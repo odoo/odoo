@@ -1,0 +1,53 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_cancel
+#
+# Translators:
+# Jason Ouellet, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-02-23 06:20+0000\n"
+"Last-Translator: Jason Ouellet\n"
+"Language-Team: French (Canada) (http://www.transifex.com/odoo/odoo-9/"
+"language/fr_CA/)\n"
+"Language: fr_CA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_cancel
+#: model:ir.model,name:account_cancel.model_account_bank_statement
+msgid "Bank Statement"
+msgstr "Relevé bancaire"
+
+#. module: account_cancel
+#: model:ir.model,name:account_cancel.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Ligne du compte bancaire"
+
+#. module: account_cancel
+#: model:ir.ui.view,arch_db:account_cancel.bank_statement_cancel_form_inherit
+#: model:ir.ui.view,arch_db:account_cancel.payment_cancel_form_inherit
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: account_cancel
+#: model:ir.ui.view,arch_db:account_cancel.invoice_form_cancel_inherit
+#: model:ir.ui.view,arch_db:account_cancel.invoice_supplier_cancel_form_inherit
+msgid "Cancel Invoice"
+msgstr "Annuler la facture"
+
+#. module: account_cancel
+#: code:addons/account_cancel/models/account_bank_statement.py:28
+#, python-format
+msgid "Please set the bank statement to New before canceling."
+msgstr "S'il vous plaît définir le relevé bancaire à Nouveau avant d'annuler."
+
+#. module: account_cancel
+#: model:ir.ui.view,arch_db:account_cancel.bank_statement_draft_form_inherit
+msgid "Reset to New"
+msgstr "Initialiser à Nouveau"

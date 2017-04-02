@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_pos_mercury_configuration_form" model="ir.ui.view" >
+            <field name="name">Mercury Configurations</field>
+            <field name="model">pos_mercury.configuration</field>
+            <field name="arch" type="xml">
+                <form string="Card Reader">
+                    <sheet>
+                        <div class="oe_title">
+                           <label for="name" class="oe_edit_only"/>
+                           <h1><field name="name"/></h1>
+                        </div>
+                        <div>
+                            <p>
+                                <i>Mercury Configurations</i> define what Mercury account will be used when
+                                processing credit card transactions in the Point Of Sale. Setting up a Mercury
+                                configuration will enable you to allow payments with various credit cards
+                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this
+                                configuration you should associate it with a Point Of Sale payment method.
+                            </p><p>
+                                We currently support the MagTek Dynamag card reader device. It can be connected
+                                directly to the Point Of Sale device or it can be connected to the POSBox.
+                            </p><p>
+                                Using the Mercury integration in the Point Of Sale is easy: just press the
+                                associated payment method. After that the amount can be adjusted (eg. for cashback)
+                                just like on any other payment line. Whenever the payment line is set up, a card
+                                can be swiped through the card reader device.
+                            </p><p>
+                                For quickly handling orders: just swiping a credit card when on the payment screen
+                                (without having pressed anything else) will charge the full amount of the order to
+                                the card.
+                            </p><p>
+                                If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472
+                                to create one.
+                            </p>
+                        </div>
+                        <group col="2">
+                            <field name="merchant_id"/>
+                            <field name="merchant_pwd"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_pos_mercury_configuration_tree" model="ir.ui.view">
+            <field name="name">Mercury Configurations</field>
+            <field name="model">pos_mercury.configuration</field>
+            <field name="arch" type="xml">
+                <tree string="Card Reader">
+                    <field name="name"/>
+                    <field name="merchant_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_configuration_form" model="ir.actions.act_window">
+            <field name="name">Mercury Configurations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos_mercury.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to configure your card reader.
+              </p>
+            </field>
+        </record>
+
+        <record id="view_account_journal_pos_user_form" model="ir.ui.view">
+            <field name="name">POS Journal</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount_authorized_diff']" position="after">
+                    <field name="pos_mercury_config_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_pos_order" model="ir.ui.view">
+          <field name="name">POS orders</field>
+          <field name="model">pos.order</field>
+          <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="before">
+              <field name="mercury_prefixed_card_number"/>
+              <field name="mercury_card_brand"/>
+              <field name="mercury_card_owner_name"/>
+            </xpath>
+          </field>
+        </record>
+
+        <menuitem parent="point_of_sale.menu_point_config_product" action="pos_mercury.action_configuration_form" id="menu_pos_pos_mercury_config"
+            sequence="35"/>
+    </data>
+</odoo>

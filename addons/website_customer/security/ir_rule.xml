@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record model="ir.rule" id="website_customer_res_partner_tag_public">
+            <field name="name">Partner Tag: published only</field>
+            <field name="model_id" ref="model_res_partner_tag"/>
+            <field name="domain_force">[('website_published', '=', True)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+        </record>
+
+</odoo>

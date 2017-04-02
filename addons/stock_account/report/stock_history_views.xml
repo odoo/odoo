@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_history_report_tree" model="ir.ui.view">
+        <field name="name">Stock Value At Date</field>
+        <field name="model">stock.history</field>
+        <field name="arch" type="xml">
+            <tree string="Stock Value At Date" create="0" delete="0">
+                <field name="location_id" invisible="1"/>
+                <field name="product_id" invisible="1"/>
+                <field name="move_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="date"/>
+                <field name="source"/>
+                <field name="quantity" sum="# of Products "/>
+                <field name="inventory_value" sum="Total Value"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_stock_history_report_pivot" model="ir.ui.view">
+        <field name="name">stock.history.value.pivot</field>
+        <field name="model">stock.history</field>
+        <field name="arch" type="xml">
+            <pivot string="Stock Value At Date">
+                <field name="product_id" type="row"/>
+                <field name="location_id" type="row"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="view_stock_history_report_graph" model="ir.ui.view">
+        <field name="name">stock.history.value.graph</field>
+        <field name="model">stock.history</field>
+        <field name="arch" type="xml">
+            <graph string="Stock Value At Date">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="quantity" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <record id="view_stock_history_report_search" model="ir.ui.view">
+        <field name="name">stock.history.report.search</field>
+        <field name="model">stock.history</field>
+        <field name="arch" type="xml">
+            <search string="Stock Value At Date">
+                <field name="product_id"/>
+                <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <group expand="1" string="Group By">
+                    <filter string="Product" context="{'group_by':'product_id'}" name='group_by_product'/>
+                    <filter string="Product Category" context="{'group_by':'product_categ_id'}"/>
+                    <filter string="Product Template" context="{'group_by':'product_template_id'}" name="group_by_product_template"/>
+                    <filter string="Location" context="{'group_by':'location_id'}" name='group_by_location'/>
+                    <filter string="Stock Move" context="{'group_by':'move_id'}"/>
+                    <filter string="Lot/Serial Number" context="{'group_by':'serial_number'}" groups="stock.group_production_lot"/>
+                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                 </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_stock_history" model="ir.actions.act_window">
+        <field name="name">Stock History</field>
+        <field name="res_model">stock.history</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph,pivot</field>
+    </record>
+</odoo>

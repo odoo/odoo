@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_layout" name="Portal layout: Issues menu entry" inherit_id="website_portal.portal_layout" priority="30">
+        <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
+            <li t-att-class="page_name == 'issue' and 'active' or ''">
+                 <a href="/my/issues">Issues</a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home" name="Portal My Home: Issue entries" inherit_id="website_portal.portal_my_home" priority="30">
+        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
+            <h3 class="page-header">
+                <a href="/my/issues">Your Issues
+                    <small class="ml8">
+                        <t t-if="issue_count">
+                            <span class='badge'><t t-esc="issue_count"/></span>
+                        </t>
+                        <t t-if="not issue_count">
+                            There are currently no issues for your account.
+                        </t>
+                    </small>
+                </a>
+            </h3>
+        </xpath>
+    </template>
+
+    <template id="my_issues" name="My Issues">
+        <t t-call="website_portal.portal_layout">
+            <h3 class="page-header">
+                Your Issues
+                <div class="dropdown pull-right mr8">
+                    <button id="sortby" class="btn btn-default" type="button" data-toggle="dropdown">
+                        <span class="fa fa-sort" /> <span t-esc="sortings.get(sortby, {}).get('label', 'Newest')"/>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="sortby">
+                        <li t-foreach="sortings" t-as="option" t-att-class="sortby == option and 'active'">
+                            <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'project', sortby=option)"><span t-esc="sortings.get(option).get('label')"/></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="dropdown pull-right mr8">
+                    <button id="project_filters" class="btn btn-default" type="button" data-toggle="dropdown">
+                        Projects: <span t-esc="project_filters.get(project, {}).get('label', 'All')"/>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="project_filters">
+                        <li t-foreach="project_filters" t-as="option" t-att-class="project == option and 'active'">
+                            <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'sortby', project=option)"><span t-esc="project_filters.get(option).get('label')"/></a>
+                        </li>
+                    </ul>
+                </div>
+            </h3>
+            <div class="panel panel-default">
+                <t t-if="not issues">
+                    <div class="alert alert-warning mt8" role="alert">
+                        There are no issues.
+                    </div>
+                </t>
+                <table t-if="issues" class="table table-hover status_table">
+                    <thead>
+                        <tr class="active">
+                            <th>Issue</th>
+                            <th class="col-md-8">Description</th>
+                            <th>Stage</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="issues" t-as="issue">
+                        <tr>
+                            <td>
+                                <a t-attf-href="/my/issues/#{issue.id}?{{ keep_query() }}">Issue <t t-esc="issue.id" /></a>
+                            </td>
+                            <td><span t-field="issue.name"/></td>
+                            <td>
+                                <span class="label label-info" title="Current stage of the issue" t-esc="issue.stage_id.name" />
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+            <div t-if="pager" class="o_portal_pager text-center">
+                <t t-call="website.pager"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="my_issues_issue" name="My Issue">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container">
+                    <div class="oe_structure">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <ol class="breadcrumb mt8">
+                                    <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                    <li><a t-attf-href="/my/issues?#{keep_query()}">My Issues</a></li>
+                                    <li>Issue <span t-field="issue.id"/></li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>
+                                            Issue <span t-field="issue.id"/> - <span t-field="issue.name"/>
+                                            <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.issue&amp;id=%s&amp;view_type=form' % (issue.id)" groups="project.group_project_user">Edit Issue</a>
+                                            <span t-field="issue.stage_id.name" class="pull-right label label-info" title="Current stage of this issue"/>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="mb8">
+                                    <strong>Date:</strong> <span t-field="issue.create_date" t-options='{"widget": "date"}'/>
+                                </div>
+                                <div class='row'>
+                                    <div class="col-md-6" t-if="issue.user_id">
+                                        <strong>Assigned to</strong>
+                                        <div>
+                                            <address t-field="issue.user_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Reported by</strong>
+                                        <div t-if="issue.partner_id">
+                                            <address t-field="issue.partner_id" t-options='{"widget": "contact", "fields": ["name", "email"], "no_marker": True}'/>
+                                        </div>
+                                    </div>
+                                    <t t-if="issue.description">
+                                        <div class="col-md-12">
+                                            <strong>Description</strong>
+                                            <div t-field="issue.description"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt32">
+                            <div class="col-md-12">
+                                <h4><strong>Message and communication history</strong></h4>
+                            </div>
+                            <div class="col-md-10 col-md-offset-1 mt16">
+                                <t t-call="website_mail.message_thread">
+                                    <t t-set="object" t-value="issue"/>
+                                    <t t-set="chatter_mode" t-value="'json'"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="my_projects" inherit_id="website_project.my_projects">
+        <xpath expr="//table/thead/tr/th[last()]" position="after">
+            <th></th>
+        </xpath>
+        <xpath expr="//table/tbody/tr/td[last()]" position="after">
+            <td>
+                <a t-if="project.use_issues" t-attf-href="/my/issues?project=#{project.id}">
+                    <t t-esc="project.issue_count" />
+                    <t t-esc="project.label_issues" />
+                </a>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="my_project" inherit_id="website_project.my_project">
+        <xpath expr="//div[@class='panel-body']/div[@class='row']/div[@class='col-md-6'][last()]/div[@class='pull-right']" position="before">
+            <a t-attf-href="/my/issues?project=#{project.id}" class="btn btn-default btn-lg pull-right ml8">
+                <span class="fa fa-bug" />
+                <span t-esc="project.issue_count" />
+                <span t-field="project.label_issues" />
+            </a>
+        </xpath>
+    </template>
+
+</odoo>

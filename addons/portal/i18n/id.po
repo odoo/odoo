@@ -1,0 +1,252 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
+# William Surya Permana <zarambie_game@yahoo.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Deddy Ddr <deddy.ddr@gmail.com>, 2016
+# Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2016
+# Andi Fadhel <cliffryu@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Andi Fadhel <cliffryu@gmail.com>, 2016\n"
+"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: portal
+#: model:mail.template,body_html:portal.mail_template_data_portal_welcome
+msgid ""
+"\n"
+"<p>\n"
+"    Dear ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Your login account data is:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Username: ${object.user_id.login or ''}</li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"\tYou can set or change your password via the following url:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
+msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_groups
+msgid "Access Groups"
+msgstr "Kelompok Akses"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Apply"
+msgstr "Terapkan"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Cancel"
+msgstr "Batalkan"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Contacts"
+msgstr "Daftar kontak"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_create_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
+msgid "Email"
+msgstr "Email"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_id
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_id
+msgid "ID"
+msgstr "ID"
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_res_groups_is_portal
+msgid "If checked, this group is usable as a portal."
+msgstr "Jika dicentang, kelompok ini berguna sebagai portal."
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
+msgid "In Portal"
+msgstr "Di Portal"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
+msgid "Invitation Message"
+msgstr "PESAN UNDANGAN"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user___last_update
+msgid "Last Modified on"
+msgstr "Terakhir diubah pada"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_write_uid
+msgid "Last Updated by"
+msgstr "Terakhir diperbarui oleh"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbaharui pada"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
+msgid "Login User"
+msgstr "Pengguna Masuk"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.group_search_view
+msgid "Non-Portal Groups"
+msgstr "Kelompok-kelompok non-Portal"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
+#: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
+msgid "Portal"
+msgstr "Pintu gerbang"
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Portal Access Management"
+msgstr "Portal akses manajemen"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.group_search_view
+msgid "Portal Groups"
+msgstr "Kelompok-kelompok portal"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "Konfigurasi portal"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid ""
+"Select which contacts should belong to the portal in the list below.\n"
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
+msgstr ""
+"Pilih kontak yang harus milik portal dalam daftar di bawah ini.\n"
+"                        Alamat email dari setiap kontak yang dipilih harus valid dan unik.\n"
+"                        Jika perlu, Anda dapat memperbaiki alamat email kontak apapun secara langsung dalam daftar."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:106
+#, python-format
+msgid "Several contacts have the same email: "
+msgstr "Beberapa kontak memiliki email yang sama:"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:103
+#, python-format
+msgid "Some contacts don't have a valid email: "
+msgstr "Beberapa kontak tidak memiliki imel:"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:109
+#, python-format
+msgid "Some contacts have the same email as an existing portal user:"
+msgstr ""
+"Beberapa kontak memiliki email yang sama sebagai pengguna portal yang ada:"
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
+msgid "The portal that users can be added in or removed from."
+msgstr "Portal bahwa pengguna dapat ditambahkan atau dihapus dari."
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "This text is included in the email sent to new portal users."
+msgstr "Teks ini terdapat di email yang dikirim ke pengguna portal baru."
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
+msgid "This text is included in the email sent to new users of the portal."
+msgstr "Teks ini terdapat di email yang dikirim kepada pengguna baru portal."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:112
+#, python-format
+msgid ""
+"To resolve this error, you can: \n"
+"- Correct the emails of the relevant contacts\n"
+"- Grant access only to contacts with unique emails"
+msgstr ""
+"Untuk mengatasi kesalahan ini, Anda dapat: - benar email kontak yang relevan"
+" - memberikan akses hanya untuk kontak dengan email yang unik"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
+msgid "Users"
+msgstr "Pengguna"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
+msgid "Wizard"
+msgstr "Wizard"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:179
+#, python-format
+msgid ""
+"You must have an email address in your User Preferences to send emails."
+msgstr ""
+"Anda harus memiliki alamat email dalam preferensi pengguna untuk mengirim "
+"email."
+
+#. module: portal
+#: model:mail.template,subject:portal.mail_template_data_portal_welcome
+msgid "Your Odoo account at ${user.company_id.name}"
+msgstr ""

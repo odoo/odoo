@@ -1,0 +1,294 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_crm
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# David Perez <david@closemarketing.es>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Javier Ramirez <elbomba887@gmail.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
+# Yeison Vargas <yeison.vargas@megaterios.co>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Gelo Joga Landoo <gj@landoo.es>, 2017\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
+msgid "# Issues"
+msgstr "Nº incidencias"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
+msgid "# of Sales Order"
+msgstr "Nº de pedido de venta"
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Orders</span>"
+msgstr "<span class=\"o_stat_text\"> Pedidos</span>"
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
+msgstr "<span class=\"o_stat_text\"> Presupuesto(s) </span>"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
+msgid ""
+"A member with whom you want to associate your membership. It will consider "
+"the membership state of the associated member."
+msgstr ""
+"Un miembro con el que desea asociar su afiliación. Se considerará como "
+"estado de la afiliación el del miembro asociado."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
+msgid "Associate Member"
+msgstr "Miembro asociado"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
+msgid "Cancel Membership Date"
+msgstr "Cancelar fecha de asociación"
+
+#. module: sale_crm
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:16
+#, python-format
+msgid "Click here to see more options."
+msgstr "Clic aquí para ver más opciones."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
+msgid "Count Payment Token"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
+msgid "Current Membership Status"
+msgstr "Estado actual de socio"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_customer
+msgid "Customer Location"
+msgstr "Ubicación del cliente"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_start
+msgid "Date from which membership becomes active."
+msgstr "Fecha desde la que el socio está activo."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_cancel
+msgid "Date on which membership has been cancelled"
+msgstr "Fecha en la que el socio ha sido cancelado."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
+msgid "Date until which membership remains active."
+msgstr "Fecha hasta la que el socio permanece activo."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
+msgid "Free Member"
+msgstr "Socio gratuito"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
+msgid "Invoiced in Sale Orders Target"
+msgstr "Facturados en Objetivos Pedidos Venta"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
+msgid ""
+"It indicates the membership state.\n"
+"-Non Member: A partner who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paying member: A member who has paid the membership fee."
+msgstr ""
+"Indica el estado de la afiliación.\n"
+"- No socio: Una empresa que no ha solicitado ninguna afiliación.\n"
+"- Socio cancelado: Un socio que ha cancelado su afiliación.\n"
+"- Socio antiguo: Un socio cuya afiliación ha expirado.\n"
+"- Socio en espera: Un socio que ha solicitado la afiliación y cuya factura debe crearse.\n"
+"- Socio facturado: Un socio cuya factura ha sido creada.\n"
+"- Socio pagado: Un socio que ha pagado la tasa de afiliación."
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Iniciativa/Oportunidad"
+
+#. module: sale_crm
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:20
+#, python-format
+msgid "Let's have a look at the quotations of this sales team."
+msgstr "Echemos un vistazo a los presupuestos de este equipo de ventas."
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Log in the chatter from which opportunity the order originates"
+msgstr "Entra en el chat desde cada oportunidad que genere el pedido"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
+msgid "Membership"
+msgstr "Socio"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
+msgid "Membership Amount"
+msgstr "Importe de la afiliación"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
+msgid "Membership End Date"
+msgstr "Fecha fin de asociación"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_start
+msgid "Membership Start Date"
+msgstr "Fecha de inicio de la asociación"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
+msgid "Message for Sales Order"
+msgstr "Mensaje para el pedido de venta"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr "Mensaje para albarán de stock"
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "New Quotation"
+msgstr "Nuevo Presupuesto"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
+msgid "Number of Quotations"
+msgstr "Número de cotizaciones"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
+msgid "Opportunity"
+msgstr "Oportunidad"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
+msgid "Orders"
+msgstr "Pedidos"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
+msgid "Payment Tokens"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
+msgid "Quotation"
+msgstr "Presupuesto"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
+msgid "Quotations"
+msgstr "Presupuestos"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
+msgid "Sales Order"
+msgstr "Pedido de venta"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_free_member
+msgid "Select if you want to give free membership."
+msgstr "Seleccione si quiere dar la cuota de afiliación gratuita"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
+#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Si selecciona la opción \"Aviso\" se notificará a los usuarios con el "
+"mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción con "
+"el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
+"siguiente campo."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
+msgid "Stock Picking"
+msgstr "Albarán de stock"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
+msgid "Sum of Orders"
+msgstr "Suma de pedidos"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
+msgid "Tags"
+msgstr "Etiquetas"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
+msgid "The price negotiated by the partner"
+msgstr "El precio negociado por la empresa."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
+msgid ""
+"This stock location will be used, instead of the default one, as the "
+"destination location for goods you send to this partner"
+msgstr ""
+"Se utilizará esta ubicación de existencias, en lugar de la ubicación por "
+"defecto, como la ubicación de destino para enviar mercancías a esta empresa"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for goods you receive from the current partner"
+msgstr ""
+"Esta ubicación de existencias será utilizada, en lugar de la ubicación por "
+"defecto, como la ubicación de origen para recibir mercancías desde esta "
+"empresa"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_res_users
+msgid "Users"
+msgstr "Usuarios"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
+msgid "Vendor Location"
+msgstr "Ubicación del Proveedor"

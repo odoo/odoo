@@ -1,0 +1,320 @@
+/* --- Restaurant Specific CSS --- */
+
+.screen .screen-content-flexbox {
+    margin:     0px auto;
+    text-align: left;
+    height:     100%;
+    overflow:   hidden;
+    position:   relative;
+    display:    -webkit-flex;
+    -webkit-flex-flow:  column nowrap;
+    flex-flow:  column nowrap;
+}
+
+/* ------ FLOOR SELECTOR ------- */
+
+.floor-selector { 
+    line-height: 48px;
+    font-size: 18px;
+    display: -webkit-flex;
+    display: flex;
+    text-align: center;
+    width: 100%;
+}
+.floor-selector .button {
+    cursor: pointer;
+    border-left: dashed 1px rgb(196,196,196);
+    -webkit-flex: 1;
+    flex: 1;
+}
+.floor-selector .button:first-child {
+    border-left: none;
+}
+.floor-selector .button.active {
+    background: #6EC89B;
+    color: white;
+}
+
+/* ------ FLOOR MAP ------- */
+
+.floor-map {
+    -webkit-flex: 1;
+    flex: 1;
+    position: relative;
+    width: auto;
+    height: 100%;
+    box-shadow: 0px 6px 0px -3px rgba(0,0,0,0.07) inset;
+    background: #D8D7D7;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    background-size: cover;
+    transition: all 300ms ease-in-out;
+}
+
+.floor-map .tables {
+    position: relative;
+}
+@media screen and (min-width: 1024px) {
+    .floor-map .tables {
+        max-width: 1024px;
+        margin: auto;
+        max-height: 540px;
+        border-radius: 0px 0px 6px 6px;
+        border: dashed 2px rgba(0,0,0,0.1);
+        border-top: none;
+        height: 100%;
+    }
+}
+
+.floor-map .table{
+    position: absolute;
+    text-align: center;
+    font-size: 18px;
+    color: white;
+    background: rgb(53, 211, 116);
+    border-radius: 3px;
+    cursor: pointer;
+    box-shadow: 0px 3px rgba(0,0,0,0.07);
+    transition: background, background-color 300ms ease-in-out;
+    overflow: hidden;
+}
+.floor-map .table .table-cover {
+    display: block;
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    border-radius: 0px 0px 3px 3px;
+    background: rgba(0,0,0,0.2);
+}
+.floor-map .table .table-cover.full {
+    border-radius: 3px 3px 3px 3px;
+}
+.floor-map .table .table-seats {
+    position: absolute;
+    display: inline-block;
+    bottom: 0;
+    left: 50%;
+    height: 20px;
+    width: 20px;
+    line-height: 20px;
+    font-size: 16px;
+    border-radius: 50%;
+    margin-left: -10px;
+    margin-bottom: 4px;
+    background: black;
+    color: white;
+    opacity: 0.2;
+    z-index: 3;
+}
+.floor-map .table .label {
+    display: block;
+    max-height: 100%;
+    overflow: hidden;
+    position: relative;
+    bottom: 5px;
+    z-index: 5;
+}
+.floor-map .table.selected {
+    outline: solid rgba(255,255,255,0.3);
+    cursor: move;
+    z-index: 50;
+}
+.floor-map .edit-button.editing {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 20px;
+    margin: 8px;
+    line-height: 32px;
+    width: 32px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    border: solid 1px rgba(0,0,0,0.2);
+}
+.floor-map .edit-button.editing.active {
+    background: #444;
+    border-color: transparent;
+    color: white;
+}
+.floor-map .edit-bar {
+    position: absolute;
+    top: 0;
+    right: 40px;
+    margin: 8px;
+    line-height: 34px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    background: rgba(255,255,255,0.5);
+    z-index: 100;
+}
+.floor-map .edit-bar .edit-button {
+    position: relative;
+    width: 32px;
+    display: inline-block;
+    cursor: pointer;
+    margin-right: -4px;
+    border-right: solid 1px rgba(0,0,0,0.2);
+    transition: all 150ms linear;
+}
+.floor-map .edit-bar .edit-button.disabled {
+    cursor: default;
+}
+.floor-map .edit-bar .edit-button.disabled > * {
+    opacity: 0.5;
+}
+.floor-map .edit-bar .color-picker {
+    position: absolute;
+    left: -106px;
+    top: 40px;
+    width: 180px;
+    height: 180px;
+    border-radius: 3px;
+    z-index: 100;
+}
+.floor-map .edit-bar .color-picker .color {
+    display: block;
+    float: left;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    background-color: gray;
+}
+.floor-map .edit-bar .color-picker .color.tl {  border-top-left-radius: 3px; }
+.floor-map .edit-bar .color-picker .color.tr {  border-top-right-radius: 3px; }
+.floor-map .edit-bar .color-picker .color.bl {  border-bottom-left-radius: 3px; }
+.floor-map .edit-bar .color-picker .color.br {  border-bottom-right-radius: 3px; }
+
+.floor-map .edit-bar .close-picker {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-left: -16px;
+    margin-bottom: -16px;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 16px;
+    background: black;
+    color: white;
+    cursor: pointer;
+}
+
+.floor-map .edit-bar .edit-button:last-child {
+    margin-right: 0;
+    border-right: none;
+}
+
+.floor-map .table.selected .table-handle {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    left: 50%;
+    top: 50%;
+    border-radius: 24px;
+    margin-left: -24px;
+    margin-top:  -24px;
+    background: white;
+    box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
+    cursor: grab;
+    transition: all 150ms linear;
+    z-index: 100;
+}
+.floor-map .table.selected .table-handle:hover {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    margin-left: -30px;
+    margin-top: -30px;
+}
+.floor-map .table .table-handle.top {      top: 0;         }
+.floor-map .table .table-handle.bottom {   top: 100%;      }
+.floor-map .table .table-handle.left {     left: 0;        }
+.floor-map .table .table-handle.right {    left: 100%;     }
+
+.floor-map .table .order-count {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    background: black;
+    width: 20px;
+    margin-top: 1px;
+    margin-left: -10px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    z-index: 10;
+}
+.floor-map .table .order-count.notify-printing {
+    background: red;
+}
+.floor-map .table .order-count.notify-skipped {
+    background: blue;
+}
+
+.floor-map .empty-floor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 400px;
+    height: 40px;
+    font-size: 18px;
+    text-align: center;
+    opacity: 0.6;
+}
+.floor-map .empty-floor i {
+    display: inline-block;
+    padding: 6px 7px 3px;
+    margin: 0px 3px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 3px;
+}
+
+
+/* ------ FLOOR BUTTON IN THE ORDER SELECTOR ------- */
+
+.pos .order-button.floor-button {
+    background: #6EC89B;
+    font-weight: bold;
+    font-size: 16px;
+    min-width: 128px;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+.pos .order-button.floor-button .table-name {
+    font-weight: normal;
+}
+.pos .order-button.floor-button .fa{
+    font-size: 24px;
+}
+/* ------ ORDER LINE STATUS ------- */
+
+.pos .order .orderline.dirty {
+    border-left: solid 6px #6EC89B;
+    color: #6EC89B;
+    padding-left: 9px;
+}
+.pos .order .orderline.skip {
+    border-left: solid 6px #7F82AC;
+    color: #7F82AC;
+    padding-left: 9px;
+}
+
+
+/* ------ ORDER NOTES ------- */
+
+.pos .order .orderline-note {
+    margin: 8px;
+}
+.orderline-note .fa {
+    opacity: 0.5;
+    margin-right: 4px;
+}
+

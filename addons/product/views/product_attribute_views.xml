@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_attribute_value_view_tree" model="ir.ui.view">
+        <field name="name">product.attribute.value.view.tree</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml">
+            <tree string="Attributes" editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="attribute_id"/>
+                <field name="name"/>
+                <field name="price_extra"/>
+            </tree>
+        </field>
+    </record>
+    <record id="product_attribute_value_action" model="ir.actions.act_window">
+        <field name="name">Variant Values</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="product_attribute_value_view_tree"/>
+        <field name="domain">[('product_ids.product_tmpl_id', '=', active_id)]</field>
+        <field name="context">{'default_product_tmpl_id': active_id}</field>
+    </record>
+
+        <record id="attribute_tree_view" model="ir.ui.view">
+            <field name="name">product.attribute.tree</field>
+            <field name="model">product.attribute</field>
+            <field name="arch" type="xml">
+                <tree string="Variant Values" editable="top">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="create_variant" groups="base.group_no_one"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_attribute_view_form" model="ir.ui.view">
+            <field name="name">product.attribute.form</field>
+            <field name="model">product.attribute</field>
+            <field name="arch" type="xml">
+                <form string="Product Attribute">
+                    <group>
+                        <group name="main_fields">
+                            <label for="name" string="Attribute Name"/>
+                            <field name="name" nolabel="1"/>
+                        </group>
+                    </group>
+                    <group name="values_ids">
+                        <label for="value_ids" string="Attribute Values"/>
+                        <field name="value_ids" widget="one2many_list" nolabel="1">
+                            <tree string="Values" editable="bottom">
+                                <field name="name"/>
+                            </tree>
+                            <form string="Values">
+                                <field name="name"/>
+                            </form>
+                        </field>
+                        <field name="create_variant" groups="base.group_no_one"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="attribute_action" model="ir.actions.act_window">
+            <field name="name">Attributes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.attribute</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <record id="variants_tree_view" model="ir.ui.view">
+            <field name="name">product.attribute.value.tree</field>
+            <field name="model">product.attribute.value</field>
+            <field name="arch" type="xml">
+                <tree string="Variant Values" editable="top">
+                    <field name="sequence" widget="handle"/>
+                    <field name="attribute_id"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="variants_action" model="ir.actions.act_window">
+            <field name="name">Attribute Values</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.attribute.value</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+        </record>
+
+    <record id="product_attribute_line_form" model="ir.ui.view">
+        <field name="name">product.attribute.line.form</field>
+        <field name="model">product.attribute.line</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <form string="Product Attribute and Values">
+                <group name="main_field">
+                    <label for="attribute_id" string="Attribute Name"/>
+                    <field name="attribute_id" nolabel="1"/>
+                    <field name="value_ids" widget="one2many_list">
+                        <tree string="Values">
+                            <field name="name"/>
+                        </tree>
+                        <form string="Values">
+                            <field name="name"/>
+                        </form>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

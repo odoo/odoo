@@ -1,0 +1,99 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_cash_basis
+# 
+# Translators:
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:55+0000\n"
+"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_move
+msgid "Account Entry"
+msgstr "Vknjižba"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
+msgid "Account use when creating entry for tax cash basis"
+msgstr ""
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_res_company
+msgid "Companies"
+msgstr "Družbe"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_move_line
+msgid "Journal Item"
+msgstr "Postavka"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_partial_reconcile
+msgid "Partial Reconcile"
+msgstr "Delno usklajevanje"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_use_cash_basis
+msgid ""
+"Select this if the tax should use cash basis,which will create an entry for "
+"this tax on a given account during reconciliation"
+msgstr ""
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_tax
+msgid "Tax"
+msgstr "Davek"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
+msgid "Tax Cash Basis Entry of"
+msgstr ""
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_config_settings_tax_cash_basis_journal_id
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_res_company_tax_cash_basis_journal_id
+msgid "Tax Cash Basis Journal"
+msgstr ""
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_cash_basis_account
+msgid "Tax Received Account"
+msgstr ""
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
+msgid ""
+"Technical field used to keep track of the tax cash basis reconciliation.This"
+" is needed when cancelling the source: it will post the inverse journal "
+"entry to cancel that part too."
+msgstr ""
+
+#. module: account_tax_cash_basis
+#: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:80
+#, python-format
+msgid ""
+"There is no tax cash basis journal defined for this company: \"%s\" \n"
+"Configure it in Accounting/Configuration/Settings"
+msgstr ""
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis
+msgid "Use Cash Basis"
+msgstr ""
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"

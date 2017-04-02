@@ -1,0 +1,146 @@
+# HG changeset patch
+# Parent 2ee7212e5de4702dff08d9b5e4268e7dc261d038
+# Parent  4ca7b848bb60c3573de7ed41a28b4b65186a5725
+
+diff --git a/academy/__manifest__.py b/academy/__manifest__.py
+--- a/academy/__manifest__.py
++++ b/academy/__manifest__.py
+@@ -27,6 +27,7 @@
+         'security/ir.model.access.csv',
+         'templates.xml',
+         'views.xml',
++        'data.xml',    
+     ],
+     # only loaded in demonstration mode
+     'demo': [
+diff --git a/academy/data.xml b/academy/data.xml
+new file mode 100644
+--- /dev/null
++++ b/academy/data.xml
+@@ -0,0 +1,6 @@
++<odoo><data>
++  <record model="product.public.category" id="category_courses">
++    <field name="name">Courses</field>
++    <field name="parent_id" ref="website_sale.categ_others"/>
++  </record>
++</data></odoo>
+diff --git a/academy/demo.xml b/academy/demo.xml
+--- a/academy/demo.xml
++++ b/academy/demo.xml
+@@ -9,5 +9,30 @@
+         <record id="vaughn" model="academy.teachers">
+             <field name="name">Lester Vaughn</field>
+         </record>
++
++        <record id="course0" model="product.template">
++            <field name="name">Course 0</field>
++            <field name="teacher_id" ref="padilla"/>
++            <field name="public_categ_ids" eval="[(4, ref('academy.category_courses'), False)]"/>
++            <field name="website_published">True</field>
++            <field name="list_price" type="float">0</field>
++            <field name="type">service</field>
++        </record>
++        <record id="course1" model="product.template">
++            <field name="name">Course 1</field>
++            <field name="teacher_id" ref="padilla"/>
++            <field name="public_categ_ids" eval="[(4, ref('academy.category_courses'), False)]"/>
++            <field name="website_published">True</field>
++            <field name="list_price" type="float">0</field>
++            <field name="type">service</field>
++        </record>
++        <record id="course2" model="product.template">
++            <field name="name">Course 2</field>
++            <field name="teacher_id" ref="vaughn"/>
++            <field name="public_categ_ids" eval="[(4, ref('academy.category_courses'), False)]"/>
++            <field name="website_published">True</field>
++            <field name="list_price" type="float">0</field>
++            <field name="type">service</field>
++        </record>
+     </data>
+ </odoo>
+diff --git a/academy/models.py b/academy/models.py
+--- a/academy/models.py
++++ b/academy/models.py
+@@ -8,11 +8,9 @@ class Teachers(models.Model):
+     name = fields.Char()
+     biography = fields.Html()
+ 
+-    course_ids = fields.One2many('academy.courses', 'teacher_id', string="Courses")
++    course_ids = fields.One2many('product.template', 'teacher_id', string="Courses")
+ 
+ class Courses(models.Model):
+-    _name = 'academy.courses'
+-    _inherit = 'mail.thread'
++    _inherit = 'product.template'
+ 
+-    name = fields.Char()
+     teacher_id = fields.Many2one('academy.teachers', string="Teacher")
+diff --git a/academy/security/ir.model.access.csv b/academy/security/ir.model.access.csv
+--- a/academy/security/ir.model.access.csv
++++ b/academy/security/ir.model.access.csv
+@@ -1,3 +1,2 @@
+ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+-access_academy_teachers,access_academy_teachers,model_academy_teachers,,1,0,0,0
+-access_academy_courses,access_academy_courses,model_academy_courses,,1,0,0,0
+\ No newline at end of file
++access_academy_teachers,access_academy_teachers,model_academy_teachers,,1,0,0,0
+\ No newline at end of file
+diff --git a/academy/views.xml b/academy/views.xml
+--- a/academy/views.xml
++++ b/academy/views.xml
+@@ -25,55 +25,9 @@
+     </field>
+   </record>
+ 
+-  <record id="action_academy_courses" model="ir.actions.act_window">
+-    <field name="name">Academy courses</field>
+-    <field name="res_model">academy.courses</field>
+-  </record>
+-  <record id="academy_course_search" model="ir.ui.view">
+-    <field name="name">Academy courses: search</field>
+-    <field name="model">academy.courses</field>
+-    <field name="arch" type="xml">
+-      <search>
+-        <field name="name"/>
+-        <field name="teacher_id"/>
+-      </search>
+-    </field>
+-  </record>
+-  <record id="academy_course_list" model="ir.ui.view">
+-    <field name="name">Academy courses: list</field>
+-    <field name="model">academy.courses</field>
+-    <field name="arch" type="xml">
+-      <tree string="Courses">
+-        <field name="name"/>
+-        <field name="teacher_id"/>
+-      </tree>
+-    </field>
+-  </record>
+-  <record id="academy_course_form" model="ir.ui.view">
+-    <field name="name">Academy courses: form</field>
+-    <field name="model">academy.courses</field>
+-    <field name="arch" type="xml">
+-      <form>
+-        <sheet>
+-          <label for="name"/>
+-          <field name="name"/>
+-          <label for="teacher_id"/>
+-          <field name="teacher_id"/>
+-        </sheet>
+-        <div class="oe_chatter">
+-          <field name="message_follower_ids" widget="mail_followers"/>
+-          <field name="message_ids" widget="mail_thread"/>
+-        </div>
+-      </form>
+-    </field>
+-  </record>
+-
+   <menuitem sequence="0" id="menu_academy" name="Academy"/>
+   <menuitem id="menu_academy_content" parent="menu_academy"
+             name="Academy Content"/>
+-  <menuitem id="menu_academy_content_courses"
+-            parent="menu_academy_content"
+-            action="action_academy_courses"/>
+   <menuitem id="menu_academy_content_teachers"
+             parent="menu_academy_content"
+             action="action_academy_teachers"/>

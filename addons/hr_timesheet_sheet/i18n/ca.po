@@ -1,0 +1,533 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet_sheet
+# 
+# Translators:
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Josep Sànchez <papapep@gmx.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Josep Sànchez <papapep@gmx.com>, 2016\n"
+"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+msgid ""
+" * The 'Open' status is used when a user is encoding a new and unconfirmed timesheet. \n"
+"* The 'Waiting Approval' status is used to confirm the timesheet by user. \n"
+"* The 'Approved' status is used when the users timesheet is accepted by his/her senior."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
+#, python-format
+msgid "Add a Line"
+msgstr "Afegir una línia"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Línia analítica"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_ids
+msgid "Analytic accounts"
+msgstr "Comptes analítics"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Approve"
+msgstr "Aprova"
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+#: model:mail.message.subtype,name:hr_timesheet_sheet.mt_timesheet_approved
+msgid "Approved"
+msgstr "Aprovat"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:140
+#, python-format
+msgid "Cannot approve a non-submitted timesheet."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:51
+#, python-format
+msgid "Click to add projects, contracts or analytic accounts."
+msgstr "Premi per afegir projectes, contractes o comptes analítics."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_res_company
+msgid "Companies"
+msgstr "Empreses"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_company_id
+msgid "Company"
+msgstr "Companyia"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Confirmed Timesheets"
+msgstr "Fulles d'hores confirmades"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_create_uid
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_create_uid
+msgid "Created by"
+msgstr "Creat per"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_create_date
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_create_date
+msgid "Created on"
+msgstr "Creat el"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
+msgid "Date From"
+msgstr "Data des de"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
+msgid "Date To"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Department"
+msgstr "Departament"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Details"
+msgstr "Detalls"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_display_name
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_display_name
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_display_name
+msgid "Display Name"
+msgstr "Mostrar Nom"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
+msgid "Employee"
+msgstr "Empleat"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Employee's Name"
+msgstr "Nom del treballador"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Employees"
+msgstr "Empleats"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "Extra features"
+msgstr "Característiques extra"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Group By"
+msgstr "Agrupar per"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Hours"
+msgstr "Hores"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_id
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "In Draft"
+msgstr "En esborrany"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:106
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:116
+#, python-format
+msgid ""
+"In order to create a timesheet for this employee, you must link him/her to a"
+" user."
+msgstr ""
+"Per crear una part d'hores per aquest treballador, ha d'enllaçar-lo amb un "
+"usuari."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet___last_update
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account___last_update
+msgid "Last Modified on"
+msgstr "Última modificació el "
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_write_uid
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_write_uid
+msgid "Last Updated by"
+msgstr "Última actualització per"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_write_date
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_write_date
+msgid "Last Updated on"
+msgstr "Última actualització el"
+
+#. module: hr_timesheet_sheet
+#: selection:res.company,timesheet_range:0
+msgid "Month"
+msgstr "Mes"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "More Info"
+msgstr "Més informació"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
+msgid "My Current Timesheet"
+msgstr "El meu full de serveis actual"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timesheet_sheet
+msgid "My Timesheet"
+msgstr "El meu full d'assistència"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
+msgid "My Timesheets"
+msgstr "La meva fulla d'assistència"
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "New"
+msgstr "Nou"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+msgid "New timesheet to approve."
+msgstr "Nova fulla d'hores per aprovar."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
+msgid "Note"
+msgstr "Nota"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:138
+#, python-format
+msgid "Only an HR Officer or Manager can approve timesheets."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:123
+#, python-format
+msgid ""
+"Only an HR Officer or Manager can refuse timesheets or reset them to draft."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "Open"
+msgstr "Obert"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:26
+#, python-format
+msgid "Open Timesheet"
+msgstr "Obre full d'assistència"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_project_config_settings_timesheet_range
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_res_company_timesheet_range
+msgid "Periodicity on which you validate your timesheets."
+msgstr "Periodicitat que es validen les fulles d'hores."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_name
+msgid "Project / Analytic Account"
+msgstr "Projecte / compte analític"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Refuse"
+msgstr "Rebutja"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Usuari relacionat amb el recurs per gestionar l'accés"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_filter
+msgid "Search Account"
+msgstr "Cerca compte"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Search Timesheet"
+msgstr "Cerca full d'assistència"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Set to Draft"
+msgstr "Canvia a esborrany"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_account_analytic_line_sheet_id
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_account_analytic_line_sheet_id_computed
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_sheet_id
+msgid "Sheet"
+msgstr "Full"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+msgid "Status"
+msgstr "Estat"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Submit to Manager"
+msgstr "Enviar al responsable"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Summary"
+msgstr "Resum"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Timesheet"
+msgstr "Full de serveis"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Timesheet Activities"
+msgstr "Activitats del full de treball"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Timesheet Period"
+msgstr "Període de la fulla d'hores"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
+msgid "Timesheet app for Chrome/Android/iOS"
+msgstr "Aplicació de part d'hores per Chrome/Android/iOS"
+
+#. module: hr_timesheet_sheet
+#: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
+msgid "Timesheet approved"
+msgstr "Fulla d'hores aprovada"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_tree
+msgid "Timesheet by Accounts"
+msgstr "Full de serveis per comptes"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_timesheet_ids
+msgid "Timesheet lines"
+msgstr "Línies full de serveis"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_range
+msgid "Timesheet range"
+msgstr "Rang full d'assistència"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_timesheet_range
+msgid "Timesheet range *"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count
+msgid "Timesheet to Approve"
+msgstr "Fulla d'hores per aprovar"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_employee_timesheet_count
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "Timesheets"
+msgstr "Parts de temps"
+
+#. module: hr_timesheet_sheet
+#: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_approved
+msgid "Timesheets Approved"
+msgstr "Fulla d'hores aprovada"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
+msgid "Timesheets by Period"
+msgstr "Fulls d'assistència per període"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+msgid ""
+"Timesheets can also be invoiced to customers, depending on the\n"
+"                configuration of each project's related contract."
+msgstr ""
+"La fulla d'hores també pot ser facturada als clients, depenent en la "
+"configuració de cada projecte relacionada amb el contracte."
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.hr_timesheet_action_from_department
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
+#: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_confirmed
+msgid "Timesheets to Approve"
+msgstr "Fulla d'hores per aprovar"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_to_approve
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "To Approve"
+msgstr "Per aprovar"
+
+#. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:14
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:36
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_tree
+#, python-format
+msgid "Total"
+msgstr "Total"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_total
+msgid "Total Time"
+msgstr "Temps total"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Unread Messages"
+msgstr "Missatges pendents de llegir"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Unvalidated Timesheets"
+msgstr "Fulls de serveis no validats"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_user_id
+msgid "User"
+msgstr "Usuari"
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+#: model:mail.message.subtype,name:hr_timesheet_sheet.mt_timesheet_confirmed
+msgid "Waiting Approval"
+msgstr "Està esperant l'aprovació"
+
+#. module: hr_timesheet_sheet
+#: selection:res.company,timesheet_range:0
+msgid "Week"
+msgstr "Setmana"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:146
+#, python-format
+msgid "Week "
+msgstr "Setmana"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:154
+#, python-format
+msgid "You cannot delete a timesheet which is already confirmed."
+msgstr "No pot eliminar una fulla d'hores que ja està confirmada."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:100
+#, python-format
+msgid "You cannot duplicate a timesheet."
+msgstr "No pot duplicar una fulla d'hores."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/account_analytic_line.py:60
+#, python-format
+msgid "You cannot modify an entry in a confirmed timesheet."
+msgstr "No pot modificar una entrada en la fulla d'hores confirmades."
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+msgid ""
+"You must record timesheets every day and confirm at the end\n"
+"                of the week. Once the timesheet is confirmed, it should be\n"
+"                validated by a manager."
+msgstr ""
+"Vostè ha de gravar les fulles d'hores cada dia i confirmar-les al final de "
+"la setmana. Una vegada les fulles d'hores siguin confirmades, han de ser "
+"validades per l'administrador."
+
+#. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:52
+#, python-format
+msgid "You will be able to register your working hours and activities."
+msgstr ""
+"Vostè serà habilitat per registrar les seves hores de treball i activitats."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
+msgid "hr.timesheet.current.open"
+msgstr "rrhh.fullassistència.actual.obrir"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+msgid "new timesheet."
+msgstr "nova fulla d'assistència."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_project_config_settings
+msgid "project.config.settings"
+msgstr "project.config.settings"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "to"
+msgstr "fins"
+
+#. module: hr_timesheet_sheet
+#: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_confirmed
+msgid "waiting approval"
+msgstr "esperant aprovació"

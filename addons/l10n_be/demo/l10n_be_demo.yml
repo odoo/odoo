@@ -1,0 +1,18 @@
+-
+  Set the demo tags on account templates and on their respective accounts (already generated during the loading of data)
+-
+  !python {model: account.account.template, id: False}: |
+      mapping_list = [
+          ('a1000', 'account.demo_capital_account'),
+          ('a300', 'account.demo_stock_account'),
+          ('a7600', 'account.demo_sale_of_land_account'),
+          ('a6201', 'account.demo_ceo_wages_account'),
+          ('a24011', 'account.demo_coffee_machine_account'),
+      ]
+      for xml_id, tag in mapping_list:
+          account_template = self.browse(ref(xml_id))
+          account_template.write({'tag_ids': [(4, ref(tag))]})
+          accounts = self.env['account.account'].search([('code', 'like', account_template.code)])
+          if accounts:
+              accounts.write({'tag_ids': [(4,ref(tag))]})
+

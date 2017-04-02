@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Opportunities by user and team pivot View -->
+        <record id="crm_opportunity_report_view_pivot" model="ir.ui.view">
+            <field name="name">crm.opportunity.report.pivot</field>
+            <field name="model">crm.opportunity.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Pipeline Analysis" disable_linking="True">
+                    <field name="create_date" interval="month" type="col"/>
+                    <field name="stage_id" type="row"/>
+                    <field name="expected_revenue" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="crm_opportunity_report_view_pivot_lead" model="ir.ui.view">
+            <field name="name">crm.opportunity.report.view.pivot.lead</field>
+            <field name="model">crm.opportunity.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Leads Analysis" disable_linking="True">
+                    <field name="create_date" interval="month" type="row"/>
+                    <field name="team_id" type="col"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Opportunities by user and team Graph View -->
+        <record id="crm_opportunity_report_view_graph" model="ir.ui.view">
+            <field name="name">crm.opportunity.report.graph</field>
+            <field name="model">crm.opportunity.report</field>
+            <field name="arch" type="xml">
+                <graph string="Pipeline Analysis" stacked="True">
+                    <field name="stage_id" type="row"/>
+                    <field name="date_deadline" type="row" interval="month"/>
+                    <field name="expected_revenue" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="crm_opportunity_report_view_graph_lead" model="ir.ui.view">
+            <field name="name">crm.opportunity.report.graph.lead</field>
+            <field name="model">crm.opportunity.report</field>
+            <field name="arch" type="xml">
+                <graph string="Leads Analysis" stacked="True">
+                    <field name="create_date" interval="month" type="col"/>
+                    <field name="team_id" type="col"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_opportunity_opportunities_cohort" model="ir.filters">
+            <field name="name">Opportunities Cohort</field>
+            <field name="model_id">crm.opportunity.report</field>
+            <field name="domain">[('probability', '=', 100)]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['date_closed:month'],'col_group_by': ['create_date:month'], 'measures': ['__count']}</field>
+        </record>
+        <record id="filter_opportunity_opportunities_won_per_team" model="ir.filters">
+            <field name="name">Opportunities Won Per Team</field>
+            <field name="model_id">crm.opportunity.report</field>
+            <field name="domain">[('probability', '=', 100)]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['team_id'], 'col_group_by': ['date_last_stage_update:month'], 'measures': ['expected revenue']}</field>
+        </record>
+        <record id="filter_opportunity_salesperson" model="ir.filters">
+            <field name="name">Leads By Salespersons</field>
+            <field name="model_id">crm.opportunity.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'col_group_by': ['create_date:month'], 'group_by': ['user_id'], 'measures': ['__count']}</field>
+        </record>
+        <record id="filter_opportunity_country" model="ir.filters">
+            <field name="name">Won By Country</field>
+            <field name="model_id">crm.opportunity.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="domain">[('probability', '=', 100)]</field>
+            <field name="context">{'col_group_by': ['create_date:month'], 'group_by': ['country_id']}</field>
+        </record>
+        <record id="ir_filters_crm_opportunity_report_next_action" model="ir.filters">
+            <field name="name">Expected Revenus by Team</field>
+            <field name="model_id">crm.opportunity.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['create_date:month', 'team_id'], 'measures': ['expected_revenue', '__count']}</field>
+        </record>
+        <record id="ir_filters_crm_opportunity_report_next_action" model="ir.filters">
+            <field name="name">Team Activities</field>
+            <field name="model_id">crm.opportunity.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['team_id'], 'measures': ['nbr_activities']}</field>
+        </record>
+
+        <!-- Opportunities by user and team Search View -->
+        <record id="crm_opportunity_report_view_search" model="ir.ui.view">
+            <field name="name">crm.opportunity.report.select</field>
+            <field name="model">crm.opportunity.report</field>
+            <field name="arch" type="xml">
+                <search string="Opportunities Analysis">
+                    <filter string="My Opportunities" name="my"
+                            domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
+                    <filter name="opportunity" string="Opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
+                    <separator/>
+                    <filter string="Won" name="won"
+                            domain="[('probability', '=', 100)]"/>
+                    <filter string="Lost" name="lost"
+                            domain="[('probability', '=', 0), ('active', '=', False)]"/>
+                    <field name="team_id" context="{'invisible_team': False}"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <separator/>
+                    <filter string="Current" name="current" domain="[('active', '=', True)]"/>
+                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Extended Filters">
+                        <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                        <field name="stage_id" domain="['|', ('team_id', '=', False), ('team_id', '=', 'team_id')]"/>
+                        <field name="campaign_id"/>
+                        <field name="medium_id"/>
+                        <field name="source_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <separator orientation="vertical"/>
+                        <field name="stage_id" widget="selection" domain="['|', ('team_id', '=', False), ('team_id', '=', 'team_id')]"/>
+                        <field name="campaign_id" widget="selection"/>
+                        <field name="medium_id" widget="selection"/>
+                        <field name="source_id" widget="selection"/>
+                        <separator orientation="vertical"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="create_date"/>
+                        <field name="opening_date"/>
+                        <field name="date_closed"/>
+                    </group>
+                    <group expand="1" string="Group By">
+                        <filter string="Salesperson" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" context="{'group_by':'team_id'}"/>
+                        <filter string="City" context="{'group_by':'city'}" />
+                        <filter string="Country" context="{'group_by':'country_id'}" />
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
+                        <filter string="Expected Closing" context="{'group_by':'date_deadline:month'}" name="date_deadline" help="Expiration Closing Month"/>
+                        <filter string="Conversion Date" context="{'group_by':'date_conversion:month'}" name="conversion_date" help="Conversion Date from Lead to Opportunity"/>
+                        <filter string="Lost Reason" context="{'group_by':'lost_reason'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="crm_opportunity_report_action" model="ir.actions.act_window">
+             <field name="name">Pipeline Analysis</field>
+             <field name="res_model">crm.opportunity.report</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">pivot,graph</field>
+             <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True}</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')})]"/>
+             <field name="help">Pipeline Analysis gives you an instant access to
+your opportunities with information such as the expected revenue, planned cost,
+missed deadlines or the number of interactions per opportunity. This report is
+mainly used by the sales manager in order to do the periodic review with the
+teams of the sales pipeline.</field>
+        </record>
+        <menuitem id="crm_opportunity_report_menu" name="Pipeline"
+            parent="sales_team.menu_sale_report" action="crm_opportunity_report_action" sequence="5"/>
+
+        <record id="crm_opportunity_report_action_graph" model="ir.actions.act_window">
+             <field name="name">Pipeline Analysis</field>
+             <field name="res_model">crm.opportunity.report</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">graph,pivot</field>
+             <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True}</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')})]"/>
+             <field name="help">Pipeline Analysis gives you an instant access to
+your opportunities with information such as the expected revenue, planned cost,
+missed deadlines or the number of interactions per opportunity. This report is
+mainly used by the sales manager in order to periodically review the pipeline
+with the the sales teams.</field>
+        </record>
+
+        <record id="crm_opportunity_report_action_lead" model="ir.actions.act_window">
+            <field name="name">Leads Analysis</field>
+            <field name="res_model">crm.opportunity.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="context">{'search_default_current': True, 'active_test': True}</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')}),
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')})]"/>
+            <field name="help">This report analyses the source of your leads
+(including those converted into opportunities).</field>
+        </record>
+
+        <menuitem
+            id="crm_opportunity_report_menu_lead"
+            name="Leads"
+            parent="sales_team.menu_sale_report"
+            action="crm_opportunity_report_action_lead"
+            groups="crm.group_use_lead"
+            sequence="6"/>
+
+</odoo>

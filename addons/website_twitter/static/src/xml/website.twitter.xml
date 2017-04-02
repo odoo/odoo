@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website.Twitter.Tweet">
+        <div class="tweet" t-attf-data-url="http://twitter.com/#{tweet.user.screen_name}/status/#{tweet.id_str}" t-attf-data-tweet-id="#{tweet.id_str}">
+          <div class="left">
+              <img t-att-src="tweet.user.profile_image_url_https"/>
+          </div>
+          <div class="right">
+              <div class="top">
+                  <h4>
+                      <t t-esc="tweet.user.name"/>
+                      <span>
+                          <a t-att-href="'https://twitter.com/' + tweet.user.screen_name" target="_blank"><t t-esc="'@' + tweet.user.screen_name "/></a>
+                      </span>
+                  </h4>
+                  <a class="date" target="_blank" t-attf-href="http://twitter.com/#{tweet.user.screen_name}/status/#{tweet.id_str}"><t t-esc="tweet.created_at"/></a>
+              </div>
+              <div class="bottom"><p><t t-raw="tweet.text"/></p></div>
+          </div>
+        </div>
+    </t>
+    <t t-name="website.Twitter.Scroller">
+             <div class="wrap-row" contenteditable="false">
+                    <div class="twitter-row">
+                        <div class="twitter-scroller">
+                            <div id="scroller1" ></div>
+                            <div id="scroller2" ></div>
+                            <div id="scroller3" ></div>
+                        </div>
+                    </div>
+              </div>
+    </t>
+    <t t-name="website.Twitter.Reload">
+        <button type="button" contenteditable="false" class="btn btn-primary hover-edition-button">Reload</button>
+    </t>
+    <t t-name="website.Twitter.Error">
+        <div class="alert alert-info" contenteditable="false">
+            <t t-esc="data.error"/>
+                <i t-if='!data.nodata' class="fa fa-plus-circle">
+                    <a class="lnk_configure" href="/web#action=website.action_website_configuration">Twitter Configuration</a>
+                </i>
+        </div>
+    </t>
+</templates>

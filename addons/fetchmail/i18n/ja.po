@@ -1,0 +1,354 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * fetchmail
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016
+# ook rio <riokoko5@gmail.com>, 2016
+# Manami Hashi <manami@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "# of emails"
+msgstr "Eメール数"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Actions to Perform on Incoming Mails"
+msgstr "受信Eメールに対する処理"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
+msgid "Active"
+msgstr "有効"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Advanced"
+msgstr "詳細"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Advanced Options"
+msgstr "高度オプション"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Configuration"
+msgstr "設定"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
+msgid "Configure the incoming email gateway"
+msgstr "受信メールゲートウェイを設定"
+
+#. module: fetchmail
+#: selection:fetchmail.server,state:0
+msgid "Confirmed"
+msgstr "確認済"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:137
+#, python-format
+msgid "Connection test failed: %s"
+msgstr "接続テストに失敗しました: %s"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_is_ssl
+msgid ""
+"Connections are encrypted with SSL/TLS through a dedicated port (default: "
+"IMAPS=993, POP3S=995)"
+msgstr "専用ポートを使った接続によって SSL/TLS で暗号化されます (デフォルト：IMAPS=993, POP3S=995)。"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
+msgid "Create a New Record"
+msgstr "新しいレコードを作成する"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
+msgid "Defines the order of processing, lower values mean higher priority"
+msgstr "処理の順序を定義します。値が小さいほど優先度が高い。"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Fetch Now"
+msgstr "いま読み取る。"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_server
+msgid "Hostname or IP of the mail server"
+msgstr "ホスト名あるいはEメールサーバのIP"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
+msgid "ID"
+msgstr "ID"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "IMAP"
+msgstr "IMAP"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "IMAP Server"
+msgstr "IMAP サーバー"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "If SSL required."
+msgstr "SSLは必要ならば"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
+msgid "Inbound Mail Server"
+msgstr "受信メールサーバ"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Incoming Mail Server"
+msgstr "受信メールサーバ"
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+#: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
+msgid "Incoming Mail Servers"
+msgstr "受信メールサーバ"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_attach
+msgid "Keep Attachments"
+msgstr "添付を保持する。"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_original
+msgid "Keep Original"
+msgstr "原本を保持する"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_date
+msgid "Last Fetch Date"
+msgstr "前回の読取日"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "Local Server"
+msgstr "ローカルサーバ"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Login Information"
+msgstr "ログイン情報"
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_message_ids
+msgid "Messages"
+msgstr "メッセージ"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_name
+msgid "Name"
+msgstr "名称"
+
+#. module: fetchmail
+#: selection:fetchmail.server,state:0
+msgid "Not Confirmed"
+msgstr "未確認"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_action_id
+msgid ""
+"Optional custom server action to trigger for each incoming mail, on the "
+"record that was created or updated by this mail"
+msgstr "受信するEメールが作成したレコードによって、カスタムサーバの実行を起動するかどうかの選択"
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "送信メール"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "POP"
+msgstr "POP"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "POP Server"
+msgstr "POPサーバ"
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_server
+msgid "POP/IMAP Server"
+msgstr "POP/IMAPサーバ"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "POP/IMAP Servers"
+msgstr "POP/MAPサーバ"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_password
+msgid "Password"
+msgstr "パスワード"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_port
+msgid "Port"
+msgstr "ポート"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_object_id
+msgid ""
+"Process each incoming mail as part of a conversation corresponding to this "
+"document type. This will create new documents for new conversations, or "
+"attach follow-up emails to the existing conversations (documents)."
+msgstr ""
+"受信Eメールを、この文書タイプに対応する交信の一部として処理する。\r\n"
+"\r\n"
+"そうすると、新しい交信のための新しい文書を作成するか、既存の交信（文書）への追跡Eメールを添付します。"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Reset Confirmation"
+msgstr "確認をリセット"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "SSL"
+msgstr "SSL"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_is_ssl
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_script
+msgid "Script"
+msgstr "スクリプト"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Search Incoming Mail Servers"
+msgstr "受信メールサーバを検索"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Server & Login"
+msgstr "サーバとログイン"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_action_id
+msgid "Server Action"
+msgstr "サーバアクション"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Server Information"
+msgstr "サーバ情報"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_server
+msgid "Server Name"
+msgstr "サーバ名"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_priority
+msgid "Server Priority"
+msgstr "サーバの優先度"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_type
+msgid "Server Type"
+msgstr "サーバタイプ"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Server type IMAP."
+msgstr "サーバタイプ IMAP"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Server type POP."
+msgstr "サーバタイプPOP"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_state
+msgid "Status"
+msgstr "ステータス"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Test & Confirm"
+msgstr "テスト・確認"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
+msgid "Username"
+msgstr "ユーザ名"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
+msgid ""
+"Whether a full original copy of each email should be kept for reference and "
+"attached to each processed message. This will usually double the size of "
+"your message database."
+msgstr "Eメールの原本を保存して、処理済みメッセージを添付するかどうかの指定。これを指定すると、メッセージ・データベースのサイズが倍になります。"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
+msgid ""
+"Whether attachments should be downloaded. If not enabled, incoming emails "
+"will be stripped of any attachments before being processed"
+msgstr "添付ファイルをダウンロードするかどうか。これを指定しないと，Eメールを受信する前に添付ファイアは外されます。"

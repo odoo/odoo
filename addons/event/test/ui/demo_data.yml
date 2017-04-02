@@ -1,0 +1,24 @@
+-
+  I create event registation record to call event onchange and partner onchange.
+-
+  !record {model: event.registration, id: reg_0_1}:
+    event_id: event_0
+    partner_id: base.res_partner_1
+    name: 'Ticket for Concert'
+-
+  I create event record to call product onchange and team onchange.
+-
+  !record {model: event.event, id: event_2}:
+    product_id: event_product_2
+    name: 'Conference on ERP Buisness'
+-
+  I confirm event from wizard.
+-
+  !python {model: event.confirm, id: False}: |
+    wizard = self.with_context(event_ids=[ref("event_2")]).create({})
+    wizard.confirm()
+-
+  I call close registration process.
+-
+  !python {model: event.registration, id: reg_0_2}: |
+    self.button_reg_close()

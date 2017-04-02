@@ -1,0 +1,180 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product_expiry
+# 
+# Translators:
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
+msgid "<span class=\"pull-right\">Expiry Date</span>"
+msgstr "<span class=\"pull-right\">Дата окончания</span>"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
+msgid "Alert Date"
+msgstr "Дата предупреждения"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_use_date
+msgid "Best before Date"
+msgstr "Срок годности"
+
+#. module: product_expiry
+#: model:product.product,name:product_expiry.product_product_pain
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr "Хлеб"
+
+#. module: product_expiry
+#: model:product.product,name:product_expiry.product_product_lait
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "Коровье молоко"
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid "Dates"
+msgstr "Даты"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_life_date
+msgid "End of Life Date"
+msgstr "Дата конца жизни"
+
+#. module: product_expiry
+#: model:product.product,name:product_expiry.product_product_jambon
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camembert"
+msgstr "Французский сыр Камамбер"
+
+#. module: product_expiry
+#: model:product.product,name:product_expiry.product_product_from
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Ветчина"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr "Партия/Серия"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
+msgid "Product Alert Time"
+msgstr "Время оповещения товара"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
+msgid "Product Life Time"
+msgstr "Время жизни продукции"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_removal_time
+msgid "Product Removal Time"
+msgstr "Время удаления продукта"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
+msgstr "Шаблон Продукта"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_use_time
+msgid "Product Use Time"
+msgstr "Время использования продукта"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr "Статистика"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_removal_date
+msgid "Removal Date"
+msgstr "Дата удаления"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
+msgid ""
+"This is the date on which an alert should be notified about the goods with "
+"this Serial Number."
+msgstr ""
+"Это дата, на которую посылается оповещение о товаре с этим серийным номером."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
+msgid ""
+"This is the date on which the goods with this Serial Number may become "
+"dangerous and must not be consumed."
+msgstr ""
+"Это дата, на которую товар с этим серийным номером может стать опасным и не "
+"должен потребляться."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant_removal_date
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock."
+msgstr ""
+"Это дата, на которую товары с этим серийным номером должны быть удалены из "
+"запаса."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr ""
+"Это дата, на которую товар с этим серийным номером начинается ухудшаться, "
+"еще не будучи опасным."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
+"При присвоении нового серийного номера, это количество дней до оповещения."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"При присвоении нового серийного номера, это количество дней , прежде чем "
+"товар может стать опасным и не должен потребляться."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
+"При присвоении нового серийного номера, это количество дней до того, как "
+"товары должны быть удалены из запаса."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+"При присвоении нового серийного номера, это количество дней, прежде чем "
+"товар начинает ухудшаться, еще не будучи опасным."

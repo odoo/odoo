@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record model="ir.config_parameter" id="google_app_key">
+            <field name="key">website_slides.google_app_key</field>
+            <field name="value">AIzaSyDOWlmDW-7DbLmOR9ZsT5AOEXf4n6TFwQA</field>
+            <field name="group_ids" eval="[(4, ref('base.group_system'))]" />
+        </record>
+
+        <record id="website_menu_slides" model="website.menu">
+            <field name="name">Presentations</field>
+            <field name="url">/slides</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">50</field>
+        </record>
+
+        <record id="slide_template_published" model="mail.template">
+            <field name="name">Slide Published</field>
+            <field name="subject">New ${object.slide_type} published on ${object.channel_id.name}</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>
+    A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}
+</p>
+<p style="text-align: center; margin-top: 10px;">
+    <a href="${object.website_url}">
+        <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:150px; background-color: #cccccc; margin: 16px;">
+    </a>
+</p>
+<p style="text-align: center; margin-top: 10px;">
+    <a style="-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px" class="o_default_snippet_text" href="${object.website_url}">
+        View <strong>${object.name}</strong>
+    </a>
+</p>
+]]></field>
+        </record>
+
+        <record id="slide_template_shared" model="mail.template">
+            <field name="name">Slide Shared</field>
+            <field name="subject">${user.name} shared a ${object.slide_type} with you!</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${ctx['email']}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>
+    ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!
+</p>
+<p style="text-align: center; margin-top: 10px;">
+    <a href="${object.website_url}">
+        <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:150px; background-color: #cccccc; margin: 16px;">
+    </a>
+</p>
+<p style="text-align: center; margin-top: 10px;">
+    <a style="-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px" class="o_default_snippet_text" href="${object.website_url}">
+        View <strong>${object.name}</strong>
+    </a>
+</p>
+]]></field>
+        </record>
+
+        <record model="slide.channel" id="channel_public">
+            <field name="name">Public Channel</field>
+            <field name="promote_strategy">most_viewed</field>
+            <field name="website_published" eval="True"/>
+            <field name="visibility">public</field>
+            <field name="description">Default channel for slides, all public users can access content of this channel.</field>
+        </record>
+        <record model="slide.channel" id="channel_partial">
+            <field name="name">Partner Channel</field>
+            <field name="website_published" eval="True"/>
+            <field name="group_ids" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+            <field name="upload_group_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="visibility">partial</field>
+            <field name="description">Used to publish slides in partner network privately.</field>
+        </record>
+        <record model="slide.channel" id="channel_private">
+            <field name="name">Employee Channel</field>
+            <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="visibility">private</field>
+            <field name="description">Used to publish internal slides of company.</field>
+        </record>
+
+        <!-- Channel subtypes -->
+        <record id="mt_channel_slide_published" model="mail.message.subtype">
+            <field name="name">Presentation Published</field>
+            <field name="res_model">slide.channel</field>
+            <field name="default" eval="True"/>
+            <field name="description">Presentation Published</field>
+        </record>
+
+        <!-- jump to Channel on installation complete -->
+        <record id="action_open_channels" model="ir.actions.act_url">
+            <field name="name">Channels</field>
+            <field name="target">self</field>
+            <field name="url" eval="'/slides'"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_channels"/>
+            <field name="type">automatic</field>
+            <field name="state">open</field>
+        </record>
+    </data>
+</odoo>

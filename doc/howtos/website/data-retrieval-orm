@@ -1,0 +1,30 @@
+# HG changeset patch
+# Parent f0a3629abb17ca9f4dddd8885321d9ca5de14b55
+# Parent  4c1c3d77ba8ad35dc759405a0db39a6eae943b0f
+
+diff --git a/academy/controllers.py b/academy/controllers.py
+--- a/academy/controllers.py
++++ b/academy/controllers.py
+@@ -4,8 +4,9 @@ from odoo import http
+ class Academy(http.Controller):
+     @http.route('/academy/academy/', auth='public')
+     def index(self, **kw):
++        Teachers = http.request.env['academy.teachers']
+         return http.request.render('academy.index', {
+-            'teachers': ["Diana Padilla", "Jody Caroll", "Lester Vaughn"],
++            'teachers': Teachers.search([])
+         })
+ 
+ #     @http.route('/academy/academy/objects/', auth='public')
+diff --git a/academy/templates.xml b/academy/templates.xml
+--- a/academy/templates.xml
++++ b/academy/templates.xml
+@@ -3,7 +3,7 @@
+         <template id="index">
+             <title>Academy</title>
+             <t t-foreach="teachers" t-as="teacher">
+-              <p><t t-esc="teacher"/></p>
++                <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
+             </t>
+         </template>
+         <!-- <template id="object"> -->

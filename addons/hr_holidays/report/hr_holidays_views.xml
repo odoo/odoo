@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="view_holiday_pivot" model="ir.ui.view">
+            <field name="name">hr.holidays.report_pivot</field>
+            <field name="model">hr.holidays</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <pivot string="Leaves Summary">
+                    <field name="employee_id" type="row"/>
+                    <field name="type" type="row"/>
+                    <field name="date_from" type="col"/>
+                    <field name="number_of_days" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_holiday_graph" model="ir.ui.view">
+            <field name="name">hr.holidays.report_graph</field>
+            <field name="model">hr.holidays</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <graph string="Leaves Summary">
+                    <field name="employee_id"/>
+                    <field name="type"/>
+                    <field name="number_of_days" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="action_hr_available_holidays_report" model="ir.actions.act_window">
+            <field name="name">Leaves Analysis</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,pivot,calendar,form</field>
+            <field name="view_id"></field>  <!-- force empty -->
+            <field name="context">{'search_default_leaves':1}</field>
+            <field name="search_view_id" ref="view_hr_holidays_filter"/>
+        </record>
+
+        <record id="action_window_leave_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_holiday_pivot"/>
+            <field name="act_window_id" ref="action_hr_available_holidays_report"/>
+        </record>
+
+        <record id="action_window_leave_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_holiday_graph"/>
+            <field name="act_window_id" ref="action_hr_available_holidays_report"/>
+        </record>
+
+        <menuitem
+            name="Leaves"
+            id="menu_hr_available_holidays_report_tree"
+            action="action_hr_available_holidays_report"
+            parent="menu_hr_holidays_report" sequence="5"/>
+
+</odoo>

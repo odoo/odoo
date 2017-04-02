@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="project_issue_form_view" model="ir.ui.view">
+            <field name="name">project.issue.form.view</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <form>
+                <header>
+                    <field name="stage_id" widget="statusbar" clickable="True"
+                        options="{'fold_field': 'fold'}"/>
+                </header>
+                <sheet string="Issue">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_no_one"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Issue Summary..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="priority" groups="base.group_user" widget="priority"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="email_from"/>
+                            <field name="project_id" context="{'default_use_issues':1}" groups="base.group_user"/>
+                            <field name="task_id" groups="base.group_no_one" context="{'default_project_id':project_id}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" placeholder="Add an internal note..." groups="base.group_user"/>
+                        </page>
+                        <page string="Extra Info" name="extra_info" groups="project.group_project_manager,project.group_project_user">
+                            <group>
+                                <group>
+                                    <field name="id" groups="base.group_no_one"/>
+                                    <field name="day_open"/>
+                                    <field name="day_close"/>
+                                    <field name="legend_blocked" invisible="1"/>
+                                    <field name="legend_done" invisible="1"/>
+                                    <field name="legend_normal" invisible="1"/>
+                                </group>
+                                <group>
+                                    <field name="working_hours_open" widget="float_time"/>
+                                    <field name="working_hours_close" widget="float_time"/>
+                                    <field name="inactivity_days"/>
+                                    <field name="days_since_creation"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="project_issue_tree_view" model="ir.ui.view">
+            <field name="name">project.issue.tree.view</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <tree string="Issue Tracker Tree" decoration-bf="message_needaction==True">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="project_id" groups="base.group_user"/>
+                    <field name="priority" string="Priority" groups="base.group_user"/>
+                    <field name="create_date" string="Creation Date"/>
+                    <field name="user_id"/>
+                    <field name="stage_id" widget="selection" readonly="1"/>
+                    <field name="tag_ids" invisible="1"/>
+                    <field name="task_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_project_issue_filter" model="ir.ui.view">
+            <field name="name">project.issue.search.view</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <search string="Issue Tracker Search">
+                    <field name="name" string="Issue" filter_domain="['|', '|', '|', ('partner_id','child_of',self), ('description','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                    <field name="id"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="user_id"/>
+                    <field name="project_id" groups="base.group_user"/>
+                    <field name="tag_ids"/>
+                    <field name="stage_id" domain="[]"/>
+                    <filter string="My Issues" name="my_issues" domain="[('user_id','=',uid)]"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                    <separator/>
+                    <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
+                    <separator/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand="0" string="Group By" >
+                        <filter string="Assigned to" name="Responsible" context="{'group_by':'user_id'}" />
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}" />
+                        <filter string="Task" context="{'group_by':'task_id'}"/>
+                        <filter string="Priority" context="{'group_by':'priority'}" />
+                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator/>
+                        <filter string="Create Day" context="{'group_by':'create_date:day'}" help="Create Date"/>
+                        <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="project_issue_calendar_view" model="ir.ui.view">
+            <field name="name">project.issue.calendar.view</field>
+            <field name="model">project.issue</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Issues" date_start="date" color="user_id" date_delay="duration">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                </calendar>
+            </field>
+        </record>
+
+
+        <!-- Project Issue Karban View-->
+
+        <record id="project_issue_kanban_view" model="ir.ui.view">
+            <field name="name">project.issue.kanban.view</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column">
+                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
+                    <field name="color"/>
+                    <field name="user_email"/>
+                    <field name="user_id"/>
+                    <field name="date_deadline"/>
+                    <field name="message_needaction_counter"/>
+                    <field name="active"/>
+                    <field name="legend_blocked"/>
+                    <field name="legend_done"/>
+                    <field name="legend_normal"/>
+                    <templates>
+                        <t t-name="kanban-tooltip">
+                           <ul class="oe_kanban_tooltip">
+                              <li><b>Project:</b> <field name="project_id"/></li>
+                           </ul>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
+                                <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <t t-if="widget.editable"><li><a type="edit">Edit Issue</a></li></t>
+                                        <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                    <field name="tag_ids"/>
+                                    <div>
+                                        <b><field name="name"/></b> <br/>
+                                        <field name="partner_id"/> <br/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="priority" widget="priority"/>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                        </t>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        <div class="pull-left" groups="base.group_user">
+                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="project_issue_view_kanban_inherit_no_group_create" model="ir.ui.view">
+            <field name="name">project.issue.view.kanban.inherit.no.group.create</field>
+            <field name="model">project.issue</field>
+            <field name="inherit_id" ref="project_issue.project_issue_kanban_view"/>
+            <field name="mode">primary</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <kanban position="attributes">
+                    <attribute name="group_create">false</attribute>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="project_issue_pivot_view" model="ir.ui.view">
+            <field name="name">project.issue.pivot.view</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <pivot string="Project Issues">
+                    <field name="project_id" type="row"/>
+                    <field name="stage_id" type="col"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="project_issue_graph_view" model="ir.ui.view">
+            <field name="name">project.issue.graph.view</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <graph string="Project Issues" type="bar">
+                    <field name="project_id" type="row"/>
+                    <field name="create_date" interval="month" type="col"/>
+                </graph>
+            </field>
+        </record>
+
+
+        <!-- Feature Requests -->
+        <record id="project_feature_tree_view" model="ir.ui.view">
+            <field name="name">project.issue.tree.view.featured</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <tree string="Feature Tracker Tree" decoration-bf="message_needaction==True">
+                    <field name="id"/>
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name" string="Feature description"/>
+                    <field name="partner_id"/>
+                    <field name="priority" string="Priority"/>
+                    <field name="user_id"/>
+                    <field name="stage_id" widget="selection" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="act_project_project_2_project_issue_all" model="ir.actions.act_window">
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="name">Issues</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph,pivot</field>
+            <field name="context">{
+                    'search_default_project_id': [active_id],
+                    'default_project_id': active_id,
+                }
+            </field>
+            <field name="help" type="html">
+                <p>
+                    The Odoo issues tracker allows you to efficiently manage things
+                    like internal requests, software development bugs, customer
+                    complaints, project troubles, material breakdowns, etc.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_view_issues" model="ir.actions.act_window">
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="name">Issues</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="help" type="html">
+                <p>
+                    The Odoo issues tracker allows you to efficiently manage things
+                    like internal requests, software development bugs, customer
+                    complaints, project troubles, material breakdowns, etc.
+                </p>
+            </field>
+        </record>
+
+        <record id="project_issue_categ_act0" model="ir.actions.act_window">
+            <field name="name">Issues</field>
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,calendar,form,pivot,graph</field>
+            <field name="view_id" eval="False"/>
+            <field name="domain" eval=""/>
+            <field name="context">{'search_default_my_issues': 1}</field>
+            <field name="search_view_id" ref="view_project_issue_filter"/>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('project_issue_view_kanban_inherit_no_group_create')}),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('project_issue_tree_view')}),
+                          (0, 0, {'view_mode': 'calendar', 'view_id': ref('project_issue_calendar_view')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('project_issue_form_view')}),
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('project_issue_graph_view')}),
+                          ]"/>
+            <field name="help" type="html">
+                <p>
+                    The Odoo issues tracker allows you to efficiently manage things
+                    like internal requests, software development bugs, customer
+                    complaints, project troubles, material breakdowns, etc.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_project_issue_track" name="Issues" parent="project.menu_project_management"
+                action="project_issue_categ_act0" sequence="15"/>
+</odoo>

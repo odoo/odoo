@@ -1,0 +1,32 @@
+-
+  Purchase user can also cancel order therfore test with that user which have Purchase user rights.
+-
+  !context
+    uid: 'res_users_purchase_user'
+-
+   In order to test the cancel flow, I start it from canceling confirmed purchase order.
+-
+  I confirm the purchase order.
+-
+  !python {model: purchase.order, id: purchase_order_5}: |
+    self.button_confirm()
+-
+  I check the "Approved" status  after confirmed RFQ.
+-
+  !assert {model: purchase.order, id: purchase_order_5}:
+    - state == 'purchase'
+-
+  First I cancel  receptions related to this order if order shipped.
+-
+  !python {model: purchase.order, id: purchase_order_5}: |
+    self.env['stock.picking'].browse([picking.id for picking in self.picking_ids]).action_cancel()
+-
+  Now I am able to cancel purchase order.
+-
+  !python {model: purchase.order, id: purchase_order_5}: |
+    self.button_cancel()
+-
+  I check that order is cancelled.
+-
+  !assert {model: purchase.order, id: purchase_order_5}:
+    - state == 'cancel'

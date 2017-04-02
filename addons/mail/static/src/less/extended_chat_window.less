@@ -1,0 +1,34 @@
+.o_chat_window {
+    &.o_thread_less {
+        .o_chat_search_input {
+            .o-flex-display();
+            padding: 5px;
+            > span {
+                .o-flex(0, 0, auto);
+            }
+            > input {
+                margin-left: 5px;
+                .o-flex(1, 1, 100%);
+            }
+        }
+        .o_mail_thread {
+            background-color: lightgray;
+        }
+        .o_chat_composer {
+            display: none;
+        }
+    }
+
+    .o_chat_composer {
+        .o_composer {
+            border-top: 1px solid lightgray;
+            .o_composer_input textarea {
+                display: block;
+                padding: 5px;
+            }
+        }
+        .o_composer_attachments_list, .o_composer_buttons {
+            display: none;
+        }
+    }
+}

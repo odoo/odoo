@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sales_team.team_sales_department" model="crm.team">
+            <field name="use_leads">True</field>
+            <field name="alias_name">sales</field>
+        </record>
+
+        <!--default alias for leads-->
+        <record id="mail_alias_lead_info" model="mail.alias">
+            <field name="alias_name">info</field>
+            <field name="alias_model_id" ref="model_crm_lead"/>
+            <field name="alias_user_id" ref="base.user_root"/>
+            <field name="alias_parent_model_id" ref="model_crm_team"/>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <record id="module_install_notification" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="mail.channel_all_employees"/>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">CRM application installed!</field>
+            <field name="body"><![CDATA[<p>From the top Sales menu you can track leads and opportunities, get accurate forecast on your sales pipeline, plan meetings, get realtime statistics and efficiently organize the communication with your prospects.</p>
+<p>To manage quotations and sale orders, install the "Sales Management" application.</p>]]></field>
+        </record>
+
+        <!-- opportunities' lost causes -->
+        <record id="lost_reason_1" model="crm.lost.reason">
+            <field name="name">Too expensive</field>
+        </record>
+        <record id="lost_reason_2" model="crm.lost.reason">
+            <field name="name">We don't have people/skills</field>
+        </record>
+        <record id="lost_reason_3" model="crm.lost.reason">
+            <field name="name">Not enough stock</field>
+        </record>
+    </data>
+
+</odoo>

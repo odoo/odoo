@@ -1,0 +1,69 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_vat
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2016\n"
+"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "Bolag"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr ""
+"Om markerad, kommer företags momsregistreringsnummer helt valideras mot EU: "
+"s VIES tjänst snarare än via en enkel formatvalidering (kontrollsumma)."
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Företag"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:131
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+"Moms-registreringsnumret [%s] for organisationen [%s] verkar inte stämma. \n"
+"Notera: det förväntade formatet är %s"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:130
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
+"Moms-registreingsnumret [%s] för organisationen [%s] klarade inte VIES VAT-"
+"kontroll eller följer inte formatet %s."
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
+msgid "VIES VAT Check"
+msgstr "VIES VAT-kontroll"
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "e.g. SE5577472701"

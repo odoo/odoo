@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template">
+    <t t-name="PlannerLauncher">
+        <li class="o_planner_systray hidden-xs">
+            <div class="progress"><div class="progress-bar"/></div>
+        </li>
+    </t>
+
+    <div t-name="PlannerDialog" class="modal" id="PlannerDialog" tabindex="-1" role="dialog" aria-labelledby="PlannerDialogLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg o_planner_dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="o_planner_title_block">
+                        <h4 class="o_currently_shown_page"/>
+                    </div><div class="o_planner_progress_block">
+                        <div class="progress"><div class="progress-bar"/></div> <div class="o_progress_text"></div>
+                    </div><div class="o_planner_close_block"><button aria-hidden="true" class="close" data-dismiss="modal" type="button"><span class="fa fa-close"></span></button></div>
+                </div>
+                <div class="modal-body">
+                    <div class="o_planner_content_wrapper">
+                        <div class="o_planner_menu">
+                            <ul role="menu" aria-labelledby="dLabel"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="o_planner_header_left">
+                        <button class="btn btn-primary mark_as_done">
+                            <i class="fa fa-square-o"></i>
+                            <span>Mark As Done</span>
+                        </button>
+                    </div><div class="o_planner_header_right text-right">
+                        <a class="btn btn-next">
+                            Next step
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <t t-name="PlannerMenu">
+        <li t-foreach="orphan_pages" t-as="orphan_page">
+            <a t-att-href="'#' + menu_item_page_map[orphan_page]"><span class="fa fa-fw"/><t t-esc="orphan_page"/></a>
+        </li>
+        <t t-foreach="menu_categories" t-as="menu_category">
+            <h4><i t-att-class="'fa ' + menu_category.classes"/><t t-esc="menu_category.name"/></h4>
+            <li t-foreach="menu_category.menu_items" t-as="menu_item">
+                <a t-att-href="'#' + menu_item_page_map[menu_item]" disable_anchor="true"><span class="fa fa-fw"/><t t-esc="menu_item"/></a>
+            </li>
+        </t>
+    </t>
+</templates>

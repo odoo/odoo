@@ -1,0 +1,15 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="website_mail.thread_message">
+        <li class="media" t-att-id="'message-' + id">
+            <div class="media-body">
+                <img class="media-object pull-left img-circle" t-att-src="image_url" style="width: 50px; margin-right: 10px;"/>
+                <div class="media-body">
+                    <h5 class="media-heading">
+                        <span t-esc="author"/> <small>just now</small>
+                    </h5>
+                    <div t-raw="body"/>
+                </div>
+            </div>
+        </li>
+    </t>
+</templates>

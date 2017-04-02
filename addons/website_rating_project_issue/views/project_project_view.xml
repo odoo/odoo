@@ -1,0 +1,17 @@
+<odoo>
+    <record id="edit_project_inherit_website_rating_project_issue" model="ir.ui.view">
+        <field name="name">project.project.inherit.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr='//div[@name="button_box"]/*[1]' position='before'>
+                <button class="oe_stat_button" name="website_publish_button"
+                    type="object" icon="fa-globe" attrs="{'invisible': [('rating_status', '=', 'no')]}">
+                    <field name="website_published" widget="website_button"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

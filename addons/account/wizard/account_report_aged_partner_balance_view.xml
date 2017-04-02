@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_aged_balance_view" model="ir.ui.view">
+        <field name="name">Aged Partner Balance</field>
+        <field name="model">account.aged.trial.balance</field>
+        <field name="arch" type="xml">
+            <form string="Report Options">
+                <separator string="Aged Partner Balance"/>
+                <label string="Aged Partner Balance is a more detailed report of your receivables by intervals. Odoo calculates a table of credit balance by start Date. So if you request an interval of 30 days Odoo generates an analysis of creditors for the past month, past two months, and so on. "/>
+                <group col="4">
+                    <field name="date_from"/>
+                    <field name="period_length"/>
+                    <newline/>
+                    <field name="result_selection" widget="radio"/>
+                    <field name="target_move" widget="radio"/>
+                </group>
+                <field name="journal_ids" required="0" invisible="1"/>
+                <footer>
+                    <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_aged_balance_view" model="ir.actions.act_window">
+        <field name="name">Aged Partner Balance</field>
+        <field name="res_model">account.aged.trial.balance</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="account_aged_balance_view"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_aged_trial_balance"
+        name="Aged Partner Balance"
+        action="action_account_aged_balance_view"
+        parent="account.menu_finance_legal_statement"/>
+
+</odoo>

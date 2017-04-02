@@ -1,0 +1,4232 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project
+# 
+# Translators:
+# William Surya Permana <zarambie_game@yahoo.com>, 2016
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Febrasari Almania <febrasari.almania@gmail.com>, 2016
+# Deddy Ddr <deddy.ddr@gmail.com>, 2016
+# Edy Kend <edy@azmall.co.id>, 2016
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
+# Dhaman <dhaman@indonesian-odoo.com>, 2016
+# alfieqashwa <alfieqashwa@gmail.com>, 2016
+# aryge <gustanto.ary@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-10-10 08:42+0000\n"
+"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"Last-Translator: aryge <gustanto.ary@gmail.com>, 2017\n"
+"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_module_install_project
+msgid ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Your Odoo Project application is up and running</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">What’s next?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Try creating a task by sending an email to </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Invite new users</span></a></span>\n"
+"                                        <span>to collaborate</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">project planner</span></a></span>\n"
+"                                <span> to activate extra features</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Track hours with timesheets,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Plan tasks and resources with forecasts,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Bill time on tasks or issues,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>And much more...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
+"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us at \n"
+"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
+"                                how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
+"                                </span><span> or with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
+msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
+msgid "# Days to Assign"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
+msgid "# Days to Close"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
+msgid "# Days to Deadline"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_res_partner_task_count
+msgid "# Tasks"
+msgstr "# Kegiatans"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
+msgid "# Working Days"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
+msgid "# of Tasks"
+msgstr "# Kegiatans"
+
+#. module: project
+#: code:addons/project/models/project.py:240
+#: code:addons/project/models/project.py:410
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copy)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"(Un)archiving a project automatically (un)archives its tasks and issues. Do "
+"you want to proceed?"
+msgstr ""
+"(PBB) pengarsipan proyek secara otomatis (PBB) Arsip tugas dan masalah. "
+"Apakah Anda ingin melanjutkan?"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "- The Odoo Team"
+msgstr "-Tim Odoo"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "1. Learn about Tasks, Issues and Timesheets."
+msgstr "1. Pelajari tentang tugas, isu-isu dan Timesheets."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"2. Now, take some time to list <strong>the Projects you'll need:</strong>"
+msgstr ""
+"2. sekarang, luangkan waktu untuk daftar <strong>proyek-proyek yang Anda "
+"perlukan:</strong>"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:72
+#, python-format
+msgid ""
+"<b>Assign the task</b> to someone. <i>You can create and invite a new user "
+"on the fly.</i>"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:83
+#, python-format
+msgid "<b>Click the save button</b> to apply your changes to the task."
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:48
+#, python-format
+msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:97
+#, python-format
+msgid ""
+"<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:54
+#, python-format
+msgid "<b>Star tasks</b> to mark team priorities."
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<i class=\"fa fa-user\"/> Person Responsible"
+msgstr "<i class=\"fa fa-user\"></i>Orang yang bertanggung jawab"
+
+#. module: project
+#: code:addons/project/models/project.py:122
+#, python-format
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        Documents are attached to the tasks and issues of your project.</p><p>\n"
+"                        Send messages or log internal notes with attachments to link\n"
+"                        documents to your project.\n"
+"                    </p>"
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">Dokumen yang melekat tugas dan isu-isu"
+" proyek Anda.</p><p>Mengirim pesan atau log catatan internal dengan lampiran"
+" link dokumen ke proyek Anda.</p>"
+
+#. module: project
+#: code:addons/project/models/project.py:150
+#, python-format
+msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">as </span>"
+msgstr "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">sebagai</span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"></span>Instal sekarang"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat"
+msgstr "<span class=\"fa fa-comment-o\"></span>Situs web Live Chat"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
+msgstr "<span class=\"fa fa-comment-o\"></span>Situs web Live Chat pada"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<span class=\"fa fa-envelope-o\"/> Email Our Project Expert"
+msgstr "<span class=\"fa fa-envelope-o\"></span>Email ahli proyek kami"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use"
+" projects:"
+msgstr ""
+"<span class=\"fa fa-thumbs-o-down\"></span><strong>Wrong Way</strong> untuk "
+"menggunakan proyek:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"fa fa-thumbs-o-up\"/> The <strong>Right Way</strong> to use "
+"projects:"
+msgstr ""
+"<span class=\"fa fa-thumbs-o-up\"></span><strong>Cara yang tepat</strong> "
+"untuk menggunakan proyek:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "<span class=\"o_label\">Documents</span>"
+msgstr "<span class=\"o_label\">Dokumen</span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-laptop\"/>\n"
+"                                            <strong> Screen Customization</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-laptop\"></span>\n"
+"                                            <strong>Layar kustomisasi</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-mobile\"/>\n"
+"                                            <strong> From your Mobile phone</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-mobile\"></span>\n"
+"                                            <strong>Dari ponsel Anda</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> Create Custom Reports</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-pencil-square-o\"></span>\n"
+"                                            <strong>Membuat laporan kustom</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-puzzle-piece\"/>\n"
+"                                            <strong> Via Chrome extension</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-puzzle-piece\"></span>\n"
+"                                            <strong>Melalui ekstensi Chrome</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-sitemap\"/>\n"
+"                                            <strong> Workflow Customization</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-sitemap\"></span>\n"
+"                                            <strong>Kustomisasi alur kerja</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-tasks\"/>\n"
+"                                            <strong> Directly in Odoo</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-tasks\"></span>\n"
+"                                            <strong>Langsung di Odoo</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> Exercise 1</strong><br/>\n"
+"                                            <span class=\"small\">Check Workload</span>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"></span>\n"
+"                                            <strong>Olahraga 1</strong><br/>\n"
+"                                            <span class=\"small\">Periksa beban kerja</span>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> Exercise 2</strong><br/>\n"
+"                                            <span class=\"small\">Delay to close an Issue</span>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"></span>\n"
+"                                            <strong>Latihan 2</strong><br/>\n"
+"                                            <span class=\"small\">Penundaan untuk menutup masalah</span>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-check-square-o\"/>\n"
+"                                        <strong> Tasks</strong>\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-check-square-o\"></span>\n"
+"                                        <strong>Tugas</strong>\n"
+"                                    </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-clock-o\"/>\n"
+"                                        <strong> Timesheets</strong>\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-clock-o\"></span>\n"
+"                                        <strong>Timesheets</strong>\n"
+"                                    </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-exclamation-circle\"/>\n"
+"                                        <strong> Issues</strong>\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-exclamation-circle\"></span>\n"
+"                                        <strong>Masalah</strong>\n"
+"                                    </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid ""
+"<span>(*) This configuration is related to the company you're logged "
+"into.</span>"
+msgstr ""
+"<span>(*) Konfigurasi berikut berkaitan dengan perusahaan di mana anda "
+"login.</span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span><strong>Contact us to customize your application:</strong><br/>\n"
+"                                    We have special options for unlimited number of customizations !\n"
+"                                    </span>"
+msgstr ""
+"<span><strong>Hubungi kami untuk menyesuaikan aplikasi "
+"Anda:</strong><br/>Kami memiliki pilihan khusus untuk jumlah tak terbatas "
+"penyesuaian!</span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span><strong>We are here to help you:</strong> if you don't succeed in achieving your favorite KPIs, contact us and we can help you create your custom reports.\n"
+"                                    </span>"
+msgstr ""
+"<span><strong>Kami di sini untuk membantu Anda:</strong> jika Anda tidak "
+"berhasil dalam mencapai KPI favorit Anda, hubungi kami dan kami dapat "
+"membantu Anda membuat laporan kustom.</span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Adjourn (5 min)</strong>\n"
+"                                Conclude the meeting with upbeat statements and positive input on project accomplishments. Always reinforce teamwork and encourage all member to watch out for each other to ensure the project is successful."
+msgstr ""
+"<strong>Menunda (5 menit)</strong>\n"
+"                                Menyimpulkan pertemuan dengan pernyataan optimis dan masukan positif pada proyek prestasi. Selalu memperkuat kerja sama tim dan mendorong semua anggota untuk berhati-hati untuk memastikan proyek ini sukses."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Critical items (10 min)</strong>\n"
+"                                Upon completing the project status review session, summarize the critical items."
+msgstr ""
+"<strong>Item penting (10 menit)</strong>\n"
+"                                Setelah menyelesaikan status proyek review sesi, meringkas item penting."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> New business issues (5 min)</strong>\n"
+"                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  issue as you walk through the project status session. Not every  issue warrants spending time here, so keep discussions to a minimum."
+msgstr ""
+"<strong>Masalah bisnis baru (5 menit)</strong>\n"
+"                                Anda mungkin telah belajar sesuatu selama seminggu yang mempengaruhi proyek.  Berbagi berita di awal pertemuan untuk membantu anggota tim mempertimbangkan masalah sebagai Anda berjalan melalui sidang status proyek. Tidak setiap masalah Waran menghabiskan waktu di sini, jadi ingatlah diskusi untuk minimum."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong> Prepare an agenda (and keep to it)</strong>"
+msgstr "<strong>Siapkan agenda (dan terus untuk itu)</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Project plan status review (20 min) </strong>\n"
+"                                Walk through your project plan and allow each team member to provide a brief status of assignments due this week and tasks planned for the next two  weeks. You want to know whether tasks are on track and if any will miss  their projected deadline. You also want to allow the team member to share  any special considerations that might affect other tasks or members of  the project. Carefully manage this part because some team members will  want to pontificate and spend more time than is really needed. Remember, you’re the project manager."
+msgstr ""
+"<strong> rencana Proyek Status review (20 menit) </strong>\n"
+"                                Berjalan melalui rencana proyek Anda dan memungkinkan setiap anggota tim untuk memberikan status singkat tugas karena minggu ini dan tugas-tugas yang direncanakan untuk dua minggu ke depan. Anda ingin tahu apakah tugas berada di jalur dan jika ada akan kehilangan tenggat waktu mereka diproyeksikan. Anda juga ingin memungkinkan anggota tim untuk berbagi pertimbangan khusus yang mungkin mempengaruhi tugas atau anggota proyek lainnya. Hati-hati mengelola bagian ini karena beberapa anggota tim akan ingin kepausannya dan menghabiskan lebih banyak waktu daripada yang benar-benar dibutuhkan. Ingat, Anda adalah manajer proyek."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Q&amp;A and discussion time (10 min)</strong>\n"
+"                                Always give your team time to ask questions on issues that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting."
+msgstr ""
+"<strong>Q &amp; A dan diskusi waktu (10 menit)</strong>\n"
+"                                Selalu memberikan waktu tim Anda untuk mengajukan pertanyaan pada isu-isu yang tidak dibahas. Ini memberi Anda kesempatan lain untuk memperkuat poin-poin penting yang Anda telah diambil selama seminggu atau ditemukan selama pertemuan."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Roll call (5 min)</strong>\n"
+"                                Let everyone know who is in attendance before starting. This is important  for remote team members who have dialled in and will save you time later."
+msgstr ""
+"<strong>Roll call (5 menit)</strong>\n"
+"                                Biarkan semua orang tahu siapa yang hadir sebelum memulai. Hal ini penting untuk anggota remote tim yang telah diputar di dan akan menghemat waktu kemudian."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Summary and follow-up items (5 min)</strong>\n"
+"                                Always wrap up with a project status summary and a list of action items  dentified in the meeting to help move the project along."
+msgstr ""
+"<strong>Ringkasan dan tindak lanjut item (5 menit)</strong>\n"
+"                                Selalu membungkus dengan status proyek ringkasan dan daftar tindakan item dentified dalam pertemuan untuk membantu bergerak proyek bersama."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
+"                            It replaces the standard Description area in Tasks and Issues and is extremely useful for several cases."
+msgstr ""
+"<strong>Fitur yang hebat di Odoo adalah integrasi dari Notepad kolaboratif "
+"yang disebut Etherpad.</strong><br/>Ia menggantikan daerah Deskripsi standar"
+" dalam tugas dan isu-isu dan sangat berguna untuk beberapa kasus."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>A problem or request from a customer</strong> that needs to be "
+"identified, solved and followed up asap."
+msgstr ""
+"<strong>A problem atau permintaan dari pelanggan</strong> yang perlu "
+"diidentifikasi, dipecahkan dan ditindaklanjuti asap."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>About Employees:</strong>"
+msgstr "<strong>Tentang karyawan:</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Add a Deadline</strong><br/>\n"
+"                                    The deadline will help you determine if a task or issue is progressing as expected  and to anticipate its next update."
+msgstr ""
+"<strong>Tambahkan tenggat waktu</strong><br/>Batas waktu akan membantu Anda "
+"menentukan jika sebuah tugas atau masalah maju seperti yang diharapkan dan "
+"untuk mengantisipasi yang update berikutnya."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>An internal activity</strong> that should be done within a defined "
+"period of time."
+msgstr ""
+"<strong>Kegiatan internal</strong> yang dilakukan dalam jangka waktu yang "
+"ditetapkan."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Analyze reports</strong> (every a year)"
+msgstr "<strong>Menganalisis laporan</strong> (setiap tahun)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Approve your Timesheets</strong> (every week)"
+msgstr "<strong>Menyetujui Timesheets Anda</strong> (setiap minggu)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Ask participants to prepare</strong><br/>\n"
+"                                To run an effective meeting, prepare participants beforehand. Inform them of how they are expected to contribute."
+msgstr ""
+"<strong>Minta peserta untuk mempersiapkan</strong><br/>Untuk menjalankan "
+"sebuah pertemuan yang efektif, mempersiapkan peserta terlebih dahulu. "
+"Menginformasikan mereka tentang bagaimana mereka diharapkan untuk "
+"berkontribusi."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Be careful about the messages you send</strong><br/>\n"
+"                                    Sending a message through Odoo will automatically send an email containing your message to all the followers including internal employees, external users or customers."
+msgstr ""
+"<strong>Berhati-hati tentang mengirim pesan</strong><br/>Mengirim pesan "
+"melalui Odoo secara otomatis akan mengirim email yang berisi pesan untuk "
+"semua pengikut yang termasuk karyawan internal, eksternal pengguna atau "
+"pelanggan."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Billing</strong>"
+msgstr "Pembayaran"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Choose the right day</strong><br/>\n"
+"                                    Avoid Monday mornings as your regular meeting day; choosing to meet later in the week gives participants time to get ready for the meeting and to work toward specific objectives in the days that follow."
+msgstr ""
+"<strong>Pilih hari yang tepat</strong><br/>Menghindari pagi hari Senin "
+"sebagai hari pertemuan rutin Anda; memilih untuk memenuhi kemudian dalam "
+"seminggu memberikan peserta waktu untuk bersiap-siap untuk pertemuan dan "
+"bekerja menuju tujuan tertentu pada hari-hari yang mengikuti."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Click on 'Reporting' on the main menu</strong> and generate "
+"statistics relevent to each profiles:"
+msgstr ""
+"<strong>Klik pada 'Laporan' di menu utama</strong> dan menghasilkan "
+"statistik relevan untuk setiap profil:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Contact us now:</strong><br/>"
+msgstr "<strong>Hubungi kami sekarang:</strong><br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Create tasks and issues by email</strong><br/>\n"
+"                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task or issue in the first stage of the project, with all the email recipients as its default followers."
+msgstr ""
+"<strong>Membuat tugas dan isu-isu melalui email</strong><br/>Dalam Odoo, "
+"setiap proyek memiliki email alias. Jika Anda mengirim email ke alias ini, "
+"itu akan secara otomatis membuat sebuah tugas atau isu di tahap pertama "
+"proyek, dengan semua email penerima sebagai pengikutnya default."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Define a Naming Convention</strong><br/>\n"
+"                                    Add keywords in the 'Task title' field, for example [Customer name] or [Website]. This will help you navigate and search through the dozens of tasks in your project."
+msgstr ""
+"<strong>Mendefinisikan konvensi penamaan</strong><br/>Menambahkan kata kunci"
+" di bidang 'Tugas judul', misalnya [nama pelanggan] atau [Website]. Ini akan"
+" membantu Anda menavigasi dan mencari melalui puluhan tugas-tugas proyek "
+"Anda."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Enter your activities</strong> (every day)"
+msgstr "<strong>Masukkan aktivitas Anda</strong> (setiap hari)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Example: </strong>"
+msgstr "CONTOH"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Exercise:</strong> Try to create a graph with the monthly evolution "
+"of the 'Average delay to close'  of Issues."
+msgstr ""
+"<strong>Latihan:</strong> Mencoba untuk membuat grafik dengan evolusi "
+"bulanan 'rata-rata keterlambatan untuk menutup' masalah."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Exercise:</strong> Try to get a view of the workload for this week "
+"for all your employees (planned hours)."
+msgstr ""
+"<strong>Latihan:</strong> Mencoba untuk mendapatkan pemandangan beban kerja "
+"untuk minggu ini untuk semua karyawan Anda (rencana jam)."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Follow every meeting with a recap email</strong>\n"
+"                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, issues/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously."
+msgstr ""
+"<strong>Ikuti setiap pertemuan dengan email rekap</strong>\n"
+"                                    Segera setelah pertemuan sudah selesai, mempublikasikan Rapat menit dan mendistribusikan mereka jadwal proyek diperbarui, masalah tindakan matriks item, dan dokumen lain yang sesuai. Cobalah untuk menggunakan template yang sama sepanjang pertemuan dan meningkatkan terus menerus."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Follow only what you need</strong><br/>\n"
+"                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks or issues of a project."
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>For issues:</strong>"
+msgstr "<strong>Untuk masalah:</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>For tasks:</strong>"
+msgstr "<strong>Untuk tugas-tugas:</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Getting reports</strong> on what your employees are working on"
+msgstr ""
+"<strong>Mendapatkan laporan</strong> pada apa karyawan Anda bekerja pada"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Getting statistics</strong> on how much time a task takes to be "
+"completed"
+msgstr ""
+"<strong>Mendapatkan Statistik</strong> pada waktu berapa banyak tugas yang "
+"diperlukan untuk diselesaikan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Have Clear Responsibilities</strong><br/>\n"
+"                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, the responsibility for a task can change depending on its stage."
+msgstr ""
+"<strong>Memiliki tanggung jawab yang jelas</strong><br/>Orang yang diberi "
+"tugas bertanggung jawab untuk kemajuan dan avatar mereka ditampilkan dalam "
+"tampilan Kanban untuk referensi cepat. Tentu saja, tanggung jawab tugas "
+"dapat berubah tergantung pada tahap."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>In 'Pull' mode</strong>, tasks ready to progress to the next stage "
+"are just marked  as 'Ready for next stage (using the status icon) by the "
+"person responsible for the current stage. Then, the person responsible for "
+"the next stage  takes the task and moves it to the next stage. This is the "
+"best way to work if you have diluted responsibilities for your Kanban "
+"stages."
+msgstr ""
+"<strong>Dalam modus 'Menarik'</strong>, tugas-tugas yang siap untuk maju ke "
+"tahap berikutnya hanya ditandai sebagai ' siap untuk tahap berikutnya "
+"(menggunakan ikon status) oleh orang yang bertanggung jawab untuk tahap saat"
+" ini. Kemudian, orang yang bertanggung jawab untuk tahap berikutnya "
+"mengambil tugas dan bergerak ke tahap berikutnya. Ini adalah cara terbaik "
+"untuk bekerja jika Anda memiliki diencerkan tanggung-jawab untuk tahap "
+"Kanban Anda."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>In 'Push' mode</strong>, tasks are pushed into the next stage (once "
+"they satisfy all requirements) by the person responsible for the current "
+"stage. This is a simple way to work but only functions well if you work "
+"alone."
+msgstr ""
+"<strong>Dalam modus 'Push'</strong>, tugas didorong ke tahap berikutnya "
+"(setelah mereka memenuhi semua persyaratan) oleh orang yang bertanggung "
+"jawab untuk tahap saat ini. Ini adalah cara sederhana untuk bekerja tetapi "
+"hanya fungsi baik jika Anda bekerja sendirian."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Invoice your customers</strong> (every month)"
+msgstr "<strong>Faktur pelanggan Anda</strong> (setiap bulan)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Invoicing your customers</strong> on Time &amp; Material projects"
+msgstr ""
+"<strong>Faktur pelanggan Anda</strong> pada proyek-proyek waktu &amp; bahan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Need help to structure your projects?</strong><br/>"
+msgstr "<strong>Perlu bantuan untuk struktur proyek Anda?</strong><br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Need help with Timesheets management? Contact us now:</strong><br/>"
+msgstr ""
+"<strong>Perlu bantuan dengan manajemen Timesheets? Hubungi kami "
+"sekarang:</strong><br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Need help with defining your Projects? Contact us now.</strong><br/>"
+msgstr ""
+"<strong>Butuh bantuan dengan mendefinisikan proyek Anda? Hubungi kami "
+"sekarang.</strong><br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Notes</strong>"
+msgstr "Nota"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Prepare yourself as well</strong><br/>\n"
+"                                As project manager, you also need to be fully prepared. There should be no surprises during the meeting. Surprises can undermine your ability to manage the project and cause team members to lose confidence in you."
+msgstr ""
+"<strong>Mempersiapkan diri serta</strong><br/>Sebagai manajer proyek, Anda "
+"juga perlu dipersiapkan sepenuhnya. Harus ada tidak ada kejutan selama "
+"pertemuan. Kejutan dapat merusak kemampuan Anda untuk mengelola proyek dan "
+"menyebabkan anggota tim kehilangan kepercayaan pada Anda."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Recommended actions:</strong>"
+msgstr "<strong>Aksi yang direkomendasikan:</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Rely on the chatter</strong><br/>\n"
+"                                    Below every Task and Issue (or more generally, below every Document in Odoo) is an area called Chatter."
+msgstr ""
+"<strong>Bergantung pada obrolan</strong><br/>Di bawah setiap tugas dan "
+"masalah (atau lebih umumnya, di bawah setiap dokumen dalam Odoo) seluas "
+"disebut obrolan."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Set Priorities</strong><br/>\n"
+"                                    The <i class=\"fa fa-star\"/> is used to indicate priority: in Kanban views, high priority Tasks or Issues will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab."
+msgstr ""
+"<strong>Menetapkan prioritas</strong><br/><i class=\"fa fa-star\"></i> "
+"Digunakan untuk menunjukkan prioritas: pemandangan Kanban, tinggi prioritas "
+"tugas atau masalah akan ditampilkan di atas. Hal ini khususnya berguna jika "
+"Anda menggunakan metodologi Scrum untuk menunjukkan tugas-tugas untuk "
+"minggu. Demikian pula untuk Status, Anda dapat mengubah makna dari indikator"
+" bintang dari tab tahap proyek."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Stages and Requirements</strong> for next stage:"
+msgstr "<strong>Tahap dan persyaratan</strong> untuk tahap berikutnya:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Start with an answer.</strong><br/>\n"
+"                                The worst question to ask is, \"What did you do this week?\" It invariably  generates unnecessary, time-consuming dialogue from team members. Plus, you should already know what everyone on the team did during the week."
+msgstr ""
+"<strong>Mulailah dengan sebuah jawaban.</strong><br/>Pertanyaannya terburuk "
+"untuk bertanya adalah, \"Apa Anda lakukan minggu ini?\" Itu selalu "
+"menghasilkan dialog tidak perlu, memakan waktu dari anggota tim. Plus, Anda "
+"harus sudah tahu apa yang setiap orang dalam tim lakukan selama seminggu."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>There are two ways of managing your Kanban stages:</strong>"
+msgstr "<strong>Ada dua cara untuk mengelola tahap Kanban Anda:</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>To increase the efficiency of your Projects</strong>, you should "
+"have a look at some of our other apps:"
+msgstr ""
+"<strong>Untuk meningkatkan efisiensi proyek Anda</strong>, Anda harus "
+"melihat pada beberapa aplikasi kami yang lain:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>To use Collaborative Notepads</strong>, simply activate the "
+"corresponding option in your"
+msgstr ""
+"<strong>Untuk menggunakan Notes kolaboratif</strong>, cukup Aktifkan opsi "
+"yang sesuai di Anda"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Use Status Indicator</strong><br/>\n"
+"                                    The Status indicator helps you manage Tasks and Issues by giving them one of 3 different colour: Grey, Green or Red. The meaning of these Statuses can be freely configured, for example:"
+msgstr ""
+"<strong>Menggunakan indikator Status</strong><br/>Indikator Status membantu "
+"Anda mengelola tugas-tugas dan masalah dengan memberi mereka salah satu dari"
+" 3 berbeda warna: abu-abu, hijau atau merah. Arti dari status ini dapat "
+"dikonfigurasi, misalnya:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Use Tags</strong><br/>\n"
+"                                    Tags  are complementary to your project stages: they can work as a second  level categorization which is very useful if you have a lot of Tasks or Issues to manage. Also, it becomes very easy to find Tasks or Issues by typing  the Tag into the main Search bar."
+msgstr ""
+"<strong>Menggunakan tag</strong><br/>Tag komplementer untuk tahap proyek "
+"Anda: mereka dapat bekerja sebagai kategorisasi tingkat kedua yang sangat "
+"berguna jika Anda memiliki banyak tugas atau masalah untuk mengelola. Juga, "
+"itu menjadi sangat mudah untuk menemukan masalah atau tugas dengan mengetik "
+"Tag ke dalam bilah penelusuran utama."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>What Activities</strong> would you like to manage?"
+msgstr "<strong>Kegiatan apa</strong> yang akan Anda ingin mengelola?"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>What do you expect</strong> from using Odoo Project?"
+msgstr "<strong>Apa yang Anda harapkan</strong> dari menggunakan Odoo proyek?"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>You have different users writing Tasks descriptions</strong><br/>\n"
+"                            It can quickly become messy if everyone uses his own layout. Etherpad will allow you to create a basic template with a few titles and bullet points, making it much easier for everyone."
+msgstr ""
+"<strong>Anda memiliki pengguna yang berbeda menulis Deskripsi "
+"tugas</strong><br/>Itu dapat dengan cepat menjadi berantakan jika setiap "
+"orang menggunakan tata letak sendiri. EtherPad akan memungkinkan Anda untuk "
+"membuat template dasar dengan beberapa judul dan poin-poin, sehingga lebih "
+"mudah bagi semua orang."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>You have to manage versions and track changes</strong><br/>\n"
+"                            Etherpad auto-saves the document at regular short intervals and users can permanently save specific versions at any time. Plus, a \"time slider\" feature also allows anyone to explore the history of the pad."
+msgstr ""
+"<strong>Anda harus mengelola versi dan melacak "
+"perubahan</strong><br/>EtherPad auto-menyimpan dokumen secara berkala pendek"
+" dan pengguna dapat secara permanen menyimpan versi tertentu setiap saat. "
+"Plus, fitur \"geser waktu\" yang juga memungkinkan setiap orang untuk "
+"menjelajahi sejarah pad."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>You organize distant meetings</strong><br/>\n"
+"                            Etherpad allows users to simultaneously edit a text document, see all of the edits in real-time and with the ability to display each author's text in their own color."
+msgstr ""
+"<strong>Anda mengatur pertemuan jauh</strong><br/>EtherPad memungkinkan "
+"pengguna untuk secara bersamaan mengedit dokumen teks, melihat semua "
+"suntingan secara real-time dan dengan kemampuan untuk menampilkan penulis "
+"setiap teks dalam warna sendiri."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Kamus Python yang akan dievaluasi untuk memberikan nilai default ketika "
+"membuat catatan baru untuk alias ini."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"A customer sends a complaint to support@yourcompany.com: an Issue is "
+"automatically created into a 'Support level 1' project based on the original"
+" email from the customer."
+msgstr ""
+"Pelanggan mengirimkan keluhan ke support@yourcompany.com: masalah secara "
+"otomatis dibuat ke ' Support level 1' proyek berdasarkan email asli dari "
+"pelanggan."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"A project usually involves many stakeholders, be it the project's sponsor, resources, customers or external contractors. But the most important person in a project is usually the Project Manager.<br/>\n"
+"                    In Odoo, the Project Managers have the responsibility of managing the Kanban view: they ensure smooth progression of the projects, minimal downtime between stages and optimal work distribution between resources."
+msgstr ""
+"Proyek ini biasanya melibatkan banyak pihak, baik itu proyek sponsor, sumber"
+" daya, pelanggan atau kontraktor eksternal. Tetapi orang yang paling penting"
+" dalam proyek biasanya manajer proyek.<br/>Dalam Odoo, manajer proyek "
+"memiliki tanggung jawab untuk mengelola tampilan Kanban: mereka memastikan "
+"kelancaran kemajuan proyek, downtime minimal antara tahap dan distribusi "
+"bekerja optimal antara sumber daya."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_kanban_state
+msgid ""
+"A task's kanban state indicates special situations affecting it:\n"
+" * Normal is the default situation\n"
+" * Blocked indicates something is preventing the progress of this task\n"
+" * Ready for next stage indicates the task is ready to be pulled to the next stage"
+msgstr ""
+"Negara kanban Kegiatan mengindikasikan situasi khusus yang mempengaruhi itu:\n"
+" * Normal adalah situasi standar\n"
+" * Diblokir menunjukkan ada sesuatu yang mencegah kemajuan kegiatan ini\n"
+" * Siap untuk tahap berikutnya menunjukkan kegiatan tersebut siap untuk ditarik ke tahap berikutnya"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Accept Emails From"
+msgstr "Menerima email dari"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Account Preferences"
+msgstr "Preferensi account"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:38
+#, python-format
+msgid "Action has a clear description"
+msgstr "Tindakan memiliki gambaran yang jelas"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Activate 'Allow invoicing based on timesheets' from the <i>Human Resources "
+"Settings</i>."
+msgstr ""
+"Aktifkan 'Izinkan faktur berdasarkan timesheets' dari <i>Pengaturan sumber "
+"daya manusia</i>."
+
+#. module: project
+#: model:ir.actions.server,name:project.activate_sample_project
+msgid "Activate Sample Project"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_active
+#: model:ir.model.fields,field_description:project.field_project_task_active
+msgid "Active"
+msgstr "Aktif"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Add a description..."
+msgstr "Menambahkan keterangan..."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:38
+#, python-format
+msgid ""
+"Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
+"Specification &gt; Development &gt; Done</i>"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "Add/remove from favorite"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:55
+#, python-format
+msgid "Added in current sprint"
+msgstr "Ditambahkan pada sprint saat ini"
+
+#. module: project
+#: model:project.task.type,name:project.project_stage_data_2
+msgid "Advanced"
+msgstr "Pencarian Lanjutan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_id
+msgid "Alias"
+msgstr "Alias"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_contact
+msgid "Alias Contact Security"
+msgstr "Alias kontak keamanan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_model
+msgid "Alias Model"
+msgstr "Alias Model"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_name
+msgid "Alias Name"
+msgstr "Nama Alias"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_domain
+msgid "Alias domain"
+msgstr "Domain alias"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_model_id
+msgid "Aliased Model"
+msgstr "Alias Model"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Also, lead by example. When your team members see how prepared you are it "
+"will  reinforce the need for each of them to be prepared for status "
+"meetings."
+msgstr ""
+"Juga, memimpin dengan contoh. Ketika anggota tim Anda melihat cara persiapan"
+" Anda itu akan memperkuat kebutuhan untuk masing-masing harus disiapkan "
+"untuk pertemuan status."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Alternatively, Timesheets can be added directly from Tasks by activating "
+"<strong>'Log work activities on tasks'</strong> in the"
+msgstr ""
+"Selain itu, Timesheets dapat ditambahkan secara langsung dari tugas dengan "
+"mengaktifkan <strong>'Log aktivitas kerja pada tugas-tugas'</strong> di"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"An internal message will not send any email notification, but your message "
+"will still be displayed to every user that has access to the page."
+msgstr ""
+"Pesan internal tidak akan mengirim email pemberitahuan, tetapi pesan akan "
+"tetap ditampilkan untuk setiap pengguna yang memiliki akses ke halaman."
+
+#. module: project
+#: model:ir.model,name:project.model_account_analytic_account
+#: model:ir.model.fields,field_description:project.field_project_project_name
+msgid "Analytic Account"
+msgstr "Akun Analitik"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_line_ids
+msgid "Analytic Lines"
+msgstr "Baris Analitik"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Another good way to limit the number of notifications you receive is to only"
+" follow your Project's 'Task Assigned' events.  Then you'll be notified when"
+" a Task or Issue is created, and can  manually decide if you want to be "
+"notified for its other events too."
+msgstr ""
+"Cara lain yang baik untuk membatasi jumlah pemberitahuan Anda menerima "
+"adalah untuk hanya mengikuti proyek Anda 'Diberikan tugas' peristiwa.  "
+"Kemudian Anda akan diberitahu bila suatu tugas atau masalah dibuat, dan "
+"secara manual dapat memutuskan apakah Anda ingin diberitahu untuk acara-"
+"acara lain yang juga."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "Apply"
+msgstr "Terapkan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Archived"
+msgstr "Diarsipkan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
+msgid "Assignation Date"
+msgstr "Penugasan tanggal"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+msgid "Assignation Month"
+msgstr "Penugasan bulan"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
+msgid "Assigned Tasks"
+msgstr "Kegiatan yang ditetapkan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
+msgid "Assigned To"
+msgstr "Ditetapkan ke"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_user_id
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Assigned to"
+msgstr "Dikegiatankan untuk"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_date_assign
+msgid "Assigning Date"
+msgstr "Menetapkan tanggal"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid ""
+"At each stage employees can block or make task/issue ready for next stage.\n"
+"                                You can define here labels that will be displayed for the state instead\n"
+"                                of the default labels."
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"At the end of the week, each employee should review\n"
+"                            their entries for the week and makes sure the\n"
+"                            entries are correctly encoded. This can be done\n"
+"                            from the"
+msgstr ""
+"Pada akhir minggu, setiap karyawan harus meninjau entri mereka selama "
+"seminggu dan memastikan entri yang dikodekan dengan benar. Ini dapat "
+"dilakukan dari"
+
+#. module: project
+#: code:addons/project/models/project.py:115
+#: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
+#, python-format
+msgid "Attachments"
+msgstr "Lampiran"
+
+#. module: project
+#: selection:project.config.settings,generate_project_alias:0
+msgid "Automatically generate an email alias at the project creation"
+msgstr ""
+"Secara otomatis menghasilkan sebuah email alias pada penciptaan proyek"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Available on the Apple Store"
+msgstr "Tersedia di Apple Store"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Back at the office, the manager splits the customer's requests into several "
+"tasks and delegates them to several employees."
+msgstr ""
+"Kembali di kantor, manajer permintaan nasabah terbagi menjadi beberapa tugas"
+" dan delegasi mereka untuk beberapa karyawan."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:31
+#: code:addons/project/static/src/js/web_planner_project.js:47
+#: code:addons/project/static/src/js/web_planner_project.js:63
+#, python-format
+msgid "Backlog"
+msgstr "Backlog"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_balance
+msgid "Balance"
+msgstr "Saldo"
+
+#. module: project
+#: model:project.task.type,name:project.project_stage_data_1
+msgid "Basic"
+msgstr "Dasar"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Basic Management"
+msgstr "Dasar manajemen"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Be aware of the team’s productivity and time: try to keep meetings to one "
+"hour or less."
+msgstr ""
+"Menyadari tim produktivitas dan waktu: mencoba untuk menjaga pertemuan untuk"
+" satu jam atau kurang."
+
+#. module: project
+#: selection:project.task,kanban_state:0
+#: selection:report.project.task.user,state:0
+msgid "Blocked"
+msgstr "Diblokir"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"But because change is never easy, we've created this Planner to guide you.<br/>\n"
+"                        For example, you'll understand why you shouldn’t use Odoo to plan but instead to\n"
+"                        collaborate, or why organizing your projects by role is wrong."
+msgstr ""
+"Tapi karena perubahan tidak pernah mudah, kami telah membuat ini Planner "
+"untuk membimbing Anda.<br/>Misalnya, Anda akan memahami mengapa Anda "
+"sebaiknya tidak menggunakan Odoo untuk merencanakan melainkan untuk "
+"berkolaborasi, atau mengapa mengatur proyek Anda dengan peran salah."
+
+#. module: project
+#: model:project.task,legend_done:project.project_task_10
+#: model:project.task,legend_done:project.project_task_11
+#: model:project.task,legend_done:project.project_task_13
+#: model:project.task,legend_done:project.project_task_14
+#: model:project.task,legend_done:project.project_task_17
+#: model:project.task,legend_done:project.project_task_2
+#: model:project.task,legend_done:project.project_task_21
+#: model:project.task,legend_done:project.project_task_22
+#: model:project.task,legend_done:project.project_task_23
+#: model:project.task,legend_done:project.project_task_4
+#: model:project.task,legend_done:project.project_task_5
+#: model:project.task,legend_done:project.project_task_6
+#: model:project.task,legend_done:project.project_task_7
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Buzz atau set seperti yang dilakukan"
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_responsible
+msgid "By Responsible"
+msgstr "Tanggung-jawab"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "Cancel"
+msgstr "Batalkan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:69
+#: code:addons/project/static/src/js/web_planner_project.js:84
+#: code:addons/project/static/src/js/web_planner_project.js:98
+#: model:project.task.type,name:project.project_stage_3
+#, python-format
+msgid "Cancelled"
+msgstr "Dibatalkan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Change their Stages in the Project Stages tab"
+msgstr "Mengubah mereka tahap-tahap proyek tab"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_account_analytic_account_use_tasks
+#: model:ir.model.fields,help:project.field_project_project_use_tasks
+msgid "Check this box to manage internal activities through this project"
+msgstr ""
+"Centang kotak ini untuk mengelola pelaksanaan kegiatan melalui proyek ini"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:23
+#, python-format
+msgid ""
+"Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
+"Office Party, etc.)"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+msgid "Choose a Project Email"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:54
+#, python-format
+msgid "Clear description and purpose"
+msgstr "Deskripsi jelas dan tujuan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:59
+#, python-format
+msgid "Click on a card to get the details of the task."
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:31
+#, python-format
+msgid ""
+"Click on the card to <b>go to your project</b> and start organizing tasks."
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:67
+#, python-format
+msgid "Click on this button to modify the task."
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,help:project.project_tags_action
+msgid "Click to add a new tag."
+msgstr "Klik untuk menambahkan tag baru."
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_task_type_form
+msgid "Click to add a stage in the task pipeline."
+msgstr "Klik untuk menambahkan tahap dalam pipa tugas."
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid "Click to create a new project.<br>"
+msgstr ""
+
+#. module: project
+#: selection:project.config.settings,module_pad:0
+msgid "Collaborative rich text on task description"
+msgstr "Kolaboratif teks kaya pada Deskripsi tugas"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_color
+#: model:ir.model.fields,field_description:project.field_project_tags_color
+#: model:ir.model.fields,field_description:project.field_project_task_color
+msgid "Color Index"
+msgstr "Indeks Warna"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Communication campaign"
+msgstr "Komunikasi kampanye"
+
+#. module: project
+#: model:ir.model,name:project.model_res_company
+msgid "Companies"
+msgstr "Perusahaan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_company_id
+#: model:ir.model.fields,field_description:project.field_project_project_company_id
+#: model:ir.model.fields,field_description:project.field_project_task_company_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_company_id
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
+#: model:ir.model.fields,field_description:project.field_project_project_company_uom_id
+msgid "Company UOM"
+msgstr "Perusahaan UOM"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_project_config
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Configuration"
+msgstr "Konfigurasi"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:93
+#, python-format
+msgid "Configuration options are available in the Settings app."
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_config_settings
+msgid "Configure Project"
+msgstr "Mengkonfigurasi proyek"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Congratulations on choosing Odoo Project to help running your company more "
+"efficiently!"
+msgstr ""
+"Selamat memilih Odoo proyek untuk membantu menjalankan perusahaan Anda lebih"
+" efisien!"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Congratulations, you're done !"
+msgstr "Selamat, Anda sudah selesai!"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Consulting mission"
+msgstr "Konsultasi misi"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_partner_id
+#: model:ir.ui.view,arch_db:project.view_project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_analytic_account_id
+msgid "Contract/Analytic"
+msgstr "Kontrak/analitik"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Control projects quality and satisfaction"
+msgstr "Proyek kontrol kualitas dan kepuasan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:33
+#, python-format
+msgid "Copywriting / Design"
+msgstr "Copywriting / desain"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+msgid "Create"
+msgstr "Membuat"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Create a Gantt chart with your projects tasks and deadlines"
+msgstr "Membuat bagan Gantt dengan tenggat waktu dan tugas-tugas proyek Anda"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_create_project
+msgid "Create a Project"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all_config
+msgid "Create a new project."
+msgstr "Membuat proyek baru."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Create a task by sending an email to a project alias with one of your "
+"colleagues in copy"
+msgstr ""
+"Membuat tugas dengan mengirimkan email ke proyek alias dengan salah satu "
+"rekan-rekan Anda dalam copy"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Create at least 3 tasks"
+msgstr "Buat minimal 3 tugas"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Create bills automatically based on Time &amp; Material."
+msgstr "Membuat tagihan otomatis berdasarkan waktu &amp; bahan."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_create_date
+msgid "Create date"
+msgstr "Buat Tanggal"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Create the Projects"
+msgstr "Membuat proyek"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_create_uid
+#: model:ir.model.fields,field_description:project.field_project_project_create_uid
+#: model:ir.model.fields,field_description:project.field_project_tags_create_uid
+#: model:ir.model.fields,field_description:project.field_project_task_create_uid
+#: model:ir.model.fields,field_description:project.field_project_task_type_create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_create_date
+#: model:ir.model.fields,field_description:project.field_project_project_create_date
+#: model:ir.model.fields,field_description:project.field_project_tags_create_date
+#: model:ir.model.fields,field_description:project.field_project_task_type_create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Creating Tasks and/or Issues is the next step in managing your Projects.<br/>\n"
+"                        In Odoo, it is pretty straightforward, but here are some explanations you may find useful."
+msgstr ""
+"Membuat tugas dan/atau masalah adalah langkah berikutnya dalam mengelola "
+"proyek-proyek Anda.<br/>Di Odoo, hal ini cukup sederhana, tetapi di sini "
+"adalah beberapa penjelasan yang Anda mungkin menemukan berguna."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+msgid "Creation Date"
+msgstr "Tanggal Pembuatan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_credit
+msgid "Credit"
+msgstr "Kredit"
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_cumulative_flow
+msgid "Cumulative Flow"
+msgstr "Kumulatif aliran"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_currency_id
+msgid "Currency"
+msgstr "Mata Uang"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Current Timesheet"
+msgstr "Saat ini absen"
+
+#. module: project
+#: code:addons/project/models/project.py:643
+#: model:ir.model.fields,field_description:project.field_project_project_partner_id
+#: model:ir.model.fields,field_description:project.field_project_task_partner_id
+#: model:ir.ui.view,arch_db:project.edit_project
+#, python-format
+msgid "Customer"
+msgstr "Pelanggan"
+
+#. module: project
+#: code:addons/project/models/project.py:643
+#, python-format
+msgid "Customer Email"
+msgstr "Email Supporter"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Customer Service"
+msgstr "Layanan Pelanggan:"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:73
+#, python-format
+msgid "Customer feedback has been requested"
+msgstr "Umpan balik pelanggan telah meminta"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:91
+#, python-format
+msgid "Customer has cancelled repair"
+msgstr "Pelanggan telah dibatalkan perbaikan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:71
+#, python-format
+msgid "Customer has reported new issue"
+msgstr "Pelanggan telah melaporkan masalah baru"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:70
+#, python-format
+msgid "Customer service has found new issue"
+msgstr "Layanan pelanggan telah menemukan masalah baru"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Customer support tickets"
+msgstr "Pelanggan dukungan Tiket"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Customization"
+msgstr "Kustomisasi"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_projects
+msgid "Dashboard"
+msgstr "Dasbor"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_date_deadline
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_date_deadline
+msgid "Deadline"
+msgstr "Batas waktu"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_debit
+msgid "Debit"
+msgstr "Debit"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_defaults
+msgid "Default Values"
+msgstr "Nilai default"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_task_type_form
+msgid ""
+"Define the steps that will be used in the project from the\n"
+"                creation of the task, up to the closing of the task or issue.\n"
+"                You will use these stages in order to track the progress in\n"
+"                solving a task or an issue."
+msgstr ""
+"Menentukan langkah-langkah yang akan digunakan dalam proyek dari penciptaan tugas, hingga penutupan tugas atau masalah.\n"
+"                Anda akan menggunakan tahap ini untuk melacak kemajuan dalam menyelesaikan sebuah tugas atau masalah."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Delete"
+msgstr "Hapus"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Depending on what you need and how you want to operate, there are several "
+"ways to work with Odoo. First, decide if you want to think in terms of tasks"
+" or issues. Then, activate the Timesheets app if you need it."
+msgstr ""
+"Tergantung pada apa yang Anda butuhkan dan bagaimana Anda ingin beroperasi, "
+"ada beberapa cara untuk bekerja dengan Odoo. Pertama, tentukan Apakah Anda "
+"ingin untuk berpikir dalam hal tugas atau masalah. Lalu, Aktifkan Timesheets"
+" app jika Anda membutuhkannya."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Deploy"
+msgstr "Menyebarkan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:19
+#, python-format
+msgid "Deployment"
+msgstr "Penyebaran"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_description
+#: model:ir.model.fields,field_description:project.field_project_task_type_description
+#: model:ir.ui.view,arch_db:project.view_task_form2
+msgid "Description"
+msgstr "Keterangan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:17
+#, python-format
+msgid "Development"
+msgstr "Pengembangan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Development Process"
+msgstr "Proses pengembangan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:50
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#, python-format
+msgid "Discard"
+msgstr "Abaikan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
+#: model:ir.model.fields,field_description:project.field_project_project_display_name
+#: model:ir.model.fields,field_description:project.field_project_tags_display_name
+#: model:ir.model.fields,field_description:project.field_project_task_display_name
+#: model:ir.model.fields,field_description:project.field_project_task_type_display_name
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
+msgid "Displayed Image"
+msgstr "Gambar yang ditampilkan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:34
+#, python-format
+msgid "Distribute"
+msgstr "Distribusi"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:42
+#, python-format
+msgid "Distribution is completed"
+msgstr "Distribusi selesai"
+
+#. module: project
+#: selection:project.config.settings,generate_project_alias:0
+msgid "Do not create an email alias automatically"
+msgstr "Jangan membuat email alias secara otomatis"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:50
+#, python-format
+msgid "Documentation"
+msgstr "Dokumentasi"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Documents"
+msgstr "Dokumen"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Don't create a Project for different locations (this could isolate teams "
+"that work at different locations)."
+msgstr ""
+"Jangan membuat sebuah proyek untuk lokasi yang berbeda (ini bisa memisahkan "
+"tim yang bekerja di lokasi yang berbeda)."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Don't create a Project for each of your customers - this will be too "
+"complicated to manage properly."
+msgstr ""
+"Jangan membuat sebuah proyek untuk masing-masing pelanggan Anda - ini akan "
+"menjadi terlalu rumit untuk mengelola dengan benar."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Don't hesitate to"
+msgstr "Jangan ragu untuk"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Don't hesitate to select only the events you are interested in!"
+msgstr ""
+"Jangan ragu untuk memilih hanya peristiwa-peristiwa yang Anda tertarik!"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:35
+#: code:addons/project/static/src/js/web_planner_project.js:68
+#: code:addons/project/static/src/js/web_planner_project.js:83
+#: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
+#, python-format
+msgid "Done"
+msgstr "selesai"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"During a meeting, a customer asks a manager for a few modifications to a "
+"project."
+msgstr ""
+"Selama pertemuan, pelanggan meminta seorang manajer beberapa modifikasi "
+"untuk sebuah proyek."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Each employee will have his own task, while the manager will be able to "
+"follow the global progress in the Kanban view of the project."
+msgstr ""
+"Setiap karyawan akan memiliki tugas sendiri, sementara manajer akan mampu "
+"mengikuti kemajuan global dalam tampilan Kanban proyek."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Edit Task"
+msgstr "Mengedit tugas"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Email Alias"
+msgstr "Email Alias"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
+msgid "Email Template"
+msgstr "Template Email"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Emails"
+msgstr "e-mail"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "End"
+msgstr "Akhir"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_date_end
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_date_end
+msgid "Ending Date"
+msgstr "Tanggal Akhir"
+
+#. module: project
+#: code:addons/project/models/project.py:418
+#, python-format
+msgid "Error ! Task starting date must be lower than its ending date."
+msgstr ""
+"Kesalahan! Tugas mulai tanggal harus lebih rendah dari tanggal berakhir."
+
+#. module: project
+#: sql_constraint:project.project:0
+msgid "Error! project start-date must be lower than project end-date."
+msgstr ""
+"Kesalahan! Proyek awal-date harus lebih rendah dari proyek akhir-date."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_planned_hours
+msgid ""
+"Estimated time to do the task, usually set by the project manager when the "
+"task is in draft state."
+msgstr ""
+"Perkiraan waktu untuk melakukan kegiatan, biasanya di atur oleh manajer "
+"proyek ketika kegiatan dalam status draft."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Even if there is no specific field in Odoo, it's important to define a person responsible for each stage of your Project.<br/>\n"
+"                        This person will have the responsibility for validating each stage and ensuring that the requirements to move to the next stage are met."
+msgstr ""
+"Bahkan jika ada tidak ada bidang tertentu dalam Odoo, sangat penting untuk "
+"menentukan orang yang bertanggung jawab untuk setiap tahap proyek "
+"Anda.<br/>Orang ini akan memiliki tanggung jawab untuk memvalidasi setiap "
+"tahap dan memastikan bahwa persyaratan untuk pindah ke tahap berikutnya "
+"terpenuhi."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Every business is different.<br/>\n"
+"                    Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs."
+msgstr ""
+"Setiap bisnis berbeda.<br/>Odoo memungkinkan Anda untuk menyesuaikan setiap "
+"aplikasi dan biasanya ide yang baik untuk menyesuaikan layar sesuai dengan "
+"kebutuhan proyek Anda."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Examples"
+msgstr "Contoh"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:74
+#, python-format
+msgid "Expert advice has been requested"
+msgstr "Saran ahli telah diminta"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_date
+msgid "Expiration Date"
+msgstr "Tanggal kadaluarsa"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type_legend_priority
+msgid ""
+"Explanation text to help users using the star and priority mechanism on "
+"stages or issues that are in this stage."
+msgstr ""
+"Penjelasan teks untuk membantu pengguna menggunakan mekanisme bintang dan "
+"prioritas pada tahap atau isu-isu yang pada tahap ini."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+msgid "Extended Filters"
+msgstr "Penyaring tambahan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_form2
+msgid "Extra Info"
+msgstr "Info tambahan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Extra useful for when you're with a customer or in a meeting."
+msgstr ""
+"Ekstra berguna ketika Anda sedang dengan pelanggan atau dalam pertemuan."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:88
+#, python-format
+msgid "Feedback from customer requested"
+msgstr "Umpan balik dari pelanggan diminta"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:26
+#, python-format
+msgid "Finally task is deployed"
+msgstr "Akhirnya tugas dikerahkan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_fold
+msgid "Folded in Kanban"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"Follow this project to automatically track the events associated to tasks "
+"and issues of this project."
+msgstr ""
+"Ikuti proyek ini untuk secara otomatis melacak aktivitas terkait dengan "
+"kegiatan dan masalah dari proyek ini."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Followed by Me"
+msgstr "Diikuti oleh saya"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "For employees, the"
+msgstr "Bagi karyawan,"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"For example, risk and issue owners should come prepared to share the status "
+"of their item and, ideally, a path to resolution."
+msgstr ""
+"Sebagai contoh, risiko dan masalah pemilik harus datang siap untuk berbagi "
+"status barang mereka dan, idealnya, jalan menuju resolusi."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"For the Odoo Team,<br/>\n"
+"                            Fabien Pinckaers, Founder"
+msgstr "Untuk tim Odoo,<br/>Fabien Pinckaers, pendiri"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"For the same reason, don't create a Project based on weeks or time (example:"
+" Scrum)."
+msgstr ""
+"Untuk alasan yang sama, jangan membuat proyek berdasarkan minggu atau waktu "
+"(contoh: Scrum)."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "Forecasts"
+msgstr "Prakiraan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
+msgid "Forecasts, planning and Gantt charts"
+msgstr "Prakiraan, perencanaan dan bagan Gantt"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_tasks_config
+msgid "GTD"
+msgstr "GTD"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Generate a timesheet report to attach to your customer invoices"
+msgstr ""
+"Menghasilkan laporan absen untuk melampirkan ke tagihan pelanggan Anda"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Get full synchronization with Odoo"
+msgstr "Mendapatkan sinkronisasi penuh dengan Odoo"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Get it on Google Play"
+msgstr "Mendapatkannya di Google Play"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Get more apps"
+msgstr "Mendapatkan lebih banyak aplikasi"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_label_tasks
+msgid "Gives label to tasks on project's kanban view."
+msgstr "Memberi label untuk tugas-tugas proyek kanban pandangan."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_sequence
+msgid "Gives the sequence order when displaying a list of Projects."
+msgstr "Memberikan perintah urutan ketika menampilkan daftar proyek."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_sequence
+msgid "Gives the sequence order when displaying a list of tasks."
+msgstr "Memberikan perintah urutan ketika menampilkan daftar derajat."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:102
+#, python-format
+msgid ""
+"Good job! Your completed the Project Management tour. You can continue with "
+"the <b>implementation guide</b> to help you setup Project Management in your"
+" company."
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Good luck!"
+msgstr "Semoga sukses"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Green: the Task is ready for next stage (the job for this stage is complete)"
+msgstr ""
+"Hijau: tugas siap untuk tahap berikutnya (pekerjaan untuk tahap ini lengkap)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Grey: the Task is in progress (someone is working on it)"
+msgstr ""
+"Abu-abu: tugas yang sedang berlangsung (seseorang sedang mengerjakan ini)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Group By"
+msgstr "Dikelompokkan berdasarkan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Here are some of the <strong>available customizations</strong>"
+msgstr "Berikut adalah beberapa <strong>penyesuaian yang tersedia</strong>"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
+msgid "Here, you can create new tasks"
+msgstr "Di sini, Anda dapat membuat tugas baru"
+
+#. module: project
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "High"
+msgstr "Tinggi"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_privacy_visibility
+msgid ""
+"Holds visibility of the tasks or issues that belong to the current project:\n"
+"- On invitation only: Employees may only see the followed project, tasks or issues\n"
+"- Visible by all employees: Employees may see all project, tasks or issues\n"
+"- Visible by following customers: employees see everything;\n"
+"   if website is activated, portal users may see project, tasks or issues followed by\n"
+"   them or by someone of their company\n"
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:567
+#, python-format
+msgid "I take it"
+msgstr "Saya mengambil"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_id
+#: model:ir.model.fields,field_description:project.field_project_project_id
+#: model:ir.model.fields,field_description:project.field_project_tags_id
+#: model:ir.model.fields,field_description:project.field_project_task_id
+#: model:ir.model.fields,field_description:project.field_project_task_type_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_id
+msgid "ID"
+msgstr "ID"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr ""
+"ID dari catatan orang tua memegang alias (contoh: proyek memegang tugas "
+"penciptaan alias)"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:103
+#, python-format
+msgid "Idea has been transformed into concrete actions"
+msgstr "Ide telah berubah menjadi tindakan-tindakan nyata"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:102
+#, python-format
+msgid "Idea is fully explained"
+msgstr "Ide sepenuhnya dijelaskan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Ideally, a person should only be responsible for one project."
+msgstr "Idealnya, seseorang hanya harus bertanggung jawab untuk satu proyek."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:95
+#, python-format
+msgid "Ideas"
+msgstr "Gagasan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Identify problems and blocking points more easily"
+msgstr "Mengidentifikasi masalah dan memblokir poin lebih mudah"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type_mail_template_id
+msgid ""
+"If set an email will be sent to the customer when the task or issue reaches "
+"this step."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the project "
+"without removing it."
+msgstr ""
+"Jika bidang aktif diatur ke False, itu akan memungkinkan Anda untuk "
+"menyembunyikan proyek tanpa menghapus itu."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"If you don't want to receive email notifications, you can uncheck the option"
+" in your"
+msgstr ""
+"Jika Anda tidak ingin menerima pemberitahuan email, Anda dapat Hapus centang"
+" opsi di Anda"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"If you want to limit access for certain users or customers, simply use the "
+"Privacy / Visibility settings in the Project Settings."
+msgstr ""
+"Jika Anda ingin membatasi akses untuk pengguna tertentu atau pelanggan, "
+"hanya menggunakan privasi / setelan keterlihatan dalam pengaturan proyek."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"If you work on a Time &amp; Material project, you'll probably want to "
+"extract a Timesheet of the tasks and issues to invoice directly to the "
+"customer. To do that:"
+msgstr ""
+"Jika Anda bekerja pada waktu &amp; bahan proyek, Anda mungkin ingin "
+"mengekstrak absen tugas dan isu-isu untuk faktur secara langsung kepada "
+"pelanggan. Untuk melakukannya:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Implement"
+msgstr "Melaksanakan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Improve"
+msgstr "memperbaiki"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Improve collaboration with customers"
+msgstr "Meningkatkan kerjasama dengan pelanggan"
+
+#. module: project
+#: selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
+#: selection:report.project.task.user,state:0
+msgid "In Progress"
+msgstr "Dalam Proses"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:32
+#: code:addons/project/static/src/js/web_planner_project.js:65
+#: code:addons/project/static/src/js/web_planner_project.js:80
+#, python-format
+msgid "In progress"
+msgstr "Dalam proses"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:79
+#, python-format
+msgid "Incoming"
+msgstr "Barang Masuk"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Incoming Emails create"
+msgstr "Membuat email masuk"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_planned_hours
+msgid "Initially Planned Hours"
+msgstr "Awalnya direncanakan jam"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_id
+msgid ""
+"Internal email associated with this project. Incoming emails are "
+"automatically synchronized with Tasks (or optionally Issues if the Issue "
+"Tracker module is installed)."
+msgstr ""
+"Internal email yang terkait dengan proyek ini. Email masuk secara otomatis "
+"disinkronisasi dengan tugas (atau opsional masalah jika pelacak isu modul "
+"diinstal)."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Internal notes are messages that will appear in the Chatter but will not be "
+"notified in Odoo's Inbox."
+msgstr ""
+"Catatan Internal adalah pesan yang akan muncul dalam obrolan tapi akan tidak"
+" diberitahu di Odoo di kotak masuk."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Issue Tracking app."
+msgstr "App pelacakan masalah."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_tags_search_view
+msgid "Issue Version"
+msgstr "Versi"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:72
+#, python-format
+msgid "Issue is being worked on"
+msgstr "Masalah sedang dikerjakan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:75
+#, python-format
+msgid "Issue is resolved"
+msgstr "Masalah diselesaikan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Issues"
+msgstr "Masalah"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Issues analysis"
+msgstr "Analisis masalah"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"It is better to start with a \"project answer\", such as: \"We are two weeks"
+" late\", \"We are at planned budget\" or \"We are 50% complete with the "
+"process model\". Also if you can, start the meeting on a positive note, such"
+" as milestones that have been met or are ahead of schedule. This will make "
+"participants feel motivated to engage in the conversation."
+msgstr ""
+"Lebih baik untuk memulai dengan \"proyek jawaban\", seperti: \"Kami adalah "
+"dua minggu akhir\", \"Kami adalah pada anggaran yang direncanakan\" atau "
+"\"Kami adalah 50% lengkap dengan model proses\". Juga, jika Anda bisa, "
+"memulai pertemuan pada catatan positif, seperti tonggak yang telah dipenuhi "
+"atau yang lebih cepat dari jadwal. Ini akan membuat para peserta merasa "
+"termotivasi untuk terlibat dalam percakapan."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"It is time to think about how you will transform your activities into real projects in Odoo.<br/>\n"
+"                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task or an issue can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects."
+msgstr ""
+"Saatnya untuk berpikir tentang bagaimana Anda akan mengubah aktivitas Anda "
+"ke proyek-proyek nyata di Odoo.<br/>Untuk itu, yang paling penting adalah "
+"mendefinisikan tahap proyek Anda. Tahap yang berbeda langkah tugas atau "
+"masalah dapat pergi melalui, dari penciptaan untuk berakhir dengan. Mereka "
+"akan muncul dalam apa yang kita sebut 'Kanban' pandangan proyek Anda."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"It's essential to be clear about why you want to use Odoo Project and what your goals are.\n"
+"                        Indeed, there are many ways to manage a project, to find the best one for you, you need to know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company."
+msgstr ""
+"Hal ini penting untuk menjelaskan tentang mengapa Anda ingin menggunakan Odoo proyek dan apa tujuan Anda.\n"
+"                        Memang, ada banyak cara untuk mengelola proyek, untuk menemukan yang terbaik untuk Anda, Anda perlu tahu apa yang Anda inginkan untuk mencapai. Dan kemudian kita akan mudah-mudahan mengubah tujuan Anda menjadi nyata perbaikan untuk perusahaan Anda."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"It's for logging every change, event or message related to the Document."
+msgstr ""
+"Hal ini untuk log setiap perubahan, peristiwa, atau pesan yang terkait "
+"dengan dokumen."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"It's usually a good idea to take time to analyze your tasks and issues once "
+"a year. Here are some KPIs you should take a look at. Ask yourself 'How can "
+"they be improved?'"
+msgstr ""
+"Biasanya ide yang baik untuk mengambil waktu untuk menganalisis tugas-tugas "
+"Anda dan isu-isu setahun sekali. Berikut adalah beberapa KPI Anda harus "
+"mengambil melihat. Tanyakan pada diri sendiri 'Bagaimana dapat mereka "
+"ditingkatkan?'"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
+msgid "Kanban Blocked Explanation"
+msgstr "Kanban diblokir penjelasan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_legend_normal
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "Kanban berkelanjutan penjelasan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Kanban Stage"
+msgstr "Tahap Kanban"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Kanban Stages"
+msgstr "Tahap Kanban"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_kanban_state
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_state
+msgid "Kanban State"
+msgstr "Kanban State"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_legend_done
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
+msgid "Kanban Valid Explanation"
+msgstr "Kanban berlaku penjelasan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Keep track of messages and conversations"
+msgstr "Menjaga melacak yang pesan dan percakapan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Know what my employees are working on"
+msgstr "Tahu apa karyawan bekerja pada"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Last Message"
+msgstr "Pesan yang lalu"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings___last_update
+#: model:ir.model.fields,field_description:project.field_project_project___last_update
+#: model:ir.model.fields,field_description:project.field_project_tags___last_update
+#: model:ir.model.fields,field_description:project.field_project_task___last_update
+#: model:ir.model.fields,field_description:project.field_project_task_type___last_update
+#: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
+msgid "Last Modified on"
+msgstr "Terakhir diubah pada"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
+msgid "Last Stage Update"
+msgstr "Update tahap terakhir"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_write_uid
+#: model:ir.model.fields,field_description:project.field_project_project_write_uid
+#: model:ir.model.fields,field_description:project.field_project_tags_write_uid
+#: model:ir.model.fields,field_description:project.field_project_task_type_write_uid
+#: model:ir.model.fields,field_description:project.field_project_task_write_uid
+msgid "Last Updated by"
+msgstr "Terakhir diperbarui oleh"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_write_date
+#: model:ir.model.fields,field_description:project.field_project_project_write_date
+#: model:ir.model.fields,field_description:project.field_project_tags_write_date
+#: model:ir.model.fields,field_description:project.field_project_task_type_write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbaharui pada"
+
+#. module: project
+#: model:web.planner,tooltip_planner:project.planner_project
+msgid ""
+"Learn how to better organize your company using Projects, Tasks, Issues and "
+"Timesheets."
+msgstr ""
+"Pelajari cara untuk lebih baik mengatur perusahaan Anda menggunakan proyek, "
+"tugas, isu-isu dan Timesheets."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:18
+#, python-format
+msgid "Let's create your first project."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_config_settings_module_pad
+msgid ""
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
+"-This installs the module pad."
+msgstr ""
+"Memungkinkan perusahaan menyesuaikan instalasi Pad yang harus digunakan untuk link ke bantalan baru (misalnya: http://ietherpad.com/).\n"
+"-Ini akan menginstal modul pad."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_analytic_account_id
+msgid ""
+"Link this project to an analytic account if you need financial management on"
+" projects. It enables you to connect projects with budgets, planning, cost "
+"and revenue analysis, timesheets on projects, etc."
+msgstr ""
+"Link proyek ini ke account analitik jika Anda membutuhkan manajemen keuangan"
+" pada proyek-proyek. Hal ini memungkinkan Anda untuk menghubungkan proyek-"
+"proyek dengan anggaran, perencanaan, biaya dan pendapatan, timesheets pada "
+"proyek-proyek, dll."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "List, plan and track things to do"
+msgstr "Daftar, rencana dan trek untuk melakukan sesuatu"
+
+#. module: project
+#: selection:report.project.task.user,priority:0
+msgid "Low"
+msgstr "Rendah"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+#: model:res.groups,name:project.group_project_manager
+msgid "Manager"
+msgstr "Manajer"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Managing a group of people, a team or a department (example: R&amp;D team, "
+"HR Department, etc.)"
+msgstr ""
+"Mengelola kelompok orang, sebuah tim atau Departemen (contoh: R &amp; D tim,"
+" Departemen HR, dll.)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Managing long projects that span over many months and/or need Timesheets."
+msgstr ""
+"Mengelola proyek-proyek lama yang span selama berbulan-bulan dan/atau perlu "
+"Timesheets."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Managing notifications is essential: too few and you risk missing critical "
+"information, too many and you will be  overloaded with unnecessary "
+"information. The trick is to find the right balance between the projects, "
+"stages and tasks you want to be informed about. Fortunately, Odoo Project "
+"has many levels of notifications and messages you can choose from."
+msgstr ""
+"Mengelola pemberitahuan penting: terlalu sedikit dan Anda risiko kehilangan "
+"informasi penting, terlalu banyak dan Anda akan dipenuhi dengan informasi "
+"yang tidak perlu. Triknya adalah untuk menemukan keseimbangan yang tepat "
+"antara proyek, tahapan dan tugas-tugas yang Anda ingin diberitahu tentang. "
+"Untungnya, Odoo proyek memiliki banyak tingkat notifikasi dan pesan Anda "
+"dapat memilih dari."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Marketing Department"
+msgstr "Departemen Pemasaran"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
+msgid "Members"
+msgstr "Anggota"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "More <i class=\"fa fa-caret-down\"/>"
+msgstr "Lebih<i class=\"fa fa-caret-down\"></i>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr "Info lebih lanjut"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "More efficient communication between employees"
+msgstr "Lebih efisien komunikasi antara karyawan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "My Favorites"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "My Tasks"
+msgstr " Kegiatanku"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_tags_name
+msgid "Name"
+msgstr "Nama"
+
+#. module: project
+#: model:project.task,legend_blocked:project.project_task_10
+#: model:project.task,legend_blocked:project.project_task_11
+#: model:project.task,legend_blocked:project.project_task_13
+#: model:project.task,legend_blocked:project.project_task_14
+#: model:project.task,legend_blocked:project.project_task_17
+#: model:project.task,legend_blocked:project.project_task_2
+#: model:project.task,legend_blocked:project.project_task_21
+#: model:project.task,legend_blocked:project.project_task_22
+#: model:project.task,legend_blocked:project.project_task_23
+#: model:project.task,legend_blocked:project.project_task_4
+#: model:project.task,legend_blocked:project.project_task_5
+#: model:project.task,legend_blocked:project.project_task_6
+#: model:project.task,legend_blocked:project.project_task_7
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Butuh bantuan fungsional atau teknis"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:64
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+#: model:project.task.type,name:project.project_stage_data_0
+#, python-format
+msgid "New"
+msgstr "Baru"
+
+#. module: project
+#: code:addons/project/models/project.py:571
+#, python-format
+msgid "New Task"
+msgstr "Tugas baru"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:86
+#, python-format
+msgid "New repair added"
+msgstr "Baru perbaikan ditambahkan"
+
+#. module: project
+#: selection:project.config.settings,module_rating_project:0
+msgid "No customer rating"
+msgstr "Tidak ada nilai pelanggan"
+
+#. module: project
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: project
+#: model:project.task,legend_blocked:project.project_task_1
+#: model:project.task,legend_blocked:project.project_task_12
+#: model:project.task,legend_blocked:project.project_task_20
+#: model:project.task,legend_blocked:project.project_task_25
+#: model:project.task,legend_blocked:project.project_task_26
+#: model:project.task,legend_blocked:project.project_task_9
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Tidak divalidasi"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_notes
+msgid "Notes"
+msgstr "Catatan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Notifications"
+msgstr "Pemberitahuan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:43
+#, python-format
+msgid "Now that the project is set up, <b>create a few tasks</b>."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
+msgid "Number of Days to Open the task"
+msgstr "Jumlah hari untuk membuka kegiatan"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_report_project_task_user_closing_days
+msgid "Number of Days to close the task"
+msgstr "Jumlah hari untuk menutup kegiatan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_doc_count
+msgid "Number of documents attached"
+msgstr "Jumlah dokumen yang dilampirkan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
+"                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
+"                        who's in charge, all in one place."
+msgstr ""
+"Odoo proyek adalah cara super cepat dan mudah untuk membuat kegiatan dan "
+"tugas terlihat untuk semua orang di perusahaan Anda. Ikuti bagaimana hal-hal"
+" kemajuan, lihat ketika hal-hal terjebak, tahu siapa yang bertanggung jawab,"
+" Semua dalam satu tempat."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_config_settings_generate_project_alias
+msgid ""
+"Odoo will generate an email alias at the project creation from project name."
+msgstr ""
+"Odoo akan menghasilkan alias email pada penciptaan proyek dari nama proyek."
+
+#. module: project
+#: model:ir.actions.act_window,help:project.action_view_task
+msgid ""
+"Odoo's project management allows you to manage the pipeline of your tasks "
+"efficiently. You can track progress, discuss on tasks, attach documents, "
+"etc."
+msgstr ""
+"Manajemen proyek Odoo yang memungkinkan Anda untuk mengelola pipa tugas Anda"
+" secara efisien. Anda dapat melacak kemajuan, membahas tentang tugas, "
+"melampirkan dokumen, dll."
+
+#. module: project
+#: code:addons/project/models/project.py:203
+#: selection:project.project,privacy_visibility:0
+#, python-format
+msgid "On invitation only"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Once a Timesheet is confirmed by an employee, it needs to be Approved by a "
+"manager in the"
+msgstr ""
+"Setelah absen dikonfirmasi oleh seorang karyawan, perlu disetujui oleh "
+"seorang manajer di"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"Opsional ID thread (catatan) yang semua pesan masuk akan dilampirkan, bahkan"
+" jika mereka tidak menjawab untuk itu. Jika diatur, hal ini akan "
+"menonaktifkan penciptaan catatan baru sepenuhnya."
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid "Or"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Or, if you are using Issues, by activating 'Activate timesheets on issues', "
+"also in the"
+msgstr ""
+"Atau, jika Anda menggunakan masalah, dengan mengaktifkan 'Activate "
+"timesheets isu', juga dalam"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Organize meetings"
+msgstr "Mengatur pertemuan"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all_config
+msgid ""
+"Organize your activities (plan tasks, track issues, invoice timesheets) for "
+"internal, personal or customer projects."
+msgstr ""
+"Mengatur aktivitas (rencana tugas, melacak masalah, faktur timesheets) untuk"
+" proyek-proyek pribadi atau pelanggan internal,."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Organize your company, from personal tasks to collaborative meeting minutes."
+msgstr ""
+"Mengatur perusahaan Anda, dari tugas pribadi yang kolaboratif Rapat menit."
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
+msgid "Overpassed Tasks"
+msgstr "Kegiatan-kegiatan overpassed"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_legend_blocked
+#: model:ir.model.fields,help:project.field_project_task_type_legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+"Mengganti nilai default ditampilkan untuk negara diblokir untuk kanban "
+"pilihan, ketika tugas atau isu di tahap itu."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_legend_done
+#: model:ir.model.fields,help:project.field_project_task_type_legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+"Mengganti nilai default ditampilkan untuk negara dilakukan untuk kanban "
+"pilihan, ketika tugas atau isu di tahap itu."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_legend_normal
+#: model:ir.model.fields,help:project.field_project_task_type_legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+"Mengganti nilai default ditampilkan untuk keadaan normal untuk kanban "
+"pilihan, ketika tugas atau isu di tahap itu."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
+msgid "Owner"
+msgstr "Pemilik"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
+msgid "Pads"
+msgstr "Bantalan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
+msgid "Parent Model"
+msgstr "Model orangtua"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "Orangtua catatan Thread ID"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Model induk memegang alias. Model memegang referensi alias ini tidak selalu "
+"berarti model yang diberikan oleh alias_model_id (contoh: proyek "
+"(parent_model) dan tugas (model))"
+
+#. module: project
+#: model:ir.model,name:project.model_res_partner
+msgid "Partner"
+msgstr "Rekanan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Plan your activities for the day"
+msgstr "Merencanakan berbagai kegiatan Anda untuk hari"
+
+#. module: project
+#: model:ir.model,name:project.model_web_planner
+msgid "Planner"
+msgstr "Perencanaan"
+
+#. module: project
+#: code:addons/project/models/project.py:723
+#, python-format
+msgid ""
+"Please remove existing tasks in the project linked to the accounts you want "
+"to delete."
+msgstr ""
+"Silakan Hapus tugas-tugas yang ada dalam proyek yang terkait dengan akun "
+"yang ingin Anda hapus."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Prepare"
+msgstr "masak"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_priority
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_priority
+msgid "Priority"
+msgstr "Prioritas"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
+msgid "Priority Management Explanation"
+msgstr "Penjelasan manajemen prioritas"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
+msgid "Privacy"
+msgstr "Privasi"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Product or software version"
+msgstr "Versi produk atau perangkat lunak"
+
+#. module: project
+#: model:ir.model,name:project.model_project_project
+#: model:ir.model.fields,field_description:project.field_project_task_project_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_project_id
+#: model:ir.ui.menu,name:project.menu_main_pm
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+#: model:res.request.link,name:project.req_link_project
+msgid "Project"
+msgstr "Proyek"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_generate_project_alias
+msgid "Project Alias"
+msgstr "Proyek Alias"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
+#: model:ir.model.fields,field_description:project.field_project_project_project_count
+msgid "Project Count"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "Project Management"
+msgstr "Manajemen proyek"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_user_id
+#: model:ir.model.fields,field_description:project.field_project_task_manager_id
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.view_project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Project Manager"
+msgstr "Manajer Proyek"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#: model:ir.ui.view,arch_db:project.view_project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Project Name"
+msgstr "Nama Proyek"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Project Settings"
+msgstr "Seting Proyek"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Project Settings."
+msgstr "Seting Proyek."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_task_graph
+#: model:ir.ui.view,arch_db:project.view_project_task_pivot
+msgid "Project Tasks"
+msgstr "Kegiatan-kegiatan proyek"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_project_time_mode_id
+msgid "Project Time Unit *"
+msgstr ""
+
+#. module: project
+#: model:res.request.link,name:project.req_link_task
+msgid "Project task"
+msgstr "Kegiatan proyek"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.dblc_proj
+msgid "Project's tasks"
+msgstr "Kegiatan-kegiatan proyek"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_view_project_all
+#: model:ir.actions.act_window,name:project.open_view_project_all_config
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_ids
+#: model:ir.model.fields,field_description:project.field_project_project_project_ids
+#: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
+#: model:ir.ui.menu,name:project.menu_projects_config
+#: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
+#: model:ir.ui.view,arch_db:project.view_project
+msgid "Projects"
+msgstr "Proyek"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
+msgid "Rating on task"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:40
+#, python-format
+msgid "Ready for layout / copywriting"
+msgstr "Siap untuk tata letak / copywriting"
+
+#. module: project
+#: selection:project.task,kanban_state:0
+#: selection:report.project.task.user,state:0
+msgid "Ready for next stage"
+msgstr "Siap untuk tahap berikutnya"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:58
+#, python-format
+msgid "Ready for release"
+msgstr "Siap untuk rilis"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:56
+#, python-format
+msgid "Ready for testing"
+msgstr "Siap untuk pengujian"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:41
+#, python-format
+msgid "Ready to be displayed, published or sent"
+msgstr "Siap untuk ditampilkan, diterbitkan atau dikirim"
+
+#. module: project
+#: model:project.task,legend_done:project.project_task_16
+#: model:project.task,legend_done:project.project_task_19
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Siap untuk membuka kembali"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:76
+#: code:addons/project/static/src/js/web_planner_project.js:105
+#, python-format
+msgid "Reason for cancellation has been documented"
+msgstr "Alasan untuk pembatalan telah didokumentasikan"
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "Catatan Thread ID"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Red: the Task is blocked (there's a problem)"
+msgstr "Merah: tugas diblokir (ada masalah)"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_code
+msgid "Reference"
+msgstr "Rujukan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:51
+#, python-format
+msgid "Release"
+msgstr "Lepaskan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_remaining_hours
+msgid "Remaining Hours"
+msgstr "Jam tersisa"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:48
+#, python-format
+msgid "Remove Cover Image"
+msgstr "Hapus Gambar Cover"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Repair Workshop"
+msgstr "Perbaikan lokakarya"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:87
+#, python-format
+msgid "Repair has started"
+msgstr "Perbaikan telah dimulai"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:90
+#, python-format
+msgid "Repair is completed"
+msgstr "Perbaikan selesai"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Reporting"
+msgstr "pelaporan."
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_project_report
+msgid "Reports"
+msgstr "Laporan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:89
+#, python-format
+msgid "Request for parts has been sent"
+msgstr "Permintaan bagian telah dikirim"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Responsibilities"
+msgstr "Tanggung Jawab"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Responsibility"
+msgstr "Rasa tanggung jawab"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Runs outside Odoo, always available"
+msgstr "Berjalan di luar Odoo, selalu tersedia"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Scrum Methodology"
+msgstr "Scrum metodologi"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_project_management
+msgid "Search"
+msgstr "Penelusuran"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Search Project"
+msgstr "Cari proyek"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:46
+#, python-format
+msgid "Select"
+msgstr "Pilih"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Send an alert when a task is stuck in red for more than a few days"
+msgstr ""
+"Mengirimkan peringatan ketika tugas yang terjebak dalam merah selama lebih "
+"dari beberapa hari"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Send an automatic confirmation to all issue emails sent to your customer "
+"support"
+msgstr ""
+"Kirim konfirmasi otomatis untuk semua masalah email dikirim ke dukungan "
+"pelanggan Anda"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_sequence
+#: model:ir.model.fields,field_description:project.field_project_task_sequence
+#: model:ir.model.fields,field_description:project.field_project_task_type_sequence
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Service Level Agreement (SLA)"
+msgstr "Perjanjian Tingkat Layanan (PTL)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Set Cover Image"
+msgstr "Foto Cover"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:45
+#, python-format
+msgid "Set a Cover Image"
+msgstr "Mengatur gambar sampul"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_project_general_settings
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "Settings"
+msgstr "Pengaturan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Severity"
+msgstr "Kerasnya"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Share files and manage versions"
+msgstr "Berbagi file dan mengelola versi"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_is_favorite
+msgid "Show Project on dashboard"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"So if you're looking for the history of a Task, or the latest message on an "
+"Issue, simply go to the corresponding Document and you'll find it!"
+msgstr ""
+"Jadi jika Anda mencari untuk sejarah tugas, atau pesan terbaru pada masalah,"
+" hanya pergi ke dokumen sesuai dan Anda akan menemukan itu!"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Software development"
+msgstr "Pengembangan perangkat lunak"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:15
+#, python-format
+msgid "Specification"
+msgstr "Spesifikasi"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:23
+#, python-format
+msgid "Specification is validated"
+msgstr "Spesifikasi divalidasi"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:22
+#, python-format
+msgid "Specification of task is written"
+msgstr "Spesifikasi tugas tertulis"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:48
+#, python-format
+msgid "Sprint"
+msgstr "Sprint"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_stage_id
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Stage"
+msgstr "Tahap"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_task_stage
+msgid "Stage Changed"
+msgstr "tahap berubah"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Stage Description and Tooltips"
+msgstr "Tahap Deskripsi dan Tooltips"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_name
+msgid "Stage Name"
+msgstr "Nama Tahap"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_stage
+msgid "Stage changed"
+msgstr "Perubahan tahap"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_task_type_form
+#: model:ir.ui.menu,name:project.menu_project_config_project
+msgid "Stages"
+msgstr "Tahapan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Start / Stop a timer in one click"
+msgstr "Start / Stop timer dalam satu klik"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_date_start
+msgid "Start Date"
+msgstr "Tanggal Mulai"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_date_start
+msgid "Starting Date"
+msgstr "Tanggal Awal"
+
+#. module: project
+#: sql_constraint:project.tags:0
+msgid "Tag name already exists !"
+msgstr "Nama tag sudah ada!"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_tags_action
+#: model:ir.model.fields,field_description:project.field_project_project_tag_ids
+#: model:ir.model.fields,field_description:project.field_project_task_tag_ids
+#: model:ir.ui.menu,name:project.menu_project_tags_act
+#: model:ir.ui.view,arch_db:project.project_tags_form_view
+msgid "Tags"
+msgstr "Tag"
+
+#. module: project
+#: model:ir.model,name:project.model_project_tags
+msgid "Tags of project's tasks, issues..."
+msgstr "Tags: tugas-tugas proyek, isu-isu..."
+
+#. module: project
+#: model:ir.model,name:project.model_project_task
+#: model:ir.ui.view,arch_db:project.view_task_form2
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Task"
+msgstr "Kegiatan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_tasks
+msgid "Task Activities"
+msgstr "Kegiatan kegiatan"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_blocked
+#: model:mail.message.subtype,name:project.mt_task_blocked
+msgid "Task Blocked"
+msgstr "Kegiatan yang diblokir"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_new
+#: model:mail.message.subtype,name:project.mt_task_new
+msgid "Task Opened"
+msgstr "Membuka tugas"
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_task_pipe
+msgid "Task Pipe"
+msgstr "Kegiatan pipa"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_ready
+#: model:mail.message.subtype,name:project.mt_task_ready
+msgid "Task Ready"
+msgstr "Tugas siap"
+
+#. module: project
+#: model:ir.model,name:project.model_project_task_type
+#: model:ir.ui.view,arch_db:project.task_type_edit
+#: model:ir.ui.view,arch_db:project.task_type_tree
+msgid "Task Stage"
+msgstr "Tahap kegiatan"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_stage
+msgid "Task Stage Changed"
+msgstr "Tahap kegiatan berubah"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_name
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_name
+msgid "Task Title"
+msgstr "Tugas judul"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_form2
+msgid "Task Title..."
+msgstr "Tugas judul..."
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_blocked
+msgid "Task blocked"
+msgstr "Kegiatan yang diblokir"
+
+#. module: project
+#: selection:project.config.settings,module_pad:0
+msgid "Task description is plain text"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:24
+#, python-format
+msgid "Task is Developed"
+msgstr "Tugas dikembangkan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:104
+#, python-format
+msgid "Task is completed"
+msgstr "Tugas selesai"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:25
+#, python-format
+msgid "Task is tested"
+msgstr "Tugas diuji"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_new
+msgid "Task opened"
+msgstr "Membuka tugas"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_ready
+msgid "Task ready for Next Stage"
+msgstr "Tugas siap untuk tahap berikutnya"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
+#: model:ir.actions.act_window,name:project.action_view_task
+#: model:ir.model.fields,field_description:project.field_project_project_task_count
+#: model:ir.model.fields,field_description:project.field_project_project_task_ids
+#: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
+#: model:ir.model.fields,field_description:project.field_res_partner_task_ids
+#: model:ir.ui.menu,name:project.menu_action_view_task
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.project_planner
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+#: model:ir.ui.view,arch_db:project.view_task_calendar
+#: model:ir.ui.view,arch_db:project.view_task_partner_info_form
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+#: model:ir.ui.view,arch_db:project.view_task_tree2
+msgid "Tasks"
+msgstr "Kegiatan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Tasks &amp; Issues"
+msgstr "Tugas &amp; masalah"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree_filtered
+#: model:ir.ui.menu,name:project.menu_project_report_task_analysis
+#: model:ir.ui.view,arch_db:project.view_task_project_user_graph
+#: model:ir.ui.view,arch_db:project.view_task_project_user_pivot
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+msgid "Tasks Analysis"
+msgstr "Kegiatan analisis"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_type_ids
+#: model:ir.ui.view,arch_db:project.task_type_search
+msgid "Tasks Stages"
+msgstr "Tahap kegiatan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Tasks analysis"
+msgstr "Tugas analisis"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Tasks are the main mechanism in Odoo and are activated by default."
+msgstr "Tugas utama mekanisme di Odoo dan diaktifkan secara default."
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr "Kegiatan oleh pengguna dan proyek"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:49
+#, python-format
+msgid "Test"
+msgstr "Tes"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:57
+#, python-format
+msgid "Test is OK, need to document"
+msgstr "Tes OK, perlu dokumen"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:18
+#, python-format
+msgid "Testing"
+msgstr "Pengujian"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"The Odoo Project app can be used to manage many activities, from the "
+"development of a new product to the daily operations of a customer support. "
+"With some creativity, it can even be used to manage your marketing "
+"communications or personal projects. But just because it can be done doesn't"
+" mean it's always a good idea: let's start by helping you understand what "
+"can be a good project."
+msgstr ""
+"Odoo proyek app dapat digunakan untuk mengelola berbagai kegiatan, dari "
+"pengembangan produk baru untuk operasi sehari-hari dukungan pelanggan. "
+"Dengan beberapa kreativitas, itu bahkan dapat digunakan untuk mengelola "
+"komunikasi pemasaran atau proyek pribadi Anda. Tapi hanya karena dapat "
+"dilakukan tidak berarti itu selalu ide yang bagus: Mari kita mulai dengan "
+"membantu Anda memahami apa yang dapat menjadi proyek yang baik."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_model
+msgid ""
+"The kind of document created when an email is received on this project's "
+"email alias"
+msgstr ""
+"Jenis dokumen yang dibuat ketika email yang diterima pada proyek ini email "
+"alias"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"Model (Odoo dokumen jenis) yang alias ini sesuai. Email masuk yang tidak "
+"menjawab catatan yang ada akan menyebabkan pembentukan rekor baru model ini "
+"(misalnya tugas proyek)"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Nama email alias, misalnya 'pekerjaan' jika Anda ingin menangkap email "
+"untuk<jobs@example.odoo.com></jobs@example.odoo.com>"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_user_id
+msgid ""
+"The owner of records created upon receiving emails on this alias. If this "
+"field is not set the system will attempt to find the right owner based on "
+"the sender (From) address, or will use the Administrator account if no "
+"system user is found for that address."
+msgstr ""
+"Pemilik catatan yang dibuat setelah menerima email pada alias ini. Jika "
+"bidang ini belum menetapkan sistem akan berusaha untuk menemukan pemilik "
+"tepat berdasarkan pengirim (dari) alamat, atau akan menggunakan "
+"Administrator account jika tidak ada sistem pengguna yang ditemukan untuk "
+"alamat tersebut."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "The same features as the Chrome extension, but on your mobile phone!"
+msgstr "Fitur yang sama sebagai ekstensi Chrome, tetapi pada ponsel Anda!"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/xml/project.xml:7
+#, python-format
+msgid ""
+"There is no available image to be set as cover. Send a message on the task "
+"with an attached image."
+msgstr ""
+"Ada tidak ada gambar yang tersedia untuk ditetapkan sebagai penutup. "
+"Mengirim pesan pada tugas dengan gambaran yang terlampir."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
+msgid "This allows customers to give rating on provided services"
+msgstr ""
+"Hal ini memungkinkan pelanggan untuk memberikan rating pada layanan yang "
+"disediakan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"This is particularly useful to manage help and support: all incoming email  "
+"from customers will be transformed into an issue that you'll be able to "
+"track easily!"
+msgstr ""
+"Hal ini sangat berguna untuk mengelola bantuan dan dukungan: semua email "
+"masuk dari pelanggan akan berubah menjadi sebuah isu yang Anda akan dapat "
+"melacak mudah!"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.action_project_task_user_tree
+#: model:ir.actions.act_window,help:project.action_project_task_user_tree_filtered
+msgid ""
+"This report allows you to analyse the performance of your projects and "
+"users. You can analyse the quantities of tasks, the hours spent compared to "
+"the planned hours, the average number of days to open or close a task, etc."
+msgstr ""
+"Laporan ini memungkinkan Anda untuk menganalisis kinerja proyek Anda dan "
+"pengguna. Anda dapat menganalisis kuantitas kegiatan, jam dihabiskan "
+"dibandingkan dengan waktu yang direncanakan, rata-rata jumlah hari untuk "
+"membuka atau menutup kegiatan, dll."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type_fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
+"Tahap ini dilipat di tampilan kanban ketika tidak ada catatan dalam tahap "
+"itu untuk menampilkan."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"This whole process might take you a few hours, but don't worry, you can take a break and\n"
+"                        return to it at any time: your progress is automatically saved."
+msgstr ""
+"Seluruh proses ini mungkin memakan waktu beberapa jam, tapi jangan khawatir,"
+" Anda dapat beristirahat dan kembali ke setiap saat: kemajuan Anda secara "
+"otomatis disimpan."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"This will add an Invoice Tasks menu in the Project module, that can be used "
+"to select the Timesheet to invoice."
+msgstr ""
+"Ini akan menambah menu faktur tugas dalam modul proyek, yang dapat digunakan"
+" untuk memilih absen untuk faktur."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
+#: model:ir.model.fields,help:project.field_project_config_settings_project_time_mode_id
+#: model:ir.model.fields,help:project.field_project_project_company_uom_id
+#: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+msgstr ""
+
+#. module: project
+#: model:res.groups,name:project.group_time_work_estimation_tasks
+msgid "Time Estimation on Tasks"
+msgstr "Estimasi waktu pada kegiatan-kegiatan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Time Scheduling"
+msgstr "Waktu penjadwalan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
+msgid "Timesheet UoM"
+msgstr "UoM absen"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Timesheets are often essential for running a company.<br/>\n"
+"                    They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>\n"
+"                    Fortunately, Odoo has several solutions to make them as efficient and painless as possible!<br/>"
+msgstr ""
+"Timesheets sering penting untuk menjalankan perusahaan.<br/>Mereka juga "
+"rentan terhadap kesalahan manusia, berulang-ulang, menjengkelkan, dan "
+"kadang-kadang stres kepada karyawan.<br/>Untungnya, Odoo memiliki beberapa "
+"solusi untuk membuat mereka efisien dan menyakitkan mungkin!<br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Timesheets can be used for several purposes:"
+msgstr "Timesheets dapat digunakan untuk beberapa keperluan:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Timesheets to Approve"
+msgstr "Timesheets untuk menyetujui"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_resource_calendar_id
+msgid "Timetable working hours to adjust the gantt diagram report"
+msgstr "Jadwal kerja untuk menyesuaikan laporan diagram gantt"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
+#, python-format
+msgid "To Do"
+msgstr "Yang harus dilakukan .."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"To configure these Kanban Statuses, go to the 'Project Stages' tab of a "
+"Project."
+msgstr ""
+"Untuk mengkonfigurasi status Kanban ini, pergi ke tab 'Proyek tahap' proyek."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "To use Issues, install the"
+msgstr "Untuk menggunakan isu-isu, install"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "To use Timesheets, go to your"
+msgstr "Untuk menggunakan Timesheets, pergi ke Anda"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_remaining_hours
+msgid ""
+"Total remaining time, can be re-estimated periodically by the assignee of "
+"the task."
+msgstr ""
+"Jumlah sisa waktu, dapat kembali diperkirakan secara berkala oleh diberi "
+"kegiatan kegiatan."
+
+#. module: project
+#: selection:project.config.settings,module_rating_project:0
+msgid "Track customer satisfaction on tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Unassigned"
+msgstr "Tak dikegiatankan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Unread Messages"
+msgstr "%d pesan belum terbaca"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
+#: model:ir.model.fields,field_description:project.field_project_project_use_tasks
+msgid "Use Tasks"
+msgstr "Menggunakan kegiatan"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_label_tasks
+msgid "Use Tasks as"
+msgstr "Menggunakan tugas sebagai"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Use Timesheets"
+msgstr "Menggunakan Timesheets"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Use separate meetings to solve big issues or issues that aren’t important "
+"for the entire team."
+msgstr ""
+"Menggunakan pertemuan terpisah untuk memecahkan masalah-masalah besar atau "
+"isu-isu yang tidak penting bagi seluruh tim."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:106
+#, python-format
+msgid ""
+"Use the <b>implementation guide</b> to setup Project Management in your "
+"company."
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:88
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
+msgstr ""
+"Menggunakan prioritas untuk tugas-tugas yang terkait dengan pelanggan emas"
+
+#. module: project
+#: model:res.groups,name:project.group_project_user
+msgid "User"
+msgstr "Pengguna"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_user_email
+msgid "User Email"
+msgstr "Email Pengguna"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Usually, a project's team members are managed through weekly (or monthly) status meetings.<br/>\n"
+"                        Sometimes, these meetings can last hours and expose participants to an overly detailed review of the project.<br/>\n"
+"                        Your team members will probably try to avoid those kind of meetings, or have to rush afterwards to meet their deadlines...<br/><br/>\n"
+"                        So how can you, as project manager, structure a weekly status meeting where team members are engaged, informed and willing to contribute to the project's next steps? Here are some tips."
+msgstr ""
+"Biasanya, anggota tim proyek dikelola melalui pertemuan Status mingguan (atau bulanan). <br/>\n"
+"                        Kadang-kadang, pertemuan ini bisa bertahan jam dan mengekspos peserta dengan review yang terlalu rinci proyek. <br/>\n"
+"                        Anggota tim Anda mungkin akan mencoba untuk menghindari orang-orang semacam pertemuan, atau harus buru-buru setelah itu untuk memenuhi tenggat waktu mereka ... <br/> <br/>\n"
+"                        Jadi bagaimana bisa Anda, sebagai manajer proyek, struktur pertemuan Status mingguan di mana anggota tim terlibat, informasi dan bersedia untuk berkontribusi langkah berikutnya proyek? Berikut adalah beberapa tips."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:16
+#, python-format
+msgid "Validation"
+msgstr "Validasi"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "View statistics (time spent, efficiency, etc.)"
+msgstr "Melihat statistik (waktu dihabiskan, efisiensi, dll.)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "View statistics for the week"
+msgstr "Melihat statistik untuk minggu"
+
+#. module: project
+#: code:addons/project/models/project.py:204
+#: selection:project.project,privacy_visibility:0
+#, python-format
+msgid "Visible by all employees"
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:205
+#: selection:project.project,privacy_visibility:0
+#, python-format
+msgid "Visible by following customers"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:66
+#: code:addons/project/static/src/js/web_planner_project.js:81
+#, python-format
+msgid "Wait. Customer"
+msgstr "Tunggu. Pelanggan"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:67
+#: code:addons/project/static/src/js/web_planner_project.js:82
+#, python-format
+msgid "Wait. Expert"
+msgstr "Tunggu. Ahli"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:13
+#, python-format
+msgid ""
+"Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "We can add fields related to your business on any screen, for example:"
+msgstr ""
+"Kita dapat menambahkan bidang yang berhubungan dengan bisnis Anda pada "
+"setiap layar, misalnya:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "We can automate steps in your workflow, for example:"
+msgstr ""
+"We dapat mengotomatisasi langkah-langkah dalam alur kerja Anda, misalnya:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"We can implement custom reports based on your Word or GoogleDocs templates, "
+"for example:"
+msgstr ""
+"Kita dapat menerapkan laporan kustom yang didasarkan pada template Anda kata"
+" atau GoogleDocs, sebagai contoh:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"We hope this process helped you implement our project management "
+"application."
+msgstr ""
+"Kami berharap proses ini membantu Anda menerapkan aplikasi manajemen proyek "
+"kami."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"We've developed a super simple and efficient Chrome extension to enter your "
+"timesheets:<br/><br/>"
+msgstr ""
+"Kami telah mengembangkan ekstensi Chrome super sederhana dan efisien untuk "
+"memasukkan timesheets Anda:<br/><br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Welcome"
+msgstr "Selamat Datang"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"What is the average number of working hours necessary to close an issue?"
+msgstr ""
+"Apa yang dimaksud dengan rata-rata jumlah jam kerja yang diperlukan untuk "
+"menutup masalah?"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "What is the average time before an issue is assigned / closed?"
+msgstr "Apa itu waktu rata-rata sebelum masalah ditugaskan / tutup?"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"What is the difference between initial time estimation and final time spent?"
+msgstr ""
+"What is the perbedaan antara estimasi waktu awal dan akhir waktu yang "
+"dihabiskan?"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "What is the number of missed deadlines?"
+msgstr "Berapakah jumlah tenggat?"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "What is their average number of tasks or issues worked on / closed?"
+msgstr ""
+"Apa Apakah mereka rata-rata jumlah tugas atau masalah bekerja pada / "
+"tertutup?"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "What is their average number of working hours over the year?"
+msgstr "Apakah mereka rata-rata jumlah jam kerja selama setahun?"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_is_favorite
+msgid "Whether this project should be displayed on the dashboard or not"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:39
+#, python-format
+msgid "Work has started"
+msgstr "Kerja telah dimulai"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_resource_calendar_id
+msgid "Working Time"
+msgstr "Hari Kerja"
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_workload
+msgid "Workload"
+msgstr "Beban kerja"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_write_date
+msgid "Write date"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid ""
+"You can also add a description to help your coworkers understand the meaning"
+" and purpose of the stage."
+msgstr ""
+"Anda juga dapat menambahkan keterangan untuk membantu rekan kerja Anda "
+"memahami arti dan tujuan panggung."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid ""
+"You can also give a tooltip about the use of the stars available in the "
+"kanban and form views."
+msgstr ""
+"Anda juga dapat memberikan tooltip tentang penggunaan bintang-bintang yang "
+"tersedia dalam pandangan kanban dan bentuk."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"You can even include any report in your dashboard for permanent access!"
+msgstr ""
+"Anda bahkan dapat mencakup setiap laporan di dashboard Anda untuk akses "
+"permanen!"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"You can learn more about Timesheets in the 'Use Timesheets' section of this "
+"planner."
+msgstr ""
+"Anda dapat mempelajari lebih lanjut tentang Timesheets di bagian 'Penggunaan"
+" Timesheets' perencana ini."
+
+#. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
+msgid ""
+"You can now manage your tasks in order to get things done efficiently. Track"
+" progress, discuss, attach documents, etc."
+msgstr ""
+"Sekarang Anda dapat mengelola tugas-tugas Anda untuk mendapatkan hal-hal "
+"yang dilakukan secara efisien. Melacak kemajuan, mendiskusikan, melampirkan "
+"dokumen, dll."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"You can reply directly to a message from you email software; the message and"
+" its attachments will be added to the Chatter."
+msgstr ""
+"Anda dapat membalas langsung pesan dari Anda email perangkat lunak; pesan "
+"dan lampiran yang akan ditambahkan ke obrolan."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "You can save your reports to easily reuse it later"
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:70
+#, python-format
+msgid ""
+"You cannot delete a project containing tasks. You can either delete all the "
+"project's tasks and then delete the project or simply deactivate the "
+"project."
+msgstr ""
+"Anda tidak dapat menghapus proyek yang mengandung kegiatan. Anda dapat "
+"menghapus kegiatan semua proyek dan kemudian menghapus proyek atau hanya "
+"menonaktifkan proyek."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Activities"
+msgstr "Aktivitas"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Objectives"
+msgstr "Tujuan Anda"
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_module_install_project
+msgid "Your Odoo Project application is up and running"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Projects"
+msgstr "Proyek Anda"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Projects:"
+msgstr "Proyek-proyek Anda:"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid "activate a sample project"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "and activate:"
+msgstr "dan mengaktifkan:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+msgid "e.g. Office Party"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "etc.."
+msgstr "dan sebagainya."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "for Issues: 'Activate timesheets on issues'"
+msgstr "untuk masalah: 'Activate timesheets isu'"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "for Tasks: 'Log work activities on tasks'"
+msgstr "untuk tugas-tugas: 'Log aktivitas kerja pada tugas-tugas'"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"
+
+#. module: project
+#: model:ir.model,name:project.model_project_config_settings
+msgid "project.config.settings"
+msgstr "Project.config.Settings"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "send us an email"
+msgstr "Kirim email"
+
+#. module: project
+#: code:addons/project/models/project.py:466
+#, python-format
+msgid "tasks"
+msgstr "Kegiatan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "to describe<br/> your experience or to suggest improvements !"
+msgstr "untuk menggambarkan<br/>pengalaman Anda atau menyarankan perbaikan!"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid "to play with."
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "using the above recommendations"
+msgstr "menggunakan rekomendasi di atas"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"view of the HR module is the main tool to check, modify and confirm "
+"Timesheets."
+msgstr ""
+"Lihat modul HR merupakan alat utama untuk memeriksa, memodifikasi dan "
+"mengkonfirmasi Timesheets."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "view of the Human Resources module."
+msgstr "Lihat modul sumber daya manusia."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "view."
+msgstr "pandangan."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "with Timesheet"
+msgstr "dengan absen"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "you listed on the previous step"
+msgstr "Anda terdaftar di langkah sebelumnya"

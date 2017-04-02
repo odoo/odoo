@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="event_registration_mail_template_badge" model="mail.template">
+            <field name="name">Event: Registration Badge</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
+            <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="subject">Your badge for ${object.event_id.name}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="report_event_registration_badge"/>
+            <field name="report_name">badge_of_${(object.event_id.name or '').replace('/','_')}</field>
+            <field name="body_html"><![CDATA[
+<p>Dear ${object.name},</p>
+<p>Thank you for your inquiry.</p>
+<p>Here is your badge for the event ${object.event_id.name}.</p>
+<p>If you have any questions, please let us know.</p>
+<p>Best regards,</p>]]></field>
+        </record>
+
+        <record id="event_subscription" model="mail.template">
+            <field name="name">Event: Registration</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
+            <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="reply_to">${object.event_id.reply_to|safe}</field>
+            <field name="subject">Your registration at ${object.event_id.name}</field>
+            <field name="body_html"><![CDATA[
+<div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
+% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')
+    <table style="width:600px;margin:5px auto;">
+        <tbody>
+            <tr>
+                <td>
+                    <a href="/">
+                        <img src="/logo" alt="${object.company_id.name}" style="vertical-align:baseline;max-width:100px;" />
+                    </a>
+                </td>
+                <td style="text-align:right;vertical-align:middle;">
+                    % if 'website_url' in object.event_id and object.event_id.website_url:
+                        <a href="/event" style="text-decoration:none;color:#717188;">More Events</a>
+                    % endif
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+        <tbody>
+            <tr>
+                <td style="padding:15px 20px 0px 20px;">
+                    <h2 style="font-weight:300;">
+                        Hi ${object.name}, here is your order confirmation for
+                        % if 'website_url' in object.event_id and object.event_id.website_url:
+                            <a href="${object.event_id.website_url}" style="color:#875A7B;text-decoration:none;">${object.event_id.name}</a>
+                        % else:
+                            <strong>${object.event_id.name}</strong>
+                        % endif
+                    </h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:15px 20px 0px 20px;">
+                    <table style="width:100%;border-top:1px solid #e1e1e1;">
+                        <tr>
+                            <td style="padding:25px 0px;vertical-align:top;">
+                                <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34">
+                            </td>
+                            <td style="padding:30px 10px 25px 10px;width:50%;vertical-align:top;">
+                                % if object.event_id.address_id.street:
+                                    <p style="margin:0px 0px 0px 0px;">${object.event_id.address_id.street},</p>
+                                    % set location = object.event_id.address_id.street
+                                % endif
+                                % if object.event_id.address_id.street2:
+                                    <p style="margin:0px 0px 0px 0px;">${object.event_id.address_id.street2},</p>
+                                    % set location = '%s, %s' % (location, object.event_id.address_id.street2)
+                                % endif
+                                % if object.event_id.address_id.city:
+                                    ${object.event_id.address_id.city},
+                                    % set location = '%s, %s' % (location, object.event_id.address_id.city)
+                                % endif
+                                % if object.event_id.address_id.state_id.name:
+                                    ${object.event_id.address_id.state_id.name},
+                                    % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)
+                                % endif
+                                % if object.event_id.address_id.zip:
+                                    ${object.event_id.address_id.zip},
+                                    % set location = '%s, %s' % (location, object.event_id.address_id.zip)
+                                % endif
+                                % if object.event_id.address_id.country_id.name:
+                                    <p style="margin:0px 0px 0px 0px;">${object.event_id.address_id.country_id.name}</p>
+                                    % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)
+                                % endif
+                            </td>
+                            <td style="padding:25px 0px;vertical-align:top;">
+                                <img src="/web_editor/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34">
+                            </td>
+                            <td style="padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;">
+                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>
+                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>
+                                <div style="font-size:12px;color:#9e9e9e"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>
+                            </td>
+                        </tr>
+                    </table>
+                    % if object.event_id.organizer_id.email:
+                        <table style="width:100%;border-top:1px solid #e1e1e1;">
+                            <tr>
+                                <td style="padding:10px 0px 25px 0px;">
+                                    <h2 style="font-weight:300;margin:10px 0px">Questions about this event?</h2>
+                                    <div>Please contact the organizer at <a href="mailto:${object.event_id.organizer_id.email}" style="text-decoration:none;color:#875A7B;">${object.event_id.organizer_id.email}</a></div>
+                                </td>
+                            </tr>
+                        </table>
+                    % endif
+                    <table style="width:100%;border-top:1px solid #e1e1e1;">
+                        <tr>
+                            <td style="padding:25px 0px;">
+                                <strong>Add this event to your calendar</strong>
+                                <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Google</a>
+                                <a href="https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Outlook</a>
+                                <a href="https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Yahoo</a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
+        <a href="https://maps.google.com/maps?q=${location}" target="new">
+            <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;" />
+        </a>
+    </div>
+    <table style="width:600px;margin:0px auto;text-align:center;">
+        <tbody>
+            <tr>
+                <td style="padding-top:10px;font-size: 12px;">
+                    <div>This email was sent to <a href="mailto:${object.email}" style="text-decoration:none;color:#875A7B;">${object.email}</a></div>
+                    <p style="margin:0px 0px 9px 0px;padding-top:10px;">Copyright © ${object.company_id.name}</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+            ]]></field>
+        </record>
+
+        <record id="event_reminder" model="mail.template">
+            <field name="name">Event: Reminder</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
+            <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="reply_to">${object.event_id.reply_to|safe}</field>
+            <field name="subject">Reminder for ${object.event_id.name}</field>
+            <field name="body_html"><![CDATA[
+<div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
+% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')
+    <table style="width:600px;margin:5px auto;">
+        <tbody>
+            <tr>
+                <td>
+                    <a href="/">
+                        <img src="/logo" alt="${object.company_id.name}" style="vertical-align:baseline;max-width:100px;" />
+                    </a>
+                </td>
+                <td style="text-align:right;vertical-align:middle;">
+                    % if 'website_url' in object.event_id and object.event_id.website_url:
+                        <a href="/event" style="text-decoration:none;color:#717188;">More Events</a>
+                    % endif
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+        <tbody>
+            <tr>
+                <td style="padding:15px 20px 0px 20px;">
+                    <h2 style="font-weight:300;">
+                        Hi ${object.name},
+                    </h2>
+                    <p style="font-size:16px;">
+                        Please keep in mind that the event
+                        % if 'website_url' in object.event_id and object.event_id.website_url:
+                            <a href="${object.event_id.website_url}" style="color:#875A7B;text-decoration:none;">${object.event_id.name}</a>
+                        % else:
+                            <strong>${object.event_id.name}</strong>
+                        % endif
+                        takes place on
+                        <strong>${object.get_date_range_str()}</strong>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:15px 20px 0px 20px;">
+                    <table style="width:100%;border-top:1px solid #e1e1e1;">
+                        <tr>
+                            <td style="padding:25px 0px;vertical-align:top;">
+                                <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34">
+                            </td>
+                            <td style="padding:30px 10px 25px 10px;width:50%;vertical-align:top;">
+                                % if object.event_id.address_id.street:
+                                    <p style="margin:0px 0px 0px 0px;">${object.event_id.address_id.street},</p>
+                                    % set location = object.event_id.address_id.street
+                                % endif
+                                % if object.event_id.address_id.street2:
+                                    <p style="margin:0px 0px 0px 0px;">${object.event_id.address_id.street2},</p>
+                                    % set location = '%s, %s' % (location, object.event_id.address_id.street2)
+                                % endif
+                                % if object.event_id.address_id.city:
+                                    ${object.event_id.address_id.city},
+                                    % set location = '%s, %s' % (location, object.event_id.address_id.city)
+                                % endif
+                                % if object.event_id.address_id.state_id.name:
+                                    ${object.event_id.address_id.state_id.name},
+                                    % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)
+                                % endif
+                                % if object.event_id.address_id.zip:
+                                    ${object.event_id.address_id.zip},
+                                    % set location = '%s, %s' % (location, object.event_id.address_id.zip)
+                                % endif
+                                % if object.event_id.address_id.country_id.name:
+                                    <p style="margin:0px 0px 0px 0px;">${object.event_id.address_id.country_id.name}</p>
+                                    % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)
+                                % endif
+                            </td>
+                            <td style="padding:25px 0px;vertical-align:top;">
+                                <img src="/web_editor/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34">
+                            </td>
+                            <td style="padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;">
+                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>
+                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>
+                                <div style="font-size:12px;color:#9e9e9e"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>
+                            </td>
+                        </tr>
+                    </table>
+                    % if object.event_id.organizer_id.email:
+                        <table style="width:100%;border-top:1px solid #e1e1e1;">
+                            <tr>
+                                <td style="padding:10px 0px 25px 0px;">
+                                    <h2 style="font-weight:300;margin:10px 0px">Questions about this event?</h2>
+                                    <div>Please contact the organizer at <a href="mailto:${object.event_id.organizer_id.email}" style="text-decoration:none;color:#875A7B;">${object.event_id.organizer_id.email}</a></div>
+                                </td>
+                            </tr>
+                        </table>
+                    % endif
+                    <table style="width:100%;border-top:1px solid #e1e1e1;">
+                        <tr>
+                            <td style="padding:25px 0px;">
+                                <strong>Add this event to your calendar</strong>
+                                <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Google</a>
+                                <a href="https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Outlook</a>
+                                <a href="https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Yahoo</a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
+        <a href="https://maps.google.com/maps?q=${location}" target="new">
+            <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;" />
+        </a>
+    </div>
+    <table style="width:600px;margin:0px auto;text-align:center;">
+        <tbody>
+            <tr>
+                <td style="padding-top:10px;font-size: 12px;">
+                    <div>This email was sent to <a href="mailto:${object.email}" style="text-decoration:none;color:#875A7B;">${object.email}</a></div>
+                    <p style="margin:0px 0px 9px 0px;padding-top:10px;">Copyright © ${object.company_id.name}</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+            ]]></field>
+        </record>
+
+    </data>
+</odoo>

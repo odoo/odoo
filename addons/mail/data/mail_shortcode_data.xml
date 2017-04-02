@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!-- Smileys -->
+        <record id="mail_smiley_smile" model="mail.shortcode">
+            <field name="source">:)</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/smile.png'/&gt;</field>
+            <field name="description">Emoji Smile</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_sad" model="mail.shortcode">
+            <field name="source">:(</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/sad.png'/&gt;</field>
+            <field name="description">Emoji Sad</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_laugh" model="mail.shortcode">
+            <field name="source">:D</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/laugh.png'/&gt;</field>
+            <field name="description">Emoji Laugh</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_wink" model="mail.shortcode">
+            <field name="source">;)</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/wink.png'/&gt;</field>
+            <field name="description">Emoji Wink</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_stuck" model="mail.shortcode">
+            <field name="source">O_0</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/stuck_out_tongue.png'/&gt;</field>
+            <field name="description">Emoji Stuck Out Tongue Winking Eye</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_scream" model="mail.shortcode">
+            <field name="source">:@</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/scream.png'/&gt;</field>
+            <field name="description">Emoji Scream</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_neutral" model="mail.shortcode">
+            <field name="source">:|</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/neutral.png'/&gt;</field>
+            <field name="description">Emoji Speechless/Neutral face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_cheeky" model="mail.shortcode">
+            <field name="source">:p</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/yum.png'/&gt;</field>
+            <field name="description">Emoji Cheeky</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_confused" model="mail.shortcode">
+            <field name="source">:/</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/confused.png'/&gt;</field>
+            <field name="description">Emoji Confused</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_open_mouth" model="mail.shortcode">
+            <field name="source">:O</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/open_mouth.png'/&gt;</field>
+            <field name="description">Emoji Open Mouth</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_heart" model="mail.shortcode">
+            <field name="source">&lt;3</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/heart.png'/&gt;</field>
+            <field name="description">Emoji Heart</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <!-- Other images -->
+        <record id="mail_smiley_thumbsup" model="mail.shortcode">
+            <field name="source">:+1</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/thumbsup.png'/&gt;</field>
+            <field name="description">Emoji Thumbs Up</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_thumbsdown" model="mail.shortcode">
+            <field name="source">:-1</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/thumbsdown.png'/&gt;</field>
+            <field name="description">Emoji Thumbs Down</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_kitten" model="mail.shortcode">
+            <field name="source">:kitten</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/cat.png'/&gt;</field>
+            <field name="description">Emoji Kitten</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_pinky" model="mail.shortcode">
+            <field name="source">:pinky</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/pinky.png'/&gt;</field>
+            <field name="description">Emoji Pinky</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_musti" model="mail.shortcode">
+            <field name="source">:musti</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/musti.png'/&gt;</field>
+            <field name="description">Emoji Musti</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_man_with_turban" model="mail.shortcode">
+            <field name="source">:turban</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/man_with_turban.png'/&gt;</field>
+            <field name="description">Emoji Man With Turban</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_troll" model="mail.shortcode">
+            <field name="source">:troll</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/trollface.png'/&gt;</field>
+            <field name="description">Emoji Troll Face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_boar" model="mail.shortcode">
+            <field name="source">:boar</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/boar.png'/&gt;</field>
+            <field name="description">Emoji Boar</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_poop" model="mail.shortcode">
+            <field name="source">:poop</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/poop.png'/&gt;</field>
+            <field name="description">Emoji Poop</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_cookie" model="mail.shortcode">
+            <field name="source">:cookie</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/cookie.png'/&gt;</field>
+            <field name="description">Emoji Cookie</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_postal_horn" model="mail.shortcode">
+            <field name="source">:postal_horn</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/postal_horn.png'/&gt;</field>
+            <field name="description">Emoji Postal Horn</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_ghost" model="mail.shortcode">
+            <field name="source">:ghost</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/ghost.png'/&gt;</field>
+            <field name="description">Emoji Ghost</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_beer" model="mail.shortcode">
+            <field name="source">:beer</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/beer.png'/&gt;</field>
+            <field name="description">Emoji Beer</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_smiley_man" model="mail.shortcode">
+            <field name="source">:man</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/man.png'/&gt;</field>
+            <field name="description">Emoji Man</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+    </data>
+</odoo>

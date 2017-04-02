@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="barcode_rule_weight_three_dec" model="barcode.rule">
+            <field name="name">Weight Barcodes 3 Decimals</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
+            <field name="sequence">36</field>
+            <field name="type">weight</field>
+            <field name="encoding">ean13</field>
+            <field name="pattern">21.....{NNDDD}</field>
+        </record>
+        
+        <record id="barcode_rule_package" model="barcode.rule">
+            <field name="name">Package barcodes</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
+            <field name="sequence">70</field>
+            <field name="type">package</field>
+            <field name="encoding">any</field>
+            <field name="pattern">PACK</field>
+        </record>
+
+        <record id="barcode_rule_lot" model="barcode.rule">
+            <field name="name">Lot barcodes</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
+            <field name="sequence">80</field>
+            <field name="type">lot</field>
+            <field name="encoding">any</field>
+            <field name="pattern">10</field>
+        </record>
+
+        <record id="barcode_rule_location" model="barcode.rule">
+            <field name="name">Location barcodes</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
+            <field name="sequence">60</field>
+            <field name="type">location</field>
+            <field name="encoding">any</field>
+            <field name="pattern">414</field>
+        </record>
+    </data>
+</odoo>

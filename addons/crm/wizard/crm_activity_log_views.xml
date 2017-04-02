@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="crm_activity_log_view_form" model="ir.ui.view">
+        <field name="name">Log an Activity</field>
+        <field name="model">crm.activity.log</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Log an Activity">
+                <group>
+                    <field name="team_id" invisible="1"/>
+                    <field name="lead_id" invisible="1"/>
+                    <group>
+                        <field name="next_activity_id" required="1"
+                            domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]"
+                            options="{'no_create': True, 'no_open': True}"/>
+                        <field name="title_action" placeholder="e.g. Discuss proposal"/>
+                    </group>
+                    <group>
+                        <field name="planned_revenue"/>
+                        <field name="date_deadline"/>
+                    </group>
+                </group>
+                <field name="note" placeholder="Log a note..."/>
+                <footer>
+                    <button name="action_log_and_schedule" string="Log &amp; Schedule Next" type="object" class="btn btn-primary"/>
+                    <button name="action_log" string="Log Only" type="object" class="btn btn-primary"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_activity_log_view_form_schedule" model="ir.ui.view">
+        <field name="name">Schedule next Activity</field>
+        <field name="model">crm.activity.log</field>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <form string="Schedule Next Activity">
+                <group class="mt0">
+                    <field name="team_id" invisible="1"/>
+                    <field name="lead_id" invisible="1"/>
+                    <field name="last_activity_id" invisible="1"/>
+                    <group>
+                        <field name="next_activity_id"
+                            domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]"
+                            options="{'no_create': True, 'no_open': True}"/>
+                        <field name="date_action"/>
+                        <field name="title_action" placeholder="e.g. Discuss proposal"/>
+                    </group>
+                    <group>
+                        <div>
+                            <p><strong>Recommended activities:</strong></p>
+                            <field name="recommended_activity_id" widget="radio" class="o_recommended_activity"
+                                domain="[('preceding_activity_ids', '=', last_activity_id)]"/>
+                        </div>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_schedule" string="Schedule Activity" type="object" class="btn btn-primary"/>
+                    <button string="No activity" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_activity_log_action" model="ir.actions.act_window">
+        <field name="name">Log an Activity</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.activity.log</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm_activity_log_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="crm_activity_schedule_action" model="ir.actions.act_window">
+        <field name="name">Schedule an Activity</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.activity.log</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm_activity_log_view_form_schedule"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

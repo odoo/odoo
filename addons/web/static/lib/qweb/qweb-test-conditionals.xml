@@ -1,0 +1,41 @@
+<templates>
+    <t t-name="boolean-value-condition">
+        <t t-if="condition">ok</t>
+    </t>
+    <params id="boolean-value-condition">{"condition": true}</params>
+    <result id="boolean-value-condition">ok</result>
+
+    <t t-name="boolean-value-condition-false">
+        <t t-if="condition">fail</t>
+    </t>
+    <params id="boolean-value-condition-false">{"condition": false}</params>
+    <result id="boolean-value-condition-false"/>
+
+    <t t-name="boolean-value-condition-missing">
+        <t t-if="condition">fail</t>
+    </t>
+    <result id="boolean-value-condition-missing"/>
+
+    <t t-name="boolean-value-condition-elif">
+        <t t-if="color == 'black'">black pearl</t>
+        <t t-elif="color == 'yellow'">yellow submarine</t>
+        <t t-elif="color == 'red'">red is dead</t>
+        <t t-else="">beer</t>
+    </t>
+    <params id="boolean-value-condition-elif">{"color": "red"}</params>
+    <result id="boolean-value-condition-elif">red is dead</result>
+
+    <t t-name="boolean-value-condition-else">
+        <div><span>begin</span><t t-if="condition">ok</t>
+        <t t-else="">ok-else</t><span>end</span></div>
+    </t>
+    <params id="boolean-value-condition-else">{"condition": true}</params>
+    <result id="boolean-value-condition-else"><![CDATA[<div><span>begin</span>ok<span>end</span></div>]]></result>
+
+    <t t-name="boolean-value-condition-false-else">
+        <div><span>begin</span><t t-if="condition">fail</t>
+        <t t-else="">fail-else</t><span>end</span></div>
+    </t>
+    <params id="boolean-value-condition-false-else">{"condition": false}</params>
+    <result id="boolean-value-condition-false-else"><![CDATA[<div><span>begin</span>fail-else<span>end</span></div>]]></result>
+</templates>

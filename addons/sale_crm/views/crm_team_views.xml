@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo >
+
+    <record id="crm_team_salesteams_view_kanban" model="ir.ui.view">
+        <field name="name">crm.team.kanban.inherit.sale</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sale.crm_team_salesteams_view_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//button[@name='%(sale.action_quotations_salesteams)d']" position="replace"/>
+            </data>
+        </field>
+    </record>
+
+</odoo>

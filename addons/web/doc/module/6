@@ -1,0 +1,29 @@
+# HG changeset patch
+# Parent 0026cb80097a724db8d36371bc00da993a51a06f
+
+diff --git a/__manifest__.py b/__manifest__.py
+--- a/__manifest__.py
++++ b/__manifest__.py
+@@ -4,5 +4,6 @@
+     'description': "Basic example of a (future) web module",
+     'category': 'Hidden',
+     'depends': ['web'],
++    'data': ['web_example.xml'],
+     'js': ['static/src/js/first_module.js'],
+ }
+diff --git a/web_example.xml b/web_example.xml
+new file mode 100644
+--- /dev/null
++++ b/web_example.xml
+@@ -0,0 +1,11 @@
++<!-- web_example/web_example.xml -->
++<openerp>
++    <data>
++        <record model="ir.actions.client" id="action_client_example">
++            <field name="name">Example Client Action</field>
++            <field name="tag">example.action</field>
++        </record>
++        <menuitem action="action_client_example"
++                  id="menu_client_example"/>
++    </data>
++</openerp>

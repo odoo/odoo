@@ -1,0 +1,16 @@
+<template>
+
+<t t-name="DiagramView.buttons">
+	<div t-if="widget.is_action_enabled('create')">
+        <button type="button" class="btn btn-primary btn-sm o_diagram_new_button">
+            New Node
+        </button>
+    </div>
+</t>
+
+<t t-name="DiagramView">
+	<div class="o_diagram_header" t-att-id="widget.element_id + '_header'"/>
+    <div class="o_diagram"/>
+</t>
+
+</template>

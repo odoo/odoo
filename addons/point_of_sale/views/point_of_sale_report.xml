@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+        id="report_user_label"
+        model="res.users"
+        string="User Labels"
+        report_type="qweb-pdf"
+        name="point_of_sale.report_userlabel"
+        file="point_of_sale.report_userlabel"
+    />
+
+    <!-- used from POS UI, no need to be in print menu -->
+    <record id="pos_invoice_report" model="ir.actions.report.xml">
+        <field name="name">Invoice</field>
+        <field name="model">pos.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">point_of_sale.report_invoice</field>
+    </record>
+
+    <record id="sale_details_report" model="ir.actions.report.xml">
+        <field name="name">Sale Details</field>
+        <field name="model">report.point_of_sale.details</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">point_of_sale.report_saledetails</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Top menu item -->
+        <!--
+            This menu item's purpose is to rename it into 'Sales' in the 
+            case that CRM was installed after Sales
+        -->
+        <menuitem name="Sales" id="sales_team.menu_base_partner"/>
+
+        <record id="crm_case_form_view_oppor" model="ir.ui.view">
+            <field name="name">crm.lead.oppor.inherited.crm</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_set_won']" position="before">
+                    <button string="New Quotation" name="%(sale_action_quotations_new)d" type="action" class="oe_highlight"
+                        context="{'search_default_partner_id': partner_id,
+                                  'default_partner_id': partner_id,
+                                  'default_team_id': team_id}"/>
+                </xpath>
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="action"
+                            name="%(sale_action_quotations)d" icon="fa-pencil-square-o"
+                            context="{'default_partner_id': partner_id, 'search_default_draft': 1}">
+                        <div class="o_stat_info">
+                            <field name="sale_number" class="o_stat_value"/>
+                            <span class="o_stat_text"> Quote(s) </span>
+                        </div>
+                    </button>
+                    <button class="oe_stat_button" type="action" attrs="{'invisible': [('sale_amount_total', '=', 0)]}"
+                            name="%(sale_action_quotations)d" icon="fa-usd"
+                            context="{'search_default_partner_id': partner_id, 'default_partner_id': partner_id, 'search_default_sales': 1}">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value"><field name="sale_amount_total" widget="monetary" options="{'currency_field': 'company_currency'}"/></span>
+                            <span class="o_stat_text"> Orders</span>
+                        </div>
+                    </button>
+                </div>
+            </field>
+        </record>
+
+        <!-- add needaction_menu_ref to reload quotation needaction when opportunity needaction is reloaded -->
+        <record id="crm.crm_lead_opportunities" model="ir.actions.act_window">
+            <field name="context">{'default_type': 'opportunity', 'default_user_id': uid, 'needaction_menu_ref': 'sale.menu_sale_quotations'}</field>
+        </record>
+
+</odoo>

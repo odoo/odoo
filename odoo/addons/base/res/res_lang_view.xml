@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_lang_tree" model="ir.ui.view">
+            <field name="name">res.lang.tree</field>
+            <field name="model">res.lang</field>
+            <field name="arch" type="xml">
+                <tree string="Languages" colors="gray:not active" >
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="iso_code"/>
+                    <field name="direction"/>
+                    <field name="translatable"/>
+                    <field name="active"/>
+                    <button name="%(base.action_wizard_update_translations)d"
+                    string="Update Terms" type="action" icon="fa-refresh" help="Update Language Terms"
+                    attrs="{'invisible': [('active', '=', False)]}"/>
+                </tree>
+            </field>
+        </record>
+        <record id="res_lang_form" model="ir.ui.view">
+            <field name="name">res.lang.form</field>
+            <field name="model">res.lang</field>
+            <field name="arch" type="xml">
+                <form string="Languages">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group col="3">
+                            <group>
+                                <field name="code"/>
+                                <field name="iso_code"/>
+                                <field name="translatable"/>
+                            </group>
+                            <group>
+                                <field name="direction"/>
+                                <field name="grouping"/>
+                                <field name="decimal_point"/>
+                                <field name="thousands_sep"/>
+                                <field name="date_format"/>
+                                <field name="time_format"/>
+                            </group>
+                        </group>
+                        <group string="Legends for supported Date and Time Formats">
+                            <div>%%a - Abbreviated weekday name.</div>
+                            <div>%%A - Full weekday name.</div>
+                            <div>%%b - Abbreviated month name.</div>
+                            <div>%%B - Full month name."</div>
+                            <div>%%d - Day of the month [01,31]."</div>
+                            <div>%%j - Day of the year [001,366]."</div>
+                            <div>%%H - Hour (24-hour clock) [00,23]."</div>
+                            <div>%%I - Hour (12-hour clock) [01,12]."</div>
+                            <div>%%M - Minute [00,59]."</div>
+                            <div>%%p - Equivalent of either AM or PM."</div>
+                            <div>%%S - Seconds [00,61]."</div>
+                            <div>%%w - Weekday number [0(Sunday),6]."</div>
+                            <div>%%y - Year without century [00,99]."</div>
+                            <div>%%Y - Year with century."</div>
+                            <div>%%m - Month number [01,12]."</div>
+                        </group>
+                        <group string="Examples">
+                            <div>1. %%b, %%B         ==> Dec, December</div>
+                            <div>2. %%a ,%%A         ==> Fri, Friday</div>
+                            <div>3. %%y, %%Y         ==> 08, 2008</div>
+                            <div>4. %%d, %%m         ==> 05, 12</div>
+                            <div>5. %%H:%%M:%%S      ==> 18:25:20</div>
+                            <div>6. %%I:%%M:%%S %%p  ==> 06:25:20 PM</div>
+                            <div>7. %%j              ==> 340</div>
+                            <div>8. %%S              ==> 20</div>
+                            <div>9. %%w              ==> 5 ( Friday is the 6th day)</div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="res_lang_search" model="ir.ui.view">
+            <field name="name">res.lang.search</field>
+            <field name="model">res.lang</field>
+            <field name="arch" type="xml">
+                <search string="Languages">
+                    <field name="name"
+                        filter_domain="['|', '|', ('name','ilike',self), ('code','ilike',self), ('iso_code','ilike',self)]"
+                        string="Language"/>
+                    <filter string="Translatable" domain="[('translatable','=',True)]"/>
+                    <filter string="Active" domain="[('active','=',True)]"/>
+                    <field name="direction"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="res_lang_act_window" model="ir.actions.act_window">
+            <field name="name">Languages</field>
+            <field name="res_model">res.lang</field>
+            <field name="view_type">form</field>
+            <field name="context">{'active_test': False}</field>
+            <field name="search_view_id" ref="res_lang_search"/>
+        </record>
+        <menuitem action="res_lang_act_window" id="menu_res_lang_act_window" parent="menu_translation" groups="base.group_no_one" sequence="1"/>
+    </data>
+</odoo>

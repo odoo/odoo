@@ -1,0 +1,106 @@
+-
+  I first create a warehouse with pick-pack-ship and receipt in 2 steps
+-
+  !record {model: stock.warehouse, id: wh_pps}:
+    name: WareHouse PickPackShip 
+    code: whpps
+    reception_steps: 'two_steps'
+    delivery_steps: 'pick_pack_ship' 
+-
+  Next I create a new product in this warehouse
+-
+  !record {model: product.product, id: product_mto, view: False}:
+    name: "My Product"
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_2
+        min_qty: 2.0
+-
+  Set routes on product to be MTO and Buy
+-
+ !python {model: product.product, id: product_mto}: |
+    route_warehouse0_buy = self.env['stock.warehouse'].browse(ref('stock.warehouse0')).buy_pull_id.route_id.id 
+    route_warehouse0_mto = self.env['stock.warehouse'].browse(ref('stock.warehouse0')).mto_pull_id.route_id.id 
+    self.write({'route_ids': [(6, 0, [route_warehouse0_mto,route_warehouse0_buy])]})
+-
+  Create a sales order with a line of 5 Units "My Product".
+- 
+  !record {model: sale.order, id: sale_order_product_mto}:
+    partner_id: base.res_partner_3
+    note: Create Sales order
+    warehouse_id: wh_pps
+    pricelist_id: product.list0
+    order_line:
+      - product_id: product_mto
+        name: "product_mto"
+        product_uom_qty: 5.00
+        product_uom: product.product_uom_unit
+- 
+  Confirm the sale order
+- 
+  !python {model: sale.order, id: sale_order_product_mto}: |
+    self.action_confirm()
+-
+  Create another sales order with 2 Dozen of the same product
+-
+  !record {model: sale.order, id: sale_order_product_mto2}:
+    partner_id: base.res_partner_4
+    note: Create Sales order
+    warehouse_id: wh_pps
+    order_line:
+      - product_id: product_mto
+        name: "product_mto"
+        product_uom_qty: 2.00
+        product_uom: product.product_uom_dozen
+-
+  Confirm the sale order
+-
+  !python {model: sale.order, id: sale_order_product_mto2}: |
+    self.action_confirm()
+-
+  I run scheduler.
+-
+  !python {model: procurement.order, id: False}: |
+    self.run_scheduler()
+- 
+  Check the propagation when we cancel the main procurement 
+    * Retrieve related procurements and check that there are all running
+    * Check that a purchase order is well created
+    * Cancel the main procurement
+    * Check that all procurements related and the purchase order are well cancelled   
+-
+  !python {model: procurement.order, id: False}: |
+    # Retrieve related procurement
+    so1 = self.env['sale.order'].browse(ref('sale_order_product_mto'))
+    so2 = self.env['sale.order'].browse(ref('sale_order_product_mto2'))
+    procus = self.search([('group_id.name', 'in', [so1.name, so2.name])])
+    assert len(procus.ids)>0, 'No procurement found!'
+    # Check that all procurements are running 
+    for procu in procus:
+        assert procu.state == u'running', 'Procurement with id: %d should be running but is with state : %s!' %(procu.id, procu.state)
+    
+    # Check that one purchase order has been created
+    purchases = procus.mapped('purchase_line_id').mapped('order_id')
+    assert len(purchases.ids) == 1, 'No purchase order found !'
+
+    # Check the two purchase order lines
+    purchase_line = purchases[0].order_line[0]
+    assert purchase_line.product_qty == 29.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
+    assert purchase_line.product_uom.id == ref("product.product_uom_unit"), 'The product UoM ID of the first order line should be %s and not %s' % (ref("product.product_uom_unit"), purchase_line.product_uom.id,)
+
+    # Cancel the Sales Order 2
+    so2.order_line[0].procurement_ids[0].cancel()
+    assert so2.order_line[0].procurement_ids[0].state == u'cancel', 'Procurement 2 should be cancelled !'
+    assert purchase_line.product_qty == 5.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
+
+    # Cancel the Sales Order 1
+    so1.order_line[0].procurement_ids[0].cancel()
+    assert so1.order_line[0].procurement_ids[0].state == u'cancel', 'Procurement 1 should be cancelled !'
+    assert len(purchases.order_line) == 0, 'The PO line should have been unlinked!'
+    
+    # Check that all procurements related are cancelled    
+    for procu in procus:
+        assert procu.state == u'cancel', 'Procurement %d should be cancelled but is with a state : %s!' %(procu.id, procu.state)

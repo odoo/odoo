@@ -1,0 +1,4089 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project
+# 
+# Translators:
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# Manami Hashi <manami@roomsfor.hk>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Masayuki Takesue <m_takesue@nifty.com>, 2016
+# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+# SHIMIZU Taku <shimizu.taku@gmail.com>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# kent_ocean <ke.tanabe@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-10-10 08:42+0000\n"
+"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"Last-Translator: kent_ocean <ke.tanabe@gmail.com>, 2016\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_module_install_project
+msgid ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Your Odoo Project application is up and running</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">What’s next?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Try creating a task by sending an email to </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Invite new users</span></a></span>\n"
+"                                        <span>to collaborate</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">project planner</span></a></span>\n"
+"                                <span> to activate extra features</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Track hours with timesheets,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Plan tasks and resources with forecasts,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Bill time on tasks or issues,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>And much more...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
+"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us at \n"
+"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
+"                                how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
+"                                </span><span> or with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
+msgstr ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">自動ログイン</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Odooプロジェクトアプリは稼働中です</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">この次は?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>ここに電子メールを送ってタスクを作ります </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Invite new users</span></a></span>\n"
+"                                        <span>コラボレートするには</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">project planner</span></a></span>\n"
+"                                <span>追加機能を有効にするには</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>タイムシートで時間管理する,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>フォーキャストをもとにタスクやリソースを計画する,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>スマートなレポートと正確なダッシュボードを入手,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>タスクや課題に関する請求時間,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>その他...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
+"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>私たちは途中であなたを助られることを嬉しく思っています。 お問い合わせ \n"
+"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a> あなたは何か質問がある場合。 また、\n"
+"                                 Odoo プロジェクトを最大限に活用する方法</span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">ユーザードキュメント</span></a>\n"
+"                                </span><span> もしくはホームページ </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API ドキュメント</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Odoo体験をお楽しみください,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS：人々はOdooを愛してます </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">ユーザーの声もご覧ください</span></a></span>\n"
+"            </div>\n"
+"        </div>"
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+"\n"
+"<p> ${object.partner_id.name or 'customer'}　様,</p>\n"
+"<p>ご質問ありがとうございます。<br /></p>\n"
+"<p>ご不明な点がございましたら、お知らせください。</p>\n"
+"<p>以上、よろしくお願いいたします。</p>"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
+msgid "# Days to Assign"
+msgstr "割当日数"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
+msgid "# Days to Close"
+msgstr "終了日番号"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
+msgid "# Days to Deadline"
+msgstr "締切期限日数"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_res_partner_task_count
+msgid "# Tasks"
+msgstr "タスク数"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
+msgid "# Working Days"
+msgstr "就労日数"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
+msgid "# of Tasks"
+msgstr "タスク数"
+
+#. module: project
+#: code:addons/project/models/project.py:240
+#: code:addons/project/models/project.py:410
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (コピー)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"(Un)archiving a project automatically (un)archives its tasks and issues. Do "
+"you want to proceed?"
+msgstr "プロジェクトを自動的にアーカイブする(しない)と、そのタスクと課題がアーカイブされます(ません)。 続行しますか？"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "- The Odoo Team"
+msgstr "- The Odoo チーム"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "1. Learn about Tasks, Issues and Timesheets."
+msgstr "1.タスク、課題、タイムシートについて学びます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"2. Now, take some time to list <strong>the Projects you'll need:</strong>"
+msgstr "2.ここで、<strong>必要なプロジェクト</strong>を表示する時間を取ってください。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:72
+#, python-format
+msgid ""
+"<b>Assign the task</b> to someone. <i>You can create and invite a new user "
+"on the fly.</i>"
+msgstr "<b>タスクを誰かに割り当てる</b>。 <i>新しいユーザーを作成して招待することができます。</i>"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:83
+#, python-format
+msgid "<b>Click the save button</b> to apply your changes to the task."
+msgstr "<b>保存ボタンをクリック</b>して変更をタスクに適用します。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:48
+#, python-format
+msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
+msgstr "作業中に、列間で<b>タスクをドラッグ＆ドロップ</b>します。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:97
+#, python-format
+msgid ""
+"<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
+msgstr "<b>同僚を電子メールで招待</b>します。<br/> <i> 1行に1件のメールを入力します。</i>"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:54
+#, python-format
+msgid "<b>Star tasks</b> to mark team priorities."
+msgstr "<b>スタータスク</b>でチームの優先順位を表示。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<i class=\"fa fa-user\"/> Person Responsible"
+msgstr "<i class=\"fa fa-user\"/> 責任者"
+
+#. module: project
+#: code:addons/project/models/project.py:122
+#, python-format
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        Documents are attached to the tasks and issues of your project.</p><p>\n"
+"                        Send messages or log internal notes with attachments to link\n"
+"                        documents to your project.\n"
+"                    </p>"
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"ドキュメントは、プロジェクトの課題や課題に添付されています。</p> <p>\n"
+"                         文書をプロジェクトにリンクするために、メッセージを送信するか、\n"
+"                         添付ファイル付きの内部メモを記録します。\n"
+"                    </p>"
+
+#. module: project
+#: code:addons/project/models/project.py:150
+#, python-format
+msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
+msgstr "<p class=\"oe_view_nocontent_create\">クリックで新しいプロジェクトが作成されます。</p>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">as </span>"
+msgstr "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">as </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> 今すぐインストール"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat"
+msgstr "<span class=\"fa fa-comment-o\"/> ウェブサイトライブチャット"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
+msgstr "<span class=\"fa fa-comment-o\"/> ウェブサイト・ライブチャット"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<span class=\"fa fa-envelope-o\"/> Email Our Project Expert"
+msgstr "<span class=\"fa fa-envelope-o\"/> プロジェクトエキスパートにメールする"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use"
+" projects:"
+msgstr "<span class=\"fa fa-thumbs-o-down\"/> プロジェクトを使用する<strong>間違った方法</strong>："
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"fa fa-thumbs-o-up\"/> The <strong>Right Way</strong> to use "
+"projects:"
+msgstr "<span class=\"fa fa-thumbs-o-up\"/> プロジェクトを使用する<strong>正しい方法</strong>："
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "<span class=\"o_label\">Documents</span>"
+msgstr "<span class=\"o_label\">ドキュメント</span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-laptop\"/>\n"
+"                                            <strong> Screen Customization</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-laptop\"/>\n"
+"                                            <strong> 画面のカスタマイズ</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-mobile\"/>\n"
+"                                            <strong> From your Mobile phone</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-mobile\"/>\n"
+"                                            <strong> 携帯電話から</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> Create Custom Reports</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> カスタムレポートの作成</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-puzzle-piece\"/>\n"
+"                                            <strong> Via Chrome extension</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-puzzle-piece\"/>\n"
+"                                            <strong> Chrome拡張機能経由</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-sitemap\"/>\n"
+"                                            <strong> Workflow Customization</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-sitemap\"/>\n"
+"                                            <strong> ワークフローのカスタマイズ</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-tasks\"/>\n"
+"                                            <strong> Directly in Odoo</strong>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-tasks\"/>\n"
+"                                            <strong> Odooで直接</strong>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> Exercise 1</strong><br/>\n"
+"                                            <span class=\"small\">Check Workload</span>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> エクササイズ1</strong><br/>\n"
+"                                            <span class=\"small\">ワークロードの確認</span>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> Exercise 2</strong><br/>\n"
+"                                            <span class=\"small\">Delay to close an Issue</span>\n"
+"                                        </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> エクササイズ2</strong><br/>\n"
+"                                            <span class=\"small\">課題を閉じるまでの遅延</span>\n"
+"                                        </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-check-square-o\"/>\n"
+"                                        <strong> Tasks</strong>\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-check-square-o\"/>\n"
+"                                        <strong> タスク</strong>\n"
+"                                    </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-clock-o\"/>\n"
+"                                        <strong> Timesheets</strong>\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-clock-o\"/>\n"
+"                                        <strong> タイムシート</strong>\n"
+"                                    </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-exclamation-circle\"/>\n"
+"                                        <strong> Issues</strong>\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-exclamation-circle\"/>\n"
+"                                        <strong> 課題</strong>\n"
+"                                    </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid ""
+"<span>(*) This configuration is related to the company you're logged "
+"into.</span>"
+msgstr "<span>(*) 自分が現在ログインしている会社の設定</span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span><strong>Contact us to customize your application:</strong><br/>\n"
+"                                    We have special options for unlimited number of customizations !\n"
+"                                    </span>"
+msgstr ""
+"<span><strong>アプリケーションをカスタマイズするには、お問い合わせください:</strong><br/>\n"
+"                                    無制限にカスタマイズできる特別なオプションがあります！\n"
+"                                    </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<span><strong>We are here to help you:</strong> if you don't succeed in achieving your favorite KPIs, contact us and we can help you create your custom reports.\n"
+"                                    </span>"
+msgstr ""
+"<span><strong>私たちはあなたを助けるためにここにいます：</strong> あなたがお気に入りのKPIを達成することに成功しなかった場合は、私たちに連絡してください。カスタムレポートの作成のお手伝いができます。\n"
+"                                    </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Adjourn (5 min)</strong>\n"
+"                                Conclude the meeting with upbeat statements and positive input on project accomplishments. Always reinforce teamwork and encourage all member to watch out for each other to ensure the project is successful."
+msgstr ""
+"<strong> 休憩 (5 分)</strong>\n"
+"                                明るい発言とプロジェクト成果への肯定的な意見をもって会合を締結する。 常にチームワークを強化し、プロジェクトの成功を確実にするために、すべてのメンバーがお互いに注意を払うよう奨励します。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Critical items (10 min)</strong>\n"
+"                                Upon completing the project status review session, summarize the critical items."
+msgstr ""
+"<strong> クリティカルアイテム (10 分)</strong>\n"
+"                                プロジェクトの進捗状況のレビューセッションを完了し、重要な項目をまとめたもの。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> New business issues (5 min)</strong>\n"
+"                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  issue as you walk through the project status session. Not every  issue warrants spending time here, so keep discussions to a minimum."
+msgstr ""
+"<strong> 新しいビジネス課題(5分)</strong>\n"
+"                                あなたは、この週の間に、プロジェクトに影響を与える何かを学びます。ミーティングの早い段階でニュースを共有して、チームメンバーがプロジェクトステータスセッションを通過する際に課題を検討するのを手伝ってください。すべての課題で、ここで時間を費やすわけではありませんので、議論は最小限に抑えてください。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong> Prepare an agenda (and keep to it)</strong>"
+msgstr "<strong>議題を準備する(そして維持する)</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Project plan status review (20 min) </strong>\n"
+"                                Walk through your project plan and allow each team member to provide a brief status of assignments due this week and tasks planned for the next two  weeks. You want to know whether tasks are on track and if any will miss  their projected deadline. You also want to allow the team member to share  any special considerations that might affect other tasks or members of  the project. Carefully manage this part because some team members will  want to pontificate and spend more time than is really needed. Remember, you’re the project manager."
+msgstr ""
+"<strong>プロジェクト計画状況の確認(20分)</strong>\n"
+"                                 プロジェクト計画を通して、各チームメンバーが今週の予定とタスクを計画し、次の2週間の計画します。 あなたは、タスクが軌道に乗っているかどうか、そして予定された締め切りが間に合うかどうか確認もしたいし、 また、チームメンバーがプロジェクトの他のタスクやメンバーに影響する可能性のある特別な考慮事項を共有できるようにする必要もあります。 チームメンバの中には、実際に必要とされるよりも多くの時間を費やして賞賛したいこともあるので、この部分は注意深く管理してください。 覚えておいてください、あなたはプロジェクトマネージャです。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Q&amp;A and discussion time (10 min)</strong>\n"
+"                                Always give your team time to ask questions on issues that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting."
+msgstr ""
+"<strong> Q&amp;Aとディスカッションの時間 (10 分)</strong>\n"
+"                                議論されなかった課題については、チームに常に質問をしてください。 これにより、週中に拾った、または会議中に発見された重要なポイントを補強する別の機会が与えられます"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Roll call (5 min)</strong>\n"
+"                                Let everyone know who is in attendance before starting. This is important  for remote team members who have dialled in and will save you time later."
+msgstr ""
+"<strong> Roll call (5 min)</strong>\n"
+"                                開始前に誰が出席しているかを全員に知らせる。 これは電話会議出席のリモートのチームメンバーにとって重要で、後で時間を節約できます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong> Summary and follow-up items (5 min)</strong>\n"
+"                                Always wrap up with a project status summary and a list of action items  dentified in the meeting to help move the project along."
+msgstr ""
+"<strong>サマリーとフォローアップアイテム(5分)</strong>\n"
+"                                 プロジェクトのステータスサマリーと会議で肯定されたアクション項目のリストを常にまとめて、プロジェクトの移動に役立てます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
+"                            It replaces the standard Description area in Tasks and Issues and is extremely useful for several cases."
+msgstr ""
+"<strong> Odooの大きな特長は、Etherpadと呼ばれるコラボレーティブノートパッドとの統合です。</strong> <br/>\n"
+"                            タスクと課題の標準の説明領域を置き換ることで、いくつかのケースで非常に役立ちます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>A problem or request from a customer</strong> that needs to be "
+"identified, solved and followed up asap."
+msgstr "<strong>顧客からの問題またはリクエスト</strong>を特定し、解決し、できるだけ早く追跡する必要があります。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>About Employees:</strong>"
+msgstr "<strong>従業員について:</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Add a Deadline</strong><br/>\n"
+"                                    The deadline will help you determine if a task or issue is progressing as expected  and to anticipate its next update."
+msgstr ""
+"<strong>締切を追加</strong><br/>\n"
+"                                    締切は、タスクや問題が期待どおりに進行しているかどうかを判断し、次回の更新を予測するのに役立ちます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>An internal activity</strong> that should be done within a defined "
+"period of time."
+msgstr "<strong>内部活動</strong>、これは定義された期間内に実行さるものです。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Analyze reports</strong> (every a year)"
+msgstr "<strong>レポートを分析</strong>(1年ごと)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Approve your Timesheets</strong> (every week)"
+msgstr "<strong>タイムシートの承認</strong>(毎週)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Ask participants to prepare</strong><br/>\n"
+"                                To run an effective meeting, prepare participants beforehand. Inform them of how they are expected to contribute."
+msgstr ""
+"<strong>参加者に準備を依頼</strong><br/>\n"
+"                                効果的な会議を開催するには、事前に参加者を準備してください。 あらかじめ彼らがどのように貢献することが期待されるかを知らせておきます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Be careful about the messages you send</strong><br/>\n"
+"                                    Sending a message through Odoo will automatically send an email containing your message to all the followers including internal employees, external users or customers."
+msgstr ""
+"<strong>送信するメッセージには注意してください</strong><br/>\n"
+"                                    Odooを介してメッセージを送信すると、内部の従業員、外部ユーザーまたは顧客を含むすべてのフォロワーにメッセージを含む電子メールが自動的に送信されます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Billing</strong>"
+msgstr "<strong>請求</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Choose the right day</strong><br/>\n"
+"                                    Avoid Monday mornings as your regular meeting day; choosing to meet later in the week gives participants time to get ready for the meeting and to work toward specific objectives in the days that follow."
+msgstr ""
+"<strong>正しい日の選択</strong><br/>\n"
+"                                    月曜日の朝は定期会議の日としては避けてください。 会議の後半に会うことを選択すると、参加者には、会議の準備をし、その後の特定の目標に向けて作業する時間ができます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Click on 'Reporting' on the main menu</strong> and generate "
+"statistics relevent to each profiles:"
+msgstr "<strong>メインメニューの「 レポート」 をクリックして</strong>各プロファイルに関連する統計を生成します。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Contact us now:</strong><br/>"
+msgstr "<strong>連絡先:</strong><br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Create tasks and issues by email</strong><br/>\n"
+"                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task or issue in the first stage of the project, with all the email recipients as its default followers."
+msgstr ""
+"<strong>メールでタスクや課題を作成する</strong> <br/>\n"
+"Odooでは、すべてのプロジェクトに電子メールエイリアスがあります。 このエイリアスに電子メールを送信すると、すべての電子メール受信者を既定のフォロワーとして、プロジェクトの最初の段階でタスクまたは課題が自動的に作成されます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Define a Naming Convention</strong><br/>\n"
+"                                    Add keywords in the 'Task title' field, for example [Customer name] or [Website]. This will help you navigate and search through the dozens of tasks in your project."
+msgstr ""
+"<strong>命名規約の定義</strong><br/>\n"
+"                                    「タスク名」フィールドにキーワードを追加します。例：[顧客名]または[ウェブサイト]。 これにより、プロジェクト内の数多くのタスクをナビゲートして検索するのに役立ちます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Enter your activities</strong> (every day)"
+msgstr "<strong>アクティビティを入力</strong>(毎日)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Example: </strong>"
+msgstr "<strong>例: </strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Exercise:</strong> Try to create a graph with the monthly evolution "
+"of the 'Average delay to close'  of Issues."
+msgstr "<strong>エクササイズ：</strong>課題の「終了処理の平均遅延」の月間の進化をグラフにしてみます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Exercise:</strong> Try to get a view of the workload for this week "
+"for all your employees (planned hours)."
+msgstr "<strong>エクササイズ：</strong>今週のすべての従業員(予定時間)のワークロードを表示してみましょう。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Follow every meeting with a recap email</strong>\n"
+"                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, issues/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously."
+msgstr ""
+"<strong>要約電子メールで会議をフォロー</strong>\n"
+"                                    会議が終わるとすぐに会議の議事録を発表し、更新されたプロジェクトスケジュール、課題/行動項目マトリックス、その他の適切なドキュメントとともに配布します。 会議全体で同じテンプレートを使用し、継続的に改善してください。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Follow only what you need</strong><br/>\n"
+"                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks or issues of a project."
+msgstr ""
+"<strong>必要なものだけをフォロー</strong><br/>\n"
+"                                    通知を使用する最も簡単な方法は、プロジェクト全体をフォローすることです。新しい、もしくは既存プロジェクトやタスクやプロジェクトの課題、すべての通知が届きます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>For issues:</strong>"
+msgstr "<strong>課題の場合：</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>For tasks:</strong>"
+msgstr "<strong>タスク用：</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Getting reports</strong> on what your employees are working on"
+msgstr "従業員の作業内容に関する<strong>レポートの取得</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Getting statistics</strong> on how much time a task takes to be "
+"completed"
+msgstr "タスクが完了するまでに要する時間の<strong>統計の取得</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Have Clear Responsibilities</strong><br/>\n"
+"                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, the responsibility for a task can change depending on its stage."
+msgstr ""
+"<strong>責任者を明確化</strong><br/>\n"
+"                                    タスクに割り当てられた担当者が進行を担当し、アバターがかんばん表示に表示され、クイックリファレンスが表示されます。 もちろん、タスクの責任者はその段階によって変わることがあります。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>In 'Pull' mode</strong>, tasks ready to progress to the next stage "
+"are just marked  as 'Ready for next stage (using the status icon) by the "
+"person responsible for the current stage. Then, the person responsible for "
+"the next stage  takes the task and moves it to the next stage. This is the "
+"best way to work if you have diluted responsibilities for your Kanban "
+"stages."
+msgstr ""
+"<strong>「プル」モード</strong>では、次のステージに進む準備が整ったタスクは、現在のステージの担当者が「次のステージの準備完了(ステータスアイコンを使用)」としてマークされます。"
+" 次に、次のステージの責任者がタスクを受け取り、次のステージに移動します。 これは、かんばんステージの責任を希釈した場合には、作業する最善の方法です。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>In 'Push' mode</strong>, tasks are pushed into the next stage (once "
+"they satisfy all requirements) by the person responsible for the current "
+"stage. This is a simple way to work but only functions well if you work "
+"alone."
+msgstr ""
+"<strong> 'プッシュ'モード</strong>では、現在の担当者がタスクを次のステージにプッシュします(すべての要件を満たした場合)。 "
+"これは簡単な作業方法ですが、あなたが一人で作業するときのみうまく機能します。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Invoice your customers</strong> (every month)"
+msgstr "<strong>お客様に請求</strong>(毎月)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Invoicing your customers</strong> on Time &amp; Material projects"
+msgstr "時間と材料の<strong>お客様への経費請求</strong> プロジェクト"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Need help to structure your projects?</strong><br/>"
+msgstr "<strong>あなたのプロジェクトを構成するのに助けが必要ですか？</strong> <br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Need help with Timesheets management? Contact us now:</strong><br/>"
+msgstr "<strong>タイムシート管理のサポートが必要ですか？ 今すぐお問い合わせください：</strong> <br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Need help with defining your Projects? Contact us now.</strong><br/>"
+msgstr "<strong>あなたのプロジェクトを定義するのに助けが必要ですか？ 今すぐお問い合わせください。</strong><br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Notes</strong>"
+msgstr "<strong>ノート</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Prepare yourself as well</strong><br/>\n"
+"                                As project manager, you also need to be fully prepared. There should be no surprises during the meeting. Surprises can undermine your ability to manage the project and cause team members to lose confidence in you."
+msgstr ""
+"<strong>自分自身も入念に準備</strong><br/>\n"
+"                                プロジェクトマネージャーとして、あなたは完全に準備する必要もあります。 会議中に驚きはないはずです。 驚きは、あなたのプロジェクト管理能力を損ない、チームメンバーが自信を失う原因となります。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Recommended actions:</strong>"
+msgstr "<strong>推奨アクション：</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Rely on the chatter</strong><br/>\n"
+"                                    Below every Task and Issue (or more generally, below every Document in Odoo) is an area called Chatter."
+msgstr ""
+"<strong>チャッターに頼る</strong> <br/>\n"
+"下のすべてのタスクと課題(またはより一般的には、Odooのすべてのドキュメントの配下)はChatterと呼ばれる領域です。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Set Priorities</strong><br/>\n"
+"                                    The <i class=\"fa fa-star\"/> is used to indicate priority: in Kanban views, high priority Tasks or Issues will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab."
+msgstr ""
+"<strong>優先度の設定</strong> <br/>\n"
+"<i class = \"fa fa-star\"/>は、優先度を示すために使用されます。かんばんのビューでは、優先度の高いタスクまたは課題が上部に表示されます。 スクラム方法論を使用してその週のタスクを示す場合は、これは特に便利です。 ステータスと同様に、プロジェクトステージ タブからスターインジケータの意味を変更できます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>Stages and Requirements</strong> for next stage:"
+msgstr "次のステージのための<strong>ステージと要件</strong>："
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Start with an answer.</strong><br/>\n"
+"                                The worst question to ask is, \"What did you do this week?\" It invariably  generates unnecessary, time-consuming dialogue from team members. Plus, you should already know what everyone on the team did during the week."
+msgstr ""
+"<strong>答えから始めよう。</strong><br/>\n"
+"                                最悪の質問は、「あなたは今週何をしましたか？」です。 チームメンバーからの不必要で時間のかかる対話が常に発生します。 さらに、週にチームの全員が何をしたのかをすでに知っているはずです。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>There are two ways of managing your Kanban stages:</strong>"
+msgstr "<strong>かんばんのステージを管理するには、2つの方法があります。</strong>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>To increase the efficiency of your Projects</strong>, you should "
+"have a look at some of our other apps:"
+msgstr "<strong>プロジェクトの効率を上げるには</strong>、私たちの、その他アプリをいくつか見てください。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>To use Collaborative Notepads</strong>, simply activate the "
+"corresponding option in your"
+msgstr "<strong>コラボレーティブノートパッドを使用する</strong>場合は、対応するオプションを有効にするだけです"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Use Status Indicator</strong><br/>\n"
+"                                    The Status indicator helps you manage Tasks and Issues by giving them one of 3 different colour: Grey, Green or Red. The meaning of these Statuses can be freely configured, for example:"
+msgstr ""
+"<strong>ステータスインジケータを使用する</strong> <br/>\n"
+"ステータスインジケータは、タスクや課題を3種類の色（グレー、グリーン、レッド）で管理するのに役立ちます。 これらのステータスの意味は自由に設定できます。たとえば、次のようになります。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Use Tags</strong><br/>\n"
+"                                    Tags  are complementary to your project stages: they can work as a second  level categorization which is very useful if you have a lot of Tasks or Issues to manage. Also, it becomes very easy to find Tasks or Issues by typing  the Tag into the main Search bar."
+msgstr ""
+"<strong>タグを使用する</strong> <br/>\n"
+"タグはプロジェクトの段階を補完するもので、第2レベルの分類として機能し、管理するタスクや課題がたくさんある場合に非常に便利です。 また、主な検索バーにタグを入力することで、タスクや課題を見つけるのが非常に簡単になります。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>What Activities</strong> would you like to manage?"
+msgstr "<strong>どのようなアクティビティ</strong>を管理しますか？"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<strong>What do you expect</strong> from using Odoo Project?"
+msgstr "あなたは Odoo プロジェクトに<strong>どのような期待</strong>を持っていますか？"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>You have different users writing Tasks descriptions</strong><br/>\n"
+"                            It can quickly become messy if everyone uses his own layout. Etherpad will allow you to create a basic template with a few titles and bullet points, making it much easier for everyone."
+msgstr ""
+"<strong>タスクの説明を書いている別のユーザーあり</strong><br/>\n"
+"                           誰もが自分のレイアウトを使用すると、すぐに乱雑になることがあります。 Etherpadでは、いくつかのタイトルと箇条書きの機能がある基本的なテンプレートを作成することができます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>You have to manage versions and track changes</strong><br/>\n"
+"                            Etherpad auto-saves the document at regular short intervals and users can permanently save specific versions at any time. Plus, a \"time slider\" feature also allows anyone to explore the history of the pad."
+msgstr ""
+"<strong>バージョンを管理し、変更を追跡する必要があります</strong><br/>\n"
+"                            Etherpadは短い間隔で文書を自動的に保存し、ユーザはいつでも特定のバージョンを永久に保存することができます。 また、「タイムスライダー」機能により、誰でもパッドの履歴を調べることができます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>You organize distant meetings</strong><br/>\n"
+"                            Etherpad allows users to simultaneously edit a text document, see all of the edits in real-time and with the ability to display each author's text in their own color."
+msgstr ""
+"<strong>遠距離会議をオーガナイズする</strong><br/>\n"
+"                            Etherpadを使用すると、テキスト文書を同時に編集したり、すべての編集内容をリアルタイムで表示したり、各著者のテキストを独自の色で表示することができます。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr "このエイリアスの新しいレコードを作成する時にデフォルト値を与えるためのPython辞書です。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"A customer sends a complaint to support@yourcompany.com: an Issue is "
+"automatically created into a 'Support level 1' project based on the original"
+" email from the customer."
+msgstr ""
+"顧客がsupport@yourcompany.comに苦情を送信すると、顧客からの元の電子メールに基づいて課題が自動的に「サポートレベル1」プロジェクトに作成されます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"A project usually involves many stakeholders, be it the project's sponsor, resources, customers or external contractors. But the most important person in a project is usually the Project Manager.<br/>\n"
+"                    In Odoo, the Project Managers have the responsibility of managing the Kanban view: they ensure smooth progression of the projects, minimal downtime between stages and optimal work distribution between resources."
+msgstr ""
+"プロジェクトには通常、プロジェクトのスポンサー、リソース、顧客、または外部請負業者など、多くのステークホルダーが関与します。 しかし、プロジェクトの中で最も重要な人は、通常、プロジェクトマネージャーです。<br/>\n"
+"Odooでは、プロジェクトマネージャはかんばんビューを管理する責任があります。プロジェクトの円滑な進行、ステージ間のダウンタイムの最小化、リソース間の最適な作業分散を保証します。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_kanban_state
+msgid ""
+"A task's kanban state indicates special situations affecting it:\n"
+" * Normal is the default situation\n"
+" * Blocked indicates something is preventing the progress of this task\n"
+" * Ready for next stage indicates the task is ready to be pulled to the next stage"
+msgstr ""
+"タスクのかんばん状態は、それに影響を及ぼす特別な状況を示します。\n"
+"* 通常 デフォルトはこの状態です\n"
+"* ブロックされている は、このタスクの進行を妨げるものがあることを示します。\n"
+"* 次の段階へ進む準備完了 は、そのタスクが次の段階に進む準備ができていることを示します"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Accept Emails From"
+msgstr "Eメール受信対象"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Account Preferences"
+msgstr "アカウント設定"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:38
+#, python-format
+msgid "Action has a clear description"
+msgstr "アクションには明確な説明があります"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Activate 'Allow invoicing based on timesheets' from the <i>Human Resources "
+"Settings</i>."
+msgstr "<i>人事管理</i>の「タイムシートに基づく請求を許可する」を有効にします。"
+
+#. module: project
+#: model:ir.actions.server,name:project.activate_sample_project
+msgid "Activate Sample Project"
+msgstr "サンプルプロジェクトを有効にする"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_active
+#: model:ir.model.fields,field_description:project.field_project_task_active
+msgid "Active"
+msgstr "有効"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Add a description..."
+msgstr "説明を追加..."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:38
+#, python-format
+msgid ""
+"Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
+"Specification &gt; Development &gt; Done</i>"
+msgstr ""
+"<b>あなたのタスク用ステージ</b>を設定するカラムを追加してください。<br/><i>例. 仕様定義 &gt; 開発&gt; 完了</i>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "Add/remove from favorite"
+msgstr "お気に入りに追加/削除"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:55
+#, python-format
+msgid "Added in current sprint"
+msgstr "現在のスプリントに追加"
+
+#. module: project
+#: model:project.task.type,name:project.project_stage_data_2
+msgid "Advanced"
+msgstr "詳細"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_id
+msgid "Alias"
+msgstr "エイリアス"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_contact
+msgid "Alias Contact Security"
+msgstr "エイリアス連絡先セキュリティ"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_model
+msgid "Alias Model"
+msgstr "エイリアスモデル"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_name
+msgid "Alias Name"
+msgstr "エイリアス名"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_domain
+msgid "Alias domain"
+msgstr "エイリアスドメイン"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_model_id
+msgid "Aliased Model"
+msgstr "エイリアス対象モデル"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Also, lead by example. When your team members see how prepared you are it "
+"will  reinforce the need for each of them to be prepared for status "
+"meetings."
+msgstr "また、リードを例にしますと、チームメンバーがどのように準備をしているかを見ると、それぞれのメンバーが進捗会議に備える必要がなくなります。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Alternatively, Timesheets can be added directly from Tasks by activating "
+"<strong>'Log work activities on tasks'</strong> in the"
+msgstr ""
+"また、<strong>タスクの作業アクティビティをログに記録</strong>を有効にすることで、タスクからタスクシートを直接追加することもできます"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"An internal message will not send any email notification, but your message "
+"will still be displayed to every user that has access to the page."
+msgstr "内部メッセージは電子メール通知を送信しませんが、メッセージはそのページにアクセスできるすべてのユーザーに表示されます。"
+
+#. module: project
+#: model:ir.model,name:project.model_account_analytic_account
+#: model:ir.model.fields,field_description:project.field_project_project_name
+msgid "Analytic Account"
+msgstr "分析勘定"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_line_ids
+msgid "Analytic Lines"
+msgstr "分析行"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Another good way to limit the number of notifications you receive is to only"
+" follow your Project's 'Task Assigned' events.  Then you'll be notified when"
+" a Task or Issue is created, and can  manually decide if you want to be "
+"notified for its other events too."
+msgstr ""
+"受け取る通知の数を制限するもう1つの良い方法は、プロジェクトの「タスク割り当て済み」イベントだけに従うことです。タスクや課題が作成されたときに通知され、他のイベントについても通知を受けるか否かを手動で決定できます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "Apply"
+msgstr "適用"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Archived"
+msgstr "アーカイブ済"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
+msgid "Assignation Date"
+msgstr "割当日"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+msgid "Assignation Month"
+msgstr "割当て月"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
+msgid "Assigned Tasks"
+msgstr "タスクの割当"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
+msgid "Assigned To"
+msgstr "担当者"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_user_id
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Assigned to"
+msgstr "担当者"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_date_assign
+msgid "Assigning Date"
+msgstr "割当日"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid ""
+"At each stage employees can block or make task/issue ready for next stage.\n"
+"                                You can define here labels that will be displayed for the state instead\n"
+"                                of the default labels."
+msgstr ""
+"各段階で、従業員は次の段階のために準備を整えたりタスク/課題を準備したりすることができます。\n"
+"                                 ここでは、デフォルトのラベルの代わりに状態に対して表示されるラベルを定義することができます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"At the end of the week, each employee should review\n"
+"                            their entries for the week and makes sure the\n"
+"                            entries are correctly encoded. This can be done\n"
+"                            from the"
+msgstr ""
+"At the end of the week, each employee should review\n"
+"                            their entries for the week and makes sure the\n"
+"                            entries are correctly encoded. This can be done\n"
+"                            from the"
+
+#. module: project
+#: code:addons/project/models/project.py:115
+#: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
+#, python-format
+msgid "Attachments"
+msgstr "添付"
+
+#. module: project
+#: selection:project.config.settings,generate_project_alias:0
+msgid "Automatically generate an email alias at the project creation"
+msgstr "プロジェクトの作成時に電子メールエイリアスを自動的に生成する"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Available on the Apple Store"
+msgstr "アプリストアにあります"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Back at the office, the manager splits the customer's requests into several "
+"tasks and delegates them to several employees."
+msgstr "オフィスに戻って、マネージャは顧客の要求をいくつかのタスクに分割し、それらを複数の従業員に委任します。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:31
+#: code:addons/project/static/src/js/web_planner_project.js:47
+#: code:addons/project/static/src/js/web_planner_project.js:63
+#, python-format
+msgid "Backlog"
+msgstr "バックログ"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_balance
+msgid "Balance"
+msgstr "残高"
+
+#. module: project
+#: model:project.task.type,name:project.project_stage_data_1
+msgid "Basic"
+msgstr "初期"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Basic Management"
+msgstr "基本マネジメント"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Be aware of the team’s productivity and time: try to keep meetings to one "
+"hour or less."
+msgstr "チームの生産性と時間に注意してください。ミーティングを1時間以内に終了させるようにしてください。"
+
+#. module: project
+#: selection:project.task,kanban_state:0
+#: selection:report.project.task.user,state:0
+msgid "Blocked"
+msgstr "ブロック"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"But because change is never easy, we've created this Planner to guide you.<br/>\n"
+"                        For example, you'll understand why you shouldn’t use Odoo to plan but instead to\n"
+"                        collaborate, or why organizing your projects by role is wrong."
+msgstr ""
+"しかし、変更は容易ではないため、このプランナーを作成してガイドしています。<br/>\n"
+"                         たとえば、あなたが計画のためではなく、コラボレーションするためにOdooを\n"
+"                        使うべき理由、また、プロジェクトを役割別に整理するのが間違っている理由が理解できます。"
+
+#. module: project
+#: model:project.task,legend_done:project.project_task_10
+#: model:project.task,legend_done:project.project_task_11
+#: model:project.task,legend_done:project.project_task_13
+#: model:project.task,legend_done:project.project_task_14
+#: model:project.task,legend_done:project.project_task_17
+#: model:project.task,legend_done:project.project_task_2
+#: model:project.task,legend_done:project.project_task_21
+#: model:project.task,legend_done:project.project_task_22
+#: model:project.task,legend_done:project.project_task_23
+#: model:project.task,legend_done:project.project_task_4
+#: model:project.task,legend_done:project.project_task_5
+#: model:project.task,legend_done:project.project_task_6
+#: model:project.task,legend_done:project.project_task_7
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "ブザーまたは完了として設定"
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_responsible
+msgid "By Responsible"
+msgstr "責任者"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "Cancel"
+msgstr "取消"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:69
+#: code:addons/project/static/src/js/web_planner_project.js:84
+#: code:addons/project/static/src/js/web_planner_project.js:98
+#: model:project.task.type,name:project.project_stage_3
+#, python-format
+msgid "Cancelled"
+msgstr "取消済"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Change their Stages in the Project Stages tab"
+msgstr " プロジェクトステージ タブでステージの変更"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_account_analytic_account_use_tasks
+#: model:ir.model.fields,help:project.field_project_project_use_tasks
+msgid "Check this box to manage internal activities through this project"
+msgstr "このプロジェクトに含まれる内部活動を管理するには、このチェックボックスをオンにします"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:23
+#, python-format
+msgid ""
+"Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
+"Office Party, etc.)"
+msgstr "<b>プロジェクト名</b>を選択します。 (ウェブサイトの立ち上げ、製品開発、オフィスパーティーなど)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+msgid "Choose a Project Email"
+msgstr "プロジェクトの電子メールを選択する"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:54
+#, python-format
+msgid "Clear description and purpose"
+msgstr "明確な説明と目的"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:59
+#, python-format
+msgid "Click on a card to get the details of the task."
+msgstr "カードをクリックすると、タスクの詳細が表示されます。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:31
+#, python-format
+msgid ""
+"Click on the card to <b>go to your project</b> and start organizing tasks."
+msgstr "カードをクリックして<b>プロジェクトに移動</b>し、タスクの整理を開始します。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:67
+#, python-format
+msgid "Click on this button to modify the task."
+msgstr "このボタンをクリックすると、タスクが変更されます。"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.project_tags_action
+msgid "Click to add a new tag."
+msgstr "クリックで新しいタグを追加。"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_task_type_form
+msgid "Click to add a stage in the task pipeline."
+msgstr "クリックしてタスクパイプラインにステージを追加。"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid "Click to create a new project.<br>"
+msgstr "クリックして新規プロジェクトを作成<br>"
+
+#. module: project
+#: selection:project.config.settings,module_pad:0
+msgid "Collaborative rich text on task description"
+msgstr "タスク説明に共同リッチテキストを使用"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_color
+#: model:ir.model.fields,field_description:project.field_project_tags_color
+#: model:ir.model.fields,field_description:project.field_project_task_color
+msgid "Color Index"
+msgstr "カラーインデクス"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Communication campaign"
+msgstr "コミュニケーションキャンペーン"
+
+#. module: project
+#: model:ir.model,name:project.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_company_id
+#: model:ir.model.fields,field_description:project.field_project_project_company_id
+#: model:ir.model.fields,field_description:project.field_project_task_company_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_company_id
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Company"
+msgstr "会社"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
+#: model:ir.model.fields,field_description:project.field_project_project_company_uom_id
+msgid "Company UOM"
+msgstr "会社単位"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_project_config
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Configuration"
+msgstr "設定"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:93
+#, python-format
+msgid "Configuration options are available in the Settings app."
+msgstr "設定オプションは、設定アプリで使用できます。"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_config_settings
+msgid "Configure Project"
+msgstr "プロジェクト設定"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Congratulations on choosing Odoo Project to help running your company more "
+"efficiently!"
+msgstr "あなたの会社をより効率的に運営するために、Odoo プロジェクトを選んだことをお祝いします！"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Congratulations, you're done !"
+msgstr "おめでとうございます。やり遂げました！"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Consulting mission"
+msgstr "コンサルティングミッション"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_partner_id
+#: model:ir.ui.view,arch_db:project.view_project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_analytic_account_id
+msgid "Contract/Analytic"
+msgstr "契約/分析"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Control projects quality and satisfaction"
+msgstr "プロジェクトの品質と満足度をコントロール！"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:33
+#, python-format
+msgid "Copywriting / Design"
+msgstr "コピーライティング/デザイン"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+msgid "Create"
+msgstr "作成"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Create a Gantt chart with your projects tasks and deadlines"
+msgstr "プロジェクトのタスクと締切日でガントチャートを作成する"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_create_project
+msgid "Create a Project"
+msgstr "プロジェクト作成"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all_config
+msgid "Create a new project."
+msgstr "新規プロジェクト作成"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Create a task by sending an email to a project alias with one of your "
+"colleagues in copy"
+msgstr "プロジェクトエイリアスに同僚にCCの入った電子メールを送信してタスクを作成。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Create at least 3 tasks"
+msgstr "最低3タスク作成"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Create bills automatically based on Time &amp; Material."
+msgstr "時間&amp; 材料に基づいて自動的に請求書を作成します。"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_create_date
+msgid "Create date"
+msgstr "作成日"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Create the Projects"
+msgstr "そのプロジェクトを作成"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_create_uid
+#: model:ir.model.fields,field_description:project.field_project_project_create_uid
+#: model:ir.model.fields,field_description:project.field_project_tags_create_uid
+#: model:ir.model.fields,field_description:project.field_project_task_create_uid
+#: model:ir.model.fields,field_description:project.field_project_task_type_create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_create_date
+#: model:ir.model.fields,field_description:project.field_project_project_create_date
+#: model:ir.model.fields,field_description:project.field_project_tags_create_date
+#: model:ir.model.fields,field_description:project.field_project_task_type_create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Creating Tasks and/or Issues is the next step in managing your Projects.<br/>\n"
+"                        In Odoo, it is pretty straightforward, but here are some explanations you may find useful."
+msgstr ""
+"タスクや課題の作成は、プロジェクト管理の次のステップです。<br/>\n"
+"                         Odooでは、それはかなり簡単ですが、あなたが役に立つと思ういくつかの説明があります。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+msgid "Creation Date"
+msgstr "作成日"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_credit
+msgid "Credit"
+msgstr "費用"
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_cumulative_flow
+msgid "Cumulative Flow"
+msgstr "累積フロー"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_currency_id
+msgid "Currency"
+msgstr "通貨"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Current Timesheet"
+msgstr "現在のタイムシート"
+
+#. module: project
+#: code:addons/project/models/project.py:643
+#: model:ir.model.fields,field_description:project.field_project_project_partner_id
+#: model:ir.model.fields,field_description:project.field_project_task_partner_id
+#: model:ir.ui.view,arch_db:project.edit_project
+#, python-format
+msgid "Customer"
+msgstr "顧客"
+
+#. module: project
+#: code:addons/project/models/project.py:643
+#, python-format
+msgid "Customer Email"
+msgstr "顧客Eメール"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Customer Service"
+msgstr "顧客サービス"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:73
+#, python-format
+msgid "Customer feedback has been requested"
+msgstr "お客様からのフィードバックが必要です"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:91
+#, python-format
+msgid "Customer has cancelled repair"
+msgstr "お客様が修理をキャンセルしました"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:71
+#, python-format
+msgid "Customer has reported new issue"
+msgstr "お客様から新しい課題が報告されました"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:70
+#, python-format
+msgid "Customer service has found new issue"
+msgstr "カスタマーサービスが新しい課題を発見しました"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Customer support tickets"
+msgstr "顧客サポートチケット"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Customization"
+msgstr "カスタマイズ"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_projects
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_date_deadline
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_date_deadline
+msgid "Deadline"
+msgstr "期日"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_debit
+msgid "Debit"
+msgstr "収益"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_defaults
+msgid "Default Values"
+msgstr "デフォルト値"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_task_type_form
+msgid ""
+"Define the steps that will be used in the project from the\n"
+"                creation of the task, up to the closing of the task or issue.\n"
+"                You will use these stages in order to track the progress in\n"
+"                solving a task or an issue."
+msgstr ""
+"プロジェクトで使用される手順を定義します。\n"
+"                 タスクの作成、タスクまたは課題の終了まで。\n"
+"                 これらの段階を使用して、\n"
+"                 タスクや課題を解決します。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Delete"
+msgstr "削除"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Depending on what you need and how you want to operate, there are several "
+"ways to work with Odoo. First, decide if you want to think in terms of tasks"
+" or issues. Then, activate the Timesheets app if you need it."
+msgstr ""
+"必要なものと操作方法に応じて、Odooを使用するいくつかの方法があります。 まず、タスクや課題の点で考えるかどうかを決定します。 "
+"次に、必要に応じてタイムシートアプリを有効にします。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Deploy"
+msgstr "展開"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:19
+#, python-format
+msgid "Deployment"
+msgstr "展開"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_description
+#: model:ir.model.fields,field_description:project.field_project_task_type_description
+#: model:ir.ui.view,arch_db:project.view_task_form2
+msgid "Description"
+msgstr "説明"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:17
+#, python-format
+msgid "Development"
+msgstr "開発"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Development Process"
+msgstr "展開プロセス"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:50
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#, python-format
+msgid "Discard"
+msgstr "破棄"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
+#: model:ir.model.fields,field_description:project.field_project_project_display_name
+#: model:ir.model.fields,field_description:project.field_project_tags_display_name
+#: model:ir.model.fields,field_description:project.field_project_task_display_name
+#: model:ir.model.fields,field_description:project.field_project_task_type_display_name
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
+msgid "Displayed Image"
+msgstr "表示イメージ"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:34
+#, python-format
+msgid "Distribute"
+msgstr "配信"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:42
+#, python-format
+msgid "Distribution is completed"
+msgstr "配信が完了しました"
+
+#. module: project
+#: selection:project.config.settings,generate_project_alias:0
+msgid "Do not create an email alias automatically"
+msgstr "電子メールエイリアスを自動的に作成しない"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:50
+#, python-format
+msgid "Documentation"
+msgstr "ドキュメント"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Documents"
+msgstr "ドキュメント"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Don't create a Project for different locations (this could isolate teams "
+"that work at different locations)."
+msgstr "異なる場所にプロジェクトを作成しないでください(異なる場所で作業するチームを分離する可能性があります)。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Don't create a Project for each of your customers - this will be too "
+"complicated to manage properly."
+msgstr "顧客ごとにプロジェクトを作成しないでください。管理が複雑になりすぎます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Don't hesitate to"
+msgstr "お気軽に"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Don't hesitate to select only the events you are interested in!"
+msgstr "興味のあるイベントのみで結構ですのでお気軽に選んでください！"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:35
+#: code:addons/project/static/src/js/web_planner_project.js:68
+#: code:addons/project/static/src/js/web_planner_project.js:83
+#: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
+#, python-format
+msgid "Done"
+msgstr "完了"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"During a meeting, a customer asks a manager for a few modifications to a "
+"project."
+msgstr "会議中、顧客はマネージャにプロジェクトのいくつかの変更を依頼します。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Each employee will have his own task, while the manager will be able to "
+"follow the global progress in the Kanban view of the project."
+msgstr "各従業員は自分自身の仕事がありますが、マネージャはプロジェクトのかんばんの観点からグローバルな進捗状況に追従可能です。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Edit Task"
+msgstr "タスクを編集"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Email Alias"
+msgstr "Eメールエイリアス"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
+msgid "Email Template"
+msgstr "Eメールテンプレート"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Emails"
+msgstr "Eメール"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "End"
+msgstr "終了"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_date_end
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_date_end
+msgid "Ending Date"
+msgstr "終了日"
+
+#. module: project
+#: code:addons/project/models/project.py:418
+#, python-format
+msgid "Error ! Task starting date must be lower than its ending date."
+msgstr "エラー！ タスクの開始日は、終了日よりも前でなければなりません。"
+
+#. module: project
+#: sql_constraint:project.project:0
+msgid "Error! project start-date must be lower than project end-date."
+msgstr "エラー！ プロジェクトの開始日はプロジェクトの終了日よりも前でなければなりません。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_planned_hours
+msgid ""
+"Estimated time to do the task, usually set by the project manager when the "
+"task is in draft state."
+msgstr "タスクを行う予想時間。タスクがドラフト状態の時に通常はプロジェクトマネジャによりセットされます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Even if there is no specific field in Odoo, it's important to define a person responsible for each stage of your Project.<br/>\n"
+"                        This person will have the responsibility for validating each stage and ensuring that the requirements to move to the next stage are met."
+msgstr ""
+"Odooに特定のフィールドがない場合でも、プロジェクトの各段階を担当する担当者を定義することが重要です。<br/>\n"
+"                         担当者には、各段階を検証し、次の段階に移行するための要件が満たされていることを確認する責任があります。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Every business is different.<br/>\n"
+"                    Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs."
+msgstr ""
+"すべてのビジネスは異なります。<br/>\n"
+"                     Odooではすべてのアプリケーションをカスタマイズできますが、プロジェクトのニーズに合わせて画面をカスタマイズすることをお勧めします。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Examples"
+msgstr "例"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:74
+#, python-format
+msgid "Expert advice has been requested"
+msgstr "専門家のアドバイスが必要です"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_date
+msgid "Expiration Date"
+msgstr "有効期日"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type_legend_priority
+msgid ""
+"Explanation text to help users using the star and priority mechanism on "
+"stages or issues that are in this stage."
+msgstr "この段階にあるステージや課題で、スターと優先順位の仕組みを使用した、ユーザーを支援するテキスト。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+msgid "Extended Filters"
+msgstr "拡張フィルタ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_form2
+msgid "Extra Info"
+msgstr "追加情報"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Extra useful for when you're with a customer or in a meeting."
+msgstr "あなたが客先や会議にいるときに便利です。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:88
+#, python-format
+msgid "Feedback from customer requested"
+msgstr "客様からのフィードバックがリクエストされました"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:26
+#, python-format
+msgid "Finally task is deployed"
+msgstr "最後にタスクが展開されます"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_fold
+msgid "Folded in Kanban"
+msgstr "かんばんで畳みこむ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"Follow this project to automatically track the events associated to tasks "
+"and issues of this project."
+msgstr "関連タスクや課題についてのイベントを自動追跡するには、このプロジェクトをフォローしてください。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Followed by Me"
+msgstr "フォロー中"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "For employees, the"
+msgstr "従業員にとって、"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"For example, risk and issue owners should come prepared to share the status "
+"of their item and, ideally, a path to resolution."
+msgstr "たとえば、リスクと課題の所有者は、自分のアイテムの状態、理想的には解決の道筋を共有する用意ができているはずです。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"For the Odoo Team,<br/>\n"
+"                            Fabien Pinckaers, Founder"
+msgstr ""
+"Odoo チーム,<br/>\n"
+"                            Fabien Pinckaers, Founder"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"For the same reason, don't create a Project based on weeks or time (example:"
+" Scrum)."
+msgstr "同じ理由で、週や時間に基づいてプロジェクトを作成しないでください(例：スクラム)。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "Forecasts"
+msgstr "フォーキャスト"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
+msgid "Forecasts, planning and Gantt charts"
+msgstr "フォーキャスト、計画およびガントチャート"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_tasks_config
+msgid "GTD"
+msgstr "GTD"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Generate a timesheet report to attach to your customer invoices"
+msgstr "顧客請求書に添付するタイムシートレポートを生成する"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Get full synchronization with Odoo"
+msgstr "Odooと完全同期をとる"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Get it on Google Play"
+msgstr "Google Playで入手する"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Get more apps"
+msgstr "より多くのアプリケーションを入手"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_label_tasks
+msgid "Gives label to tasks on project's kanban view."
+msgstr "プロジェクトのかんばん表示でタスクにラベルを付ける。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_sequence
+msgid "Gives the sequence order when displaying a list of Projects."
+msgstr "プロジェクトのリストを表示する時に並び順を与えます。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_sequence
+msgid "Gives the sequence order when displaying a list of tasks."
+msgstr "タスクリストを表示する時に並び順を与えます。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:102
+#, python-format
+msgid ""
+"Good job! Your completed the Project Management tour. You can continue with "
+"the <b>implementation guide</b> to help you setup Project Management in your"
+" company."
+msgstr ""
+"凄い！ あなたはプロジェクト管理ツアーを完了しました。 <b>導入ガイド</b>を続行して、企業でプロジェクト管理を設定することができます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Good luck!"
+msgstr "がんばろう！"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Green: the Task is ready for next stage (the job for this stage is complete)"
+msgstr "グリーン：タスクは次のステージの準備ができています(このステージのジョブは完了しています)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Grey: the Task is in progress (someone is working on it)"
+msgstr "グレー：タスクが進行中です(誰かがそれに着手しています)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Group By"
+msgstr "グループ化"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Here are some of the <strong>available customizations</strong>"
+msgstr "<strong>利用可能なカスタマイズ</strong>"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
+msgid "Here, you can create new tasks"
+msgstr "ここでは、新しいタスクを作成することができます"
+
+#. module: project
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "High"
+msgstr "高"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_privacy_visibility
+msgid ""
+"Holds visibility of the tasks or issues that belong to the current project:\n"
+"- On invitation only: Employees may only see the followed project, tasks or issues\n"
+"- Visible by all employees: Employees may see all project, tasks or issues\n"
+"- Visible by following customers: employees see everything;\n"
+"   if website is activated, portal users may see project, tasks or issues followed by\n"
+"   them or by someone of their company\n"
+msgstr ""
+"現在のプロジェクトに属するタスクまたは課題の可視性を保持します。\n"
+"- 招待状のみ：従業員は、追跡されたプロジェクト、タスク、または課題のみを見ることができます。\n"
+"- すべての従業員が見る：従業員は、すべてのプロジェクト、タスク、または課題を見ることができます。\n"
+"- フォロー中カスタマーが見る:従業員はすべてを見ることができます。さらに、\n"
+"    ウェブサイトがアクティブになっている場合、ポータルユーザは、プロジェクト、タスク、または課題がフォローされている人や、または会社の誰かによって参照されることがあります。\n"
+
+#. module: project
+#: code:addons/project/models/project.py:567
+#, python-format
+msgid "I take it"
+msgstr "とります"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_id
+#: model:ir.model.fields,field_description:project.field_project_project_id
+#: model:ir.model.fields,field_description:project.field_project_tags_id
+#: model:ir.model.fields,field_description:project.field_project_task_id
+#: model:ir.model.fields,field_description:project.field_project_task_type_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_id
+msgid "ID"
+msgstr "ID"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr "エイリアスを保持する親レコードのID（例：プロジェクトは、タスク作成エイリアスを保持）"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:103
+#, python-format
+msgid "Idea has been transformed into concrete actions"
+msgstr "アイデアが具体的な行動に変更されました"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:102
+#, python-format
+msgid "Idea is fully explained"
+msgstr "アイデアは完全に説明されています"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Ideally, a person should only be responsible for one project."
+msgstr "おかげで、人は1つのプロジェクトにしか責任を負いません。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:95
+#, python-format
+msgid "Ideas"
+msgstr "アイデア"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Identify problems and blocking points more easily"
+msgstr "問題とブロッキングポイントをより簡単に特定"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type_mail_template_id
+msgid ""
+"If set an email will be sent to the customer when the task or issue reaches "
+"this step."
+msgstr "設定されている場合、タスクまたは課題がこのステップに達すると、電子メールが顧客に送信されます。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the project "
+"without removing it."
+msgstr "アクティブ項目がFalseにセットされると、プロジェクトを削除することなく非表示にできます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"If you don't want to receive email notifications, you can uncheck the option"
+" in your"
+msgstr "メール通知を受信したくない場合は、あなたのメール通知をオフにすることができます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"If you want to limit access for certain users or customers, simply use the "
+"Privacy / Visibility settings in the Project Settings."
+msgstr "特定のユーザーまたは顧客のアクセスを制限する場合は、プロジェクト設定 の プライバシー/可視性 設定を使用します。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"If you work on a Time &amp; Material project, you'll probably want to "
+"extract a Timesheet of the tasks and issues to invoice directly to the "
+"customer. To do that:"
+msgstr ""
+"あなたが時間 &amp; 原材料プロジェクトでは、タスクと課題のタイムシートを抽出して、顧客に直接請求することができます。 それを行うには："
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Implement"
+msgstr "実装"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Improve"
+msgstr "改善"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Improve collaboration with customers"
+msgstr "顧客とのコラボレーションを改善する"
+
+#. module: project
+#: selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
+#: selection:report.project.task.user,state:0
+msgid "In Progress"
+msgstr "進行中"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:32
+#: code:addons/project/static/src/js/web_planner_project.js:65
+#: code:addons/project/static/src/js/web_planner_project.js:80
+#, python-format
+msgid "In progress"
+msgstr "進行中"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:79
+#, python-format
+msgid "Incoming"
+msgstr "着信"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Incoming Emails create"
+msgstr "受信Eメールで作成するもの"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_planned_hours
+msgid "Initially Planned Hours"
+msgstr "当初計画時間"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_id
+msgid ""
+"Internal email associated with this project. Incoming emails are "
+"automatically synchronized with Tasks (or optionally Issues if the Issue "
+"Tracker module is installed)."
+msgstr ""
+"このプロジェクトに関連する内部電子メール。 "
+"着信電子メールはタスクと自動的に同期されます(または、課題追跡モジュールがインストールされている場合はオプションの課題)。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Internal notes are messages that will appear in the Chatter but will not be "
+"notified in Odoo's Inbox."
+msgstr "内部ノートはチャッターに表示されるメッセージですが、Odooの受信トレイには通知されません。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Issue Tracking app."
+msgstr "課題追跡アプリ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_tags_search_view
+msgid "Issue Version"
+msgstr "課題バージョン"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:72
+#, python-format
+msgid "Issue is being worked on"
+msgstr "課題は解決中です"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:75
+#, python-format
+msgid "Issue is resolved"
+msgstr "課題が解決しました"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Issues"
+msgstr "課題"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Issues analysis"
+msgstr "課題分析"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"It is better to start with a \"project answer\", such as: \"We are two weeks"
+" late\", \"We are at planned budget\" or \"We are 50% complete with the "
+"process model\". Also if you can, start the meeting on a positive note, such"
+" as milestones that have been met or are ahead of schedule. This will make "
+"participants feel motivated to engage in the conversation."
+msgstr ""
+"「私たちは2週間遅れています」、「計画予算に達しています」、または「プロセスモデルで50％完了しました」などの「プロジェクト回答」から始める方がよいでしょう。また、可能な場合は、計画通りだったり予定より早いマイルストーンなどのポジティブなノートで会議を開始することもできます。"
+" これにより、参加者は会話に参加する意欲を感じることができます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"It is time to think about how you will transform your activities into real projects in Odoo.<br/>\n"
+"                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task or an issue can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects."
+msgstr ""
+"あなたの活動をどのようにOdooの実際のプロジェクトに変換するかについて考えてみましょう。<br/>\n"
+"そのために、最も重要な部分はプロジェクトの段階を定義することです。 ステージとは、タスクや課題が作成から終了までのさまざまなステップです。 それらはあなたのプロジェクトの「かんばん」という視点に現れます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"It's essential to be clear about why you want to use Odoo Project and what your goals are.\n"
+"                        Indeed, there are many ways to manage a project, to find the best one for you, you need to know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company."
+msgstr ""
+"なぜあなたがOdoo プロジェクトを使いたいのか、あなたの目標が何であるかを明確にすることが不可欠です。\n"
+"確かに、プロジェクトを管理し、あなたのために最高のものを見つけるための多くの方法があります。あなたが達成したいものを正確に知る必要があります。 そして、あなたの目標を、あなたの会社の本当の改善に変えることを願っています。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"It's for logging every change, event or message related to the Document."
+msgstr "これは、ドキュメントに関連するすべての変更、イベント、またはメッセージを記録するためのものです。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"It's usually a good idea to take time to analyze your tasks and issues once "
+"a year. Here are some KPIs you should take a look at. Ask yourself 'How can "
+"they be improved?'"
+msgstr ""
+"1年に1回、タスクと課題を分析するのに時間を取ることは、通常は良い考えです。 あなたが見ておくべきいくつかのKPIがここにあります。 "
+"どのように改善することができると思いますか？"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
+msgid "Kanban Blocked Explanation"
+msgstr "かんばん ブロック説明"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_legend_normal
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "かんばん 進行中の説明"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Kanban Stage"
+msgstr "かんばんステージ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Kanban Stages"
+msgstr "かんばんステージ"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_kanban_state
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_state
+msgid "Kanban State"
+msgstr "かんばん状態"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_legend_done
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
+msgid "Kanban Valid Explanation"
+msgstr "かんばん 有効な説明"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Keep track of messages and conversations"
+msgstr "メッセージと会話を記録する"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Know what my employees are working on"
+msgstr "従業員が働いているかどうか知る"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Last Message"
+msgstr "最終メッセージ"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings___last_update
+#: model:ir.model.fields,field_description:project.field_project_project___last_update
+#: model:ir.model.fields,field_description:project.field_project_tags___last_update
+#: model:ir.model.fields,field_description:project.field_project_task___last_update
+#: model:ir.model.fields,field_description:project.field_project_task_type___last_update
+#: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
+msgid "Last Stage Update"
+msgstr "最終ステージ更新日"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_write_uid
+#: model:ir.model.fields,field_description:project.field_project_project_write_uid
+#: model:ir.model.fields,field_description:project.field_project_tags_write_uid
+#: model:ir.model.fields,field_description:project.field_project_task_type_write_uid
+#: model:ir.model.fields,field_description:project.field_project_task_write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_write_date
+#: model:ir.model.fields,field_description:project.field_project_project_write_date
+#: model:ir.model.fields,field_description:project.field_project_tags_write_date
+#: model:ir.model.fields,field_description:project.field_project_task_type_write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: project
+#: model:web.planner,tooltip_planner:project.planner_project
+msgid ""
+"Learn how to better organize your company using Projects, Tasks, Issues and "
+"Timesheets."
+msgstr "プロジェクト、タスク、課題、タイムシートを使用して企業をより良く組織する方法を学びます。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:18
+#, python-format
+msgid "Let's create your first project."
+msgstr "最初のプロジェクトを作りましょう。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_config_settings_module_pad
+msgid ""
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
+"-This installs the module pad."
+msgstr ""
+"新しいパッドへのリンクに使用するパッドのインストールをカスタマイズすることができます(例：http://ietherpad.com/)。\n"
+"- モジュールpadをインストールします"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_analytic_account_id
+msgid ""
+"Link this project to an analytic account if you need financial management on"
+" projects. It enables you to connect projects with budgets, planning, cost "
+"and revenue analysis, timesheets on projects, etc."
+msgstr ""
+"プロジェクトの財務管理を必要とする場合は、このプロジェクトをリンクします。すると、予算、計画、費用収益分析、プロジェクトの勤務表などとプロジェクトを接続することが可能になります。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "List, plan and track things to do"
+msgstr "行うことを計画し、リスト化して、追跡します。"
+
+#. module: project
+#: selection:report.project.task.user,priority:0
+msgid "Low"
+msgstr "低い"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+#: model:res.groups,name:project.group_project_manager
+msgid "Manager"
+msgstr "マネジャ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Managing a group of people, a team or a department (example: R&amp;D team, "
+"HR Department, etc.)"
+msgstr "人、チーム、または部門のグループを管理する(例：R&amp;D チーム、HR部門など)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Managing long projects that span over many months and/or need Timesheets."
+msgstr "何ヶ月にも及ぶ長いプロジェクトを管理するので、タイムシートを必要とする。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Managing notifications is essential: too few and you risk missing critical "
+"information, too many and you will be  overloaded with unnecessary "
+"information. The trick is to find the right balance between the projects, "
+"stages and tasks you want to be informed about. Fortunately, Odoo Project "
+"has many levels of notifications and messages you can choose from."
+msgstr ""
+"通知を管理することは不可欠です。少なすぎると重要な情報が失われる危険性があります。あまりにも多くの情報が不足すると過負荷になります。これをうまくやるコツとしては、あなたが知りたいプロジェクト、ステージ、タスクのバランスを適切に取ることです。\n"
+"幸いにも、Odoo プロジェクトには、さまざまなレベルの通知とメッセージが用意されています。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Marketing Department"
+msgstr "マーケティング部門"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
+msgid "Members"
+msgstr "会員"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "More <i class=\"fa fa-caret-down\"/>"
+msgstr "さらに <i class=\"fa fa-caret-down\"/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr "詳しくはこちらへ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "More efficient communication between employees"
+msgstr "従業員間のより効率的なコミュニケーション"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "My Favorites"
+msgstr "お気にいり"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "My Tasks"
+msgstr "自分のタスク"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_tags_name
+msgid "Name"
+msgstr "名称"
+
+#. module: project
+#: model:project.task,legend_blocked:project.project_task_10
+#: model:project.task,legend_blocked:project.project_task_11
+#: model:project.task,legend_blocked:project.project_task_13
+#: model:project.task,legend_blocked:project.project_task_14
+#: model:project.task,legend_blocked:project.project_task_17
+#: model:project.task,legend_blocked:project.project_task_2
+#: model:project.task,legend_blocked:project.project_task_21
+#: model:project.task,legend_blocked:project.project_task_22
+#: model:project.task,legend_blocked:project.project_task_23
+#: model:project.task,legend_blocked:project.project_task_4
+#: model:project.task,legend_blocked:project.project_task_5
+#: model:project.task,legend_blocked:project.project_task_6
+#: model:project.task,legend_blocked:project.project_task_7
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "機能または技術的なヘルプが必要"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:64
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+#: model:project.task.type,name:project.project_stage_data_0
+#, python-format
+msgid "New"
+msgstr "新規"
+
+#. module: project
+#: code:addons/project/models/project.py:571
+#, python-format
+msgid "New Task"
+msgstr "新規タスク"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:86
+#, python-format
+msgid "New repair added"
+msgstr "新規修理が追加されました"
+
+#. module: project
+#: selection:project.config.settings,module_rating_project:0
+msgid "No customer rating"
+msgstr "顧客評価を使用しない"
+
+#. module: project
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "Normal"
+msgstr "通常"
+
+#. module: project
+#: model:project.task,legend_blocked:project.project_task_1
+#: model:project.task,legend_blocked:project.project_task_12
+#: model:project.task,legend_blocked:project.project_task_20
+#: model:project.task,legend_blocked:project.project_task_25
+#: model:project.task,legend_blocked:project.project_task_26
+#: model:project.task,legend_blocked:project.project_task_9
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "未検証"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_notes
+msgid "Notes"
+msgstr "ノート"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Notifications"
+msgstr "通知"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:43
+#, python-format
+msgid "Now that the project is set up, <b>create a few tasks</b>."
+msgstr "プロジェクトがセットアップされたら、<b>いくつかのタスクを作成</b>します。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
+msgid "Number of Days to Open the task"
+msgstr "タスクを開くための日数"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_report_project_task_user_closing_days
+msgid "Number of Days to close the task"
+msgstr "タスクを閉じるための日数"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_doc_count
+msgid "Number of documents attached"
+msgstr "添付ファイルの数"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
+"                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
+"                        who's in charge, all in one place."
+msgstr ""
+"Odoo プロジェクトは、あなたの会社のすべての人にあなたの活動や仕事を見せるための、すばやく簡単な方法です。\n"
+"物事がどのように進行するか、物事が滞っているかどうかを見て、誰が担当しているかが一目瞭然です。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_config_settings_generate_project_alias
+msgid ""
+"Odoo will generate an email alias at the project creation from project name."
+msgstr "Odooはプロジェクト名からプロジェクト作成時に電子メールエイリアスを生成します。"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.action_view_task
+msgid ""
+"Odoo's project management allows you to manage the pipeline of your tasks "
+"efficiently. You can track progress, discuss on tasks, attach documents, "
+"etc."
+msgstr ""
+"Odooのプロジェクト管理では、タスクのパイプラインを効率的に管理できます。 進捗状況の追跡、タスクの議論、ドキュメントの添付などが可能です。"
+
+#. module: project
+#: code:addons/project/models/project.py:203
+#: selection:project.project,privacy_visibility:0
+#, python-format
+msgid "On invitation only"
+msgstr "招待のみ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Once a Timesheet is confirmed by an employee, it needs to be Approved by a "
+"manager in the"
+msgstr "従業員によってタイムシートが確認されたら、管理者がこのタイムシートを承認する必要があります。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr "すべての受信メッセージに添付されるスレッド(レコード)のオプションIDです。設定した場合は新しいレコードの作成を無効にします。"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid "Or"
+msgstr "または"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Or, if you are using Issues, by activating 'Activate timesheets on issues', "
+"also in the"
+msgstr "また、課題を使用している場合は、この 課題でタイムシートを使用  を有効にします"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Organize meetings"
+msgstr "打ち合わせをアレンジ"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all_config
+msgid ""
+"Organize your activities (plan tasks, track issues, invoice timesheets) for "
+"internal, personal or customer projects."
+msgstr "社内、個人または顧客のプロジェクトのために、あなたの活動(計画タスク、課題追跡、請求書タイムシート)を整理します。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Organize your company, from personal tasks to collaborative meeting minutes."
+msgstr "個人的な仕事からコラボレーティブなちょっとした会議に至るまで、あなたの会社をオーガナイズします。"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
+msgid "Overpassed Tasks"
+msgstr "期限超過タスク"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_legend_blocked
+#: model:ir.model.fields,help:project.field_project_task_type_legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr "タスクまたは課題がその段階にある場合、かんばん選択のブロック状態に表示されるデフォルト値を上書きします。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_legend_done
+#: model:ir.model.fields,help:project.field_project_task_type_legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr "タスクまたは課題がそのステージにあるときに、かんばん選択の完了状態に表示されるデフォルト値を上書きします。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_legend_normal
+#: model:ir.model.fields,help:project.field_project_task_type_legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr "タスクまたは課題がその段階にあるときに、かんばん選択の通常状態のために表示されるデフォルト値を上書きします。"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
+msgid "Owner"
+msgstr "オーナー"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
+msgid "Pads"
+msgstr "パッド"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
+msgid "Parent Model"
+msgstr "親モデル"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "親レコードスレッドID"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"エイリアスを保持する親モデル。エイリアスの参照を保持しているモデルは、必ずしもalias_model_idによって与えられたモデルではありません(例：プロジェクト(parent_model)とタスク(model))"
+
+#. module: project
+#: model:ir.model,name:project.model_res_partner
+msgid "Partner"
+msgstr "取引先"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Plan your activities for the day"
+msgstr "その日のあなたの活動を計画"
+
+#. module: project
+#: model:ir.model,name:project.model_web_planner
+msgid "Planner"
+msgstr "プランナー"
+
+#. module: project
+#: code:addons/project/models/project.py:723
+#, python-format
+msgid ""
+"Please remove existing tasks in the project linked to the accounts you want "
+"to delete."
+msgstr "削除するアカウントにリンクされているプロジェクトの既存のタスクを削除してください。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"メールゲートウェイを使用したメッセージドキュメント投稿のポリシー\n"
+"- everyone: 誰にでも投稿可能\n"
+"- partners: 許可されたパートナーのみ\n"
+"- followers: 関連ドキュメントのフォロワーか、フォローしているチャンネルのメンバーのみ\n"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Prepare"
+msgstr "準備"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_priority
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_priority
+msgid "Priority"
+msgstr "優先度"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
+msgid "Priority Management Explanation"
+msgstr "優先度管理用説明"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
+msgid "Privacy"
+msgstr "プライバシー"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Product or software version"
+msgstr "製品またはソフトウェアのバージョン"
+
+#. module: project
+#: model:ir.model,name:project.model_project_project
+#: model:ir.model.fields,field_description:project.field_project_task_project_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_project_id
+#: model:ir.ui.menu,name:project.menu_main_pm
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+#: model:res.request.link,name:project.req_link_project
+msgid "Project"
+msgstr "プロジェクト"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_generate_project_alias
+msgid "Project Alias"
+msgstr "プロジェクトエイリアス"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
+#: model:ir.model.fields,field_description:project.field_project_project_project_count
+msgid "Project Count"
+msgstr "プロジェクト数"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "Project Management"
+msgstr "プロジェクト管理"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_user_id
+#: model:ir.model.fields,field_description:project.field_project_task_manager_id
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.view_project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Project Manager"
+msgstr "プロジェクトマネジャ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#: model:ir.ui.view,arch_db:project.view_project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Project Name"
+msgstr "プロジェクト名"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Project Settings"
+msgstr "プロジェクト設定"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Project Settings."
+msgstr "プロジェクト設定"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_task_graph
+#: model:ir.ui.view,arch_db:project.view_project_task_pivot
+msgid "Project Tasks"
+msgstr "プロジェクトのタスク"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_project_time_mode_id
+msgid "Project Time Unit *"
+msgstr "プロジェクト時間単位 *"
+
+#. module: project
+#: model:res.request.link,name:project.req_link_task
+msgid "Project task"
+msgstr "プロジェクトタスク"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.dblc_proj
+msgid "Project's tasks"
+msgstr "プロジェクトのタスク"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_view_project_all
+#: model:ir.actions.act_window,name:project.open_view_project_all_config
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_ids
+#: model:ir.model.fields,field_description:project.field_project_project_project_ids
+#: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
+#: model:ir.ui.menu,name:project.menu_projects_config
+#: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
+#: model:ir.ui.view,arch_db:project.view_project
+msgid "Projects"
+msgstr "プロジェクト"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr "プロジェクトとタスク"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
+msgid "Rating on task"
+msgstr "タスクの評価"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:40
+#, python-format
+msgid "Ready for layout / copywriting"
+msgstr "レイアウト/コピーライティングの準備"
+
+#. module: project
+#: selection:project.task,kanban_state:0
+#: selection:report.project.task.user,state:0
+msgid "Ready for next stage"
+msgstr "次のステージに移動可"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:58
+#, python-format
+msgid "Ready for release"
+msgstr "リリース準備完了"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:56
+#, python-format
+msgid "Ready for testing"
+msgstr "テスト準備完了"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:41
+#, python-format
+msgid "Ready to be displayed, published or sent"
+msgstr "表示、公開、送信可能な状態"
+
+#. module: project
+#: model:project.task,legend_done:project.project_task_16
+#: model:project.task,legend_done:project.project_task_19
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "再開準備完了"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:76
+#: code:addons/project/static/src/js/web_planner_project.js:105
+#, python-format
+msgid "Reason for cancellation has been documented"
+msgstr "キャンセル理由がドキュメント化されている"
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
+msgstr "${object.name} の受信"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "レコードのスレッドID"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Red: the Task is blocked (there's a problem)"
+msgstr "赤：タスクがブロックされています(問題があります)"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_code
+msgid "Reference"
+msgstr "参照"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:51
+#, python-format
+msgid "Release"
+msgstr "リリース"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_remaining_hours
+msgid "Remaining Hours"
+msgstr "残時間"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:48
+#, python-format
+msgid "Remove Cover Image"
+msgstr "カバーイメージを削除"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Repair Workshop"
+msgstr "修理工場"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:87
+#, python-format
+msgid "Repair has started"
+msgstr "修理開始"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:90
+#, python-format
+msgid "Repair is completed"
+msgstr "修理完了"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Reporting"
+msgstr "レポーティング"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_project_report
+msgid "Reports"
+msgstr "レポート"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:89
+#, python-format
+msgid "Request for parts has been sent"
+msgstr "部品のリクエストが送信されました"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Responsibilities"
+msgstr "責任"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Responsibility"
+msgstr "責任者"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Runs outside Odoo, always available"
+msgstr "Odoo外で稼働、常に利用可能"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Scrum Methodology"
+msgstr "スクラム方法論"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_project_management
+msgid "Search"
+msgstr "検索"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Search Project"
+msgstr "プロジェクトの検索"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:46
+#, python-format
+msgid "Select"
+msgstr "選択"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Send an alert when a task is stuck in red for more than a few days"
+msgstr "タスクが数日以上赤で止まっている場合にアラートを送信する"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Send an automatic confirmation to all issue emails sent to your customer "
+"support"
+msgstr "お客様サポートに送信されたすべての課題の電子メールに自動確認を送信する"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_sequence
+#: model:ir.model.fields,field_description:project.field_project_task_sequence
+#: model:ir.model.fields,field_description:project.field_project_task_type_sequence
+msgid "Sequence"
+msgstr "付番"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Service Level Agreement (SLA)"
+msgstr "サービスレベル契約 (SLA)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Set Cover Image"
+msgstr "カバーイメージを設定"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:45
+#, python-format
+msgid "Set a Cover Image"
+msgstr "カバーイメージを設定"
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_project_general_settings
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "Settings"
+msgstr "管理設定"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Severity"
+msgstr "重大度"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Share files and manage versions"
+msgstr "ファイルを共有してバージョンを管理"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_is_favorite
+msgid "Show Project on dashboard"
+msgstr "ダッシュボードにプロジェクトを表示"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"So if you're looking for the history of a Task, or the latest message on an "
+"Issue, simply go to the corresponding Document and you'll find it!"
+msgstr "タスクの履歴や課題に関する最新のメッセージを探している場合は、対応するドキュメントに移動するだけで見つけられます！"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Software development"
+msgstr "ソフト開発"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:15
+#, python-format
+msgid "Specification"
+msgstr "仕様"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:23
+#, python-format
+msgid "Specification is validated"
+msgstr "仕様が検証済"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:22
+#, python-format
+msgid "Specification of task is written"
+msgstr "タスクの仕様は記述済"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:48
+#, python-format
+msgid "Sprint"
+msgstr "スプリント"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_stage_id
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Stage"
+msgstr "ステージ"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_task_stage
+msgid "Stage Changed"
+msgstr "ステージ変更"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Stage Description and Tooltips"
+msgstr "ステージ説明およびステータス定義"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_name
+msgid "Stage Name"
+msgstr "ステージ名"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_stage
+msgid "Stage changed"
+msgstr "ステージ変更"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_task_type_form
+#: model:ir.ui.menu,name:project.menu_project_config_project
+msgid "Stages"
+msgstr "ステージ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Start / Stop a timer in one click"
+msgstr "ワンクリックでタイマーを開始/停止する"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_date_start
+msgid "Start Date"
+msgstr "開始日"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_date_start
+msgid "Starting Date"
+msgstr "開始日"
+
+#. module: project
+#: sql_constraint:project.tags:0
+msgid "Tag name already exists !"
+msgstr "そのタグ名は既に使われています！"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_tags_action
+#: model:ir.model.fields,field_description:project.field_project_project_tag_ids
+#: model:ir.model.fields,field_description:project.field_project_task_tag_ids
+#: model:ir.ui.menu,name:project.menu_project_tags_act
+#: model:ir.ui.view,arch_db:project.project_tags_form_view
+msgid "Tags"
+msgstr "タグ"
+
+#. module: project
+#: model:ir.model,name:project.model_project_tags
+msgid "Tags of project's tasks, issues..."
+msgstr "プロジェクトのタスク、課題のタグ..."
+
+#. module: project
+#: model:ir.model,name:project.model_project_task
+#: model:ir.ui.view,arch_db:project.view_task_form2
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Task"
+msgstr "タスク"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_tasks
+msgid "Task Activities"
+msgstr "タスクのアクティビティ"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_blocked
+#: model:mail.message.subtype,name:project.mt_task_blocked
+msgid "Task Blocked"
+msgstr "タスクブロック"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_new
+#: model:mail.message.subtype,name:project.mt_task_new
+msgid "Task Opened"
+msgstr "タスク作成"
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_task_pipe
+msgid "Task Pipe"
+msgstr "タスクのパイプ"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_ready
+#: model:mail.message.subtype,name:project.mt_task_ready
+msgid "Task Ready"
+msgstr "次ステージに移動可"
+
+#. module: project
+#: model:ir.model,name:project.model_project_task_type
+#: model:ir.ui.view,arch_db:project.task_type_edit
+#: model:ir.ui.view,arch_db:project.task_type_tree
+msgid "Task Stage"
+msgstr "タスク工程"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_stage
+msgid "Task Stage Changed"
+msgstr "タスクステージ変更"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_name
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_name
+msgid "Task Title"
+msgstr "タスク名"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_form2
+msgid "Task Title..."
+msgstr "タスク名..."
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_blocked
+msgid "Task blocked"
+msgstr "タスクブロック"
+
+#. module: project
+#: selection:project.config.settings,module_pad:0
+msgid "Task description is plain text"
+msgstr "タスク説明は普通のテキスト"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:24
+#, python-format
+msgid "Task is Developed"
+msgstr "タスクが作成されました"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:104
+#, python-format
+msgid "Task is completed"
+msgstr "タスクが終了しました"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:25
+#, python-format
+msgid "Task is tested"
+msgstr "タスクがテストされました"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_new
+msgid "Task opened"
+msgstr "タスク作成"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_ready
+msgid "Task ready for Next Stage"
+msgstr "次ステージに移動できるタスク"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
+#: model:ir.actions.act_window,name:project.action_view_task
+#: model:ir.model.fields,field_description:project.field_project_project_task_count
+#: model:ir.model.fields,field_description:project.field_project_project_task_ids
+#: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
+#: model:ir.model.fields,field_description:project.field_res_partner_task_ids
+#: model:ir.ui.menu,name:project.menu_action_view_task
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.project_planner
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+#: model:ir.ui.view,arch_db:project.view_task_calendar
+#: model:ir.ui.view,arch_db:project.view_task_partner_info_form
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+#: model:ir.ui.view,arch_db:project.view_task_tree2
+msgid "Tasks"
+msgstr "タスク"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Tasks &amp; Issues"
+msgstr "タスク &amp; 課題"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree_filtered
+#: model:ir.ui.menu,name:project.menu_project_report_task_analysis
+#: model:ir.ui.view,arch_db:project.view_task_project_user_graph
+#: model:ir.ui.view,arch_db:project.view_task_project_user_pivot
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+msgid "Tasks Analysis"
+msgstr "タスク分析"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_type_ids
+#: model:ir.ui.view,arch_db:project.task_type_search
+msgid "Tasks Stages"
+msgstr "タスクステージ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Tasks analysis"
+msgstr "タスク分析"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Tasks are the main mechanism in Odoo and are activated by default."
+msgstr "タスクはOdooの主なメカニズムであり、デフォルトで有効化されます。"
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr "ユーザとプロジェクト別のタスク"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:49
+#, python-format
+msgid "Test"
+msgstr "テスト"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:57
+#, python-format
+msgid "Test is OK, need to document"
+msgstr "テストはOKです、ドキュメント化する必要があります"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:18
+#, python-format
+msgid "Testing"
+msgstr "テスト"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"The Odoo Project app can be used to manage many activities, from the "
+"development of a new product to the daily operations of a customer support. "
+"With some creativity, it can even be used to manage your marketing "
+"communications or personal projects. But just because it can be done doesn't"
+" mean it's always a good idea: let's start by helping you understand what "
+"can be a good project."
+msgstr ""
+"Odoo プロジェクト アプリケーションは、新製品の開発から顧客サポートの日常業務まで、多くの活動を管理するために使用できます。 "
+"創造性があれば、マーケティングコミュニケーションや個人的なプロジェクトの管理にも使用できます。 "
+"しかし、それができるという理由だけで、それが常に良いアイデアだというわけではありません：何が良いプロジェクトになるのかを理解することから始めましょう。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_model
+msgid ""
+"The kind of document created when an email is received on this project's "
+"email alias"
+msgstr "このプロジェクトの電子メールエイリアスで電子メールが受信されたときに作成されるドキュメントの種類"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"このエイリアスに対応した(Odooドキュメント種別)モデル。既存のレコードに返信しない任意の受信メールは、このモデルの新しいレコード(例えば、プロジェクトタスク)の作成を引き起こします"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr "eメールのエイリアス.例えば<jjobs@example.odoo.com>のメールを受け取りたい場合'jobs’を選択"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_user_id
+msgid ""
+"The owner of records created upon receiving emails on this alias. If this "
+"field is not set the system will attempt to find the right owner based on "
+"the sender (From) address, or will use the Administrator account if no "
+"system user is found for that address."
+msgstr ""
+"このエイリアスに電子メールを受信した時に作成されるレコードの所有者。このフィールドが設定されない場合、システムは送信者(From)アドレスに基づいた適切な所有者を見つけるか、見つからなければ管理者アカウントを使用します。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "The same features as the Chrome extension, but on your mobile phone!"
+msgstr "Chrome拡張機能と同じ機能ですが、携帯電話でも使用できます。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/xml/project.xml:7
+#, python-format
+msgid ""
+"There is no available image to be set as cover. Send a message on the task "
+"with an attached image."
+msgstr "カバーイメージとして設定するイメージがありません。タスクの編集で、イメージを添付したメッセージを送信してください。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
+msgid "This allows customers to give rating on provided services"
+msgstr "これで、顧客が、提供するサービスの評価をすることができます"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"This is particularly useful to manage help and support: all incoming email  "
+"from customers will be transformed into an issue that you'll be able to "
+"track easily!"
+msgstr "これは、ヘルプとサポートを管理する場合に特に便利です。顧客からのすべての電子メールは、簡単に追跡できる課題に変換されます！"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.action_project_task_user_tree
+#: model:ir.actions.act_window,help:project.action_project_task_user_tree_filtered
+msgid ""
+"This report allows you to analyse the performance of your projects and "
+"users. You can analyse the quantities of tasks, the hours spent compared to "
+"the planned hours, the average number of days to open or close a task, etc."
+msgstr ""
+"このレポートはあなたのプロジェクトとユーザの成績を分析することができます。タスクの数、計画時間数と消費時間数の比較、タスクを開いて、閉じた平均日数などの分析ができます。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type_fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr "このステージは、そのステージにレコードが表示されていないときに、かんばんのビューで折り畳まれます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"This whole process might take you a few hours, but don't worry, you can take a break and\n"
+"                        return to it at any time: your progress is automatically saved."
+msgstr ""
+"このプロセス全体が数時間かかるかもしれませんが、心配する必要はありません。いつでも休憩して確認することができます：進行状況は自動的に保存されます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"This will add an Invoice Tasks menu in the Project module, that can be used "
+"to select the Timesheet to invoice."
+msgstr ""
+"これにより、請求タスク メニューがプロジェクトモジュールに追加されます。このメニューを使用すると、請求対象のタイムシートが選択できるようになります。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
+#: model:ir.model.fields,help:project.field_project_config_settings_project_time_mode_id
+#: model:ir.model.fields,help:project.field_project_project_company_uom_id
+#: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+msgstr ""
+"プロジェクトとタスクで使用される計量単位が設定されます。\n"
+"プロジェクトにリンクされたタイムシートを使用する場合は、従業員に適切な計量単位を設定することを忘れないでください。"
+
+#. module: project
+#: model:res.groups,name:project.group_time_work_estimation_tasks
+msgid "Time Estimation on Tasks"
+msgstr "タスクの時間見積"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Time Scheduling"
+msgstr "時間管理"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
+msgid "Timesheet UoM"
+msgstr "タイムシート単位"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Timesheets are often essential for running a company.<br/>\n"
+"                    They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>\n"
+"                    Fortunately, Odoo has several solutions to make them as efficient and painless as possible!<br/>"
+msgstr ""
+"タイムシートは企業運営に不可欠な要素です。<br/>\n"
+"                     しかしこれはまた、反復的で、うっとおしく、そして時には従業員にストレスを与え、ヒューマンエラーを起こすこともあります。<br/>\n"
+"                     幸いにも、Odooには、できるだけ効率的で痛みを伴わないようにするためのいくつかのソリューションがあります。<br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Timesheets can be used for several purposes:"
+msgstr "タイムシートは、いくつかの目的で使用できます:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Timesheets to Approve"
+msgstr "未承認タイムシート"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_resource_calendar_id
+msgid "Timetable working hours to adjust the gantt diagram report"
+msgstr "ガントチャートレポートを調整するための時刻表労働時間数"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
+#, python-format
+msgid "To Do"
+msgstr "未処理"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"To configure these Kanban Statuses, go to the 'Project Stages' tab of a "
+"Project."
+msgstr "カンバンステータスを設定するには、プロジェクトの プロジェクトステージ タブに移動します。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "To use Issues, install the"
+msgstr "課題 を使用するには、これをインストール"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "To use Timesheets, go to your"
+msgstr "タイムシートを使用するには、"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_remaining_hours
+msgid ""
+"Total remaining time, can be re-estimated periodically by the assignee of "
+"the task."
+msgstr "残時間合計は定期的にタスクの担当者により再評価されます。"
+
+#. module: project
+#: selection:project.config.settings,module_rating_project:0
+msgid "Track customer satisfaction on tasks"
+msgstr "タスクの顧客満足度を追跡"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Unassigned"
+msgstr "未割当"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Unread Messages"
+msgstr "未読メッセージ"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
+#: model:ir.model.fields,field_description:project.field_project_project_use_tasks
+msgid "Use Tasks"
+msgstr "タスクを使用"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_label_tasks
+msgid "Use Tasks as"
+msgstr "名前を付けてタスクを使用"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Use Timesheets"
+msgstr "タイムシートを使用"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Use separate meetings to solve big issues or issues that aren’t important "
+"for the entire team."
+msgstr "別の会議を使用して、チーム全体にとって大きな課題やそれほど重要でない課題を解決します。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:106
+#, python-format
+msgid ""
+"Use the <b>implementation guide</b> to setup Project Management in your "
+"company."
+msgstr "会社のプロジェクト管理を設定するには、<b>導入ガイド</b>を使用してください。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:88
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
+msgstr "パンくずリストを使用して<b>タスクパイプラインに戻る</b>。"
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
+msgstr "ゴールドカスタマーに関連するタスクの優先順位を使用する"
+
+#. module: project
+#: model:res.groups,name:project.group_project_user
+msgid "User"
+msgstr "ユーザ"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_user_email
+msgid "User Email"
+msgstr "ユーザのEメール"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"Usually, a project's team members are managed through weekly (or monthly) status meetings.<br/>\n"
+"                        Sometimes, these meetings can last hours and expose participants to an overly detailed review of the project.<br/>\n"
+"                        Your team members will probably try to avoid those kind of meetings, or have to rush afterwards to meet their deadlines...<br/><br/>\n"
+"                        So how can you, as project manager, structure a weekly status meeting where team members are engaged, informed and willing to contribute to the project's next steps? Here are some tips."
+msgstr ""
+"通常、プロジェクトのチームメンバーは毎週(または毎月)のステータスミーティングを通じて管理されます。<br/>\n"
+"                        時には、これらの会議は数時間続くことがあり、参加者はプロジェクトの過度の詳細なレビューに晒されることがあります。<br/>\n"
+"                        あなたのチームメンバーは、おそらく、そのような種類の会議を避けようとしたり、締め切りを抱えていて急がなければならないかもしれません。<br/> <br/>\n"
+"                        というわけで、プロジェクトマネージャーとして、チームメンバーがプロジェクトの次のステップに関与し、情報を提供し、喜んで貢献している週定例のステータスミーティングをどのように構成できますか？ ここにいくつかのヒントがあります。"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:16
+#, python-format
+msgid "Validation"
+msgstr "検証"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "View statistics (time spent, efficiency, etc.)"
+msgstr "統計情報(費やした時間、効率など)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "View statistics for the week"
+msgstr "その週の統計を表示"
+
+#. module: project
+#: code:addons/project/models/project.py:204
+#: selection:project.project,privacy_visibility:0
+#, python-format
+msgid "Visible by all employees"
+msgstr "全従業員に表示"
+
+#. module: project
+#: code:addons/project/models/project.py:205
+#: selection:project.project,privacy_visibility:0
+#, python-format
+msgid "Visible by following customers"
+msgstr "フォローしている顧客に表示"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:66
+#: code:addons/project/static/src/js/web_planner_project.js:81
+#, python-format
+msgid "Wait. Customer"
+msgstr "待機。顧客"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:67
+#: code:addons/project/static/src/js/web_planner_project.js:82
+#, python-format
+msgid "Wait. Expert"
+msgstr "待機。 エキスパート"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:13
+#, python-format
+msgid ""
+"Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
+msgstr "<b>プロジェクトを管理</b>するより良い方法をお探しですか？ <i>ここから始まります。</i>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "We can add fields related to your business on any screen, for example:"
+msgstr "ビジネスに関連するフィールドを任意の画面に追加することができます。たとえば:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "We can automate steps in your workflow, for example:"
+msgstr "ワークフローのステップを自動化することができます。たとえば:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"We can implement custom reports based on your Word or GoogleDocs templates, "
+"for example:"
+msgstr "たとえば、WordやGoogleドキュメントのテンプレートに基づいてカスタムレポートを実装できます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"We hope this process helped you implement our project management "
+"application."
+msgstr "このプロセスがプロジェクト管理アプリケーションの実装に役立つことを願っています。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"We've developed a super simple and efficient Chrome extension to enter your "
+"timesheets:<br/><br/>"
+msgstr "Googleでは、シンプルで効率的なChromeの拡張機能を開発し、タイムシートに入力できます：<br/> <br/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Welcome"
+msgstr "ようこそ！"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"What is the average number of working hours necessary to close an issue?"
+msgstr "課題を解決するために必要な平均労働時間数はどのくらいですか？"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "What is the average time before an issue is assigned / closed?"
+msgstr "課題が割り当てられるまでの平均時間はどのくらいですか？"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"What is the difference between initial time estimation and final time spent?"
+msgstr "最初の時間見積もりと最後の費やした時間の違いは何ですか？"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "What is the number of missed deadlines?"
+msgstr "期限を逃した回数はどのくらいですか？"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "What is their average number of tasks or issues worked on / closed?"
+msgstr "平均的な作業数や作業中の課題点は何ですか？"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "What is their average number of working hours over the year?"
+msgstr "年間平均勤務時間数はどのくらいですか？"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_is_favorite
+msgid "Whether this project should be displayed on the dashboard or not"
+msgstr "このプロジェクトをダッシュボードに表示するかどうか"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:39
+#, python-format
+msgid "Work has started"
+msgstr "仕事開始"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_resource_calendar_id
+msgid "Working Time"
+msgstr "作業時間"
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_workload
+msgid "Workload"
+msgstr "負荷"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_write_date
+msgid "Write date"
+msgstr "更新日"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid ""
+"You can also add a description to help your coworkers understand the meaning"
+" and purpose of the stage."
+msgstr "こちらに、このステージの意味・目的を定義してください。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid ""
+"You can also give a tooltip about the use of the stars available in the "
+"kanban and form views."
+msgstr "こちらに、かんばん/フォームビューのスターの用途を定義してください。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"You can even include any report in your dashboard for permanent access!"
+msgstr "ダッシュボードに任意のレポートを含めることもできます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"You can learn more about Timesheets in the 'Use Timesheets' section of this "
+"planner."
+msgstr "このプランナーのタイムシートを使用セクションでタイムシートに関する詳細を確認できます。"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
+msgid ""
+"You can now manage your tasks in order to get things done efficiently. Track"
+" progress, discuss, attach documents, etc."
+msgstr "タスクを効率的に処理するために、タスクを管理できるようになりました。 進行状況の追跡、ディスカス、ドキュメントの添付など"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"You can reply directly to a message from you email software; the message and"
+" its attachments will be added to the Chatter."
+msgstr "電子メールソフトウェアからのメッセージに直接返信することができます。 メッセージとその添付ファイルがチャッターに追加されます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "You can save your reports to easily reuse it later"
+msgstr "後で簡単に再利用できるようにレポートを保存することができます"
+
+#. module: project
+#: code:addons/project/models/project.py:70
+#, python-format
+msgid ""
+"You cannot delete a project containing tasks. You can either delete all the "
+"project's tasks and then delete the project or simply deactivate the "
+"project."
+msgstr ""
+"タスクを含むプロジェクトは削除できません。 "
+"すべてのプロジェクトのタスクを削除してから、プロジェクトを削除するか、単にプロジェクトを無効にすることができます。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Activities"
+msgstr "あなたの活動"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Objectives"
+msgstr "あなたの目的"
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_module_install_project
+msgid "Your Odoo Project application is up and running"
+msgstr "Odoo Projectアプリケーションが起動しています"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Projects"
+msgstr "あなたのプロジェクト"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Projects:"
+msgstr "あなたのプロジェクト:"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid "activate a sample project"
+msgstr "サンプルプロジェクトを有効にする"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "and activate:"
+msgstr "有効にする："
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+msgid "e.g. Office Party"
+msgstr "例えば オフィスパーティー"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "etc.."
+msgstr "等.."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "for Issues: 'Activate timesheets on issues'"
+msgstr "課題用:課題でタイムシートを使用"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "for Tasks: 'Log work activities on tasks'"
+msgstr "タスク用:タスクに作業活動を記録"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"
+
+#. module: project
+#: model:ir.model,name:project.model_project_config_settings
+msgid "project.config.settings"
+msgstr "project.config.settings"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "send us an email"
+msgstr "私達に電子メールを送る"
+
+#. module: project
+#: code:addons/project/models/project.py:466
+#, python-format
+msgid "tasks"
+msgstr "タスク"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "to describe<br/> your experience or to suggest improvements !"
+msgstr "<br/>あなたの経験を記述したり、改善を提案したりする！"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid "to play with."
+msgstr "遊ぶ"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "using the above recommendations"
+msgstr "上記の推奨事項を使用して"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"view of the HR module is the main tool to check, modify and confirm "
+"Timesheets."
+msgstr "人事管理モジュールのビューは、タイムシートを確認、変更、および確認するための主なツールです。"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "view of the Human Resources module."
+msgstr "人事モジュールのビュー"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "view."
+msgstr "ビュー"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "with Timesheet"
+msgstr "タイムシートで"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "you listed on the previous step"
+msgstr "前の手順に記載済"

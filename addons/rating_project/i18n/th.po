@@ -1,0 +1,299 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * rating_project
+# 
+# Translators:
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-14 15:54+0000\n"
+"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: rating_project
+#: model:mail.template,body_html:rating_project.rating_project_request_email_template
+msgid ""
+"\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\" /></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Satisfaction Survey\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Hello,</p>\n"
+"                <p>Please take a moment to rate our services related to the task \"<strong>${object.name}</strong>\"\n"
+"                   assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.</p>\n"
+"                <p>We appreciate your feedback. It helps us to improve continuously.</p>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:10px 20px\">\n"
+"                <table summary=\"o_mail_notification\" style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                    <tr>\n"
+"                        <td style=\"text-align:center;\">\n"
+"                            <h2 style=\"font-weight:300;font-size:18px;\">\n"
+"                                Tell us how you feel about our service:\n"
+"                            </h2>\n"
+"                            <div style=\"text-color: #888888\">(click on one of these smileys)</div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:10px 10px;\">\n"
+"                            <table style=\"width:100%;text-align:center;\">\n"
+"                                <tr>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/10\">\n"
+"                                            <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/5\">\n"
+"                                            <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/1\">\n"
+"                                            <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${object.user_id.signature or ''| safe}</td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding-top:10px;color:#afafaf;\">\n"
+"                % if object.project_id.rating_status == 'stage':\n"
+"                    <p>This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></p>\n"
+"                % endif\n"
+"                % if object.project_id.rating_status == 'periodic':\n"
+"                    <p>This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.\n"
+"                % endif\n"
+"                <p>Email automatically sent by <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Project</a> for <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+msgstr ""
+
+#. module: rating_project
+#: model:mail.template,subject:rating_project.rating_project_request_email_template
+msgid "${object.project_id.company_id.name}: Service Rating Request"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
+msgid "% On tasks"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
+msgid "Automatic kanban status"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
+msgid ""
+"Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
+" * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
+" * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
+#: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
+msgid "Customer Ratings"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
+msgid ""
+"Customer ratings on tasks. If you have no rating, change your project "
+"Settings to activate it."
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
+msgid ""
+"Customer ratings on tasks/issues. If you have no rating, change your project"
+" Settings to activate it."
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
+msgid "Customer(s) Ratings"
+msgstr ""
+
+#. module: rating_project
+#: selection:project.project,rating_status_period:0
+msgid "Daily"
+msgstr "รายวัน"
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
+msgid ""
+"Edit project's stages and set an email template\n"
+"                            on the stages on which you want to activate the rating."
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
+msgid "Happy % on Project"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
+msgid "Happy % on Task"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model.fields,help:rating_project.field_project_project_rating_status
+msgid ""
+"How to get the customer's feedbacks?\n"
+"- Rating when changing stage: Email will be sent when a task/issue is pulled in another stage\n"
+"- Periodical Rating: Email will be sent periodically\n"
+"\n"
+"Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
+msgstr ""
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
+msgid "Latest Rating: Higly Dissatisfied"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
+msgid "Latest Rating: Not Satisfied"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
+msgid "Latest Rating: Satisfied"
+msgstr ""
+
+#. module: rating_project
+#: selection:project.project,rating_status:0
+msgid "No rating"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
+msgid "No rating yet"
+msgstr ""
+
+#. module: rating_project
+#: selection:project.project,rating_status_period:0
+msgid "Once a Month"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
+msgid ""
+"Percentage of happy ratings over the past 30 days. Get rating details from "
+"the More menu."
+msgstr ""
+
+#. module: rating_project
+#: selection:project.project,rating_status:0
+msgid "Periodical Rating"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model,name:rating_project.model_project_project
+msgid "Project"
+msgstr "โปรเจค"
+
+#. module: rating_project
+#: selection:project.project,rating_status_period:0
+msgid "Quarterly"
+msgstr "รายไตรมาส"
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.project_task_view_form_inherit_rating
+msgid "Rating"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
+msgid "Rating Email Template"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
+msgid "Rating Frequency"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
+msgid "Rating request deadline"
+msgstr ""
+
+#. module: rating_project
+#: selection:project.project,rating_status:0
+msgid "Rating when changing stage"
+msgstr ""
+
+#. module: rating_project
+#: model:mail.message.subtype,description:rating_project.mt_task_rating
+msgid "Ratings"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
+msgid ""
+"Select an email template. An email will be sent to the customer when the "
+"task reach this step."
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model,name:rating_project.model_project_task
+msgid "Task"
+msgstr "งาน"
+
+#. module: rating_project
+#: model:mail.message.subtype,name:rating_project.mt_project_task_rating
+#: model:mail.message.subtype,name:rating_project.mt_task_rating
+msgid "Task Rating"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.model,name:rating_project.model_project_task_type
+msgid "Task Stage"
+msgstr ""
+
+#. module: rating_project
+#: selection:project.project,rating_status_period:0
+msgid "Twice a Month"
+msgstr ""
+
+#. module: rating_project
+#: selection:project.project,rating_status_period:0
+msgid "Weekly"
+msgstr "รายสองสัปดาห์"
+
+#. module: rating_project
+#: selection:project.project,rating_status_period:0
+msgid "Yearly"
+msgstr "รายปี"

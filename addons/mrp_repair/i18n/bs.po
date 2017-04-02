@@ -1,0 +1,900 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_repair
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Boško Stojaković <bluesoft83@gmail.com>, 2016
+# Bole <bole@dajmi5.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-14 15:55+0000\n"
+"PO-Revision-Date: 2016-11-14 15:55+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2016\n"
+"Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "(<i>Remove</i>)"
+msgstr "(<i>Ukloni</i>)"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "(update)"
+msgstr "(osvježi)"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
+msgid ""
+"* The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'Confirmed' status is used when a user confirms the repair order.\n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
+"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.\n"
+"* The 'Done' status is set when repairing is completed.\n"
+"* The 'Cancelled' status is used when user cancel repair order."
+msgstr ""
+"* 'U priprem' status se koristi kada korisnik unosi novi i ne potvrđen nalog popravke.\n"
+"* 'Potvrđen' status se koristi kada korisnik potvrđuje nalog popravke.\n"
+"* 'Spremno za popravku' status se koristi za početak popravke, korisnik može da započne popravak tek nakon što je nalog popravke potvđen.\n"
+"* 'Za fakturisanje' status se koristi za kreiranje fakture prije ili nakon što je popravka završena.\n"
+"* 'Završen' status je postavljen kada je popravka završena.\n"
+"* 'Otkazan' status se koristi kada korisnik otkaže nalog popravke."
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<i>(Add)</i>"
+msgstr "<i>(Dodaj)</i>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Fees Line(s)</strong>"
+msgstr "<strong>Stavke naknade</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Guarantee Limit:</strong>"
+msgstr "<strong>Limit garancije:</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Lot Number</strong>"
+msgstr "<strong>Broj lota</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Operation Line(s)</strong>"
+msgstr "<strong>Stavke operacija</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Printing Date:</strong>"
+msgstr "<strong>Datum štampanja:</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Product to Repair:</strong>"
+msgstr "<strong>Proizvodi za popravku:</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Shipping address :</strong>"
+msgstr "<strong>Adresa isporuke :</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Total Without Taxes</strong>"
+msgstr "<strong>Ukupno bez poreza</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Total</strong>"
+msgstr "<strong>Ukupno</strong>"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+msgid "Add"
+msgstr "Dodaj"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Add internal notes..."
+msgstr "Dodajte interne zabilješke ..."
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Add quotation notes..."
+msgstr "Dodajte zabilješke predračuna..."
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "After Repair"
+msgstr "Poslije popravka"
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "Before Repair"
+msgstr "Prije popravka"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:206
+#, python-format
+msgid "Can only confirm draft repairs."
+msgstr "Može samo potvrditi popravke u pripremi."
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+msgid "Cancel"
+msgstr "Otkaži"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Cancel Repair"
+msgstr "Otkaži popravak"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+msgid "Cancel Repair Order"
+msgstr "Otkaži nalog za popravak"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+msgid "Cancelled"
+msgstr "Otkazan"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:221
+#, python-format
+msgid "Cannot cancel completed repairs."
+msgstr "Ne mogu se otkazati završene popravke."
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
+msgid "Choose partner for whom the order will be invoiced and delivered."
+msgstr "Odaberite partnera kojem će narudžba biti fakturisana i dopremljena."
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid "Click to create a reparation order."
+msgstr "Kliknite da kreirate nalog popravke."
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Company"
+msgstr "Kompanija"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Confirm Repair"
+msgstr "Potvrdi popravak"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+msgid "Confirmed"
+msgstr "Potvrđeno"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:508
+#: code:addons/mrp_repair/models/mrp_repair.py:570
+#, python-format
+msgid ""
+"Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr ""
+"Nije bilo moguće pronaći stavku cijenovnika koja odgovara ovom proizvodu i količini.\n"
+"Morate da promjeniti proizvod, količinu ili cijenovnik."
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Create Invoice"
+msgstr "Kreriaj Fakturu"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+msgid "Create invoices"
+msgstr "Kreiraj Fakturu"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_create_date
+msgid "Created on"
+msgstr "Kreirano"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
+msgid "Current Location"
+msgstr "Trenutna Lokacija"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
+msgid "Default address id"
+msgstr "Zadana adresa"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
+msgid "Delivery Address"
+msgstr "Adresa dostave"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_dest_id
+msgid "Delivery Location"
+msgstr "Lokacija isporuke"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_name
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Description"
+msgstr "Opis"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_dest_id
+msgid "Dest. Location"
+msgstr "Odredišna lokacija"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_display_name
+msgid "Display Name"
+msgstr "Prikaži naziv"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+msgid "Do you really want to create the invoice(s)?"
+msgstr "Želite li zaista želite kreirati fakturu(e)?"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Done"
+msgstr "Gotovo"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr "U pripremi"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "End Repair"
+msgstr "Završi popravak"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Extra Info"
+msgstr "Dodatne informacije"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fees_lines
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Fees"
+msgstr "Nadoknada"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Group By"
+msgstr "Grupiši po"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_group
+msgid "Group by partner invoice address"
+msgstr "Grupiraj po partnerovoj adresi fakture"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit Month"
+msgstr "Mjesec limita garancije"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit by Month"
+msgstr "Limit garancije po mjesecima"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "History"
+msgstr "Istorija"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"In a repair order, you can detail the components you remove,\n"
+"                add or replace and record the time you spent on the different\n"
+"                operations."
+msgstr ""
+"U nalogu popravke, možete navesti komponente koje ste uklonili,\n"
+"dodati ili zamjeniti i zabilježiti vrijeme koje ste utrošili na različitim\n"
+"operacijama."
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_internal_notes
+msgid "Internal Notes"
+msgstr "Interne zabilješke"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_move_id
+msgid "Inventory Move"
+msgstr "Interno kretanje"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_id
+msgid "Invoice"
+msgstr "Faktura"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Invoice Exception"
+msgstr "Fakture izuzeci"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoice_line_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_invoice_line_id
+msgid "Invoice Line"
+msgstr "Stavka fakture"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_method
+msgid "Invoice Method"
+msgstr "Metoda fakturisanja"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Invoice address:"
+msgstr "Adresa fakture:"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Invoice and shipping address:"
+msgstr "Adresa fakture i isporuke:"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoiced
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoiced
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_invoiced
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Invoiced"
+msgstr "Fakturisano"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Invoicing"
+msgstr "Fakturisanje"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_invoice_id
+msgid "Invoicing Address"
+msgstr "Adresa za fakturu"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice___last_update
+msgid "Last Modified on"
+msgstr "Zadnje mijenjano"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_write_uid
+msgid "Last Updated by"
+msgstr "Zadnji ažurirao"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_write_date
+msgid "Last Updated on"
+msgstr "Zadnje ažurirano"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_lot_id
+msgid "Lot"
+msgstr "Partija"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
+msgid "Make Invoice"
+msgstr "Kreiraj Fakturu"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_move_id
+msgid "Move"
+msgstr "Kretanje"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_move_id
+msgid "Move created by the repair order"
+msgstr "Kretanje kreirano od strane naloga popravke"
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "No Invoice"
+msgstr "Nema fakture"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:499
+#: code:addons/mrp_repair/models/mrp_repair.py:561
+#, python-format
+msgid "No Pricelist!"
+msgstr "Nema cijenovnika!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:260
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr "Nema konta definisanog za partnera \"%s\"."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:285
+#: code:addons/mrp_repair/models/mrp_repair.py:313
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr "Nije definisan konto za proizvod \"%s\"."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:306
+#, python-format
+msgid "No product defined on Fees!"
+msgstr "Nema proizvoda definisanih na naknadama!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:506
+#: code:addons/mrp_repair/models/mrp_repair.py:568
+#, python-format
+msgid "No valid pricelist line found !"
+msgstr "Nije pronađena validna stavka cijenovnika!"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Notes"
+msgstr "Zabilješke"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
+msgid "Operation Lines"
+msgstr "Stavke operacije"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Operations"
+msgstr "Operacije"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_id
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Partner"
+msgstr "Partner"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Price"
+msgstr "Cijena"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_pricelist_id
+msgid "Pricelist"
+msgstr "Cijenovnik"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_pricelist_id
+msgid "Pricelist of the selected partner."
+msgstr "Cjenovnik odabranog partnera"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_id
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Product Information"
+msgstr "Informacije o proizvodu"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_qty
+msgid "Product Quantity"
+msgstr "Količina proizvoda"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_uom
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_uom
+msgid "Product Unit of Measure"
+msgstr "Jedinica mjere proizvoda"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_id
+msgid "Product to Repair"
+msgstr "Proizvodi za popravak"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_lot_id
+msgid "Products repaired are all belonging to this lot"
+msgstr "Proizvodi koji su popravljeni svi pripadaju ovom lotu"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom_qty
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_uom_qty
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Quotation"
+msgstr "Predračun"
+
+#. module: mrp_repair
+#: model:ir.actions.report.xml,name:mrp_repair.action_report_mrp_repair_order
+msgid "Quotation / Order"
+msgstr "Ponuda / Nalog"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_quotation_notes
+msgid "Quotation Notes"
+msgstr "Zabilješke predračuna"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Quotations"
+msgstr "Predračuni"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Ready To Repair"
+msgstr "Spremno za popravak"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Ready to Repair"
+msgstr "Spremno za popravak"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+msgid "Remove"
+msgstr "Ukloni"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
+msgid "Repair Fees Line"
+msgstr "Stavka naknade popravka"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_line
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Repair Line"
+msgstr "Stavka popravke"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Repair Order"
+msgstr "Nalog za popravak"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Repair Order #:"
+msgstr "Nalog popravke #:"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_repair_id
+msgid "Repair Order Reference"
+msgstr "Nalog za popravak br."
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Repair Orders"
+msgstr "Nalozi za popravak"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Repair Quotation #:"
+msgstr "Ponuda popravke #:"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
+msgid "Repair Reference"
+msgstr "Popravak br."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:194
+#, python-format
+msgid "Repair must be canceled in order to reset it to draft."
+msgstr "Popravke moraju biti otkazane kako bi ih postavili u pripremu."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:343
+#, python-format
+msgid "Repair must be confirmed before starting reparation."
+msgstr "Popravke moraju biti potvđene kako bi ste započeli popravku."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:371
+#, python-format
+msgid "Repair must be repaired in order to make the product moves."
+msgstr ""
+"Popravke moraju biti popravljene kako bi ste kreirali kretanja proizvoda."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:354
+#, python-format
+msgid "Repair must be under repair in order to end reparation."
+msgstr "Popravke moraju biti pod popravkom kako bi ste završili popravku."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:223
+#, python-format
+msgid "Repair order is already invoiced."
+msgstr "Nalog popravke je već fakturisan."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/wizard/mrp_repair_cancel.py:20
+#, python-format
+msgid "Repair order is not invoiced."
+msgstr "Nalog popravke nije fakturisan."
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_repaired
+#: selection:mrp.repair,state:0
+msgid "Repaired"
+msgstr "Popravljeno"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_lot_id
+msgid "Repaired Lot"
+msgstr "Popravljeni lot"
+
+#. module: mrp_repair
+#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
+msgid "Repairs"
+msgstr "Popravke"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_tree
+msgid "Repairs order"
+msgstr "Nalozi za popravak"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Search Repair Orders"
+msgstr "Pretraga naloga popravke"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
+msgid ""
+"Selecting 'Before Repair' or 'After Repair' will allow you to generate "
+"invoice before or after the repair is done respectively. 'No invoice' means "
+"you don't want to generate invoice for this repair order."
+msgstr ""
+"Odabirom 'Prije popravke' ili 'Nakon popravke' će vam dozvoliti da kreirate "
+"fakturu prije ili nakon završene popravke. 'Baz fakture' znači da ne želite "
+"da generišete fakutu za ovaj nalog popravke."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:213
+#, python-format
+msgid "Serial number is required for operation line with product '%s'"
+msgstr "Serijski broj je potreban za stavke operacije sa proizvodom '%s'"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Set to Draft"
+msgstr "Postavi u pripremu"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
+msgid "Source Location"
+msgstr "Izvorna lokacija"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Start Repair"
+msgstr "Pokreni popravak"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_state
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_state
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Status"
+msgstr "Status"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_subtotal
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_subtotal
+msgid "Subtotal"
+msgstr "Podukupno"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Tax"
+msgstr "Porez"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_tax
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_tax_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_tax_id
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Taxes"
+msgstr "Porezi"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:166
+#, python-format
+msgid ""
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
+msgstr ""
+"Jedinica mjere proizvoda koju ste izabrali ima drugačiju kategoriju nego u "
+"formi proizvoda."
+
+#. module: mrp_repair
+#: sql_constraint:mrp.repair:0
+msgid "The name of the Repair Order must be unique!"
+msgstr "Naziv naloga popravke mora biti jedinstven!"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"The repair order uses the warranty date on the Serial Number in\n"
+"                order to know if whether the repair should be invoiced to the\n"
+"                customer or not."
+msgstr ""
+"Nalozi popravke koriste datuma garancije na serijskim brojevima \n"
+"kako bi znali da li popravka treba da se fakturiše kupcu ili ne."
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
+msgid ""
+"The status of a repair line is set automatically to the one of the linked "
+"repair order."
+msgstr ""
+"Status stavke popravke je automatski postavljen na jednu od povezanih naloga"
+" popravke."
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+msgid ""
+"This operation will cancel the Repair process, but will not cancel it's "
+"Invoice. Do you want to continue?"
+msgstr ""
+"Ova operacija će otkazati proces popravka, ali neće otkazati pripadajuću "
+"fakturu. Nastaviti?"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_to_invoice
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_to_invoice
+msgid "To Invoice"
+msgstr "Za fakturisati"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "To be Invoiced"
+msgstr "Za fakturisanje"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
+msgid "Total"
+msgstr "Ukupno"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Total amount"
+msgstr "Ukupni iznos"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_type
+msgid "Type"
+msgstr "Tip"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr "U popravku"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_unit
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_unit
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Unit Price"
+msgstr "Jedinična cijena"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Unit of Measure"
+msgstr "Jedinica mjere"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
+msgid "Untaxed Amount"
+msgstr "Neoporezivi iznos"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Untaxed amount"
+msgstr "Neoporezovan iznos"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "VAT:"
+msgstr "PDV:"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:166
+#, python-format
+msgid "Warning"
+msgstr "Upozorenje"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_guarantee_limit
+msgid "Warranty Expiration"
+msgstr "Isticanje garancije"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+msgid "Yes"
+msgstr "Da"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:248
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr "Morate odabrati adresu fakture partnera u formi popravke!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:501
+#: code:addons/mrp_repair/models/mrp_repair.py:563
+#, python-format
+msgid ""
+"You have to select a pricelist in the Repair form !\n"
+" Please set one before choosing a product."
+msgstr ""
+"Morate da odaberete cijenovnik na formi Popravke!\n"
+"Molimo odaberite jedan prije odabira proizvoda."

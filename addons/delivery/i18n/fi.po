@@ -1,0 +1,1924 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery
+# 
+# Translators:
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2016
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
+# Kari Lindgren <karisatu@gmail.com>, 2016
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
+# Marko Happonen <marko.happonen@sprintit.fi>, 2016
+# Timo Koukkari <timo.koukkari@seamk.fi>, 2016
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
+# Miku Laitinen <miku.laitinen@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>, 2016\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rules_count
+msgid "# Analytic Rules"
+msgstr "# Analyyttiset säännöt"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_count
+msgid "# Bill of Material"
+msgstr "# Osaluettelo"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_num_invoiced
+msgid "# Invoiced in Purchase"
+msgstr "#Laskutettu ostettaessa"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_num_invoiced
+msgid "# Invoiced in Sale"
+msgstr "# Laskutettua myynnissä"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_mo_count
+msgid "# Manufacturing Orders"
+msgstr "# Valmistustilaukset"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
+msgid "# Product Variants"
+msgstr "# Tuotevariaatiota"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
+msgid "# Purchases"
+msgstr "# Ostot"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_count
+msgid "# Sales"
+msgstr "# Myyntien määrä"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:74
+#, python-format
+msgid ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    Buy Odoo Enterprise now to get more providers.\n"
+"                </p>"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "<span>kg</span>"
+msgstr "<span>kg</span>"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model:ir.ui.view,arch_db:delivery.report_shipping2
+msgid "<strong>Carrier</strong>"
+msgstr "Huolitsija"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model:ir.ui.view,arch_db:delivery.report_shipping2
+msgid "<strong>Weight</strong>"
+msgstr "<strong>Paino</strong>"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+"Asiakkaille tarkoitettu tuotteen kuvaus. Lisätään Myyntitilauksiin, "
+"Toimitustilauksiin ja asiakkaan laskuihin/palautuksiin."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
+msgid ""
+"A description of the Product that you want to communicate to your vendors. "
+"This description will be copied to every Purchase Order, Receipt and Vendor "
+"Bill/Refund."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_description
+msgid ""
+"A precise description of the Product, used only for internal information "
+"purposes."
+msgstr ""
+"Vain sisäiseen käyttöön tarkoitettu yksityiskohtainen kuvaus tuotteesta."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_type
+msgid ""
+"A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not managed.\n"
+"A service is a non-material product you provide.\n"
+"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
+msgid "Action Needed"
+msgstr "Vaatii toimia"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
+msgid "Action while validating Delivery Orders"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
+msgid "Active"
+msgstr "Aktiivinen"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_amount
+msgid "Amount"
+msgstr "Määrä"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_amount
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr ""
+"Summa jonka ylittyessä toimitus on ilmainen, ilmaistuna yrityksen "
+"valuutassa."
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
+msgstr "Arkistoitu"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
+msgid "Asset Type"
+msgstr "Käyttöomaisuus tyyppi"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_value_ids
+msgid "Attributes"
+msgstr "Attribuutit"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available
+msgid "Available"
+msgstr "Saatavilla"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available_in_pos
+msgid "Available in the Point of Sale"
+msgstr "Saatavilla kassapäätteestä"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_produce_delay
+msgid ""
+"Average delay in days to produce this product. In the case of multi-level "
+"BOM, the manufacturing lead times of the components will be added."
+msgstr ""
+"Keskimääräinen viive päivissä tämän tuotteen tuottamiseen. Monitasoisen "
+"osaluettelon tapauksessa komponenttien viiveet summataan kokonaisviiveeseen."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
+msgid "Avg. Price in Customer Invoices."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_avg_price
+msgid "Avg. Price in Vendor Bills "
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_avg_price
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_avg_price
+msgid "Avg. Unit Price"
+msgstr "Keskimääräinen yksikköhinta"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_barcode
+msgid "Barcode"
+msgstr "Viivakoodi"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_list_price
+msgid ""
+"Base price to compute the customer price. Sometimes called the catalog "
+"price."
+msgstr ""
+"Perushinta asiakashinnan laskentaan. Toisinaan kutsutaan luettelohinnaksi."
+
+#. module: delivery
+#: selection:delivery.carrier,delivery_type:0
+msgid "Based on Rules"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image
+msgid "Big-sized image"
+msgstr "Suurikokoinen kuva"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_ids
+msgid "Bill of Materials"
+msgstr "Osaluettelo"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
+msgid "Bulk Weight"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
+msgid "Can be Expensed"
+msgstr "Voidaan kirjata kuluksi"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
+msgid "Can be Purchased"
+msgstr "Voidaan ostaa"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rental
+msgid "Can be Rent"
+msgstr "Voidaan vuokrata"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_sale_ok
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_ok
+msgid "Can be Sold"
+msgstr "Voidaan myydä"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid ""
+"Can be changed during the 'put in pack' to adjust the weight of the "
+"shipping."
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Cancel"
+msgstr "Peru"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_carrier
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_package_carrier_type
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_id
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
+msgid "Carrier"
+msgstr "Huolitsija"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
+msgid "Category Routes"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
+msgid "Check if the product is eligible for membership."
+msgstr "Tarkasta jos tuote on oikeutettu jäsenyyteen."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_to_weight
+msgid ""
+"Check if the product should be weighted using the hardware scale integration"
+msgstr "Tarkista pitääkö tuote punnita käyttäen vaaka-integraatiota"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
+msgstr "Valitse tämä jos haluat tämän tuotteen näkyvän kassapäätteellä."
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid "Click to define a new delivery method."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
+msgid "Color Index"
+msgstr "Väri-indeksi"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_company_id
+msgid "Company"
+msgstr "Yritys"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+msgid "Condition"
+msgstr "Ehto"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
+msgid "Control Purchase Bills"
+msgstr "Ostolaskun luonti perustuen"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
+msgid "Cost"
+msgstr "Kulut"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_standard_price
+msgid "Cost Price"
+msgstr "Kustannushinta"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
+msgid "Cost method"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
+msgid ""
+"Cost of the product template used for standard stock valuation in accounting"
+" and used as a base price on purchase orders. Expressed in the default unit "
+"of measure of the product."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
+msgid "Costing Method"
+msgstr "Arvotuskäytäntö"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_country_ids
+msgid "Countries"
+msgstr "Maat"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_project_id
+msgid ""
+"Create a task under this project on sale order validation. This setting must"
+" be set for each company."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_currency_id
+msgid "Currency"
+msgstr "Valuutta"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_qty_available
+msgid ""
+"Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
+msgid "Customer Lead Time"
+msgstr "Asiakkaan läpimenoaika"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
+msgid "Customer Ref"
+msgstr "Asiakkaan viite"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
+msgid "Customer Taxes"
+msgstr "Asiakasverot"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_from
+msgid "Date from which membership becomes active."
+msgstr "Päivä, jolloin jäsenyys astuu voimaan."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
+msgid "Date of the last message posted on the record."
+msgstr "Viimeisen viestin päivämäärä"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
+msgid "Date until which membership remains active."
+msgstr "Päivä johon asti jäsenyys pysyy voimassa."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
+msgid "Default Unit of Measure used for all stock operation."
+msgstr "Oletusyksikkö kaikille varaston toiminnoille."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_po_id
+msgid ""
+"Default Unit of Measure used for purchase orders. It must be in the same "
+"category than the default unit of measure."
+msgstr ""
+"Oletusyksikkö jota käytetään ostotilauksilla. Täytyy olla samassa ryhmässä "
+"(kategoriassa) kuin oletusyksikkö."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr "Tuloennakon tyyppi"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_count
+#: model:ir.ui.menu,name:delivery.menu_delivery
+#: model:ir.ui.menu,name:delivery.sale_menu_delivery
+msgid "Delivery"
+msgstr "Toimitus"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Delivery Information"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_sale_order_carrier_id
+msgid "Delivery Method"
+msgstr "Toimitustapa"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
+msgid "Delivery Methods"
+msgstr "Toimitustavat"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_price_rule
+msgid "Delivery Price Rules"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
+msgid "Delivery Product"
+msgstr "Toimitustuote"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_route_ids
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
+msgid "Description"
+msgstr "Kuvaus"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
+msgid "Description on Picking"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Destination"
+msgstr "Kohde"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_event_ok
+msgid ""
+"Determine if a product needs to create automatically an event registration "
+"at the confirmation of a sales order line."
+msgstr ""
+"Luoko tuote tapahtumarekisteröinnin automaattisesti myyntitilauksen "
+"hyväksymisestä."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
+msgid "Determine the display order"
+msgstr "Aseta näyttöjärjestys"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Discard"
+msgstr "Hylkää"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
+"                to each method."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
+msgid "Environment"
+msgstr "Ympäristö"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
+msgid "Estimated Delivery Price"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
+msgid "Event Registration"
+msgstr "Tapahtuman rekisteröinti"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
+msgid "Event Tickets"
+msgstr "Tapahtuman liput"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin
+msgid "Expected Margin"
+msgstr "Odotettu marginaali"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin_rate
+msgid "Expected Margin (%)"
+msgstr "Odotettu marginaali (%)"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_expected
+msgid "Expected Sale"
+msgstr "Odotettu myynti"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_expected_margin
+msgid "Expected Sale - Normal Cost"
+msgstr "Odotettu myynti - normaalikulut"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sales_gap
+msgid "Expected Sale - Turn Over"
+msgstr "Odotettu myynti - liikevaihto"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_expected_margin_rate
+msgid "Expected margin * 100 / Expected Sale"
+msgstr "Odotettu marginaali * 100 / Odotettu myynti"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_expense_id
+msgid "Expense Account"
+msgstr "Menotili"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
+msgid "Fill this field if you plan to invoice the shipping based on picking."
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.carrier,delivery_type:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_fixed_price
+msgid "Fixed Price"
+msgstr "Kiinteä hinta"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_follower_ids
+msgid "Followers"
+msgstr "Seuraajat"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Seuraajat (kanavat)"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seuraajat (kumppanit)"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
+msgid "Forecast Quantity"
+msgstr "Ennustettu määrä"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
+msgid ""
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
+#: model:product.product,name:delivery.free_delivery_carrier_product_product
+msgid "Free delivery charges"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
+msgid "Free if Order total is more than"
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.carrier,integration_level:0
+msgid "Get Rate"
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.carrier,integration_level:0
+msgid "Get Rate and Create Shipment"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
+msgid ""
+"Gives the different ways to package the same product. This has no impact on "
+"the picking order and is mainly used if you use the EDI module."
+msgstr ""
+"Antaa eri tapoja pakata sama tuote. Ei vaikuta keräilyjärjestykseen ja "
+"käytetään lähinnä EDI moduulissa."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
+msgid "Gives the sequence order when calculating delivery carrier."
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Group By"
+msgstr "Ryhmittely"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
+#: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
+msgid "HS Code"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_height
+msgid "Height"
+msgstr "Korkeus"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Height must be positive"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_id
+msgid "ID"
+msgstr "Tunniste (ID)"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread
+msgid "If checked new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
+msgid ""
+"If perpetual valuation is enabled for a product, the system will "
+"automatically create journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
+msgid ""
+"If the order is more expensive than a certain amount, the customer can "
+"benefit from a free shipping"
+msgstr ""
+"Jos tilaus on arvokkaampi kuin tietty määrä, asiakas hyötyy ilmaisesta "
+"toimituksesta."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_active
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr ""
+"Jos on valitsematta, niin sallii tuotteen piilottamisen poistamatta sitä."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_image
+msgid ""
+"Image of the product variant (Big-sized image of product template if false)."
+" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"preserved."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
+msgid ""
+"Image of the product variant (Medium-sized image of product template if "
+"false)."
+msgstr ""
+"Tuotevariantin kuva (jos ei määritetty, käytetään tuotemallin keskikokoista "
+"kuvaa)."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_image_small
+msgid ""
+"Image of the product variant (Small-sized image of product template if "
+"false)."
+msgstr ""
+"Tuotevariantin kuva (jos ei määritetty, käytetään tuotemallin pientä kuvaa)."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
+msgid "Income Account"
+msgstr "Tulotili"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
+msgid "Incoming"
+msgstr "Saapuva"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Install more Providers"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
+msgid "Integration Level"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
+msgid "Internal Category"
+msgstr "Sisäinen kategoria"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_code
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_default_code
+msgid "Internal Reference"
+msgstr "Sisäinen viite"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_barcode
+msgid "International Article Number used for product identification."
+msgstr "Kansainvälistä tuotenumeroa (IAN) käytetään tuotteen tunnistamiseen."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_inventory
+msgid "Inventory Location"
+msgstr "Varastopaikka"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_valuation
+msgid "Inventory Valuation"
+msgstr "Varastonarvostus"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
+msgid "Invoice Shipping on Delivery"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
+msgid "Invoice State"
+msgstr "Laskun tila"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
+msgid "Invoicing Policy"
+msgstr "Laskutus perustuu"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
+msgid "Is Follower"
+msgstr "On seuraaja"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
+msgid "Is a Delivery"
+msgstr "On toimitus"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
+msgid ""
+"Keep empty if the pricing depends on the advanced pricing per destination"
+msgstr ""
+"Jätä tyhjäksi jos hinnoittelu riippuu kohdekohtaisesta edistyksellisestä "
+"hinnoittelusta"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_last_post
+msgid "Last Message Date"
+msgstr "Viimeinen viestipvm"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
+msgid "Last Modified on"
+msgstr "Viimeksi muokattu"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_length
+msgid "Length"
+msgstr "Pituus"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Length must be positive"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
+msgid "Location"
+msgstr "Sijainti"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
+msgid "Logistical Units"
+msgstr "Logistiset yksiköt"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Manage Package Type"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
+msgid ""
+"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sale order validation and track the work hours."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
+msgid "Manufacturing Lead Time"
+msgstr "Valmistuksen läpimenoaika"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
+msgid "Margin"
+msgstr "Myyntikate"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
+msgid "Margin Date From"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_to
+msgid "Margin Date To"
+msgstr ""
+
+#. module: delivery
+#: sql_constraint:delivery.carrier:0
+msgid "Margin cannot be lower than -100%"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
+msgid "Max Weight"
+msgstr ""
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Max Weight must be positive"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
+msgid "Maximum Value"
+msgstr "Maksimiarvo"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
+msgid "Maximum weight shippable in this packaging"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
+msgid "Medium-sized image"
+msgstr "Keskikokoinen kuva"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
+msgid "Membership"
+msgstr "Jäsenyys"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_to
+msgid "Membership End Date"
+msgstr "Jäsenyyden päättymispäivä"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_from
+msgid "Membership Start Date"
+msgstr "Jäsenyyden alkupäivä"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "Viesti ostotilausriville"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr "Viesti myyntitilausriville"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
+msgid "Messages"
+msgstr "Viestit"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
+msgid "Minimum Stock Rules"
+msgstr "Minimivarastosäännöt"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_name
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Name"
+msgstr "Nimi"
+
+#. module: delivery
+#: selection:product.packaging,package_carrier_type:0
+msgid "No carrier integration"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:63
+#, python-format
+msgid "No carrier matching."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:72
+#, python-format
+msgid "No carrier set for this order."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_normal_cost
+msgid "Normal Cost"
+msgstr "Kiinteä hinta"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
+msgid "Normal Cost - Total Cost"
+msgstr "Normaalikulut - kokonaiskulut"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimenpiteiden määrä"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
+msgid "Number of Packages"
+msgstr "Pakkausten määrä"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
+msgid "Number of unread messages"
+msgstr "Lukemattomia viestejä"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_method
+msgid ""
+"On ordered quantities: control bills based on ordered quantities.\n"
+"On received quantities: control bills based on received quantity."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
+msgid "Operator"
+msgstr "Operaattori"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_invoice_policy
+msgid ""
+"Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
+msgid "Outgoing"
+msgstr "Lähtevä"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Package"
+msgstr "Pakkaus"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
+msgid "Package Code"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:35
+#: code:addons/delivery/models/stock_picking.py:128
+#, python-format
+msgid "Package Details"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
+msgid "Packages"
+msgstr "Pakkaukset"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_packaging
+msgid "Packaging"
+msgstr "Paketointi"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_pack_operation
+msgid "Packing Operation"
+msgstr "Pakkaustoiminnot"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_partner
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_quant_package
+msgid "Physical Packages"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pos_categ_id
+msgid "Point of Sale Category"
+msgstr "Kassapäätteen kategoria"
+
+#. module: delivery
+#: selection:delivery.price.rule,variable:0
+#: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price
+msgid "Price"
+msgstr "Hinta"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_creditor_price_difference
+msgid "Price Difference Account"
+msgstr "Hintaerotuksen tili"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+msgid "Price Rules"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_id
+msgid "Pricelist"
+msgstr "Hinnasto"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
+msgid "Pricelist Items"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
+msgid "Pricelist item ids"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Pricing"
+msgstr "Hinnoittelu"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
+msgid "Pricing Rules"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_procurement
+msgid "Procurement Location"
+msgstr "Hankinnan paikka"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_id
+msgid "Product"
+msgstr "Tuote"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_alert_time
+msgid "Product Alert Time"
+msgstr "Tuotten hälytysaika"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_line_ids
+msgid "Product Attributes"
+msgstr "Tuotteen attribuutit"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_email_template_id
+msgid "Product Email Template"
+msgstr "Tuotteen sähköpostimalli"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_life_time
+msgid "Product Life Time"
+msgstr "Tuotteen elinikä"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_removal_time
+msgid "Product Removal Time"
+msgstr "Tuotteen poistopäivä"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_template
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_tmpl_id
+msgid "Product Template"
+msgstr "Tuotemalli"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_type
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_type
+msgid "Product Type"
+msgstr "Tuotteen tyyppi"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_use_time
+msgid "Product Use Time"
+msgstr "Tuotteen käyttöaika"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
+msgid "Production Location"
+msgstr "Valmistuksen paikka"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_ids
+msgid "Products"
+msgstr "Tuotteet"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_project_id
+msgid "Project"
+msgstr "Projektit"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Provider"
+msgstr "Palveluntarjoaja"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
+msgid "Purchase Description"
+msgstr "Ostojen kuvaus"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_gap
+msgid "Purchase Gap"
+msgstr "Ostoero"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn
+msgid "Purchase Order Line"
+msgstr "Ostotilausrivi"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
+msgid "Purchase Unit of Measure"
+msgstr "Ostoyksikkö"
+
+#. module: delivery
+#: selection:delivery.price.rule,variable:0
+#: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line_product_qty
+msgid "Quantity"
+msgstr "Määrä"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_qty_available
+msgid "Quantity On Hand"
+msgstr "Käytettävissä oleva määrä"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_incoming_qty
+msgid ""
+"Quantity of products that are planned to arrive.\n"
+"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
+msgid ""
+"Quantity of products that are planned to leave.\n"
+"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
+msgid "Re-Invoice Expenses"
+msgstr "Uudelleenlaskuta kulut"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
+msgid "Receipt"
+msgstr "Kuitti"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
+msgid "Reordering Rules"
+msgstr "Uudelleentilauksen säännöt"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
+msgid "Reordering max qty"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
+msgid "Reordering min qty"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Palauta keräily"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
+msgid "Routes"
+msgstr "Reitit"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
+msgid "Sale Base Price"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_sale
+msgid "Sale Description"
+msgstr "Myynnin kuvaus"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_list_price
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_lst_price
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_price
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+msgid "Sale Price"
+msgstr "Myyntihinta"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_gap
+msgid "Sales Gap"
+msgstr "Myynnin alijäämä"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sales Order"
+msgstr "Myyntitilaus"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order_line
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn
+msgid "Sales Order Line"
+msgstr "Myyntitilausrivi"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Save"
+msgstr "Tallenna"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
+msgid "Select category for the current product"
+msgstr "Valitse nykyiselle tuotteelle ryhmä (kategoria)"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:296
+#, python-format
+msgid ""
+"Selected product in the delivery method doesn't fulfill any of the delivery "
+"carrier(s) criteria."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_line_warn
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_line_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Valittaessa vaihtoehto:\n"
+"  \"Varoitusviesti\", käyttäjälle näytetään varoitusviesti\n"
+"  \"Estoviesti, käyttäjälle näytetään poikkeusviesti ja toimenpide estetään.\n"
+"Kirjoita näytettävä viesti seuraavaan kenttään."
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Send to Shipper"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sequence
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_sequence
+msgid "Sequence"
+msgstr "Järjestys"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Set price"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
+msgid "Set to True if your credentials are certified for production."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:147
+#, python-format
+msgid ""
+"Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost:"
+" %.2f %s"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
+msgid "Shipping Cost"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
+msgid "Shipping Weight"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
+msgid "Small-sized image"
+msgstr "Pienikokoinen kuva"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_sale_ok
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_ok
+msgid "Specify if the product can be selected in a sales order line."
+msgstr "Määrittele voiko tuotteen valita myyntitilausrivillä."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
+msgid "Specify whether the product can be selected in an HR expense."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
+#: model:ir.model.fields,help:delivery.field_product_template_hs_code
+msgid "Standardized code for international shipping and goods declaration"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
+msgid "States"
+msgstr "Tilat"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
+msgid "Stock Input Account"
+msgstr "Saapuvan varaston tili"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_move
+msgid "Stock Move"
+msgstr "Varastosiirto"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_output
+msgid "Stock Output Account"
+msgstr "Lähtevän varaston tili"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
+msgid "Stock move ids"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
+msgid "Stock quant ids"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
+msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_turnover
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_total_cost
+msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_expected
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer "
+"Invoices"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_num_invoiced
+msgid "Sum of Quantity in Customer Invoices"
+msgstr "Määrien summa asiakaslaskuilla"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_num_invoiced
+msgid "Sum of Quantity in Vendor Bills"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_pricelist_id
+msgid ""
+"Technical field. Used for searching on pricelists, not stored in database."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
+msgid "Technical: used to compute quantities."
+msgstr ""
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
+msgid ""
+"The average delay in days between the confirmation of the customer order and"
+" the delivery of the finished products. It's the time you promise to your "
+"customers."
+msgstr ""
+"Keskimääräinen viive päivissä asiakastilauksen vahvistuksesta valmiiden "
+"tuotteiden toimitukseen. Tämän ajan lupaat asiakkaallesi."
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:54
+#, python-format
+msgid "The order state have to be draft to add delivery lines."
+msgstr "Vain tilausehdotuksille voi lisätä tilausrivejä."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_lst_price
+msgid ""
+"The sale price is managed from the product template. Click on the 'Variant "
+"Prices' button to set the extra attribute prices."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
+msgid "The volume in m3."
+msgstr "Tilavuus kuutiometreinä."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_weight
+msgid "The weight of the contents in Kg, not including any packaging, etc."
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"These methods allow to automatically compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
+"                quotation) or the invoice (based on the delivery orders)."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and cost price."
+msgstr ""
+"Tätä tiliä käytetään arvostamaan hintaeroa ostohinnan ja kustannushinnan "
+"välillä"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
+msgid "This delivery method will be used when invoicing from picking."
+msgstr "Tämä toimitustapa on käytössä kun laskutus tapahtuu keräilystä."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_image_variant
+msgid ""
+"This field holds the image used as image for the product variant, limited to"
+" 1024x1024px."
+msgstr ""
+"Tähän kenttään määritellään tuotemuunnelman kuva, maksimikoko 1024x1024px."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
+msgid "This is the sum of the extra price of all attributes"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
+msgid "This percentage will be added to the shipping price."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for stock moves generated by manufacturing orders."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for stock moves generated by procurements."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for stock moves generated when you do an inventory."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
+msgstr ""
+"Näitä ryhmiä käytetään samankaltaisten tuotteiden ryhmittelyyn "
+"kassapäätteelle."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_to_weight
+msgid "To Weigh With Scale"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
+msgid "Total Cost"
+msgstr "Kokonaiskustannukset"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin
+msgid "Total Margin"
+msgstr "Kokonaismarginaali"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin_rate
+msgid "Total Margin Rate(%)"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin_rate
+msgid "Total margin * 100 / Turnover"
+msgstr "Kokonaismarginaali * 100 / Liikevaihto"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
+msgid "Track Service"
+msgstr "Palvelun seuranta"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Tracking"
+msgstr "Seuranta"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
+msgid "Tracking Reference"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_picking
+msgid "Transfer"
+msgstr "Siirto"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_turnover
+msgid "Turnover"
+msgstr "Liikevaihto"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin
+msgid "Turnover - Standard price"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_uom_id
+msgid "Unit of Measure"
+msgstr "Mittayksikkö"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr "Yksikkö (Yksikkö) on painoyksikkö"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_picking_weight_uom_id
+msgid "Unit of measurement for Weight"
+msgstr "Painoyksikkö"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread
+msgid "Unread Messages"
+msgstr "Lukemattomat viestit"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Lukemattomien viestien laskuri"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
+msgid "Valuation"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
+msgid "Variable"
+msgstr "Vaihteleva"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable_factor
+msgid "Variable Factor"
+msgstr "Muunnoskerroin"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_variant
+msgid "Variant Image"
+msgstr "Variantin kuva"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
+msgid "Variant Price Extra"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
+msgid "Vendor Taxes"
+msgstr "Toimittajaverot"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
+msgid "Vendors"
+msgstr "Toimittajat"
+
+#. module: delivery
+#: selection:delivery.price.rule,variable:0
+#: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_volume
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_volume
+msgid "Volume"
+msgstr "Tilavuus"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warehouse_id
+msgid "Warehouse"
+msgstr "Varasto"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warranty
+msgid "Warranty"
+msgstr "Takuu"
+
+#. module: delivery
+#: selection:delivery.price.rule,variable:0
+#: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
+#: model:ir.model.fields,field_description:delivery.field_stock_move_weight
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package_weight
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Weight"
+msgstr "Paino"
+
+#. module: delivery
+#: selection:delivery.price.rule,variable:0
+#: selection:delivery.price.rule,variable_factor:0
+msgid "Weight * Volume"
+msgstr "Paino * Tilavuus"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
+msgid "Weight Unit of Measure"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
+msgid "Weight for Shipping"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
+"Kun uusi sarjanumero myönnetään käyttöön, niin näin monta päivää aikaisemmin"
+" pitäisi aiheesta tulla hälytys."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"Kun uusi sarjanumero myönnetään käyttöön, niin näin monta päivää aikaisemmin"
+" tuotteet tulevat vaaralliseksi eikä niitä pitäisi käyttää."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
+"Kun uusi sarjanumero myönnetään käyttöön, niin tuotteet pitää poistaa näin "
+"monta päivää ennen varastosta."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+"Kun uusi sarjanumero muönnetään, niin näin monta päivää ennen tuotteet "
+"alkavat huonontua, olemtta kuitenkaan vielä vaarallisia."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_input
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. When not set on the "
+"product, the one from the product category is used."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. When not set on "
+"the product, the one from the product category is used."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
+msgid ""
+"When validating an invoice, an email will be sent to the customer based on "
+"this template. The customer will receive an email for each product linked to"
+" an email template."
+msgstr ""
+"Laskun hyväksynnän yhteydessä asiakkaalle lähetetään sähköposti perustuen "
+"tähän sähköpostimalliin. Asiakas saa sähköpostin jokaisesta "
+"sähköpostimalliin liitetystä tuotteesta."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_width
+msgid "Width"
+msgstr "Leveys"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Width must be positive"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:187
+#, python-format
+msgid ""
+"You are shipping different packaging types in the same shipment.\n"
+"Packaging Types: %s"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:163
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
+msgid "Zip From"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
+msgid "Zip To"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "e.g. UPS Express"
+msgstr ""

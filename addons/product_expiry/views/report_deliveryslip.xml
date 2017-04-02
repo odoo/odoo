@@ -1,0 +1,14 @@
+<odoo>
+    <template id="report_delivery_document_inherit_product_expiry" inherit_id="stock.report_delivery_document">
+        <xpath expr="//th[@name='lot_serial']" position="inside">
+            <t t-if="any([lot.lot_id.use_date for operation in o.pack_operation_ids for lot in operation.pack_lot_ids])">
+                <span class="pull-right">Expiry Date</span>
+            </t>
+        </xpath>
+        <xpath expr="//td[@name='lot_qty']" position="after">
+            <td>
+                <span class="pull-right" t-field="packlot.lot_id.use_date" t-field-options='{"widget": "date"}'/>
+            </td>
+        </xpath>
+    </template>
+</odoo>

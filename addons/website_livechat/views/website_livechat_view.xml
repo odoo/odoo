@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="im_livechat_channel_form_view" model="ir.ui.view">
+            <field name="name">im_livechat.channel.form.inherit.website_livechat</field>
+            <field name="model">im_livechat.channel</field>
+            <field name="inherit_id" ref="im_livechat.im_livechat_channel_view_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name="website_publish_button"
+                        type="object" icon="fa-globe">
+                        <field name="website_published" widget="website_button"/>
+                    </button>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

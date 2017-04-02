@@ -1,0 +1,102 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_calendar
+# 
+# Translators:
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: stock_calendar
+#: model:ir.ui.view,arch_db:stock_calendar.view_procurement_form_stock_inherit
+msgid "Calculate dates according to Orderpoint"
+msgstr "Oblicz terminy wg punktów zamawiania"
+
+#. module: stock_calendar
+#: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
+msgid "Calendar"
+msgstr "Kalendarz"
+
+#. module: stock_calendar
+#: model:ir.model.fields,help:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
+msgid ""
+"In the calendar you can define the days that the goods will be delivered. "
+"That way the scheduler will only take into account the goods needed until "
+"the second delivery and put the procurement date as the first delivery."
+msgstr ""
+
+#. module: stock_calendar
+#: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_last_execution_date
+msgid "Last Execution Date"
+msgstr "Data ostatniego wykonania"
+
+#. module: stock_calendar
+#: model:ir.model,name:stock_calendar.model_resource_calendar_leaves
+msgid "Leave Detail"
+msgstr "Opis nieobecności"
+
+#. module: stock_calendar
+#: model:ir.model,name:stock_calendar.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Reguła minimalnych zapasów"
+
+#. module: stock_calendar
+#: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_delivery_date
+msgid "Next Delivery Date"
+msgstr "Następna data dostawy"
+
+#. module: stock_calendar
+#: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_purchase_date
+msgid "Next Purchase Date"
+msgstr "Następna data zakupu"
+
+#. module: stock_calendar
+#: model:ir.model,name:stock_calendar.model_procurement_order
+msgid "Procurement"
+msgstr "Zapotrzebowanie"
+
+#. module: stock_calendar
+#: model:ir.model.fields,field_description:stock_calendar.field_resource_calendar_attendance_group_id
+#: model:ir.model.fields,field_description:stock_calendar.field_resource_calendar_leaves_group_id
+msgid "Procurement Group"
+msgstr "Grupa zapotrzebowań"
+
+#. module: stock_calendar
+#: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_purchase_calendar_id
+msgid "Purchase Calendar"
+msgstr "Kalendarz zakupów"
+
+#. module: stock_calendar
+#: model:ir.model,name:stock_calendar.model_resource_calendar
+msgid "Resource Calendar"
+msgstr "Kalendarz zasobu"
+
+#. module: stock_calendar
+#: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_delivery_date
+msgid ""
+"The date of the next delivery for this procurement group, when this group is"
+" on the purchase calendar of the orderpoint"
+msgstr ""
+
+#. module: stock_calendar
+#: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_purchase_date
+msgid "The date the next purchase order should be sent to the vendor"
+msgstr ""
+
+#. module: stock_calendar
+#: model:ir.model,name:stock_calendar.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Szczegóły pracy"

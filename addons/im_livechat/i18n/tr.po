@@ -1,0 +1,917 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * im_livechat
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Murat Kaplan <muratk@projetgrup.com>, 2016
+# gezgin biri <gezginbiri@hotmail.com>, 2016
+# Saban Yildiz <sabany@projetgrup.com>, 2016
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
+# Ediz Duman <neps1192@gmail.com>, 2016
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
+# Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:58+0000\n"
+"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"Last-Translator: Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2016\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_nbr_channel
+msgid "# of Sessions"
+msgstr "Oturum #"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_speaker
+msgid "# of speakers"
+msgstr "Konuşmacı #"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "% Happy"
+msgstr "% Mutlu"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
+msgid ""
+"* 'Display the button' displays the chat button on the pages.\n"
+"* 'Auto popup' displays the button and automatically open the conversation pane.\n"
+"* 'Hide the button' hides the chat button on the pages."
+msgstr ""
+"* 'Butonu göster' sayfalarda sohbet butonunu gösterir.\n"
+"* 'Otomatik popup' butonu gösterir ve sohbet penceresini otomatik açar.\n"
+"* 'Butonu gizle' sayfalarda sohbet butonunu gizler."
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"<span>Define rules for your live support channel. You can apply an action "
+"(disable the support, automatically open your support, or just make the "
+"button available) for the given URL, and per country.<br/>To identify the "
+"country, GeoIP must be install on your server, otherwise, the countries of "
+"the rule will not be taken into account.</span>"
+msgstr ""
+"<span>Canlı destek kanalınız için kuralları tanımlayın. Belirtilen URL ve "
+"ülke için aksiyon tanımlayabilir (desteği gizle, desteği otomatik aç, veya "
+"sadece butonu göster)<br/>Ülkeyi tanımlayabilmek için, GeoIP'nin sunucuda "
+"yüklenmiş olması gerekmektedir, aksi durumda ülke ile ilgili kurallar "
+"geçersiz olacaktır.</span>"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_action
+msgid "Action"
+msgstr "Aksiyon"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel_anonymous_name
+msgid "Anonymous Name"
+msgstr "Belirtilmeyen İsim"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_are_you_inside
+msgid "Are you inside the matrix?"
+msgstr "Matris içinde misin?"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:27
+#, python-format
+msgid "Ask something ..."
+msgstr "Birşey sorun ..."
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Attendees"
+msgstr "Katılımcılar"
+
+#. module: im_livechat
+#: selection:im_livechat.channel.rule,action:0
+msgid "Auto popup"
+msgstr "Otomatik popup"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
+msgid "Auto popup timer"
+msgstr "Otomatik popup süresi"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_duration
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_duration
+msgid "Average duration"
+msgstr "Ortalama süre"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_message
+msgid "Average message"
+msgstr "Ortalama mesaj"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_time_to_answer
+msgid "Average time to give the first answer to the visitor"
+msgstr "Ziyaretçiye ilk cevap için geçen ortalama süre"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:13
+#, python-format
+msgid "Bad"
+msgstr "Kötü"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+msgid "Canned Responses"
+msgstr "Hazır Cevaplar"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid ""
+"Canned responses allow you to insert prewritten responses in\n"
+"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                replaced directly in your message, so that you can still edit\n"
+"                it before sending."
+msgstr ""
+"Hazır cevaplar daha önceden tanımlanmış cevapların <i>:shortcut</i>\n"
+"                yazılarak mesajlarda kullanılmasını sağlar. Kısayol \n"
+"                direk olarak mesaja eklenir ve göndermeden önce\n"
+"                düzenleme şansı verilir."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_livechat_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_livechat_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel_livechat_channel_id
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Channel"
+msgstr "Kanal"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_name
+msgid "Channel Name"
+msgstr "Kanal Adı"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+msgid "Channel Rule"
+msgstr "Kanal Kuralı"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Channel Rules"
+msgstr "Kanal Kuralları"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.support_channels
+msgid "Channels"
+msgstr "Kanallar"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_input_placeholder
+msgid "Chat Input Placeholder"
+msgstr "Sohbet Girişi Yer Tutucu"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:29
+#, python-format
+msgid "Chat with one of our collaborators"
+msgstr "Çalışanlarımızdan birisiyle sohbet edin"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Click to create a new canned response."
+msgstr "Yeni hazır cevap oluşturmak için tıklayın."
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+msgid "Click to define a new website live chat channel."
+msgstr "Yeni websitesi canlı sohbet kanalı tanımlamak için tıklayın."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_technical_name
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Code"
+msgstr "Kod"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.livechat_config
+msgid "Configuration"
+msgstr "Yapılandırma"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_channel_id
+msgid "Conversation"
+msgstr "Sohbet"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Copy and paste this code into your website, within the &lt;head&gt; tag:"
+msgstr ""
+"Kopyalayın ve Web sitesi, &lt; head &gt; etiketi içinde bu kodu yapıştırın:"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_country_ids
+msgid "Country"
+msgstr "Ülke"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_create_uid
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_create_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_create_date
+msgid "Created on"
+msgstr "Oluşturulma"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Creation date (day)"
+msgstr "Oluşturulma (gün)"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Creation date (hour)"
+msgstr "Oluşturulma (saat)"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Creation date (month)"
+msgstr "Oluşturulma (ay)"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Creation date (week)"
+msgstr "Oluşturulma (hafta)"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Creation date (year)"
+msgstr "Oluşturulma (yıl)"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_button_text
+msgid "Default text displayed on the Livechat Support Button"
+msgstr "Canlı Sohbet Destek Butonundaki varsayılan yazı"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
+msgid ""
+"Delay (in seconds) to automatically open the conversation window. Note: the "
+"selected action must be 'Auto popup' otherwise this parameter will not be "
+"taken into account."
+msgstr ""
+"Sohbet penceresini otomatik açmak için bekleme süresi (saniye olarak). Not: "
+"seçili aksiyon 'Otomatik popup' olmalı, yoksa bu parametre hesaba "
+"katılmayacaktır."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:7
+#, python-format
+msgid "Did we correctly answer your question ?"
+msgstr "Sorunuzu doğru şekilde cevapladık mı?"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel
+msgid "Discussion channel"
+msgstr "Tartışma kanalı"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_display_name
+msgid "Display Name"
+msgstr "Gösterilen İsim"
+
+#. module: im_livechat
+#: selection:im_livechat.channel.rule,action:0
+msgid "Display the button"
+msgstr "Butonu Göster"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_duration
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_duration
+msgid "Duration of the conversation (in seconds)"
+msgstr "Sohbet süresi (saniye olarak)"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+msgid ""
+"Each channel has it's own URL that you can send by email to\n"
+"                your customers in order to start chatting with you."
+msgstr ""
+"Her bir kanalın kendine özel URL'si bulunmaktadır. Bunu eposta\n"
+"                ile müşterilerinize göndererek, sohbete başlayabilirsiniz."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:19
+#, python-format
+msgid "Explain your note"
+msgstr "Notunuzu açıklayın"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"For website built with Odoo CMS, please install the website_livechat module."
+" Then go to Settings &gt; Website Settings and select the Website Live Chat "
+"Channel you want to add on your website."
+msgstr ""
+"Odoo CMS ile oluşturulan websitelerinde, lütfen website_livechat modülünü "
+"yükleyin. Sonrasında Ayarlar &gt; Websitesi Ayarlarına gidin ve websitesine "
+"eklemek istediğiniz Websitesi Canlı Sohbet Kanalını seçin."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
+msgid ""
+"Given the order to find a matching rule. If 2 rules are matching for the "
+"given url/country, the one with the lowest sequence will be chosen."
+msgstr ""
+"Eşleşen kuralı bulmak için verilen sıralama. Şayet 2 kural, belirtilen "
+"url/ülke için aynı şekilde eşleşiyorsa, ilk başta sıralaması en düşük olan "
+"seçilir."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:11
+#, python-format
+msgid "Good"
+msgstr "İyi"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Group By..."
+msgstr "Grupla..."
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Has a Rating"
+msgstr "Değerlendirmesi Var"
+
+#. module: im_livechat
+#: selection:im_livechat.channel.rule,action:0
+msgid "Hide the button"
+msgstr "Butonu Gizleyin"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.mail_channel_action
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "History"
+msgstr "Geçmiş"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_start_date_hour
+msgid "Hour of start Date of session"
+msgstr "Oturumun başladığı günün saati"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:30
+#, python-format
+msgid "How may I help you?"
+msgstr "Size nasıl yardımcı olabilirim?"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "How to use the Website Live Chat widget?"
+msgstr "Websitesi Canlı Sohbet öğesi nasıl kullanılır?"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:15
+#, python-format
+msgid "I don't want to rate this conversation"
+msgstr "Bu sohbeti değerlendirmek istemiyorum."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_id
+msgid "ID"
+msgstr "ID"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image
+msgid "Image"
+msgstr "Resim"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Join"
+msgstr "Katıl"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Join Channel"
+msgstr "Kanala Katıl"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Last 24h"
+msgstr "Son 24s"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel___last_update
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule___last_update
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel___last_update
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator___last_update
+msgid "Last Modified on"
+msgstr "Son Güncelleme"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Last Seen Many2many"
+msgstr "Son Görülme Many2many"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Last Week"
+msgstr "Son Hafta"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Leave"
+msgstr "Ayrıl"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Leave Channel"
+msgstr "Kanaldan Ayrıl"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
+msgid "Live Chat"
+msgstr "Canlı Sohbet"
+
+#. module: im_livechat
+#: model:ir.module.category,name:im_livechat.module_category_im_livechat
+msgid "Live Support"
+msgstr "Canlı Destek"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:9
+#, python-format
+msgid "Livechat"
+msgstr "Canlı sohbet"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel
+msgid "Livechat Channel"
+msgstr "Canlı Sohbet Kanalı"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
+msgid ""
+"Livechat Support Channel Statistics allows you to easily check and analyse "
+"your company livechat session performance. Extract information about the "
+"missed sessions, the audiance, the duration of a session, etc."
+msgstr ""
+"Canlı Sohbet Destek Kanalı istatistikleri firmanızın canlı sohbet oturum "
+"performansını kolayca kontrol ve analiz etmenizi sağlar. Kaçırılmış oturum "
+"istekleri, hedef kitlesi, oturum süresi, vb. konularda bilgi elde edilir."
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
+#: model:ir.model,name:im_livechat.model_im_livechat_report_operator
+msgid "Livechat Support Report"
+msgstr "Canlı Sohbet Destek Raporu"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_report_operator_action
+msgid "Livechat Support Report Channel"
+msgstr "Canlı Sohbet Destek Raporu Kanalı"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_graph
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_pivot
+msgid "Livechat Support Statistics"
+msgstr "Canlı Sohbet Destek İstatistikleri"
+
+#. module: im_livechat
+#: model:res.groups,name:im_livechat.im_livechat_group_manager
+msgid "Manager"
+msgstr "Yönetici"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_sequence
+msgid "Matching order"
+msgstr "Eşleştirme sırası"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image_medium
+msgid "Medium"
+msgstr "Orta"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_medium
+msgid ""
+"Medium-sized photo of the group. It is automatically resized as a 128x128px "
+"image, with aspect ratio preserved. Use this field in form views or some "
+"kanban views."
+msgstr ""
+"Grupun orta boyutlu fotoğrafı. En boy oranaı korunarak otomatikman 128x128 "
+"resim olarak boyutlandırılır. Bu alanı form görünümünde ya da bazı kanban "
+"görünümlerinde kullanın."
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Missed sessions"
+msgstr "Kaçırılmış oturumlar"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_name
+msgid "Name"
+msgstr "Adı"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:117
+#, python-format
+msgid ""
+"None of our collaborators seems to be available, please try again later."
+msgstr "Online kimse yok, lütfen daha sonra yeniden deneyin."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_nbr_channel
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_nbr_channel
+msgid "Number of conversation"
+msgstr "Sohbet Sayısı"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_nbr_speaker
+msgid "Number of different speakers"
+msgstr "Farklı konuşmacı sayısı"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_nbr_message
+msgid "Number of message in the conversation"
+msgstr "Sohbetteki mesaj sayısı"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:12
+#, python-format
+msgid "OK"
+msgstr "Tamam"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_partner_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_partner_id
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Operator"
+msgstr "Operatör"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_operator
+msgid "Operator Analysis"
+msgstr "Operatör Analizi"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_user_ids
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Operators"
+msgstr "Operatörler"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid ""
+"Operators\n"
+"                                            <br/>\n"
+"                                            <i class=\"fa fa-comments\"/>"
+msgstr ""
+"Operatörler\n"
+"                                            <br/>\n"
+"                                            <i class=\"fa fa-comments\"/>"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Operators that do not show any activity In Odoo for more than 30 minutes "
+"will be considered as disconnected."
+msgstr ""
+"Odoo içerisinde 30 dakikadan fazla aktivitesi olmayan operatörler çevrim "
+"dışı olarak değerlendirilecektir."
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Options"
+msgstr "Seçenekler"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
+msgid "Percentage of happy ratings over the past 7 days"
+msgstr "Son 7 gündeki mutlu değerlendirme yüzdesi"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_rating_rating
+msgid "Rating"
+msgstr "Değerlendirme"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:309
+#, python-format
+msgid "Rating: :rating_%d"
+msgstr "Değerlendirme: :rating_%d"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
+msgid ""
+"Regular expression specifying the web pages this rule will be applied on."
+msgstr "Bu kuralın geçerli olduğu web sayfalarını belirten tanımlama"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
+msgid "Report"
+msgstr "Rapor"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_ids
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_tree
+msgid "Rules"
+msgstr "Kurallar"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_script_external
+msgid "Script (external)"
+msgstr "Script (harici)"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Search history"
+msgstr "Arama geçmişi"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Search report"
+msgstr "Arama raporu"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Session Date"
+msgstr "Oturum Tarihi"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+msgid "Session Form"
+msgstr "Oturum Formu"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
+msgid "Session Statistics"
+msgstr "Oturum İstatistikleri"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.mail_channel_action_from_livechat_channel
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_channel_ids
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Sessions"
+msgstr "Oturumlar"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.session_history
+msgid "Sessions History"
+msgstr "Oturum Geçmişi"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_small
+msgid ""
+"Small-sized photo of the group. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr ""
+"Küçük boyutlu grup fotoğrafı. En boy oranı korunarak otomatikman 64x64 resim"
+" olarak boyutlandırılır. Küçük resim gerektiren her yerde kullanabilirsiniz."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_start_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_start_date
+msgid "Start Date of session"
+msgstr "Oturum Başlangıç Tarihi"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_start_date
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_start_date
+msgid "Start date of the conversation"
+msgstr "Sohbet başlangıç tarihi"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_button_text
+msgid "Text of the Button"
+msgstr "Tuşun Metni"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_channel_id
+msgid "The channel of the rule"
+msgstr "Kuralın kanalı"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_name
+msgid "The name of the channel"
+msgstr "Kanalın ismi"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_country_ids
+msgid ""
+"The rule will only be applied for these countries. Example: if you select "
+"'Belgium' and 'United States' and that you set the action to 'Hide Button', "
+"the chat button will be hidden on the specified URL from the visitors "
+"located in these 2 countries. This feature requires GeoIP installed on your "
+"server."
+msgstr ""
+"Kural sadece bu ülkeler için geçerlidir. Örneğin: Belçika ve Amerika "
+"seçerseniz ve Butonu Gizle aksiyonu seçilirse, sohbet butonu bu 2 ülkeden "
+"giren ziyaretçiler için belirtilen URL'lerde gizli olacaktır. Bu özellik "
+"GeoIP'nin sunucuda yüklü olmasını gerektirmektedir."
+
+#. module: im_livechat
+#: model:res.groups,comment:im_livechat.im_livechat_group_manager
+msgid "The user will be able to delete support channels."
+msgstr "Kullanıcı destek kanallarını silebilecek."
+
+#. module: im_livechat
+#: model:res.groups,comment:im_livechat.im_livechat_group_user
+msgid "The user will be able to join support channels."
+msgstr "Destek kanallarına katılmaya yetkili olacak"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image
+msgid ""
+"This field holds the image used as photo for the group, limited to "
+"1024x1024px."
+msgstr ""
+"Bu alan, grup için kullanılan resmi tutar, 1024x1024px olarak sınırlıdır."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_default_message
+msgid ""
+"This is an automated 'welcome' message that your visitor will see when they "
+"initiate a new conversation."
+msgstr ""
+"Bu, ziyaretçilerinizin yeni bir sohbet başlattıklarında görecekleri otomatik"
+" hoş geldin mesajıdır."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image_small
+msgid "Thumbnail"
+msgstr "Küçük Resim"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_time_to_answer
+msgid "Time to answer"
+msgstr "Cevaplama süresi"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Treated sessions"
+msgstr "Hizmet verilmiş oturumlar"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_regex_url
+msgid "URL Regex"
+msgstr "URL Tanımı"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_web_page
+msgid ""
+"URL to a static page where you client can discuss with the operator of the "
+"channel."
+msgstr ""
+"Müşterinizin, kanal operatörü ile canlı sohbeti için geçerli URL sayfası."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_uuid
+msgid "UUID"
+msgstr "UUID"
+
+#. module: im_livechat
+#: model:res.groups,name:im_livechat.im_livechat_group_user
+msgid "User"
+msgstr "Kullanıcı"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/controllers/main.py:37
+#: code:addons/im_livechat/static/src/js/im_livechat.js:28
+#, python-format
+msgid "Visitor"
+msgstr "Ziyaretçi"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_web_page
+msgid "Web Page"
+msgstr "Web Sayfası"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
+msgid "Website Live Chat Channels"
+msgstr "Websitesi Canlı Sohbet Kanalları"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_default_message
+msgid "Welcome Message"
+msgstr "Karşılama Mesajı"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+msgid ""
+"You can create channels for each website on which you want\n"
+"                to integrate the website live chat widget, allowing your website\n"
+"                visitors to talk in real time with your operators."
+msgstr ""
+"Websitesi Canlı Sohbet öğesini eklemek istediğiniz her bir websitesi\n"
+"                için kanallar oluşturabilirsiniz. Bu sayede websitenizdeki\n"
+"                ziyaretçiler operatörlerle canlı sohbet edebilirler."
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.mail_channel_action
+msgid ""
+"Your chatter history is empty. Create a channel and start chatting to fill "
+"up your history."
+msgstr ""
+"Sohbet geçmişiniz boş. Yani bir kanal oluşturup, geçmişinizi doldurmaya "
+"başlayabilirsiniz."
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "e.g. Hello, how may I help you?"
+msgstr "örn. Merhaba, size nasıl yardımcı olabilirim?"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "e.g. YourWebsite.com"
+msgstr "örn. Websiteniz.com"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "or copy this url and send it by email to your customers or suppliers:"
+msgstr ""
+"ya da bu URL'yi kopyalayın ve müşteriler veya tedarikçiler için e-posta ile "
+"gönderin:"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+msgid "seconds"
+msgstr "saniye"

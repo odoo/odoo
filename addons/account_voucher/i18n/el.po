@@ -1,0 +1,559 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_voucher
+# 
+# Translators:
+# Kostas Goutoudis <goutoudis@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Stefanos Nikou <stefanos.nikou@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Stefanos Nikou <stefanos.nikou@gmail.com>, 2016\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_state
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+" * The 'Cancelled' status is used when user cancel voucher."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
+msgid "Account"
+msgstr "Λογαριασμός"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+msgid "Account Date"
+msgstr "Ημερομηνία Λογαριασμού"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+msgid "Accounting Date"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Παραστατικό Λογιστικής"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
+msgid "Amount"
+msgstr "Ποσό"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
+msgid "Analytic Account"
+msgstr "Αναλυτικός Λογαριασμός"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Are you sure you want to cancel this receipt?"
+msgstr "Σίγουρα θέλετε να καταργήσετε αυτή την απόδειξη;"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Bill Date"
+msgstr "Ημερομηνία Λογαριασμού"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Bill Information"
+msgstr "Πληροφορίες Λογαριασμού"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
+msgid "Bill Reference"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Cancel"
+msgstr "Άκυρο"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Cancel Receipt"
+msgstr "Ακύρωση Απόδειξης"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+msgid "Cancelled"
+msgstr "Ακυρώθηκε"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:159
+#, python-format
+msgid "Cannot delete voucher(s) which are already opened or paid."
+msgstr ""
+"Δεν είναι δυνατή η διαγραφή των παραστατικών που είναι ήδη ανοιχτά ή "
+"εξοφλημένα."
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid "Click to create a sale receipt."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid "Click to register a purchase receipt."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
+msgid "Company"
+msgstr "Εταιρία"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+msgid "Company related to this journal"
+msgstr "Η εταιρία που σχετίζεται με το ημερολόγιο"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
+msgid "Created by"
+msgstr "Δημιουργήθηκε από"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
+msgid "Created on"
+msgstr "Δημιουργήθηκε στις"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
+msgid "Currency"
+msgstr "Νόμισμα"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+msgid "Customer"
+msgstr "Πελάτης"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
+msgid "Description"
+msgstr "Περιγραφή"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
+msgid "Display Name"
+msgstr "Εμφάνιση Ονόματος"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Draft"
+msgstr "Πρόχειρο"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Draft Vouchers"
+msgstr "Πρόχειρα Παραστατικά"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
+msgid "Due Date"
+msgstr "Προθεσμία"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+msgid "Effective date for accounting entries"
+msgstr "Ημερομηνία έναρξης ισχύος για λογιστικές εγγραφές"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
+msgid "Gives the sequence of this line when displaying the voucher."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Group By"
+msgstr "Ομαδοποίηση Κατά"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
+msgid "ID"
+msgstr "Κωδικός"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
+msgid ""
+"In case we have a rounding problem in the tax, use this field to correct it"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Internal Notes"
+msgstr "Εσωτερικά Σημειώματα"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Journal"
+msgstr "Ημερολόγιο"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
+msgid "Journal Entry"
+msgstr "Εγγραφή Ημερολογίου"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Journal Items"
+msgstr "Εγγραφές Ημερολογίων"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
+msgid "Last Modified on"
+msgstr "Τελευταία τροποποίηση στις"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
+msgid "Last Updated by"
+msgstr "Τελευταία Ενημέρωση από"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
+msgid "Last Updated on"
+msgstr "Τελευταία Ενημέρωση στις"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
+msgid "Notes"
+msgstr "Σημειώσεις"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
+msgid "Number"
+msgstr "Αριθμός"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
+msgid "Only for tax excluded from price"
+msgstr "Μόνο για φόρους εξαιρούμενους από την τιμή"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
+msgid "Paid"
+msgstr "Εξοφλημένο"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "Partner"
+msgstr "Συναλλασόμενος"
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Directly"
+msgstr "Απευθείας Πληρωμή"
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Later"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
+msgid "Payment"
+msgstr "Πληρωμή"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
+msgid "Payment Reference"
+msgstr "Αναφορά Πληρωμής"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:195
+#, python-format
+msgid "Please activate the sequence of selected journal !"
+msgstr "Παρακαλώ ενεργοποιήστε την ακολουθία του επιλεγμένου ημερολογίου !"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:198
+#, python-format
+msgid "Please define a sequence on the journal."
+msgstr "Παρακαλώ ορίστε μια αλληλουχία στο ημερολόγιο."
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Posted"
+msgstr "Καταχωρημένο"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Posted Vouchers"
+msgstr "Καταχωρημένα Παραστατικά"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+msgid "Pro-forma"
+msgstr "Pro-forma"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
+msgid "Product"
+msgstr "Είδος"
+
+#. module: account_voucher
+#: selection:account.voucher,voucher_type:0
+msgid "Purchase"
+msgstr "Αγορά"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Purchase Receipt"
+msgstr "Απόδειξη Αγοράς"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+msgid "Purchase Receipts"
+msgstr "Αποδείξεις Αγορών"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Purchase Voucher"
+msgstr "Παραστατικό Αγοράς"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
+msgid "Quantity"
+msgstr "Ποσότητα"
+
+#. module: account_voucher
+#: selection:account.voucher,voucher_type:0
+msgid "Sale"
+msgstr "Πώληση"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Sales Information"
+msgstr "Πληροφορίες Πώλησης"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Sales Receipt"
+msgstr "Απόδειξη Πώλησης"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Sales Receipts"
+msgstr "Αποδείξεις Πωλήσεων"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Search Vouchers"
+msgstr "Αναζήτηση Παραστατικών"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
+msgid "Sequence"
+msgstr "Ακολουθία"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Set to Draft"
+msgstr "Ορισμός σε Πρόχειρο"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Status"
+msgstr "Κατάσταση"
+
+#. module: account_voucher
+#: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
+msgid "Status Change"
+msgstr "Αλλαγή Κατάστασης"
+
+#. module: account_voucher
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status changed"
+msgstr "Αλλαγή κατάστασης"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
+msgid "Tax"
+msgstr "Φόρος"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
+msgid "Tax amount"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
+msgid "Tax correction"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
+msgid "The Voucher has been totally paid."
+msgstr "Το Παραστατικό έχει πλήρως εξοφληθεί. "
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
+msgid "The income or expense account related to the selected product."
+msgstr "Ο λογαριασμός εσόδων ή εξόδων που σχετίζεται με το επιλεγμένο προϊόν."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
+msgid "The partner reference of this document."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "To Review"
+msgstr "Για Επισκόπηση"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_amount
+msgid "Total"
+msgstr "Σύνολο"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Total Amount"
+msgstr "Σύνολο"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
+msgid "Type"
+msgstr "Τύπος"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
+msgid "Unit Price"
+msgstr "Τιμή Μονάδας"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Validate"
+msgstr "Επικύρωση"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Vendor"
+msgstr "Προμηθευτής"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Vendor Voucher"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:97
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+#, python-format
+msgid "Voucher"
+msgstr "Παραστατικό"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Voucher Entries"
+msgstr "Εγγραφές Παραστατικών"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher_line
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_ids
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_tree
+msgid "Voucher Lines"
+msgstr "Γραμμές Παραστατικού"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.account_cash_statement_graph
+msgid "Voucher Statistics"
+msgstr "Στατιστικά Παραστατικού"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
+msgid "Vouchers Entries"
+msgstr "Καταχωρήσεις Παραστατικού"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid ""
+"When the purchase receipt is confirmed, you can record the\n"
+"                vendor payment related to this purchase receipt."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid ""
+"When the sale receipt is confirmed, you can record the customer\n"
+"                payment related to this sales receipt."
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:361
+#, python-format
+msgid "You must first select a partner!"
+msgstr "Πρέπει πρώτα να επιλέξετε ένα συνεργάτη!"

@@ -1,0 +1,433 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * barcodes
+# 
+# Translators:
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Alain van Hall <ajcvhall@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-14 15:54+0000\n"
+"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"Last-Translator: Alain van Hall <ajcvhall@gmail.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:202
+#, python-format
+msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
+msgstr " '*' is geen geldig regex barcode patroon. Bedoelde u soms '.*' ?"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:200
+#, python-format
+msgid ": a rule can only contain one pair of braces."
+msgstr ": een regel kan enkel één paar accolades bevatten."
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:196
+#, python-format
+msgid ": braces can only contain N's followed by D's."
+msgstr ": accolades kunnen enkel N bevatten gevolgd door D."
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:198
+#, python-format
+msgid ": empty braces."
+msgstr ": lege accolades."
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
+"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix of the barcode."
+msgstr ""
+"De <i>nomenclatuur</i> van een barcode bepaalt hoe barcodes worden herkend en gecategoriseerd.\n"
+"                                Wanneer een barcode wordt gescand, wordt ze gekoppeld met de <i>eerste</i> regel van een\n"
+"                                passend patroon. De syntax van een patroon is zoals een reguliere expressie, en een barcode wordt\n"
+"                                gematcht indien de reguliere expressie overeenkomt met een prefix van de barcode."
+
+#. module: barcodes
+#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr ""
+"De nomenclatuur van een barcode bepaalt hoe de kassa een barcode "
+"identificeert en interpreteert"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:183 selection:barcode.rule,type:0
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_alias
+#, python-format
+msgid "Alias"
+msgstr "Alias"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "Always"
+msgstr "Altijd"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_name
+msgid "An internal identification for this barcode nomenclature rule"
+msgstr "Een interne identificatie voor de regel van deze barcode nomenclatuur"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_name
+msgid "An internal identification of the barcode nomenclature"
+msgstr "Een interne identificatie van de barcode nomenclatuur"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:177
+#: selection:barcode.rule,encoding:0
+#, python-format
+msgid "Any"
+msgstr "Elke"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_barcode_nomenclature_id
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Barcode Nomenclature"
+msgstr "Barcode nomenclatuur"
+
+#. module: barcodes
+#: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+msgid "Barcode Nomenclatures"
+msgstr "Barcode nomenclaturen"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_pattern
+msgid "Barcode Pattern"
+msgstr "Barcode patroon"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+msgid "Barcode Rule"
+msgstr "Barcode regel"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
+msgid "Barcode Scanned"
+msgstr "Barcode gescand"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Cashier"
+msgstr "Kassière"
+
+#. module: barcodes
+#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid "Click to add a Barcode Nomenclature ."
+msgstr "Klik om een barcode-nomenclatuur toe te voegen"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Client"
+msgstr "Cliënt"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Credit Card"
+msgstr "Credit Card"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:100
+#, python-format
+msgid "Discard"
+msgstr "Annuleren"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Discounted Product"
+msgstr "Korting product"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_display_name
+msgid "Display Name"
+msgstr "Weergave naam"
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-13"
+msgstr "EAN-13"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "EAN-13 to UPC-A"
+msgstr "EAN-13 naar UPC-A"
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-8"
+msgstr "EAN-8"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_encoding
+msgid "Encoding"
+msgstr "Codering"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
+#, python-format
+msgid "Error : Document not editable"
+msgstr "Fout: document kan niet gewijzigd worden"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
+#, python-format
+msgid "Error : No last scanned barcode"
+msgstr "Fout: Geen laats gescande barcode  "
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_id
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_id
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_id
+msgid "ID"
+msgstr "ID"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature___last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule___last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Location"
+msgstr "Locatie"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Lot"
+msgstr "Partij"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "Never"
+msgstr "Nooit"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_name
+msgid "Nomenclature Name"
+msgstr "Naam nomenclatuur"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Package"
+msgstr "Verpakking"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"Patterns can also define how numerical values, such as weight or price, can be\n"
+"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are encoded. Floats are also supported with the \n"
+"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, \n"
+"                                the barcode field on the associated records <i>must</i> show these digits as \n"
+"                                zeroes."
+msgstr ""
+"Patronen kunnen ook bepalen hoe numeriek waarden zoals gewicht of prijs, in de\n"
+"                                barcode worden gecodeerd. Ze worden aangeduid met <code>{NNN}</code>\n"
+"                                waarbij N aangeeft waar de cijfers van het getal worden gecodeerd. Decimalen \n"
+"                                worden ook ondersteund met behulp van D, zoals in <code>{NNNDD}</code>. Het barcode  \n"
+"                                codeveld van het bijhorende record <i>moet</i> dan deze cijfers als nullen afbeelden."
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Priced Product"
+msgstr "Prijs Product"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_name
+msgid "Rule Name"
+msgstr "Regelnaam"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_rule_ids
+msgid "Rules"
+msgstr "Regels"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:86
+#, python-format
+msgid "Select"
+msgstr "Selecteren"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_sequence
+msgid "Sequence"
+msgstr "Reeks"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:85
+#, python-format
+msgid "Set quantity"
+msgstr "Ingestelde hoeveelheid "
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Tables"
+msgstr "Tafels"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_pattern
+msgid "The barcode matching pattern"
+msgstr "Het overeenkomstige barcode patroon"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_rule_ids
+msgid "The list of barcode rules"
+msgstr "De lijst met barcode regels"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
+msgid "The matched pattern will alias to this barcode"
+msgstr "Het overeenkomstige patroon zal naar deze barcode verwijzen"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:196
+#: code:addons/barcodes/models/barcodes.py:198
+#: code:addons/barcodes/models/barcodes.py:200
+#, python-format
+msgid "There is a syntax error in the barcode pattern "
+msgstr "Er is een fout in de syntax van het barcode patroon"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+"Deze regel zal enkel toegepast worden indien de barcode van de juiste "
+"codering voorzien is"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
+#, python-format
+msgid "To modify this document, please first start edition."
+msgstr "Om dit document te wijzigen moet u eerst de wijzigingsmodus starten."
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
+#, python-format
+msgid "To set the quantity please scan a barcode first."
+msgstr "Om uw kwantiteit in te stellen scan eerst uw barcode. "
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_type
+msgid "Type"
+msgstr "Soort"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_upc_ean_conv
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"UPC codes kunnen naar EAN omgezet worden door ze met het prefix nul te "
+"voorzien. Deze instelling bepaalt of de UPC/EAN-omzetting automatisch moet "
+"uitgevoerd wanneer er een overeenkomst wordt gezocht in een regel met de ene"
+" of andere codering. "
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "UPC-A"
+msgstr "UPC-A"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "UPC-A to EAN-13"
+msgstr "UPC-A naar EAN-13"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_upc_ean_conv
+msgid "UPC/EAN Conversion"
+msgstr "UPC/EAN omzetting"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:184 selection:barcode.rule,type:0
+#, python-format
+msgid "Unit Product"
+msgstr "Producteenheid"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+"Wordt gebruikt om regels te ordenen zodat regels met een lagere volgorde "
+"eerst worden vergeleken."
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
+msgid "Value of the last barcode scanned."
+msgstr "Waarde van de laatst gescande barcode."
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Weighted Product"
+msgstr "Gewogen product"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_nomenclature
+msgid "barcode.nomenclature"
+msgstr "barcode.nomenclature"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_rule
+msgid "barcode.rule"
+msgstr "barcode.rule"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
+msgid "barcodes.barcode_events_mixin"
+msgstr "barcodes.barcode_events_mixin"

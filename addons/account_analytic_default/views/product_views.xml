@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="product_form_view_default_analytic_button" model="ir.ui.view">
+            <field name="name">product.product.inherit.rules_count</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name= "%(action_product_default_list)d" class="oe_stat_button" type="action" 
+                        groups="analytic.group_analytic_accounting" icon="fa-bookmark-o">
+                        <field name="rules_count" string="Analytic Rules" widget="statinfo" />
+                    </button>
+                </div>
+            </field>
+        </record>
+
+        <record id="product_template_view_default_analytic_button" model="ir.ui.view">
+            <field name="name">product.template.inherit.rules_count</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name= "action_view_rules" class="oe_stat_button" type="object" 
+                        groups="analytic.group_analytic_accounting" icon="fa-bookmark-o">
+                        <field name="rules_count" string="Analytic Rules" widget="statinfo" />
+                    </button>
+                </div>
+            </field>
+        </record>
+</odoo>

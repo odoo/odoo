@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options">
+    <t t-call="web_editor.snippet_options"/>
+    <t t-raw="0"/>
+
+    <div data-js="width-x"
+        data-selector="img, .mv, .col_mv, td:not(.o_mail_no_resize), th">
+    </div>
+
+    <div data-js="table_item" data-selector="td, th"/>
+
+    <div data-js="table_row"
+        data-selector="tr:has(> .row), tr:has(> .col_mv)"
+        data-drop-near="tr:has(> .row), tr:has(> .col_mv)">
+    </div>
+
+    <div data-js="table_column"
+        data-selector=".col>td, .col>th"
+        data-drop-near=".col>td, .col>th">
+    </div>
+
+    <div data-js="table_column_mv"
+        data-selector=".col_mv, td, th"
+        data-drop-near=".col_mv, td, th">
+    </div>
+
+    <div data-js="content"
+        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, .oe_snippet_body"
+        data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
+        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure">
+    </div>
+
+    <div data-js="resize"
+        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div">
+    </div>
+
+    <div data-js="margin-y"
+        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, td:not(.o_mail_no_resize), th">
+    </div>
+
+    <div data-js="colorpicker"
+        data-selector="
+            [data-oe-field='body_html'] > div:not(.o_layout):not(.o_mail_no_colorpicker),
+            [data-oe-field='body_html'] .oe_structure > div:not(.o_mail_no_colorpicker),
+            td, th
+        ">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
+    </div>
+</template>
+
+</odoo>

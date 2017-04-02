@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_irmodeloverview">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <div class="page">
+                <table class="table table-bordered mb64">
+                    <tr>
+                        <td colspan="12">
+                            <strong>Object: <span t-field="o.model"/>
+                            <p>Name: <span t-field="o.name"/></p></strong>
+                        </td>
+                        <td colspan="8">
+                            <p>Type: <span t-field="o.state"/></p>
+                            <p t-if="o.transient">Transient: True</p>
+                            <p t-if="not o.transient">Transient: False</p>
+                            <p>Apps: <span t-field="o.modules"/></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="20"><u><strong>Security</strong></u></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><strong>Group</strong></td>
+                        <td><strong>R</strong></td>
+                        <td><strong>W</strong></td>
+                        <td><strong>C</strong></td>
+                        <td><strong>U</strong></td>
+                        <td colspan="12"><strong>Name</strong></td>
+                    </tr>
+                    <tr t-foreach="o.access_ids" t-as="access">
+                        <td colspan="4"><span t-field="access.group_id"/></td>
+                        <td><t t-if="access.perm_read">X</t></td>
+                        <td><t t-if="access.perm_write">X</t></td>
+                        <td><t t-if="access.perm_create">X</t></td>
+                        <td><t t-if="access.perm_unlink">X</t></td>
+                        <td colspan="12"><span t-field="access.name"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="20"><u><strong>Fields</strong></u></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><strong>Name</strong></td>
+                        <td colspan="3"><strong>Label</strong></td>
+                        <td colspan="2"><strong>Type</strong></td>
+                        <td colspan="4"><strong>Attribute</strong></td>
+                        <td><strong>Rq</strong></td>
+                        <td><strong>Ro</strong></td>
+                        <td><strong>Tr</strong></td>
+                        <td><strong>Idx</strong></td>
+                        <td colspan="4"><strong>Apps</strong></td>
+                    </tr>
+                    <tr t-foreach="o.field_id" t-as="field">
+                        <td colspan="3"><span t-field="field.name"/></td>
+                        <td colspan="3"><span t-field="field.field_description"/></td>
+                        <td colspan="2"><span t-field="field.ttype"/></td>
+                        <td colspan="4">
+                            <p t-if="field.relation"><span>- relation = <span t-field="field.relation"/></span></p>
+                            <p t-if="field.relation_field"><span>- field = <span t-field="field.relation_field"/></span></p>
+                            <div t-if="field.selection"><span>- selection = <span t-field="field.selection"/></span></div>
+                            <div t-if="field.size"><span>- size = <span t-field="field.size"/></span></div>
+                            <div t-if="field.on_delete"><span>- ondelete = <span t-field="field.on_delete"/></span></div>
+                            <div t-if="field.domain"><span>- domain = <span t-field="field.domain"/></span></div>
+                            <div t-if="field.groups"><span>- groups = <span t-esc="', '.join(g.name for g in field.groups)"/></span></div>
+                        </td>
+                        <td><t t-if="field.required">X</t></td>
+                        <td><t t-if="field.readonly">X</t></td>
+                        <td><t t-if="field.translate">X</t></td>
+                        <td><t t-if="field.index">X</t></td>
+                        <td colspan="4"><span t-field="field.modules"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="20"><u><strong>Views</strong></u></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Seq</strong></td>
+                        <td><strong>Type</strong></td>
+                        <td colspan="4"><strong>Name</strong></td>
+                        <td colspan="6"><strong>XML ID</strong></td>
+                        <td colspan="8"><strong>Inherited</strong></td>
+                    </tr>
+                    <tr t-foreach="o.view_ids" t-as="view">
+                        <td><span t-field="view.priority"/></td>
+                        <td><span t-field="view.type"/></td>
+                        <td colspan="4"><span t-field="view.name"/></td>
+                        <td colspan="6"><span t-field="view.xml_id"/></td>
+                        <td colspan="8" t-if="view.inherit_id.xml_id"><span t-field="view.inherit_id.xml_id"/></td>
+                        <td colspan="8" t-if="not view.inherit_id.xml_id"><span t-field="view.inherit_id.name"/></td>
+                    </tr>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</odoo>

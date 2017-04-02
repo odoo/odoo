@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_mrp_user'))]" name="groups_id"/>
+        </record>
+
+        <!-- Resource: res.company -->
+        <record id="stock.res_company_1" model="res.company">
+            <field eval="1.0" name="manufacturing_lead"/>
+        </record>
+
+        <record id="product_assembly" model="product.product">
+            <field name="standard_price">0.1</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="type">service</field>
+            <field name="name">Assembly Service Cost</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="image" type="base64" file="mrp/static/img/product_assembly-image.jpg"/>
+        </record>
+
+        <record id="product_product_19" model="product.product">
+            <field name="name">HDD on Demand</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">1100.0</field>
+            <field name="list_price">1250.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">On demand hard-disk having capacity based on requirement.</field>
+            <field name="default_code">HDD-DEM</field>
+        </record>
+
+
+        <!-- Resource: mrp.workcenter -->
+
+        <record id="mrp_workcenter_0" model="mrp.workcenter">
+            <field name="name">Assembly Station 1</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="capacity">5</field>
+            <field name="time_start">10</field>
+            <field name="time_stop">8</field>
+            <field name="time_efficiency">87</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+        </record>
+
+        <record id="mrp_workcenter_3" model="mrp.workcenter">
+            <field name="name">Cutting</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+        </record>
+
+        <record id="mrp_workcenter_1" model="mrp.workcenter">
+            <field name="name">Drill Station 1</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+        </record>
+
+        <record id="mrp_workcenter_2" model="mrp.workcenter">
+            <field name="name">Assemble Station 2</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+        </record>
+
+
+
+        <!-- Resource: mrp.routing -->
+
+        <record id="mrp_routing_0" model="mrp.routing">
+            <field name="name">Assembly Line 1</field>
+        </record>
+
+        <record id="mrp_routing_1" model="mrp.routing">
+            <field name="name">Custom Assembly Line</field>
+        </record>
+
+        <record id="mrp_routing_2" model="mrp.routing">
+            <field name="name">Manual Component's Assembly</field>
+        </record>
+
+        <record id="mrp_routing_3" model="mrp.routing">
+            <field name="name">Assemble Furniture</field>
+        </record>
+
+
+        <!-- Resource: mrp.routing.workcenter -->
+
+        <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="name">Manual Assembly</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">5</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_1"/>
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="name">Long time assembly</field>
+            <field name="time_cycle">180</field>
+            <field name="sequence">15</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_1"/>
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="name">Testing</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">10</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_1"/>
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="name">Packing</field>
+            <field name="time_cycle">30</field>
+            <field name="sequence">5</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_2" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_2"/>
+            <field name="workcenter_id" ref="mrp_workcenter_2"/>
+            <field name="time_cycle">120</field>
+            <field name="sequence">5</field>
+            <field name="name">Manual Assembly</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_5" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_3"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="time_cycle">120</field>
+            <field name="sequence">10</field>
+            <field name="name">Cutting</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_6" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_3"/>
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="time_cycle">120</field>
+            <field name="sequence">15</field>
+            <field name="name">Drilling</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/drill-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_7" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_3"/>
+            <field name="workcenter_id" ref="mrp_workcenter_2"/>
+            <field name="time_cycle">120</field>
+            <field name="sequence">20</field>
+            <field name="name">Assembly</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
+        </record>
+
+        <!-- Resource: mrp.bom -->
+
+        <record id="mrp_bom_3" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_19_product_template"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="mrp_bom_line_3" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_17"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_3"/>
+        </record>
+
+
+        <record id="product.product_product_3_product_template" model="product.template">
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="mrp_bom_manufacture" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="mrp_routing_0"/>
+        </record>
+
+        <record id="mrp_bom_manufacture_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="mrp_bom_manufacture_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="mrp_bom_manufacture_line_3" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_16"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="mrp_bom_manufacture_line_4" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_17"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="mrp_bom_manufacture_line_5" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_20"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="mrp_bom_manufacture_line_6" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_22"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="mrp_bom_manufacture_line_7" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_24"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="product_product_build_kit" model="product.product">
+            <field name="name">Self Build Kit</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">600.0</field>
+            <field name="list_price">147.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">Self Build kit.</field>
+            <field name="default_code">E-COM92</field>
+        </record>
+
+        <record id="product_product_build_kit_product_template" model="product.template">
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+
+        <record id="mrp_bom_kit" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_build_kit_product_template"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="type">phantom</field>
+        </record>
+
+        <record id="mrp_bom_kit_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_kit"/>
+        </record>
+
+        <record id="mrp_bom_kit_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_9"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_kit"/>
+        </record>
+
+        <record id="mrp_production_1" model="mrp.production">
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_qty">3</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="mrp_production_2" model="mrp.production">
+            <field name="product_id" ref="mrp.product_product_19"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="bom_id" ref="mrp.mrp_bom_3"/>
+        </record>
+
+        <record id="product_product_computer_desk" model="product.product">
+            <field name="name">Computer Desk</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">2500</field>
+            <field name="list_price">2250</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">Solid wood computer desk.</field>
+            <field name="default_code">FURN001</field>
+        </record>
+        <record id="product_product_computer_desk_head" model="product.product">
+            <field name="name">Table Head</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">2000</field>
+            <field name="list_price">2000</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">Solid wood is a durable natural material.</field>
+            <field name="default_code">FURN002</field>
+        </record>
+        <record id="product_product_computer_desk_leg" model="product.product">
+            <field name="name">Table Leg</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">50</field>
+            <field name="list_price">50</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">18″ x 2½″ Square Leg</field>
+            <field name="default_code">FURN003</field>
+        </record>
+        <record id="product_product_computer_desk_bolt" model="product.product">
+            <field name="name">Bolt</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">12.5</field>
+            <field name="list_price">12.5</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">Stainless steel screw full (dia - 5mm, Length - 10mm)</field>
+            <field name="default_code">FURN004</field>
+        </record>
+
+        <record id="product_product_computer_desk_product_template" model="product.template">
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+
+        <record id="mrp_bom_desk" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_computer_desk_product_template"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">3</field>
+            <field name="routing_id" ref="mrp_routing_3"/>
+        </record>
+
+        <record id="mrp_bom_desk_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_head"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_desk"/>
+            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        </record>
+
+        <record id="mrp_bom_desk_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_leg"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="bom_id" ref="mrp_bom_desk"/>
+            <field name="operation_id" ref="mrp.mrp_routing_workcenter_6"/>
+        </record>
+
+        <record id="mrp_bom_desk_line_3 " model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_bolt"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">3</field>
+            <field name="bom_id" ref="mrp_bom_desk"/>
+            <field name="operation_id" ref="mrp.mrp_routing_workcenter_7"/>
+        </record>
+
+        <record id="mrp_production_3" model="mrp.production">
+            <field name="product_id" ref="product_product_computer_desk"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_qty">1</field>
+            <field name="bom_id" ref="mrp_bom_desk"/>
+        </record>
+
+        <!-- Manufacturing Order Demo With Lots-->
+
+        <record id="product_product_laptop_charger" model="product.product">
+            <field name="name">Laptop Charger</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="tracking">lot</field>
+            <field name="standard_price">2000.0</field>
+            <field name="list_price">2250.0</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)</field>
+            <field name="default_code">E-COM93</field>
+        </record>
+
+        <record id="product_product_laptop_keypad" model="product.product">
+            <field name="name">Laptop Keypad</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="tracking">lot</field>
+            <field name="standard_price">800</field>
+            <field name="list_price">850</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">New Original Laptop Keyboard Part No 9GT99</field>
+            <field name="default_code">E-COM94</field>
+        </record>
+
+        <record id="product.product_product_27" model="product.product">
+            <field name="tracking">lot</field>
+        </record>
+
+        <record id="lot_product_27_0" model="stock.production.lot">
+            <field name="name">0000000000030</field>
+            <field name="product_id" ref="product.product_product_27"/>
+        </record>
+        <record id="lot_product_27_1" model="stock.production.lot">
+            <field name="name">0000000000031</field>
+            <field name="product_id" ref="product.product_product_27"/>
+        </record>
+        <record id="lot_product_laptop_charger" model="stock.production.lot">
+            <field name="name">0000000000032</field>
+            <field name="product_id" ref="product_product_laptop_charger"/>
+        </record>
+        <record id="lot_product_laptop_keypad" model="stock.production.lot">
+            <field name="name">0000000000033</field>
+            <field name="product_id" ref="product_product_laptop_keypad"/>
+        </record>
+
+        <record id="stock_inventory_product_27" model="stock.inventory">
+            <field name="name">Inventory for laptop customized</field>
+            <field name="filter">product</field>
+            <field name="product_id" ref="product.product_product_27"/>
+        </record>
+
+        <record id="stock_inventory_product_27_lot0" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_product_27"/>
+            <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_27_0"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+
+        <record id="stock_inventory_product_27_lot1" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_product_27"/>
+            <field name="product_qty">40</field>
+            <field name="prod_lot_id" ref="lot_product_27_1"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+
+        <record id="stock_inventory_product_laptop_charger" model="stock.inventory">
+            <field name="name">Inventory for laptop charger</field>
+            <field name="filter">product</field>
+            <field name="product_id" ref="product_product_laptop_charger"/>
+        </record>
+        <record id="stock_inventory_line_product_laptop_charger" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_laptop_charger"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_product_laptop_charger"/>
+            <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_laptop_charger"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+        <record id="stock_inventory_product_laptop_keypad" model="stock.inventory">
+            <field name="name">Inventory for laptop keypad</field>
+            <field name="filter">product</field>
+            <field name="product_id" ref="product_product_laptop_keypad"/>
+        </record>
+        <record id="stock_inventory_line_product_laptop_keypad" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_laptop_keypad"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_product_laptop_keypad"/>
+            <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_laptop_keypad"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+
+        <record id="mrp_bom_laptop_cust" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+        </record>
+        <record id="mrp_bom_laptop_cust_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_laptop_charger"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+        </record>
+        <record id="mrp_bom_laptop_cust_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_laptop_keypad"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+        </record>
+
+        <record id="mrp_bom_laptop_cust_rout" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="routing_id" ref="mrp_routing_1"/>
+        </record>
+        <record id="mrp_bom_laptop_cust_rout_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_laptop_charger"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+        </record>
+        <record id="mrp_bom_laptop_cust_rout_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_laptop_keypad"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+        </record>
+
+        <record id="mrp_production_laptop_cust" model="mrp.production">
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_qty">5</field>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+        </record>
+
+        <function model="stock.inventory" name="prepare_inventory" eval="[[ref('mrp.stock_inventory_product_laptop_charger'), ref('mrp.stock_inventory_product_laptop_keypad')]]"/>
+
+        <function model="stock.inventory" name="action_done" eval="[[ref('stock_inventory_product_laptop_charger'), ref('stock_inventory_product_laptop_keypad')]]"/>
+
+        <!-- Run Scheduler -->
+        <function model="procurement.order" name="run_scheduler"/>
+
+
+        <!-- OEE -->
+
+        <record id="mrp_workcenter_efficiency_0" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="loss_id" ref="block_reason7"/>
+            <field name="date_start" eval="(datetime.now() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_1" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="loss_id" ref="block_reason0"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_2" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="loss_id" ref="block_reason1"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(days=5, hours=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - timedelta(days=5, hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_3" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="loss_id" ref="block_reason7"/>
+            <field name="date_start" eval="(datetime.now() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_4" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="loss_id" ref="block_reason0"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(days=5,hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - timedelta(days=5,hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_5" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="loss_id" ref="block_reason1"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+
+
+    </data>
+</odoo>

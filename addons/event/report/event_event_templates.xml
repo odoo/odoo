@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- template use to render a Registration Badge -->
+    <template id="event_registration_report_template_badge">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div class="row">
+                        <!-- Front -->
+                        <div class="col-xs-6 text-center" style="padding-left:7mm; border-left:1px dashed black; height: 149mm; -webkit-transform:rotate(180deg); padding-top: 7mm">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <t t-if="o.event_id.event_logo">
+                                        <div t-field="o.event_id.event_logo"/>
+                                    </t>
+                                    <span t-if="not o.event_id.event_logo and o.event_id.organizer_id.company_id.logo_web and o.event_id.organizer_id.is_company">
+                                        <img t-att-src="'data:image/png;base64,%s' % o.event_id.organizer_id.company_id.logo_web" style="max-height:1cm; max-width:4cm;"/>
+                                    </span>
+                                    <h5 t-field="o.event_id.name"/>
+                                    <h5>( <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="o.event_id.date_begin" t-options='{"hide_seconds": True}'> </span> <i>to</i> <span itemprop="endDate" t-field="o.event_id.date_end" t-options='{"hide_seconds": True}'> </span> )</h5>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 text-center" id="o_event_name">
+                                        <small>
+                                            <h3 t-field="o.name"/>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div t-field="o.event_id.badge_front"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="col-xs-6" style="padding-right:7mm; height: 149mm; -webkit-transform:rotate(180deg); padding-top: 2mm;">
+                            <span t-field="o.event_id.badge_back"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Inner left -->
+                        <div class="col-xs-6 text-center" style="padding-right:7mm; border-top:1px dashed black; height: 148mm;">
+                            <span t-field="o.event_id.badge_innerleft"/>
+                        </div>
+                        <!-- Inner right -->
+                        <div class="col-xs-6 text-center" style="border-left:1px dashed black; border-top:1px dashed black; height: 148mm; text-center">
+                            <span t-field="o.event_id.badge_innerright"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+
+    <!-- template use to edit Event Badget (allow to set the HTML badge fields) -->
+    <template id="event_event_report_template_badge">
+        <t t-call="report.html_container">
+            <div class="page">
+                <t t-foreach="docs" t-as="event">
+                    <div class="row">
+                        <!-- Front -->
+                        <div class="col-xs-6 text-center" style="padding-left:7mm; border-right:1px dashed black; height: 149mm; padding-top: 7mm">
+                            <div class="row" t-ignore="true">
+                                <div class="col-xs-12">
+                                    <span t-if="event.organizer_id.is_company and event.organizer_id.company_id.logo_web">
+                                        <div t-field="event.event_logo">
+                                            <img t-att-src="'data:image/png;base64,%s' % event.organizer_id.company_id.logo_web" style="max-height:1cm; max-width:4cm;"/>
+                                        </div>
+                                    </span>
+                                    <h4 t-field="event.name"/>
+                                    <h5>( <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin" t-options='{"hide_seconds": True}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end" t-options='{"hide_seconds": True}'> </span> )</h5>
+                                </div>
+                            </div>
+                            <div class="row" t-ignore="true">
+                                <div class="col-xs-12 text-center" id="o_event_attendee_name">
+                                    <small><h3>Attendee Name</h3></small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div t-field="event.badge_front"></div>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="col-xs-6" style="padding-right:7mm; height: 149mm; padding-top: 2mm;">
+                            <div t-field="event.badge_back"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Inner left -->
+                        <div class="col-xs-6 text-center" style="padding-right:7mm; border-top:1px dashed black; height: 148mm;">
+                            <div t-field="event.badge_innerleft"/>
+                        </div>
+                        <!-- Inner right -->
+                        <div class="col-xs-6 text-center" style="border-left:1px dashed black; border-top:1px dashed black; height: 148mm; text-center">
+                            <div t-field="event.badge_innerright"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+</odoo>

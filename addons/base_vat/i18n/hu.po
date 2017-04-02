@@ -1,0 +1,72 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_vat
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "Vállalatok"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr ""
+"Bejelölt állapotban a partner közösségi adószámának érvényessége az EU VIES "
+"- Közösségi adószám-megerősítés szolgáltatásával lesz ellenőrizve az "
+"egyszerű formátum ellenőrzés helyett. "
+"(http://ec.europa.eu/taxation_customs/vies/)"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:131
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+"Az adószám [%s] ehhez a partnerhez [%s] tartozik, de nem tűnik érvényesnek. \n"
+"Megjegyzés: a helyes formátum így néz ki %s"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:130
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
+"Az adószám [%s] ehhez a partnerhez [%s] vagy nem ment át a VIES közösségi "
+"adószám érvényesítésen vagy nem megfelelő formátumú %s."
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
+msgid "VIES VAT Check"
+msgstr "VIES  - Közösségi adószám érvényesség ellenőrzés"
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "pl.: BE0477472701"

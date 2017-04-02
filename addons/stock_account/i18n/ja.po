@@ -1,0 +1,660 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# Manami Hashi <manami@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
+msgid "# of Products"
+msgstr "プロダクトの数"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "Account Stock Properties"
+msgstr "在庫関連勘定属性"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+msgid "Accounting Information"
+msgstr "会計情報"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+msgid ""
+"Allows to configure inventory valuations on products and product categories."
+msgstr "製品と製品カテゴリに在庫評価を設定できます。"
+
+#. module: stock_account
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
+msgid "Average Price"
+msgstr "平均価格"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Cancel"
+msgstr "取消"
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:244
+#, python-format
+msgid ""
+"Cannot find a stock input account for the product %s. You must define one on"
+" the product category, or on the location, before processing this operation."
+msgstr "商品 %sの在庫入力勘定を見つけることができません。 この操作を処理する前に、製品カテゴリまたはロケーションを定義する必要があります。"
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:246
+#, python-format
+msgid ""
+"Cannot find a stock output account for the product %s. You must define one "
+"on the product category, or on the location, before processing this "
+"operation."
+msgstr "商品 %sの在庫出力勘定を見つけることができません。 この操作を処理する前に、製品カテゴリまたはロケーションを定義する必要があります。"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "Change Price"
+msgstr "価格変更"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
+#: model:ir.model,name:stock_account.model_stock_change_standard_price
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "Change Standard Price"
+msgstr "標準価格を変更"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Choose a date in the past to get the inventory at that date."
+msgstr "日付指定で、過去日時点の在庫を抽出することができます。"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
+msgid ""
+"Choose the accounting date at which you want to value the stock moves "
+"created by the inventory instead of the default one (the inventory end date)"
+msgstr "デフォルトの在庫移動(在庫終了日)の代わりに在庫によって作成された在庫移動を評価する会計日を選択します。"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Choose your date"
+msgstr "日付を選択"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Company"
+msgstr "会社"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Compute from average price"
+msgstr "平均価格から計算"
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:319
+#, python-format
+msgid ""
+"Configuration error. Please configure the price difference account on the "
+"product or its category to process this operation."
+msgstr "構成エラー。 この操作を処理するには、製品またはそのカテゴリの価格差異勘定を設定してください。"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "Cost"
+msgstr "原価"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
+msgid "Cost method"
+msgstr "原価計算法"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
+msgid "Costing Method"
+msgstr "原価計算法"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
+msgid "Counter-Part Account"
+msgstr "カウンターパートアカウント"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_date
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
+msgid "Date"
+msgstr "日付"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
+msgid "Force Accounting Date"
+msgstr "強制有効日"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Group By"
+msgstr "グループ化"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_id
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
+msgid ""
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+msgstr ""
+"原価が増加した場合、在庫の変動勘定は借方に記帳され、そして在庫払出勘定は 値 = (金額の相違 * 利用可能な数量) で貸方に記帳されます。\n"
+"原価が減少した場合、在庫の変動勘定は貸方に記帳され、そして在庫受入勘定は借方に記帳されます。"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
+msgid ""
+"If perpetual valuation is enabled for a product, the system will "
+"automatically create journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'. The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr ""
+"製品に対して永久評価が有効になっている場合、システムは在庫移動に対応する仕訳入力を自動的に作成しますが、原価計算方法で指定された製品価格が使用されます。"
+" 商品カテゴリに設定された在庫変動勘定は現在の在庫金額を表し、在庫入力勘定と在庫勘定は入出庫商品の取引を保持します。"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
+#: model:ir.model.fields,help:stock_account.field_product_template_property_valuation
+msgid ""
+"If perpetual valuation is enabled for a product, the system will "
+"automatically create journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr ""
+"製品に対して永久評価が有効になっている場合、システムは在庫移動に対応する仕訳入力を自動的に作成しますが、原価計算方法で指定された製品価格が使用されます。"
+" 商品カテゴリに設定された在庫変動勘定は現在の在庫金額を表し、在庫入力勘定と在庫勘定は入出庫商品の取引を保持します。"
+
+#. module: stock_account
+#: selection:stock.config.settings,module_stock_landed_costs:0
+msgid "Include landed costs in product costing computation"
+msgstr "仕入諸掛を製品原価計算に含める"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
+msgid ""
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
+msgstr "仕入諸掛を入荷に計上し製品に配賦するモジュールをインストール。"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_inventory
+msgid "Inventory"
+msgstr "在庫"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_location
+msgid "Inventory Locations"
+msgstr "在庫ロケーション"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "Inventory Valuation"
+msgstr "在庫評価"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
+msgid "Inventory Value"
+msgstr "在庫金額"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
+#: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
+msgid "Inventory at Date"
+msgstr "時点在庫"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_invoice
+msgid "Invoice"
+msgstr "請求書"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "請求書行"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_module_stock_landed_costs
+msgid "Landed Costs"
+msgstr "仕入諸掛"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
+#: model:ir.model.fields,field_description:stock_account.field_stock_history___last_update
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history___last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_date
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_location_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Location"
+msgstr "ロケーション"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Lot/Serial Number"
+msgstr "ロット/シリアル番号"
+
+#. module: stock_account
+#: model:res.groups,name:stock_account.group_inventory_valuation
+msgid "Manage Inventory Valuation and Costing Methods"
+msgstr "在庫評価および原価計算法を管理"
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:109
+#, python-format
+msgid "No difference between standard price and new price!"
+msgstr "標準価格と新価格との差がありません！"
+
+#. module: stock_account
+#: selection:stock.config.settings,module_stock_landed_costs:0
+msgid "No landed costs"
+msgstr "仕入諸掛を管理しない"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_date
+msgid "Operation Date"
+msgstr "オペレーション日"
+
+#. module: stock_account
+#: selection:product.category,property_valuation:0
+#: selection:product.template,property_valuation:0
+msgid "Periodic (manual)"
+msgstr "定期 (手動)"
+
+#. module: stock_account
+#: selection:stock.config.settings,group_stock_inventory_valuation:0
+msgid "Periodic inventory valuation (recommended)"
+msgstr "棚卸計算法 (推奨)"
+
+#. module: stock_account
+#: selection:product.category,property_valuation:0
+#: selection:product.template,property_valuation:0
+msgid "Perpetual (automated)"
+msgstr "継続記録 (自動)"
+
+#. module: stock_account
+#: selection:stock.config.settings,group_stock_inventory_valuation:0
+msgid ""
+"Perpetual inventory valuation (stock move generates accounting entries)"
+msgstr "継続記録法 (在庫移動により会計仕訳生成)"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
+msgid "Price"
+msgstr "価格"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_product
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_product_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Product"
+msgstr "製品"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Product Category"
+msgstr "製品カテゴリ"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
+msgid "Product Quantity"
+msgstr "製品数量"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_product_template_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Product Template"
+msgstr "製品テンプレート"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_quant
+msgid "Quants"
+msgstr "保管ロット"
+
+#. module: stock_account
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
+msgid "Real Price"
+msgstr "実際原価"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Retrieve the Inventory Value"
+msgstr "在庫金額を抽出"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Retrieve the curent stock valuation."
+msgstr "現在の在庫評価を抽出します。"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Set standard price"
+msgstr "標準価格を設定"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_source
+msgid "Source"
+msgstr "要求元"
+
+#. module: stock_account
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
+msgid "Standard Price"
+msgstr "標準原価"
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:126
+#: code:addons/stock_account/models/product.py:131
+#, python-format
+msgid "Standard Price changed"
+msgstr "標準価格変更済"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
+#: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+"標準価格：原価は、特定の期間の終了時に(通常は年に1回)手動で更新されます。\n"
+"平均価格：原価は入荷ごとに再計算され、製品評価に使用されます。\n"
+"実価格：表示される原価は最後に出荷される商品の価格です(在庫損失の場合などに使用されます)。"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
+msgstr ""
+"標準価格：原価は、特定の期間の終了時に(通常は年に1回)手動で更新されます。\n"
+"平均価格：原価は入荷ごとに再計算され、製品評価に使用されます。\n"
+"実価格：表示される原価は最後に出荷される商品の価格です(在庫損失の場合などに使用されます)。"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Stock Accounting"
+msgstr "在庫勘定"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
+msgid "Stock Input Account"
+msgstr "在庫受入勘定"
+
+#. module: stock_account
+#: code:addons/stock_account/models/account_chart_template.py:15
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
+#, python-format
+msgid "Stock Journal"
+msgstr "在庫記録簿"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_output
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_output
+msgid "Stock Output Account"
+msgstr "在庫払出勘定"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_valuation_account_id
+msgid "Stock Valuation Account"
+msgstr "在庫評価勘定"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_in_account_id
+msgid "Stock Valuation Account (Incoming)"
+msgstr "在庫評価勘定 (入庫)"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_out_account_id
+msgid "Stock Valuation Account (Outgoing)"
+msgstr "在庫評価勘定(出庫)"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/wizard_valuation_history.py:24
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
+#, python-format
+msgid "Stock Value At Date"
+msgstr "時点在庫評価"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr "勘定科目表のテンプレート"
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:273
+#, python-format
+msgid ""
+"The found valuation amount for product %s is zero. Which means there is "
+"probably a configuration error. Check the costing method and the standard "
+"price"
+msgstr "商品 %s の見積金額はゼロです。 つまり、設定エラーが考えられます。 原価計算方法と標準原価の確認をしてください"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
+msgid "Total Value"
+msgstr "合計価値"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved from an internal location into this location, instead of the "
+"generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr ""
+"リアルタイム在庫評価のために使用されます。仮想の場所 (非内部タイプ) "
+"に設定されている場合、このアカウントは製品にセットされる一般的な在庫出力アカウントの代わりに、内部の場所からこの場所に移動される製品の価値を保持するために使用されます。"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved out of this location and into an internal location, instead of "
+"the generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr ""
+"リアルタイム在庫評価のために使用されます。仮想の場所 (非内部タイプ) "
+"に設定されている場合、このアカウントは製品にセットされる一般的な在庫出力アカウントの代わりに、この場所から内部の場所に移動される製品の価値を保持するために使用されます。"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
+msgid "Valuation"
+msgstr "評価"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
+msgid "Value"
+msgstr "値"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. This is the default "
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr ""
+"リアルタイムで在庫評価を行う場合、元の場所に置かれた特定の評価アカウントがある場合を除き、全ての入庫移動に対応した仕訳帳項目は、このアカウントに記帳されます。これはこの分類の全ての製品のデフォルト値です。また、各製品に直接セットすることもできます。"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
+#: model:ir.model.fields,help:stock_account.field_product_template_property_stock_account_input
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. When not set on the "
+"product, the one from the product category is used."
+msgstr ""
+"リアルタイム在庫評価を行う場合、特別な評価アカウントが元の場所に設定されていない限り、全入庫の移動のための対応する仕訳帳項目はこのアカウントに記帳されます。製品に設定されていない場合、製品分類のものが使用されます。"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. This is the "
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr ""
+"リアルタイム在庫評価を行う場合、特定の評価アカウントが宛先場所に設定されていない限り、全ての出荷在庫移動に対応する仕訳帳項目はこのアカウントに記帳されます。これはこの分類の全ての製品のためのデフォルト値です。これは各製品に直接セットすることができます。"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
+#: model:ir.model.fields,help:stock_account.field_product_template_property_stock_account_output
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. When not set on "
+"the product, the one from the product category is used."
+msgstr ""
+"リアルタイム在庫評価を行う場合、宛先場所に特定の評価アカウントのセットがある場合を除き、全ての出荷在庫移動に対応する仕訳帳項目がこのアカウントに記帳されます。製品に設定されていない場合は製品分類のものが使用されます。"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
+msgid ""
+"When doing real-time inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr "リアルタイム在庫評価を行う場合、これは在庫移動が処理される時に自動的に記帳される会計仕訳です。"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
+msgid ""
+"When real-time inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr "製品がリアルタイム在庫評価が有効である時、このアカウントは製品の現在価値を保ちます。"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_wizard_valuation_history
+msgid "Wizard that opens the stock valuation history table"
+msgstr "在庫評価履歴テーブルを開くウィザード"
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:242
+#, python-format
+msgid ""
+"You don't have any stock journal defined on your product category, check if "
+"you have installed a chart of accounts"
+msgstr "製品カテゴリに定義されている在庫記録がありません。勘定コード表がインストールされているかどうか確認してください"
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:111
+#: code:addons/stock_account/models/stock.py:248
+#, python-format
+msgid ""
+"You don't have any stock valuation account defined on your product category."
+" You must define one before processing this operation."
+msgstr "商品カテゴリに定義されている在庫評価勘定はありません。 この操作を処理する前に定義する必要があります。"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "_Apply"
+msgstr "適用"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_config_settings
+msgid "stock.config.settings"
+msgstr "stock.config.settings"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_history
+msgid "stock.history"
+msgstr "stock.history"

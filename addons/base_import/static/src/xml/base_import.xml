@@ -1,0 +1,161 @@
+<templates>
+    <t t-name="ImportView">
+        <t t-set="_id" t-value="_.uniqueId('export')"/>
+        <form action="" method="post" enctype="multipart/form-data" class="oe_import">
+            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+            <input type="hidden" name="session_id"
+               t-att-value="widget.session.session_id"/>
+            <input type="hidden" name="import_id"/>
+            <div class="oe_import_box col-sm-9">
+                <div class="col-sm-12">
+                    <p>Select a CSV or Excel file to import. <a href="https://www.odoo.com/documentation/user/10.0/general/base_import/import_faq.html" target="new" class="pull-right">Help</a></p>
+                </div>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                      <input type="text" class="oe_import_file_show form-control" placeholder="No file chosen..."/>
+                      <span class="input-group-btn">
+                        <label class="btn btn-primary" for="my-file-selector">
+                        <input accept=".csv, .xls, .xlsx, .ods" id-attf-id="file_#{_id}"
+                       name="file" id="my-file-selector" class="oe_import_file" type="file" style="display:none;"/>
+                        Load File
+                        </label>
+                      </span>
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default oe_import_file_reload" disabled="disabled">Reload File</button>
+                      </span>
+                    </div>
+                </div>
+
+                <div class="oe_import_with_file col-sm-12">
+                    <a href="#" class="oe_import_toggle">
+                        Options…</a>
+                    <div class="oe_import_toggled oe_import_options js_import_options col-sm-5">
+                        <p t-foreach="widget.opts" t-as="option">
+                            <!-- no @name, avoid submission when file_update called -->
+                            <label t-attf-for="#{option.name}_#{_id}">
+                                <t t-esc="option.label"/></label>
+                            <input t-attf-id="#{option.name}_#{_id}"
+                                   t-attf-class="oe_import_#{option.name}"
+                                   t-att-value="option.value"/>
+                        </p>
+                    </div>
+                    <div class="oe_import_toggled oe_import_options col-sm-5">
+                        <p t-foreach="widget.parse_opts" t-as="option">
+                            <!-- no @name, avoid submission when file_update called -->
+                            <label t-attf-for="#{option.name}_#{_id}">
+                                <t t-esc="option.label"/></label>
+                            <input t-attf-id="#{option.name}_#{_id}"
+                                   t-attf-class="oe_import_#{option.name}"
+                                   t-att-value="option.value"/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="oe_import_with_file oe_padding col-sm-12">
+                <h2>Map your columns to import</h2>
+                <div title="If the model uses openchatter, history tracking
+                            will set up subscriptions and send notifications
+                            during the import, but lead to a slower import."
+                    class="oe_import_tracking">
+                    <input type="checkbox" id="oe_import_tracking"/>
+                    <label for="oe_import_tracking">
+                        Track history during import
+                    </label>
+                </div>
+                <input type="checkbox" class="oe_import_has_header"
+                       id="oe_import_has_header" checked="checked"/>
+                <label for="oe_import_has_header">The first row
+                 contains the label of the column</label>
+                <input type="checkbox" class="oe_import_advanced_mode" disabled="disabled"
+                       id="oe_import_advanced_mode"/>
+                <label for="oe_import_advanced_mode">Show fields of relation fields (advanced)</label>
+                <p class="oe_import_noheaders">If the file contains
+                the column names, Odoo can try auto-detecting the
+                field corresponding to the column. This makes imports
+                simpler especially when the file has many columns.</p>
+
+                <div class="oe_import_error_report"></div>
+                <table class="table-striped table-bordered oe_import_grid" />
+            </div>
+        </form>
+    </t>
+
+    <t t-name="ImportView.buttons">
+        <button type="button" class="btn btn-sm btn-primary o_import_button o_import_validate"
+                disabled="disabled">Validate</button>
+        <button type="button" class="btn btn-sm btn-default o_import_button o_import_import"
+                disabled="disabled">Import</button>
+        <button type="button" class="btn btn-sm btn-default o_import_cancel">Cancel</button>
+    </t>
+
+    <t t-name="ImportView.preview">
+        <thead>
+            <tr t-if="headers" class="oe_import_grid-header">
+                <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
+                    ><t t-esc="header"/></td>
+            </tr>
+            <tr class="oe_import_fields">
+                <!-- Iterate on first row to ensure we have all columns -->
+                <td t-foreach="preview[0]" t-as="column">
+                    <input class="oe_import_match_field"/>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
+                <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
+                    ><t t-esc="cell"/></td>
+            </tr>
+        </tbody>
+    </t>
+    <t t-name="ImportView.preview.error">
+        <div class="oe_import_report oe_import_report_error">
+            <p>Import preview failed due to: <t t-esc="error"/>.</p>
+            <p>For CSV files, the issue could be an incorrect encoding.</p>
+            <p t-if="preview">Here is the start of the file we could not import:</p>
+        </div>
+        <pre t-if="preview"><t t-esc="preview"/></pre>
+    </t>
+    <ul t-name="ImportView.error">
+        <li t-foreach="errors" t-as="error"
+            t-attf-class="oe_import_report oe_import_report_#{error_value[0].type}">
+            <t t-call="ImportView.error.each">
+                <t t-set="error" t-value="error_value[0]"/>
+            </t>
+
+            <a href="#" class="oe_import_report_count" t-if="error_value.length gt 1">
+                <t t-esc="more(error_value.length - 1)"/>
+            </a>
+            <ul class="oe_import_report_more" t-if="error_value.length gt 1">
+                <li t-foreach="error_value.length - 1" t-as="index">
+                    <t t-call="ImportView.error.each">
+                        <t t-set="error" t-value="error_value[index + 1]"/>
+                    </t>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <t t-name="ImportView.error.each">
+        <span class="oe_import_report_message">
+            <t t-esc="error.message"/>
+        </span>
+        <t t-if="error.rows"  t-esc="at(error.rows)"/>
+        <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
+    </t>
+    <t t-name="ImportView.import_button">
+        <button t-if='widget.options.import_enabled' type="button" class="btn btn-sm btn-default o_button_import">
+            Import
+        </button>
+    </t>
+    <t t-extend="ListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+           <t t-call="ImportView.import_button"/>
+        </t>
+    </t>
+    <t t-extend="KanbanView.buttons">
+        <t t-jquery="button.o-kanban-button-new" t-operation="after">
+            <t t-call="ImportView.import_button"/>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,25 @@
+-
+  Accountant can also be created receipt and validate it there for I checked it with that user who is accountant.
+-
+  !context
+    uid: 'res_users_account_voucher_user'
+- 
+  Creating a Voucher Receipt for partner Seagate with amount 30000.0
+- 
+  !record {model: account.voucher, id: account_voucher_seagate_0, view: view_sale_receipt_form}:
+    account_id: a_recv
+    amount: 30000.0
+    company_id: base.main_company
+    journal_id: sales_journal
+    line_ids:
+      - account_id: a_sale
+        price_unit: 30000.0
+        name: Voucher Seagate
+    partner_id: base.res_partner_2
+    date: !eval time.strftime("%Y-%m-%d")
+    voucher_type: sale
+-
+  I check that the voucher state is Draft
+-
+  !assert {model: account.voucher, id: account_voucher_seagate_0}:
+    - state == 'draft'

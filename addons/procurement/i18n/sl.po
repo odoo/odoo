@@ -1,0 +1,531 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * procurement
+# 
+# Translators:
+# Vida Potočnik <vida.potocnik@mentis.si>, 2016
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Dejan Sraka <dejan.sraka@picolabs.si>, 2016\n"
+"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"A <b>Procurement Exception</b> occurs when the system cannot find a way to "
+"fulfill a procurement. Some exceptions will resolve themselves "
+"automatically, but others require manual intervention (those are identified "
+"by a specific error message in the chatter)."
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid ""
+"A <b>procurement order</b> is used to record a need for a specific\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
+"                minimum stock rules.</i>"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
+msgid "Action"
+msgstr "Dejanje"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: procurement
+#: selection:procurement.group,move_type:0
+msgid "All at once"
+msgstr "Vse naenkrat"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Arhivirano"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Cancel"
+msgstr "Prekliči"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Cancel Procurement"
+msgstr "Preklic oskrbe"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Cancelled"
+msgstr "Preklicano"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Check Procurement"
+msgstr "Preveri oskrbovanje"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
+msgid ""
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
+msgstr ""
+"Pravilo izbrano za razreševanje oskrbovanj. Običajno ga uporablja sistem, a "
+"lahko ga tudi ročno ustvari upravitelj oskrbovanja, da bi vsilil neobičajno "
+"obnašanje."
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid "Click to create a procurement order."
+msgstr "Klikni za pripravo naloga oskrbe."
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_company_id
+msgid "Company"
+msgstr "Družba"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Compute all procurements in the background."
+msgstr "Izvršba vseh oskrbovanj v ozadju."
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "Izvedi vse načrtovalce"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Confirmed"
+msgstr "Potrjeno"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
+msgid "Delivery Type"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_name
+msgid "Description"
+msgstr "Opis"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
+msgid "Display Name"
+msgstr "Prikazni naziv"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Done"
+msgstr "Opravljeno"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Exception"
+msgstr "Napaka"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Exceptions"
+msgstr "Izjeme"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "External note..."
+msgstr "Eksterna zabeležka..."
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Extra Information"
+msgstr "Dodatne informacije"
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Fixed"
+msgstr "Stalno"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_id
+msgid "Fixed Procurement Group"
+msgstr "Stalna oskrbovalna skupina"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Global"
+msgstr "Globalno"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Group By"
+msgstr "Združi po"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.do_view_procurements
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Group's Procurements"
+msgstr "Oskrbovanja skupine"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_id
+msgid "ID"
+msgstr "ID"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "If the route is global"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_rule_active
+msgid "If unchecked, it will allow you to hide the rule without removing it."
+msgstr ""
+"Če je polje neoznačeno, bo omogočilo skrivanje pravila, ne da bi ga "
+"odstranili."
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_order___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule___last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_uid
+msgid "Last Updated by"
+msgstr "Zadnjič posodobil"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Late"
+msgstr "Zamuja"
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Leave Empty"
+msgstr "Pustiti prazno"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
+msgid "Name"
+msgstr "Naziv"
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:189
+#, python-format
+msgid "No rule matching this procurement"
+msgstr "Ni pravila, ki bi ustrezalo temu oskrbovanju"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Normal"
+msgstr "Običajno"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Not urgent"
+msgstr "Ni nujno"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Notes"
+msgstr "Beležke"
+
+#. module: procurement
+#: selection:procurement.group,move_type:0
+msgid "Partial"
+msgstr "Delno"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_priority
+msgid "Priority"
+msgstr "Prioriteta"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement"
+msgstr "Oskrba"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_exceptions
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement Exceptions"
+msgstr "Napake oskrbe"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
+msgid "Procurement Group"
+msgstr "Oskrbovalna skupina"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_tree_view
+msgid "Procurement Lines"
+msgstr "Postavke oskrbe"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.procurement_action
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_product_template_stat
+msgid "Procurement Orders"
+msgstr "Interni nalog oskrbe"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_group
+msgid "Procurement Requisition"
+msgstr "Oskrbovalno naročilo"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_rule
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "Procurement Rule"
+msgstr "Oskrbovalno pravilo"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
+msgid "Procurement Rules"
+msgstr "Oskrbovalna pravila"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
+msgid "Procurement group"
+msgstr "Skupina nabave"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement started late"
+msgstr "Zamuda pri oskrbi"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
+#: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
+#: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
+#: model:ir.ui.view,arch_db:procurement.product_template_view_form_procurement_button
+msgid "Procurements"
+msgstr "Oskrbovanja"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_id
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Product"
+msgstr "Izdelek"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_uom
+msgid "Product Unit of Measure"
+msgstr "Merska enota izdelka"
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Propagate"
+msgstr "Razširi"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "Propagation Options"
+msgstr "Opcije širitve"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_propagation_option
+msgid "Propagation of Procurement Group"
+msgstr "Širitev oskrbovalne skupine"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Reconfirm Procurement"
+msgstr "Ponovno potrdi oskrbovanje"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_name
+msgid "Reference"
+msgstr "Sklic"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_order_origin
+msgid ""
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
+msgid "Rule"
+msgstr "Pravilo"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Run Procurement"
+msgstr "Izračun oskrbe"
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Run Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.action_compute_schedulers
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Run Schedulers"
+msgstr "Zagon načrtovalca"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Running"
+msgstr "V teku"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_date_planned
+msgid "Scheduled Date"
+msgstr "Načrtovani datum"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Scheduled Month"
+msgstr "Načrtovani mesec"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Scheduler Parameters"
+msgstr "Parametri načrtovalca"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Scheduling"
+msgstr "Razporejanje"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Search Procurement"
+msgstr "Iskanje internih oskrbnih nalogov"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_sequence
+msgid "Sequence"
+msgstr "Zaporedje"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
+msgid "Source Document"
+msgstr "Izvorni dokument"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_state
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Status"
+msgstr "Status"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_rule_name
+msgid "This field will fill the packing origin and the name of its moves"
+msgstr "To polje bo izpolnilo izvor pakiranja in naziv premikov"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_tree_view
+msgid "Unit of Measure"
+msgstr "Merska enota"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Urgent"
+msgstr "Nujno"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Very Urgent"
+msgstr "Zelo nujno"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid ""
+"When the procurement order is confirmed, it automatically\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
+"                order proposition, manufacturing order, etc."
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:144
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "e.g. Buy"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "e.g. SO005"
+msgstr "npr. SO005"

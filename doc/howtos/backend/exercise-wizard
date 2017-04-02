@@ -1,0 +1,24 @@
+Index: addons/openacademy/__init__.py
+===================================================================
+--- addons.orig/openacademy/__init__.py	2014-08-27 14:19:23.023111330 +0200
++++ addons/openacademy/__init__.py	2014-08-27 14:22:25.043108628 +0200
+@@ -2,3 +2,4 @@
+ from . import controllers
+ from . import models
+ from . import partner
++from . import wizard
+Index: addons/openacademy/wizard.py
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ addons/openacademy/wizard.py	2014-08-27 14:24:39.195106637 +0200
+@@ -0,0 +1,10 @@
++# -*- coding: utf-8 -*-
++
++from odoo import models, fields, api
++
++class Wizard(models.TransientModel):
++    _name = 'openacademy.wizard'
++
++    session_id = fields.Many2one('openacademy.session',
++        string="Session", required=True)
++    attendee_ids = fields.Many2many('res.partner', string="Attendees")

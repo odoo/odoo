@@ -1,0 +1,36 @@
+# HG changeset patch
+# Parent cb05882d4fe73e97b9d34a69190ced14d1a50c24
+
+Index: addons/openacademy/models.py
+===================================================================
+--- addons.orig/openacademy/models.py	2014-08-27 14:18:59.091111685 +0200
++++ addons/openacademy/models.py	2014-08-27 14:19:03.259111624 +0200
+@@ -10,6 +10,8 @@
+ 
+     responsible_id = fields.Many2one('res.users',
+         ondelete='set null', string="Responsible", index=True)
++    session_ids = fields.One2many(
++        'openacademy.session', 'course_id', string="Sessions")
+ 
+ 
+ class Session(models.Model):
+Index: addons/openacademy/views/openacademy.xml
+===================================================================
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-27 14:18:59.091111685 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-27 14:18:59.083111686 +0200
+@@ -15,8 +15,13 @@
+                             <page string="Description">
+                                 <field name="description"/>
+                             </page>
+-                            <page string="About">
+-                                This is an example of notebooks
++                            <page string="Sessions">
++                                <field name="session_ids">
++                                    <tree string="Registered sessions">
++                                        <field name="name"/>
++                                        <field name="instructor_id"/>
++                                    </tree>
++                                </field>
+                             </page>
+                         </notebook>
+                     </sheet>

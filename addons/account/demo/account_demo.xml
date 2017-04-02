@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- TAGS FOR RETRIEVING THE DEMO ACCOUNTS -->
+
+        <record id="demo_capital_account" model="account.account.tag">
+            <field name="name">Demo Capital Account</field>
+        </record>
+        <record id="demo_stock_account" model="account.account.tag">
+            <field name="name">Demo Stock Account</field>
+        </record>
+        <record id="demo_sale_of_land_account" model="account.account.tag">
+            <field name="name">Demo Sale of Land Account</field>
+        </record>
+        <record id="demo_ceo_wages_account" model="account.account.tag">
+            <field name="name">Demo CEO Wages Account</field>
+        </record>
+        <record id="demo_coffee_machine_account" model="account.account.tag">
+            <field name="name">Demo Coffe Machine Account</field>
+        </record>
+        <!-- Payment Term -->
+        
+        <record id="account_payment_term" model="account.payment.term">
+            <field name="name">End of Following Month</field>
+            <field name="note">Payment term: End of Following Month</field>
+            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 0, 'option': 'last_day_following_month'})]"/>
+        </record>
+
+        <record id="account_payment_term_advance" model="account.payment.term">
+            <field name="name">30% Advance End of Following Month</field>
+            <field name="note">Payment term: 30% Advance End of Following Month</field>
+            <field name="line_ids" eval="[(0, 0, {'value': 'percent', 'value_amount': 30.0, 'sequence': 400, 'days': 0, 'option': 'day_after_invoice_date'}), 
+                    (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 0, 'option': 'last_day_following_month'})]"/>
+        </record>
+
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4,ref('account.group_account_user'))]"/> 
+        </record>
+
+        <!-- Add payment term on some demo partners -->
+        <record id="base.res_partner_2" model="res.partner">
+            <field name="property_payment_term_id" ref="account.account_payment_term_net"/>
+        </record>
+        <record id="base.res_partner_12" model="res.partner">
+            <field name="property_payment_term_id" ref="account_payment_term"/>
+            <field name="property_supplier_payment_term_id" ref="account_payment_term"/>
+        </record>
+        <record id="base.res_partner_4" model="res.partner">
+            <field name="property_supplier_payment_term_id" ref="account.account_payment_term_net"/>
+        </record>
+        <record id="base.res_partner_1" model="res.partner">
+            <field name="property_supplier_payment_term_id" ref="account_payment_term"/>
+        </record>
+    </data>
+</odoo>

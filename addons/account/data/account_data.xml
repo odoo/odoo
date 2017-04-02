@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- TAGS FOR CASH FLOW STATEMENT -->
+
+        <record id="account_tag_operating" model="account.account.tag">
+            <field name="name">Operating Activities</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="account_tag_financing" model="account.account.tag">
+            <field name="name">Financing Activities</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="account_tag_investing" model="account.account.tag">
+            <field name="name">Investing &amp; Extraordinary Activities</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <!--
+        Payment term
+        -->
+        <record id="account_payment_term_immediate" model="account.payment.term">
+            <field name="name">Immediate Payment</field>
+            <field name="note">Payment term: Immediate Payment</field>
+        </record>
+
+        <record id="account_payment_term_15days" model="account.payment.term">
+            <field name="name">15 Days</field>
+            <field name="note">Payment term: 15 Days</field>
+            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+
+        <record forcecreate="True" id="decimal_payment" model="decimal.precision">
+            <field name="name">Payment Terms</field>
+            <field name="digits">6</field>
+        </record>
+
+        <record id="account_payment_term_net" model="account.payment.term">
+            <field name="name">30 Net Days</field>
+            <field name="note">Payment term: 30 Net Days</field>
+            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+
+        <!--
+        Account Statement Sequences
+        -->
+        <record id="sequence_reconcile_seq" model="ir.sequence">
+            <field name="name">Account reconcile sequence</field>
+            <field name="code">account.reconcile</field>
+            <field name="prefix">A</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+        <!--
+        Invoice requests (deprecated)
+        -->
+        <record id="req_link_invoice" model="res.request.link">
+            <field name="name">Invoice</field>
+            <field name="object">account.invoice</field>
+        </record>
+
+        <!-- Account-related subtypes for messaging / Chatter -->
+        <record id="mt_invoice_validated" model="mail.message.subtype">
+            <field name="name">Validated</field>
+            <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
+            <field name="description">Invoice validated</field>
+        </record>
+        <record id="mt_invoice_paid" model="mail.message.subtype">
+            <field name="name">Paid</field>
+            <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
+            <field name="description">Invoice paid</field>
+        </record>
+        <record id="mt_invoice_created" model="mail.message.subtype">
+            <field name="name">Invoice Created</field>
+            <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Invoice Created</field>
+        </record>
+
+        <!-- Payment methods -->
+        <record id="account_payment_method_manual_in" model="account.payment.method">
+            <field name="name">Manual</field>
+            <field name="code">manual</field>
+            <field name="payment_type">inbound</field>
+        </record>
+        <record id="account_payment_method_manual_out" model="account.payment.method">
+            <field name="name">Manual</field>
+            <field name="code">manual</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <!-- Payment sequences -->
+        <record id="sequence_payment_customer_invoice" model="ir.sequence">
+            <field name="name">Payments customer invoices sequence</field>
+            <field name="code">account.payment.customer.invoice</field>
+            <field name="prefix">CUST.IN/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_payment_customer_refund" model="ir.sequence">
+            <field name="name">Payments customer refunds sequence</field>
+            <field name="code">account.payment.customer.refund</field>
+            <field name="prefix">CUST.OUT/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_payment_supplier_invoice" model="ir.sequence">
+            <field name="name">Payments supplier invoices sequence</field>
+            <field name="code">account.payment.supplier.invoice</field>
+            <field name="prefix">SUPP.OUT/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_payment_supplier_refund" model="ir.sequence">
+            <field name="name">Payments supplier refunds sequence</field>
+            <field name="code">account.payment.supplier.refund</field>
+            <field name="prefix">SUPP.IN/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_payment_transfer" model="ir.sequence">
+            <field name="name">Payments transfer sequence</field>
+            <field name="code">account.payment.transfer</field>
+            <field name="prefix">TRANS/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+
+        <!-- Account Tax Group -->
+        <record id="tax_group_taxes" model="account.tax.group">
+            <field name="name">Taxes</field>
+            <field name="sequence">0</field>
+        </record>
+
+        <!-- Partner Trust Property -->
+        <record forcecreate="True" id="default_followup_trust" model="ir.property">
+            <field name="name">Followup Trust Property</field>
+            <field name="fields_id" search="[('model', '=', 'res.partner'), ('name', '=', 'trust')]"/>
+            <field name="value">normal</field>
+            <field name="type">selection</field>
+        </record>
+
+    </data>
+</odoo>

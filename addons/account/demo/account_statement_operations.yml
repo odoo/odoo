@@ -1,0 +1,37 @@
+-
+  !python {model: ir.model.data, id: False} : |
+      account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_expenses')), ('tag_ids', '=', ref('account_tag_operating'))], limit=1).id
+      vals = {
+          'name': "Discount For Early Payment",
+          'label': 'Discount',
+          'amount_type': 'percentage',
+          'amount': -7,
+      }
+      if account_id:
+          vals['account_id'] = account_id
+          self._update(cr, uid, 'account.reconcile.model', 'account', vals, 'account_reconcile_model_1')
+-
+  !python {model: ir.model.data, id: False} : |
+      account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_expenses')), ('tag_ids', '=', ref('account_tag_operating'))], limit=1).id
+      vals = {
+          'name': "Bank Fees",
+          'label': 'Bank Fees',
+          'amount_type': 'percentage',
+          'amount': 100.0,
+      }
+      if account_id:
+          vals['account_id'] = account_id
+          self._update(cr, uid, 'account.reconcile.model', 'account', vals, 'account_reconcile_model_2')
+-
+  !python {model: ir.model.data, id: False} : |
+      account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_revenue')), ('tag_ids', '=', ref('account_tag_operating'))], limit=1).id
+      vals = {
+          'name': "Profit / Loss",
+          'label': 'Profit / Loss',
+          'amount_type': 'percentage',
+          'amount': 100.0,
+      }
+      if account_id:
+          vals['account_id'] = account_id
+          self._update(cr, uid, 'account.reconcile.model', 'account', vals, 'account_reconcile_model_3')
+-

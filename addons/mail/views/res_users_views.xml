@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!-- Update Preferences form !-->
+        <record id="view_users_form_simple_modif_mail" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.mail</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+            <data>
+                <field name="email" position="before">
+                    <field name="notify_email" widget="radio" readonly="0"/>
+                </field>
+            </data>
+            </field>
+        </record>
+
+        <!-- Update user form !-->
+        <record id="view_users_form_mail" model="ir.ui.view">
+            <field name="name">res.users.form.mail</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="signature" position="before">
+                        <field name="notify_email" widget="radio"/>
+                    </field>
+                    <field name="signature" position="before">
+                        <field name="alias_id"/>
+                        <field name="alias_contact" attrs="{'invisible': [('alias_id', '=', False)]}"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>

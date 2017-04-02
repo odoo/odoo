@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Properties -->
+        <record id="ir_property_view_search" model="ir.ui.view">
+            <field name="name">ir.property.search</field>
+            <field name="model">ir.property</field>
+            <field name="arch" type="xml">
+                <search string="Parameters">
+                    <field name="name" string="Name"/>
+                    <filter string="Generic"
+                        help="Parameters that are used by all resources."
+                        domain="[('res_id','=',False)]"/>
+                    <field name="fields_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
+        <record id="ir_property_view" model="ir.ui.view">
+            <field name="name">ir.property.form</field>
+            <field name="model">ir.property</field>
+            <field name="arch" type="xml">
+                <form string="Parameters">
+                  <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="fields_id"/>
+                        <field name="type"/>
+                        <field name="res_id"/>
+                    </group>
+                    <group>
+	                    <field name="value_integer" string="Value" attrs="{'invisible' : [('type', 'not in', ('integer', 'boolean'))]}"/>
+	                    <field name="value_float" string="Value" attrs="{'invisible' : [('type', '!=', 'float')]}"/>
+	                    <field name="value_datetime" string="Value" attrs="{'invisible' : [('type', 'not in', ('date', 'datetime'))]}"/>
+	                    <field name="value_text" string="Value" attrs="{'invisible' : [('type', 'not in', ('char', 'text', 'selection'))]}"/>
+	                    <field name="value_reference" string="Value" attrs="{'invisible' : [('type', '!=', 'many2one')]}"/>
+	                    <field name="value_binary" string="Value" attrs="{'invisible' : [('type', '!=', 'binary')]}"/>
+                    </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="ir_property_view_tree" model="ir.ui.view">
+            <field name="name">ir.property.tree</field>
+            <field name="model">ir.property</field>
+            <field name="arch" type="xml">
+                <tree string="Parameters">
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="fields_id"/>
+                    <field name="res_id"/>
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+        <record id="ir_property_form" model="ir.actions.act_window">
+            <field name="name">Company Properties</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.property</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="ir_property_view_tree"/>
+        </record>
+        <menuitem id="menu_ir_property_form_all" parent="menu_ir_property" action="ir_property_form"/>
+    </data>
+</odoo>

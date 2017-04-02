@@ -1,0 +1,788 @@
+<?xml version="1.0" ?>
+<odoo>
+<data>
+
+<!-- add link to the standard footer -->
+<template id="slide_footer" inherit_id="website.footer_default" name="Footer Slides Link">
+    <xpath expr="//div[@id='info']//ul[@class='list-unstyled']" position="inside">
+        <li>
+            <a href="/slides">Presentations</a>
+        </li>
+    </xpath>
+</template>
+
+<!-- assets -->
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Slide">
+    <xpath expr="." position="inside">
+        <link type="text/less" href="/website_slides/static/src/less/website_slides.less" rel="stylesheet" t-ignore="true"/>
+        <!-- Js widgets, ... order loading files is IMPORTANT -->
+        <script type="text/javascript" src="/website_slides/static/src/js/slides.js"/>
+        <script type="text/javascript" src="/website_slides/static/src/js/slides_upload.js"/>
+    </xpath>
+</template>
+
+<!-- Tools template: share on social networkds -->
+<template id='slides_share' name="Slides Media Share">
+    <div class="form-group">
+        <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{slide.website_url}" class="o_slides_social_share" social-key="facebook"><i class="fa fa-facebook-square fa-2x"/></a>
+        <a t-attf-href="https://twitter.com/intent/tweet?text=#{slide.name}&amp;url=#{slide.website_url}" class="o_slides_social_share"  social-key="twitter"><i class="fa fa-twitter fa-2x"/></a>
+        <a t-attf-href="http://www.linkedin.com/shareArticle?mini=true&amp;url=#{slide.website_url}&amp;title=#{slide.name}&amp;" social-key="linkedin" class="o_slides_social_share"><i class="fa fa-linkedin fa-2x"/></a>
+        <a t-attf-href="https://plus.google.com/share?url=#{slide.website_url}" class="o_slides_social_share" social-key="gplus"><i class="fa fa-google-plus-square fa-2x"/></a>
+    </div>
+</template>
+
+<!-- Channels View: main template, display list of available channels -->
+<template id="channels" name="Channels">
+    <t t-call="website.layout">
+        <div class="container mt16">
+            <h1>Select a Channel</h1>
+            <div class="row">
+                <t t-foreach="channels" t-as="channel">
+                    <div t-if="channel_index % 3 == 0" class="clearfix"/>
+                    <div class="col-sm-4 mb32">
+                        <div class="well well-sm">
+                            <div>
+                                <a t-attf-href="/slides/#{slug(channel)}">
+                                    <img t-if="channel.promoted_slide_id" t-attf-src="/web/image/slide.slide/#{channel.promoted_slide_id.id}/image_medium" class="img-responsive oe_slides_channel_thumbnail"/>
+                                    <img t-if="not channel.promoted_slide_id" src="/website_slides/static/src/img/channel-default.jpg" class="img-responsive oe_slides_opacity"/>
+                                </a>
+                            </div>
+                            <div>
+                                <div class="mt4 pull-right">
+                                    <t t-call="website.publish_management">
+                                        <t t-set="object" t-value="channel"/>
+                                        <t t-set="publish_edit" t-value="True"/>
+                                        <t t-set="action" t-value="'website_slides.action_slide_channels'"/>
+                                    </t>
+                                </div>
+                                <h3 class="mt4 mb4 lead" t-att-title="channel.name" style="width:55%">
+                                    <a t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
+                                </h3>
+                                <span class="label label-warning" t-if="not channel.can_see_full">Private channel</span>
+                            </div>
+                            <div>
+                                <p class="text-muted oe_no_empty" t-field="channel.description"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- Channels View: option: subscription -->
+<template id="opt_subscription_on_channels" name="Subscription" customize_show="True" inherit_id="website_slides.channels">
+    <xpath expr="//p[@t-field='channel.description']" position="after">
+        <t t-if="channel.can_see_full">
+            <t t-call="website_mail.follow">
+                <t t-set="email" t-value="user.email"/>
+                <t t-set="object" t-value="channel"/>
+            </t>
+        </t>
+    </xpath>
+</template>
+
+<!-- Channels: no channel found -->
+<template id="channel_not_found" name="Private Presentation">
+    <t t-call="website.layout">
+        <div class="container">
+            <div class="oe_structure">
+                <h2>No channel created or published yet.</h2>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- Channels sub-template: header -->
+<template id="slides_channel_header" name="Slides Channel Header">
+    <section class="oe_slides_box_shadow">
+        <div class="container">
+            <div class="row">
+                <!-- Name and breadcrumb -->
+                <div class="pull-left col-md-8 col-sm-12 col-xs-12 mt16 mb8">
+                    <h3 class="mt0">
+                        <a t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
+                        <t t-if="category">
+                            / <a t-attf-href="/slides/#{slug(channel)}/category/#{slug(category)}" t-esc="category.name"/>
+                        </t>
+                        <!-- Public user has not right to create/write on slide -->
+                        <t t-if="channel.can_upload and not is_public_user">
+                            <a class="btn btn-primary oe_slide_js_upload" title="Upload Presentation" t-attf-channel_id="#{channel.id}">
+                                <i class="fa fa-cloud-upload"></i> Upload
+                            </a>
+                        </t>
+                        <t t-if="channel.can_upload and is_public_user">
+                            <a class="btn btn-primary" title="Upload Presentation" t-attf-href="/web/login?redirect=/slides/#{slug(channel)}">
+                                <i class="fa fa-cloud-upload"></i> Upload
+                            </a>
+                        </t>
+                    </h3>
+                </div>
+                <!-- Search box -->
+                <div class="col-md-4 col-sm-12 col-xs-12 pul-right mt16 mb8">
+                    <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="search" t-attf-placeholder="Search in #{channel.name}" t-att-value="search"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row" t-if="not search">
+                <!-- Navigation -->
+                <div class="col-md-8 col-sm-12 col-xs-12">
+                    <ul class="nav nav-tabs nav-tabs-border">
+                        <li t-attf-class="#{not slide_type and 'active' ''}">
+                            <a  t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}"> <i class="fa fa-home"></i> Home</a>
+                        </li>
+                        <li t-if="header_object.nbr_presentations" t-attf-class="#{slide_type == 'presentation' and 'active' ''}">
+                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/presentation">
+                                <span class="badge" t-esc="header_object.nbr_presentations"/> Presentations
+                            </a>
+                        </li>
+                        <li t-if="header_object.nbr_videos" t-attf-class="#{slide_type == 'video' and 'active' ''}">
+                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/video">
+                                <span class="badge" t-esc="header_object.nbr_videos"/> Videos
+                            </a>
+                        </li>
+                        <li t-if="header_object.nbr_documents" t-attf-class="li #{slide_type == 'document' and 'active' ''}">
+                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/document">
+                                <span class="badge" t-esc="header_object.nbr_documents"/> Documents
+                            </a>
+                        </li>
+                        <li t-if="header_object.nbr_infographics" t-attf-class="#{slide_type == 'infographic' and 'active' ''}">
+                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/infographic">
+                                <span class="badge" t-esc="header_object.nbr_infographics"/> Infographics
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Sort options -->
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <span class="pull-right">
+                        <span class="text-muted">Sort by:</span>
+                        <a href="?sorting=date">
+                            <span t-attf-style="#{sorting and sorting == 'date' and 'font-weight:bold;' ''}">Newest</span>
+                        </a>
+                        <span class="text-muted">|</span>
+                        <a href="?sorting=view">
+                            <span t-attf-style="#{sorting and sorting == 'view' and 'font-weight:bold;' ''}">Most Viewed</span>
+                        </a>
+                        <span class="text-muted">|</span>
+                        <a href="?sorting=vote">
+                            <span t-attf-style="#{sorting and sorting == 'vote' and 'font-weight:bold;' ''}">Most Voted</span>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<!-- Channel main template -->
+<template id='home' name="Odoo Slides">
+     <t t-set="head">
+        <t t-call-assets="web.pdf_js_lib" t-css="false"/>
+        <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
+    </t>
+    <t t-call="website.layout">
+        <div class="wrap">
+            <t t-set="main_object" t-value="channel"/>
+            <t t-call="website_slides.slides_channel_header">
+                <t t-if="not category">
+                    <t t-set="header_object" t-value="channel"/>
+                </t>
+                <t t-if="category">
+                    <t t-set="header_object" t-value="category"/>
+                </t>
+            </t>
+            <section t-if="not channel.promoted_slide_id and not tag and not slide_type and not search and not is_public_user and not category and display_channel_settings" class="wrap mt16 mb0" groups="website.group_website_designer">
+                <div class="container">
+                    <div class="alert alert-danger alert-dismissable mb0">
+                        <button type="button" class="close o_slides_hide_channel_settings" t-att-data-channel-id="channel.id" data-dismiss="alert">x</button>
+                        <p>
+                            Review your channel settings to promote your most viewed or recent published presentation
+                        </p>
+                        <a t-attf-href="/web#return_label=Website&amp;id=#{channel.id}&amp;view_type=form&amp;model=slide.channel&amp;action=#{request.env.ref('website_slides.action_slide_channels').id }" class="fa fa-arrow-right mt8">
+                            Channel Settings
+                        </a>
+                    </div>
+                </div>
+            </section>
+            <section class="oe_slides_promote_box" t-if="channel.promoted_slide_id and not tag and not slide_type and not search and not category">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5 mt16 mb16">
+                            <a t-attf-href="/slides/slide/#{slug(channel.promoted_slide_id)}">
+                                <img t-attf-src="/web/image/slide.slide/#{channel.promoted_slide_id.id}/image_medium" class="img-responsive shadow oe_slides_promote_image"/>
+                            </a>
+                        </div>
+                        <div class="col-md-7 mt16 mb16">
+                            <h3 class="row">
+                                <a t-attf-href="/slides/slide/#{slug(channel.promoted_slide_id)}">
+                                    <t t-esc="channel.promoted_slide_id.name"/>
+                                </a>
+                            </h3>
+                            <div class="row mt8 mb8" t-if="channel.promoted_slide_id.tag_ids">
+                                <t t-foreach="channel.promoted_slide_id.tag_ids" t-as="slide_tag">
+                                    <a t-attf-href="/slides/#{slug(channel)}/tag/#{slug(slide_tag)}" t-attf-class="label label-default #{tag and tag.id == slide_tag.id and 'label-primary' ''}" t-field="slide_tag.name"/>
+                                </t>
+                            </div>
+                            <div class="row oe_no_empty" t-esc="channel.promoted_slide_id.description"/>
+                            <p class="row mt8">
+                                <b>Share:</b>
+                                <t t-call="website_slides.slides_share">
+                                    <t t-set="slide" t-value="channel.promoted_slide_id"/>
+                                </t>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="container mt16">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-left: 15px;padding-right: 15px;" t-if="channel.total == 0">
+                            <div class="jumbotron">
+                                <h1>No presentation published yet.</h1>
+                                <p>
+                                    The <i><t t-esc="channel.name"/></i> is empty.
+                                    <span t-if="can_upload">
+                                        Upload PDF presentations, documents, videos or infographic using the button below.
+                                    </span>
+                                </p>
+                                <p>
+                                    <!-- Public user has not right to create/write on slide-->
+                                    <a t-if="can_upload and not is_public_user" class="btn btn-primary oe_slide_js_upload" t-attf-channel_id="#{channel.id}">
+                                        <i class="fa fa-cloud-upload"></i> Upload
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" t-if="slide_type or category or tag">
+                            <div class="alert alert-success mb0" role="alert" t-if="tag">
+                                Results for <strong t-esc="tag.name"/>
+                            </div>
+                            <t t-call="website_slides.slides_grid_view"/>
+                        </div>
+                        <div class="row text-center" t-if="slide_type or category or tag">
+                            <t t-call="website.pager"/>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb16" t-if="not slide_type and category_datas and not tag">
+                            <t t-foreach="category_datas" t-as="category">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt8 oe_slides_bottom_border">
+                                        <a t-if="category['id']" t-attf-href="/slides/#{slug(channel)}/category/#{category['id']}" class="h3 mt0 mb0">
+                                            <t t-esc="category['name']"/>
+                                        </a>
+                                        <span t-if="not category['id']" title="Uncategorized presentation" class="h3 mt0 mb0">
+                                            <t t-esc="category['name']"/>
+                                        </span>
+                                        <a t-attf-href="/slides/#{slug(channel)}/category/#{category['id']}" class="pull-right" t-if="category['total'] - 4 > 0 and category['id']">
+                                            <i class="fa fa-arrow-right"></i> See all
+                                        </a>
+                                    </div>
+                                </div>
+                                <t t-call="website_slides.slides_grid_view">
+                                    <t t-set="slides" t-value="category['slides']"/>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </t>
+</template>
+
+<!-- Channels: search result -->
+<template id='slides_search' name="Searching Slides">
+    <t t-call="website.layout">
+        <div class="wrap">
+            <t t-set="main_object" t-value="channel"/>
+            <t t-call="website_slides.slides_channel_header"/>
+            <section>
+                <div class="container mt16" t-if="not slides">
+                    <div class="alert alert-danger" role="alert">
+                        Sorry, but nothing matches your search criteria <b><t t-esc="search"/></b>. Please try again with different keywords.
+                    </div>
+                </div>
+                <div class="container mt16" t-if="slides">
+                    <div class="alert alert-success mb0" role="alert">
+                        <b t-esc="len(slides)"/> results found for the given criteria <b><t t-esc="search"/></b>
+                    </div>
+                    <div class="row mt0">
+                        <t t-call="website_slides.slides_grid_view"/>
+                    </div>
+                    <div class="row text-center">
+                        <t t-call="website.pager"/>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </t>
+</template>
+
+<!-- Embedded template: display a list of slides in a grid view -->
+<template id='slides_grid_view' name="Slides (Grid View)">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 mt16 mb16" t-foreach="slides" t-as="slide">
+        <div class="well well-sm oe_slides_thumbnail_container">
+            <a t-attf-href="/slides/slide/#{slug(slide)}">
+                <img t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" class="img-responsive img-thumbnail oe_slides_grid_thumbnail"/>
+            </a>
+            <span t-if="not slide.website_published" class="label label-danger" style="position: absolute;right: 20px;top: 7px;">Unpublished</span>
+            <a t-if="not is_public_user and slide.website_published and slide.channel_id.promote_strategy == 'custom' and slide.channel_id.promoted_slide_id.id != slide.id"
+                groups="base.group_user"
+                t-attf-href="/slides/slide/#{slide.id}/promote"
+                style="position: absolute;right: 20px;top: 7px;"
+                t-attf-title="Promote this #{slide.slide_type}">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-square fa-stack-2x oe_slides_opacity"></i>
+                  <i class="fa fa-bullhorn fa-stack-1x fa-inverse"></i>
+                </span>
+            </a>
+
+            <div style="padding: 5px;">
+                <h4 class="mt4 mb8 oe_slides_ellipsis">
+                    <a t-att-title="slide.name" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
+                </h4>
+                <div class="text-muted clearfix">
+                    <small class="pull-left"><t t-esc="slide.total_views"/> Views</small>
+                    <small class="pull-right"><timeago class="timeago" t-att-datetime="slide.create_date"></timeago></small>
+                </div>
+                <p t-if="slide.tag_ids" style="padding-top: 5px;">
+                    <t t-foreach="slide.tag_ids" t-as="att_tag">
+                        <a t-attf-href="/slides/#{slug(channel)}/tag/#{slug(att_tag)}" t-attf-class="label label-default #{tag and tag.name == att_tag.name and 'label-primary' ''} text-muted" t-field="att_tag.name"/>
+                    </t>
+                </p>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Slide: main template: detailed view -->
+<template id="slide_detail_view" name="Slide Detailed View">
+    <t t-set="head">
+        <t t-if="not private">
+            <meta property="og:title" t-att-content="slide.name" />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" t-att-content="slide.website_url" />
+            <meta property="og:image" t-attf-content="#{request.httprequest.host_url}/web/image/slide.slide/#{slide.id}/image_thumb"/>
+            <meta property="og:description" t-att-content="slide.description" />
+        </t>
+    </t>
+    <t t-call="website.layout">
+        <t t-set="main_object" t-value="slide"/>
+        <div class="container mt16">
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                    <div t-if="private" class="mb16">
+                        <h3 class="alert alert-danger">
+                            <i class="fa fa-exclamation-triangle"></i> This <t t-esc="slide.slide_type"/> is private
+                        </h3>
+                        <t t-if="slide.channel_id.access_error_msg">
+                            <div t-field="slide.channel_id.access_error_msg" class="well oe_no_empty"/>
+                        </t>
+                    </div>
+
+                    <div t-if="not private">
+                            <t t-if="slide.datas and slide.slide_type == 'infographic'">
+                                <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%"/>
+                            </t>
+                        <div t-if="slide.slide_type in ('presentation', 'document')" class="embed-responsive embed-responsive-4by3 embed-responsive-item mb8">
+                            <t t-raw="slide.embed_code"/>
+                        </div>
+                        <div t-if="slide.slide_type == 'video' and slide.document_id" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
+                            <t t-raw="slide.embed_code"/>
+                        </div>
+                        <div class="row">
+                            <h4 t-field="slide.name" class="col-md-6"/>
+                            <div class="col-md-6">
+                                <div clas="row">
+                                    <div class="col-md-8" t-if="slide.tag_ids">
+                                        <t t-foreach="slide.tag_ids" t-as="slide_tag">
+                                            <a t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(slide_tag)}"  t-attf-class="label label-default ml4 mb4 pull-right #{tag and tag.id == slide_tag.id and 'label-primary' ''}" t-field="slide_tag.name"/>
+                                        </t>
+                                    </div>
+                                    <div class="pull-right">
+                                        <t t-call="website.publish_management">
+                                            <t t-set="object" t-value="slide"/>
+                                            <t t-set="publish_edit" t-value="True"/>
+                                            <t t-set="action" t-value="'website_slides.action_slides_slides'"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-8 col-xs-12">
+                                <div class="pull-left">
+                                    <a t-attf-href="/slides/#{slug(slide.channel_id)}">
+                                        <i class="fa fa-circle-o fa-5x" style="color: #875A7B;font-weight: bold;"></i>
+                                    </a>
+                                </div>
+                                <div style="margin-left: 80px">
+                                    <p>
+                                        <a t-attf-href="/slides/#{slug(slide.channel_id)}" t-esc="slide.channel_id.name"/>
+                                        <t t-if="slide and slide.category_id">
+                                            <span> / </span>
+                                            <a t-attf-href="/slides/#{slug(slide.channel_id)}/category/#{slug(slide.category_id)}" t-esc="slide.category_id.name"/>
+                                        </t>
+                                    </p>
+                                    <div>
+                                        <t t-call="website_mail.follow">
+                                            <t t-set="email" t-value="user.email"/>
+                                            <t t-set="object" t-value="slide.channel_id"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 hidden-xs">
+                                <div class="text-right">
+                                    <b class="h3 text-muted"><t t-esc="slide.total_views"/></b> <span class="text-muted small">views</span>
+                                </div>
+                                <!-- progress bar of like/dislike -->
+                                <div class="progress mb0" style="height: 2px;" t-if="slide.likes + slide.dislikes > 0">
+                                    <div class="progress-bar" role="progressbar" t-attf-aria-valuenow="#{slide.likes}" aria-valuemin="0"
+                                        t-attf-aria-valuemax="#{slide.likes + slide.dislikes}"
+                                        t-attf-style="width: #{(slide.likes*100)/(slide.likes + slide.dislikes)}%;">
+                                        <span class="sr-only"><t t-esc="slide.likes"/> Likes</span>
+                                    </div>
+                                </div>
+                                <div class="progress mb0" style="height: 2px;" t-if="slide.likes + slide.dislikes == 0">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                                        <span class="sr-only"><t t-esc="slide.likes"/> Likes</span>
+                                    </div>
+                                </div>
+                                <!-- LikeButton widget -->
+                                <div class="text-muted mt4">
+                                    <div class="pull-right mb16 text-right">
+                                        <span
+                                            class="oe_slide_js_like"
+                                            data-href="/slides/slide/like"
+                                            t-att-data-user-id="user.id"
+                                            t-att-data-public-user="is_public_user"
+                                            t-att-data-slide-id="slide.id"
+                                            tabindex="0"
+                                            data-toggle="popover">
+                                            <i class="fa fa-thumbs-up fa-1x">
+                                                <t t-esc="slide.likes"/>
+                                            </i>
+                                        </span>
+                                        <span
+                                            class="oe_slide_js_unlike"
+                                            data-href="/slides/slide/dislike"
+                                            t-att-data-user-id="user.id"
+                                            t-att-data-public-user="is_public_user"
+                                            t-att-data-slide-id="slide.id"
+                                            tabindex="0"
+                                            data-toggle="popover">
+                                            <i class="fa fa-thumbs-down fa-1x">
+                                                <t t-esc="slide.dislikes"/>
+                                            </i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt8 mb32">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li t-att-class="not comments and 'active' or None">
+                                    <a href="#about" role="tab" data-toggle="tab">
+                                        <i class="fa fa-home"></i> About
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#share" role="tab" data-toggle="tab">
+                                        <i class="fa fa-share-alt"></i> Share
+                                    </a>
+                                </li>
+                                <li t-att-class="comments and 'active' or None">
+                                    <a href="#discuss" role="tab" data-toggle="tab">
+                                        <i class="fa fa-comments-o"></i> Comments
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#transcript" role="tab" data-toggle="tab">
+                                        <i class="fa fa-align-justify"></i> Transcript
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#statistic" role="tab" data-toggle="tab">
+                                        <i class="fa fa-bar-chart"></i> Statistics
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" style="padding: 20px 5px 5px 5px; word-wrap: break-word;">
+                                <div t-att-class="not comments and 'tab-pane fade active in' or 'tab-pane fade'" id="about">
+                                    <div t-field="slide.description"/>
+                                </div>
+                                <div class="tab-pane fade" t-if="slide.website_published" id="share">
+                                    <t t-call="website_slides.slide_social_media">
+                                        <t t-set="slide" t-value="slide"/>
+                                    </t>
+                                    <t t-call="website_slides.slide_social_email">
+                                        <t t-set="slide" t-value="slide"/>
+                                    </t>
+                                    <t t-if="not slide.document_id">
+                                        <t t-call="website_slides.slide_social_embed">
+                                            <t t-set="slide" t-value="slide"/>
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="tab-pane fade" t-if="not slide.website_published" id="share">
+                                    <h4><i class="fa fa-info-circle"></i>
+                                        The social sharing module will be unlocked when a moderator will allow your publication.
+                                    </h4>
+                                </div>
+                                <div t-att-class="comments and 'tab-pane fade active in' or 'tab-pane fade'" id="discuss">
+                                    <form id="comment" class="js_website_submit_form" t-attf-action="/slides/slide/#{slide.id}/comment" method="POST">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <div class="media">
+                                            <span class="pull-left" t-if="not is_public_user">
+                                                <img class="img img-circle media-object"
+                                                    t-att-src="'/web/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)"
+                                                    style="width: 30px"/>
+                                            </span>
+                                            <div class="media-body">
+                                                <div t-if="is_public_user" class="col-md-6">
+                                                    <input type="name" class="form-control mb8" required="true" name="name" placeholder="Your Name"/>
+                                                    <input type="email" class="form-control mb8" required="true" name="email" placeholder="Email Address"/>
+                                                </div>
+                                                <div t-if="is_public_user" class="col-md-6">
+                                                    <p class="text-muted small">
+                                                        Post comment with email address (confirmation of email is required in order to publish comment on website) or please
+                                                        <a t-attf-href="/web?redirect=#{request.httprequest.url}">login</a>
+                                                        to post comment
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <textarea rows="3" name="comment" class="o_slides_comment form-control" required="true" placeholder="Write a comment..."></textarea>
+                                                    <button type="submit" class="btn btn-primary mt8">Post</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <ul class="media-list mt8">
+                                        <li t-foreach="comments" t-as="message" class="media">
+                                            <span class="pull-left">
+                                                <img class="media-object img img-circle"
+                                                    t-att-src="'/web/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width: 30px"/>
+                                            </span>
+                                            <div class="media-body">
+                                                <t t-call="website.publish_short">
+                                                    <t t-set="object" t-value="message"/>
+                                                </t>
+                                                <span t-field="message.author_id" style="display: inline-block;" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                                <span class="text-muted">on<span t-field="message.date"/></span>
+                                                <div t-field="message.body" class="discussion_scroll_post"></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tab-pane fade oe_slides_transcript" id="transcript">
+                                    <t t-if="slide.index_content">
+                                        <t t-foreach="slide.index_content.split('\n')" t-as="line">
+                                            <p t-esc="line"></p>
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="tab-pane fade" id="statistic" t-att-slide-url="slide.website_url">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h4 class="mt0 oe_slides_statistics_title">Views</h4>
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    <span class="badge"><t t-esc="slide.total_views"/></span>
+                                                    <i class="fa fa-play"></i> Total Views
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <span class="badge"><t t-esc="slide.slide_views"/></span>
+                                                    <i class="fa fa-circle-o"></i> Website Views
+                                                </li>
+                                                <li class="list-group-item" t-if="not slide.document_id">
+                                                    <span class="badge"><t t-esc="slide.embed_views"/></span>
+                                                    <i class="fa fa-code"></i> Embeded Views
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <h4 class="mt0 oe_slides_statistics_title">Actions</h4>
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    <span class="badge" id="total-share">0</span>
+                                                    <i class="fa fa-share-alt"></i> Social Shares
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <span class="badge"><t t-esc="slide.likes"/></span>
+                                                    <i class="fa fa-thumbs-up"></i> Likes
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <span class="badge"><t t-esc="slide.dislikes"/></span>
+                                                    <i class="fa fa-thumbs-down"></i> Dislikes
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <span class="badge"><t t-esc="len(slide.website_message_ids)"/></span>
+                                                    <i class="fa fa-comments-o"></i> Comments
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <h4 class="mt0 oe_slides_statistics_title">Share count</h4>
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    <span class="badge" id="facebook-badge">0</span>
+                                                    <i class="fa fa-facebook-square"></i> Facebook
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <span class="badge" id="twitter-badge">0</span>
+                                                    <i class="fa fa-twitter-square"></i> Twitter
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <span class="badge" id="linkedin-badge">0</span>
+                                                    <i class="fa fa-linkedin-square"></i> LinkedIn
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <span class="badge" id="google-badge">0</span>
+                                                    <i class="fa fa-google-plus-square"></i> Google+
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row" t-if="not slide.document_id and slide.embedcount_ids">
+                                        <div class="col-md-12">
+                                            <h4 class="mt0"> Embeds
+                                                <span class="badge pull-right">
+                                                    <t t-esc="len(slide.embedcount_ids)"/>
+                                                </span>
+                                            </h4>
+                                            <ul class="list-group" style="height: 150px;overflow: auto;">
+                                                <li class="list-group-item" t-foreach="slide.embedcount_ids" t-as="count">
+                                                    <span class="badge"><t t-esc="count.count_views"/></span>
+                                                    <t t-esc="count.url"/>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active"><a href="#related" data-toggle="tab">Related</a></li>
+                        <li><a href="#most_viewed" data-toggle="tab">Most Viewed</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="related" class="tab-pane active mt4">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 panel panel-default">
+                                <ul class="media-list panel-body">
+                                    <t t-set="related_slides_list" t-value="list(related_slides)"/>
+                                    <t t-if="not related_slides_list">
+                                        No presentation available.
+                                    </t>
+                                    <t t-foreach="related_slides_list" t-as="slide">
+                                        <t t-call="website_slides.related_slides"/>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="most_viewed" class="tab-pane  mt4">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 panel panel-default">
+                                <ul class="media-list panel-body">
+                                    <t t-set="most_viewed_slides_list" t-value="list(most_viewed_slides)"/>
+                                    <t t-if="not list(most_viewed_slides_list)">
+                                        No presentation available.
+                                    </t>
+                                    <t t-foreach="most_viewed_slides_list" t-as="slide">
+                                        <t t-call="website_slides.related_slides"/>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- Slide sub-template: display an item in a list of related slides (Related, Most Viewed, ...) -->
+<template id="related_slides" name="Related Slide">
+    <li class="media">
+        <a class="media-left pull-left" t-attf-href="/slides/slide/#{slug(slide)}">
+                <img class="media-object oe_slides_apart_small" t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb"/>
+        </a>
+        <div class="media-body">
+            <a t-attf-href="/slides/slide/#{slug(slide)}"><h5 class="media-heading" t-esc="slide.name"/></a>
+            <small class="text-muted">
+                <t t-esc="slide.total_views"/> Views . <timeago class="timeago" t-att-datetime="slide.create_date"></timeago>
+            </small>
+        </div>
+    </li>
+</template>
+
+
+<!-- Slide sub-template: share: social media -->
+<template id='slide_social_media' name="Share on Social Networks">
+    <h4 class="mt0">Share on Social Networks</h4>
+    <t t-call="website_slides.slides_share"/>
+    <h4 class="mt0">Share Link</h4>
+    <input type="text" class="form-control" t-att-value="slide.website_url" readonly="readonly" onClick="this.select();"/>
+    <span class="help-block">Use permanent link to share in social media</span>
+</template>
+
+
+<!-- Slide sub-template: share: send by email -->
+<template id='slide_social_email' name="Share by Email">
+    <h4 class="mt0">Share with a friend</h4>
+    <t t-if="not is_public_user">
+        <form class="form-group oe_slide_js_share_email" role="form">
+            <div class="input-group col-md-6">
+                <input type="email" class="form-control" placeholder="your-friend@domain.com"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button"
+                        data-loading-text="Sending..."
+                        t-attf-data-slide-id="#{slide.id}"
+                        style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                        <i class="fa fa-envelope-o"></i>
+                        Send Email
+                    </button>
+                </span>
+            </div>
+            <span class="help-block">Send presentation through email</span>
+        </form>
+    </t>
+    <t t-if="is_public_user">
+        <p>Please <a t-attf-href="/web?redirect=#{request.httprequest.url}"> login </a> to send this <t t-esc="slide.slide_type"/> by email!</p>
+    </t>
+</template>
+
+<!-- Slide sub-template: share: embed in your website -->
+<template id="slide_social_embed" name="Share on Your Website">
+    <div class="oe_slide_js_embed_code_widget">
+        <h4 class="mt0">Embed in your website</h4>
+        <div class="form-group">
+            <textarea class="form-control slide_embed_code" readonly="readonly" onClick="this.select();"><t t-esc="slide.embed_code"/></textarea>
+        </div>
+        <div class="form-group" t-if="slide.slide_type in ('presentation', 'document')">
+            <div class="help-block col-lg-3 col-md-3 col-sm-6 col-xs-6">Select page to start with</div>
+            <div class="input-group col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                <input type="number" value="1" class="form-control"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+</data>
+</odoo>

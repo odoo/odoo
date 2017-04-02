@@ -1,0 +1,792 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-29 13:59+0000\n"
+"PO-Revision-Date: 2016-06-22 09:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
+"language/zh_TW/)\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr_lines
+msgid "# of Lines"
+msgstr "項目數量"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
+msgid "# of Purchase Order"
+msgstr "採購訂單總數"
+
+#. module: purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase_done
+msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} 訂單 (Ref ${object.name or 'n/a' })"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "<strong>Qty</strong>"
+msgstr "<strong>數量</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "<strong>Shipping address:</strong>"
+msgstr "<strong>送貨地址：</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Taxes</strong>"
+msgstr "<strong>稅金</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Total Without Taxes</strong>"
+msgstr "<strong>未稅總計</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Total</strong>"
+msgstr "<strong>合計</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Unit Price</strong>"
+msgstr "<strong>單價</strong>"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_costing_method
+msgid "Allows you to compute product cost price based on average cost."
+msgstr "基於平均成本，計算出產品成本價格。"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_uom
+msgid ""
+"Allows you to select and maintain different units of measure for products."
+msgstr "允許您針對產品選擇與維護不同的度量單位"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_account_analytic_id
+msgid "Analytic Account"
+msgstr "輔助核算項目"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_analytic_accounting
+msgid "Analytic Accounting for Purchases"
+msgstr "採購用分析會計"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Apply"
+msgstr "套用"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Approve Order"
+msgstr "已核可訂單"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_price_average
+msgid "Average Price"
+msgstr "平均價格"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:796
+#: code:addons/purchase/models/stock.py:81
+#: model:stock.location.route,name:purchase.route_warehouse0_buy
+#, python-format
+msgid "Buy"
+msgstr "買"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_calendar
+msgid "Calendar View"
+msgstr "行事曆檢視"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Cancel"
+msgstr "取消"
+
+#. module: purchase
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
+msgid "Cancelled"
+msgstr "取消"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
+msgid "Commercial Entity"
+msgstr "商業實體"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_company_id
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Company"
+msgstr "公司"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:294
+#, python-format
+msgid "Compose Email"
+msgstr "撰寫郵件"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config
+msgid "Configuration"
+msgstr "設定"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_configuration
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Configure Purchases"
+msgstr "設定採購作業"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Confirm Order"
+msgstr "確認訂單"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_create_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_uid
+msgid "Created by"
+msgstr "建立者"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_create_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_create_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_company_currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_currency_id
+msgid "Currency"
+msgstr "貨幣"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_date_approve
+msgid "Date Approved"
+msgstr "核可日期"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_report_date_order
+msgid "Date on which this document has been created"
+msgstr "文件建立日期"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_delay_pass
+msgid "Days to Deliver"
+msgstr "距離交貨日數"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
+msgid "Description"
+msgstr "說明"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: purchase
+#: selection:purchase.report,state:0
+msgid "Done"
+msgstr "完成"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "電子郵件撰寫精靈"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_fiscal_position_id
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Fiscal Position"
+msgstr "財務結構"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Group By"
+msgstr "分組方式"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_id
+msgid "ID"
+msgstr "編號"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:197
+#, python-format
+msgid "In order to delete a purchase order, you must cancel it first."
+msgstr "必需先取消該訂單，才可刪除之。"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
+msgid "Incoming  Products"
+msgstr "入庫產品"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Incoming Shipments"
+msgstr "進貨"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_incoterm_id
+msgid "Incoterm"
+msgstr "國際商業用語"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_incoterm_id
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr "國貿條款(INCOTERMS)是一系列事先定義並使用於國際交易的商業術語。"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_invoice
+msgid "Invoice"
+msgstr "發票"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "發票明細"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings___last_update
+#: model:ir.model.fields,field_description:purchase.field_purchase_order___last_update
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line___last_update
+#: model:ir.model.fields,field_description:purchase.field_purchase_report___last_update
+msgid "Last Modified on"
+msgstr "最後修改:"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_write_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_write_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_write_uid
+msgid "Last Updated by"
+msgstr "最後更新："
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_write_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_write_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Location & Warehouse"
+msgstr "倉位和倉庫"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_manager
+msgid "Manager"
+msgstr "經理"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+msgid "Manual Invoices"
+msgstr "手開發票"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "New Mail"
+msgstr "新郵件"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Notes"
+msgstr "備註"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_date_order
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Order Date"
+msgstr "訂單日期"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_order_line
+msgid "Order Lines"
+msgstr "訂單行"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_order_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_name
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+msgid "Order Reference"
+msgstr "訂單參考"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_state
+msgid "Order Status"
+msgstr "訂單狀態"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Order of Day"
+msgstr "下單日"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Orders"
+msgstr "訂單"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "送出信件"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_partner
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_partner_id
+msgid "Partner"
+msgstr "伙伴"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category_property_account_creditor_price_difference_categ
+#: model:ir.model.fields,field_description:purchase.field_product_product_property_account_creditor_price_difference
+#: model:ir.model.fields,field_description:purchase.field_product_template_property_account_creditor_price_difference
+msgid "Price Difference Account"
+msgstr "價格差異帳戶"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_procurement_order
+msgid "Procurement"
+msgstr "採購"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_group_id
+msgid "Procurement Group"
+msgstr "補貨組"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "補貨規則"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_product
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_product_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_product_id
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+msgid "Product"
+msgstr "產品"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Product Categories"
+msgstr "產品分類"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_category
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_category_id
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Product Category"
+msgstr "產品分類"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
+msgid "Product Quantity"
+msgstr "產品數量"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_template
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_product_tmpl_id
+msgid "Product Template"
+msgstr "產品範本"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_uom
+msgid "Product Unit of Measure"
+msgstr "產品量度單位"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.product_product_action
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_product_variant
+#: model:ir.ui.menu,name:purchase.product_product_menu
+msgid "Product Variants"
+msgstr "系列產品"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
+#: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
+#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Products"
+msgstr "產品"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_price_standard
+msgid "Products Value"
+msgstr "產品價值"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
+msgid "Purchase"
+msgstr "採購"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
+msgid "Purchase Analysis"
+msgstr "採購分析"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
+msgid "Purchase Lead Time"
+msgstr "採購前置時間"
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.action_report_purchase_order
+#: model:ir.model,name:purchase.model_purchase_order
+#: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
+#: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_id
+#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.purchase_order_graph
+#: model:ir.ui.view,arch_db:purchase.purchase_order_pivot
+#: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
+#: model:res.request.link,name:purchase.req_link_purchase_order
+msgid "Purchase Order"
+msgstr "採購單"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_line
+#: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn
+#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn
+#: model:ir.model.fields,field_description:purchase.field_stock_move_purchase_line_id
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+msgid "Purchase Order Line"
+msgstr "採購訂單細項"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_tree
+msgid "Purchase Order Lines"
+msgstr "採購單明細"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action
+#: model:ir.actions.act_window,name:purchase.purchase_order_action_generic
+#: model:ir.model.fields,field_description:purchase.field_stock_picking_purchase_id
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Purchase Orders"
+msgstr "採購訂單"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_graph
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_pivot
+msgid "Purchase Orders Statistics"
+msgstr "採購訂單統計資料"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Purchase orders that include lines not invoiced."
+msgstr "有未開發票的採購明細之採購單"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_negociation
+msgid "Purchase-Standard Price"
+msgstr "採購標準價格"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+#: model:ir.ui.menu,name:purchase.menu_purchase_root
+#: model:ir.ui.view,arch_db:purchase.procurement_order_view_form_inherit_purchase
+#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
+msgid "Purchases"
+msgstr "購貨"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_report
+msgid "Purchases Orders"
+msgstr "採購訂單"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
+msgid "Quantity"
+msgstr "數量"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Quotations"
+msgstr "報價單"
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_approved
+msgid "RFQ Approved"
+msgstr "已核可詢價單"
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
+msgid "RFQ Confirmed"
+msgstr "已確認詢價單"
+
+#. module: purchase
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
+msgid "RFQ Sent"
+msgstr "已送出之詢價單"
+
+#. module: purchase
+#: model:mail.template,report_name:purchase.email_template_edi_purchase
+msgid "RFQ_${(object.name or '').replace('/','_')}"
+msgstr "詢價單_${(object.name or '').replace('/','_')}"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
+msgid "RFQs and Purchases"
+msgstr "詢價單及採購"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Receive Products"
+msgstr "接收產品"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_received
+msgid "Received Qty"
+msgstr "接收量"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_open_picking
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
+msgid "Receptions"
+msgstr "接收"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Reference"
+msgstr "參考"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_product_uom
+msgid "Reference Unit of Measure"
+msgstr "參考度量單位"
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "Request for Quotation"
+msgstr "詢價單"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
+msgid "Reservation"
+msgstr "預留"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_create_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_user_id
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Responsible"
+msgstr "負責人"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_date_planned
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_date_planned
+msgid "Scheduled Date"
+msgstr "預定日期"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Search Purchase Order"
+msgstr "搜尋採購訂單"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Set to Draft"
+msgstr "設為草稿"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_general_settings
+msgid "Settings"
+msgstr "設定"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Shipment"
+msgstr "運送"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
+msgid "Source Document"
+msgstr "源單據"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_state
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_state
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Status"
+msgstr "狀態"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_move
+msgid "Stock Move"
+msgstr "庫存調動"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+msgid "Stock Moves"
+msgstr "庫存調動"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_subtotal
+msgid "Subtotal"
+msgstr "小計"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_tax
+msgid "Tax"
+msgstr "稅別"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_tax
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_taxes_id
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Taxes"
+msgstr "稅別"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
+msgid "Terms and Conditions"
+msgstr "付款條件"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
+#: model:ir.model.fields,help:purchase.field_product_template_property_account_creditor_price_difference
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and cost price."
+msgstr "此帳戶將被使用於衡量採購價及成本價之間的價差。"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
+msgid "To Approve"
+msgstr "批准"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_total
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_total
+msgid "Total"
+msgstr "總計"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_price_total
+msgid "Total Price"
+msgstr "總價"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+msgid "Total Untaxed amount"
+msgstr "總未稅金額"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+msgid "Total amount"
+msgstr "總金額"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_picking
+msgid "Transfer"
+msgstr "調撥"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
+msgid "Unit Price"
+msgstr "單價"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr "度量單位類別"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_uom
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
+msgid "Units of Measure"
+msgstr "量度單位"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+msgid "Untaxed"
+msgstr "未稅"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_untaxed
+msgid "Untaxed Amount"
+msgstr "未完稅金額"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_user
+msgid "User"
+msgstr "用戶"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "VAT:"
+msgstr "增值稅:"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_warehouse
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_picking_type_id
+msgid "Warehouse"
+msgstr "倉庫"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_config_settings
+msgid "purchase.config.settings"
+msgstr "purchase.config.settings"

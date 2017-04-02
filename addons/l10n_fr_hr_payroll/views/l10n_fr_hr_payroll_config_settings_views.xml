@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_config_settings_form_inherit_l10n_fr_hr_payroll" model="ir.ui.view">
+        <field name="name">view.account.config.form.inherit.l10n.fr.hr.payroll</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='followup']" position="before">
+                <group string="Paie">
+                    <label for="plafond_secu"/>
+                    <div>
+                        <field name="plafond_secu" class="oe_inline"/>
+                    </div>
+                    <label for="nombre_employes"/>
+                    <div>
+                        <field name="nombre_employes" class="oe_inline"/>
+                    </div>
+                    <label for="cotisation_prevoyance"/>
+                    <div>
+                        <field name="cotisation_prevoyance" class="oe_inline"/>
+                    </div>
+                    <label for="org_ss"/>
+                    <div>
+                        <field name="org_ss" class="oe_inline"/>
+                    </div>
+                    <label for="conv_coll"/>
+                    <div>
+                        <field name="conv_coll" class="oe_inline"/>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

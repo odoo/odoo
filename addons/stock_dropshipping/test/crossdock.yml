@@ -1,0 +1,57 @@
+-
+    Create a supplier.
+-
+    !record {model: res.partner, id: supplier_crossdock}:
+        name: Crossdocking supplier
+-
+    Use the warehouse created in cancellation_propagated.yml.
+-
+    !python {model: stock.warehouse, id: wh_pps}: |
+        assert self.crossdock_route_id.active, 'Crossdock route is not active'
+-
+    Create new product without any routes.
+-
+    !record {model: product.product, id: cross_shop_product, view: False}:
+        name: PCE
+        type: product
+        categ_id: product.product_category_1
+        list_price: 100.0
+        standard_price: 70.0
+        seller_ids:
+            - delay: 1
+              name: supplier_crossdock
+              min_qty: 2.0
+        type: product
+        uom_id: product.product_uom_unit
+        uom_po_id: product.product_uom_unit
+-
+    Create a sales order with a line of 100 PCE incoming shipment, with route_id crossdock shipping.
+-
+    !record {model: sale.order, id: sale_order_crossdock_shpng}:
+        partner_id: base.res_partner_4
+        warehouse_id: wh_pps
+        note: Create Sales order
+        order_line:
+            - product_id: cross_shop_product
+              product_uom_qty: 100.00
+-
+    !python {model: sale.order.line, id: False}: |
+        route_wh_pps_crossdock = self.env['stock.warehouse'].browse(ref('stock_dropshipping.wh_pps')).crossdock_route_id.id
+        order = self.env['sale.order'].browse(ref('sale_order_crossdock_shpng'))
+        order.order_line.write({'route_id': route_wh_pps_crossdock})
+-
+    Confirm sales order.
+-
+    !python {model: sale.order, id: sale_order_crossdock_shpng}: |
+        self.action_confirm()
+-
+    Run the scheduler.
+-
+    !python {model: procurement.order, id: False}: |
+        self.run_scheduler()
+-
+    Check a quotation was created for the created supplier and confirm it.
+-
+    !python {model: purchase.order, id: False}: |
+        po = self.search([('partner_id', '=', ref('supplier_crossdock')), ('state','=','draft')])
+        po.button_confirm()

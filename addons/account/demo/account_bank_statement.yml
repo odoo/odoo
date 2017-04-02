@@ -1,0 +1,70 @@
+-
+  Create demo bank statement
+-
+  !python {model: ir.model.data, id: False} : |
+      default_company = self.env['res.company']._company_default_get('account.journal')
+      journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', default_company.id)], limit=1)
+      import time
+      if journal:
+          vals = {
+              'name': 'demo_bank_statement_1',
+              'journal_id': journal.id,
+              'date': time.strftime('%Y')+'-01-01',
+              'name': "BNK/2014/001",
+              'balance_end_real': '8998.2',
+              'balance_start': 5103.0
+          }
+          self._update('account.bank.statement', 'account', vals, 'demo_bank_statement_1')
+          vals = {
+              'ref': '',
+              'statement_id': ref('account.demo_bank_statement_1'),
+              'sequence': 1,
+              'name': "SAJ/2014/002 and SAJ/2014/003",
+              'journal_id': journal.id,
+              'amount': 1175.0,
+              'date': time.strftime('%Y')+'-01-01',
+              'partner_id': ref('base.res_partner_2'),
+          }
+          self._update('account.bank.statement.line', 'account', vals, 'demo_bank_statement_line_1')
+          vals = {
+              'ref': '',
+              'statement_id': ref('account.demo_bank_statement_1'),
+              'sequence': 2,
+              'name': "Bank fees",
+              'journal_id': journal.id,
+              'amount': -32.58,
+              'date': time.strftime('%Y')+'-01-01',
+          }
+          self._update('account.bank.statement.line', 'account', vals, 'demo_bank_statement_line_2')
+          vals = {
+              'ref': '',
+              'statement_id': ref('account.demo_bank_statement_1'),
+              'sequence': 3,
+              'name': "Prepayment",
+              'journal_id': journal.id,
+              'amount': 650.0,
+              'date': time.strftime('%Y')+'-01-01',
+              'partner_id': ref('base.res_partner_12'),
+          }
+          self._update('account.bank.statement.line', 'account', vals, 'demo_bank_statement_line_3')
+          vals = {
+              'ref': '',
+              'statement_id': ref('account.demo_bank_statement_1'),
+              'sequence': 4,
+              'name': "First 2000 € of SAJ/2014/001",
+              'journal_id': journal.id,
+              'amount': 2000.0,
+              'date': time.strftime('%Y')+'-01-01',
+              'partner_id': ref('base.res_partner_12'),
+          }
+          self._update('account.bank.statement.line', 'account', vals, 'demo_bank_statement_line_4')
+          vals = {
+              'ref': '',
+              'statement_id': ref('account.demo_bank_statement_1'),
+              'sequence': 5,
+              'name': "Last Year Interests",
+              'journal_id': journal.id,
+              'amount': 102.78,
+              'date': time.strftime('%Y')+'-01-01',
+          }
+          self._update('account.bank.statement.line', 'account', vals, 'demo_bank_statement_line_5')

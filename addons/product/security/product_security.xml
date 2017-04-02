@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+
+    <record id="group_sale_pricelist" model="res.groups">
+        <field name="name">Sales Pricelists</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_pricelist_item" model="res.groups">
+        <field name="name">Manage Pricelist Items</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_product_pricelist" model="res.groups">
+        <field name="name">Pricelists On Product</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_uom" model="res.groups">
+        <field name="name">Manage Multiple Units of Measure</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_stock_packaging" model="res.groups">
+        <field name="name">Manage Product Packaging</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_mrp_properties" model="res.groups">
+        <field name="name">Manage Properties of Product</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_product_variant" model="res.groups">
+        <field name="name">Manage Product Variants</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+</data>
+<data noupdate="1">
+
+    <record id="product_comp_rule" model="ir.rule">
+        <field name="name" >Product multi-company</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force"> ['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record model="ir.rule" id="product_pricelist_comp_rule">
+        <field name="name">product pricelist company rule</field>
+        <field name="model_id" ref="model_product_pricelist"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force"> ['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
+    </record>
+
+    <record model="ir.rule" id="product_pricelist_item_comp_rule">
+        <field name="name">product pricelist item company rule</field>
+        <field name="model_id" ref="model_product_pricelist_item"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force"> ['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
+    </record>
+
+    <record model="ir.rule" id="product_supplierinfo_comp_rule">
+        <field name="name">product supplierinfo company rule</field>
+        <field name="model_id" ref="model_product_supplierinfo"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
+    </record>
+
+</data>
+</odoo>

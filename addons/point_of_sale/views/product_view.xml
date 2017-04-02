@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_search_view_pos" model="ir.ui.view">
+        <field name="name">product.template.search.pos.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <filter name="filter_to_sell" position="before">
+               <filter name="filter_to_availabe_pos" string="Available in POS" domain="[('available_in_pos', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="product_product_action" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.product</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context" eval="{'search_default_filter_to_availabe_pos': 1}"/>
+        <field name="domain" eval="[]"/>
+        <field name="search_view_id" eval="False"/> <!-- Force empty -->
+        <field name="view_id" eval="False"/> <!-- Force empty -->
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new product.
+            </p><p>
+                You must define a product for everything you sell through
+                the point of sale interface.
+            </p><p>
+                Do not forget to set the price and the point of sale category
+                in which it should appear. If a product has no point of sale
+                category, you can not sell it through the point of sale
+                interface.
+            </p>
+        </field>
+    </record>
+    <menuitem
+        id="menu_pos_products"
+        action="product_product_action"
+        parent="menu_point_of_sale" sequence="3"/>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_template_property_form"/>
+        <field name="arch" type="xml">
+            <group name="sale_condition" position="after">
+                <group name="pos" string="Point of Sale">
+                    <field name="available_in_pos"/>
+                    <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
+                    <field name="to_weight" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

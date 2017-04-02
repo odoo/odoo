@@ -1,0 +1,2020 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
+# p_amoruso <p.amoruso@elvenstudio.it>, 2016
+# Simone Bernini <simone@aperturelabs.it>, 2016
+# Tiziano Zambelli <zstiziano@gmail.com>, 2016
+# Paolo Valier <paolo.valier@hotmail.it>, 2016
+# Daniele Faraglia <daniele.faraglia@gmail.com>, 2016
+# Maurizio Schiavo <inactive+MaurizioSchiavo@transifex.com>, 2016
+# Luca Tralli <luca.tralli@gemsrl.it>, 2016
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2016
+# Innovazione <innovazione@lesvil.it>, 2016
+# Giuseppe Castellani <giuseppecastellani@gmail.com>, 2016
+# Giuliano Lotta <giuliano.lotta@gmail.com>, 2017
+# Pietro Federico Sacchi <sacchi.pietro@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-29 13:59+0000\n"
+"PO-Revision-Date: 2016-09-29 13:59+0000\n"
+"Last-Translator: Pietro Federico Sacchi <sacchi.pietro@gmail.com>, 2017\n"
+"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase
+msgid ""
+"\n"
+"<p>Dear\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>If you have any question, do not hesitate to contact us.</p>\n"
+"<p>Best regards,</p>\n"
+msgstr ""
+"\n"
+"<p>Gentile\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Vi inviamo in allegato una ${object.state in ('draft', 'sent') and 'Richiesta di Preventivo' or \"Conferma d'Ordine\"} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    con riferimento: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"per un valore di <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"da parte di ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Nel caso di dubbi o domande, non esitate a contattarci.</p>\n"
+"<p>Saluti,</p>\n"
+
+#. module: purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase_done
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name} \n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Please find in attachment a <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>You can reply to this email if you have any questions.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Gentile ${object.partner_id.name} \n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Vi inviamo in allegato una <strong>${object.state in ('draft', 'sent') and 'Richiesta di Preventivo' or \"Conferma d'Ordine\"} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    con riferimento: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"per un valore di <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"da parte di ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Potete scrivere a questo indirizzo mail per richieste di chiarimento.</p>\n"
+"<p>Saluti,</p>\n"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
+msgid ""
+"\n"
+"Creates the dropship Route and add more complex tests\n"
+"-This installs the module stock_dropshipping."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/stock.py:87
+#, python-format
+msgid " Buy"
+msgstr " Compra"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_count
+#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_count
+msgid "# Purchases"
+msgstr "# Acquisti"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "# Fatture Fornitori"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_count
+msgid "# of Bills"
+msgstr "# di Fatture"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr_lines
+msgid "# of Lines"
+msgstr "# di righe"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
+msgid "# of Purchase Order"
+msgstr "# dell'Ordine di Acquisto"
+
+#. module: purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase_done
+msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} Ordine (Rif ${object.name or 'n/a' })"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid ""
+"<span>(*) This configuration is related to the company you're logged "
+"into.</span>"
+msgstr ""
+"<span>(*) Questa configurazione è collegata all'azienda con cui siete "
+"connessi.</span>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Date Req.</strong>"
+msgstr "<strong>Data richiesta</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "<strong>Description</strong>"
+msgstr "<strong>Descrizione</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "<strong>Expected Date</strong>"
+msgstr "<strong>Data Prevista</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Net Price</strong>"
+msgstr "<strong>Prezzo Netto</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Order Date:</strong>"
+msgstr "<strong>Data Ordine:</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Our Order Reference:</strong>"
+msgstr "<strong> Riferimento del nostro  ordine</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "<strong>Qty</strong>"
+msgstr "<strong>Q.tà</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "<strong>Shipping address:</strong>"
+msgstr "<strong>Indirizzo di spedizione:</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Taxes</strong>"
+msgstr "<strong>Imposte</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Total Without Taxes</strong>"
+msgstr "<strong>Totale imponibile</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Total</strong>"
+msgstr "<strong>Totale</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Unit Price</strong>"
+msgstr "<strong>Prezzo Unitario</strong>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Your Order Reference</strong>"
+msgstr "<strong>Riferimento del vostro ordine</strong>"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_warning_purchase
+msgid "A warning can be set on a product or a customer (Purchase)"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
+msgid "Add Purchase Order"
+msgstr "Aggiungi ordini d'acquisto"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_warning_purchase:0
+msgid "All the products and the customers can be used in purchase orders"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.settings,module_stock_dropshipping:0
+msgid "Allow suppliers to deliver directly to your customers"
+msgstr "Permette ai fornitori di consegnare direttamente ai vostri clienti"
+
+#. module: purchase
+#: selection:res.company,po_lock:0
+msgid "Allow to edit purchase orders"
+msgstr "Permette di modificare gli ordini di acquisto"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_manage_vendor_price:0
+msgid "Allow using and importing vendor pricelists"
+msgstr "Permette di importare ed utilizzare listini prezzi dei venditori"
+
+#. module: purchase
+#: selection:purchase.config.settings,module_purchase_requisition:0
+msgid ""
+"Allow using call for tenders to get quotes from multiple suppliers "
+"(advanced)"
+msgstr ""
+"Permette di usare un bando di gara per ottenere le quotazioni per molteplici"
+" fornitori (avanzato)"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_costing_method
+msgid "Allows you to compute product cost price based on average cost."
+msgstr ""
+"Consente di calcolare il prezzo di costo del prodotto basandosi sul costo "
+"medio."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_uom
+msgid ""
+"Allows you to select and maintain different units of measure for products."
+msgstr ""
+"Consente di selezionare e mantenere differenti unità di misura per i "
+"prodotti."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_config_settings_group_analytic_account_for_purchases
+msgid "Allows you to specify an analytic account on purchase order lines."
+msgstr ""
+"Permette di specificare un account analitico sulle linee di acquisto ordini"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid ""
+"An administrator can set up default Terms and conditions in your Company "
+"settings."
+msgstr ""
+"Un amministratore può impostare termini e condizioni predefiniti all'interno"
+" delle impostazioni aziendali."
+
+#. module: purchase
+#: selection:purchase.config.settings,group_warning_purchase:0
+msgid ""
+"An informative or blocking warning can be set on a product or a customer"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_account_analytic_id
+msgid "Analytic Account"
+msgstr "Conto Analitico"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_analytic_accounting
+msgid "Analytic Accounting for Purchases"
+msgstr "Contabilità Analitica su Acquisti"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "Tag Analitici"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_config_settings_group_analytic_account_for_purchases
+msgid "Analytic accounting for purchases"
+msgstr "Contabilità analitica su acquisti"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Apply"
+msgstr "Salva"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_date_approve
+msgid "Approval Date"
+msgstr "Data di approvazione"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Approve Order"
+msgstr "Approva Ordine"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_procurement_ids
+msgid "Associated Procurements"
+msgstr "Associazione appalti"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_invoice_line_purchase_id
+msgid ""
+"Associated Purchase Order. Filled in automatically when a PO is chosen on "
+"the vendor bill."
+msgstr ""
+"Ordine di acquisto associato. Viene compilato automaticamente quando un PO "
+"viene scelto dalle fatture dei fornitori"
+
+#. module: purchase
+#: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
+msgid "Average Delivery Time"
+msgstr "Tempo Medio di Consegna"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_price_average
+msgid "Average Price"
+msgstr "Prezzo medio"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
+msgid "Bill Lines"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
+msgid "Billed Qty"
+msgstr "Fatturati Qty"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
+msgid "Billing Status"
+msgstr "Stato Fatturazione"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_ids
+msgid "Bills"
+msgstr "Ricevuta"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: selection:purchase.order,invoice_status:0
+msgid "Bills Received"
+msgstr "Fatture Ricevute"
+
+#. module: purchase
+#: selection:product.template,purchase_line_warn:0
+#: selection:res.partner,purchase_warn:0
+msgid "Blocking Message"
+msgstr "Messaggio di blocco"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:796
+#: code:addons/purchase/models/stock.py:81
+#: model:stock.location.route,name:purchase.route_warehouse0_buy
+#, python-format
+msgid "Buy"
+msgstr "Acquista"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_pull_id
+msgid "Buy rule"
+msgstr "Regole d'acquisto"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_calendar
+msgid "Calendar View"
+msgstr "Panoramica del calendario"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_module_purchase_requisition
+msgid "Calls for Tenders"
+msgstr "Bando di gara"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_purchase_requisition
+msgid ""
+"Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
+"You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:812
+#, python-format
+msgid ""
+"Can not cancel a procurement related to a purchase order. Please cancel the "
+"purchase order first."
+msgstr ""
+"Non puoi cancellare un appalto relativo ad un ordine di acquisto. Per favore"
+" cancella prima l'ordine di acquisto."
+
+#. module: purchase
+#: code:addons/purchase/models/stock.py:84
+#, python-format
+msgid "Can't find any generic Buy route."
+msgstr "Non è possibile trovare nessun percorso d'Acquisto generico"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: purchase
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
+msgid "Cancelled"
+msgstr "Annullato"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:662
+#, python-format
+msgid "Cannot delete a purchase order line which is in state '%s'."
+msgstr "Non puoi eliminare una riga di acquisto quanto è in stato '%s'."
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
+msgid "Click here to record a vendor bill."
+msgstr "Clicca per registrare la fattura di un fornitore"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_form_action
+msgid ""
+"Click to create a quotation that will be converted into a purchase order."
+msgstr ""
+"Clicca per creare una quotazione che può essere convertita in un ordine "
+"d'acquisto"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_rfq
+msgid "Click to create a request for quotation."
+msgstr "Clicca per creare una richiesta di quotazione"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_invoice_pending
+msgid "Click to create a vendor bill."
+msgstr "Clicca per creare la fattura di un fornitore"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
+#: model:ir.actions.act_window,help:purchase.product_product_action
+msgid "Click to define a new product."
+msgstr "Clicca per definire un nuovo prodotto"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_open_invoice
+msgid "Click to record a vendor bill related to this purchase."
+msgstr "Clicca per registrare una fattura relativa a questo acquisto"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
+msgid "Commercial Entity"
+msgstr "Ente commerciale"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_company_id
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Company"
+msgstr "Azienda"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:294
+#, python-format
+msgid "Compose Email"
+msgstr "Componi Email"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config
+msgid "Configuration"
+msgstr "Configurazione"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_configuration
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Configure Purchases"
+msgstr "Configura acquisti"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Confirm Order"
+msgstr "Conferma Ordine"
+
+#. module: purchase
+#: selection:res.company,po_double_validation:0
+msgid "Confirm purchase orders in one step"
+msgstr "conferma ordini d'acquisto in una fase "
+
+#. module: purchase
+#: selection:res.company,po_lock:0
+msgid "Confirmed purchase orders are not editable"
+msgstr "Gli ordini di acquisto confermati non sono modificabili"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_control
+msgid "Control"
+msgstr "Controllo"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_method
+#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_method
+msgid "Control Purchase Bills"
+msgstr "Controllo Fatture di Acquisto"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_costing_method
+msgid "Costing Methods"
+msgstr "Metodi basati sul costo"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_create_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_create_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_create_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_date
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_company_currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_date_approve
+msgid "Date Approved"
+msgstr "Data Approvazione"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_report_date_order
+msgid "Date on which this document has been created"
+msgstr "Data nella quale il documento è stato creato"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_delay_pass
+msgid "Days to Deliver"
+msgstr "Giorni per la consegna"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_delay
+msgid "Days to Validate"
+msgstr "Giorni dalla validazione"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_type_id
+msgid "Deliver To"
+msgstr "Consegna"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Deliveries & Invoices"
+msgstr "Consegne & Fatture"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_date_order
+#: model:ir.model.fields,help:purchase.field_purchase_order_line_date_order
+msgid ""
+"Depicts the date where the Quotation should be validated and converted into "
+"a purchase order."
+msgstr ""
+"Rappresenta la data di quando la quotazione sarà validata e convertita in un"
+" ordine d'acquisto."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
+msgid "Description"
+msgstr "Descrizione"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Description for Vendors"
+msgstr "Descrizione per fornitori"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
+msgid "Destination Location Type"
+msgstr "Tipo di Ubicazione di Destinazione"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
+msgid "Display Name"
+msgstr "Nome Visualizzato"
+
+#. module: purchase
+#: selection:purchase.report,state:0
+msgid "Done"
+msgstr "Fatto"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
+msgid "Double validation amount"
+msgstr "Doppia validazione dell'importo"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_double_validation_amount
+msgid "Double validation amount *"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.report,state:0
+msgid "Draft RFQ"
+msgstr "Bozza RFQ"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_dest_address_id
+msgid "Drop Ship Address"
+msgstr "Indirizzo dropshipping"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_module_stock_dropshipping
+msgid "Dropshipping"
+msgstr "Dropshipping"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Procedura guidata composizione email"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_survey_mail_compose_message
+msgid "Email composition wizard for Survey"
+msgstr "Composizione guidata email per Sondaggio"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
+msgid ""
+"Encoding help. When selected, the associated purchase order lines are added "
+"to the vendor bill. Several PO can be selected."
+msgstr ""
+"Codifica aiuto. Quando selezionato, la linea di ordini d'acquisto "
+"selezionata sarà aggiunta alle fatture dei fornitori. Diversi PO possono "
+"essere selezionati"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Expected Date"
+msgstr "Data prevista"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Extended Filters"
+msgstr "Filtri Estesi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_fiscal_position_id
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Fiscal Position"
+msgstr "Posizione Fiscale"
+
+#. module: purchase
+#: selection:res.company,po_double_validation:0
+msgid "Get 2 levels of approvals to confirm a purchase order"
+msgstr "Ottieni 2 livelli di approvazione per confermare un ordine d'acquisto"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
+msgid "Gross Weight"
+msgstr "Peso Lordo"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Group By"
+msgstr "Raggruppa per"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+msgid "Hide cancelled lines"
+msgstr "Nascondi righe cancellate"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_id
+msgid "ID"
+msgstr "ID"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:197
+#, python-format
+msgid "In order to delete a purchase order, you must cancel it first."
+msgstr ""
+"Deve essere prima annullato per poter cancellare un ordine di acquisto."
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
+msgid "Incoming  Products"
+msgstr "Prodotti in arrivo"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Incoming Shipments"
+msgstr "Spedizioni in Ingresso"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_incoterm_id
+msgid "Incoterm"
+msgstr "Incoterm"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_incoterm_id
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+"I termini commerciali internazionali sono una serie di termini commerciali "
+"predefiniti usati nelle transazioni internazionali"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_invoice
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Riga Fattura"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Invoices and Incoming Shipments"
+msgstr "Fatture e Spedizioni in Entrata"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_is_shipped
+msgid "Is shipped"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings___last_update
+#: model:ir.model.fields,field_description:purchase.field_purchase_order___last_update
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line___last_update
+#: model:ir.model.fields,field_description:purchase.field_purchase_report___last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_write_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_write_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_write_uid
+msgid "Last Updated by"
+msgstr "Ultima modifica di"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_write_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_write_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_write_date
+msgid "Last Updated on"
+msgstr "Ultima modifica il"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation
+msgid "Levels of Approvals"
+msgstr "Livelli di Approvazioni"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_double_validation
+msgid "Levels of Approvals *"
+msgstr "Livelli di Approvazione *"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Location & Warehouse"
+msgstr "Punti di stoccaggio & magazzino"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Lock"
+msgstr "Blocca"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Locked"
+msgstr "Bloccato"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Logistics"
+msgstr "Logistica"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_manage_vendor_price
+msgid "Manage Vendor Price"
+msgstr "Gestisci il prezzo dei fornitori"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_manage_vendor_price:0
+msgid "Manage vendor price on the product form"
+msgstr "Gestisci il prezzo dei fornitori sul prodotto da "
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_manager
+msgid "Manager"
+msgstr "Manager"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+msgid "Manual Invoices"
+msgstr "Fatture manuali"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_lead
+#: model:ir.model.fields,help:purchase.field_res_company_po_lead
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for procuring products, they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
+msgstr ""
+"Margine di errore per i tempi di consegna del fornitore. Quando il sistema "
+"genera ordini d'acquisto per procurare prodotti, loro vengono schedati "
+"giorni prima per affrontare imprevisti ritardi dal fornitore"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
+msgid "Message for Purchase Order"
+msgstr "Messaggio per l'Ordine di Acquisto"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "Messaggio per Riga Ordine di Acquisto"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation_amount
+#: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
+msgid "Minimum amount for which a double validation is required"
+msgstr "L'ammontare minimo per una doppia validazione e richiesto"
+
+#. module: purchase
+#: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
+msgid "Monthly Purchases"
+msgstr "Acquisti Mensili"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_rfq
+msgid ""
+"Most propositions of purchase orders are created automatically\n"
+"                by Odoo based on inventory needs."
+msgstr ""
+"La maggior parte delle proposte di ordine d'acquisto vengono create automaticamente\n"
+"                   da Odoo in base alle esigenze dell'inventario"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "New Mail"
+msgstr "Nuova Mail"
+
+#. module: purchase
+#: selection:product.template,purchase_line_warn:0
+#: selection:res.partner,purchase_warn:0
+msgid "No Message"
+msgstr "Nessun messaggio"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_product_variant:0
+msgid "No variants on products"
+msgstr "I prodotti non hanno varianti (taglia, colore, ecc..)"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:945
+#, python-format
+msgid ""
+"No vendor associated to product %s. Please set one to fix this procurement."
+msgstr ""
+"Nessun fornitore associato al prodotto %s. Selezionane uno per fissare "
+"l'appalto"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Notes"
+msgstr "Note"
+
+#. module: purchase
+#: selection:purchase.order,invoice_status:0
+msgid "Nothing to Bill"
+msgstr ""
+
+#. module: purchase
+#: selection:product.template,purchase_method:0
+msgid "On ordered quantities"
+msgstr "Quantitativi ordinati"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product_purchase_method
+#: model:ir.model.fields,help:purchase.field_product_template_purchase_method
+msgid ""
+"On ordered quantities: control bills based on ordered quantities.\n"
+"On received quantities: control bills based on received quantity."
+msgstr ""
+
+#. module: purchase
+#: selection:product.template,purchase_method:0
+msgid "On received quantities"
+msgstr "Quantitativi ricevuti"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_date_order
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Order Date"
+msgstr "Data Ordine"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_order_line
+msgid "Order Lines"
+msgstr "Righe Ordine"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Order Month"
+msgstr "Ordine mese"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_order_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_name
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+msgid "Order Reference"
+msgstr "Rif. Ordine"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_state
+msgid "Order Status"
+msgstr "Stato Ordine"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Order of Day"
+msgstr "Ordine del Giorno"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:769
+#, python-format
+msgid "Ordered quantity decreased!"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Orders"
+msgstr "Ordini"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "Email in Uscita"
+
+#. module: purchase
+#: model:mail.template,report_name:purchase.email_template_edi_purchase_done
+msgid "PO_${(object.name or '').replace('/','_')}"
+msgstr "PO_${(object.name or '').replace('/','_')}"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Packaging"
+msgstr "Confezionamento"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_partner
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_country_id
+msgid "Partner Country"
+msgstr "Paese del Partner:"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Partner's Country"
+msgstr "Paese del partner:"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_payment_term_id
+msgid "Payment Terms"
+msgstr "Termini di pagamento"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category_property_account_creditor_price_difference_categ
+#: model:ir.model.fields,field_description:purchase.field_product_product_property_account_creditor_price_difference
+#: model:ir.model.fields,field_description:purchase.field_product_template_property_account_creditor_price_difference
+msgid "Price Difference Account"
+msgstr "Contro Differenze di prezzo"
+
+#. module: purchase
+#: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
+msgid "Price Per Vendor"
+msgstr "Prezzo per fornitore "
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Print RFQ"
+msgstr "Stampa RdP"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_procurement_order
+msgid "Procurement"
+msgstr "Approvvigionamento"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_group_id
+msgid "Procurement Group"
+msgstr "Gruppo di approvvigionamento"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "Regola di Approvvigionamento"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_product
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_product_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_product_id
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Product Categories"
+msgstr "Categorie Prodotti"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_category
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_category_id
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Product Category"
+msgstr "Categoria prodotto"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
+msgid "Product Quantity"
+msgstr "Quantità prodotto"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_template
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_product_tmpl_id
+msgid "Product Template"
+msgstr "Template prodotto"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_uom
+msgid "Product Unit of Measure"
+msgstr "Unità di Misura Prodotto"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.product_product_action
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_product_variant
+#: model:ir.ui.menu,name:purchase.product_product_menu
+msgid "Product Variants"
+msgstr "Varianti Prodotto"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
+#: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
+#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Products"
+msgstr "Prodotti"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_price_standard
+msgid "Products Value"
+msgstr "Costo Prodotti"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_product_variant:0
+msgid ""
+"Products can have several attributes, defining variants (Example: size, "
+"color,...)"
+msgstr ""
+"I prodotti possono avere diversi attributi, che ne definiscono le varianti ("
+" Esempio: taglie, colori, ecc.. )"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_uom:0
+msgid "Products have only one unit of measure (easier)"
+msgstr "I prodotti hanno una sola unità di misura (più semplice)"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation
+#: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
+msgid "Provide a double validation mechanism for purchases"
+msgstr "Fornire un meccanismo di doppia validazione per gli acquisti"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_normal_action_puchased
+msgid "Purchasable Products"
+msgstr "Prodotti Acquistabili"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
+msgid "Purchase"
+msgstr "Acquisto"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
+msgid "Purchase Analysis"
+msgstr "Analisi degli acquisti"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
+msgid ""
+"Purchase Analysis allows you to easily check and analyse your company "
+"purchase history and performance. From this menu you can track your "
+"negotiation performance, the delivery performance of your vendors, etc."
+msgstr ""
+"L'analisi degli acquisti ti permette di controllare e analizzare facilmente "
+"la storia di acuisti e le prestazioni della tua azienda. Da questo menù , "
+"puoi registrare le prestazioni nelle negoziazioni, nelle consegne dei "
+"fornitori, etc."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
+msgid "Purchase Lead Time"
+msgstr "Tempo di consegna acquisto"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_lead
+msgid "Purchase Lead Time *"
+msgstr "Tempo di consegna acquisto*"
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.action_report_purchase_order
+#: model:ir.model,name:purchase.model_purchase_order
+#: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
+#: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_id
+#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.purchase_order_graph
+#: model:ir.ui.view,arch_db:purchase.purchase_order_pivot
+#: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
+#: model:res.request.link,name:purchase.req_link_purchase_order
+msgid "Purchase Order"
+msgstr "Ordine di Acquisto"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Purchase Order Confirmation #"
+msgstr "Conferma ordine d'acquisto #"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Purchase Order Fiscal Position"
+msgstr "Posizione fiscale ordine d'acquisto"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_line
+#: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn
+#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn
+#: model:ir.model.fields,field_description:purchase.field_stock_move_purchase_line_id
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+msgid "Purchase Order Line"
+msgstr "Riga Ordine d'Acquisto"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_tree
+msgid "Purchase Order Lines"
+msgstr "Righe Ordine di Acquisto"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_company_po_lock
+msgid "Purchase Order Modification"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_lock
+msgid "Purchase Order Modification *"
+msgstr "Modifica Ordini di di Acquisto"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_lock
+#: model:ir.model.fields,help:purchase.field_res_company_po_lock
+msgid ""
+"Purchase Order Modification used when you want to purchase order editable "
+"after confirm"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action
+#: model:ir.actions.act_window,name:purchase.purchase_order_action_generic
+#: model:ir.model.fields,field_description:purchase.field_stock_picking_purchase_id
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Purchase Orders"
+msgstr "Ordini di acquisto"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_graph
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_pivot
+msgid "Purchase Orders Statistics"
+msgstr "Statistiche degli ordini di vendita"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:664
+#, python-format
+msgid "Purchase order line deleted."
+msgstr "ordine d'acquisto eliminato"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Purchase orders that have been invoiced."
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Purchase orders that include lines not invoiced."
+msgstr "Ordini di acquisto che includono righe non fatturate."
+
+#. module: purchase
+#: selection:purchase.config.settings,module_purchase_requisition:0
+msgid ""
+"Purchase propositions trigger draft purchase orders to a single supplier"
+msgstr ""
+"Le proposte di acquisto innescano una bozza di ordine d'acquisto da un "
+"singolo fornitore  "
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
+msgid "Purchase to resupply this warehouse"
+msgstr "Acquistare per rifornire questo magazzino"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_negociation
+msgid "Purchase-Standard Price"
+msgstr "Prezzo standard di acquisto"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+#: model:ir.ui.menu,name:purchase.menu_purchase_root
+#: model:ir.ui.view,arch_db:purchase.procurement_order_view_form_inherit_purchase
+#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
+msgid "Purchases"
+msgstr "Acquisti"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_report
+msgid "Purchases Orders"
+msgstr "Ordini di Acquisto"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_dest_address_id
+msgid ""
+"Put an address if you want to deliver directly from the vendor to the "
+"customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
+"Inserisci un indirizzo se vuoi spedire dal fornitore a cliente . Altrimenti "
+", continua senza inserire l'indirizzo per consegnare alla tua azienda"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
+msgid "Quantity"
+msgstr "Quantità"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Quotations"
+msgstr "Preventivi"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "RFQ"
+msgstr "RFQ"
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_approved
+msgid "RFQ Approved"
+msgstr "RdP Approvata"
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
+msgid "RFQ Confirmed"
+msgstr "RdP Confermata"
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_done
+msgid "RFQ Done"
+msgstr "RdP Completata"
+
+#. module: purchase
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
+msgid "RFQ Sent"
+msgstr "RFQ Inviata"
+
+#. module: purchase
+#: model:mail.template,report_name:purchase.email_template_edi_purchase
+msgid "RFQ_${(object.name or '').replace('/','_')}"
+msgstr "RFQ_${(object.name or '').replace('/','_')}"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
+msgid "RFQs and Purchases"
+msgstr "RFQ e Acquisti"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Re-Send RFQ by Email"
+msgstr "Rispedisci RdP per Email "
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Receive Products"
+msgstr "Prodotti in entrata"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_received
+msgid "Received Qty"
+msgstr "Q.tà ricevuta"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_open_picking
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
+msgid "Receptions"
+msgstr "Ricezioni"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Reference"
+msgstr "Riferimento"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_product_uom
+msgid "Reference Unit of Measure"
+msgstr "Unità di misura di riferimento"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_origin
+msgid ""
+"Reference of the document that generated this purchase order request (e.g. a"
+" sale order or an internal procurement request)"
+msgstr ""
+"Riferisce del documento che genera questo ordine d'acquisto (es: un ordine "
+"d'acquisto  o una richiesta interna)"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
+msgid ""
+"Reference of the sales order or bid sent by the vendor. It's used to do the "
+"matching when you receive the products as this reference is usually written "
+"on the delivery order sent by your vendor."
+msgstr ""
+"Riferimento all'ordine di vednita o all'offerta inviata dal Fornitore. E "
+"utilizzato per controllare quando ricevi i prodotti ed è riportato "
+"solitamente sul buono di consegna del fonitore"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.purchase_report
+msgid "Reports"
+msgstr "Report"
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "Request for Quotation"
+msgstr "Richiesta Preventivo"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Request for Quotation #"
+msgstr "Richiesta per una quotazione #"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_rfq
+#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+msgid "Requests for Quotation"
+msgstr "Richieste di preventivo"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
+msgid "Reservation"
+msgstr "Prenotazione"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_create_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_user_id
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Responsible"
+msgstr "Responsabile"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_date_planned
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_date_planned
+msgid "Scheduled Date"
+msgstr "Data pianificata"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Search Purchase Order"
+msgstr "Cerca ordine di acquisto"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
+#: model:ir.model.fields,help:purchase.field_product_template_purchase_line_warn
+#: model:ir.model.fields,help:purchase.field_res_partner_purchase_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Scegliendo l'opzione \"Avvisi\" si notificherà all'utente con il messaggio, "
+"Scegliendo \"Messaggio bloccante\" lancerà una eccezione con il messaggio e "
+"bloccherà il flusso. Il messaggio deve essere scritto nel campo successivo."
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Send PO by Email"
+msgstr "Invia PO per email"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Send RFQ by Email"
+msgstr "Invia RdP per Email"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_sequence
+msgid "Sequence"
+msgstr "Sequenza"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_costing_method:0
+msgid "Set a fixed cost price on each product"
+msgstr "Imposta un prezzo fisso su ogni prodotto"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Set date to all order lines"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Set to Draft"
+msgstr "Imposta come Bozza"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_general_settings
+msgid "Settings"
+msgstr "Configurazione"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Shipment"
+msgstr "Spedizione"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_uom:0
+msgid ""
+"Some products may be sold/puchased in different units of measure (advanced)"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
+msgid "Source Document"
+msgstr "Documento di origine"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_state
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_state
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Status"
+msgstr "Stato"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_move
+msgid "Stock Move"
+msgstr "Movimento Magazzino"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+msgid "Stock Moves"
+msgstr "Movimenti di Magazzino"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_subtotal
+msgid "Subtotal"
+msgstr "Subtotale"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner_property_purchase_currency_id
+msgid "Supplier Currency"
+msgstr "Valuta fornitore"
+
+#. module: purchase
+#: selection:purchase.config.settings,module_stock_dropshipping:0
+msgid "Suppliers always deliver to your warehouse(s)"
+msgstr "I forntiri consegnano sempre al tuo magazzino(i)"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_tax
+msgid "Tax"
+msgstr "Imposta"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_tax
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_taxes_id
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Taxes"
+msgstr "Imposte"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
+msgid "Technical field used to display the Drop Ship Address"
+msgstr "Campo tecnico utilizzato per visualizzare l'indirizzo Drop Ship"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
+msgid "Terms and Conditions"
+msgstr "Termini e Condizioni"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.product_product_action
+msgid ""
+"The product form contains detailed information to improve the\n"
+"                purchase process: prices, procurement logistics, accounting data,\n"
+"                available vendors, etc."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
+msgid ""
+"The product form contains detailed information to improve the\n"
+"            purchase process: prices, procurement logistics, accounting data,\n"
+"            available vendors, etc."
+msgstr ""
+"Il prodotto contiene informazioni dettagliate su come migliorare il \n"
+"                  processo d'acquisto: prezzi, logistica, data account \n"
+"                  fornitori disponibili"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_rfq
+msgid ""
+"The quotation contains the history of the discussion/negotiation\n"
+"                you had with your vendor. Once confirmed, a request for\n"
+"                quotation is converted into a purchase order."
+msgstr ""
+"La quotazione contiene la storia della discussione/negoziazione\n"
+"                       avuta con il fornitore. Quando confermata, una richiesta di \n"
+"                       quotazione è convertita in un ordine d'acquisto."
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
+msgid ""
+"The request for quotation is the first step of the purchases flow. Once\n"
+"                    converted into a purchase order, you will be able to control the receipt\n"
+"                    of the products and the vendor bill."
+msgstr ""
+"La richiesta di una quotazione è la prima fase del processo d'acquisto. Una volta\n"
+"                   convertita in un ordine di acquisto, potrai controllare la ricezione \n"
+"                   del prodotto e delle fatture ."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and accounting cost."
+msgstr ""
+"Questo account verrà utilizzato per valutare le differenze di prezzo tra "
+"prezzo d'acquisto e  il  costo contabile"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
+#: model:ir.model.fields,help:purchase.field_product_template_property_account_creditor_price_difference
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and cost price."
+msgstr ""
+"Questo conto viene usato per valorizzare le differenze di prezzo tra il "
+"prezzo di vendita e il prezzo di acquisto."
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "This changes the scheduled date of all order lines to the given date"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
+msgid ""
+"This currency will be used, instead of the default one, for purchases from "
+"the current partner"
+msgstr "Questa valuta  verrà usata per acquistare dagli attuali partner"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "This note will be displayed on requests for quotation."
+msgstr ""
+"Questa descrizione sarà mostrata all'interno delle richieste di preventivo a"
+" fornitori."
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:973
+#, python-format
+msgid ""
+"This purchase order has been created from: <a href=# data-oe-"
+"model=procurement.order data-oe-id=%d>%s</a>"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:986
+#, python-format
+msgid ""
+"This purchase order has been modified from: <a href=# data-oe-"
+"model=procurement.order data-oe-id=%d>%s</a>"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/account_invoice.py:184
+#, python-format
+msgid "This vendor bill has been created from: %s"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/account_invoice.py:198
+#, python-format
+msgid "This vendor bill has been modified from: %s"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
+msgid "This vendor has no purchase order. Click to create a new RfQ."
+msgstr ""
+"Questo fornitore non ha ordini d'acquisto. Clicca per creare un nuovo RFQ"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
+msgid "This will determine picking type of incoming shipment"
+msgstr "Questo determinerà il tipo di picking delle spedizioni in arrivo "
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
+msgid "To Approve"
+msgstr "Da Approvare"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_total
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_total
+msgid "Total"
+msgstr "Totale"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_price_total
+msgid "Total Price"
+msgstr "Prezzo Totale"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+msgid "Total Untaxed amount"
+msgstr "Totale imponibile"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+msgid "Total amount"
+msgstr "Importo Totale"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_picking
+msgid "Transfer"
+msgstr "Trasferimento"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:345
+#, python-format
+msgid ""
+"Unable to cancel purchase order %s as some receptions have already been "
+"done."
+msgstr ""
+"Non è possibile cancellare l'ordine di acquisto %s  poiché sono già stati "
+"fatte alcune ricezioni "
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:348
+#, python-format
+msgid ""
+"Unable to cancel this purchase order. You must first cancel related vendor "
+"bills."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
+msgid "Unit Price"
+msgstr "Prezzo Unitario"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr "Categorie Unità di Misura"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_uom
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
+msgid "Units of Measure"
+msgstr "Unità di Misura"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Unlock"
+msgstr "Sblocca"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+msgid "Untaxed"
+msgstr "Non tassato"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_untaxed
+msgid "Untaxed Amount"
+msgstr "Totale Imponibile"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_costing_method:0
+msgid "Use a 'Fixed', 'Real' or 'Average' price costing method"
+msgstr "Usa un metodo di costo 'Fisso', 'Reale' o 'Medio'"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_invoice_pending
+msgid ""
+"Use this menu to control the invoices to be received from your\n"
+"            vendors. When registering a new bill, set the purchase order\n"
+"            and Odoo will fill the bill automatically according to ordered\n"
+"            or received quantities."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_form_action
+msgid ""
+"Use this menu to search within your purchase orders by\n"
+"                references, vendor, products, etc. For each purchase order,\n"
+"                you can track the related discussion with the vendor, control\n"
+"                the products received and control the vendor bills."
+msgstr ""
+"Usa questo menù per cercare tra i tuoi ordini di acquisto. Per ogni ordine d'acquisto\n"
+"              puoi consultarne lo storico, controllare\n"
+"              i prodotti ricevuti e controllare le fatture collegate."
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_user
+msgid "User"
+msgstr "Utente"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_company_currency_id
+msgid "Utility field to express amount currency"
+msgstr "Campo di utilità per esprimere la valuta"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+msgid "VAT:"
+msgstr "IVA:"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_partner_id
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model:ir.ui.view,arch_db:purchase.purchase_order_line_tree
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Vendor"
+msgstr "Venditore"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
+#: model:ir.actions.act_window,name:purchase.action_invoice_pending
+#: model:ir.actions.act_window,name:purchase.purchase_open_invoice
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
+msgid "Vendor Bills"
+msgstr "Fatture fornitori"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
+msgid "Vendor Bills."
+msgstr "Fatture fornitori."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_manage_vendor_price
+msgid "Vendor Price"
+msgstr "Prezzi fornitori"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+msgid "Vendor Pricelists"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
+msgid "Vendor Reference"
+msgstr "Riferimento fornitore"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Vendors"
+msgstr "Fornitori"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                    orders or receipts. This allows you to control bills\n"
+"                    you receive from your vendor according to the draft\n"
+"                    document in Odoo."
+msgstr ""
+"Fornitori fatture possono essere pre-generati sulla base di acquisto\n"
+"ordini o ricevute. Questo consente di controllare le bollette\n"
+"si riceve dal fornitore secondo il progetto\n"
+"documento in Odoo."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
+msgid "Volume"
+msgstr "Volume"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: selection:purchase.order,invoice_status:0
+msgid "Waiting Bills"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_warehouse
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_picking_type_id
+msgid "Warehouse"
+msgstr "Magazzino"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_warning_purchase
+#: selection:product.template,purchase_line_warn:0
+#: selection:res.partner,purchase_warn:0
+msgid "Warning"
+msgstr "Attenzione"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:251
+#: code:addons/purchase/models/purchase.py:730
+#, python-format
+msgid "Warning for %s"
+msgstr "Avviso per %s"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+msgid "Warning on the Purchase Order"
+msgstr "Avviso sull'Ordine di Acquisto"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Warning when Purchasing this Product"
+msgstr "Avviso sull'acquisto di questo prodotto"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
+msgid "When products are bought, they can be delivered to this warehouse"
+msgstr ""
+"Quando i prodotti sono acquistati, possono essere consegnati a questo "
+"magazzino"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_product_variant
+msgid ""
+"Work with product variant allows you to define some variant of the same "
+"products, an ease the product management in the ecommerce for example"
+msgstr ""
+" Lavorare con prodotti diversi aiuta a definire alcune varianti dello stesso"
+" prodotto ,gestiscilo nel tuo ecommerce per esempio  "
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:770
+#, python-format
+msgid ""
+"You are decreasing the ordered quantity!\n"
+"You must update the quantities on the reception and/or bills."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_open_invoice
+msgid ""
+"You can control the invoice from your vendor according to\n"
+"            what you purchased (services) or received (products)."
+msgstr ""
+"Puoi controllare le fatture dei tuoi fornitori secondo\n"
+"          quanto hai acquistato (servizi) o ricevuto (prodotti)"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.product_product_action
+msgid ""
+"You must define a product for everything you purchase, whether\n"
+"                it's a physical product, a consumable or services you buy to\n"
+"                subcontractors."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
+msgid ""
+"You must define a product for everything you purchase, whether\n"
+"            it's a physical product, a consumable or services you buy to\n"
+"            subcontractors."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:385
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr "Dovresti indicare la posizione del fornitore per questo prodotto %s"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:315
+#, python-format
+msgid ""
+"You need purchase manager access rights to validate an order above %.2f %s."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_config_settings
+msgid "purchase.config.settings"
+msgstr "purchase.config.settings"

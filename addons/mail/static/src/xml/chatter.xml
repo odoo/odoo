@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <!--
+        Chatter composer
+    -->
+    <t t-name="mail.chatter.ChatComposer" t-extend="mail.ChatComposer">
+        <!-- Insert information before the composer -->
+        <t t-jquery=".o_composer_attachments_list" t-operation="before">
+            <!-- Internal note composer -->
+            <t t-if="widget.options.is_log">
+                <span class="o_chatter_composer_info">
+                    Log an internal note which will not be sent to followers, but which can be read
+                    by users accessing this document.
+                </span>
+            </t>
+            <!-- New message composer -->
+            <t t-if="!widget.options.is_log">
+                <!-- Text for followers -->
+                <span class="o_chatter_composer_info">
+                    To: Followers of
+                    <t t-if="widget.options.record_name">
+                        &quot;<t t-esc="widget.options.record_name"/>&quot;
+                    </t>
+                    <t t-if="!widget.options.record_name">
+                        this document
+                    </t>
+                </span>
+                <!-- List of followers -->
+                <div class="o_composer_suggested_partners">
+                    <t t-foreach='widget.suggested_partners' t-as='recipient'>
+                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
+                            <input type="checkbox"
+                                   t-att-checked="recipient.checked ? 'checked' : undefined"
+                                   t-att-data-fullname="recipient.full_name"/>
+                            <t t-esc="recipient.name"/>
+                            <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+
+        <!-- Add a button to open the full composer dialog -->
+        <t t-jquery=".o_composer_button_add_attachment" t-operation="after">
+            <button tabindex="6" class="btn btn-sm btn-icon fa fa-pencil-square-o o_composer_button_full_composer" type="button"/>
+        </t>
+    </t>
+
+    <!--
+        Chatter main div
+    -->
+    <t t-name="mail.Chatter">
+        <div class="o_chatter">
+            <div class="o_chatter_topbar">
+                <button type="button" class="btn btn-sm btn-primary o_chatter_button_new_message" title="Send a message">
+                    New message
+                </button>
+                <button t-if="widget.options.display_log_button" class="btn btn-sm btn-link o_chatter_button_log_note" title="Log a note. Followers will not be notified.">
+                    Log an internal note
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

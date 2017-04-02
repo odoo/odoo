@@ -1,0 +1,248 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_timesheet
+# 
+# Translators:
+# Bole <bole@dajmi5.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2016
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2016
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2016
+# Tina Milas <tina@uvid.hr>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-19 12:36+0000\n"
+"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_account_id
+msgid "Account"
+msgstr "Konto"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analitičke stavke"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_res_company
+msgid "Companies"
+msgstr "Tvrtke"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
+#: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
+msgid ""
+"Create a task under this project on sale order validation. This setting must"
+" be set for each company."
+msgstr ""
+"Kreirajte zadatak pod ovim projektom na ovjeri prodajnog naloga. Ova "
+"postavka mora biti postavljena za svaku tvrtku."
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_hr_employee
+msgid "Employee"
+msgstr "Zaposlenik"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
+msgid "Order Line"
+msgstr "Stavka naloga"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_procurement_order
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
+msgid "Procurement"
+msgstr "Nabava"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_product_product
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
+msgid "Product Alert Time"
+msgstr "Vrijeme alarma na proizvodu"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
+msgid "Product Life Time"
+msgstr "Životni vijek proizvoda"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
+msgid "Product Removal Time"
+msgstr "Vrijeme uklanjanja proizvoda"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_product_template
+msgid "Product Template"
+msgstr "Predložak proizvoda"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_use_time
+msgid "Product Use Time"
+msgstr "Vrijeme korištenja proizvoda"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
+#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "Project"
+msgstr "Projekt"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
+msgid "Project associated to this sale"
+msgstr "Projekt povezan s ovom prodajom"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_sale_order
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
+msgid "Sales Order"
+msgstr "Prodajni nalog"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_sale_order_line
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
+msgid "Sales Order Line"
+msgstr "Stavka prodajnog naloga"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task
+#: model:ir.model.fields,field_description:sale_timesheet.field_procurement_order_task_id
+msgid "Task"
+msgstr "Zadatak"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/procurement.py:80
+#, python-format
+msgid ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgstr ""
+"Zadatak kreiran (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
+#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "Tasks"
+msgstr "Zadaci"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
+msgid "Tasks associated to this sale"
+msgstr "Zadaci povezani sa ovom prodajom"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/procurement.py:84
+#, python-format
+msgid ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+msgstr ""
+"Zadatak je kreiran iz: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+msgstr ""
+"Ovo će postaviti jedinicu mjere korištenu u projektima i zadacima.\n"
+"Ako koristite raspored povezan s projektima, ne zaboravite postaviti ispravnu jedinicu mjere na Vašim zaposlenicima."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
+msgid "Timesheet Cost"
+msgstr "Trošak kontrolnih kartica"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
+msgid "Timesheet UoM"
+msgstr "Evidencija radnog vremena UoM"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
+msgid "Timesheet activities"
+msgstr "Aktivnosti kontrolne kartice"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
+msgid "Timesheet activities associated to this sale"
+msgstr "Aktivnosti kontrolnih kartica povezanih sa prodajom"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
+#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "Timesheets"
+msgstr "Kontrolne kartice"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
+"Kada se izdaje novi serijski broj, ovo je broj dana prije nego se treba "
+"izdati upozorenje."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"Kada se izdaje novi serijski broj, ovo je broj dana prije nego roba može "
+"postati opasna i ne smije se konzumirati."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
+"Kada se izdaje novi serijski broj, ovo je broj dana prije nego se roba treba"
+" ukloniti iz zalihe."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+"Kada se izdaje novi serijski broj, to je broj dana prije početka "
+"pogoršavanja dobara, još je uvijek bezopasna."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:55
+#, python-format
+msgid ""
+"You can use only one product on timesheet within the same sale order. You "
+"should split your order to include only one contract based on time and "
+"material."
+msgstr ""
+"Možete koristiti samo jedan proizvod na kontrolnoj kartici u retku prodajnog"
+" naloga. Trebali biste podijeliti vašu narudžbu kako biste uključili samo "
+"jedan ugovor baziran na vremenu i materijalu."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:17
+#, python-format
+msgid ""
+"You cannot delete a task related to a Sale Order. You can only archive this "
+"task."
+msgstr ""
+"Ne možete obrisati zadatak vezan uz prodajni nalog. Možete samo arhivirati "
+"ovaj zadatak."

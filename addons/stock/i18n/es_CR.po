@@ -1,0 +1,1762 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-22 14:03+0000\n"
+"PO-Revision-Date: 2016-01-30 10:36+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Costa Rica) (http://www.transifex.com/odoo/odoo-9/"
+"language/es_CR/)\n"
+"Language: es_CR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_report_stock_lines_date_active
+#: model:ir.model.fields,field_description:stock.field_stock_incoterms_active
+#: model:ir.model.fields,field_description:stock.field_stock_location_active
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_active
+#: model:ir.model.fields,field_description:stock.field_stock_location_route_active
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_active
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_active
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_active
+msgid "Active"
+msgstr "Activo"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Additional Info"
+msgstr "Información adicional"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_comment
+#: model:ir.ui.view,arch_db:stock.view_location_form
+msgid "Additional Information"
+msgstr "Información adicional"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_partner_id
+msgid "Address"
+msgstr "Dirección"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "All"
+msgstr "Todos"
+
+#. module: stock
+#: selection:stock.picking,move_type:0
+msgid "All at once"
+msgstr "Todo junto"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:90
+#, python-format
+msgid "All products"
+msgstr "Todos los productos"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_stock_config_settings
+msgid "Apply"
+msgstr "Aplicar"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
+msgid "Ask New Products"
+msgstr "Solicitar nuevos productos"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_auto
+msgid "Automatic Move"
+msgstr "Movimiento automático"
+
+#. module: stock
+#: selection:stock.location.path,auto:0
+msgid "Automatic No Step Added"
+msgstr "Automático paso no añadido"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_procurement
+msgid "Automatic Procurements"
+msgstr "Abastecimientos automáticos"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_string_availability_info
+msgid "Availability"
+msgstr "Disponibilidad"
+
+#. module: stock
+#: selection:stock.move,state:0 selection:stock.picking,state:0
+msgid "Available"
+msgstr "Reservado"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_backorder_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_backorder_id
+msgid "Back Order of"
+msgstr "Albarán pendiente de"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "Back Orders"
+msgstr "Movimientos pendientes"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_barcode
+msgid "Barcode"
+msgstr "Código de barras"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_location_active
+msgid ""
+"By unchecking the active field, you may hide a location without deleting it."
+msgstr ""
+"Si el campo activo se desmarca, permite ocultar la ubicación sin eliminarla."
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_picking_calendar
+msgid "Calendar View"
+msgstr "Vista calendario"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_scrap_form_view2
+#: model:ir.ui.view,arch_db:stock.view_immediate_transfer
+#: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+#: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
+#: model:ir.ui.view,arch_db:stock.view_stock_config_settings
+#: model:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_inventory_form
+msgid "Cancel Inventory"
+msgstr "Cancelar el inventario"
+
+#. module: stock
+#: selection:stock.inventory,state:0 selection:stock.move,state:0
+#: selection:stock.picking,state:0
+msgid "Cancelled"
+msgstr "Cancelada"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_change_product_qty
+msgid "Change Product Quantity"
+msgstr "Cambiar cantidad producto"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_location_scrap_location
+#: model:ir.model.fields,help:stock.field_stock_move_scrapped
+msgid ""
+"Check this box to allow using this location to put scrapped/damaged goods."
+msgstr ""
+"Marque esta opción para permitir utilizar esta ubicación para poner "
+"mercancías desechadas/defectuosas."
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_incoterms_code
+msgid "Code"
+msgstr "Código"
+
+#. module: stock
+#: model:ir.model,name:stock.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_location_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_location_route_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_company_id
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_company_id
+#: model:ir.ui.view,arch_db:stock.quant_package_search_view
+#: model:ir.ui.view,arch_db:stock.quant_search_view
+msgid "Company"
+msgstr "Compañía"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
+msgid "Compute Stock"
+msgstr "Calcular stock"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_picking_form
+msgid "Conditions"
+msgstr "Condiciones"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_config_settings
+msgid "Configuration"
+msgstr "Configuración"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Confirmed"
+msgstr "Confirmada"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
+msgid "Consumable"
+msgstr "Consumible"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_child_ids
+msgid "Contains"
+msgstr "Contiene"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_quant_package_form
+msgid "Content"
+msgstr "Contenido"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_posx
+msgid "Corridor (X)"
+msgstr "Pasillo (X)"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_move_ids
+msgid "Created Moves"
+msgstr "Movimientos creados"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_make_procurement_create_date
+#: model:ir.model.fields,field_description:stock.field_procurement_orderpoint_compute_create_date
+#: model:ir.model.fields,field_description:stock.field_product_putaway_create_date
+#: model:ir.model.fields,field_description:stock.field_product_removal_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_incoterms_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_location_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_location_route_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_picking_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "Creation"
+msgstr "Creación"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_picking_date
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot_create_date
+#: model:ir.model.fields,field_description:stock.field_stock_quant_create_date
+msgid "Creation Date"
+msgstr "Fecha creación"
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:103
+#: model:ir.ui.view,arch_db:stock.view_location_search
+#, python-format
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_customer
+#: selection:stock.location,usage:0
+msgid "Customer Location"
+msgstr "Ubicación del cliente"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_customers
+#: selection:stock.picking.type,code:0
+msgid "Customers"
+msgstr "Clientes"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_report_stock_forecast_date
+#: model:ir.model.fields,field_description:stock.field_stock_move_date
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_date
+#: model:ir.ui.view,arch_db:stock.stock_move_tree
+msgid "Date"
+msgstr "Fecha"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_move_tree
+msgid "Date Expected"
+msgstr "Fecha prevista"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_stock_lines_date_tree
+msgid "Dates of Inventories"
+msgstr "Fechas de inventarios"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_location_path_form
+#: model:ir.ui.view,arch_db:stock.view_procurement_rule_form_stock_inherit
+msgid "Delay"
+msgstr "Retraso"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_delay
+msgid "Delay (days)"
+msgstr "Retraso (días)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:348
+#, python-format
+msgid "Delivered Qty"
+msgstr "Ctdad enviada"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product_delivery_count
+#: model:ir.ui.view,arch_db:stock.product_kanban_stock_view
+msgid "Delivery"
+msgstr "Entrega"
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:206
+#: model:stock.picking.type,name:stock.chi_picking_type_out
+#: model:stock.picking.type,name:stock.picking_type_out
+#, python-format
+msgid "Delivery Orders"
+msgstr "Órdenes de entrega"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_name
+msgid "Description"
+msgstr "Descripción"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_form
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "Destination"
+msgstr "Destino"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_partner_id
+msgid "Destination Address "
+msgstr "Dirección de destino "
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_location_dest_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_location_dest_id
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_location_dest_id
+msgid "Destination Location"
+msgstr "Ubicación destino"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_procurement_order_move_dest_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_move_dest_id
+msgid "Destination Move"
+msgstr "Movimiento destino"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_location_path_form
+msgid "Details"
+msgstr "Detalles"
+
+#. module: stock
+#: model:stock.location,name:stock.location_dispatch_zone
+msgid "Dispatch Zone"
+msgstr "Zona de expedición"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_is_done
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_qty
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_qty_done
+#: model:ir.ui.view,arch_db:stock.stock_scrap_form_view2
+#: model:ir.ui.view,arch_db:stock.view_move_search
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+#: selection:stock.move,state:0 selection:stock.picking,state:0
+#: selection:stock.scrap,state:0
+msgid "Done"
+msgstr "Realizado"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+#: selection:stock.inventory,state:0 selection:stock.picking,state:0
+#: selection:stock.scrap,state:0
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Draft Moves"
+msgstr "Movimientos borrador"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_7
+msgid "European Customers"
+msgstr "Clientes europeos"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_date_expected
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_date_expected
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Expected Date"
+msgstr "Fecha prevista"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.quant_search_view
+msgid "Filters"
+msgstr "Filtros"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Force Availability"
+msgstr "Forzar disponibilidad"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_from_loc
+msgid "From"
+msgstr "De"
+
+#. module: stock
+#: code:addons/stock/models/product.py:346
+#, python-format
+msgid "Future Deliveries"
+msgstr "Entregas futuras"
+
+#. module: stock
+#: code:addons/stock/models/product.py:351
+#, python-format
+msgid "Future P&L"
+msgstr "P&L futuras"
+
+#. module: stock
+#: code:addons/stock/models/product.py:361
+#, python-format
+msgid "Future Productions"
+msgstr "Producciones futuras"
+
+#. module: stock
+#: code:addons/stock/models/product.py:356
+#, python-format
+msgid "Future Qty"
+msgstr "Ctdad futura"
+
+#. module: stock
+#: model:stock.location,name:stock.location_gate_a
+msgid "Gate A"
+msgstr "Puerta A"
+
+#. module: stock
+#: model:stock.location,name:stock.location_gate_b
+msgid "Gate B"
+msgstr "Puerta B"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_location_path_filter
+msgid "Global"
+msgstr "Global"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
+msgid "Graph"
+msgstr "Gráfico"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.search_product_lot_filter
+#: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
+#: model:ir.ui.view,arch_db:stock.view_inventory_filter
+#: model:ir.ui.view,arch_db:stock.view_move_search
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+#: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
+#: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.quant_package_search_view
+#: model:ir.ui.view,arch_db:stock.quant_search_view
+msgid "Group by..."
+msgstr "Agrupar por..."
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_posz
+msgid "Height (Z)"
+msgstr "Altura (Z)"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_stock_quant_form
+msgid "History"
+msgstr "Historial"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_make_procurement_id
+#: model:ir.model.fields,field_description:stock.field_procurement_orderpoint_compute_id
+#: model:ir.model.fields,field_description:stock.field_product_putaway_id
+#: model:ir.model.fields,field_description:stock.field_product_removal_id
+#: model:ir.model.fields,field_description:stock.field_report_stock_forecast_id
+#: model:ir.model.fields,field_description:stock.field_report_stock_lines_date_id
+#: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_id
+#: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_id
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_id
+#: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_id
+#: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_id
+#: model:ir.model.fields,field_description:stock.field_stock_incoterms_id
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_id
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_id
+#: model:ir.model.fields,field_description:stock.field_stock_location_id
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_id
+#: model:ir.model.fields,field_description:stock.field_stock_location_route_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_id
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_id
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8295
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_id
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_id
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_change_product_qty.py:96
+#, python-format
+msgid "INV: %s"
+msgstr "INV: %s"
+
+#. module: stock
+#: model:product.product,name:stock.product_icecream
+#: model:product.template,name:stock.product_icecream_product_template
+#: model:stock.inventory.line,product_name:stock.stock_inventory_line_icecream_lot0
+#: model:stock.inventory.line,product_name:stock.stock_inventory_line_icecream_lot1
+msgid "Ice Cream"
+msgstr "Helado"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move_propagate
+msgid "If checked, when this move is cancelled, cancel the linked move too"
+msgstr ""
+"Si está marcado, cuando este movimiento se cancela, también cancela el "
+"movimiento relacionado."
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"orderpoint without removing it."
+msgstr ""
+"Si el campo activo se desmarca, permite ocultar la regla de stock mínimo sin "
+"eliminarla."
+
+#. module: stock
+#: selection:stock.inventory,state:0
+msgid "In Progress"
+msgstr "En progreso"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
+#: model:ir.model.fields,field_description:stock.field_product_template_incoming_qty
+msgid "Incoming"
+msgstr "Entrada"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_steps
+msgid "Incoming Shipments"
+msgstr "Envíos entrantes"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_incoterms_tree
+#: model:ir.model,name:stock.model_stock_incoterms
+#: model:ir.ui.menu,name:stock.menu_action_incoterm_open
+#: model:ir.ui.view,arch_db:stock.stock_incoterms_form
+#: model:ir.ui.view,arch_db:stock.stock_incoterms_view_search
+#: model:ir.ui.view,arch_db:stock.view_incoterms_tree
+msgid "Incoterms"
+msgstr "Incoterms"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_location_search
+#: selection:stock.picking.type,code:0
+msgid "Internal"
+msgstr "Interno"
+
+#. module: stock
+#: selection:stock.location,usage:0
+msgid "Internal Location"
+msgstr "Ubicación interna"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.quant_search_view
+#: model:ir.ui.view,arch_db:stock.view_location_search
+msgid "Internal Locations"
+msgstr "Ubicaciones Internas"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot_ref
+msgid "Internal Reference"
+msgstr "Referencia interna"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_int_type_id
+msgid "Internal Type"
+msgstr "Tipo interno"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_ids
+msgid "Inventories"
+msgstr "Inventarios"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.stock_picking_type_action
+#: model:ir.actions.report.xml,name:stock.action_report_inventory
+#: model:ir.model,name:stock.model_stock_inventory
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_inventory_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_inventory_id
+#: model:ir.ui.menu,name:stock.menu_stock_root
+#: model:ir.ui.view,arch_db:stock.view_stock_quant_pivot
+#: model:ir.ui.view,arch_db:stock.view_template_property_form
+msgid "Inventory"
+msgstr "Inventario"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_inventory_control
+msgid "Inventory Control"
+msgstr "Control inventario"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_inventory_line
+msgid "Inventory Line"
+msgstr "Línea inventario"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
+#: model:ir.model.fields,field_description:stock.field_product_template_property_stock_inventory
+msgid "Inventory Location"
+msgstr "Ubicación de inventario"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_name
+#: model:ir.ui.view,arch_db:stock.view_inventory_filter
+msgid "Inventory Reference"
+msgstr "Referencia inventario"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.quantsact
+#: model:ir.ui.menu,name:stock.menu_quants
+#: model:ir.ui.view,arch_db:stock.quant_search_view
+#: model:ir.ui.view,arch_db:stock.view_stock_quant_form
+#: model:ir.ui.view,arch_db:stock.view_stock_quant_graph_value
+#: model:ir.ui.view,arch_db:stock.view_stock_quant_tree
+msgid "Inventory Valuation"
+msgstr "Valoración inventario"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move_product_packaging
+msgid ""
+"It specifies attributes of packaging like type, quantity of packaging,etc."
+msgstr ""
+"Indica los atributos del empaquetado como el tipo, la cantidad de paquetes, "
+"etc."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:64
+#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+#, python-format
+msgid "Late"
+msgstr "Retrasado"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_parent_left
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_parent_left
+msgid "Left Parent"
+msgstr "Padre izquierdo"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_location_form
+msgid "Localization"
+msgstr "Localización"
+
+#. module: stock
+#: code:addons/stock/models/barcode.py:12
+#: model:ir.model.fields,field_description:stock.field_product_product_location_id
+#: model:ir.model.fields,field_description:stock.field_product_template_location_id
+#: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_location_id
+#: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_fixed_location_id
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_location_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant_location_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_location_id
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_location_id
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_location_id
+#: model:ir.ui.view,arch_db:stock.quant_package_search_view
+#: model:ir.ui.view,arch_db:stock.quant_search_view
+#: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
+#: model:ir.ui.view,arch_db:stock.view_move_search
+#: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
+#, python-format
+msgid "Location"
+msgstr "Lugar"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_location_name
+#: model:ir.model.fields,field_description:stock.field_stock_location_name
+msgid "Location Name"
+msgstr "Nombre ubicación"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_location_path_form
+#: model:ir.ui.view,arch_db:stock.stock_location_path_tree
+msgid "Location Paths"
+msgstr "Rutas de ubicaciones"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_lot_stock_id
+msgid "Location Stock"
+msgstr "Ubicación stock"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_usage
+msgid "Location Type"
+msgstr "Tipo de ubicación"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move_location_dest_id
+msgid "Location where the system will stock the finished products."
+msgstr "Ubicación donde el sistema almacenará los productos finalizados."
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_location_form
+#: model:ir.ui.menu,name:stock.menu_action_location_form
+#: model:ir.ui.view,arch_db:stock.stock_location_path_form
+#: model:ir.ui.view,arch_db:stock.view_move_picking_form
+#: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form
+#: model:ir.ui.view,arch_db:stock.view_picking_type_form
+#: model:ir.ui.view,arch_db:stock.view_warehouse
+msgid "Locations"
+msgstr "Ubicaciones"
+
+#. module: stock
+#: code:addons/stock/models/barcode.py:13
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_lot_id
+#, python-format
+msgid "Lot"
+msgstr "Lote"
+
+#. module: stock
+#: model:ir.model,name:stock.model_make_procurement
+msgid "Make Procurements"
+msgstr "Realizar abastecimientos"
+
+#. module: stock
+#: model:res.groups,name:stock.group_stock_manager
+msgid "Manager"
+msgstr "Gerente"
+
+#. module: stock
+#: selection:stock.location.path,auto:0
+msgid "Manual Operation"
+msgstr "Operación manual"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_max_date
+msgid "Max. Expected Date"
+msgstr "Fecha prevista máx."
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_putaway_method
+#: model:ir.model.fields,field_description:stock.field_product_removal_method
+msgid "Method"
+msgstr "Método"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Regla de inventario mínimo"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product_orderpoint_ids
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_calendar
+msgid "Minimum Stock Rules"
+msgstr "Reglas de stock mínimo"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
+msgid "Misc"
+msgstr "Varios"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Modify"
+msgstr "Modificar"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_move_id
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_move_id
+msgid "Move"
+msgstr "Movimiento"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move_date
+msgid ""
+"Move date: scheduled date until move is done, then date of actual move "
+"processing"
+msgstr ""
+"Fecha del movimiento: Fecha planificada hasta que el movimiento esté "
+"realizado, después fecha real en que el movimiento ha sido procesado."
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_product_stock_move_open
+#: model:ir.model.fields,field_description:stock.field_procurement_order_move_ids
+#: model:ir.model.fields,field_description:stock.field_stock_quant_history_ids
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_product_return_moves
+#: model:ir.ui.view,arch_db:stock.stock_move_tree
+#: model:ir.ui.view,arch_db:stock.view_move_tree
+#: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
+#: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking_board
+msgid "Moves"
+msgstr "Movimientos"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_putaway_name
+#: model:ir.model.fields,field_description:stock.field_product_removal_name
+#: model:ir.model.fields,field_description:stock.field_stock_incoterms_name
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: stock
+#: code:addons/stock/models/stock_scrap.py:19
+#: code:addons/stock/models/stock_scrap.py:63
+#: code:addons/stock/models/stock_scrap.py:64 selection:stock.move,state:0
+#, python-format
+msgid "New"
+msgstr "Nuevo"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_8
+msgid "Non European Customers"
+msgstr "Clientes no europeos"
+
+#. module: stock
+#: selection:stock.move,priority:0 selection:stock.picking,priority:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: stock
+#: selection:stock.move,priority:0 selection:stock.picking,priority:0
+msgid "Not urgent"
+msgstr "No urgente"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_note
+#: model:ir.model.fields,field_description:stock.field_stock_picking_note
+#: model:ir.ui.view,arch_db:stock.view_inventory_form
+msgid "Notes"
+msgstr "Notas"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_procurement_rule_delay
+msgid "Number of Days"
+msgstr "Número de Días"
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:68
+#, python-format
+msgid "OK"
+msgstr "Aceptar"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_operation_id
+msgid "Operation"
+msgstr "Operación"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_name
+msgid "Operation Name"
+msgstr "Nombre operación"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Operations"
+msgstr "Operaciones"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move_partner_id
+msgid ""
+"Optional address where goods are to be delivered, specifically used for "
+"allotment"
+msgstr ""
+"Dirección opcional cuando las mercancías deben ser entregadas, utilizado "
+"específicamente para lotes."
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_location_posx
+#: model:ir.model.fields,help:stock.field_stock_location_posy
+#: model:ir.model.fields,help:stock.field_stock_location_posz
+msgid "Optional localization details, for information purpose only"
+msgstr "Detalles de ubicación opcionales, sólo para fines de información."
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move_move_dest_id
+msgid "Optional: next stock move when chaining them"
+msgstr "Opcional: Siguiente movimiento de stock cuando se encadenan."
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Order Date"
+msgstr "Fecha orden"
+
+#. module: stock
+#: model:stock.location,name:stock.location_order
+msgid "Order Processing"
+msgstr "Procesando pedido"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "Orders processed Today or planned for Today"
+msgstr "Hoy en día los pedidos procesados ​​o previstas para hoy"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_form
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Origin"
+msgstr "Origen"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product_outgoing_qty
+#: model:ir.model.fields,field_description:stock.field_product_template_outgoing_qty
+msgid "Outgoing"
+msgstr "Salida"
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:95
+#: model:stock.location,name:stock.stock_location_output
+#, python-format
+msgid "Output"
+msgstr "Salida"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_partner_id
+#: model:ir.model.fields,field_description:stock.field_stock_location_partner_id
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_owner_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_owner_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant_owner_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_owner_id
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_owner_id
+#: model:ir.ui.view,arch_db:stock.quant_search_view
+msgid "Owner"
+msgstr "Propietario"
+
+#. module: stock
+#: code:addons/stock/models/product.py:353
+#, python-format
+msgid "P&L Qty"
+msgstr "Ctdad P&L"
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:213
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_package_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_pack_ids
+#, python-format
+msgid "Pack"
+msgstr "Paquete"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.quant_package_search_view
+msgid "Packaging"
+msgstr "Empaquetado"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
+msgid "Parameters"
+msgstr "Parámetros"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_location_id
+#: model:ir.ui.view,arch_db:stock.view_location_search
+msgid "Parent Location"
+msgstr "Ubicación padre"
+
+#. module: stock
+#: selection:stock.picking,move_type:0
+msgid "Partial"
+msgstr "Parcial"
+
+#. module: stock
+#: model:ir.model,name:stock.model_res_partner
+#: model:ir.model.fields,field_description:stock.field_procurement_group_partner_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_partner_id
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_procurement_rule_partner_address_id
+msgid "Partner Address"
+msgstr "Dirección empresa"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_locations_partner
+msgid "Partner Locations"
+msgstr "Ubicaciones de empresas"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_locations
+msgid "Physical Locations"
+msgstr "Ubicaciones físicas"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_picking_id
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "Picking"
+msgstr "Albarán"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Picking List"
+msgstr "Albarán"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.vpicktree
+msgid "Picking list"
+msgstr "Albarán"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Pickings already processed"
+msgstr "Ganancias ya procesadas"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_make_procurement_date_planned
+msgid "Planned Date"
+msgstr "Fecha planificada"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_printed
+msgid "Printed"
+msgstr "Impreso"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_sequence
+#: model:ir.model.fields,field_description:stock.field_stock_move_priority
+#: model:ir.model.fields,field_description:stock.field_stock_picking_priority
+msgid "Priority"
+msgstr "Prioridad"
+
+#. module: stock
+#: model:ir.model,name:stock.model_procurement_order
+#: model:ir.model.fields,field_description:stock.field_stock_move_procurement_id
+#: selection:stock.location,usage:0
+msgid "Procurement"
+msgstr "Abastecimiento"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_procurement_action
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Procurement Exceptions"
+msgstr "Excepciones abastecimiento"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_procurement_order_location_id
+#: model:ir.model.fields,field_description:stock.field_procurement_rule_location_id
+#: model:ir.model.fields,field_description:stock.field_product_product_property_stock_procurement
+#: model:ir.model.fields,field_description:stock.field_product_template_property_stock_procurement
+msgid "Procurement Location"
+msgstr "Ubicación de abastecimiento"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_make_procurement
+#: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
+#: model:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
+#: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
+#: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
+msgid "Procurement Request"
+msgstr "Solicitud de abastecimiento"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.do_view_procurement_op
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_procurement_jit
+#: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
+#: model:stock.location,name:stock.location_procurement
+msgid "Procurements"
+msgstr "Abastecimientos"
+
+#. module: stock
+#: code:addons/stock/models/product.py:363
+#, python-format
+msgid "Produced Qty"
+msgstr "Ctdad producida"
+
+#. module: stock
+#: model:ir.model,name:stock.model_product_product
+#: model:ir.model.fields,field_description:stock.field_make_procurement_product_id
+#: model:ir.model.fields,field_description:stock.field_report_stock_forecast_product_id
+#: model:ir.model.fields,field_description:stock.field_report_stock_lines_date_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_id
+#: model:ir.ui.view,arch_db:stock.quant_search_view
+#: model:ir.ui.view,arch_db:stock.report_lot_barcode
+#: model:ir.ui.view,arch_db:stock.report_package_barcode
+#: model:ir.ui.view,arch_db:stock.search_product_lot_filter
+#: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "Product"
+msgstr "Producto"
+
+#. module: stock
+#: code:addons/stock/models/stock_location.py:152
+#: model:ir.model.fields,field_description:stock.field_stock_location_route_categ_ids
+#: model:ir.ui.menu,name:stock.menu_product_category_config_stock
+#: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
+#, python-format
+msgid "Product Categories"
+msgstr "Categorías de producto"
+
+#. module: stock
+#: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_category_id
+msgid "Product Category"
+msgstr "Categoría de producto"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.search_product_lot_filter
+msgid "Product Lots Filter"
+msgstr "Filtro lotes de producto"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_name
+msgid "Product Name"
+msgstr "Nombre producto"
+
+#. module: stock
+#: model:ir.model,name:stock.model_product_template
+#: model:ir.model.fields,field_description:stock.field_report_stock_forecast_product_tmpl_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_product_tmpl_id
+msgid "Product Template"
+msgstr "Plantilla de producto"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_uom
+msgid "Product Unit of Measure"
+msgstr "Unidad de medida del producto"
+
+#. module: stock
+#: model:stock.location,name:stock.location_production
+#: selection:stock.location,usage:0
+msgid "Production"
+msgstr "Producción"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product_property_stock_production
+#: model:ir.model.fields,field_description:stock.field_product_template_property_stock_production
+msgid "Production Location"
+msgstr "Ubicación de producción"
+
+#. module: stock
+#: code:addons/stock/models/stock_location.py:141
+#: model:ir.actions.act_window,name:stock.act_product_location_open
+#: model:ir.actions.act_window,name:stock.product_template_action_product
+#: model:ir.model.fields,field_description:stock.field_stock_location_route_product_ids
+#: model:ir.ui.menu,name:stock.menu_product_in_config_stock
+#: model:ir.ui.menu,name:stock.menu_product_variant_config_stock
+#: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
+#: model:ir.ui.view,arch_db:stock.view_location_form
+#: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form
+#: model:ir.ui.view,arch_db:stock.view_production_lot_form
+#: model:ir.ui.view,arch_db:stock.view_stock_config_settings
+#, python-format
+msgid "Products"
+msgstr "Productos"
+
+#. module: stock
+#: code:addons/stock/models/product.py:326
+#, python-format
+msgid "Products: "
+msgstr "Productos: "
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_qty_multiple
+msgid "Qty Multiple"
+msgstr "Ctdad múltiple"
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:94
+#, python-format
+msgid "Quality Control"
+msgstr "Control calidad"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_make_procurement_qty
+#: model:ir.model.fields,field_description:stock.field_report_stock_forecast_quantity
+#: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_qty
+#: model:ir.model.fields,field_description:stock.field_stock_move_product_uom_qty
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot_product_qty
+#: model:ir.model.fields,field_description:stock.field_stock_quant_qty
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_quantity
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_scrap_qty
+#: model:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product_qty_available
+#: model:ir.model.fields,field_description:stock.field_product_template_qty_available
+msgid "Quantity On Hand"
+msgstr "Cantidad Disponible"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_change_product_qty.py:78
+#, python-format
+msgid "Quantity cannot be negative."
+msgstr "Cantidad no puede ser negativa."
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model:ir.ui.view,arch_db:stock.view_move_search
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Ready"
+msgstr "Preparado"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product_reception_count
+#: model:ir.ui.view,arch_db:stock.product_kanban_stock_view
+msgid "Receipt"
+msgstr "Recibo"
+
+#. module: stock
+#: code:addons/stock/models/product.py:340
+#, python-format
+msgid "Received Qty"
+msgstr "Ctdad recibida"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_name
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_name
+#: model:ir.ui.view,arch_db:stock.view_move_search
+#: model:ir.ui.view,arch_db:stock.view_move_tree
+#: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
+#: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking_board
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_warehouse_report
+msgid "Reports"
+msgstr "Informes"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Reserve"
+msgstr "Reservar"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+#: model:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return"
+msgstr "Devolver"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Devolver albarán"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_parent_right
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_parent_right
+msgid "Right Parent"
+msgstr "Padre derecho"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
+msgid "Rules"
+msgstr "Reglas"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
+#: model:ir.ui.view,arch_db:stock.view_pack_operation_lot_form
+msgid "Save"
+msgstr "Guardar"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_min_date
+msgid "Scheduled Date"
+msgstr "Fecha prevista"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move_date_expected
+msgid "Scheduled date for the processing of this move"
+msgstr "Fecha planificada para el procesado de este movimiento."
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_sched
+msgid "Schedulers"
+msgstr "Planificaciones"
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:1015
+#: model:ir.actions.act_window,name:stock.action_stock_scrap
+#: model:ir.ui.menu,name:stock.menu_stock_scrap
+#: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
+#: model:ir.ui.view,arch_db:stock.stock_scrap_form_view2
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+#, python-format
+msgid "Scrap"
+msgstr "Desecho"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_scrap_location_id
+#: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
+msgid "Scrap Location"
+msgstr "Ubicación desecho"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_move_id
+msgid "Scrap Move"
+msgstr "Movimiento desecho"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_scrapped
+#: model:stock.location,name:stock.stock_location_scrapped
+msgid "Scrapped"
+msgstr "Desechado"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_inventory_filter
+msgid "Search Inventory"
+msgstr "Buscar inventario"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_sequence
+#: model:ir.model.fields,field_description:stock.field_stock_location_route_sequence
+#: model:ir.model.fields,field_description:stock.field_stock_move_sequence
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_sequence
+#: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_inventory_form
+msgid "Set to Draft"
+msgstr "Cambiar a borrador"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move_location_id
+msgid ""
+"Sets a location if you produce at a fixed location. This can be a partner "
+"location if you subcontract the manufacturing operations."
+msgstr ""
+"Indica una ubicación si se producen en una ubicación fija. Puede ser una "
+"ubicación de empresa si subcontrata las operaciones de fabricación."
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_general_settings
+#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "Settings"
+msgstr "Configuración"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_components
+msgid "Shelf 1"
+msgstr "Estante 1"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_14
+msgid "Shelf 2"
+msgstr "Estante 2"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_posy
+msgid "Shelves (Y)"
+msgstr "Estantería (Y)"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "Source"
+msgstr "Texto original"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_origin
+#: model:ir.model.fields,field_description:stock.field_stock_picking_origin
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_origin
+msgid "Source Document"
+msgstr "Documento origen"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_procurement_rule_location_src_id
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_location_from_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_location_id
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_location_id
+msgid "Source Location"
+msgstr "Ubicación origen"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
+msgid "Split"
+msgstr "Dividir"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line_state
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_state
+#: model:ir.model.fields,field_description:stock.field_stock_move_state
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_state
+#: model:ir.model.fields,field_description:stock.field_stock_picking_state
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_state
+#: model:ir.ui.view,arch_db:stock.view_inventory_filter
+#: model:ir.ui.view,arch_db:stock.view_move_search
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Status"
+msgstr "Estado"
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:92
+#: model:stock.location,name:stock.stock_location_shop0
+#: model:stock.location,name:stock.stock_location_stock
+#, python-format
+msgid "Stock"
+msgstr "Stock"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_inventory
+msgid "Stock Inventory"
+msgstr "Inventario stock"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree
+msgid "Stock Inventory Lines"
+msgstr "Líneas regularización de inventario"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_product
+#: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_template
+msgid "Stock Level Forecast"
+msgstr "Previsión nivel de stock"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_location_form
+#: model:ir.ui.view,arch_db:stock.view_location_tree2
+msgid "Stock Location"
+msgstr "Ubicación de stock"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_location_search
+msgid "Stock Locations"
+msgstr "Ubicaciones stock"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento stock"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.stock_move_action
+#: model:ir.model.fields,field_description:stock.field_stock_picking_move_lines
+#: model:ir.ui.menu,name:stock.stock_move_menu
+#: model:ir.ui.view,arch_db:stock.view_inventory_form
+#: model:ir.ui.view,arch_db:stock.view_move_form
+#: model:ir.ui.view,arch_db:stock.view_move_picking_form
+#: model:ir.ui.view,arch_db:stock.view_move_picking_tree
+#: model:ir.ui.view,arch_db:stock.view_move_search
+#: model:ir.ui.view,arch_db:stock.view_production_lot_form
+msgid "Stock Moves"
+msgstr "Movimientos de stock"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_picking_id
+msgid "Stock Picking"
+msgstr "Albarán de stock"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "Stock moves that are Available (Ready to process)"
+msgstr "Se mueve de archivo que están disponibles (listo para procesar)"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "Stock moves that have been processed"
+msgstr "Movimientos de stock que se han procesado"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
+msgid "Stockable"
+msgstr "Almacenable"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
+#: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_product_tmpl_id
+msgid "Template"
+msgstr "Plantilla"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_res_partner_property_stock_customer
+msgid ""
+"This stock location will be used, instead of the default one, as the "
+"destination location for goods you send to this partner"
+msgstr ""
+"Esta ubicación de stock será utilizada, en lugar de la ubicación por "
+"defecto, como la ubicación de destino para enviar mercancías a esta empresa"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_res_partner_property_stock_supplier
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for goods you receive from the current partner"
+msgstr ""
+"Esta ubicación de stock será utilizada, en lugar de la ubicación por "
+"defecto, como la ubicación de origen para recibir mercancías desde esta "
+"empresa"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_to_loc
+msgid "To"
+msgstr "A"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree_ready
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_qty_todo
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_product_qty
+#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "To Do"
+msgstr "Para ejecutar"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_search
+msgid "Today"
+msgstr "Hoy"
+
+#. module: stock
+#: code:addons/stock/models/stock_production_lot.py:42
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+#: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
+#: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
+#: model:ir.ui.view,arch_db:stock.view_production_lot_form
+#: model:ir.ui.view,arch_db:stock.view_stock_config_settings
+#, python-format
+msgid "Traceability"
+msgstr "Trazabilidad"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product_tracking
+#: model:ir.model.fields,field_description:stock.field_product_template_tracking
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_tracking
+msgid "Tracking"
+msgstr "Seguimiento"
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:958
+#: model:ir.model,name:stock.model_stock_picking
+#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+#, python-format
+msgid "Transfer"
+msgstr "Transferencia"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree
+#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "Transfers"
+msgstr "Transferencias"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_picking_form
+msgid "Unit Of Measure"
+msgstr "Unidad de medida"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_price_unit
+msgid "Unit Price"
+msgstr "Precio unidad"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_make_procurement_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_product_uom
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_product_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot_product_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_quant_product_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_scrap_product_uom_id
+#: model:ir.ui.view,arch_db:stock.stock_move_tree
+#: model:ir.ui.view,arch_db:stock.view_inventory_form
+#: model:ir.ui.view,arch_db:stock.view_move_picking_tree
+#: model:ir.ui.view,arch_db:stock.view_move_tree
+#: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
+#: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking_board
+msgid "Unit of Measure"
+msgstr "Unidad de medida"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_uom
+#: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
+#: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Units of Measure"
+msgstr "Unidades de medida"
+
+#. module: stock
+#: code:addons/stock/models/product.py:358
+#, python-format
+msgid "Unplanned Qty"
+msgstr "Ctdad no planificada"
+
+#. module: stock
+#: selection:stock.move,priority:0 selection:stock.picking,priority:0
+msgid "Urgent"
+msgstr "Urgente"
+
+#. module: stock
+#: model:res.groups,name:stock.group_stock_user
+msgid "User"
+msgstr "Usuario"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_picking
+msgid "VAT:"
+msgstr "IVA:"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Validate"
+msgstr "Validar"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_inventory_form
+msgid "Validate Inventory"
+msgstr "Validar inventario"
+
+#. module: stock
+#: selection:stock.inventory,state:0
+msgid "Validated"
+msgstr "Validado"
+
+#. module: stock
+#: selection:stock.move,priority:0 selection:stock.picking,priority:0
+msgid "Very Urgent"
+msgstr "Muy urgente"
+
+#. module: stock
+#: selection:stock.location,usage:0
+msgid "View"
+msgstr "Vista"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_locations_virtual
+msgid "Virtual Locations"
+msgstr "Ubicaciones virtuales"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "Waiting"
+msgstr "En espera"
+
+#. module: stock
+#: selection:stock.move,state:0
+msgid "Waiting Another Move"
+msgstr "Esperando mover otro"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_warehouse
+#: model:ir.model.fields,field_description:stock.field_make_procurement_warehouse_id
+#: model:ir.model.fields,field_description:stock.field_procurement_order_warehouse_id
+#: model:ir.model.fields,field_description:stock.field_product_product_warehouse_id
+#: model:ir.model.fields,field_description:stock.field_product_template_warehouse_id
+#: model:ir.model.fields,field_description:stock.field_stock_location_path_warehouse_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_warehouse_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type_warehouse_id
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_warehouse_id
+#: model:ir.ui.view,arch_db:stock.stock_warehouse_view_search
+#: model:ir.ui.view,arch_db:stock.view_partner_stock_form
+#: model:ir.ui.view,arch_db:stock.view_warehouse
+#: model:ir.ui.view,arch_db:stock.view_warehouse_tree
+#: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
+msgid "Warehouse"
+msgstr "Almacén"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_warehouse_config
+msgid "Warehouse Management"
+msgstr "Gestión de almacenes"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_warehouse_form
+#: model:ir.model.fields,field_description:stock.field_stock_location_route_warehouse_ids
+#: model:ir.ui.menu,name:stock.menu_action_warehouse_form
+#: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
+msgid "Warehouses"
+msgstr "Almacenes"
+
+#. module: stock
+#: code:addons/stock/models/product.py:319
+#, python-format
+msgid "Warning!"
+msgstr "¡Aviso!"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_wizard_id
+msgid "Wizard"
+msgstr "Asistente"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
+msgid ""
+"Wizard checks all the stock minimum rules and generate procurement order."
+msgstr ""
+"El asistente comprobará todas las reglas de stock mínimo y generará orden de "
+"abastecimiento."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:901
+#, python-format
+msgid "You can only delete draft moves."
+msgstr "Sólo puede eliminar movimientos borrador."
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_change_product_quantity
+#: model:ir.ui.view,arch_db:stock.view_immediate_transfer
+msgid "_Apply"
+msgstr "_Aplicar"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
+#: model:ir.ui.view,arch_db:stock.view_change_product_quantity
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_location_path_form
+#: model:ir.ui.view,arch_db:stock.view_procurement_rule_form_stock_inherit
+#: model:ir.ui.view,arch_db:stock.view_template_property_form
+msgid "days"
+msgstr "días"

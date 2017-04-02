@@ -1,0 +1,68 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_vat
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2015-09-07 16:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/"
+"language/nl_BE/)\n"
+"Language: nl_BE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr ""
+"Indien aangevinkt worden de btw-nummers van relaties gecontroleerd via de "
+"VIES-service van de EU, en niet via eenvoudige validering van de controlesom."
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:131
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+"Het btw-nummer [%s] voor relatie [%s] lijkt niet geldig. \n"
+"Noot: het verwachte formaat is %s"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:130
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
+"Het btw-nummer [%s] voor relatie [%s] raakt niet door de VIES-controle of "
+"voldoet niet aan het verwachte formaat %s."
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
+msgid "VIES VAT Check"
+msgstr "Btw-controle VIES"
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "vb. BE0477472701"

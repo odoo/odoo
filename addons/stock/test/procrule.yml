@@ -1,0 +1,44 @@
+- 
+  Create new global procurement rule from Stock -> Output
+- 
+  !record {model: procurement.rule, id: global_proc_rule}:
+    name: Stock -> output
+    action: move
+    picking_type_id: stock.picking_type_internal
+    location_src_id: stock.stock_location_stock
+    location_id: stock.stock_location_output 
+- 
+  Create Delivery Order from Output -> Customer 
+- 
+  !record {model: stock.picking, id: pick_output}:
+    name: Delivery order for procurement
+    partner_id: base.res_partner_2
+    picking_type_id: stock.picking_type_out
+    location_id: stock.stock_location_output
+    location_dest_id: stock.stock_location_customers
+    move_lines:
+        - product_id: product.product_product_3
+          product_uom_qty: 10.00
+          procure_method: make_to_order
+- 
+  Confirm delivery order.
+- 
+  !python {model: stock.picking, id: pick_output}: |
+    self.action_confirm()
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order, id: False}: |
+    self.run_scheduler()
+- 
+  Check a picking was created from stock to output.
+- 
+  !python {model: stock.move, id: False}: |
+    picking = self.env["stock.picking"].browse(ref("pick_output"))
+    moves = self.search([
+      ('product_id', '=', ref('product.product_product_3')),
+      ('location_id', '=', ref('stock.stock_location_stock')),
+      ('location_dest_id', '=', ref('stock.stock_location_output')),
+      ('move_dest_id', '=', picking.move_lines[0].id)
+    ])
+    assert len(moves.ids) == 1, "It should have created a picking from Stock to Output with the original picking as destination"

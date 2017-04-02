@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_hr_expense_user,hr.expense.user,model_hr_expense,hr_expense.group_hr_expense_user,1,1,1,1
+access_hr_expense_employee,hr.expense.employee,model_hr_expense,base.group_user,1,1,1,1
+access_hr_expense_sheet_user,hr.expense.sheet.user,model_hr_expense_sheet,hr_expense.group_hr_expense_user,1,1,1,1
+access_hr_expense_sheet_employee,hr.expense.sheet.employee,model_hr_expense_sheet,base.group_user,1,1,1,1
+access_product_product_hr_expense_user,product.product.hr.expense.user,product.model_product_product,hr_expense.group_hr_expense_user,1,1,1,1
+access_product_template_hr_expense_user,product.template.hr.expense.user,product.model_product_template,hr_expense.group_hr_expense_user,1,1,1,1
+access_product_uom_hr_expense_user,product.uom.hr.expense.user,product.model_product_uom,hr_expense.group_hr_expense_user,1,1,1,1
+access_account_journal_user,account.journal.user,account.model_account_journal,hr_expense.group_hr_expense_user,1,1,1,1
+access_account_journal_employee,account.journal.employee,account.model_account_journal,base.group_user,1,0,0,0
+access_account_invoice_user,account.invoice.user,account.model_account_invoice,hr_expense.group_hr_expense_user,1,1,1,1
+access_account_invoice_line_user,account.invoice.line.user,account.model_account_invoice_line,hr_expense.group_hr_expense_user,1,1,1,1
+access_account_invoice_tax_user,account.invoice.tax.user,account.model_account_invoice_tax,hr_expense.group_hr_expense_user,1,0,0,0
+access_account_move_user,account.move.user,account.model_account_move,hr_expense.group_hr_expense_user,1,0,0,0
+access_account_move_line_user,account.move.line.user,account.model_account_move_line,hr_expense.group_hr_expense_user,1,0,0,0
+access_account_analytic_line_user,account.analytic.line.user,account.model_account_analytic_line,hr_expense.group_hr_expense_user,1,1,1,1

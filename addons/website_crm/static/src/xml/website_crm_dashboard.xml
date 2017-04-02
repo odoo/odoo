@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="website_crm.dashboard_leads">
+        <div t-if="widget.dashboards_data.leads" class="row o_dashboard_leads">
+            <div class="col-xs-12 o_box">
+                <div class="col-md-6 col-xs-12">
+                    <h2>Leads Acquisition / <t t-esc="widget.date_range"></t></h2>
+                    <div id="o_graph_leads" class="o_graph" data-type="leads"/>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <h4>Leads Analysis</h4>
+                    <div t-if="!widget.leads_table || !widget.leads_table.length">
+                        <i>There is no recent lead.</i>
+                    </div>
+
+                    <div t-if="widget.leads_table &amp;&amp; widget.leads_table.length" class="table-responsive">
+                        <select class="js_field_selection">
+                            <option t-foreach="widget.lead_fields" t-as="field" t-att-value="field"><t t-esc="widget.lead_fields[field]"/></option>
+                        </select>
+
+                        <t t-call="website_crm.LeadsTable"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_crm.LeadsTable">
+        <table class="table table-hover js_leads_table">
+            <tr>
+                <th></th>
+                <th>Leads</th>
+                <th>% Leads</th>
+            </tr>
+            <tr t-foreach="widget.leads_table" t-as="row">
+                <td><t t-esc="row.key"/></td>
+                <td><t t-esc="row.value"/></td>
+                <td><t t-esc="row.perc"/>%</td>
+            </tr>
+        </table>
+    </t>
+</templates>

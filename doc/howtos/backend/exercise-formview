@@ -1,0 +1,29 @@
+# HG changeset patch
+# Parent 4a0db1d29257764f4df5cb1ee0be7e59e8c8d0d8
+
+Index: addons/openacademy/views/openacademy.xml
+===================================================================
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-26 17:25:54.291783456 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-26 17:25:54.283783457 +0200
+@@ -1,6 +1,21 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <odoo>
+     <data>
++        <record model="ir.ui.view" id="course_form_view">
++            <field name="name">course.form</field>
++            <field name="model">openacademy.course</field>
++            <field name="arch" type="xml">
++                <form string="Course Form">
++                    <sheet>
++                        <group>
++                            <field name="name"/>
++                            <field name="description"/>
++                        </group>
++                    </sheet>
++                </form>
++            </field>
++        </record>
++
+         <!-- window action -->
+         <!--
+             The following tag is an action definition for a "window action",

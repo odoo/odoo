@@ -1,0 +1,85 @@
+-
+  Set a product as using fifo price
+-
+  !record {model: product.product, id: product_fiforet_icecream}:
+    default_code: FIFORET
+    name: FIFO Ice Cream
+    type: product
+    standard_price: 0.0
+    categ_id: product.product_category_1
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+    cost_method: real
+    valuation: real_time
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
+    supplier_taxes_id: []
+    description: FIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
+- 
+  I create a draft Purchase Order for first in move for 10 kg at 50 euro
+- 
+  !record {model: purchase.order, id: purchase_order_fiforet1}:
+    partner_id: base.res_partner_3
+    order_line:
+      - product_id: product_fiforet_icecream
+        product_qty: 10.0
+        product_uom: product.product_uom_kgm
+        price_unit: 50.0
+        name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+- 
+  I create a draft Purchase Order for second shipment for 30 kg at 80 euro
+- 
+  !record {model: purchase.order, id: purchase_order_fiforet2}:
+    partner_id: base.res_partner_3
+    order_line:
+      - product_id: product_fiforet_icecream
+        product_qty: 30.0
+        product_uom: product.product_uom_kgm
+        price_unit: 80.0
+        name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+- 
+  I confirm the first purchase order
+-
+  !python {model: purchase.order, id: purchase_order_fiforet1}: |
+    self.button_confirm()
+- 
+  Process the reception of purchase order 1
+-
+  !python {model: purchase.order, id: purchase_order_fiforet1}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
+- 
+  Check the standard price of the product (fifo icecream)
+- 
+  !python {model: product.product, id: product_fiforet_icecream}: |
+    assert self.standard_price == 0.0, 'Standard price should not have changed!'
+- 
+  I confirm the second purchase order
+- 
+  !python {model: purchase.order, id: purchase_order_fiforet2}: |
+    self.button_confirm()
+- 
+  Process the reception of purchase order 2
+- 
+  !python {model: purchase.order, id: purchase_order_fiforet2}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
+- 
+  Return the goods of purchase order 2
+- 
+  !python {model: purchase.order, id: purchase_order_fiforet2}: |
+    picking = self.picking_ids[0]
+    return_id = self.env['stock.return.picking'].with_context(active_model='stock.picking', active_id=picking.id).create({})
+    return_picking_id, dummy = return_id.with_context(active_id=picking.id)._create_returns()
+    # Important to pass through confirmation and assignation
+    return_picking = self.env['stock.picking'].browse(return_picking_id)
+    return_picking.action_confirm()
+    return_picking.action_assign()
+    return_picking.do_transfer()
+- 
+  Check the standard price of the product changed to 80.0 as we returned the quants of purchase order 2
+- 
+  !python {model: product.product, id: product_fiforet_icecream}: |
+    assert self.standard_price == 80.0, 'Standard price should have changed to 80.0! %s found instead' % (self.standard_price,)

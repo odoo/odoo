@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Methods">
+            <xpath expr="//div[@id='info']" position="inside">
+                <h4 class="payment_method_title">Payment Method</h4>
+                <ul class="payment_method_list list-inline">
+                    <t t-foreach="request.website.payment_acquirers()" t-as="acquirer">
+                        <li>
+                            <span t-field="acquirer.image_small" t-options='{"widget": "image", "alt-field": "name"}' />
+                        </li>
+                    </t>
+                </ul>
+            </xpath>
+        </template>
+
+     <template id="assets_frontend" inherit_id="website.assets_frontend" name="Payment Frontend assets">
+       <xpath expr="." position="inside">
+
+          <link rel='stylesheet' href='/website_payment/static/src/css/website_payment.css'/>
+          <script type="text/javascript" src="/website_payment/static/src/js/payment_acquirer.js"></script>
+          <script type="text/javascript" src="/website_payment/static/lib/jquery.payment/jquery.payment.js"></script>
+          <script type="text/javascript" src="/website_payment/static/src/js/payment_transaction.js"></script>
+      </xpath>
+    </template>
+
+    <template id="pay_methods" name="Payment Methods">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Payment Methods</t>
+            <div class="wrap">
+                <div class="container">
+                  <div class="row">
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb mt8">
+                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                <li>Payment Methods</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <h1>Payment Methods</h1>
+                    <h4 t-if="acquirers">Add a new payment method:</h4>
+                    <div t-if="acquirers" class="row">
+                        <div class="col-md-6">
+                            <div t-if="error_message" class="alert alert-danger">
+                              <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
+                            </div>
+                            <div t-if='len(acquirers)>1'>
+                                <label class="control-label" for="pm_acquirer_id">Acquirer</label>
+                                <select name="pm_acquirer_id" class="form-control">
+                                    <t t-foreach="acquirers" t-as="acquirer">
+                                        <option t-att-value="acquirer.id" t-esc="acquirer.name"/>
+                                    </t>
+                                </select>
+                            </div>
+                            <t t-foreach="acquirers" t-as="acquirer">
+                                <div t-raw="acquirer.form" t-att-data-acquirer-id="acquirer.id" t-attf-class="acquirer #{'hidden' if acquirer!=acquirers[0] else ''}"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <h4>Delete a payment method:</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form method="post" action="/website_payment/delete/">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="form-group">
+                                    <select name="delete_pm_id" class="form-control" >
+                                        <t t-foreach="pms" t-as="pm">
+                                            <option t-att-value="pm.id" t-esc="pm.name"/>
+                                        </t>
+                                    </select>
+                                </div>
+                                <div class="clearfix"></div>
+                                <button class="btn btn-primary">Delete <span class="fa fa-long-arrow-right"></span></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="pay_meth_link" inherit_id="website_portal.portal_layout" customize_show="True">
+        <xpath expr="//div[@class='o_my_details']" position="inside">
+            <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)])">
+                <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment methods</a></div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="pay">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Payment</t>
+            <div class="wrap">
+                <div class="container o_website_payment">
+                    <h1>Payment</h1>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="oe_structure"></div>
+                            <div>
+                                <div class="form-horizontal row o_website_payment_new_payment" t-att-data-acquirer_id="acquirer.id" t-att-data-currency_id="currency.id" t-att-data-reference="reference" t-att-data-amount="amount">
+                                    <div class="form-group">
+                                        <label for="form_reference" class="col-sm-3 control-label">Reference</label>
+                                        <div class="col-sm-9">
+                                            <span name="form_reference" class="form-control" t-esc="reference"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_amount" class="col-sm-3 control-label">Amount</label>
+                                        <div class="col-sm-9">
+                                            <span name="form_amount" class="form-control" t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-9 col-sm-offset-3 text-muted mt16" t-raw="acquirer.pre_msg"/>
+                                    <div class="col-sm-12 o_website_payment_form" t-raw="payment_form"/>
+                                    <div class="col-sm-6 col-sm-offset-6 text-muted mt16">
+                                        <img alt="payment_provider_logo" class="pull-right ml8" t-att-src="website.image_url(acquirer, 'image_small')"/>
+                                        <span>This transaction will be processed by <t t-esc="acquirer.name"/>.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oe_structure"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="confirm">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Payment</t>
+            <div class="wrap">
+                <div class="container o_website_payment">
+                    <h1>Payment</h1>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-horizontal">
+                                <div t-attf-class="alert alert-#{status}" t-esc="message"/>
+                                <div class="form-group">
+                                    <label for="form_partner_name" class="col-sm-3 control-label">From</label>
+                                    <div class="col-sm-9">
+                                        <span name="form_partner_name" class="form-control" t-esc="tx.partner_name"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="form_reference" class="col-sm-3 control-label">Reference</label>
+                                    <div class="col-sm-9">
+                                        <span name="form_reference" class="form-control" t-esc="tx.reference"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="form_amount" class="col-sm-3 control-label">Amount</label>
+                                    <div class="col-sm-9">
+                                        <span name="form_amount" class="form-control" t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <a t-attf-class="btn btn-#{status} pull-right" href="/my/home"><i class="fa fa-arrow-circle-right"/> Back to My Account</a>
+                                </div>
+                                <div class="col-sm-6 col-sm-offset-6 text-muted mt16">
+                                    <img alt="payment_provider_logo" class="pull-right ml8" t-att-src="website.image_url(tx.acquirer_id, 'image_small')"/>
+                                    <span>Payment processed by <t t-esc="tx.acquirer_id.name"/>.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    </data>
+</odoo>

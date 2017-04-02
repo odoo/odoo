@@ -1,0 +1,298 @@
+<odoo>
+    <!-- Goal views -->
+    <record id="goal_list_action" model="ir.actions.act_window">
+        <field name="name">Goals</field>
+        <field name="res_model">gamification.goal</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_definition': True}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a goal.
+            </p>
+            <p>
+                A goal is defined by a user and a goal definition.
+                Goals can be created automatically by using challenges.
+            </p>
+        </field>
+    </record>
+
+    <record id="goal_list_view" model="ir.ui.view">
+        <field name="name">Goal List</field>
+        <field name="model">gamification.goal</field>
+        <field name="arch" type="xml">
+            <tree string="Goal List" decoration-danger="state == 'failed'" decoration-success="state == 'reached'" decoration-muted="state == 'canceled'" create="false">
+                <field name="definition_id" invisible="1" />
+                <field name="user_id" invisible="1" />
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="current"/>
+                <field name="target_goal"/>
+                <field name="completeness" widget="progressbar"/>
+                <field name="state" invisible="1"/>
+                <field name="line_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="goal_form_view" model="ir.ui.view">
+        <field name="name">Goal Form</field>
+        <field name="model">gamification.goal</field>
+        <field name="arch" type="xml">
+            <form string="Goal" create="false">
+                <header>
+                    <button string="Start goal" type="object" name="action_start" states="draft" class="oe_highlight"/>
+
+                    <button string="Goal Reached" type="object" name="action_reach" states="inprogress" />
+                    <button string="Goal Failed" type="object" name="action_fail" states="inprogress"/>
+                    <button string="Reset Completion" type="object" name="action_cancel" states="failed,reached" groups="base.group_no_one" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,inprogress,reached" />
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Reference">
+                            <field name="definition_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="challenge_id" />
+                        </group>
+                        <group string="Schedule">
+                            <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="end_date" />
+                            <field name="computation_mode" invisible="1"/>
+
+                            <label for="remind_update_delay" attrs="{'invisible':[('computation_mode','!=', 'manually')]}"/>
+                            <div attrs="{'invisible':[('computation_mode','!=', 'manually')]}">
+                                <field name="remind_update_delay" class="oe_inline"/>
+                                days
+                            </div>
+                            <field name="last_update" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Data" colspan="4">
+                            <label for="target_goal" />
+                            <div>
+                                <field name="target_goal" attrs="{'readonly':[('state','!=','draft')]}" class="oe_inline"/>
+                                <field name="definition_suffix" class="oe_inline"/>
+                            </div>
+                            <label for="current" />
+                            <div>
+                                <field name="current" class="oe_inline"/>
+                                <button string="refresh" type="object" name="update_goal" class="oe_link" attrs="{'invisible':['|',('computation_mode', '=', 'manually'),('state', '=', 'draft')]}" />
+                                <div class="oe_grey" attrs="{'invisible':[('definition_id', '=', False)]}">
+                                    Reached when current value is <strong><field name="definition_condition" class="oe_inline"/></strong> than the target.
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="goal_search_view" model="ir.ui.view">
+        <field name="name">Goal Search</field>
+        <field name="model">gamification.goal</field>
+        <field name="arch" type="xml">
+            <search string="Search Goals">
+                <filter name="my" string="My Goals" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="inprogress" string="Running"
+                    domain="[
+                        '|',
+                            ('state', '=', 'inprogress'),
+                            '&amp;',
+                                ('state', 'in', ('done', 'failed')),
+                                ('end_date', '>=', context_today().strftime('%%Y-%%m-%%d'))
+                    ]"/>
+                <filter name="closed" string="Done"
+                    domain="[
+                        ('state', 'in', ('reached', 'failed')),
+                        '|',
+                            ('end_date', '=', False),
+                            ('end_date', '&lt;', context_today().strftime('%%Y-%%m-%%d'))
+                    ]"/>
+                <separator/>
+
+                <field name="user_id"/>
+                <field name="definition_id"/>
+                <field name="challenge_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_user" string="User" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter name="group_by_definition" string="Goal Definition" domain="[]" context="{'group_by':'definition_id'}"/>
+                    <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="End Date" domain="[]" context="{'group_by':'end_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="goal_kanban_view" model="ir.ui.view" >
+        <field name="name">Goal Kanban View</field>
+        <field name="model">gamification.goal</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey">
+                <field name="definition_id"/>
+                <field name="user_id"/>
+                <field name="current"/>
+                <field name="completeness"/>
+                <field name="state"/>
+                <field name="target_goal"/>
+                <field name="definition_condition"/>
+                <field name="definition_suffix"/>
+                <field name="definition_display"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="last_update"/>
+                <templates>
+                    <t t-name="kanban-tooltip">
+                       <field name="definition_description"/>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card o_kanban_gamification #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
+                            <div class="o_kanban_content">
+                                <p><strong><h4 class="oe_goal_name text-center" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
+                                <div class="pull-left">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
+                                </div>
+                                <field name="user_id" />
+                                <div class="o_goal_state_block">
+                                    <t t-if="record.definition_display.raw_value == 'boolean'">
+                                        <div class="o_goal_state text-center">
+                                            <t t-if="record.state.raw_value=='reached'"><i class="o_green fa fa-check fa-3x" title="Goal Reached"/></t>
+                                            <t t-if="record.state.raw_value=='inprogress'"><i class="fa fa-clock-o fa-3x" title="Goal in Progress"/></t>
+                                            <t t-if="record.state.raw_value=='failed'"><i class="o_red fa fa-times fa-3x" title="Goal Failed"/></t>
+                                        </div>
+                                    </t>
+                                    <t t-if="record.definition_display.raw_value == 'progress'">
+                                        <t t-if="record.definition_condition.raw_value =='higher'">
+                                            <field name="current" widget="gauge" style="width:160px; height: 120px;" options="{'max_field': 'target_goal', 'label_field': 'definition_suffix'}" />
+                                        </t>
+                                        <t t-if="record.definition_condition.raw_value != 'higher'">
+                                            <div t-attf-class="o_goal_state #{record.current.raw_value == record.target_goal.raw_value+1 ? 'o_orange' : record.current.raw_value &gt; record.target_goal.raw_value ? 'o_red' : 'o_green'}">
+                                                <t t-esc="record.current.raw_value" />
+                                            </div>
+                                            <em>Target: less than <t t-esc="record.target_goal.raw_value" /></em>
+                                        </t>
+                                    </t>
+
+                                </div>
+                                <p class="text-center">
+                                    <t t-if="record.start_date.value">
+                                        From <t t-esc="record.start_date.value" />
+                                    </t>
+                                    <t t-if="record.end_date.value">
+                                        To <t t-esc="record.end_date.value" />
+                                    </t>
+                                </p>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- Goal definitions view -->
+
+    <record id="goal_definition_list_action" model="ir.actions.act_window">
+        <field name="name">Goal Definitions</field>
+        <field name="res_model">gamification.goal.definition</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a goal definition.
+            </p>
+            <p>
+                A goal definition is a technical model of goal defining a condition to reach.
+                The dates, values to reach or users are defined in goal instance.
+            </p>
+        </field>
+    </record>
+
+    <record id="goal_definition_list_view" model="ir.ui.view">
+        <field name="name">Goal Definitions List</field>
+        <field name="model">gamification.goal.definition</field>
+        <field name="arch" type="xml">
+            <tree string="Goal Definitions">
+                <field name="name"/>
+                <field name="computation_mode"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="goal_definition_form_view" model="ir.ui.view">
+        <field name="name">Goal Definitions Form</field>
+        <field name="model">gamification.goal.definition</field>
+        <field name="arch" type="xml">
+            <form string="Goal definitions">
+                <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <label for="description" class="oe_edit_only"/>
+                        <div>
+                            <field name="description" class="oe_inline"/>
+                        </div>
+
+                        <group string="How to compute the goal?">
+
+                            <field widget="radio" name="computation_mode"/>
+
+                            <!-- Hide the fields below if manually -->
+                            <field name="model_id" class="oe_inline"
+                                attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}"/>
+                            <field name="field_id" class="oe_inline"
+                                attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}"/>
+                            <field name="field_date_id" class="oe_inline" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}"/>
+                            <field name="domain" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
+                            <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = env['mail.followers'].search_count([('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"/>
+                            <field name="condition" widget="radio"/>
+                        </group>
+                        <group string="Optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">
+                            <field name="batch_mode" />
+                            <div colspan="4">In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain.</div>
+                            <field name="batch_distinctive_field" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}"
+                                domain="[('model_id', '=', model_id)]" class="oe_inline" />
+                            <field name="batch_user_expression" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}" class="oe_inline"
+                                placeholder="e.g. user.partner_id.id"/>
+                        </group>
+                        <group string="Formating Options">
+                            <field name="display_mode" widget="radio" />
+                            <field name="suffix" placeholder="e.g. days" class="oe_inline"/>
+                            <field name="monetary"/>
+                        </group>
+                        <group string="Clickable Goals" attrs="{'invisible': [('computation_mode', '=', 'manually')]}">
+                            <field name="action_id"  class="oe_inline"/>
+                            <field name="res_id_field"  attrs="{'invisible': [('action_id', '=', False)]}" class="oe_inline"/>
+                        </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="goal_definition_search_view" model="ir.ui.view">
+        <field name="name">Goal Definition Search</field>
+        <field name="model">gamification.goal.definition</field>
+        <field name="arch" type="xml">
+            <search string="Search Goal Definitions">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="field_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
+                    <filter string="Computation Mode" domain="[]" context="{'group_by':'computation_mode'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- menus in settings - technical feature required -->
+    <menuitem id="gamification_menu" name="Gamification Tools" parent="base.menu_administration" groups="base.group_no_one" />
+        <menuitem id="gamification_challenge_menu" parent="gamification_menu" action="challenge_list_action" sequence="0"/>
+        <menuitem id="gamification_goal_menu" parent="gamification_menu" action="goal_list_action" sequence="10"/>
+        <menuitem id="gamification_definition_menu" parent="gamification_menu" action="goal_definition_list_action" sequence="20"/>
+        <menuitem id="gamification_badge_menu" parent="gamification_menu" action="badge_list_action" sequence="30"/>
+</odoo>

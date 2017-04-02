@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- These templates are accessible in backend and frontend -->
+
+<div t-name="Dialog" class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true" t-att-id="_.uniqueId('modal_')">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted small"><t t-esc="subtitle"/></span></h4>
+            </div>
+            <div class="modal-body"/>
+            <div class="modal-footer"/>
+        </div>
+    </div>
+</div>
+
+<t t-name="WidgetButton">
+    <button type="button" t-attf-class="btn btn-sm #{widget.node.attrs.class or ''}"
+        t-att-style="widget.node.attrs.style"
+        t-att-tabindex="widget.node.attrs.tabindex"
+        t-att-autofocus="widget.node.attrs.autofocus"
+        t-att-accesskey="widget.node.attrs.accesskey">
+        <t t-if="widget.node.attrs.icon">
+            <img t-if="!widget.fa_icon" t-att-src="widget.node.attrs.icon"/>
+            <div t-if="widget.fa_icon" t-attf-class="fa fa-fw #{widget.node.attrs.icon} o_button_icon"/>
+        </t>
+        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+    </button>
+</t>
+<t t-name="WidgetLabel.tooltip">
+    <div class="oe_tooltip_string" t-if="widget.string">
+        <t t-esc="widget.node.attrs.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
+    </div>
+    <p t-if="widget.node.attrs.help or (widget.field and widget.field.help)" class="oe_tooltip_help"><t t-esc="widget.node.attrs.help || widget.field.help"/></p>
+    <ul t-if="debug" class="oe_tooltip_technical">
+        <li data-item="field" t-if="widget.name">
+            <span class="oe_tooltip_technical_title">Field:</span>
+            <t t-esc="widget.name"/>
+        </li>
+        <li data-item="object" t-if="widget.view and widget.view.fields_view">
+            <span class="oe_tooltip_technical_title">Object:</span>
+            <t t-esc="widget.view.fields_view.model"/>
+        </li>
+        <li data-item="type" t-if="widget.field">
+            <span class="oe_tooltip_technical_title">Type:</span>
+            <t t-esc="widget.field.type"/>
+        </li>
+        <li t-if="widget.node.attrs.widget" data-item="widget">
+            <span class="oe_tooltip_technical_title">Widget:</span>
+            <t t-esc="widget.node.attrs.widget"/>
+        </li>
+        <li t-if="widget.node.attrs.size || (widget.field and widget.field.size)" data-item="size">
+            <span class="oe_tooltip_technical_title">Size:</span>
+            <t t-esc="widget.node.attrs.size || widget.field.size"/>
+        </li>
+        <li t-if="widget.node.attrs.context" data-item="context">
+            <span class="oe_tooltip_technical_title">Context:</span>
+            <t t-esc="widget.node.attrs.context"/>
+        </li>
+        <li t-if="widget.node.attrs.domain" data-item="domain">
+            <span class="oe_tooltip_technical_title">Domain:</span>
+            <t t-esc="widget.node.attrs.domain"/>
+        </li>
+        <li t-if="widget.node.attrs.modifiers and widget.node.attrs.modifiers != '{}'" data-item="modifiers">
+            <span class="oe_tooltip_technical_title">Modifiers:</span>
+            <t t-esc="widget.node.attrs.modifiers"/>
+        </li>
+        <li t-if="widget.field and widget.field.change_default" data-item="change_default">
+            <span class="oe_tooltip_technical_title">Change default:</span>
+            Yes
+        </li>
+        <li t-if="widget.node.attrs.on_change" data-item="on_change">
+            <span class="oe_tooltip_technical_title">On change:</span>
+            <t t-esc="widget.node.attrs.on_change"/>
+        </li>
+        <li t-if="widget.field and widget.field.relation" data-item="relation">
+            <span class="oe_tooltip_technical_title">Relation:</span>
+            <t t-esc="widget.field.relation"/>
+        </li>
+        <li t-if="widget.field and widget.field.selection" data-item="selection">
+            <span class="oe_tooltip_technical_title">Selection:</span>
+            <ul class="oe_tooltip_technical">
+                <li t-foreach="widget.field.selection" t-as="option">
+                    [<t t-esc="option[0]"/>]
+                    <t t-if="option[1]"> - </t>
+                    <t t-esc="option[1]"/>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</t>
+<t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
+    <t t-jquery="div.oe_tooltip_string" t-operation="replace">
+        <div class="oe_tooltip_string" t-if="debug || widget.string">
+            <t t-if="debug">
+                Button
+                <t t-if="widget.string">: </t>
+                <t t-if="!widget.string"> (no string)</t>
+            </t>
+            <t t-esc="widget.string"/>
+        </div>
+    </t>
+    <t t-jquery="ul.oe_tooltip_technical" t-operation="append">
+        <li t-if="widget.node.attrs.special" data-item="special">
+            <span class="oe_tooltip_technical_title">Special:</span>
+            <t t-esc="widget.node.attrs.special"/>
+        </li>
+        <t t-set="button_type" t-value="widget.node.attrs.type"/>
+        <li t-if="button_type" data-item="button_type">
+            <span class="oe_tooltip_technical_title">Button Type:</span>
+            <t t-esc="button_type"/>
+        </li>
+        <li t-if="button_type === 'object'" data-item="button_method">
+            <span class="oe_tooltip_technical_title">Method:</span>
+            <t t-esc="widget.node.attrs.name"/>
+        </li>
+        <li t-if="button_type === 'action'" data-item="button_action">
+            <span class="oe_tooltip_technical_title">Action ID:</span>
+            <t t-esc="widget.node.attrs.name"/>
+        </li>
+    </t>
+</t>
+
+<t t-name="SwitchCompanyMenu">
+    <li class="o_switch_company_menu">
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
+            <span class="oe_topbar_name"/> <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu"/>
+    </li>
+</t>
+
+</templates>

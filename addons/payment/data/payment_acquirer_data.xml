@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <template id="default_acquirer_button">
+        <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <t t-if="return_url">
+                <input type="hidden" name="return_url" t-att-value="return_url"/>
+            </t>
+            <input type="hidden" name="reference" t-att-value="reference"/>
+            <input type="hidden" name="amount" t-att-value="amount"/>
+            <input type="hidden" name="currency" t-att-value="currency.name"/>
+            <!-- submit -->
+            <button type="submit" width="100px" t-att-class="submit_class">
+                <img t-if="not submit_txt" src="/payment_transfer/static/src/img/transfer_icon.png"/>
+                <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+            </button>
+        </form>
+    </template>
+
+    <record id="payment_acquirer_buckaroo" model="payment.acquirer">
+        <field name="name">Buckaroo</field>
+        <field name="image" type="base64" file="payment_buckaroo/static/src/img/buckaroo_icon.png"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_buckaroo"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_ogone" model="payment.acquirer">
+        <field name="name">Ingenico</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_ogone/static/src/img/ogone_icon.png"/>
+        <field name="module_id" ref="base.module_payment_ogone"/>
+        <field name="description" type="html">
+            <p>
+                Ingenico Payment Services (formerly Ogone) supports credit cards, debit cards and bank transfers.
+            </p>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>eCommerce</li>
+                <li><i class="fa fa-check"/>Cards storage</li>
+                <li><i class="fa fa-check"/>Pay button in emails</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_adyen" model="payment.acquirer">
+        <field name="name">Adyen</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_adyen/static/src/img/adyen_icon.png"/>
+        <field name="module_id" ref="base.module_payment_adyen"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards, debit cards and bank transfers.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_authorize" model="payment.acquirer">
+        <field name="name">Authorize.net</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_authorize/static/src/img/authorize_icon.png"/>
+        <field name="module_id" ref="base.module_payment_authorize"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards and e-checks.
+            </p>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>eCommerce</li>
+                <li><i class="fa fa-check"/>Cards storage</li>
+                <li><i class="fa fa-check"/>Authorize &amp; Capture</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_transfer" model="payment.acquirer">
+        <field name="name">Wire Transfer</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_transfer/static/src/img/transfer_icon.png"/>
+        <field name="module_id" ref="base.module_payment_transfer"/>
+        <field name="pending_msg">&lt;i&gt;Pending&lt;/i&gt;... The order will be validated after the payment.</field>
+        <field name="description" type="html">
+            <p>
+                Provide instructions to customers so that they can pay their orders manually.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_sips" model="payment.acquirer">
+        <field name="name">Sips</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_sips/static/src/img/sips_icon.png"/>
+        <field name="module_id" ref="base.module_payment_sips"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway from Atos Worldline to accept online payments via credit cards.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_paypal" model="payment.acquirer">
+        <field name="name">Paypal</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_paypal/static/src/img/paypal_icon.png"/>
+        <field name="module_id" ref="base.module_payment_paypal"/>
+        <field name="description" type="html">
+            <p>
+                PayPal is the easiest way to accept payments via Paypal or credit cards.
+            </p>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>eCommerce</li>
+                <li><i class="fa fa-check"/>Pay button in emails</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_stripe" model="payment.acquirer">
+        <field name="name">Stripe</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_stripe/static/src/img/stripe_icon.png"/>
+        <field name="module_id" ref="base.module_payment_stripe"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+
+    </record>
+
+    <record id="payment_acquirer_custom" model="payment.acquirer">
+        <field name="name">Custom</field>
+        <field name="auto_confirm">none</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_transfer"/>
+        <field name="description" type="html">
+            <p>
+                A generic acquirer payment acquirer.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_payu" model="payment.acquirer">
+        <field name="name">PayUmoney</field>
+        <field name="image" type="base64" file="payment_payumoney/static/src/img/payumoney_icon.png"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_payumoney"/>
+        <field name="description" type="html">
+            <p>
+                PayU India is an online payments solutions company serving the Indian market.
+            </p>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>eCommerce</li>
+                <li><i class="fa fa-check"/>Subscription</li>
+                <li><i class="fa fa-check"/>Pay button in emails</li>
+            </ul>
+        </field>
+    </record>
+
+</odoo>

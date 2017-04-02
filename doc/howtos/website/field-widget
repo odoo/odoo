@@ -1,0 +1,16 @@
+# HG changeset patch
+# Parent c3d04f578b762612422e09777e0ac5b3863d6ea6
+# Parent  0bc39fe6579c4e48b61e77bc970da2e1784f1a67
+
+diff --git a/academy/templates.xml b/academy/templates.xml
+--- a/academy/templates.xml
++++ b/academy/templates.xml
+@@ -21,7 +21,7 @@
+                 <div class="oe_structure">
+                     <div class="container">
+                         <h3 t-field="person.name"/>
+-                        <p>Last modified: <i t-field="person.write_date" t-options='{"format": "long"}'/></p>
++                        <p>Last modified: <i t-field="person.write_date" t-options='{"widget": "relative"}'/></p>
+                         <div t-field="person.biography"/>
+                     </div>
+                 </div>

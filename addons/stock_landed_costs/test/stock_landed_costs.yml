@@ -1,0 +1,109 @@
+-
+  In order to test the landed costs feature of stock, I create a landed cost, confirm it and check its account move created
+-
+  I create 2 products with different volume and gross weight and configure them for real_time valuation and real price costing method
+-
+  !record {model: product.product, id: product_landed_cost_1}:
+    name: "LC product 1"
+    cost_method: real
+    valuation: real_time
+    weight: 10
+    volume: 1 
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
+-
+  !record {model: product.product, id: product_landed_cost_2}:
+    name: "LC product 2"
+    cost_method: real
+    valuation: real_time
+    weight: 20
+    volume: 1.5
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
+-
+  I create 2 picking moving those products
+-
+  !record {model: stock.picking, id: picking_landed_cost_1}:
+    name: 'LC_pick_1'
+    picking_type_id: stock.picking_type_out
+    move_lines:
+      - name: move 1
+        product_id: product_landed_cost_1
+        product_uom_qty: 5
+        product_uom: product.product_uom_unit
+        location_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_customers
+-
+  !record {model: stock.picking, id: picking_landed_cost_2}:
+    name: 'LC_pick_2'
+    picking_type_id: stock.picking_type_out
+    move_lines:
+      - name: move 2
+        product_id: product_landed_cost_2
+        product_uom_qty: 10
+        product_uom: product.product_uom_unit
+        location_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_customers
+-
+  I create a landed cost for those 2 pickings
+-
+  !record {model: stock.landed.cost, id: stock_landed_cost_1}:
+    picking_ids: [picking_landed_cost_1, picking_landed_cost_2]
+    account_journal_id: expenses_journal
+    cost_lines:
+      - name: 'equal split' 
+        split_method: 'equal'
+        price_unit: 10
+        product_id: product.product_product_2
+      - name: 'split by quantity' 
+        split_method: 'by_quantity'
+        price_unit: 150
+        product_id: product.product_product_2
+      - name: 'split by weight' 
+        split_method: 'by_weight'
+        price_unit: 250
+        product_id: product.product_product_2
+      - name: 'split by volume' 
+        split_method: 'by_volume'
+        price_unit: 20
+        product_id: product.product_product_2
+    valuation_adjustment_lines: []
+-
+  I compute the landed cost  using Compute button
+-
+  !python {model: stock.landed.cost, id: stock_landed_cost_1}: |
+    self.compute_landed_cost()
+
+-
+  I check the valuation adjustment lines
+-
+  !python {model: stock.landed.cost, id: stock_landed_cost_1}: |
+    for valuation in self.valuation_adjustment_lines:
+        if valuation.cost_line_id.name == 'equal split':
+            assert valuation.additional_landed_cost == 5
+        elif valuation.cost_line_id.name == 'split by quantity' and valuation.move_id.name == "move 1":
+            assert valuation.additional_landed_cost == 50
+        elif valuation.cost_line_id.name == 'split by quantity' and valuation.move_id.name == "move 2":
+            assert valuation.additional_landed_cost == 100
+        elif valuation.cost_line_id.name == 'split by weight' and valuation.move_id.name == "move 1":
+            assert valuation.additional_landed_cost == 50
+        elif valuation.cost_line_id.name == 'split by weight' and valuation.move_id.name == "move 2":
+            assert valuation.additional_landed_cost == 200
+        elif valuation.cost_line_id.name == 'split by volume' and valuation.move_id.name == "move 1":
+            assert valuation.additional_landed_cost == 5
+        elif valuation.cost_line_id.name == 'split by volume' and valuation.move_id.name == "move 2":
+            assert valuation.additional_landed_cost == 15
+        else:
+            raise 'unrecognized valuation adjustment line'
+-
+  I confirm the landed cost
+-
+  !python {model: stock.landed.cost, id: stock_landed_cost_1}: |
+    self.button_validate()
+-
+  I check that the landed cost is now "Closed" and that it has an accounting entry
+-
+  !assert {model: stock.landed.cost, id: stock_landed_cost_1}:
+    - state == 'done'
+    - account_move_id
+    - len(account_move_id.line_ids) == 16

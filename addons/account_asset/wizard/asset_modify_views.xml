@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record model="ir.ui.view" id="asset_modify_form">
+        <field name="name">wizard.asset.modify.form</field>
+        <field name="model">asset.modify</field>
+        <field name="arch" type="xml">
+            <form string="Modify Asset">
+                <field name="asset_method_time" invisible="1"/>
+                <group string="Asset Durations to Modify" col="4">
+                    <group colspan="2" col="2">
+                	    <field name="name"/>
+                        <field name="method_number" attrs="{'invisible': [('asset_method_time', '=', 'end')]}"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <field name="method_end" attrs="{'invisible': [('asset_method_time', '=', 'number')]}"/>
+                        <label for="method_period"/>
+                        <div>
+                            <field name="method_period" class="oe_inline"/> months
+                        </div>	                        
+                    </group>
+                </group>
+                <footer>
+                    <button name="modify" string="Modify" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_asset_modify" model="ir.actions.act_window">
+         <field name="name">Modify Asset</field>
+         <field name="res_model">asset.modify</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="view_id" ref="asset_modify_form"/>
+         <field name="target">new</field>
+   </record>
+    
+</odoo>

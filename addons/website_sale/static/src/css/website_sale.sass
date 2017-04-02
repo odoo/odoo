@@ -1,0 +1,544 @@
+@charset "utf-8"
+
+/* ---- Default Styles ---- */
+
+.oe_product
+    border: 1px solid rgba(100,100,100,0.2)
+
+.products_pager
+    text-align: center
+    > div
+        margin: 0 auto
+        display: inline-block
+        > *
+            vertical-align: middle
+            float: none
+            padding: 0
+        > ul
+            padding-left: 10px
+    > ul
+        margin-left: auto
+        margin-right: auto
+
+.oe_website_sale ul ul
+    margin-left: 1.5em
+
+/* ---- Default Styles ---- */
+
+.o_alternative_product
+    margin: auto
+
+.oe_product
+    position: relative
+    .oe_product_image
+        position: absolute
+        left: 15px
+        right: 15px
+        top: 15px
+        bottom: 55px
+        text-align: center
+        img
+            max-width: 100%
+            max-height: 100%
+            margin: auto
+            position: absolute
+            top: 0
+            left: 0
+            bottom: 0
+            right: 0
+            z-index: 4
+    section
+        position: absolute
+        left: 0
+        right: 0
+        bottom: 0
+        overflow: hidden
+        padding: 0 15px 24px 10px
+        min-height: 56px
+        border-top: 1px solid rgba(255,255,255,0.2)
+        background: rgba(255, 255, 255, 0.75)
+        z-index: 5
+    .product_price
+        padding: 5px 0
+        position: absolute
+        bottom: 0
+    .oe_product_cart
+        position: relative
+        width: 100%
+        height: 100%
+    .oe_subdescription
+        font-size: 0.8em
+        overflow: hidden
+        margin-bottom: 10px
+
+.oe_mycart
+    .input-group-addon
+        padding-left: 6px
+        padding-right: 6px
+
+/* Products Options */
+
+.oe_product.oe_image_full
+    .oe_product_image
+        left: 0
+        right: 0
+        top: 0
+        bottom: 0
+
+/* Ribbon for promotionso on products */
+
+.oe_product
+    &.oe_ribbon_promo
+        .ribbon-wrapper
+            display: block
+
+    .ribbon-wrapper
+        display: none
+        width: 85px
+        height: 88px
+        z-index: 5
+        overflow: hidden
+        position: absolute
+        top: 0
+        right: 0
+
+    .ribbon
+        font: bold 15px Sans-Serif
+        color: white
+        text-align: center
+        -webkit-transform: rotate(45deg)
+        -moz-transform:    rotate(45deg)
+        -ms-transform:     rotate(45deg)
+        -o-transform:      rotate(45deg)
+        position: relative
+        padding: 7px 0
+        left: -5px
+        top: 15px
+        width: 120px
+        cursor: default
+
+
+/* ---- Product Sizes ---- */
+
+#products_grid
+    > table tr:not(:first-child) > td
+        height: 100%
+    &.col-md-12, &.col-md-9
+        > table > tbody > tr > td:empty
+            height: 0
+
+    &.col-md-12
+        .oe-height-1
+            height: 75px
+        .oe-height-2
+            height: 150px
+        .oe-height-4
+            height: 300px
+        .oe-height-6
+            height: 450px
+        .oe-height-8
+            height: 600px
+    &.col-md-9
+        .oe-height-1
+            height: 70px
+        .oe-height-2
+            height: 140px
+        .oe-height-4
+            height: 280px
+        .oe-height-6
+            height: 420px
+        .oe-height-8
+            height: 560px
+
+    .oe_product.oe_grid .oe_subdescription
+        max-height: 40px
+
+@media (min-width: 992px)
+    #products_grid
+        &.col-md-12
+            .oe-height-1
+                height: 95px
+            .oe-height-2
+                height: 190px
+            .oe-height-4
+                height: 380px
+            .oe-height-6
+                height: 570px
+            .oe-height-8
+                height: 760px
+
+            .oe_product.oe_grid .oe_subdescription
+                max-height: 70px
+        &.col-md-9
+            .oe-height-1
+                height: 72px
+            .oe-height-2
+                height: 144px
+            .oe-height-4
+                height: 288px
+            .oe-height-6
+                height: 432px
+            .oe-height-8
+                height: 576px
+
+@media (min-width: 1200px)
+    #products_grid
+        &.col-md-12
+            .oe-height-1
+                height: 125px
+            .oe-height-2
+                height: 250px
+            .oe-height-4
+                height: 500px
+            .oe-height-6
+                height: 750px
+            .oe-height-8
+                height: 1000px
+        &.col-md-9
+            .oe-height-1
+                height: 95px
+            .oe-height-2
+                height: 190px
+            .oe-height-4
+                height: 380px
+            .oe-height-6
+                height: 570px
+            .oe-height-8
+                height: 760px
+
+        .oe_product.oe_grid .oe_subdescription
+            max-height: 120px
+
+@media (max-width: 768px)
+    #products_grid
+        table, tbody,tr, td
+            float: left
+            width: 100%
+            display: inline-block
+        .oe_product
+            float: left
+            width: 100%
+            display: inline-block
+            &.oe_grid
+                height: 400px
+            &.oe_grid section
+                background: rgba(100, 100, 100, 0.2)
+            .oe_subdescription
+                max-height: 200px
+    .products_pager
+        .pagination
+            margin: 5px auto !important
+
+@media (max-width: 400px)
+    #products_grid
+        .oe_product
+            &.oe_grid
+                height: 270px
+            &.oe_list
+                height: 200px
+                section
+                    background: rgba(100, 100, 100, 0.2)
+            .oe_product_image
+                top: 0
+                bottom: 65px
+    #products_grid
+        .oe_product.oe_image_full
+            .oe_product_image
+                bottom: 50px
+
+/* ---- Cart ---- */
+.oe_cart, #modal_optional_products
+    a span.visible-xs-inline
+        display: none !important
+.oe_cart, #modal_optional_products
+    a span.hidden-xs
+        display: inline !important
+
+.oe_cart table td:first-child
+    min-width: 76px
+
+div#payment_method
+    div.list-group
+        margin-left: 40px
+    .list-group-item
+        padding-top: 5px
+        padding-bottom: 5px
+
+
+@media (max-width: 992px)
+    #modal_optional_products table:last-child
+        td:last-child
+            overflow: hidden
+        td:nth-child(2)
+            width: 50%
+        td:nth-child(3)
+            width: 20%
+        td:last-child, td:nth-last-child(2)
+            width: 15%
+@media (max-width: 500px)
+    .oe_cart table, #modal_optional_products table
+        display: inline-block
+        thead
+            display: none
+        tbody, tr, td
+            float: left
+            width: 100% !important
+            display: inline-block
+        td:first-child
+            display: none
+        td:nth-child(2)
+            border-top-style: double
+            border-top-width: 6px
+        td:last-child
+            margin-bottom: 16px
+        &:last-child tr:last-child td:last-child
+            margin-bottom: 0
+        td:last-child, td:nth-last-child(2)
+            width: 50% !important
+            height: 46px
+            text-align: center
+    #modal_optional_products table:last-child td:nth-child(3) > div
+        float: none !important
+    .oe_cart a, #modal_optional_products a
+        span.hidden-xs
+            display: none !important
+        span.visible-xs-inline
+            display: inline !important
+/* ---- Product list style ---- */
+
+@media (min-width: 400px)
+    .oe_product.oe_list
+        border: none
+        border-bottom: 1px solid rgba(100, 100, 100, 0.2)
+        width: 100%
+        min-height: 100px
+        position: relative
+        padding-bottom: 5px
+        padding-left: 180px
+        .oe_product_image
+            top: 0
+            bottom: 0
+            left: 0
+            right: 0
+            width: 170px
+        section
+            position: relative
+            border: 0
+            top: auto
+            bottom: auto
+            left: auto
+            right: auto
+            background: transparent
+
+.oe_website_sale .row .row .col-md-12
+    float: none
+
+/* product detail */
+
+.css_attribute_color
+    display: inline-block
+    border: 1px solid #999999
+    text-align: center
+    input
+        margin: 8px
+        height: 13px
+        opacity: 0
+    &.active
+        border: 3px ridge #66ee66
+    &.active input
+        margin: 6px
+
+.css_not_available_msg
+    display: none
+.css_not_available.js_product
+    > *:nth-child(4) > *
+        display: none
+    .product_price, .css_quantity
+        display: none
+    .css_not_available_msg
+        display: block
+
+.css_quantity
+    max-width: 125px
+    input[name="add_qty"]
+        text-align: center
+
+option.css_not_available
+    color: #ccc
+label.css_not_available
+    opacity: 0.6
+label.css_attribute_color.css_not_available
+    opacity: 1
+    background-image: url('/website_sale/static/src/img/redcross.png')
+    background-size: cover
+
+.product_detail_img
+    margin-left: auto
+    margin-right: auto
+    display: block
+    max-height: 500px
+
+.oe_default_price
+    display: none
+.discount .oe_default_price
+    display: block
+
+.oe_website_sale input.js_quantity
+    min-width: 48px
+    text-align: center
+
+/* ---- Publish managment and options ---- */
+
+.oe_overlay_options
+    .dropdown
+        ul[name="size"]
+            table
+                margin-left: 20px
+            td
+                margin: 0
+                padding: 0
+                width: 20px
+                height: 20px
+                border: 1px #dddddd solid
+                cursor: pointer
+                &.selected
+                    background-color: #B1D4F1
+            table.oe_hover td.selected
+                background-color: transparent
+            table.oe_hover td.select
+                background-color: #B1D4F1
+
+/* Wizard */
+
+
+ul.wizard
+    padding: 0
+    margin-top: 20px
+    list-style: none outside none
+    -webkit-border-radius: 4px
+    -moz-border-radius: 4px
+    border-radius: 4px
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065)
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065)
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065)
+
+ul.wizard li
+    border: 1px solid #d4d4d4
+    border-right-width: 0
+    position: relative
+    float: left
+    padding: 0 10px 0 20px
+    margin: 0
+    line-height: 38px
+    background: #fbfbfb
+
+ul.wizard li .chevron
+    position: absolute
+    top: 0
+    right: -10px
+    z-index: 1
+    display: block
+    border: 20px solid transparent
+    border-right: 0
+    border-left: 10px solid #d4d4d4
+
+ul.wizard li .chevron:before
+    position: absolute
+    top: -20px
+    right: 1px
+    display: block
+    border: 20px solid transparent
+    border-right: 0
+    border-left: 10px solid #fbfbfb
+    content: ""
+
+ul.wizard li.text-success
+    background: #f3f4f5
+
+ul.wizard li.text-success .chevron:before
+    border-left: 10px solid #f5f5f5
+
+ul.wizard li.text-primary
+    background: #f1f6fc
+
+ul.wizard li.text-primary .chevron:before
+    border-left: 10px solid #f1f6fc
+
+ul.wizard li:first-child
+    padding-left: 15px
+    border-radius: 4px 0 0 4px
+
+/* Shipping & Billing */
+.label-optional
+    font-weight: normal
+
+/* Collapse category */
+#o_shop_collapse_category li
+    a
+        display: inline-block
+        width: 80%
+        padding-left: 3px
+
+    i.fa
+        cursor: pointer
+
+.mycart-popover
+    max-width: 500px
+    min-width: 250px
+
+    .cart_line
+        border-bottom: 1px #EEE solid
+
+td.noborder
+    border: none !important
+
+.border_primary
+    border: 1px solid #337ab7
+
+.js_change_shipping
+    cursor: pointer
+
+a.no-decoration
+    cursor: pointer
+    text-decoration: none !important
+
+
+#o-carousel-product
+    .carousel-inner div.item
+        height: 400px
+        img
+            max-height: 100%
+    .carousel-control
+        background-image: none !important
+
+    .carousel-indicators
+        background-color: transparent
+        margin: 10px 0 0
+        overflow-y: hidden
+        position: static
+        text-align: left
+        white-space: nowrap
+        width: 100%
+        height: 100px !important
+        text-align: center
+        list-style-position: inside
+
+        li
+            background-color: transparent !important
+            border-radius: 0
+            display: inline-block
+            margin: 0 !important
+            width: 54px !important
+            height: 54px !important
+            border: 0 !important
+            box-shadow: none !important
+
+            img
+                display: block
+                opacity: 0.5
+
+            &.active img
+                opacity: 1
+
+.ecom-zoomable img[data-zoom]
+    cursor: zoom-in

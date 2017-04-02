@@ -1,0 +1,549 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * procurement
+# 
+# Translators:
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Henry Mineehen <info@mineehen.de>, 2016
+# darenkster <inactive+darenkster@transifex.com>, 2016
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
+# aNj <anj2j@yahoo.de>, 2016
+# Thomas A. Jaeger <tj@jamotion.ch>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
+# JackTheHunter <Maximilian.N98@gmail.com>, 2016
+# Tina Rittmüller <tr@ife.de>, 2016
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Niki Waibel <niki.waibel@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Niki Waibel <niki.waibel@gmail.com>, 2016\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"A <b>Procurement Exception</b> occurs when the system cannot find a way to "
+"fulfill a procurement. Some exceptions will resolve themselves "
+"automatically, but others require manual intervention (those are identified "
+"by a specific error message in the chatter)."
+msgstr ""
+"Ein <b>Beschaffungsfehler</b> tritt auf, wenn das System nicht weiß, wie es "
+"die Beschaffungsanforderung erfüllen kann. Manche Fehler erledigen sich von "
+"selbst, andere jedoch erfordern manuelles Eingreifen (Diese werden durch "
+"entsprechende Meldungen in der Meldungsliste kenntlich gemacht)."
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid ""
+"A <b>procurement order</b> is used to record a need for a specific\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
+"                minimum stock rules.</i>"
+msgstr ""
+"Eine <b>Beschaffungsanfrage</b> wird verwendet, um Bedarf eines konkreten Produkts an bestimmtem \n"
+"                Standort anzuzeigen. Beschaffungsanfragen werden für gewöhnlich \n"
+"                automatisch aus <i>Verkaufsaufträgen, Pull-Regeln im Lager oder\n"
+"                aus Meldebestandsregeln</i> erstellt."
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
+msgid "Action"
+msgstr "Aktion"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: procurement
+#: selection:procurement.group,move_type:0
+msgid "All at once"
+msgstr "Nur Gesamtmengen liefern"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Archiviert"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Cancel Procurement"
+msgstr "Disposition abbrechen"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Cancelled"
+msgstr "Abgebrochen"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Check Procurement"
+msgstr "Prüfe Beschaffung"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
+msgid ""
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
+msgstr ""
+"Regel zur automatischen Behebung von Beschaffungsfehlern. Diese wird "
+"normalerweise vom System automatisch ausgeführt, kann aber auch manuell zur "
+"Erzwingung eines bestimmten Ergebnis ausgeführt werden."
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid "Click to create a procurement order."
+msgstr "Klicken, um einen Beschaffungsauftrag zu erstellen"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_company_id
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Compute all procurements in the background."
+msgstr "Berechne alle Beschaffungsaufträge im Hintergrund."
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "Berechne alle Beschaffungsregeln"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Confirmed"
+msgstr "Bestätigt"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
+msgid "Created on"
+msgstr "Angelegt am"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
+msgid "Delivery Type"
+msgstr "Lieferart"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_name
+msgid "Description"
+msgstr "Beschreibung"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Done"
+msgstr "Erledigt"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Exception"
+msgstr "Fehlerliste"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Exceptions"
+msgstr "Fehlerhinweise"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "External note..."
+msgstr "Externer Hinweis..."
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Extra Information"
+msgstr "Zusätzliche Informationen"
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Fixed"
+msgstr "Fest"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_id
+msgid "Fixed Procurement Group"
+msgstr "Fixierte Beschaffungsgruppe"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Global"
+msgstr "Global"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Group By"
+msgstr "Gruppiert nach..."
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.do_view_procurements
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Group's Procurements"
+msgstr "Gruppierte Beschaffungen"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_id
+msgid "ID"
+msgstr "ID"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "If the route is global"
+msgstr "Wenn die Route global ist"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_rule_active
+msgid "If unchecked, it will allow you to hide the rule without removing it."
+msgstr ""
+"Durch Entfernen kann diese Regel anstatt zu löschen einfach nur die Anzeige "
+"verbergen."
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_order___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule___last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Late"
+msgstr "Verspätet"
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Leave Empty"
+msgstr "Eintrag frei lassen"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
+msgid "Name"
+msgstr "Name"
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:189
+#, python-format
+msgid "No rule matching this procurement"
+msgstr "Für diese Beschaffung passt keine Regel"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Not urgent"
+msgstr "Nicht dringend"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Notes"
+msgstr "Notizen"
+
+#. module: procurement
+#: selection:procurement.group,move_type:0
+msgid "Partial"
+msgstr "Teillieferung"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_priority
+msgid "Priority"
+msgstr "Priorität"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement"
+msgstr "Beschaffung"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_exceptions
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement Exceptions"
+msgstr "Fehler Beschaffung"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
+msgid "Procurement Group"
+msgstr "Beschaffungsgruppe"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_tree_view
+msgid "Procurement Lines"
+msgstr "Beschaffungspositionen"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.procurement_action
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_product_template_stat
+msgid "Procurement Orders"
+msgstr "Beschaffungsaufträge"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_group
+msgid "Procurement Requisition"
+msgstr "Bedarfsmeldung"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_rule
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "Procurement Rule"
+msgstr "Beschaffungsregel"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
+msgid "Procurement Rules"
+msgstr "Beschaffungsregel"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
+msgid "Procurement group"
+msgstr "Beschaffungsgruppe"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement started late"
+msgstr "Die Beschaffung begann zu spät"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
+#: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
+#: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
+#: model:ir.ui.view,arch_db:procurement.product_template_view_form_procurement_button
+msgid "Procurements"
+msgstr "Beschaffungsvorgänge"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_id
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Product"
+msgstr "Produkt"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_uom
+msgid "Product Unit of Measure"
+msgstr "Produkteinheit"
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Propagate"
+msgstr "Weitergeben"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "Propagation Options"
+msgstr "Weitergabeoptionen"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_propagation_option
+msgid "Propagation of Procurement Group"
+msgstr "Weitergabe Beschaffungsgruppe"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
+msgid "Quantity"
+msgstr "Menge"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Reconfirm Procurement"
+msgstr "Beschaffung erneut bestätigen"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_name
+msgid "Reference"
+msgstr "Referenz"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_order_origin
+msgid ""
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
+msgid "Rule"
+msgstr "Regel"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Run Procurement"
+msgstr "Beschaffung starten"
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Run Procurements"
+msgstr "Starte Beschaffungsaufträge"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.action_compute_schedulers
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Run Schedulers"
+msgstr "Beschaffung starten"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Running"
+msgstr "Laufend"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_date_planned
+msgid "Scheduled Date"
+msgstr "Geplantes Datum"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Scheduled Month"
+msgstr "Geplanter Monat"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Scheduler Parameters"
+msgstr "Parameter automatische Beschaffung"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Scheduling"
+msgstr "Terminierung"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Search Procurement"
+msgstr "Beschaffungsauftrag suchen"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_sequence
+msgid "Sequence"
+msgstr "Reihenfolge"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
+msgid "Source Document"
+msgstr "Referenzbeleg"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_state
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Status"
+msgstr "Status"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_rule_name
+msgid "This field will fill the packing origin and the name of its moves"
+msgstr ""
+"Dieser Eintrag wird als Herkunftsnachweis in den Packauftrag und in die "
+"Bezeichnung des Lieferauftrags übernommen ."
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_tree_view
+msgid "Unit of Measure"
+msgstr "Mengeneinheit"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Urgent"
+msgstr "Dringend"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Very Urgent"
+msgstr "Sehr dringend"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid ""
+"When the procurement order is confirmed, it automatically\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
+"                order proposition, manufacturing order, etc."
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:144
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "e.g. Buy"
+msgstr "z.B. Kaufen"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "e.g. SO005"
+msgstr "z.B. SO005"

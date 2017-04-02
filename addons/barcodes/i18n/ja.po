@@ -1,0 +1,422 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * barcodes
+# 
+# Translators:
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2016
+# Manami Hashi <manami@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-14 15:54+0000\n"
+"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:202
+#, python-format
+msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:200
+#, python-format
+msgid ": a rule can only contain one pair of braces."
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:196
+#, python-format
+msgid ": braces can only contain N's followed by D's."
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:198
+#, python-format
+msgid ": empty braces."
+msgstr ""
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
+"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix of the barcode."
+msgstr ""
+"<i>バーコード表現規則</i> はバーコードがどのように認識され、分類されるかを定義します。\n"
+"バーコードスキャン時に、パターンが合致する規則のうち <i>一番始めのもの</i> を採用します。\n"
+"パターン構文は正規表現です。正規表現がバーコードのプレフィクスに一致することをもち、バーコードが規則に合致すると判断します。"
+
+#. module: barcodes
+#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr "バーコードの命名規則は、販売時点管理がどのようにバーコードを識別し解釈するかを定義します"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:183 selection:barcode.rule,type:0
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_alias
+#, python-format
+msgid "Alias"
+msgstr "エイリアス"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "Always"
+msgstr "常に変換"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_name
+msgid "An internal identification for this barcode nomenclature rule"
+msgstr "このバーコード命名規則の内部識別"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_name
+msgid "An internal identification of the barcode nomenclature"
+msgstr "このバーコード命名規則の内部識別"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:177
+#: selection:barcode.rule,encoding:0
+#, python-format
+msgid "Any"
+msgstr "どれでも"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_barcode_nomenclature_id
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Barcode Nomenclature"
+msgstr "バーコード表現規則"
+
+#. module: barcodes
+#: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+msgid "Barcode Nomenclatures"
+msgstr "バーコード表現規則"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_pattern
+msgid "Barcode Pattern"
+msgstr "バーコードパターン"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+msgid "Barcode Rule"
+msgstr "バーコード規則"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
+msgid "Barcode Scanned"
+msgstr "スキャンされたバーコード"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Cashier"
+msgstr "キャッシャー"
+
+#. module: barcodes
+#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid "Click to add a Barcode Nomenclature ."
+msgstr "クリックしてバーコード表現規則を追加。"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Client"
+msgstr "顧客"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Credit Card"
+msgstr "クレジットカード"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:100
+#, python-format
+msgid "Discard"
+msgstr "破棄"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Discounted Product"
+msgstr "値引対象製品"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-13"
+msgstr "JAN/EAN-13"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "EAN-13 to UPC-A"
+msgstr "JAN/EAN-13からUPC-Aに変換"
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-8"
+msgstr "JAN/EAN-8"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_encoding
+msgid "Encoding"
+msgstr "エンコード"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
+#, python-format
+msgid "Error : Document not editable"
+msgstr "エラー ： このドキュメントは編集出来ません"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
+#, python-format
+msgid "Error : No last scanned barcode"
+msgstr "エラー：最後にスキャンしたバーコードがありません"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_id
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_id
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_id
+msgid "ID"
+msgstr "ID"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature___last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule___last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Location"
+msgstr "ロケーション"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Lot"
+msgstr "ロット"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "Never"
+msgstr "変換しない"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_name
+msgid "Nomenclature Name"
+msgstr "表現規則名"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Package"
+msgstr "梱包"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"Patterns can also define how numerical values, such as weight or price, can be\n"
+"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are encoded. Floats are also supported with the \n"
+"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, \n"
+"                                the barcode field on the associated records <i>must</i> show these digits as \n"
+"                                zeroes."
+msgstr ""
+"パターンは重量や単価等の数値がどのようにバーコード化されるかも定義します。それらパターンは <code>{NNN}</code> のように表現され、「NNN」は数値の各桁を示します。\n"
+"浮動小数点数も <code>{NNNDD}</code> のように表現され、「DD」は小数点以下の各桁を示します。バーコードのこの部分は必要に応じて<i>ゼロ埋め</i>しなければなりません。"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Priced Product"
+msgstr "価格設定済製品"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_name
+msgid "Rule Name"
+msgstr "規則名"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_rule_ids
+msgid "Rules"
+msgstr "規則"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:86
+#, python-format
+msgid "Select"
+msgstr "選択"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_sequence
+msgid "Sequence"
+msgstr "付番"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:85
+#, python-format
+msgid "Set quantity"
+msgstr "数量セット"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Tables"
+msgstr "テーブル"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_pattern
+msgid "The barcode matching pattern"
+msgstr "バーコードマッチングパターン"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_rule_ids
+msgid "The list of barcode rules"
+msgstr "バーコード規則のリスト"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
+msgid "The matched pattern will alias to this barcode"
+msgstr "一致したパターンはこのバーコードにエイリアスします"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:196
+#: code:addons/barcodes/models/barcodes.py:198
+#: code:addons/barcodes/models/barcodes.py:200
+#, python-format
+msgid "There is a syntax error in the barcode pattern "
+msgstr "バーコードパターンに構文エラーがあります。"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr "このルールは、バーコードが指定されたエンコーディングでエンコードされている場合にのみ適用されます"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
+#, python-format
+msgid "To modify this document, please first start edition."
+msgstr "このドキュメントを変更するには、最初の版を起動してください。"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
+#, python-format
+msgid "To set the quantity please scan a barcode first."
+msgstr "数量を設定するには、まずバーコードをスキャンしてください。"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_type
+msgid "Type"
+msgstr "タイプ"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_upc_ean_conv
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"UPCコードは、プレフィックスとしてゼロを付けてJAN/EANに変換できます。 この設定では、あるルールと他のエンコーディングを一致させるときにUPC "
+"/EANバーコードを自動的に変換するかどうかを決定します。"
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "UPC-A"
+msgstr "UPC-A"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "UPC-A to EAN-13"
+msgstr "UPC-AからEAN-13に変換"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_upc_ean_conv
+msgid "UPC/EAN Conversion"
+msgstr "UPC/EAN変換"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:184 selection:barcode.rule,type:0
+#, python-format
+msgid "Unit Product"
+msgstr "個数管理品"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr "より小さなシーケンスのルールが最初に一致するようにルールを順序付けするために使用されます"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
+msgid "Value of the last barcode scanned."
+msgstr "最後にスキャンされたバーコードの値。"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Weighted Product"
+msgstr "計量対象製品"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_nomenclature
+msgid "barcode.nomenclature"
+msgstr "barcode.nomenclature"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_rule
+msgid "barcode.rule"
+msgstr "barcode.rule"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
+msgid "barcodes.barcode_events_mixin"
+msgstr "barcodes.barcode_events_mixin"

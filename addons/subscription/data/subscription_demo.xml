@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<odoo>
+        <record id="subscription_document_partner0" model="subscription.document">
+            <field eval="1" name="active"/>
+            <field name="model" ref="base.model_res_partner"/>
+            <field name="name">Partner</field>
+        </record>
+        <record id="subscription_document_fields_2" model="subscription.document.fields">
+            <field name="field" ref="base.field_res_partner_name"/>
+            <field name="value">false</field>
+            <field model="subscription.document" name="document_id" search="[('name', '=', u'Partner')]"/>
+        </record>
+        <record id="subscription_document_fields_3" model="subscription.document.fields">
+            <field name="field" ref="base.field_res_partner_child_ids"/>
+            <field model="subscription.document" name="document_id" search="[('name', '=', u'Partner')]"/>
+        </record>
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_event_configuration" model="ir.ui.view">
+            <field name="name">Configure Event</field>
+            <field name="model">event.config.settings</field>
+            <field name="inherit_id" eval="False"/>
+            <field name="arch" type="xml">
+                <form class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group string="Events">
+                        <field name="module_event_sale" widget="radio"/>
+                        <field name="module_website_event_track" widget="radio"/>
+                        <field name="module_website_event_questions" widget="radio"/>
+                        <field name="auto_confirmation" widget="radio"/>
+                        <label  for="id" string="Barcode Interface"/>
+                        <div class="o_row">
+                            <field name="module_event_barcode" widget="upgrade_boolean"/>
+                            <label for="module_event_barcode"/>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_event_configuration" model="ir.actions.act_window">
+            <field name="name">Configure Event</field>
+            <field name="res_model">event.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_event_global_settings" name="Settings" 
+            parent="menu_event_configuration" sequence="0" action="action_event_configuration" groups="base.group_system"/>
+    </data>
+</odoo>

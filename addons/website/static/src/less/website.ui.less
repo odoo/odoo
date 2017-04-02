@@ -1,0 +1,47 @@
+
+// LAYOUTING
+body.o_connected_user {
+    padding-top: @odoo-navbar-height!important;
+}
+
+// MAIN MENU STYLE (added above navbar.less)
+#oe_main_menu_navbar {
+    .o-position-absolute(0, 0, auto, 0);
+    position: fixed;
+    z-index: 1001;
+
+    font-family: @o-we-font-family;
+    font-size: @odoo-font-size-base;
+    a:hover, a:focus {
+        text-decoration: none;
+    }
+    .dropdown-menu {
+        font-size: inherit;
+        border-radius: 0;
+    }
+
+    .o_menu_systray {
+        a {
+            padding: 0 @grid-gutter-width/2;
+
+            &[data-action="edit"], &[data-action="translate"] {
+                .button-variant(white, @odoo-brand-optional, @odoo-brand-optional);
+
+                @media (max-width: @screen-xs-max) {
+                    &, &:hover, &:focus {
+                        outline: none;
+                    }
+                }
+            }
+
+            > .fa-plus, > .fa-pencil {
+                margin-right: @grid-gutter-width/4;
+            }
+        }
+
+        .o_mobile_preview a {
+            text-align: center;
+            font-size: 20px;
+        }
+    }
+}

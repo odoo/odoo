@@ -1,0 +1,127 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_python
+#
+# Translators:
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2015-2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-01-15 04:21+0000\n"
+"Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
+"Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
+"language/es_EC/)\n"
+"Language: es_EC\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_applicable
+msgid "Applicable Code"
+msgstr "Código aplicable"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_compute
+msgid ""
+"Compute the amount of the tax by setting the variable 'result'.\n"
+"\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+"Calcule el valor del impuesto estableciendo la variable 'result'.\n"
+"\n"
+":parámetro base_amount: número con decimales, valor real sobre el que el "
+"impuesto se aplica\n"
+":parámetro price_unit: número con decimales\n"
+":parámetro quantity: número con decimales\n"
+":parámetro company: registro único de res.company\n"
+":parámetro product: registro único de product.product o None\n"
+":parámetro partner: registro único de res.partner o None"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
+msgid ""
+"Compute the amount of the tax by setting the variable 'result'.\n"
+"\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+"Calcule el valor del impuesto estableciendo la variable 'result'.\n"
+"\n"
+":parámetro base_amount: número con decimales, valor real sobre el que el "
+"impuesto se aplica\n"
+":parámetro price_unit: número con decimales\n"
+":parámetro quantity: número con decimales\n"
+":parámetro company: registro único de res.company\n"
+":parámetro product: registro único de product.product o None\n"
+":parámetro partner: registro único de res.partner o None"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
+msgid ""
+"Determine if the tax will be applied by setting the variable 'result' to "
+"True or False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+"Determine si el impuesto será aplicado estableciendo la variable 'result' a "
+"True o False.\n"
+"\n"
+":parámetro price_unit: número con decimales\n"
+":parámetro quantity: número con decimales\n"
+":parámetro company: recordset unitario de res.company\n"
+":parámetro product: recordset unitario de product.product o None\n"
+":parámetro partner: recordset unitario de res.partner o None"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
+msgid ""
+"Determine if the tax will be applied by setting the variable 'result' to "
+"True or False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+"Determine si el impuesto será aplicado estableciendo la variable 'result' a "
+"True o False.\n"
+"\n"
+":parámetro price_unit: número con decimales\n"
+":parámetro quantity: número con decimales\n"
+":parámetro company: registro único de res.company\n"
+":parámetro product: registro único de product.product o None\n"
+":parámetro partner: registro único de res.partner o None"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_compute
+msgid "Python Code"
+msgstr "Código Python"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "Impuesto"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "Plantilla para los impuestos"

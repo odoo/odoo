@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<template id="external_layout_footer" inherit_id="report.external_layout_footer">
+    <xpath expr="//ul[@name='financial_infos']" position="inside">
+        <t t-if="not company.custom_footer">
+            <t t-set="is_first" t-value="True"/>
+            <t t-foreach="company.bank_journal_ids" t-as="journal">
+                <t t-set="bank_acc" t-value="journal.bank_account_id"/>
+                <t t-if="journal.display_on_footer">
+                    <li t-if="(is_first and company.vat) or (not is_first)">&amp;bull;</li>
+                    <li><span t-esc="bank_acc.bank_name"/><t t-if="bank_acc.bank_bic"> (<span t-esc="bank_acc.bank_bic"/>)</t>: <span t-esc="bank_acc.acc_number"/></li>
+                    <t t-set="is_first" t-value="False"/>
+                </t>
+            </t>
+        </t>
+    </xpath>
+</template>
+
+</data>
+</odoo>

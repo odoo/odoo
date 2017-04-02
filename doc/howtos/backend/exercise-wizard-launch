@@ -1,0 +1,46 @@
+Index: addons/openacademy/wizard.py
+===================================================================
+--- addons.orig/openacademy/wizard.py	2014-08-28 14:34:07.879004780 +0200
++++ addons/openacademy/wizard.py	2014-08-28 14:34:07.871004780 +0200
+@@ -5,6 +5,9 @@
+ class Wizard(models.TransientModel):
+     _name = 'openacademy.wizard'
+ 
++    def _default_session(self):
++        return self.env['openacademy.session'].browse(self._context.get('active_id'))
++
+     session_id = fields.Many2one('openacademy.session',
+-        string="Session", required=True)
++        string="Session", required=True, default=_default_session)
+     attendee_ids = fields.Many2many('res.partner', string="Attendees")
+Index: addons/openacademy/views/openacademy.xml
+===================================================================
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:34:07.879004780 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-28 14:34:07.871004780 +0200
+@@ -238,5 +238,26 @@
+         <menuitem id="session_menu" name="Sessions"
+                   parent="openacademy_menu"
+                   action="session_list_action"/>
++
++        <record model="ir.ui.view" id="wizard_form_view">
++            <field name="name">wizard.form</field>
++            <field name="model">openacademy.wizard</field>
++            <field name="arch" type="xml">
++                <form string="Add Attendees">
++                    <group>
++                        <field name="session_id"/>
++                        <field name="attendee_ids"/>
++                    </group>
++                </form>
++            </field>
++        </record>
++
++        <act_window id="launch_session_wizard"
++                    name="Add Attendees"
++                    src_model="openacademy.session"
++                    res_model="openacademy.wizard"
++                    view_mode="form"
++                    target="new"
++                    key2="client_action_multi"/>
+     </data>
+ </odoo>

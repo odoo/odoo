@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_sale_advance_payment_inv" model="ir.ui.view">
+            <field name="name">Invoice Orders</field>
+            <field name="model">sale.advance.payment.inv</field>
+            <field name="arch" type="xml">
+                <form string="Invoice Sales Order">
+                    <p class="oe_grey">
+                        Invoices will be created in draft so that you can review
+                        them before validation.
+                    </p>
+                    <group>
+                        <field name="count" invisible="[('count','=',1)]" readonly="True"/>
+                        <field name="advance_payment_method" class="oe_inline" widget="radio"
+                            attrs="{'invisible': [('count','&gt;',1)]}"/>
+                        <field name="product_id"
+                            context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
+                            attrs="{'invisible': 1}"/>
+                        <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
+                        <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
+                            <field name="amount"
+                                attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline" widget="monetary"/>
+                            <label string="%%"
+                                attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
+                        </div>
+                        <field name="deposit_account_id" class="oe_inline"
+                            attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>
+                        <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
+                            domain="[('type_tax_use','=','sale')]"
+                            attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
+                    </group>
+                    <footer>
+                        <button name="create_invoices" string="Create and View Invoices" type="object"
+                            context="{'open_invoices': True}" class="btn-primary"/>
+                        <button name="create_invoices" string="Create Invoices" type="object"
+                            class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
+            <field name="name">Invoice Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.advance.payment.inv</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="groups_id" eval="[(4,ref('sales_team.group_sale_salesman'))]"/>
+        </record>
+
+        <!-- TODO: check if we need this -->
+        <record model="ir.values" id="sale_order_line_make_invoice">
+            <field name="model_id" ref="sale.model_sale_order_line" />
+            <field name="name">Invoice Orders</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_view_sale_advance_payment_inv'))" />
+            <field name="key">action</field>
+            <field name="model">sale.order</field>
+        </record>
+
+</odoo>

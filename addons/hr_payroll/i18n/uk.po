@@ -1,0 +1,1469 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll
+# 
+# Translators:
+# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# ТАрас <tratatuta@i.ua>, 2016
+# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Zoriana Zaiats <sorenabell@quintagroup.com>, 2016\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:46
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (копія)"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
+msgid ""
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
+"* When user cancel payslip the status is 'Rejected'."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Address</strong>"
+msgstr "<strong>Адреса</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Authorized signature</strong>"
+msgstr "<strong>Підпис</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Bank Account</strong>"
+msgstr "<strong>Рахунок в банку</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Date From:</strong>"
+msgstr "<strong>Дата з:</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Date From</strong>"
+msgstr "<strong>Дата з</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Date To:</strong>"
+msgstr "<strong>Дата по:</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Date To</strong>"
+msgstr "<strong>Дата по</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Designation</strong>"
+msgstr "<strong>Визначення</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Email</strong>"
+msgstr "<strong>Ел. пошта</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Identification No</strong>"
+msgstr "<strong>Ідентифікаційний №</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Name</strong>"
+msgstr "<strong>Ім'я</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Reference</strong>"
+msgstr "<strong>Референс</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Register Name:</strong>"
+msgstr "<strong>Назва регістру</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Total</strong>"
+msgstr "<strong>Разом</strong>"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
+msgid ""
+"A contribution register is a third party involved in the salary\n"
+"                payment of the employees. It can be the social security, the\n"
+"                estate or anyone that collect or inject money on payslips."
+msgstr ""
+"Регістр накопичення використовується для накопичення\n"
+"інформації по сумах певних розрахунків. Наприклад, для\n"
+"накопичення інформації про суму нарахованих податків\n"
+"або нарахованих компенсацій."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Accounting"
+msgstr "Бухоблік"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Accounting Information"
+msgstr "Інформація для обліку"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_active
+msgid "Active"
+msgstr "Активно"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Add an internal note..."
+msgstr "Додайте внутрішню примітку..."
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
+msgid "All Children Rules"
+msgstr "Всі дочірні правила"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Always True"
+msgstr "Завжди вірно"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_amount
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Amount"
+msgstr "Сума"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_select
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Amount Type"
+msgstr "Тип суми"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Annually"
+msgstr "Щорічно"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_appears_on_payslip
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_appears_on_payslip
+msgid "Appears on Payslip"
+msgstr "Відображається у листі"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_python
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_python
+msgid ""
+"Applied this rule for calculation if condition is true. You can specify "
+"condition like basic > 1000."
+msgstr ""
+"Це правило застосовується, якщо розрахована умова є вірною.\n"
+"Наприклад:  basic > 1000"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Apply"
+msgstr "Застосувати"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-monthly"
+msgstr "Двічі на місяць"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-weekly"
+msgstr "Двічі на тиждень"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
+msgid "Calculations"
+msgstr "Розрахунки"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Cancel Payslip"
+msgstr "Скасувати розрахунковий листок"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:238
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9067
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Category"
+msgstr "Категорія"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Child Rules"
+msgstr "Дочірні правила"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_child_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_child_ids
+msgid "Child Salary Rule"
+msgstr "Дочірнє правило розрахунку"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_children_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_children_ids
+msgid "Children"
+msgstr "Дочірній"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Children Definition"
+msgstr "Визначення дочірного"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
+msgid "Click to add a new contribution register."
+msgstr "Натисніть, щоб додати новий регістр накопичення."
+
+#. module: hr_payroll
+#: selection:hr.payslip.run,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Close"
+msgstr "Закрити"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_code
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Code"
+msgstr "Код"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Companies"
+msgstr "Компанії"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_company_id
+msgid "Company"
+msgstr "Компанія"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Company Contribution"
+msgstr "Накопичення компанії"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Computation"
+msgstr "Розрахунок"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Compute Sheet"
+msgstr "Розрахувати листок"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_select
+msgid "Condition Based on"
+msgstr "Умова базується на"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Conditions"
+msgstr "Умови"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
+msgid "Configuration"
+msgstr "Налаштування"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Configure Payroll"
+msgstr "Налаштувати  розрахунковий листок"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Confirm"
+msgstr "Підтвердити"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_contract_id
+msgid "Contract"
+msgstr "Контракт"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
+msgid "Contribution"
+msgstr "Накопичення"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contribution_register
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_register_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Contribution Register"
+msgstr "Регістр накопичення"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Contribution Register's Payslip Lines"
+msgstr "Рядки листа з регістром копичення"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_filter
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
+msgid "Contribution Registers"
+msgstr "Регістри накопичення"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
+msgid "Create journal entries from payslips"
+msgstr "Зробити записи в журналі проведень на основі розрахункових листів"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_date
+msgid "Created on"
+msgstr "Дата створення"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_credit_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_credit_note
+msgid "Credit Note"
+msgstr "Сторно"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_from
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_start
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_from
+msgid "Date From"
+msgstr "Дата з"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_to
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_end
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
+msgid "Date To"
+msgstr "По дату"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_struct_id
+msgid ""
+"Defines the rules that have to be applied to this payslip, accordingly to "
+"the contract chosen. If you let empty the field contract, this field isn't "
+"mandatory anymore and thus the rules applied will be all the rules set on "
+"the structure of all contracts of the employee valid for the chosen period"
+msgstr ""
+"Визначає правила розрахунку, які необхідно застосувати для цього листа "
+"відповідно до обраного контракту. Якщо ви залишите це поле порожнім, воно "
+"більше не є обов'язковим, то будуть використовуватися всі правила, що "
+"прописані в структурі зарплати для всіх дійсних на даний момент контрактів "
+"цього співробітника."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_note
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Description"
+msgstr "Опис"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Details By Salary Rule Category"
+msgstr "Деталі розрахунку"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_details_by_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Details by Salary Rule Category"
+msgstr "Деталі розрахунку"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Done"
+msgstr "Виконано"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Done Payslip Batches"
+msgstr "Виконані групові розрахунки"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Done Slip"
+msgstr "Виконаний лист"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Draft"
+msgstr "Чернетка"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Draft Payslip Batches"
+msgstr "Чернетки групових розрахунків"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Draft Slip"
+msgstr "Чернетка листа"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_employee
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employee_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_employee_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Employee"
+msgstr "Співробітник"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contract
+msgid "Employee Contract"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_list_view
+msgid "Employee Function"
+msgstr "Функція співробітника"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
+#: model:ir.ui.menu,name:hr_payroll.menu_department_tree
+msgid "Employee Payslips"
+msgstr "Розрахункові листи співробітника"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_employee_ids
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Employees"
+msgstr "Співробітники"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:41
+#, python-format
+msgid "Error ! You cannot create a recursive Salary Structure."
+msgstr "Помилка! Ви не можете створювати рекурсивні структури зарплати."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
+msgid "Eventual third party involved in the salary payment of the employees."
+msgstr "Регістр накопичення інформації про певні суми нарахування"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_fix
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_fix
+msgid "Fixed Amount"
+msgstr "Фіксована сума"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage
+msgid "For example, enter 50.0 to apply a percentage of 50%"
+msgstr "Наприклад, введіть 50.0 для застосування 50% ставки"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "General"
+msgstr "Загальне"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid "Generate"
+msgstr "Згенерувати"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Generate Payslips"
+msgstr "Згенерувати розрахункові листи"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Створити розрахункові листи для всіх обраних співробітників"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Group By"
+msgstr "Групувати за"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_id
+msgid "ID"
+msgstr "ІД"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_run_credit_note
+msgid ""
+"If its checked, indicates that all payslips generated from here are refund "
+"payslips."
+msgstr ""
+"Якщо відмічено, то це вказує, що розрахунковий лист для сторнування "
+"розрахунку."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_active
+msgid ""
+"If the active field is set to false, it will allow you to hide the salary "
+"rule without removing it."
+msgstr ""
+"Якщо поле Активний поставити у \"не вірно\", це дозволить приховати правило "
+"розрахунку без його видалення."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
+msgid "Indicates this payslip has a refund of another"
+msgstr ""
+"Це означає, що розрахунковий лист використовується для сторнування іншого "
+"розрахунку."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Input Data"
+msgstr "Дані введення"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_input_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_input_ids
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Inputs"
+msgstr "Ручний ввід"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Install your country's payroll"
+msgstr "Встановити правила розрахунку зарпати для вашої країни"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
+msgid "Internal Note"
+msgstr "Примітка"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_quantity
+msgid ""
+"It is used in computation for percentage and fixed amount. For e.g. A rule "
+"for Meal Voucher having fixed amount of 1€ per worked day can have its "
+"quantity defined in expression like worked_days.WORK100.number_of_days."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
+msgid ""
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
+msgstr ""
+"Використовується при розрахунку зарплати. Наприклад, правило для надбавки до окладу 1% від продажу товарів можна вказати наступний вираз:\n"
+"result = inputs.SALEURO.amount * contract.wage*0.01"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
+msgid "Last Modified on"
+msgstr "Остання модифікація"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
+msgid "Link your payroll to accounting system"
+msgstr "Робити бухгалтерські проведення по розрахунку зарплати "
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category_parent_id
+msgid ""
+"Linking a salary category to its parent is used only for the reporting "
+"purpose."
+msgstr ""
+"Пов'язання категорії зарплати до батьківської категорії використовується "
+"тільки для друку звітів."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
+msgid "Made Payment Order ? "
+msgstr "Проведення розрахункового листа?"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "Керівник"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
+msgid "Maximum Range"
+msgstr "Макс. значення діапазону"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_min
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_min
+msgid "Minimum Range"
+msgstr "Мін. значення діапазону"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Miscellaneous"
+msgstr "Інші"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Monthly"
+msgstr "Щомісячно"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_name
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Name"
+msgstr "Назва"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:323
+#, python-format
+msgid "Normal Working Days paid at 100%"
+msgstr "Повністю відпрацьований робочий день"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
+msgid "Notes"
+msgstr "Примітки"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_days
+msgid "Number of Days"
+msgstr "Кількість днів"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
+msgid "Number of Hours"
+msgstr "Кількість годин"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "Начальник"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Other Inputs"
+msgstr "Інші ручні введення"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_parent_id
+msgid "Parent"
+msgstr "Батьківський"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_parent_rule_id
+msgid "Parent Salary Rule"
+msgstr "Батьківське правило розрахунку"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_partner_id
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_payslip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_slip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_payslip_id
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Pay Slip"
+msgstr "Розрахунковий лист"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "PaySlip Batch"
+msgstr "Груповий розрахунок"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
+msgid "PaySlip Details"
+msgstr "Деталі розрахункового листа"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
+msgid "PaySlip Lines"
+msgstr "Рядки розрахункового листа"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
+msgid "PaySlip Lines By Conribution Register"
+msgstr "Рядки листа регістру по накопичення"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "PaySlip Lines by Contribution Register"
+msgstr "Рядки листа регістру по накопичення"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
+msgid "PaySlip Lines by Contribution Registers"
+msgstr "Рядки листа регістру по накопичення"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "PaySlip Name"
+msgstr "Назва розрахунку"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.open_payroll_modules
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Payroll"
+msgstr "Зарплата"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
+msgid "Payroll Structures"
+msgstr "Структура зарплати"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.action_report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Payslip"
+msgstr "Розрахунковий лист"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:224
+#, python-format
+msgid "Payslip 'Date From' must be before 'Date To'."
+msgstr "Дата в полі 'З дати' повинна бути раніше ніж в полі 'По дату'."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Payslip Batches"
+msgstr "Групові розрахунки"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_count
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Payslip Computation Details"
+msgstr "Деталі розрахунку зарплати"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_input
+msgid "Payslip Input"
+msgstr "Ручне введення"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_line_ids
+msgid "Payslip Inputs"
+msgstr "Ручні введення"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_line
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
+msgid "Payslip Line"
+msgstr "Рядок розрахункового листа"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_ids
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Payslip Lines"
+msgstr "Рядки розрахункового листа"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Payslip Lines by Contribution Register"
+msgstr "Рядки листа по регістру накопичення"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
+msgid "Payslip Name"
+msgstr "Назва розрахунку"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
+msgid "Payslip Run"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_line_ids
+msgid "Payslip Worked Days"
+msgstr "Відпрацьовано днів"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_payslip_count
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_slip_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_slip_ids
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.payroll_hr_employee_view_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_tree
+msgid "Payslips"
+msgstr "Розрахункові листи"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_tree
+msgid "Payslips Batches"
+msgstr "Групові розрахунки"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid "Payslips by Employees"
+msgstr "Розрахункові листи співробітника"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage
+msgid "Percentage (%)"
+msgstr "Відсоток (%)"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage_base
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage_base
+msgid "Percentage based on"
+msgstr "Відсоток від"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Period"
+msgstr "Період"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Print"
+msgstr "Друк"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_python_compute
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_python_compute
+msgid "Python Code"
+msgstr "Код Python"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_python
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_python
+msgid "Python Condition"
+msgstr "Python умова"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Python Expression"
+msgstr "Python вираз"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_quantity
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_quantity
+msgid "Quantity"
+msgstr "Кількість"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "Quantity/Rate"
+msgstr "Розмір/ставка"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Quantity/rate"
+msgstr "Розмір/ставка"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Quarterly"
+msgstr "Щоквартально"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Range"
+msgstr "Діапазон"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range
+msgid "Range Based on"
+msgstr "База діапазону"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_rate
+msgid "Rate (%)"
+msgstr "Ставка (%)"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_number
+msgid "Reference"
+msgstr "Референс"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Refund"
+msgstr "Відшкодування"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:244
+#, python-format
+msgid "Refund: "
+msgstr "Повернення:"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_register_line_ids
+msgid "Register Line"
+msgstr "Рядок регістру"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Rejected"
+msgstr "Відхилено"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_salary_rule_id
+msgid "Rule"
+msgstr "Правило"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
+msgid "Salary Categories"
+msgstr "Категорії зарплати"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Salary Computation"
+msgstr "Розрахунок зарплати"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
+msgid "Salary Rule Categories"
+msgstr "Категорії правил розрахунку"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
+msgid "Salary Rule Categories Hierarchy"
+msgstr "Ієрархія категорій правил розрахунку"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Salary Rule Category"
+msgstr "Категорія правил розрахунку"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_rule_input
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_input_id
+msgid "Salary Rule Input"
+msgstr "Ручне введення для розрахунку"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_rule_ids
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_list
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_tree
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Salary Rules"
+msgstr "Правила розрахунку"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:548
+#: code:addons/hr_payroll/models/hr_payroll.py:595
+#, python-format
+msgid "Salary Slip of %s for %s"
+msgstr "Розрахунковий лист для %s за %s"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payroll_structure
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_struct_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_tree
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_tree
+msgid "Salary Structure"
+msgstr "Структура зарплати"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
+msgid "Salary Structures"
+msgstr "Структури зарплати"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
+msgid "Salary Structures Hierarchy"
+msgstr "Ієрархія структур зарплати"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_schedule_pay
+msgid "Scheduled Pay"
+msgstr "Запланована виплата"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Search Payslip Batches"
+msgstr "Пошук групових розрахунків"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Search Payslip Lines"
+msgstr "Пошук рядків розрахунку"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Search Payslips"
+msgstr "Пошук розрахункових листів"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Search Salary Rule"
+msgstr "Пошук правил розрахунку"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Semi-annually"
+msgstr "Щопівроку"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_sequence
+msgid "Sequence"
+msgstr "Послідовність"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Set to Draft"
+msgstr "Зробити чернеткою"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_global_settings
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Settings"
+msgstr "Налаштування"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "States"
+msgstr "Області"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_state
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_state
+msgid "Status"
+msgstr "Статус"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_struct_id
+msgid "Structure"
+msgstr "Структура"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_code
+msgid ""
+"The code of salary rules can be used as reference in computation of other "
+"rules. In that case, it is case sensitive."
+msgstr ""
+"Код правила розрахунку може використовуватися як посилання при розрахунку "
+"інших правил. В цьому випадку регістр літер має значення."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_rule_input_code
+msgid "The code that can be used in the salary rules"
+msgstr "Код, що можна використовувати у правилах розрахунку."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_select
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_select
+msgid "The computation method for the rule amount."
+msgstr "Спосіб розрахунку для суми правила"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_contract_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_contract_id
+msgid "The contract for which applied this input"
+msgstr "Контракт, для якого застосовано це ручне введення."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_max
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_max
+msgid "The maximum amount, applied for this rule."
+msgstr "Максимальне значення, що застосовується для цього правила."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_min
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_min
+msgid "The minimum amount, applied for this rule."
+msgstr "Мінімальне значення, що застосовується для цього правила."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
+msgid ""
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
+msgstr ""
+"Використовується для розрахунку значення суми відсотком. В загальному "
+"застосовується для категорії basic але ви может вказати код іншої категорії "
+"в нижньому регістрі (hra, ma, lta, і т. д.)."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid ""
+"This wizard will generate payslips for all selected employee(s) based on the"
+" dates and credit note specified on Payslips Run."
+msgstr ""
+"Цей майстер згенерує розрахункові листи для всіх обраних співробітників(а) з"
+" урахуванням вказаної дати та відмітки сторно."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_total
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Total"
+msgstr "Разом"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Total Working Days"
+msgstr "Всього робочих днів"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_sequence
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_sequence
+msgid "Use to arrange calculation sequence"
+msgstr "Використовується для впорядкування послідовності розрахунків"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_appears_on_payslip
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_appears_on_payslip
+msgid "Used to display the salary rule on payslip."
+msgstr ""
+"Використовується для відображення правила розрахунку на розрахунковому "
+"листі."
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Waiting"
+msgstr "Очікування"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Weekly"
+msgstr "Щотижня"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Day"
+msgstr "Відпрацьований день"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Days"
+msgstr "Відпрацьовані дні"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Days & Inputs"
+msgstr "Відпрацьовані дні та ручні введення"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:770
+#, python-format
+msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+msgstr "Невірна база відсотків або кількість вказана у правилі %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:776
+#, python-format
+msgid "Wrong python code defined for salary rule %s (%s)."
+msgstr "Невірний код python вказано у правилі %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:799
+#, python-format
+msgid "Wrong python condition defined for salary rule %s (%s)."
+msgstr "Невірна умова python вказана у правилі %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:763
+#, python-format
+msgid "Wrong quantity defined for salary rule %s (%s)."
+msgstr "Невірна умова вказана у правилі %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:793
+#, python-format
+msgid "Wrong range condition defined for salary rule %s (%s)."
+msgstr "Невірна умова діапазону вказана у правилі %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:268
+#, python-format
+msgid "You cannot delete a payslip which is not draft or cancelled!"
+msgstr ""
+"Ви не можете вилучити розрахунковий листок, що не в стані чернетки або у "
+"скасованому стані."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
+#, python-format
+msgid "You must select employee(s) to generate payslip(s)."
+msgstr "Ви повинні обрати робітника(ів) для генерації розрахунку(ів)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:838
+#, python-format
+msgid "You must set a contract to create a payslip line."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings
+msgid "hr.payroll.config.settings"
+msgstr "hr.payroll.config.settings"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule
+msgid "hr.salary.rule"
+msgstr "hr.salary.rule"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
+msgid "report.hr_payroll.report_contributionregister"
+msgstr "report.hr_payroll.report_contributionregister"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
+msgid "report.hr_payroll.report_payslipdetails"
+msgstr "report.hr_payroll.report_payslipdetails"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage_base
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage_base
+msgid "result will be affected to a variable"
+msgstr "result will be affected to a variable"

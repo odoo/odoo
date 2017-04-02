@@ -1,0 +1,504 @@
+.o_form_view {
+    background-color: @odoo-view-background-color;
+
+    // Utility classes (+ oe_edit_only, oe_read_only, o_label_nowrap, o_text_overflow)
+    .o_form_invisible, .o_form_field_empty {
+        display: none!important;
+    }
+    .oe_form_box_info {
+        .bg-info;
+        .o-webclient-padding(@top: 5px, @bottom: 5px);
+        > p {
+            margin: auto;
+        }
+    }
+    .oe_text_center {
+        text-align: center;
+    }
+    .oe_link {
+        .btn-link;
+    }
+    .oe_grey {
+        opacity: 0.5;
+    }
+
+    // Readonly specific rules
+    &.o_form_readonly {
+        .oe_edit_only {
+            .o_form_invisible;
+        }
+
+        .o_form_uri { // FIXME maybe global?
+            display: inline-block;
+
+            color: @odoo-main-text-color;
+            &:first-line {
+                color: @link-color;
+            }
+            &:hover {
+                color: darken(@odoo-main-text-color, 1%); // hack required on chrome
+                &:first-line {
+                    color: darken(@link-color, 15%);
+                }
+            }
+        }
+    }
+
+    // Editable specific rules
+    &.o_form_editable {
+        .oe_read_only {
+            .o_form_invisible;
+        }
+
+        .o_form_field_many2manytags {
+            .o-input();
+
+            > .o_form_field {
+                .o-flex(1, 0, 100px);
+                position: initial;
+                max-width: 100%;
+
+                > .o_form_input_dropdown > .o_form_input {
+                    border-style: none!important;
+                }
+            }
+        }
+
+        .o_form_field_monetary {
+            .o-input();
+            .o-align-items(baseline);
+
+            > .o_form_input {
+                border-style: none!important;
+                width: 100px;
+                .o-flex(1, 0, auto);
+            }
+        }
+    }
+
+    // Button box
+    .oe_button_box {
+        .oe_stat_button {
+            &:not(:hover) .o_stat_info > .o_hover {
+                display: none !important;
+            }
+            &:hover .o_stat_info > .o_not_hover {
+                display: none !important
+            }
+        }
+    }
+
+    // Title
+    .oe_title {
+        .o_priority > .o_priority_star {
+            font-size: inherit;
+        }
+    }  
+
+    // Groups
+    .o_group {
+        &.o_label_nowrap {
+            .o_form_label {
+                white-space: nowrap;
+            }
+        }
+
+        .o_form_label {
+            font-weight: normal;
+        }
+        .o_td_label .o_form_label {
+            font-weight: bold;
+            margin-right: 0px;
+        }
+    }
+    &.oe_form_configuration {
+        .o_group .o_form_label {
+            white-space: nowrap;
+        }
+    }
+
+    // Separators
+    .o_horizontal_separator {
+        font-size: @font-size-h2;
+        margin: @odoo-form-spacing-unit 0;
+        &:empty {
+            height: @odoo-form-spacing-unit * 2;
+        }
+    }
+
+    // Labels
+    .o_form_label {
+        font-size: @font-size-base; // The label muse have the same size whatever their position
+        line-height: @line-height-base;
+        margin-right: @odoo-form-spacing-unit;
+        &.o_form_invalid {
+            color: @brand-danger;
+        }
+    }
+
+    // ace editor RO
+    .oe_form_field_text .oe_form_text_content {
+        white-space: pre-wrap;
+    }
+
+    // Tags
+    .o_form_field_many2manytags {
+        .badge {
+            cursor: pointer;
+            color: white;
+            font-size: 12px;
+            border: 0;
+
+            > ul {
+                @colored-tag-width: 45px;
+                width: 5*@colored-tag-width + 3px;
+                > li {
+                    float: left;
+                    color: black;
+                    > span {
+                        border-radius: 6px;
+                        width: @colored-tag-width;
+                        height: 30px;
+                        display: inline-block;
+                        border: 2px solid white;
+                        cursor: pointer;
+                        padding: 0;
+
+                        &:hover {
+                            opacity: 0.8;
+                        }
+                    }
+                }
+                > li:last-child {
+                    margin-top: 7px;
+                    cursor: auto;
+                }
+            }
+        }
+    }
+
+    .o_form_invalid {
+        &.o_form_input, .o_form_input, &.o_form_textarea, .o_form_textarea {
+            border-color: @brand-danger!important; // enterprise o_form_required rule overrides this without !important
+        }
+    }
+
+    // Boolean
+    .o_form_field_boolean {
+        margin: 0 @odoo-form-spacing-unit 0 0;
+    }
+
+    // Numbers
+    .o_form_field_number {
+        white-space: nowrap;
+    }
+
+    // Radio buttons
+    .o_form_field_radio .o_form_radio {
+        outline: none;
+    }
+    
+    // Translate icon
+    .o_field_translate {
+        padding: 0;
+        display: none;
+        cursor: pointer;
+        width: 12px;
+        vertical-align: top;
+        &::before { // seems to be useful for some old browser
+            position: relative;
+        }
+        &.o_translate_active {
+            display: inline-block;
+        }
+    }
+    .o_form_field.o_form_invisible + .o_field_translate {
+        display: none;
+    }
+
+    // Dropdowns input (many2one, ...)
+    .o_form_input_dropdown {
+        .o-flex(1, 0, auto);
+        position: relative;
+
+        > input {
+            padding-right: 15px;
+            cursor: pointer;
+        }
+
+        .o_dropdown_button {
+            pointer-events: none;
+            &:after {
+                .o-caret-down;
+            }
+        }
+    }
+
+    // Many2many tags
+    .badge .o_delete {
+        cursor: pointer;
+    }
+
+    // Image
+    .o_form_field_image {
+        position: relative;
+
+        .o_form_image_controls {
+            .o-position-absolute(0, 0);
+            width: 100%;
+
+            color: white;
+            background-color: @odoo-brand-optional;
+            opacity: 0;
+            transition: opacity ease 400ms;
+
+            > .fa {
+                margin: 5px;
+                cursor: pointer;
+            }
+        }
+        @media (max-width: @screen-xs-min) {
+            .o_form_image_controls{
+                position: initial;
+                opacity: 1;
+                > .fa{
+                    width: 50%;
+                    padding: 6px;
+                    margin: 0px;
+                    text-align: center;
+                    &.o_select_file_button{
+                        background: @odoo-brand-optional;
+                    }
+                    &.o_clear_file_button{
+                        background: @brand-danger;
+                    }
+                }
+            }
+        }
+
+        &:hover .o_form_image_controls {
+            opacity: 0.8;
+        }
+    }
+
+    // Input loading/file
+    .o_form_binary_progress, .o_hidden_input_file .o_form_input_file {
+        display: none;
+    }
+
+    // Timezone widget warning
+    .o_tz_warning {
+        color: @brand-danger;
+        cursor: pointer;
+    }
+
+    // One2Many Kanban views
+    .o_form_field .o_kanban_view.o_kanban_ungrouped {
+        padding: 0;
+        .o_kanban_record {
+            box-shadow: none;
+        }
+    }
+
+    // One2Many List views
+    .o_form_field .o_list_view {
+        margin-bottom: 10px;
+
+        > tfoot > tr > td {
+            padding: 3px;
+            color: @odoo-main-text-color;
+        }
+    }
+    &.o_form_readonly .o_form_field .o_list_view .o_row_handle {
+        display: none;  // Hide the handler in non-edit mode
+    }
+
+    // Percent pie field
+    .o_form_field_percent_pie {
+        .o_pie {
+            position: relative;
+            border-radius: 100%;
+            overflow: hidden;
+            background-color: @odoo-brand-optional;
+
+            &:after { // Outside pie border to go over border-radius irregularities
+                content: " ";
+                .o-position-absolute(0, 0);
+                width: 100%;
+                height: 100%;
+                border-radius: 100%;
+            }
+
+            .o_mask {
+                .o-position-absolute(0, 0);
+                .o-transform-origin(0);
+                width: 50%;
+                height: 100%;
+                background-color: @odoo-view-background-color;
+                &.o_full {
+                    background-color: inherit;
+                }
+            }
+
+            .o_pie_value {
+                .o-flex-display();
+                .o-justify-content(center);
+                .o-align-items(center);
+
+                border-radius: 100%;
+
+                font-weight: 700;
+                color: @odoo-brand-primary;
+            }
+        }
+    }
+
+    // Attachments
+    .oe_attachment {
+        display: inline-block;
+        border: 1px solid @odoo-brand-lightsecondary;
+        margin: 0 @odoo-form-spacing-unit @odoo-form-spacing-unit 0;
+        padding: @odoo-form-spacing-unit;
+    }
+
+    // Specific style classes
+    .o_group.o_inner_group.oe_subtotal_footer {
+        > tbody > tr > td {
+            padding: 0;
+
+            &.o_td_label {
+                text-align: right;
+            }
+
+            .o_form_label {
+                padding-right: 20px;
+
+                min-width: 0;
+                white-space: nowrap;
+                &:after {
+                    content: ":";
+                }
+            }
+
+            .o_form_field {
+                text-align: right;
+                width: 100%;
+            }
+        }
+
+        .oe_subtotal_footer_separator {
+            width: 100%;
+            text-align: right;
+            border-top: 1px solid @odoo-brand-secondary;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+    }
+
+    .o_address_format {
+        width: 100%;
+        .o_address_street, .o_address_country {
+            .o-flex-display;
+        }
+
+        .o_address_city {
+            margin-right: 2%;
+        }
+        .o_address_state {
+            margin-right: 2%;
+        }
+        &.o_zip_city {
+            .o_address_zip {
+                margin-right: 2%;
+            }
+            .o_address_city {
+                margin-right: 0;
+            }
+            .o_address_state {
+                display: block;
+                margin-right: 0;
+            }
+        }
+        &.o_city_state {
+            .o_address_state {
+                margin-right: 0;
+            }
+            .o_address_zip {
+                display: block;
+                margin-right: 0;
+            }
+        }
+        > span.o_form_field {
+            width: auto;
+        }
+    }
+    &.o_form_editable .o_address_format {
+        input.o_address_city {
+            width: 38%;
+        }
+        div.o_address_state {
+            width: 33%;
+        }
+        input.o_address_zip {
+            width: 25%;
+        }
+        &.o_zip_city {
+            .o_address_zip {
+                width: 38%;
+            }
+            .o_address_city {
+                width: 60%;
+            }
+            .o_address_state {
+                width: 100%;
+            }
+        }
+        &.o_city_state {
+            .o_address_city {
+                width: 50%;
+            }
+            .o_address_state {
+                width: 48%;
+            }
+            .o_address_zip {
+                width: 100%;
+            }
+        }
+    }
+
+    // Notebooks
+    .o_notebook {
+        .nav-tabs {
+            > .tab-pane {
+                min-height: 100px;
+            }
+        }
+    }
+}
+
+// Overriden style when form view in modal
+.modal .modal-dialog {
+    .o_form_view {
+        .o_form_sheet {
+            box-shadow: none;
+            width: 100%;
+            margin: 0 auto;
+            max-width: none;
+        }
+    }
+
+    .o_form_invisible {
+        display: none!important;
+    }
+}
+
+// FIXME bootstrap modal : 1050
+.ui-autocomplete {
+    z-index: 1051;
+}
+
+// Buttons in ControlPanel
+.o_control_panel .o_form_buttons_view > button:first-child {
+    float: left; // Unfortunately needed for the bounce effect
+    margin-right: 4px;
+}

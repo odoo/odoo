@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="l10n_chart_china_standard_business" model="account.chart.template">
+            <field name="property_account_receivable_id" ref="account_1122" />
+            <field name="property_account_payable_id" ref="account_2202" />
+            <field name="property_account_expense_categ_id" ref="account_6401" />
+            <field name="property_account_income_categ_id" ref="account_6001" />
+            <field name="income_currency_exchange_account_id" ref="account_6061" />
+            <field name="expense_currency_exchange_account_id" ref="account_6061" />
+        </record>
+        <record id="l10n_chart_china_standard_business_value" model="ir.values">
+            <field name="name">中国会计科目表 （财会[2006]3号《企业会计准则》）</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="l10n_chart_china_standard_business" />
+            <field name="value" ref="base.CNY" />
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_salary_employee_month" model="ir.ui.view">
+            <field name="name">Hr monthly Employee Salary</field>
+            <field name="model">hr.salary.employee.month</field>
+            <field name="arch" type="xml">
+            <form string="Employee Pay Head Breakup">
+                <label string="This wizard will print report which displays employees break-up of Net Head for a specified dates."/>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+                <group>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="category_id"/>
+                    <separator string="Employees" />
+                    <field name="employee_ids"  nolabel="1" colspan="4"/>
+                </group>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_salary_employee_month" model="ir.actions.act_window">
+            <field name="name">Yearly Salary by Head</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.salary.employee.month</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            name="Yearly Salary by Head"
+            parent="hr.menu_hr_reporting_timesheet"
+            sequence="200"
+            action="action_salary_employee_month"
+            id="menu_salary_employee_month"
+            groups="hr_payroll.group_hr_payroll_manager,hr_payroll.group_hr_payroll_user"
+           />
+</odoo>

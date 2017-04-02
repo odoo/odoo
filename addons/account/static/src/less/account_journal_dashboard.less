@@ -1,0 +1,115 @@
+.o_kanban_view.o_kanban_dashboard.o_account_kanban {
+    .o_kanban_record {
+        @media (min-width: @screen-sm-min) {
+            min-width: 450px;
+        }
+
+        .oe_kanban_action_button {
+            margin-bottom: 5px;
+        }
+
+        .o_kanban_card_settings {
+            padding-top: @odoo-horizontal-padding/2;
+            padding-bottom: @odoo-horizontal-padding/2;
+
+            border-top: 1px solid;
+            border-color: @odoo-brand-lightsecondary;
+        }
+        .o_dashboard_star {
+            font-size: 12px;
+
+            &.fa-star-o {
+                color: @odoo-main-color-muted;
+                &:hover {
+                    color: gold;
+                }
+            }
+            &.fa-star {
+                color: gold;
+            }
+        }
+
+        .o_kanban_card_content {
+            // give space for graph section at the bottom
+            margin-bottom: 75px;
+            min-height: 120px;
+        }
+
+        .o_kanban_graph_section {
+            .o-position-absolute(auto, 0, 0, 0);
+            .o_graph_linechart {
+                > svg {
+                    height: 75px;
+
+                    // X axis
+                    g.nv-x.nv-axis {
+                        transform: translateY(50px);
+
+                        // Remove max and min labels
+                        g.nv-axisMaxMin {
+                            display: none;
+                        }
+                        g.tick.major {
+                            // Don't know why, but leads to strange bold text
+                            // stroke: @odoo-brand-primary;
+
+                            line {
+                                display: none;
+                            }
+                        }
+                    }
+
+                    // !important are needed because nvd3 uses inline style on elements
+
+                    // Remove strokes
+                    g.nv-linesWrap {
+                        g.nv-group.nv-series-0 {
+                            fill-opacity: 0.3 !important;
+                            fill: @odoo-brand-primary !important;
+                            stroke: @odoo-brand-primary !important;
+
+                            .nv-point {
+                                visibility: hidden;
+                                r: 3;
+                                stroke: @odoo-brand-primary !important;
+                                fill: white;
+                                stroke-width: 2;
+                            }
+                            .nv-point:nth-child(5n+1) {
+                                visibility: visible;
+                                fill-opacity: .95 !important;
+                                stroke-opacity: .95 !important;
+                            }
+                        }
+                    }
+                }
+            }
+            .o_graph_barchart {
+                > svg {
+                    height: 75px;
+                    overflow: visible;
+                    g.nv-barsWrap {
+                        g.nv-group.nv-series-0 {
+                            g.past {
+                                opacity: 0.5;
+                                fill: @odoo-brand-primary !important;
+                            }
+                            g.future {
+                                opacity: 0.5;
+                                fill: @odoo-brand-optional !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .o_invisible .o_kanban_graph_section {
+            display: none; // This fix a bug on firefox
+        }
+    }
+
+    &.o_kanban_grouped .o_kanban_record {
+        min-width: inherit;
+    }
+}

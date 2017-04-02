@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record model="ir.ui.view" id="delivery.product_packaging_delivery_form">
+    <field name="name">product.packaging.form.delivery</field>
+    <field name="model">product.packaging</field>
+    <field name="inherit_id" ref="product.product_packaging_form_view"/>
+    <field name="arch" type="xml">
+        <group name="qty" position="after">
+            <group name="delivery">
+                <field name="package_carrier_type"/>
+                <field name="height"/>
+                <field name="width"/>
+                <field name="length"/>
+                <field name="max_weight"/>
+                <field name="shipper_package_code" groups="base.group_no_one"/>
+            </group>
+        </group>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="delivery.product_packaging_delivery_tree">
+    <field name="name">product.packaging.tree.delivery</field>
+    <field name="model">product.packaging</field>
+    <field name="inherit_id" ref="product.product_packaging_tree_view"/>
+    <field name="arch" type="xml">
+        <field name="qty" position="after">
+            <field name="height"/>
+            <field name="width"/>
+            <field name="length"/>
+            <field name="max_weight"/>
+            <field name="package_carrier_type"/>
+            <field name="shipper_package_code" groups="base.group_no_one"/>
+        </field>
+    </field>
+</record>
+
+</odoo>

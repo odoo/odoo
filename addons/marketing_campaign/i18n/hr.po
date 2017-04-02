@@ -1,0 +1,1188 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * marketing_campaign
+# 
+# Translators:
+# Marko Carević <marko.carevic@live.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Bole <bole@dajmi5.com>, 2016
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2016
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2016
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2016
+# Mario Jureša <mario.juresa@uvid.hr>, 2016
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016
+# Tina Milas <tina@uvid.hr>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Poštovani,</p>\n"
+"<p>S veseljem Vam javljamo da ste ušli u odabrani krug naših Zlatnih partnera!</p>\n"
+"<p>Hvala Vam,</p>\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Poštovani,</p>\n"
+"<p>S veseljem Vam javljamo da ste danas postali jedan od naših Srebrnih partnera!</p>\n"
+"<p>Hvala Vam,</p>\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Poštovani,</p>\n"
+"<p>Uskoro ćete primiti svoj paket dobrodošlice na e-mail.</p>\n"
+"<p>Hvala Vam,</p>\n"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
+msgid "# of Actions"
+msgstr "# akcija"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+msgid ""
+"<span class=\"o_stat_text\">Campaign</span>\n"
+"                            <span class=\"o_stat_text\">Statistics</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Kampanja</span>\n"
+"<span class=\"o_stat_text\">Statistike</span>"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"A campaign can have many activities like sending an email, printing\n"
+"            a letter, assigning to a team, etc. These activities are triggered\n"
+"            from specific situations; contact form, 10 days after first\n"
+"            contact, if a lead is not closed yet, etc."
+msgstr ""
+"Kampanja može imati mnoge aktivnosti kao što su slanje e-mailova, printanje\n"
+"pisama, dodjela zadataka timu itd. Te aktivnosti nastaju\n"
+"iz određenih situacija; obrazac za kontakt, 10 dana nakon prvog\n"
+"kontakta, ako je potencijal još nije zatvoren itd."
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
+msgid "Action"
+msgstr "Akcija"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_ids
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_tree
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+msgid "Activities"
+msgstr "Aktivnosti"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_activity_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_activity_id
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Activity"
+msgstr "Aktivnost"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:384
+#, python-format
+msgid "After %(interval_nbr)d %(interval_type)s"
+msgstr "Nakon %(interval_nbr)d %(interval_type)s"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+msgid "All"
+msgstr "Sve"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.segment,sync_mode:0
+msgid "All records (no duplicates)"
+msgstr "Svi zapisi (bez duplikata)"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_signal
+msgid ""
+"An activity with a signal can be called programmatically. Be careful, the "
+"workitem is always created when a signal is sent"
+msgstr ""
+"Aktivnost sa signalom može se programski pokrenuti. Budite oprezni, jer se "
+"stavka uvijek kreira kada je poslan signal"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "April"
+msgstr "Travanj"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "August"
+msgstr "Kolovoz"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,trigger:0
+msgid "Automatic"
+msgstr "Automatski"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:383
+#, python-format
+msgid "Automatic transition"
+msgstr "Automatske tranzicije"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
+msgid ""
+"By activating this option, workitems that aren't executed because the "
+"condition is not met are marked as cancelled instead of being deleted."
+msgstr ""
+"Ako aktivirate ovu opciju, stavke koje zbog neispunjenih uvjeta nisu "
+"izvršene bit će označene kao otkazane umjesto da budu izbrisane."
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_campaign_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_campaign_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_campaign_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_campaign_id
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_campaign_analysis_all
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Campaign"
+msgstr "Kampanja"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
+msgid "Campaign Activity"
+msgstr "Aktivnost kampanje"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.action_campaign_analysis_all
+#: model:ir.model,name:marketing_campaign.model_campaign_analysis
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+msgid "Campaign Analysis"
+msgstr "Analiza kampanje"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_diagram
+msgid "Campaign Editor"
+msgstr "Uređivanje kampanje"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+msgid "Campaign Follow-up"
+msgstr "Pratiti kampanju"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
+msgid "Campaign Segment"
+msgstr "Segment kampanje"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
+msgid "Campaign Transition"
+msgstr "Prijelaz kamanje"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
+msgid "Campaign Workitem"
+msgstr "Stavka kampanje"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_campaigns
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_tree
+msgid "Campaigns"
+msgstr "Kampanje"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
+msgid "Cancel"
+msgstr "Odustani"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+msgid "Cancel Campaign"
+msgstr "Otkaži kampanju"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Cancel Segment"
+msgstr "Otkaži segment"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
+msgid "Cancel Workitem"
+msgstr "Otkaži stavku"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
+#: selection:marketing.campaign.segment,state:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "Cancelled"
+msgstr "Otkazano"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_object_id
+msgid "Choose the resource on which you want this campaign to be run"
+msgstr "Odaberite izvor na kojem želite pokrenuti kampanju"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid "Click to create a marketing campaign."
+msgstr "Klikni za kreiranje marketinške kampanje."
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Close"
+msgstr "Zatvori"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_condition
+msgid "Condition"
+msgstr "Uvjet"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr "Čestitamo! Vi ste sada srebrni partner!"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr "Čestitamo! Vi ste sada jedan od naših zlatnih partnera!"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:385
+#: selection:marketing.campaign.transition,trigger:0
+#, python-format
+msgid "Cosmetic"
+msgstr "Kozmetika"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_total_cost
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
+msgid "Cost"
+msgstr "Trošak"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_country_id
+msgid "Country"
+msgstr "Država"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_create_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_create_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_create_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_create_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_create_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_create_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_create_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_create_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_create_date
+msgid "Created on"
+msgstr "Datum kreiranja"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.activity,action_type:0
+msgid "Custom Action"
+msgstr "Prilagođena radnja"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_sync_last_date
+msgid ""
+"Date on which this segment was synchronized last time (automatically or "
+"manually)"
+msgstr ""
+"Datum na koji je ovaj segment zadnji put sinkroniziran (automatski ili "
+"ručno)"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_done
+msgid "Date this segment was last closed or cancelled."
+msgstr "Datum kada je ovaj segment zadnji put bio zatvoren ili otkazan."
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Day(s)"
+msgstr "Dan(a)"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "December"
+msgstr "Prosinac"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_sync_mode
+msgid ""
+"Determines an additional criterion to add to the filter when selecting new "
+"records to inject in the campaign. \"No duplicates\" prevents selecting "
+"records which have already entered the campaign previously.If the campaign "
+"has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
+"records which have the same value for the unique field as other records that"
+" already entered the campaign."
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_display_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_display_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_display_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_display_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_display_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_display_name
+msgid "Display Name"
+msgstr "Naziv za prikaz"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
+msgid "Don't Delete Workitems"
+msgstr "Nemoj brisati stavke"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,state:0
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+#: selection:marketing.campaign,state:0
+#: selection:marketing.campaign.segment,state:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "Done"
+msgstr "Riješeno"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Draft"
+msgstr "Nacrt"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
+#, python-format
+msgid "Duplicating campaigns is not supported."
+msgstr "Dupliciranje kampanja nije podržano."
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.activity,action_type:0
+msgid "Email"
+msgstr "E-pošta"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:586
+#, python-format
+msgid "Email Preview"
+msgstr "Pregled e-maila"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
+msgid "Email Template"
+msgstr "predložak emaila"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "Pregled e-mail predloška"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_mail_template
+msgid "Email Templates"
+msgstr "Predlošci email poruka"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_done
+msgid "End Date"
+msgstr "Završni datum"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_error_msg
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
+msgid "Error Message"
+msgstr "Poruka greške:"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,state:0
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+#: selection:marketing.campaign.workitem,state:0
+msgid "Exception"
+msgstr "Iznimka"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+msgid "Exceptions"
+msgstr "Iznimke"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_date
+msgid "Execution Date"
+msgstr "Datum izvršenja"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_day
+msgid "Execution Day"
+msgstr "Dan izvršenja"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_month
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Execution Month"
+msgstr "Mjesec izvršenja"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_year
+msgid "Execution Year"
+msgstr "Godina izvršenja"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "February"
+msgstr "Veljača"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_ir_filter_id
+msgid "Filter"
+msgstr "Filtar"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_ir_filter_id
+msgid ""
+"Filter to select the matching resource records that belong to this segment. "
+"New filters can be created and saved using the advanced search on the list "
+"view of the Resource. If no filter is set, all records are selected without "
+"filtering. The synchronization mode may also add a criterion to the filter."
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_fixed_cost
+msgid "Fixed Cost"
+msgstr "Fiksni trošak"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_fixed_cost
+msgid ""
+"Fixed cost for running this campaign. You may also specify variable cost and"
+" revenue on each campaign activity. Cost and Revenue statistics are included"
+" in Campaign Reporting."
+msgstr ""
+"Fiksni troškovi za pokretanje ove kampanje. Možete odrediti varijabilne "
+"troškove i prihode za svaku aktivnost kampanje. Statistika troškova i "
+"prihoda uključena je u Izvještaje kampanje."
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+msgid "Follow-Up"
+msgstr "Pratiti"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
+msgid "Follow-up"
+msgstr "Pratiti"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Group By"
+msgstr "Grupiraj po"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Hour(s)"
+msgstr "Sat(i)"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_transition_trigger
+msgid "How is the destination workitem triggered"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_id
+msgid "ID"
+msgstr "ID"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_date
+msgid "If date is not set, this workitem has to be run manually"
+msgstr "Ako datum nije postavljen, ova se stavka mora ručno pokrenuti"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_unique_field_id
+msgid ""
+"If set, this field will help segments that work in \"no duplicates\" mode to"
+" avoid selecting similar records twice. Similar records are records that "
+"have the same value for this unique field. For example by choosing the "
+"\"email_from\" field for CRM Leads you would prevent sending the same "
+"campaign to the same email address again. If not set, the \"no duplicates\" "
+"segments will only avoid selecting the same record again if it entered the "
+"campaign previously. Only easily comparable fields like textfields, "
+"integers, selections or single relationships may be used."
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
+msgid "Incoming Transitions"
+msgstr "Ulazne poveznice"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_run
+msgid "Initial start date of this segment."
+msgstr "Inicijalni početni datum ovog segmenta."
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_type
+msgid "Interval Unit"
+msgstr "Jedinica intervala"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_nbr
+msgid "Interval Value"
+msgstr "Interna vrijednost"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "January"
+msgstr "Siječanj"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "July"
+msgstr "Srpanj"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "June"
+msgstr "Lipanj"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis___last_update
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign___last_update
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity___last_update
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment___last_update
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition___last_update
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem___last_update
+msgid "Last Modified on"
+msgstr "Zadnja promjena"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_last_date
+msgid "Last Synchronization"
+msgstr "Zadnja sinhronizacija"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_write_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_write_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_write_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_write_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_write_uid
+msgid "Last Updated by"
+msgstr "Promijenio"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_write_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_write_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_write_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_write_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_write_date
+msgid "Last Updated on"
+msgstr "Vrijeme promjene"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_run
+msgid "Launch Date"
+msgstr "Datum startanja"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Launch Month"
+msgstr "Mjesec startanja"
+
+#. module: marketing_campaign
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_root
+msgid "Lead Automation"
+msgstr "Automatizacija potencijala"
+
+#. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_manager
+msgid "Manager"
+msgstr "Voditelj"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+msgid "Manual Mode"
+msgstr "Ručni način"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "March"
+msgstr "Ožujak"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+msgid "Marketing Campaign"
+msgstr "Marketinška kampanja"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
+msgid "Marketing Campaign Activities"
+msgstr "Aktivnosti marketinške kampanje"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Marketing Campaign Activity"
+msgstr "Aktivnost marketinške kampanje"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Marketing Campaign Segment"
+msgstr "Segment marketinške kampanje"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+msgid "Marketing Campaign Statistics"
+msgstr "Statistika marketinške kampanje"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
+#: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
+#: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
+msgid "Marketing Reports"
+msgstr "Izvještaji marketinga"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "May"
+msgstr "Svibanj"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_mode
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+msgid "Mode"
+msgstr "Način"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
+#, python-format
+msgid "Model of filter must be same as resource model of Campaign"
+msgstr "Model filtra mora biti isti kao i model resursa kampanje"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Month(s)"
+msgstr "Mjesec(i)"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_name
+msgid "Name"
+msgstr "Naziv"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,state:0
+#: selection:marketing.campaign.segment,state:0
+msgid "New"
+msgstr "Novi"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Newly Created"
+msgstr "Novo kreirano"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Newly Modified"
+msgstr "Novo modificirano"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_to_ids
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
+msgid "Next Activities"
+msgstr "Sljedeće aktivnosti"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_activity_to_id
+msgid "Next Activity"
+msgstr "Sljedeća aktivnost"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_next_sync
+msgid "Next Synchronization"
+msgstr "Sljedeća sinhronizacija"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_next_sync
+msgid "Next time the synchronization job is scheduled to run automatically"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "Normal"
+msgstr "Normalan"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "November"
+msgstr "Studeni"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_object_id
+msgid "Object"
+msgstr "Objekt"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "October"
+msgstr "Listopad"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"Odoo's marketing campaign allows you to automate communication\n"
+"            to your prospects. You can define a segment (set of conditions) on\n"
+"            your leads and partners to fulfill the campaign."
+msgstr ""
+"Odoo marketinška kampanja dopušta Vam automatizaciju komunikacije\n"
+"s Vašim potencijalnim kupcima. Možete definirati segment (skup uvjeta) na\n"
+"Vašim potencijalima i partnerima kako biste popunili kampanju. "
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.segment,sync_mode:0
+msgid "Only records created after last sync"
+msgstr "Samo zapisi kreirani nakon zadnje sinkronizacije"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.segment,sync_mode:0
+msgid "Only records modified after last sync (no duplicates)"
+msgstr "Samo zapisi izmijenjeni nakon zadnje sinkronizacije (bez duplikata)"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
+msgid "Outgoing Transitions"
+msgstr "Izlazne tranzicije"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_partner_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
+msgid "Partner Field"
+msgstr "Partnersko polje"
+
+#. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "Partneri"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
+msgid "Preview"
+msgstr "Pregled"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_from_ids
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
+msgid "Previous Activities"
+msgstr "Prethodne aktivnosti"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_activity_from_id
+msgid "Previous Activity"
+msgstr "Prethodna aktivnost"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
+msgid "Process"
+msgstr "Proces"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_condition
+msgid ""
+"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
+"   - activity: the campaign activity\n"
+"   - workitem: the campaign workitem\n"
+"   - resource: the resource object this campaign item represents\n"
+"   - transitions: list of campaign transitions outgoing from this activity\n"
+"...- re: Python regular expression module"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
+#: selection:marketing.campaign.activity,action_type:0
+msgid "Report"
+msgstr "Izvješće"
+
+#. module: marketing_campaign
+#: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
+msgid "Reports"
+msgstr "Izvještaji"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
+msgid "Reset"
+msgstr "Poništi"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_res_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_object_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_object_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_object_id
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Resource"
+msgstr "Resurs"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_res_id
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Resource ID"
+msgstr "ID resursa"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_res_name
+msgid "Resource Name"
+msgstr "Naziv resursa"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_revenue
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_revenue
+msgid "Revenue"
+msgstr "Prihod"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Run"
+msgstr "Pokreni"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: selection:marketing.campaign,state:0
+#: selection:marketing.campaign.segment,state:0
+msgid "Running"
+msgstr "U tijeku"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_segment_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_segment_id
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Segment"
+msgstr "Segment"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_ids
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segments_count
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_tree
+msgid "Segments"
+msgstr "Segmenti"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "September"
+msgstr "Rujan"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_variable_cost
+msgid ""
+"Set a variable cost if you consider that every campaign item that has "
+"reached this point has entailed a certain cost. You can get cost statistics "
+"in the Reporting section"
+msgstr ""
+"Postavite varijabilni trošak ako mislite da svaka stavka kampanje koja je "
+"došla do ove točke sadržavala određeni trošak. Statistike troška možete "
+"dobiti u dijelu Izvještaji"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_revenue
+msgid ""
+"Set an expected revenue if you consider that every campaign item that has "
+"reached this point has generated a certain revenue. You can get revenue "
+"statistics in the Reporting section"
+msgstr ""
+"Postavite očekivani prihod ako mislite da je svaka stavka kampanje koja je "
+"došla do ove točke generirala određeni prihod. Statistike prihoda možete "
+"dobiti u dijelu Izvještaji "
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Set to Draft"
+msgstr "Postavi na nacrt"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_signal
+msgid "Signal"
+msgstr "Signal"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_start
+msgid "Start"
+msgstr "Start"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_state
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_state
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_state
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_state
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Status"
+msgstr "Status"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Sync mode: all records"
+msgstr "Sinhronizacija: svi zapisi"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Sync mode: only records created after last sync"
+msgstr "Sinhronizacija: samo zapisi kreirani nakon zadnje sinhronizacije"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Sync mode: only records updated after last sync"
+msgstr "Sinhronizacija: samo zapisi ažurirani nakon zadnje sinhronizacije"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_mode
+msgid "Synchronization mode"
+msgstr "Način sinhronizacije"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Synchronize Manually"
+msgstr "Sinhroniziraj ručno"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
+msgid ""
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports. \n"
+"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to \n"
+" validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "Test Directly"
+msgstr "Testiraj direktno"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+msgid "Test Mode"
+msgstr "Testni način rada"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "Test in Realtime"
+msgstr "Testiraj u stvarnom vremenu"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:401
+#, python-format
+msgid "The To/From Activity of transition must be of the same Campaign"
+msgstr "Za/od aktivnost prijelaza mora biti od iste kampanje"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
+msgid "The action to perform when this activity is activated"
+msgstr "Akcija za izvesti kada se ova aktivnost aktivira"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
+#, python-format
+msgid "The campaign cannot be marked as done before all segments are closed."
+msgstr ""
+"Kampanja se ne može označiti kao obavljena prije nego se svi segmenti "
+"zatvore."
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
+#, python-format
+msgid ""
+"The campaign cannot be started. It does not have any starting activity. "
+"Modify campaign's activities to mark one as the starting point."
+msgstr ""
+"Kampanja se ne može započeti, jer nema početnu aktivnost. Odredite "
+"aktivnosti kampanje kako biste odabrali jednu aktivnost kao točku polazišta."
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
+#, python-format
+msgid "The campaign cannot be started. There are no activities in it."
+msgstr "Kampanja se ne može započeti, jer ne sadrži aktivnosti."
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/models/marketing_campaign.py:609
+#, python-format
+msgid "The current step for this item has no email or report to preview."
+msgstr "Trenutni korak za ovu stavku nema e-mail ili izvješće za pregled."
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_email_template_id
+msgid "The email to send when this activity is activated"
+msgstr "E-mail za poslati kada se ova aktivnost aktivira"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_partner_field_id
+msgid ""
+"The generated workitems will be linked to the partner related to the record."
+" If the record is the partner itself leave this field empty. This is useful "
+"for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
+"views."
+msgstr ""
+
+#. module: marketing_campaign
+#: sql_constraint:marketing.campaign.transition:0
+msgid "The interval must be positive or zero"
+msgstr "Interval mora biti pozitivan ili nula"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_report_id
+msgid "The report to generate when this activity is activated"
+msgstr "Izvješće koje se treba generirati kada se ova aktivnost aktivira"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_action_type
+msgid ""
+"The type of action to execute when an item enters this activity, such as:\n"
+"- Email: send an email using a predefined email template \n"
+"- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
+"- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
+msgid "This activity is launched when the campaign starts."
+msgstr "Ova aktivnost se pokreće prilikom pokretanja kampanje"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,trigger:0
+msgid "Time"
+msgstr "Vrijeme"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,state:0
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+#: selection:marketing.campaign.workitem,state:0
+msgid "To Do"
+msgstr "Za napraviti"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_trigger
+msgid "Trigger"
+msgstr "Okidač"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_action_type
+msgid "Type"
+msgstr "Vrsta"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_unique_field_id
+msgid "Unique Field"
+msgstr "Jedinstveno polje"
+
+#. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_user
+msgid "User"
+msgstr "Korisnik"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
+msgid "Variable Cost"
+msgstr "Varijabilni trošak"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the Odoo Partner Channel!"
+msgstr "Dobrodošli u kanal Odoo Partner!"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "With Manual Confirmation"
+msgstr "Sa ručnom potvrdom"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+msgid "Workitems"
+msgstr "Stavke"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Year(s)"
+msgstr "Godina(e)"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"

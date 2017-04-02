@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Cleanup: answer or question edition -->
+        <!-- Not rollback feature in forum -->
+<!--         <record id="badge_3" model="gamification.badge">
+            <field name="name">Cleanup</field>
+            <field name="description">First rollback</field>
+            <field name="level">gold</field>
+        </record> -->
+
+        <!-- Critic: downvote based -->
+        <record id="badge_5" model="gamification.badge">
+            <field name="name">Critic</field>
+            <field name="description">First downvote</field>
+            <field name="level">bronze</field>
+            <field name="rule_auth">nobody</field>
+        </record>
+        <record model="gamification.goal.definition" id="definition_critic">
+            <field name="name">Critic</field>
+            <field name="description">First downvote</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" eval="ref('website_forum.model_forum_post_vote')"/>
+            <field name="condition">higher</field>
+            <field name="domain">[('vote', '=', '-1')]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_vote_user_id')" />
+            <field name="batch_user_expression">user.id</field>
+        </record>
+        <record model="gamification.challenge" id="challenge_critic">
+            <field name="name">Critic</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="reward_id" eval="ref('badge_5')" />
+            <field name="reward_realtime">True</field>
+            <field name="user_domain">[('karma', '>', 0)]</field>
+            <field name="state">inprogress</field>
+            <field name="category">forum</field>
+        </record>
+        <record model="gamification.challenge.line" id="line_critic">
+            <field name="definition_id" eval="ref('definition_critic')"/>
+            <field name="challenge_id" eval="ref('challenge_critic')"/>
+            <field name="target_goal">1</field>
+        </record>
+
+        <!-- Disciplined: delete own post with >=3 upvotes -->
+        <record id="badge_6" model="gamification.badge">
+            <field name="name">Disciplined</field>
+            <field name="description">Deleted own post with 3 or more upvotes</field>
+            <field name="level">bronze</field>
+            <field name="rule_auth">nobody</field>
+        </record>
+        <record model="gamification.goal.definition" id="definition_disciplined">
+            <field name="name">Disciplined</field>
+            <field name="description">Delete own post with 3 or more upvotes</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" eval="ref('website_forum.model_forum_post')" />
+            <field name="condition">higher</field>
+            <field name="domain">[('vote_count', '>=', 3), ('active', '=', False)]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_user_expression">user.id</field>
+        </record>
+        <record model="gamification.challenge" id="challenge_disciplined">
+            <field name="name">Disciplined</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="reward_id" eval="ref('badge_6')" />
+            <field name="reward_realtime">True</field>
+            <field name="user_domain">[('karma', '>', 0)]</field>
+            <field name="state">inprogress</field>
+            <field name="category">forum</field>
+        </record>
+        <record model="gamification.challenge.line" id="line_disciplined">
+            <field name="definition_id" eval="ref('definition_disciplined')"/>
+            <field name="challenge_id" eval="ref('challenge_disciplined')"/>
+            <field name="target_goal">1</field>
+        </record>
+
+        <!-- Editor: first edit -->
+        <record id="badge_7" model="gamification.badge">
+            <field name="name">Editor</field>
+            <field name="description">First edit</field>
+            <field name="level">gold</field>
+            <field name="rule_auth">nobody</field>
+        </record>
+        <record model="gamification.goal.definition" id="definition_editor">
+            <field name="name">Editor</field>
+            <field name="description">First edit of answer or question</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" eval="ref('mail.model_mail_message')" />
+            <field name="condition">higher</field>
+            <field name="domain" eval="[('model', '=', 'forum.post'), ('subtype_id', 'in', [ref('website_forum.mt_answer_edit'), ref('website_forum.mt_question_edit')])]"/>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('mail.field_mail_message_author_id')" />
+            <field name="batch_user_expression">user.partner_id.id</field>
+        </record>
+        <record model="gamification.challenge" id="challenge_editor">
+            <field name="name">Editor</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="reward_id" eval="ref('badge_7')" />
+            <field name="reward_realtime">True</field>
+            <field name="user_domain">[('karma', '>', 0)]</field>
+            <field name="state">inprogress</field>
+            <field name="category">forum</field>
+        </record>
+        <record model="gamification.challenge.line" id="line_editor">
+            <field name="definition_id" eval="ref('definition_editor')"/>
+            <field name="challenge_id" eval="ref('challenge_editor')"/>
+            <field name="target_goal">1</field>
+        </record>
+
+        <record id="badge_31" model="gamification.badge">
+            <field name="name">Supporter</field>
+            <field name="description">First upvote</field>
+            <field name="level">gold</field>
+            <field name="rule_auth">nobody</field>
+        </record>
+        <record model="gamification.goal.definition" id="definition_supporter">
+            <field name="name">Supporter</field>
+            <field name="description">First upvote</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" eval="ref('website_forum.model_forum_post_vote')" />
+            <field name="condition">higher</field>
+            <field name="domain">[('vote', '=', '1')]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_vote_user_id')" />
+            <field name="batch_user_expression">user.id</field>
+        </record>
+        <record model="gamification.challenge" id="challenge_supporter">
+            <field name="name">Supporter</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="reward_id" eval="ref('badge_31')" />
+            <field name="reward_realtime">True</field>
+            <field name="user_domain">[('karma', '>', 0)]</field>
+            <field name="state">inprogress</field>
+            <field name="category">forum</field>
+        </record>
+        <record model="gamification.challenge.line" id="line_supporter">
+            <field name="definition_id" eval="ref('definition_supporter')" />
+            <field name="target_goal">1</field>
+            <field name="challenge_id" eval="ref('challenge_supporter')" />
+        </record>
+
+
+        <record id="badge_23" model="gamification.badge">
+            <field name="name">Peer Pressure</field>
+            <field name="description">Deleted own post with 3 or more downvotes</field>
+            <field name="level">gold</field>
+            <field name="rule_auth">nobody</field>
+        </record>
+        <record model="gamification.goal.definition" id="definition_peer_pressure">
+            <field name="name">Peer Pressure</field>
+            <field name="description">Delete own post with 3 or more down votes</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" eval="ref('website_forum.model_forum_post')" />
+            <field name="condition">higher</field>
+            <field name="domain">[('vote_count', '&lt;=', -3), ('active', '=', False)]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_user_expression">user.id</field>
+        </record>
+        <record model="gamification.challenge" id="challenge_peer_pressure">
+            <field name="name">Peer Pressure</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="reward_id" eval="ref('badge_23')" />
+            <field name="reward_realtime">True</field>
+            <field name="user_domain">[('karma', '>', 0)]</field>
+            <field name="state">inprogress</field>
+            <field name="category">forum</field>
+        </record>
+        <record model="gamification.challenge.line" id="line_peer_pressure">
+            <field name="definition_id" eval="ref('definition_peer_pressure')" />
+            <field name="target_goal">1</field>
+            <field name="challenge_id" eval="ref('challenge_peer_pressure')" />
+        </record>
+
+    </data>
+</odoo>

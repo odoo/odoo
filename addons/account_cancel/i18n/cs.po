@@ -1,0 +1,53 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_cancel
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Ladislav Tomm <tomm@helemik.cz>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Ladislav Tomm <tomm@helemik.cz>, 2016\n"
+"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#. module: account_cancel
+#: model:ir.model,name:account_cancel.model_account_bank_statement
+msgid "Bank Statement"
+msgstr "Bankovní výpis"
+
+#. module: account_cancel
+#: model:ir.model,name:account_cancel.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Řádek bankovního výpisu"
+
+#. module: account_cancel
+#: model:ir.ui.view,arch_db:account_cancel.bank_statement_cancel_form_inherit
+#: model:ir.ui.view,arch_db:account_cancel.payment_cancel_form_inherit
+msgid "Cancel"
+msgstr "Zrušit"
+
+#. module: account_cancel
+#: model:ir.ui.view,arch_db:account_cancel.invoice_form_cancel_inherit
+#: model:ir.ui.view,arch_db:account_cancel.invoice_supplier_cancel_form_inherit
+msgid "Cancel Invoice"
+msgstr "Zrušit fakturu"
+
+#. module: account_cancel
+#: code:addons/account_cancel/models/account_bank_statement.py:28
+#, python-format
+msgid "Please set the bank statement to New before canceling."
+msgstr "Prosím, před zrušením, nastavte bankovní výpis na Nový."
+
+#. module: account_cancel
+#: model:ir.ui.view,arch_db:account_cancel.bank_statement_draft_form_inherit
+msgid "Reset to New"
+msgstr "Restartovat na nový"

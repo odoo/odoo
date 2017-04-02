@@ -1,0 +1,3652 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account
+#
+# Translators:
+# Daniel Blanco <daniel@blancomartin.com.ar>, 2015
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2015
+# Virginia Castro <castrovirginia88@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-05-29 19:23+0000\n"
+"Last-Translator: Virginia Castro <castrovirginia88@gmail.com>\n"
+"Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-9/"
+"language/es_AR/)\n"
+"Language: es_AR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1521
+#, python-format
+msgid " seconds"
+msgstr "segundos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_code_digits
+msgid "# of Digits"
+msgstr "Nº de dígitos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
+msgid "# of Transaction"
+msgstr "Nº de transacción"
+
+#. module: account
+#: code:addons/account/models/account.py:610
+#, python-format
+msgid "%s (Copy)"
+msgstr "%s (copia)"
+
+#. module: account
+#: code:addons/account/models/account.py:170
+#: code:addons/account/models/account.py:342
+#: code:addons/account/models/account.py:343
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copia)"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_15days
+msgid "15 Days"
+msgstr "15 Días"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_net
+msgid "30 Net Days"
+msgstr "30 días netos"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_generalledger
+msgid ": General ledger"
+msgstr ": Libro mayor"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+msgid ": Trial Balance"
+msgstr ": Balance de sumas y saldos"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "<span>Reports</span>"
+msgstr "<span>Reportes</span>"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+#: model:ir.ui.view,arch_db:account.report_journal
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"
+
+#. module: account
+#: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
+msgid ""
+"A Cash Register allows you to manage cash entries in your cash\n"
+"                journals. This feature provides an easy way to follow up "
+"cash\n"
+"                payments on a daily basis. You can enter the coins that are "
+"in\n"
+"                your cash box, and then post entries when money comes in or\n"
+"                goes out of the cash box."
+msgstr ""
+"A Cash Register allows you to manage cash entries in your cash\n"
+"                journals. This feature provides an easy way to follow up "
+"cash\n"
+"                payments on a daily basis. You can enter the coins that are "
+"in\n"
+"                your cash box, and then post entries when money comes in or\n"
+"                goes out of the cash box."
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:867
+#: code:addons/account/models/account_bank_statement.py:870
+#, python-format
+msgid "A selected move line was already reconciled."
+msgstr "Alguna de las líneas seleccionadas a mover ya fue conciliada."
+
+#. module: account
+#: sql_constraint:account.fiscal.position.tax:0
+msgid "A tax fiscal position could be defined only once time on same taxes."
+msgstr ""
+"Una posición fiscal podría ser definida una única vez en los mismos "
+"impuestos."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:94
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:99
+#: code:addons/account/static/src/xml/account_reconciliation.xml:141
+#: code:addons/account/static/src/xml/account_reconciliation.xml:267
+#: model:ir.model,name:account.model_account_account
+#: model:ir.model.fields,field_description:account.field_account_invoice_account_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_account_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_account_id
+#: model:ir.model.fields,field_description:account.field_account_move_dummy_account_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_account_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_account_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_account_id
+#: model:ir.ui.view,arch_db:account.report_journal
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+#: model:ir.ui.view,arch_db:account.view_account_form
+#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+#: model:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: account
+#: model:ir.model,name:account.model_account_aged_trial_balance
+msgid "Account Aged Trial balance Report"
+msgstr "Informe de comprobación de saldos vencidos"
+
+#. module: account
+#: model:ir.model,name:account.model_account_common_account_report
+msgid "Account Common Account Report"
+msgstr "Contabilidad. Informe contable común"
+
+#. module: account
+#: model:ir.model,name:account.model_account_common_partner_report
+msgid "Account Common Partner Report"
+msgstr "Reporte Contable Común de Partner"
+
+#. module: account
+#: model:ir.model,name:account.model_account_common_report
+msgid "Account Common Report"
+msgstr "Contabilidad. Informe común"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_currency_id
+#: model:ir.model.fields,field_description:account.field_account_account_template_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_currency_id
+msgid "Account Currency"
+msgstr "Cuenta de la moneda"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_dest_id
+msgid "Account Destination"
+msgstr "Cuenta destino"
+
+#. module: account
+#: model:ir.model,name:account.model_account_move
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Account Entry"
+msgstr "Asiento contable"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_journal_id
+#: model:ir.ui.view,arch_db:account.view_account_bank_journal_tree
+#: model:ir.ui.view,arch_db:account.view_account_journal_form
+#: model:ir.ui.view,arch_db:account.view_account_journal_tree
+msgid "Account Journal"
+msgstr "Diario contable"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_account_line_id
+msgid "Account Line"
+msgstr "Linea de asiento"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_ids
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_account_ids
+#: model:ir.ui.view,arch_db:account.view_account_position_form
+msgid "Account Mapping"
+msgstr "Asociación de cuentas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_acc_name
+msgid "Account Name."
+msgstr "Nombre cuenta."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_bank_acc_number
+msgid "Account Number"
+msgstr "Número de cuenta"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner_property_account_payable_id
+msgid "Account Payable"
+msgstr "Cuenta a pagar"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_category_property_form
+msgid "Account Properties"
+msgstr "Propiedades Contables"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner_property_account_receivable_id
+msgid "Account Receivable"
+msgstr "Cuenta a cobrar"
+
+#. module: account
+#: model:ir.model,name:account.model_account_financial_report
+#: model:ir.model.fields,field_description:account.field_account_financial_report_children_ids
+#: model:ir.ui.view,arch_db:account.view_account_financial_report_form
+#: model:ir.ui.view,arch_db:account.view_account_financial_report_search
+#: model:ir.ui.view,arch_db:account.view_account_financial_report_tree
+msgid "Account Report"
+msgstr "Informe financiero"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_accounting_report_account_report_id
+#: model:ir.ui.menu,name:account.menu_account_financial_reports_tree
+msgid "Account Reports"
+msgstr "Informes de Contabilidad"
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
+#: model:ir.ui.view,arch_db:account.view_account_report_tree_hierarchy
+msgid "Account Reports Hierarchy"
+msgstr "Jerarquía de reportes contables"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_src_id
+msgid "Account Source"
+msgstr "Cuenta origen"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_bank_statement_graph
+#: model:ir.ui.view,arch_db:account.account_bank_statement_pivot
+#: model:ir.ui.view,arch_db:account.account_move_line_graph_date
+#: model:ir.ui.view,arch_db:account.account_move_line_graph_date_cash_basis
+msgid "Account Statistics"
+msgstr "Estadísticas de cuentas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_tax_form
+#: model:ir.ui.view,arch_db:account.view_tax_tree
+msgid "Account Tax"
+msgstr "Cuenta de impuestos"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_tax_template_form
+#: model:ir.ui.view,arch_db:account.view_account_tax_template_tree
+msgid "Account Tax Template"
+msgstr "Plantilla de impuesto"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
+#: model:ir.ui.view,arch_db:account.view_account_template_form
+#: model:ir.ui.view,arch_db:account.view_account_template_search
+#: model:ir.ui.view,arch_db:account.view_account_template_tree
+msgid "Account Template"
+msgstr "Plantilla de cuenta"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_template_form
+msgid "Account Templates"
+msgstr "Plantillas de cuentas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
+msgid "Account Total"
+msgstr "Total de la cuenta"
+
+#. module: account
+#: selection:account.financial.report,type:0
+#: model:ir.model,name:account.model_account_account_type
+#: model:ir.model.fields,field_description:account.field_account_account_type_name
+#: model:ir.ui.view,arch_db:account.view_account_search
+#: model:ir.ui.view,arch_db:account.view_account_template_search
+#: model:ir.ui.view,arch_db:account.view_account_type_form
+#: model:ir.ui.view,arch_db:account.view_account_type_search
+#: model:ir.ui.view,arch_db:account.view_account_type_tree
+msgid "Account Type"
+msgstr "Tipo de Cuenta"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_account_user_type_id
+#: model:ir.model.fields,help:account.field_account_move_line_user_type_id
+msgid ""
+"Account Type is used for information purpose, to generate country-specific "
+"legal reports, and set the rules to close a fiscal year and generate opening "
+"entries."
+msgstr ""
+"El Tipo de Cuenta es usado con propósito informativo, para generar informes "
+"legales específicos de cada país, y establecer las reglas para cerrar un año "
+"fiscal y generar los asientos de apertura."
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_type_form
+#: model:ir.model.fields,field_description:account.field_account_financial_report_account_type_ids
+msgid "Account Types"
+msgstr "Tipos de cuentas"
+
+#. module: account
+#: model:ir.model,name:account.model_account_unreconcile
+msgid "Account Unreconcile"
+msgstr "Desconciliar Cuenta"
+
+#. module: account
+#: model:ir.model,name:account.model_account_move_line_reconcile
+msgid "Account move line reconcile"
+msgstr "Contabilidad. Conciliar línea de movimiento"
+
+#. module: account
+#: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
+msgid "Account move line reconcile (writeoff)"
+msgstr "Concilia el apunte contable (desajuste)"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Accountant"
+msgstr "Contable"
+
+#. module: account
+#: model:ir.ui.menu,name:account.account_account_menu
+#: model:ir.ui.menu,name:account.menu_finance
+#: model:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "Accounting"
+msgstr "Contabilidad"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Accounting & Finance"
+msgstr "Contabilidad y finanzas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
+msgid "Accounting Application Configuration"
+msgstr "Contabilidad. Configuración de Aplicaciones"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Accounting Documents"
+msgstr "Documentos contables"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "Accounting Entries"
+msgstr "Asientos contables"
+
+#. module: account
+#: model:ir.model,name:account.model_accounting_report
+msgid "Accounting Report"
+msgstr "Informe financiero"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "Accounting-related settings are managed on"
+msgstr "La configuración relativa a contabilidad es gestionada en"
+
+#. module: account
+#: selection:account.account.tag,applicability:0
+#: selection:account.financial.report,type:0
+#: model:ir.model.fields,field_description:account.field_account_financial_report_account_ids
+#: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
+#: model:ir.ui.view,arch_db:account.view_account_search
+msgid "Accounts"
+msgstr "Cuentas"
+
+#. module: account
+#: model:ir.model,name:account.model_account_fiscal_position_account
+msgid "Accounts Fiscal Position"
+msgstr "Contabilidad. Posición fiscal"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_position_template_form
+msgid "Accounts Mapping"
+msgstr "Asignación de cuentas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_active
+#: model:ir.model.fields,field_description:account.field_account_payment_term_active
+#: model:ir.model.fields,field_description:account.field_account_tax_active
+#: model:ir.model.fields,field_description:account.field_account_tax_template_active
+msgid "Active"
+msgstr "Activo"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:17
+#, python-format
+msgid "Add"
+msgstr "Agregar"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Add an internal note..."
+msgstr "Añadir una nota interna..."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_comment
+msgid "Additional Information"
+msgstr "Información adicional"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_supplier_form
+msgid "Additional notes..."
+msgstr "Notas adicionales..."
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Address"
+msgstr "Dirección"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_tax_template_form
+#: model:ir.ui.view,arch_db:account.view_tax_form
+msgid "Advanced Options"
+msgstr "Opciones Avanzadas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Advanced Settings"
+msgstr "Ajustes avanzados"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_aged_balance_view
+#: model:ir.actions.report.xml,name:account.action_report_aged_partner_balance
+#: model:ir.ui.menu,name:account.menu_aged_trial_balance
+#: model:ir.ui.view,arch_db:account.account_aged_balance_view
+#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
+msgid "Aged Partner Balance"
+msgstr "Balance de comprobación de partner"
+
+#. module: account
+#. openerp-web
+#: selection:account.balance.report,display_account:0
+#: selection:account.common.account.report,display_account:0
+#: selection:account.report.general.ledger,display_account:0
+#: code:addons/account/static/src/xml/account_reconciliation.xml:298
+#, python-format
+msgid "All"
+msgstr "Todas"
+
+#. module: account
+#: selection:account.aged.trial.balance,target_move:0
+#: selection:account.balance.report,target_move:0
+#: selection:account.common.account.report,target_move:0
+#: selection:account.common.journal.report,target_move:0
+#: selection:account.common.partner.report,target_move:0
+#: selection:account.common.report,target_move:0
+#: selection:account.print.journal,target_move:0
+#: selection:account.report.general.ledger,target_move:0
+#: selection:account.report.partner.ledger,target_move:0
+#: selection:accounting.report,target_move:0
+#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
+#: model:ir.ui.view,arch_db:account.report_financial
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_journal
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+msgid "All Entries"
+msgstr "Todos los asientos"
+
+#. module: account
+#: selection:account.aged.trial.balance,target_move:0
+#: selection:account.balance.report,target_move:0
+#: selection:account.common.account.report,target_move:0
+#: selection:account.common.journal.report,target_move:0
+#: selection:account.common.partner.report,target_move:0
+#: selection:account.common.report,target_move:0
+#: selection:account.print.journal,target_move:0
+#: selection:account.report.general.ledger,target_move:0
+#: selection:account.report.partner.ledger,target_move:0
+#: selection:accounting.report,target_move:0
+#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
+#: model:ir.ui.view,arch_db:account.report_financial
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_journal
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+msgid "All Posted Entries"
+msgstr "Todos los asientos publicados"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+msgid "All accounts"
+msgstr "Todas las cuentas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_generalledger
+msgid "All accounts'"
+msgstr "Todas las cuentas'"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
+msgid "All lines reconciled"
+msgstr "Todas las lineas conciliadas"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_move_state
+msgid ""
+"All manually created new journal entries are usually in the status "
+"'Unposted', but you can set the option to skip that status on the related "
+"journal. In that case, they will behave as journal entries automatically "
+"created by the system on document validation (invoices, bank statements...) "
+"and will be created in 'Posted' status."
+msgstr ""
+"Todos los asientos creados manualmente suelen estar en el estado 'Sin "
+"asentar', salvo cuando se establece la opción de saltar ese estado en el "
+"diario relacionado. En ese caso, se comportarán como los asientos creados "
+"automáticamente por el sistema en la validación de documentos (facturas, "
+"extractos bancarios...) y serán creados en el estado 'Asentado'."
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:240
+#, python-format
+msgid ""
+"All the account entries lines must be processed in order to close the "
+"statement."
+msgstr ""
+"Todas las lineas de asientos deben ser procesadas a fin de cerrar el "
+"extracto."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_update_posted
+msgid "Allow Cancelling Entries"
+msgstr "Permitir cancelación de Asientos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_reconcile
+msgid "Allow Reconciliation"
+msgstr "Permitir conciliación"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_group_multi_currency
+msgid "Allow multi currencies"
+msgstr "Permitir multi divisa"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_group_proforma_invoices
+msgid "Allow pro-forma invoices"
+msgstr "Permitir facturas pro-forma"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
+msgid "Allows you to put invoices in pro-forma state."
+msgstr "Le permite poner las facturas en estado pro-forma."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_group_analytic_accounting
+msgid "Allows you to use the analytic accounting."
+msgstr "Le permite usar la contabilidad analítica."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:134
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:138
+#: code:addons/account/static/src/xml/account_reconciliation.xml:150
+#: code:addons/account/static/src/xml/account_reconciliation.xml:266
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
+#: model:ir.model.fields,field_description:account.field_account_move_amount
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_amount
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_amount
+#: model:ir.model.fields,field_description:account.field_account_tax_amount
+#: model:ir.model.fields,field_description:account.field_account_tax_template_amount
+#: model:ir.model.fields,field_description:account.field_cash_box_in_amount
+#: model:ir.model.fields,field_description:account.field_cash_box_out_amount
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_amount
+#: model:ir.ui.view,arch_db:account.view_account_payment_tree
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+#: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+#, python-format
+msgid "Amount"
+msgstr "Importe"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_residual
+#: model:ir.ui.view,arch_db:account.invoice_tree
+msgid "Amount Due"
+msgstr "Monto Adeudado"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_amount_currency
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount_currency
+#: model:ir.model.fields,field_description:account.field_account_move_line_amount_currency
+msgid "Amount currency"
+msgstr "Importe en moneda"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
+msgid "Amount in Currency"
+msgstr "Importe"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_amount_type
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_amount_type
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+msgid "Amount type"
+msgstr "Tipo de importe"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:68
+#, python-format
+msgid "Amount:"
+msgstr "Importe:"
+
+#. module: account
+#: sql_constraint:account.fiscal.position.account:0
+msgid ""
+"An account fiscal position could be defined only once time on same accounts."
+msgstr ""
+"Una posición fiscal de cuenta sólo puede estar definida una vez en las "
+"mismas cuentas."
+
+#. module: account
+#: model:ir.actions.act_window,help:account.action_account_form
+msgid ""
+"An account is part of a ledger allowing your company\n"
+"                to register all kinds of debit and credit transactions.\n"
+"                Companies present their annual accounts in two main parts: "
+"the\n"
+"                balance sheet and the income statement (profit and loss\n"
+"                account). The annual accounts of a company are required by "
+"law\n"
+"                to disclose a certain amount of information."
+msgstr ""
+"Una cuenta es parte de un libro, permitiendo a su compañía\n"
+"registrar todo tipo de transacciones de débito y crédito.\n"
+"Las compañías presentan sus cuentas anuales en dos partes principales: el "
+"balance y el estado de resultados (cuentas de pérdidas y ganancias). Las "
+"cuentas anuales de una compañía son un requisito legal consistente en "
+"brindar una cierta cantidad de información."
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Analytic"
+msgstr "Analítico"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:146
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:152
+#, python-format
+msgid "Analytic Acc."
+msgstr "Cuenta analítica"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_account_analytic_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_analytic_account_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_analytic_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_analytic_account_id
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+msgid "Analytic Account"
+msgstr "Cuenta Analítica"
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_analytic_accounting
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Analytic Accounting"
+msgstr "Contabilidad analítica"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_open_partner_analytic_accounts
+#: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
+#: model:ir.ui.view,arch_db:account.partner_view_button_contracts_count
+msgid "Analytic Accounts"
+msgstr "Cuentas analíticas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_template_analytic
+msgid "Analytic Cost"
+msgstr "Costo Analítico"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.analytic_line_reporting_pivot
+#: model:ir.ui.menu,name:account.menu_action_analytic_lines_reporting
+#: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
+msgid "Analytic Entries"
+msgstr "Asientos analíticos"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+#: model:ir.ui.view,arch_db:account.view_move_line_form2
+msgid "Analytic Lines"
+msgstr "Líneas Analíticas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_account_analytic_id
+msgid "Analytic account"
+msgstr "Cuenta analítica"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_group_analytic_accounting
+msgid "Analytic accounting"
+msgstr "Contabilidad analítica"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_analytic_line_ids
+msgid "Analytic lines"
+msgstr "Líneas analíticas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag_applicability
+msgid "Applicability"
+msgstr "Aplicación"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Apply"
+msgstr "Aplicar"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_auto_apply
+msgid "Apply automatically this fiscal position."
+msgstr "Aplicar automáticamente esta posición fiscal"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_country_group_id
+msgid "Apply only if delivery or invocing country match the group."
+msgstr "Aplicar solo si el país de envío o la factura coincide con el grupo"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_country_id
+msgid "Apply only if delivery or invoicing country match."
+msgstr "Aplicar solo si el pais de envío o la factura coincide"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_vat_required
+msgid "Apply only if partner has a VAT number."
+msgstr "Aplicar solo si el cliente tiene un número de identificación fiscal"
+
+#. module: account
+#: selection:res.company,fiscalyear_last_month:0
+msgid "April"
+msgstr "Abril"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_supplier_form
+msgid "Ask Refund"
+msgstr "Pedir reembolso"
+
+#. module: account
+#: model:account.financial.report,name:account.account_financial_report_assets0
+msgid "Assets"
+msgstr "Activo"
+
+#. module: account
+#: selection:res.company,fiscalyear_last_month:0
+msgid "August"
+msgstr "Agosto"
+
+#. module: account
+#: selection:account.financial.report,style_overwrite:0
+msgid "Automatic formatting"
+msgstr "Formateo automático"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_price_average
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_user_currency_price_average
+msgid "Average Price"
+msgstr "Precio Promedio"
+
+#. module: account
+#: selection:account.payment.term.line,value:0
+#: model:ir.model.fields,field_description:account.field_account_move_line_balance
+#: model:ir.ui.view,arch_db:account.report_financial
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+msgid "Balance"
+msgstr "Saldo"
+
+#. module: account
+#: model:account.financial.report,name:account.account_financial_report_balancesheet0
+#: model:ir.actions.act_window,name:account.action_account_report_bs
+#: model:ir.ui.menu,name:account.menu_account_report_bs
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "Balance Sheet"
+msgstr "Estado de Situación Patrimonial"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_balance_end
+msgid "Balance as calculated based on Opening Balance and transaction lines"
+msgstr ""
+"El saldo se ha calculado basado en el saldo de apertura y las líneas de "
+"transacción"
+
+#. module: account
+#: selection:account.bank.accounts.wizard,account_type:0
+#: selection:account.journal,type:0
+#: code:addons/account/models/chart_template.py:687
+#: model:ir.model.fields,field_description:account.field_account_journal_bank_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account_count
+#, python-format
+msgid "Bank"
+msgstr "Banco"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Bank & Cash"
+msgstr "Banco y efectivo"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_bank_account_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_bank_account_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_journal_bank_account_id
+#: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
+#: model:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Bank Account"
+msgstr "Cuenta bancaria"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_bank_journal_form
+#: model:ir.model,name:account.model_res_partner_bank
+#: model:ir.ui.menu,name:account.menu_action_account_bank_journal_form
+msgid "Bank Accounts"
+msgstr "Cuentas bancarias"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
+msgid "Bank Reconciliation Move Presets"
+msgstr "Preconfiguración del asiento de conciliación bancaria"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_search
+msgid "Bank Reconciliation Move preset"
+msgstr "Preconfiguración del asiento de conciliación bancaria"
+
+#. module: account
+#: model:ir.model,name:account.model_account_bank_statement
+#: model:ir.ui.view,arch_db:account.view_bank_statement_form
+#: model:ir.ui.view,arch_db:account.view_bank_statement_search
+msgid "Bank Statement"
+msgstr "Extracto bancario"
+
+#. module: account
+#: model:ir.model,name:account.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Línea de Extracto Bancario"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_bank_statement_line
+msgid "Bank Statement Lines"
+msgstr "Líneas de extracto bancario"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_bank_statement_tree
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Bank Statements"
+msgstr "Extractos Bancarios"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_company_footer
+msgid "Bank accounts as printed in the footer of each printed document"
+msgstr ""
+"Números de cuenta para imprimir en el pie de página de cada documento impreso"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_company_footer
+msgid "Bank accounts footer preview"
+msgstr "Vista previa números de cuenta en pie de página"
+
+#. module: account
+#: model:account.account.type,name:account.data_account_type_liquidity
+msgid "Bank and Cash"
+msgstr "Banco y efectivo"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
+msgid "Bank statements"
+msgstr "Extractos bancarios"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:205
+#, python-format
+msgid "Bank statements are fully reconciled."
+msgstr "Los extractos bancarios han sido completamente conciliados"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_supplier_form
+#: model:ir.ui.view,arch_db:account.invoice_supplier_tree
+msgid "Bill Date"
+msgstr "Fecha factura"
+
+#. module: account
+#: model:res.groups,name:account.group_account_invoice
+msgid "Billing"
+msgstr "Facturación"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_budget
+msgid "Budget management"
+msgstr "Gestión de presupuestos"
+
+#. module: account
+#: model:ir.ui.menu,name:account.account_reports_business_intelligence_menu
+msgid "Business Intelligence"
+msgstr "Inteligencia de Negocios"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_name
+msgid "Button Label"
+msgstr "Etiqueta del botón"
+
+#. module: account
+#: model:ir.filters,name:account.filter_invoice_country
+msgid "By Country"
+msgstr "Por país"
+
+#. module: account
+#: model:ir.filters,name:account.filter_invoice_product
+msgid "By Product"
+msgstr "Por producto"
+
+#. module: account
+#: model:ir.filters,name:account.filter_invoice_product_category
+msgid "By Product Category"
+msgstr "Por categoría de producto"
+
+#. module: account
+#: model:ir.filters,name:account.filter_invoice_refund
+msgid "By Refund"
+msgstr "Por devolución"
+
+#. module: account
+#: model:ir.filters,name:account.filter_invoice_salespersons
+msgid "By Salespersons"
+msgstr "Por comerciales"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_active
+msgid ""
+"By unchecking the active field, you may hide a fiscal position without "
+"deleting it."
+msgstr ""
+"Desmarcando el campo actual, esconderá la posición fiscal sin borrarla."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_visible
+msgid "Can be Visible?"
+msgstr "¿Puede ser visible?"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_aged_balance_view
+#: model:ir.ui.view,arch_db:account.account_common_report_view
+#: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
+#: model:ir.ui.view,arch_db:account.account_invoice_confirm_view
+#: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
+#: model:ir.ui.view,arch_db:account.account_unreconcile_view
+#: model:ir.ui.view,arch_db:account.cash_box_in_form
+#: model:ir.ui.view,arch_db:account.cash_box_out_form
+#: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
+#: model:ir.ui.view,arch_db:account.validate_account_move_view
+#: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
+#: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+#: model:ir.ui.view,arch_db:account.view_account_invoice_refund
+#: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
+#: model:ir.ui.view,arch_db:account.view_account_move_reversal
+#: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
+#: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_supplier_form
+msgid "Cancel Bill"
+msgstr "Cancelar Comprobante"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Cancel Entry"
+msgstr "Cancelar apunte"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_form
+msgid "Cancel Invoice"
+msgstr "Cancelar factura"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
+msgid "Cancel Invoices"
+msgstr "Cancelar facturas"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_invoice_cancel
+#: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
+msgid "Cancel Selected Invoices"
+msgstr "Cancelar facturas seleccionadas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_bank_statement_form
+msgid "Cancel Statement"
+msgstr "Cancelar extracto"
+
+#. module: account
+#: model:ir.model,name:account.model_account_invoice_cancel
+msgid "Cancel the Selected Invoices"
+msgstr "Cancelar las facturas seleccionadas"
+
+#. module: account
+#: selection:account.invoice.refund,filter_refund:0
+msgid "Cancel: create refund and reconcile"
+msgstr "Cancelar: crea la nota de crédito y concilia"
+
+#. module: account
+#: selection:account.invoice,state:0 selection:account.invoice.report,state:0
+msgid "Cancelled"
+msgstr "Cancelada"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Cancelled Invoice"
+msgstr "Factura Cancelada"
+
+#. module: account
+#: code:addons/account/models/account_move.py:173
+#, python-format
+msgid "Cannot create moves for different companies."
+msgstr "No se pueden crear apuntes de compañías diferentes."
+
+#. module: account
+#: code:addons/account/models/account_move.py:205
+#, python-format
+msgid "Cannot create unbalanced journal entry."
+msgstr "No se puede crear un ingreso desbalanceado en el diario."
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:477
+#, python-format
+msgid ""
+"Cannot find a chart of accounts for this company, You should configure it. \n"
+"Please go to Account Configuration."
+msgstr ""
+"No se ha podido encontrar un árbol de cuentas de esta compañía, debería "
+"configurar una. Por favor, diríjase a la configuración de cuentas."
+
+#. module: account
+#: code:addons/account/models/account.py:425
+#, python-format
+msgid "Cannot generate an unused account code."
+msgstr "No puede generar un código de cuenta no utilizado."
+
+#. module: account
+#: code:addons/account/models/account.py:455
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please fill the 'Shortcode' field."
+msgstr ""
+"No puede generar un código de diario no utilizado. Por favor complete el "
+"campo 'Código Corto'"
+
+#. module: account
+#: code:addons/account/wizard/account_invoice_refund.py:54
+#, python-format
+msgid "Cannot refund draft/proforma/cancelled invoice."
+msgstr "No puede reembolsar una factura borrador, proforma o cancelada."
+
+#. module: account
+#: code:addons/account/wizard/account_invoice_refund.py:56
+#, python-format
+msgid ""
+"Cannot refund invoice which is already reconciled, invoice should be "
+"unreconciled first. You can only refund this invoice."
+msgstr ""
+"No puede reembolsar una factura que ya está conciliada, debe romper la "
+"conciliación primero para hacer el reembolso de esta factura."
+
+#. module: account
+#: selection:account.bank.accounts.wizard,account_type:0
+#: selection:account.journal,type:0
+#: code:addons/account/models/chart_template.py:687
+#, python-format
+msgid "Cash"
+msgstr "Efectivo"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_cash_account_code_prefix
+msgid "Cash Accounts Prefix"
+msgstr "Prefijo de Cuentas de Caja"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:203
+#: model:ir.actions.act_window,name:account.action_view_account_bnk_stmt_cashbox
+#, python-format
+msgid "Cash Control"
+msgstr "Control de Efectivo"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_move_filter
+msgid "Cash Operations"
+msgstr "Operaciones de Caja"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
+msgid "Cash Registers"
+msgstr "Registros de Caja"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Cash Statements"
+msgstr "Asientos de Caja"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_ids
+msgid "Cash and Banks"
+msgstr "Caja y bancos"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:178
+#, python-format
+msgid "Cash difference observed during the counting (%s)"
+msgstr "Diferencia de caja observada durante el conteo (%s)"
+
+#. module: account
+#: model:ir.model,name:account.model_account_cashbox_line
+msgid "CashBox Line"
+msgstr "Línea de caja"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_cashbox_lines_ids
+msgid "Cashbox Lines"
+msgstr "Líneas de Caja"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Change"
+msgstr "Cambiar"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_template_chart_template_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_chart_template_id
+#: model:ir.model.fields,field_description:account.field_account_tax_template_chart_template_id
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_chart_template_id
+msgid "Chart Template"
+msgstr "Plantilla del Plan de cuentas"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.open_account_charts_modules
+msgid "Chart Templates"
+msgstr "Plantillas de plan"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Chart of Account"
+msgstr "Plan contable"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_form
+#: model:ir.ui.menu,name:account.menu_action_account_form
+#: model:ir.ui.view,arch_db:account.account_planner
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Chart of Accounts"
+msgstr "Plan de Cuentas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_chart_template_form
+#: model:ir.ui.view,arch_db:account.view_account_chart_template_tree
+msgid "Chart of Accounts Template"
+msgstr "Plantilla del plan de cuentas"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_chart_template_form
+msgid "Chart of Accounts Templates"
+msgstr "Plantillas del plan de cuentas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_list
+msgid "Chart of accounts"
+msgstr "Plan de cuentas"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_expects_chart_of_accounts
+msgid "Check this box if this company is a legal entity."
+msgstr "Marque esta casilla si la compañía es una entidad legal."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_journal_update_posted
+msgid ""
+"Check this box if you want to allow the cancellation the entries related to "
+"this journal or of the invoice related to this journal"
+msgstr ""
+"Marque esta opción si quiere permitir la cancelación de asientos "
+"relacionados con este diario o de la factura relacionada con este diario."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_tax_price_include
+#: model:ir.model.fields,help:account.field_account_tax_template_price_include
+msgid ""
+"Check this if the price you use on the product and invoices includes this "
+"tax."
+msgstr ""
+"Tilde esta casilla si el precio que utiliza en el producto y en las facturas "
+"incluye este impuesto."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_account_template_reconcile
+msgid ""
+"Check this option if you want the user to reconcile entries in this account."
+msgstr ""
+"Tilde esta opción si desea que el usuario concilie los asientos de esta "
+"cuenta."
+
+#. module: account
+#: model:ir.actions.act_window,help:account.action_bank_statement_tree
+msgid "Click to register a bank statement."
+msgstr "Haga click para registrar un estado de cuenta bancario"
+
+#. module: account
+#: model:ir.actions.act_window,help:account.action_account_payments
+#: model:ir.actions.act_window,help:account.action_account_payments_payable
+msgid "Click to register a payment"
+msgstr "Haga click para registrar un pago"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:41
+#, python-format
+msgid "Close"
+msgstr "Cerrar"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:227
+#, python-format
+msgid "Close the statement"
+msgstr "Cerrar el extracto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_date_done
+msgid "Closed On"
+msgstr "Cerrado en"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_method_code
+#: model:ir.model.fields,field_description:account.field_account_account_code
+#: model:ir.model.fields,field_description:account.field_account_account_template_code
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_code
+#: model:ir.model.fields,field_description:account.field_account_payment_method_code
+#: model:ir.model.fields,field_description:account.field_account_payment_payment_method_code
+#: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_code
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+msgid "Code"
+msgstr "Código"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_cashbox_line_coin_value
+msgid "Coin/Bill Value"
+msgstr "Valor de Moneda o Cuenta"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag_color
+msgid "Color Index"
+msgstr "Índice de Color"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_accounting_report_label_filter
+msgid "Column Label"
+msgstr "Etiqueta de Columna"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_comment
+msgid "Comment"
+msgstr "Comentario"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_commercial_partner_id
+#: model:ir.model.fields,help:account.field_account_invoice_report_commercial_partner_id
+msgid "Commercial Entity"
+msgstr "Entidad comercial"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_common_menu
+msgid "Common Report"
+msgstr "Informe común"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_overdue_document
+msgid "Communication"
+msgstr "Comunicación"
+
+#. module: account
+#: model:ir.model,name:account.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner_ref_company_ids
+msgid "Companies that refers to partner"
+msgstr "Compañías hacen referencia al partner"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_abstract_payment_company_id
+#: model:ir.model.fields,field_description:account.field_account_account_company_id
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_company_id
+#: model:ir.model.fields,field_description:account.field_account_balance_report_company_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_company_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_company_id
+#: model:ir.model.fields,field_description:account.field_account_chart_template_company_id
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_company_id
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_company_id
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_company_id
+#: model:ir.model.fields,field_description:account.field_account_common_report_company_id
+#: model:ir.model.fields,field_description:account.field_account_config_settings_company_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_company_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_company_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_company_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_company_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_company_id
+#: model:ir.model.fields,field_description:account.field_account_journal_company_id
+#: model:ir.model.fields,field_description:account.field_account_move_company_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_company_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_company_id
+#: model:ir.model.fields,field_description:account.field_account_payment_company_id
+#: model:ir.model.fields,field_description:account.field_account_payment_term_company_id
+#: model:ir.model.fields,field_description:account.field_account_print_journal_company_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_company_id
+#: model:ir.model.fields,field_description:account.field_account_register_payments_company_id
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_company_id
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_company_id
+#: model:ir.model.fields,field_description:account.field_account_tax_company_id
+#: model:ir.model.fields,field_description:account.field_account_tax_template_company_id
+#: model:ir.model.fields,field_description:account.field_accounting_report_company_id
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_company_id
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model:ir.ui.view,arch_db:account.view_account_payment_search
+#: model:ir.ui.view,arch_db:account.view_account_tax_search
+msgid "Company"
+msgstr "Compañía"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_has_chart_of_accounts
+msgid "Company has a chart of accounts"
+msgstr "La compañía tiene un árbol de cuentas"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_abstract_payment_company_id
+#: model:ir.model.fields,help:account.field_account_bank_statement_company_id
+#: model:ir.model.fields,help:account.field_account_bank_statement_line_company_id
+#: model:ir.model.fields,help:account.field_account_journal_company_id
+#: model:ir.model.fields,help:account.field_account_move_company_id
+#: model:ir.model.fields,help:account.field_account_payment_company_id
+#: model:ir.model.fields,help:account.field_account_register_payments_company_id
+msgid "Company related to this journal"
+msgstr "Compañía relacionada con este diario"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.accounting_report_view
+msgid "Comparison"
+msgstr "Comparación"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_complete_tax_set
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_complete_tax_set
+msgid "Complete Set of Taxes"
+msgstr "Conjunto completo de impuestos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_complete_tax_set
+msgid "Complete set of taxes"
+msgstr "Conjunto de impuestos completo"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:414
+#, python-format
+msgid "Compose Email"
+msgstr "Componer correo electrónico"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_move_line_counterpart
+msgid ""
+"Compute the counter part accounts of this journal item for this journal "
+"entry. This can be needed in reports."
+msgstr ""
+"Contabiliza la contrapartida de este item para este asiento del diario. Esto "
+"puede ser necesario en los reportes."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end
+msgid "Computed Balance"
+msgstr "Balance Computado"
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_finance_configuration
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Configuration"
+msgstr "Configuración"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:455
+#: code:addons/account/models/account_payment.py:457
+#, python-format
+msgid "Configuration Error !"
+msgstr "¡Error de configuración!"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:343
+#, python-format
+msgid ""
+"Configuration error!\n"
+"Could not find any account to create the invoice, are you sure you have a "
+"chart of account installed?"
+msgstr ""
+"¡Error de configuración!\n"
+"No se pudo encontrar ninguna cuenta para crear la factura. \n"
+"¿Está seguro que ha instalado un plan de cuentas?"
+
+#. module: account
+#: code:addons/account/models/account.py:301
+#, python-format
+msgid ""
+"Configuration error!\n"
+"The currency of the journal should be the same than the default credit "
+"account."
+msgstr ""
+"¡Error de configuración!\n"
+"La moneda del diario debería ser la misma que la de la cuenta de crédito por "
+"defecto."
+
+#. module: account
+#: code:addons/account/models/account.py:303
+#, python-format
+msgid ""
+"Configuration error!\n"
+"The currency of the journal should be the same than the default debit "
+"account."
+msgstr ""
+"¡Error de configuración!\n"
+"La moneda del diario debería ser la misma que la de la cuenta de débito por "
+"defecto."
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_config
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Configure Accounting"
+msgstr "Configurar Contabilidad"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Configure your company data"
+msgstr "Configurar datos de su compañía"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
+#: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
+#: model:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_invoice_confirm
+#: model:ir.ui.view,arch_db:account.account_invoice_confirm_view
+msgid "Confirm Draft Invoices"
+msgstr "Confirmar Facturas Borrador"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_invoice_confirm_view
+msgid "Confirm Invoices"
+msgstr "Confirmar facturas"
+
+#. module: account
+#: model:ir.model,name:account.model_account_invoice_confirm
+msgid "Confirm the selected invoices"
+msgstr "Confirmar las facturas seleccionadas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_bank_statement_search
+msgid "Confirmed"
+msgstr "Confirmada"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1525
+#, python-format
+msgid "Congrats, you're all done !"
+msgstr "¡Felicitaciones, no tiene tareas pendientes!"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner_contract_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_contracts_count
+msgid "Contracts"
+msgstr "Contratos"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:393
+#: model:ir.model.fields,field_description:account.field_account_move_line_counterpart
+#, python-format
+msgid "Counterpart"
+msgstr "Contrapartida"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_account_id
+msgid "Counterpart Account"
+msgstr "Contrapartida"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_id
+msgid "Country"
+msgstr "País"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_group_id
+msgid "Country Group"
+msgstr "Grupo de países"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_country_id
+msgid "Country of the Partner Company"
+msgstr "País de la de la empresa de la compañia"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_invoice_refund
+msgid "Create Refund"
+msgstr "Crear Nota de Crédito"
+
+#. module: account
+#: selection:account.invoice.refund,filter_refund:0
+msgid "Create a draft refund"
+msgstr "Crear una nota de crédito borrador"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_create_uid
+#: model:ir.model.fields,field_description:account.field_account_account_tag_create_uid
+#: model:ir.model.fields,field_description:account.field_account_account_template_create_uid
+#: model:ir.model.fields,field_description:account.field_account_account_type_create_uid
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_create_uid
+#: model:ir.model.fields,field_description:account.field_account_balance_report_create_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_create_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_create_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance_create_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_create_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_create_uid
+#: model:ir.model.fields,field_description:account.field_account_cashbox_line_create_uid
+#: model:ir.model.fields,field_description:account.field_account_chart_template_create_uid
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_create_uid
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_create_uid
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_create_uid
+#: model:ir.model.fields,field_description:account.field_account_common_report_create_uid
+#: model:ir.model.fields,field_description:account.field_account_config_settings_create_uid
+#: model:ir.model.fields,field_description:account.field_account_financial_report_create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template_create_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_create_uid
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile_create_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_cancel_create_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_confirm_create_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_create_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_create_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund_create_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_create_uid
+#: model:ir.model.fields,field_description:account.field_account_journal_create_uid
+#: model:ir.model.fields,field_description:account.field_account_move_create_uid
+#: model:ir.model.fields,field_description:account.field_account_move_line_create_uid
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_create_uid
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_create_uid
+#: model:ir.model.fields,field_description:account.field_account_move_reversal_create_uid
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_method_create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_term_create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line_create_uid
+#: model:ir.model.fields,field_description:account.field_account_print_journal_create_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_create_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_create_uid
+#: model:ir.model.fields,field_description:account.field_account_register_payments_create_uid
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_create_uid
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_create_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_create_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_group_create_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_template_create_uid
+#: model:ir.model.fields,field_description:account.field_account_unreconcile_create_uid
+#: model:ir.model.fields,field_description:account.field_accounting_report_create_uid
+#: model:ir.model.fields,field_description:account.field_cash_box_in_create_uid
+#: model:ir.model.fields,field_description:account.field_cash_box_out_create_uid
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_create_uid
+#: model:ir.model.fields,field_description:account.field_validate_account_move_create_uid
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_create_date
+#: model:ir.model.fields,field_description:account.field_account_account_tag_create_date
+#: model:ir.model.fields,field_description:account.field_account_account_template_create_date
+#: model:ir.model.fields,field_description:account.field_account_account_type_create_date
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_create_date
+#: model:ir.model.fields,field_description:account.field_account_balance_report_create_date
+#: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_create_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_create_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance_create_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_create_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_create_date
+#: model:ir.model.fields,field_description:account.field_account_cashbox_line_create_date
+#: model:ir.model.fields,field_description:account.field_account_chart_template_create_date
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_create_date
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_create_date
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_create_date
+#: model:ir.model.fields,field_description:account.field_account_common_report_create_date
+#: model:ir.model.fields,field_description:account.field_account_config_settings_create_date
+#: model:ir.model.fields,field_description:account.field_account_financial_report_create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template_create_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_create_date
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile_create_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_cancel_create_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_confirm_create_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_create_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_create_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund_create_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_create_date
+#: model:ir.model.fields,field_description:account.field_account_journal_create_date
+#: model:ir.model.fields,field_description:account.field_account_move_create_date
+#: model:ir.model.fields,field_description:account.field_account_move_line_create_date
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_create_date
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_create_date
+#: model:ir.model.fields,field_description:account.field_account_move_reversal_create_date
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_create_date
+#: model:ir.model.fields,field_description:account.field_account_payment_create_date
+#: model:ir.model.fields,field_description:account.field_account_payment_method_create_date
+#: model:ir.model.fields,field_description:account.field_account_payment_term_create_date
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line_create_date
+#: model:ir.model.fields,field_description:account.field_account_print_journal_create_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_create_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_create_date
+#: model:ir.model.fields,field_description:account.field_account_register_payments_create_date
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_create_date
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_create_date
+#: model:ir.model.fields,field_description:account.field_account_tax_create_date
+#: model:ir.model.fields,field_description:account.field_account_tax_group_create_date
+#: model:ir.model.fields,field_description:account.field_account_tax_template_create_date
+#: model:ir.model.fields,field_description:account.field_account_unreconcile_create_date
+#: model:ir.model.fields,field_description:account.field_accounting_report_create_date
+#: model:ir.model.fields,field_description:account.field_cash_box_in_create_date
+#: model:ir.model.fields,field_description:account.field_cash_box_out_create_date
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_create_date
+#: model:ir.model.fields,field_description:account.field_validate_account_move_create_date
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_credit
+#: model:ir.ui.view,arch_db:account.report_financial
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_journal
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+msgid "Credit"
+msgstr "Haber"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_invoice_refund
+msgid "Credit Note"
+msgstr "Nota de crédito"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_credit
+msgid "Credit amount"
+msgstr "Importe haber"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_abstract_payment_currency_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_company_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_currency_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_currency_id
+#: model:ir.model.fields,field_description:account.field_account_chart_template_currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_currency_id
+#: model:ir.model.fields,field_description:account.field_account_journal_currency_id
+#: model:ir.model.fields,field_description:account.field_account_move_currency_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_currency_id
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_company_currency_id
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_company_id
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_currency_id
+#: model:ir.model.fields,field_description:account.field_account_payment_currency_id
+#: model:ir.model.fields,field_description:account.field_account_register_payments_currency_id
+#: model:ir.model.fields,field_description:account.field_res_partner_currency_id
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_currency_id
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_journal
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+#: model:ir.ui.view,arch_db:account.view_account_payment_search
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_currency_rate
+msgid "Currency Rate"
+msgstr "Tasa monetaria"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_currency_id
+msgid "Currency as per company's country."
+msgstr "Moneda por país de la compañía."
+
+#. module: account
+#: selection:account.abstract.payment,partner_type:0
+#: selection:account.payment,partner_type:0
+#: selection:account.register.payments,partner_type:0
+#: model:ir.ui.view,arch_db:account.invoice_form
+#: model:ir.ui.view,arch_db:account.invoice_tree
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model:ir.ui.view,arch_db:account.view_account_payment_tree
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: account
+#: selection:account.invoice,type:0 selection:account.invoice.report,type:0
+msgid "Customer Invoice"
+msgstr "Factura de Cliente"
+
+#. module: account
+#: code:addons/account/models/chart_template.py:182
+#: model:ir.actions.act_window,name:account.action_invoice_tree1
+#: model:ir.ui.menu,name:account.menu_action_invoice_tree1
+#: model:ir.ui.view,arch_db:account.account_planner
+#, python-format
+msgid "Customer Invoices"
+msgstr "Facturas de cliente"
+
+#. module: account
+#: selection:account.invoice,type:0 selection:account.invoice.report,type:0
+#: code:addons/account/models/account_payment.py:488
+#, python-format
+msgid "Customer Refund"
+msgstr "Reembolso al Cliente"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_product_template_taxes_id
+msgid "Customer Taxes"
+msgstr "Impuestos de Cliente"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_overdue_document
+msgid "Customer ref:"
+msgstr "Ref. cliente:"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:295
+#: model:ir.ui.menu,name:account.menu_account_customer
+#, python-format
+msgid "Customers"
+msgstr "Clientes"
+
+#. module: account
+#. openerp-web
+#: selection:account.print.journal,sort_selection:0
+#: selection:account.report.general.ledger,sortby:0
+#: selection:accounting.report,filter_cmp:0
+#: code:addons/account/static/src/xml/account_reconciliation.xml:143
+#: code:addons/account/static/src/xml/account_reconciliation.xml:262
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_date
+#: model:ir.model.fields,field_description:account.field_account_move_date
+#: model:ir.model.fields,field_description:account.field_account_move_line_date
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_date_p
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_date
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_journal
+#: model:ir.ui.view,arch_db:account.report_overdue_document
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model:ir.ui.view,arch_db:account.view_account_move_filter
+#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model:ir.ui.view,arch_db:account.view_bank_statement_search
+#, python-format
+msgid "Date"
+msgstr "Fecha"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:56
+#, python-format
+msgid "Date:"
+msgstr "Fecha:"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.accounting_report_view
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Dates"
+msgstr "Fechas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_debit
+#: model:ir.ui.view,arch_db:account.report_financial
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_journal
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+msgid "Debit"
+msgstr "Debe"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_debit
+msgid "Debit amount"
+msgstr "Importe debe"
+
+#. module: account
+#: selection:res.company,fiscalyear_last_month:0
+msgid "December"
+msgstr "Diciembre"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
+msgid "Default Credit Account"
+msgstr "Cuenta de Haber predeterminada"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_default_debit_account_id
+msgid "Default Debit Account"
+msgstr "Cuenta de débito predeterminada"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_default_purchase_tax_id
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_purchase_tax_id
+msgid "Default Purchase Tax"
+msgstr "Impuesto de compra por defecto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_default_sale_tax_id
+msgid "Default Sale Tax"
+msgstr "Impuesto de venta por defecto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tax_ids
+#: model:ir.model.fields,field_description:account.field_account_account_template_tax_ids
+#: model:ir.ui.view,arch_db:account.view_account_chart_template_form
+#: model:ir.ui.view,arch_db:account.view_account_template_form
+msgid "Default Taxes"
+msgstr "Impuestos predeterminados"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_currency_id
+msgid "Default company currency"
+msgstr "Moneda por defecto de la compañía"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_purchase_tax_id
+msgid "Default purchase tax"
+msgstr "Impuesto de compra por defecto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_sale_tax_id
+msgid "Default sale tax"
+msgstr "Impuesto de venta por defecto"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_tax_template_form
+#: model:ir.ui.view,arch_db:account.view_tax_form
+msgid "Definition"
+msgstr "Definición"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_deprecated
+msgid "Deprecated"
+msgstr "Obsoleto"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.cash_box_out_form
+msgid "Describe why you take money from the cash register:"
+msgstr "Indique por qué retira dinero de la caja registradora:"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:265
+#: model:ir.model.fields,field_description:account.field_account_account_type_note
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_name
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+#: model:ir.ui.view,arch_db:account.view_account_payment_search
+#: model:ir.ui.view,arch_db:account.view_account_type_form
+#, python-format
+msgid "Description"
+msgstr "Descripción"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_difference
+msgid "Difference"
+msgstr "Diferencia"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Disc.(%)"
+msgstr "Desc.(%)"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_discount
+msgid "Discount (%)"
+msgstr "Descuento (%)"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_balance_report_display_account
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_display_account
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_display_account
+msgid "Display Accounts"
+msgstr "Mostrar cuentas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_accounting_report_debit_credit
+msgid "Display Debit/Credit Columns"
+msgstr "Mostrar columnas debe/haber"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_abstract_payment_display_name
+#: model:ir.model.fields,field_description:account.field_account_account_display_name
+#: model:ir.model.fields,field_description:account.field_account_account_tag_display_name
+#: model:ir.model.fields,field_description:account.field_account_account_template_display_name
+#: model:ir.model.fields,field_description:account.field_account_account_type_display_name
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_display_name
+#: model:ir.model.fields,field_description:account.field_account_balance_report_display_name
+#: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_display_name
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_display_name
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance_display_name
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_display_name
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_display_name
+#: model:ir.model.fields,field_description:account.field_account_cashbox_line_display_name
+#: model:ir.model.fields,field_description:account.field_account_chart_template_display_name
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_display_name
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_display_name
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_display_name
+#: model:ir.model.fields,field_description:account.field_account_common_report_display_name
+#: model:ir.model.fields,field_description:account.field_account_config_settings_display_name
+#: model:ir.model.fields,field_description:account.field_account_financial_report_display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template_display_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_display_name
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile_display_name
+#: model:ir.model.fields,field_description:account.field_account_invoice_cancel_display_name
+#: model:ir.model.fields,field_description:account.field_account_invoice_confirm_display_name
+#: model:ir.model.fields,field_description:account.field_account_invoice_display_name
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_display_name
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund_display_name
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_display_name
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_display_name
+#: model:ir.model.fields,field_description:account.field_account_journal_display_name
+#: model:ir.model.fields,field_description:account.field_account_move_display_name
+#: model:ir.model.fields,field_description:account.field_account_move_line_display_name
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_display_name
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_display_name
+#: model:ir.model.fields,field_description:account.field_account_move_reversal_display_name
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_display_name
+#: model:ir.model.fields,field_description:account.field_account_payment_display_name
+#: model:ir.model.fields,field_description:account.field_account_payment_method_display_name
+#: model:ir.model.fields,field_description:account.field_account_payment_term_display_name
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line_display_name
+#: model:ir.model.fields,field_description:account.field_account_print_journal_display_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_display_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_display_name
+#: model:ir.model.fields,field_description:account.field_account_register_payments_display_name
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_display_name
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_display_name
+#: model:ir.model.fields,field_description:account.field_account_tax_display_name
+#: model:ir.model.fields,field_description:account.field_account_tax_group_display_name
+#: model:ir.model.fields,field_description:account.field_account_tax_template_display_name
+#: model:ir.model.fields,field_description:account.field_account_unreconcile_display_name
+#: model:ir.model.fields,field_description:account.field_accounting_report_display_name
+#: model:ir.model.fields,field_description:account.field_cash_box_in_display_name
+#: model:ir.model.fields,field_description:account.field_cash_box_out_display_name
+#: model:ir.model.fields,field_description:account.field_report_account_report_agedpartnerbalance_display_name
+#: model:ir.model.fields,field_description:account.field_report_account_report_financial_display_name
+#: model:ir.model.fields,field_description:account.field_report_account_report_generalledger_display_name
+#: model:ir.model.fields,field_description:account.field_report_account_report_journal_display_name
+#: model:ir.model.fields,field_description:account.field_report_account_report_overdue_display_name
+#: model:ir.model.fields,field_description:account.field_report_account_report_partnerledger_display_name
+#: model:ir.model.fields,field_description:account.field_report_account_report_trialbalance_display_name
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_display_name
+#: model:ir.model.fields,field_description:account.field_validate_account_move_display_name
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_display_name
+msgid "Display Name"
+msgstr "Mostrar Nombre"
+
+#. module: account
+#: selection:account.financial.report,display_detail:0
+msgid "Display children flat"
+msgstr "Mostrar hijos sin jerarquía"
+
+#. module: account
+#: selection:account.financial.report,display_detail:0
+msgid "Display children with hierarchy"
+msgstr "Mostrar hijos con jerarquía"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_financial_report_display_detail
+msgid "Display details"
+msgstr "Muestra detalles"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_journal_display_on_footer
+msgid ""
+"Display this bank account on the footer of printed documents like invoices "
+"and sales orders."
+msgstr ""
+"Mostrar esta cuenta bancaria en el pie de página de los documentos impresos "
+"como facturas y órdenes de venta."
+
+#. module: account
+#: selection:account.invoice.report,state:0
+msgid "Done"
+msgstr "Realizado"
+
+#. module: account
+#: selection:account.invoice,state:0 selection:account.invoice.report,state:0
+#: selection:account.payment,state:0
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model:ir.ui.view,arch_db:account.view_account_payment_search
+#: model:ir.ui.view,arch_db:account.view_bank_statement_search
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_form
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Draft Invoice"
+msgstr "Factura borrador"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+msgid "Draft Invoices"
+msgstr "Facturas en borrador"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_form
+#: model:ir.ui.view,arch_db:account.invoice_supplier_form
+msgid "Draft Refund"
+msgstr "Borrador de nota de crédito"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
+msgid "Draft statements"
+msgstr "Extractos en borrador"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_overdue_document
+msgid "Due"
+msgstr "Debe"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:144
+#: model:ir.model.fields,field_description:account.field_account_invoice_date_due
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_date_due
+#: model:ir.ui.view,arch_db:account.report_overdue_document
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
+#, python-format
+msgid "Due Date"
+msgstr "Fecha de vencimiento"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_payment_term_line_form
+msgid "Due Date Computation"
+msgstr "Cómputo de fechas de vencimiento"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+msgid "Due Month"
+msgstr "Mes de vencimiento"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_date_maturity
+msgid "Due date"
+msgstr "Fecha vencimiento"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1529
+#, python-format
+msgid "Efficiency at its finest"
+msgstr "Eficiencia en su máxima expresión"
+
+#. module: account
+#: model:ir.model,name:account.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Asistente de composición de e-mail"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
+msgid "Enable Comparison"
+msgstr "Habilitar Comparación"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_date_to
+#: model:ir.model.fields,field_description:account.field_account_balance_report_date_to
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_date_to
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_date_to
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_date_to
+#: model:ir.model.fields,field_description:account.field_account_common_report_date_to
+#: model:ir.model.fields,field_description:account.field_account_print_journal_date_to
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_date_to
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_date_to
+#: model:ir.model.fields,field_description:account.field_accounting_report_date_to
+#: model:ir.model.fields,field_description:account.field_accounting_report_date_to_cmp
+msgid "End Date"
+msgstr "Fecha Final"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end_real
+msgid "Ending Balance"
+msgstr "Saldo Final"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_move_line_form
+msgid "Entries"
+msgstr "Asientos"
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:52
+#, python-format
+msgid "Entries: "
+msgstr "Asientos: "
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_generalledger
+msgid "Entry Label"
+msgstr "Etiqueta del asiento"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_sequence_id
+msgid "Entry Sequence"
+msgstr "Secuencia del asiento"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_move_line_ids
+msgid "Entry lines"
+msgstr "Líneas de asiento"
+
+#. module: account
+#: model:account.account.type,name:account.data_account_type_equity
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "Equity"
+msgstr "Patrimonio"
+
+#. module: account
+#: code:addons/account/wizard/account_report_common.py:28
+#, python-format
+msgid "Error!"
+msgstr "¡Error!"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company_expects_chart_of_accounts
+msgid "Expects a Chart of Accounts"
+msgstr "Se esperaba un plan de cuentas"
+
+#. module: account
+#: model:account.financial.report,name:account.account_financial_report_expense0
+msgid "Expense"
+msgstr "Gasto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_product_category_property_account_expense_categ_id
+#: model:ir.model.fields,field_description:account.field_product_template_property_account_expense_id
+#: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
+msgid "Expense Account"
+msgstr "Cuenta de gastos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_id
+msgid "Expense Account on Product Template"
+msgstr "Cuenta de gastos en plantilla producto"
+
+#. module: account
+#: model:account.account.type,name:account.data_account_type_expenses
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "Expenses"
+msgstr "Gastos"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1536
+#, python-format
+msgid "Fast reconciler"
+msgstr "Conciliador rápido"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_journal_search
+msgid "Favorites"
+msgstr "Favoritos"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Features"
+msgstr "Características"
+
+#. module: account
+#: selection:res.company,fiscalyear_last_month:0
+msgid "February"
+msgstr "Febrero"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.cash_box_in_form
+msgid "Fill in this form if you put money in the cash register:"
+msgstr "Rellene este formulario si pone dinero en la caja registradora:"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_accounting_report_filter_cmp
+msgid "Filter by"
+msgstr "Filtrado por"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_financial_report_style_overwrite
+msgid "Financial Report Style"
+msgstr "Estilo de reporte financiero"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_financial_report_tree
+#: model:ir.actions.act_window,name:account.action_account_report
+#: model:ir.ui.menu,name:account.menu_account_reports
+msgid "Financial Reports"
+msgstr "Reportes financieros"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_report_tree_hierarchy
+msgid "Financial Reports Hierarchy"
+msgstr "Jerarquía de reportes financieros"
+
+#. module: account
+#: model:ir.actions.report.xml,name:account.action_report_financial
+msgid "Financial report"
+msgstr "Reporte financiero"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_position_id
+msgid "Fiscal Mapping"
+msgstr "Mapeo fiscal"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
+#: model:ir.model,name:account.model_account_fiscal_position
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_position_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_name
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_position_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template_position_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_res_partner_property_account_position_id
+#: model:ir.ui.view,arch_db:account.view_account_position_form
+#: model:ir.ui.view,arch_db:account.view_account_position_template_search
+#: model:ir.ui.view,arch_db:account.view_account_position_template_tree
+#: model:ir.ui.view,arch_db:account.view_account_position_tree
+msgid "Fiscal Position"
+msgstr "Posición fiscal"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_name
+#: model:ir.ui.view,arch_db:account.view_account_position_template_form
+#: model:ir.ui.view,arch_db:account.view_account_position_template_search
+msgid "Fiscal Position Template"
+msgstr "Plantilla de posición fiscal"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
+#: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
+msgid "Fiscal Positions"
+msgstr "Posiciones fiscales"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Fiscal Year"
+msgstr "Año Fiscal"
+
+#. module: account
+#: selection:account.reconcile.model,amount_type:0
+#: selection:account.reconcile.model,second_amount_type:0
+#: selection:account.reconcile.model.template,amount_type:0
+#: selection:account.reconcile.model.template,second_amount_type:0
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Fixed"
+msgstr "Fijo"
+
+#. module: account
+#: selection:account.payment.term.line,value:0
+msgid "Fixed Amount"
+msgstr "Monto fijo"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_financial_report_sign
+msgid ""
+"For accounts that are typically more debited than credited and that you "
+"would like to print as negative amounts in your reports, you should reverse "
+"the sign of the balance; e.g.: Expense account. The same applies for "
+"accounts that are typically more credited than debited and that you would "
+"like to print as positive amounts in your reports; e.g.: Income account."
+msgstr ""
+"Para cuentas que típicamente tienen más débito que crédito y que desea "
+"imprimir con importes negativos en sus informes, debería revertir el signo "
+"en el balance; Ej.: cuenta de gasto. La misma aplica para cuentas que "
+"típicamente tienen más crédito que débito y que desea imprimir con importes "
+"positivos en sus informes. Ej.: cuenta de ingresos."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_account_template_currency_id
+#: model:ir.model.fields,help:account.field_account_bank_accounts_wizard_currency_id
+msgid "Forces all moves for this account to have this secondary currency."
+msgstr ""
+"Fuerza a todos los movimientos de esta cuenta tener esta moneda secundaria."
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:81
+#, python-format
+msgid "Free Reference"
+msgstr "Referencia libre"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_accountant
+msgid ""
+"Full accounting features: journals, legal statements, chart of accounts, etc."
+msgstr ""
+"Funcionalidad completa de contabilidad: Diarios, informes legales, árbol de "
+"cuentas, etc."
+
+#. module: account
+#: code:addons/account/models/account_journal_dashboard.py:103
+#, python-format
+msgid "Future"
+msgstr "Futuro"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_income_currency_exchange_account_id
+#: model:ir.model.fields,field_description:account.field_res_company_income_currency_exchange_account_id
+msgid "Gain Exchange Rate Account"
+msgstr "Ingresos por diferencia de cambio"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_move_line_form2
+msgid "General Information"
+msgstr "Información general"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
+#: model:ir.actions.report.xml,name:account.action_report_general_ledger
+#: model:ir.ui.menu,name:account.menu_general_ledger
+msgid "General Ledger"
+msgstr "Libro Mayor"
+
+#. module: account
+#: model:ir.model,name:account.model_account_report_general_ledger
+msgid "General Ledger Report"
+msgstr "Informe de Libro Mayor"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_line_sequence
+msgid "Gives the sequence of this line when displaying the invoice."
+msgstr "Presenta la secuencia de esta línea cuando muestra la factura"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line_sequence
+msgid ""
+"Gives the sequence order when displaying a list of bank statement lines."
+msgstr ""
+"Indica el orden de secuencia cuando se muestra una lista de líneas de "
+"extracto bancario."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_tax_sequence
+msgid "Gives the sequence order when displaying a list of invoice tax."
+msgstr ""
+"Indica el orden de secuencia cuando se muestra una lista de impuestos de "
+"factura."
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:478
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "Vaya al panel de configuración"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:205
+#: code:addons/account/static/src/xml/account_reconciliation.xml:309
+#: code:addons/account/static/src/xml/account_reconciliation.xml:316
+#, python-format
+msgid "Good Job!"
+msgstr "¡Buen trabajo!"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
+#: model:ir.ui.view,arch_db:account.view_account_financial_report_search
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model:ir.ui.view,arch_db:account.view_account_move_filter
+#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model:ir.ui.view,arch_db:account.view_account_search
+#: model:ir.ui.view,arch_db:account.view_account_tax_search
+#: model:ir.ui.view,arch_db:account.view_account_template_search
+#: model:ir.ui.view,arch_db:account.view_bank_statement_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_group_invoice_lines
+msgid "Group Invoice Lines"
+msgstr "Agrupar líneas de factura"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_has_default_company
+msgid "Has default company"
+msgstr "Tiene compañía por defecto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_abstract_payment_id
+#: model:ir.model.fields,field_description:account.field_account_account_id
+#: model:ir.model.fields,field_description:account.field_account_account_tag_id
+#: model:ir.model.fields,field_description:account.field_account_account_template_id
+#: model:ir.model.fields,field_description:account.field_account_account_type_id
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_id
+#: model:ir.model.fields,field_description:account.field_account_balance_report_id
+#: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_id
+#: model:ir.model.fields,field_description:account.field_account_cashbox_line_id
+#: model:ir.model.fields,field_description:account.field_account_chart_template_id
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_id
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_id
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_id
+#: model:ir.model.fields,field_description:account.field_account_common_report_id
+#: model:ir.model.fields,field_description:account.field_account_config_settings_id
+#: model:ir.model.fields,field_description:account.field_account_financial_report_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template_id
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_id
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_cancel_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_confirm_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_id
+#: model:ir.model.fields,field_description:account.field_account_journal_id
+#: model:ir.model.fields,field_description:account.field_account_move_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_id
+#: model:ir.model.fields,field_description:account.field_account_move_reversal_id
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_id
+#: model:ir.model.fields,field_description:account.field_account_payment_id
+#: model:ir.model.fields,field_description:account.field_account_payment_method_id
+#: model:ir.model.fields,field_description:account.field_account_payment_term_id
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line_id
+#: model:ir.model.fields,field_description:account.field_account_print_journal_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_id
+#: model:ir.model.fields,field_description:account.field_account_register_payments_id
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_id
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_id
+#: model:ir.model.fields,field_description:account.field_account_tax_group_id
+#: model:ir.model.fields,field_description:account.field_account_tax_id
+#: model:ir.model.fields,field_description:account.field_account_tax_template_id
+#: model:ir.model.fields,field_description:account.field_account_unreconcile_id
+#: model:ir.model.fields,field_description:account.field_accounting_report_id
+#: model:ir.model.fields,field_description:account.field_cash_box_in_id
+#: model:ir.model.fields,field_description:account.field_cash_box_out_id
+#: model:ir.model.fields,field_description:account.field_report_account_report_agedpartnerbalance_id
+#: model:ir.model.fields,field_description:account.field_report_account_report_financial_id
+#: model:ir.model.fields,field_description:account.field_report_account_report_generalledger_id
+#: model:ir.model.fields,field_description:account.field_report_account_report_journal_id
+#: model:ir.model.fields,field_description:account.field_report_account_report_overdue_id
+#: model:ir.model.fields,field_description:account.field_report_account_report_partnerledger_id
+#: model:ir.model.fields,field_description:account.field_report_account_report_trialbalance_id
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_id
+#: model:ir.model.fields,field_description:account.field_validate_account_move_id
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_id
+msgid "ID"
+msgstr "ID"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:386
+#, python-format
+msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
+msgstr ""
+"Si se especifica \"Importe en moneda\", entonces el \"Importe\" debe estar "
+"también."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_account_template_nocreate
+msgid "If checked, the new chart of accounts will not contain this by default."
+msgstr "Si está marcado, el nuevo plan contable no lo contendrá por defecto."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment_term_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the payment "
+"term without removing it."
+msgstr ""
+"Si el campo activo se desmarca, le permitirá a usted ocultar el plazo de "
+"pago sin que sea eliminado."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_journal_group_invoice_lines
+msgid ""
+"If this box is checked, the system will try to group the accounting lines "
+"when generating them from invoices."
+msgstr ""
+"Si esta opción está tildada, el sistema tratará de agrupar las líneas del "
+"asiento cuando se generen desde facturas."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_company_tax_calculation_rounding_method
+msgid ""
+"If you select 'Round per Line' : for each tax, the tax amount will first be "
+"computed and rounded for each PO/SO/invoice line and then these rounded "
+"amounts will be summed, leading to the total amount for that tax. If you "
+"select 'Round Globally': for each tax, the tax amount will be computed for "
+"each PO/SO/invoice line, then these amounts will be summed and eventually "
+"this total tax amount will be rounded. If you sell with tax included, you "
+"should choose 'Round per line' because you certainly want the sum of your "
+"tax-included line subtotals to be equal to the total amount with taxes."
+msgstr ""
+"Si selecciona 'Redondeo por línea': para cada impuesto, el importe de "
+"impuesto será calculado y redondeado para cada línea de PO/SO/Factura y los "
+"importes serán sumados, resultando al importe total para ese impuesto. Si "
+"selecciona 'Redondeo de forma global': Para cada impuesto, el importe de "
+"impuesto será calculado para cada línea de PO/SO/Factura, los importes serán "
+"sumados y este importe total será redondeado. Si vende con impuestos "
+"incluidos, debería escoger 'Redondeo por línea' porque seguramente quiere "
+"que la suma de los subtotales de línea, impuestos incluidos sea igual al "
+"importe total con impuestos."
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_unreconcile_view
+msgid ""
+"If you unreconcile transactions, you must also verify all the actions that "
+"are linked to those transactions because they will not be disabled"
+msgstr ""
+"Si rompe la conciliación de las transacciones, debe verificar también todas "
+"las acciones enlazadas, ya que no serán deshabilitadas"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_payment_term_id
+msgid ""
+"If you use payment terms, the due date will be computed automatically at the "
+"generation of accounting entries. If you keep the payment term and the due "
+"date empty, it means direct payment. The payment term may compute several "
+"due dates, for example 50% now, 50% in one month."
+msgstr ""
+"Si utiliza los términos de pago, la fecha de vencimiento será calculada "
+"automáticamente en la generación de los asientos contables. Si se mantiene "
+"el término de pago y la fecha de vencimiento vacía, se considera que es un "
+"pago directo. El término de pago podrá calcular varias fechas de "
+"vencimiento, por ejemplo, 50% ahora, 50% en un mes."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_date_due
+msgid ""
+"If you use payment terms, the due date will be computed automatically at the "
+"generation of accounting entries. The payment term may compute several due "
+"dates, for example 50% now and 50% in one month, but if you want to force a "
+"due date, make sure that the payment term is not set on the invoice. If you "
+"keep the payment term and the due date empty, it means direct payment."
+msgstr ""
+"Si usa plazos de pago, la fecha de vencimiento se calculará automáticamente "
+"con la generación de los asientos contables. El plazo de pago puede calcular "
+"varias fechas de vencimiento, por ejemplo 50% ahora y 50% en un mes, pero si "
+"quiere forzar una fecha de vencimiento, asegúrese que el plazo de pago no se "
+"establece en la factura. Si deja vacío el plazo de pago y la fecha de "
+"vencimiento, significa pago directo."
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_immediate
+msgid "Immediate Payment"
+msgstr "Pago inmediato"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:406
+#, python-format
+msgid ""
+"In order to delete a bank statement line, you must first cancel it to delete "
+"related journal items."
+msgstr ""
+"Con el fin de eliminar una línea del extracto bancario, primero debe "
+"cancelarla para borrar los apuntes contables relacionados."
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:192
+#, python-format
+msgid ""
+"In order to delete a bank statement, you must first cancel it to delete "
+"related journal items."
+msgstr ""
+"Para poder borrar un extracto bancario, primero debe cancelarlo para borrar "
+"los apuntes contables relacionados."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_initial_balance
+msgid "Include Initial Balances"
+msgstr "Incluir saldo inicial"
+
+#. module: account
+#: model:account.account.type,name:account.data_account_type_revenue
+#: model:account.financial.report,name:account.account_financial_report_income0
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "Income"
+msgstr "Ingreso"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_product_category_property_account_income_categ_id
+#: model:ir.model.fields,field_description:account.field_product_template_property_account_income_id
+#: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
+msgid "Income Account"
+msgstr "Cuenta de ingresos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_income_id
+msgid "Income Account on Product Template"
+msgstr "Cuenta de ingresos en plantilla del producto"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+#: model:ir.ui.view,arch_db:account.view_move_line_form2
+msgid "Information"
+msgstr "Información"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
+msgid "Information addendum"
+msgstr "Información adicional"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Install more chart templates"
+msgstr "Instalar más plantillas de cuentas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_narration
+msgid "Internal Note"
+msgstr "Nota interna"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_note
+msgid "Internal Notes"
+msgstr "Notas internas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_template_form
+msgid "Internal notes..."
+msgstr "Notas internas..."
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:956
+#: model:ir.model,name:account.model_account_invoice
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_invoice_id
+#: model:ir.model.fields,field_description:account.field_res_partner_invoice_warn
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model:ir.ui.view,arch_db:account.invoice_form
+#: model:ir.ui.view,arch_db:account.invoice_supplier_tree
+#: model:ir.ui.view,arch_db:account.invoice_tree
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model:res.request.link,name:account.req_link_invoice
+#, python-format
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_date_invoice
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
+msgid "Invoice Date"
+msgstr "Fecha de factura"
+
+#. module: account
+#: model:ir.model,name:account.model_account_invoice_line
+#: model:ir.ui.view,arch_db:account.view_invoice_line_form
+#: model:ir.ui.view,arch_db:account.view_invoice_line_tree
+msgid "Invoice Line"
+msgstr "Línea de factura"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_invoice_line_ids
+#: model:ir.ui.view,arch_db:account.invoice_form
+msgid "Invoice Lines"
+msgstr "Líneas de la factura"
+
+#. module: account
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "¡El Número de Factura debe ser único por Compañía!"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_id
+msgid "Invoice Reference"
+msgstr "Referencia de Factura"
+
+#. module: account
+#: model:ir.model,name:account.model_account_invoice_refund
+msgid "Invoice Refund"
+msgstr "Factura Reembolso"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_state
+msgid "Invoice Status"
+msgstr "Estado de la Factura"
+
+#. module: account
+#: model:ir.model,name:account.model_account_invoice_tax
+msgid "Invoice Tax"
+msgstr "Impuestos sobre Factura"
+
+#. module: account
+#: model:mail.message.subtype,description:account.mt_invoice_paid
+msgid "Invoice paid"
+msgstr "Factura pagada"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1488
+#, python-format
+msgid "Invoice sent"
+msgstr "Factura enviada"
+
+#. module: account
+#: model:mail.message.subtype,description:account.mt_invoice_validated
+msgid "Invoice validated"
+msgstr "Factura validada"
+
+#. module: account
+#: model:mail.template,report_name:account.email_template_edi_invoice
+msgid ""
+"Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
+msgstr ""
+"Factura_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+msgid "Invoiced"
+msgstr "Facturado"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_invoice_refund_out_tree
+#: model:ir.actions.act_window,name:account.action_invoice_tree
+#: model:ir.actions.report.xml,name:account.account_invoices
+#: model:ir.model.fields,field_description:account.field_account_payment_invoice_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_invoice_ids
+#: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model:ir.ui.view,arch_db:account.view_account_payment_form
+#: model:ir.ui.view,arch_db:account.view_account_payment_graph
+#: model:ir.ui.view,arch_db:account.view_invoice_graph
+#: model:ir.ui.view,arch_db:account.view_invoice_line_calendar
+#: model:ir.ui.view,arch_db:account.view_invoice_pivot
+msgid "Invoices"
+msgstr "Facturas"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_invoice_report_all
+#: model:ir.actions.act_window,name:account.action_account_invoice_report_all_supp
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_graph
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_pivot
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+msgid "Invoices Analysis"
+msgstr "Análisis de Facturas"
+
+#. module: account
+#: model:ir.model,name:account.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr "Estadísticas de Facturas"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
+#: model:ir.model.fields,help:account.field_res_company_income_currency_exchange_account_id
+msgid "It acts as a default account for credit amount"
+msgstr "Actúa como una cuenta por defecto para los importes en el haber."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_journal_default_debit_account_id
+#: model:ir.model.fields,help:account.field_res_company_expense_currency_exchange_account_id
+msgid "It acts as a default account for debit amount"
+msgstr "Actúa como una cuenta por defecto para importes en el debe."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_reconciled
+msgid ""
+"It indicates that the invoice has been paid and the journal entry of the "
+"invoice has been reconciled with one or several journal entries of payment."
+msgstr ""
+"Indica que la factura ha sido pagada y que el asiento de la factura ha sido "
+"conciliado con uno o varios asientos de pago."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_sent
+msgid "It indicates that the invoice has been sent."
+msgstr "Indica que la factura ha sido enviada."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
+#, python-format
+msgid "It took you"
+msgstr "Le llevó"
+
+#. module: account
+#: selection:account.financial.report,style_overwrite:0
+msgid "Italic Text (smaller)"
+msgstr "Texto en Italica (más pequeño)"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Items"
+msgstr "Items"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+msgid "JRNL"
+msgstr "Diario"
+
+#. module: account
+#: selection:res.company,fiscalyear_last_month:0
+msgid "January"
+msgstr "Enero"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2162
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2167
+#: code:addons/account/static/src/xml/account_reconciliation.xml:142
+#: model:ir.model,name:account.model_account_journal
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_journal_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_journal_id
+#: model:ir.model.fields,field_description:account.field_account_move_journal_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_journal_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_journal_id
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_journal_id
+#: model:ir.ui.view,arch_db:account.report_journal
+#: model:ir.ui.view,arch_db:account.view_account_journal_search
+#: model:ir.ui.view,arch_db:account.view_account_move_filter
+#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model:ir.ui.view,arch_db:account.view_account_payment_search
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+#: model:ir.ui.view,arch_db:account.view_bank_statement_search
+#, python-format
+msgid "Journal"
+msgstr "Diario"
+
+#. module: account
+#: selection:account.report.general.ledger,sortby:0
+msgid "Journal & Partner"
+msgstr "Diario & Empresa"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:253
+#: model:ir.actions.act_window,name:account.action_move_journal_line
+#: model:ir.actions.act_window,name:account.action_move_select
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_entry_ids
+#: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model:ir.ui.view,arch_db:account.view_account_journal_form
+#: model:ir.ui.view,arch_db:account.view_bank_statement_form
+#: model:ir.ui.view,arch_db:account.view_move_tree
+#, python-format
+msgid "Journal Entries"
+msgstr "Asientos contables"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_move_filter
+msgid "Journal Entries by Month"
+msgstr "Asientos contables por mes"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_move_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_move_id
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Journal Entry"
+msgstr "Asiento Contable"
+
+#. module: account
+#: model:ir.model,name:account.model_account_move_line
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+#: model:ir.ui.view,arch_db:account.view_move_line_form2
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:271
+#: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
+#: model:ir.actions.act_window,name:account.act_account_move_to_account_move_line_open
+#: model:ir.actions.act_window,name:account.action_account_moves_all_a
+#: model:ir.actions.act_window,name:account.action_account_moves_all_tree
+#: model:ir.actions.act_window,name:account.action_move_line_graph
+#: model:ir.actions.act_window,name:account.action_move_line_graph_cash_basis
+#: model:ir.actions.act_window,name:account.action_move_line_graph_cash_basis_posted
+#: model:ir.actions.act_window,name:account.action_move_line_graph_posted
+#: model:ir.actions.act_window,name:account.action_move_line_select
+#: model:ir.actions.act_window,name:account.action_move_line_select_by_partner
+#: model:ir.actions.act_window,name:account.action_move_line_select_by_type
+#: model:ir.model.fields,field_description:account.field_account_move_line_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_issued_total
+#: model:ir.model.fields,field_description:account.field_res_partner_journal_item_count
+#: model:ir.ui.menu,name:account.menu_action_account_moves_all
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model:ir.ui.view,arch_db:account.view_account_payment_form
+#: model:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.ui.view,arch_db:account.view_move_line_pivot
+#: model:ir.ui.view,arch_db:account.view_move_line_tree
+#, python-format
+msgid "Journal Items"
+msgstr "Apuntes Contables"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2125
+#: model:ir.actions.client,name:account.action_manual_reconcile
+#, python-format
+msgid "Journal Items to Reconcile"
+msgstr "Apuntes a conciliar"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_name
+msgid "Journal Name"
+msgstr "Nombre del diario"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+msgid "Journal invoices with period in current year"
+msgstr "Facturas del diario con periodo en el año actual"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_journal_form
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_balance_report_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_common_report_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_print_journal_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_journal_ids
+#: model:ir.model.fields,field_description:account.field_accounting_report_journal_ids
+#: model:ir.ui.menu,name:account.menu_action_account_journal_form
+msgid "Journals"
+msgstr "Diarios"
+
+#. module: account
+#: selection:res.company,fiscalyear_last_month:0
+msgid "July"
+msgstr "Julio"
+
+#. module: account
+#: selection:res.company,fiscalyear_last_month:0
+msgid "June"
+msgstr "Junio"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_date_invoice
+msgid "Keep empty to use the current date"
+msgstr "Dejarlo vacío para utilizar la fecha actual."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:108
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:112
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_name
+#: model:ir.model.fields,field_description:account.field_account_move_line_name
+#: model:ir.ui.view,arch_db:account.report_journal
+#, python-format
+msgid "Label"
+msgstr "Etiqueta"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_abstract_payment___last_update
+#: model:ir.model.fields,field_description:account.field_account_account___last_update
+#: model:ir.model.fields,field_description:account.field_account_account_tag___last_update
+#: model:ir.model.fields,field_description:account.field_account_account_template___last_update
+#: model:ir.model.fields,field_description:account.field_account_account_type___last_update
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance___last_update
+#: model:ir.model.fields,field_description:account.field_account_balance_report___last_update
+#: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard___last_update
+#: model:ir.model.fields,field_description:account.field_account_bank_statement___last_update
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox___last_update
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance___last_update
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line___last_update
+#: model:ir.model.fields,field_description:account.field_account_cashbox_line___last_update
+#: model:ir.model.fields,field_description:account.field_account_chart_template___last_update
+#: model:ir.model.fields,field_description:account.field_account_common_account_report___last_update
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report___last_update
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report___last_update
+#: model:ir.model.fields,field_description:account.field_account_common_report___last_update
+#: model:ir.model.fields,field_description:account.field_account_config_settings___last_update
+#: model:ir.model.fields,field_description:account.field_account_financial_report___last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position___last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account___last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template___last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax___last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template___last_update
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template___last_update
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile___last_update
+#: model:ir.model.fields,field_description:account.field_account_invoice___last_update
+#: model:ir.model.fields,field_description:account.field_account_invoice_cancel___last_update
+#: model:ir.model.fields,field_description:account.field_account_invoice_confirm___last_update
+#: model:ir.model.fields,field_description:account.field_account_invoice_line___last_update
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund___last_update
+#: model:ir.model.fields,field_description:account.field_account_invoice_report___last_update
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax___last_update
+#: model:ir.model.fields,field_description:account.field_account_journal___last_update
+#: model:ir.model.fields,field_description:account.field_account_move___last_update
+#: model:ir.model.fields,field_description:account.field_account_move_line___last_update
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile___last_update
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff___last_update
+#: model:ir.model.fields,field_description:account.field_account_move_reversal___last_update
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile___last_update
+#: model:ir.model.fields,field_description:account.field_account_payment___last_update
+#: model:ir.model.fields,field_description:account.field_account_payment_method___last_update
+#: model:ir.model.fields,field_description:account.field_account_payment_term___last_update
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line___last_update
+#: model:ir.model.fields,field_description:account.field_account_print_journal___last_update
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model___last_update
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template___last_update
+#: model:ir.model.fields,field_description:account.field_account_register_payments___last_update
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger___last_update
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger___last_update
+#: model:ir.model.fields,field_description:account.field_account_tax___last_update
+#: model:ir.model.fields,field_description:account.field_account_tax_group___last_update
+#: model:ir.model.fields,field_description:account.field_account_tax_template___last_update
+#: model:ir.model.fields,field_description:account.field_account_unreconcile___last_update
+#: model:ir.model.fields,field_description:account.field_accounting_report___last_update
+#: model:ir.model.fields,field_description:account.field_cash_box_in___last_update
+#: model:ir.model.fields,field_description:account.field_cash_box_out___last_update
+#: model:ir.model.fields,field_description:account.field_report_account_report_agedpartnerbalance___last_update
+#: model:ir.model.fields,field_description:account.field_report_account_report_financial___last_update
+#: model:ir.model.fields,field_description:account.field_report_account_report_generalledger___last_update
+#: model:ir.model.fields,field_description:account.field_report_account_report_journal___last_update
+#: model:ir.model.fields,field_description:account.field_report_account_report_overdue___last_update
+#: model:ir.model.fields,field_description:account.field_report_account_report_partnerledger___last_update
+#: model:ir.model.fields,field_description:account.field_report_account_report_trialbalance___last_update
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard___last_update
+#: model:ir.model.fields,field_description:account.field_validate_account_move___last_update
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts___last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag_write_uid
+#: model:ir.model.fields,field_description:account.field_account_account_template_write_uid
+#: model:ir.model.fields,field_description:account.field_account_account_type_write_uid
+#: model:ir.model.fields,field_description:account.field_account_account_write_uid
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_write_uid
+#: model:ir.model.fields,field_description:account.field_account_balance_report_write_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_write_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_write_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance_write_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_write_uid
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_write_uid
+#: model:ir.model.fields,field_description:account.field_account_cashbox_line_write_uid
+#: model:ir.model.fields,field_description:account.field_account_chart_template_write_uid
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_write_uid
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_write_uid
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_write_uid
+#: model:ir.model.fields,field_description:account.field_account_common_report_write_uid
+#: model:ir.model.fields,field_description:account.field_account_config_settings_write_uid
+#: model:ir.model.fields,field_description:account.field_account_financial_report_write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template_write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_write_uid
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_write_uid
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile_write_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_cancel_write_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_confirm_write_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_write_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund_write_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_write_uid
+#: model:ir.model.fields,field_description:account.field_account_invoice_write_uid
+#: model:ir.model.fields,field_description:account.field_account_journal_write_uid
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_write_uid
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_write_uid
+#: model:ir.model.fields,field_description:account.field_account_move_line_write_uid
+#: model:ir.model.fields,field_description:account.field_account_move_reversal_write_uid
+#: model:ir.model.fields,field_description:account.field_account_move_write_uid
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_method_write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line_write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_term_write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_write_uid
+#: model:ir.model.fields,field_description:account.field_account_print_journal_write_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_write_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_write_uid
+#: model:ir.model.fields,field_description:account.field_account_register_payments_write_uid
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_write_uid
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_write_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_group_write_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_template_write_uid
+#: model:ir.model.fields,field_description:account.field_account_tax_write_uid
+#: model:ir.model.fields,field_description:account.field_account_unreconcile_write_uid
+#: model:ir.model.fields,field_description:account.field_accounting_report_write_uid
+#: model:ir.model.fields,field_description:account.field_cash_box_in_write_uid
+#: model:ir.model.fields,field_description:account.field_cash_box_out_write_uid
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_write_uid
+#: model:ir.model.fields,field_description:account.field_validate_account_move_write_uid
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_uid
+msgid "Last Updated by"
+msgstr "Última actualización realizada por"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag_write_date
+#: model:ir.model.fields,field_description:account.field_account_account_template_write_date
+#: model:ir.model.fields,field_description:account.field_account_account_type_write_date
+#: model:ir.model.fields,field_description:account.field_account_account_write_date
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_write_date
+#: model:ir.model.fields,field_description:account.field_account_balance_report_write_date
+#: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_write_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_write_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance_write_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_write_date
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_write_date
+#: model:ir.model.fields,field_description:account.field_account_cashbox_line_write_date
+#: model:ir.model.fields,field_description:account.field_account_chart_template_write_date
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_write_date
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_write_date
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_write_date
+#: model:ir.model.fields,field_description:account.field_account_common_report_write_date
+#: model:ir.model.fields,field_description:account.field_account_config_settings_write_date
+#: model:ir.model.fields,field_description:account.field_account_financial_report_write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template_write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_write_date
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_write_date
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile_write_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_cancel_write_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_confirm_write_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_write_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund_write_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_write_date
+#: model:ir.model.fields,field_description:account.field_account_invoice_write_date
+#: model:ir.model.fields,field_description:account.field_account_journal_write_date
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_write_date
+#: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_write_date
+#: model:ir.model.fields,field_description:account.field_account_move_line_write_date
+#: model:ir.model.fields,field_description:account.field_account_move_reversal_write_date
+#: model:ir.model.fields,field_description:account.field_account_move_write_date
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_write_date
+#: model:ir.model.fields,field_description:account.field_account_payment_method_write_date
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line_write_date
+#: model:ir.model.fields,field_description:account.field_account_payment_term_write_date
+#: model:ir.model.fields,field_description:account.field_account_payment_write_date
+#: model:ir.model.fields,field_description:account.field_account_print_journal_write_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_write_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_write_date
+#: model:ir.model.fields,field_description:account.field_account_register_payments_write_date
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_write_date
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_write_date
+#: model:ir.model.fields,field_description:account.field_account_tax_group_write_date
+#: model:ir.model.fields,field_description:account.field_account_tax_template_write_date
+#: model:ir.model.fields,field_description:account.field_account_tax_write_date
+#: model:ir.model.fields,field_description:account.field_account_unreconcile_write_date
+#: model:ir.model.fields,field_description:account.field_accounting_report_write_date
+#: model:ir.model.fields,field_description:account.field_cash_box_in_write_date
+#: model:ir.model.fields,field_description:account.field_cash_box_out_write_date
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_write_date
+#: model:ir.model.fields,field_description:account.field_validate_account_move_write_date
+#: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_financial_report_level
+msgid "Level"
+msgstr "Nivel"
+
+#. module: account
+#: model:account.financial.report,name:account.account_financial_report_liability0
+#: model:account.financial.report,name:account.account_financial_report_liabilitysum0
+msgid "Liability"
+msgstr "Pasivo"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_move_id
+msgid "Link to the automatically generated Journal Items."
+msgstr "Enlace a los asientos generados automáticamente."
+
+#. module: account
+#: selection:account.account.type,type:0
+#: model:ir.ui.view,arch_db:account.view_account_journal_search
+msgid "Liquidity"
+msgstr "Liquidez"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_chart_template_tax_template_ids
+msgid "List of all the taxes that have to be installed by the wizard"
+msgstr "Listado de los impuestos que deben ser instalados por el asistente"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_overdue_document
+msgid "Litigation"
+msgstr "Litigación"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Logo"
+msgstr "Logo"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:166
+#, python-format
+msgid "Loss"
+msgstr "Pérdidas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_loss_account_id
+msgid "Loss Account"
+msgstr "Cuenta de pérdidas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_expense_currency_exchange_account_id
+#: model:ir.model.fields,field_description:account.field_res_company_expense_currency_exchange_account_id
+msgid "Loss Exchange Rate Account"
+msgstr "Pérdida por diferencia de cambio"
+
+#. module: account
+#: code:addons/account/models/chart_template.py:184
+#, python-format
+msgid "MISC"
+msgstr "Varios"
+
+#. module: account
+#: selection:account.financial.report,style_overwrite:0
+msgid "Main Title 1 (bold, underlined)"
+msgstr "Titulo 1 Principal (negrita, subrayado)"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_abstract_payment_communication
+#: model:ir.model.fields,field_description:account.field_account_payment_communication
+#: model:ir.model.fields,field_description:account.field_account_register_payments_communication
+msgid "Memo"
+msgstr "Memoria"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "More <i class=\"fa fa-caret-down\"/>"
+msgstr "Más <i class=\"fa fa-caret-down\"/>"
+
+#. module: account
+#: selection:accounting.report,filter_cmp:0
+msgid "No Filters"
+msgstr "Sin Filtros"
+
+#. module: account
+#: code:addons/account/wizard/account_report_common.py:28
+#, python-format
+msgid "Not implemented."
+msgstr "No implementado."
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Overdue Payments"
+msgstr "Pagos atrasados"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company_overdue_msg
+msgid "Overdue Payments Message"
+msgstr "Mensaje de Pagos Vencidos"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_financial_report_search
+msgid "Parent Report"
+msgstr "Informe padre"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1750
+#: code:addons/account/static/src/xml/account_reconciliation.xml:263
+#: model:ir.model,name:account.model_res_partner
+#: model:ir.model.fields,field_description:account.field_account_abstract_payment_partner_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_partner_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_partner_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_partner_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_partner_id
+#: model:ir.model.fields,field_description:account.field_account_move_partner_id
+#: model:ir.model.fields,field_description:account.field_account_payment_partner_id
+#: model:ir.model.fields,field_description:account.field_account_register_payments_partner_id
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_journal
+#: model:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model:ir.ui.view,arch_db:account.view_account_move_filter
+#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model:ir.ui.view,arch_db:account.view_account_payment_search
+#, python-format
+msgid "Partner"
+msgstr "Partner"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_result_selection
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_result_selection
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_result_selection
+msgid "Partner's"
+msgstr "Partner"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
+msgid "Partners"
+msgstr "Partners"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_payment_difference_handling
+msgid "Payment Difference"
+msgstr "Diferencia del pago"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_period_length
+msgid "Period Length (days)"
+msgstr "Longitud del Período (días)"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_product_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_product_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_product_id
+#: model:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+msgid "Product"
+msgstr "Producto"
+
+#. module: account
+#: model:account.financial.report,name:account.account_financial_report_profitloss_toreport0
+msgid "Profit (Loss) to report"
+msgstr "Beneficio (pérdida) para informe"
+
+#. module: account
+#: model:account.financial.report,name:account.account_financial_report_profitandloss0
+#: model:ir.actions.act_window,name:account.action_account_report_pl
+#: model:ir.ui.menu,name:account.menu_account_report_pl
+msgid "Profit and Loss"
+msgstr "Pérdidas y Ganancias"
+
+#. module: account
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Python Code"
+msgstr "Código Python"
+
+#. module: account
+#: selection:account.aged.trial.balance,result_selection:0
+#: selection:account.common.partner.report,result_selection:0
+#: selection:account.report.partner.ledger,result_selection:0
+#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
+msgid "Receivable and Payable Accounts"
+msgstr "Cuentas a cobrar y pagar"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+msgid "Ref"
+msgstr "Ref"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_invoice_payment
+#: model:ir.actions.act_window,name:account.action_account_payment_from_invoices
+#: model:ir.ui.view,arch_db:account.invoice_form
+#: model:ir.ui.view,arch_db:account.invoice_supplier_form
+#: model:ir.ui.view,arch_db:account.view_account_payment_form
+#: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
+#: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
+msgid "Register Payment"
+msgstr "Registrar pago"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_financial_report_form
+msgid "Report"
+msgstr "Reporte"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_aged_balance_view
+#: model:ir.ui.view,arch_db:account.account_common_report_view
+msgid "Report Options"
+msgstr "Opciones del Reporte"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_financial_report_search
+msgid "Report Type"
+msgstr "Tipo de informe"
+
+#. module: account
+#: model:ir.ui.menu,name:account.account_report_folder
+#: model:ir.ui.menu,name:account.menu_finance_reports
+msgid "Reports"
+msgstr "Reportes"
+
+#. module: account
+#: selection:account.tax,type_tax_use:0
+#: selection:account.tax.template,type_tax_use:0
+#: model:ir.ui.menu,name:account.menu_finance_receivables
+#: model:ir.ui.view,arch_db:account.view_account_move_filter
+msgid "Sales"
+msgstr "Ventas"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_tax_tree
+msgid "Short Name"
+msgstr "Nombre corto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_sortby
+msgid "Sort by"
+msgstr "Ordenar por"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_date_from
+#: model:ir.model.fields,field_description:account.field_account_balance_report_date_from
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_date_from
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_date_from
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_date_from
+#: model:ir.model.fields,field_description:account.field_account_common_report_date_from
+#: model:ir.model.fields,field_description:account.field_account_print_journal_date_from
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_date_from
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_date_from
+#: model:ir.model.fields,field_description:account.field_accounting_report_date_from
+#: model:ir.model.fields,field_description:account.field_accounting_report_date_from_cmp
+msgid "Start Date"
+msgstr "Fecha de inicio"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_state
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_state
+#: model:ir.model.fields,field_description:account.field_account_invoice_state
+#: model:ir.model.fields,field_description:account.field_account_move_state
+#: model:ir.model.fields,field_description:account.field_account_payment_state
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#: model:ir.ui.view,arch_db:account.view_bank_statement_search
+#: model:ir.ui.view,arch_db:account.view_move_line_form2
+msgid "Status"
+msgstr "Estado"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_target_move
+#: model:ir.model.fields,field_description:account.field_account_balance_report_target_move
+#: model:ir.model.fields,field_description:account.field_account_common_account_report_target_move
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_target_move
+#: model:ir.model.fields,field_description:account.field_account_common_partner_report_target_move
+#: model:ir.model.fields,field_description:account.field_account_common_report_target_move
+#: model:ir.model.fields,field_description:account.field_account_print_journal_target_move
+#: model:ir.model.fields,field_description:account.field_account_report_general_ledger_target_move
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_target_move
+#: model:ir.model.fields,field_description:account.field_accounting_report_target_move
+msgid "Target Moves"
+msgstr "Movimientos destino"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:120
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:125
+#: model:ir.model,name:account.model_account_tax
+#: model:ir.model.fields,field_description:account.field_account_invoice_amount_tax
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_tax_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_tax_id
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+#: model:ir.ui.view,arch_db:account.view_account_tax_search
+#, python-format
+msgid "Tax"
+msgstr "Impuestos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_chart_template_id
+msgid "Template"
+msgstr "Modelo"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_accounting_report_label_filter
+msgid ""
+"This label will be displayed on report to show the balance computed for the "
+"given comparison filter."
+msgstr ""
+"Esta etiqueta será visible en el informe para mostrar el saldo calculado "
+"para el filtro de comparación introducido."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_accounting_report_debit_credit
+msgid ""
+"This option allows you to get more details about the way your balances are "
+"computed. Because it is space consuming, we do not allow to use it while "
+"doing a comparison."
+msgstr ""
+"Esta opción permite obtener más detalles sobre la forma en la que se "
+"calculan los saldos. Debido a que consume espacio, no se permite usarla "
+"cuando se realiza una comparación."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_partner_property_payment_term_id
+msgid ""
+"This payment term will be used instead of the default one for sale orders "
+"and customer invoices"
+msgstr ""
+"Se usará este plazo de pago en lugar del predeterminado para las notas de "
+"pedido y las facturas de cliente"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+msgid "To Invoice"
+msgstr "Para facturar"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:146
+#: model:ir.model.fields,field_description:account.field_account_invoice_amount_total
+#: model:ir.ui.view,arch_db:account.invoice_supplier_tree
+#: model:ir.ui.view,arch_db:account.invoice_tree
+#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
+#: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
+#, python-format
+msgid "Total"
+msgstr "Total"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner_total_invoiced
+msgid "Total Invoiced"
+msgstr "Total facturado"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_balance_menu
+#: model:ir.actions.report.xml,name:account.action_report_trial_balance
+#: model:ir.ui.menu,name:account.menu_general_Balance_report
+msgid "Trial Balance"
+msgstr "Balance de Sumas y Saldos"
+
+#. module: account
+#: model:ir.model,name:account.model_account_balance_report
+msgid "Trial Balance Report"
+msgstr "Informe de sumas y saldos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_unit
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Unit Price"
+msgstr "Precio unitario"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_product_uom_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_uom_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_product_uom_id
+msgid "Unit of Measure"
+msgstr "Unidad de medida"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:296
+#: model:ir.ui.menu,name:account.menu_account_supplier
+#, python-format
+msgid "Vendors"
+msgstr "Vendedores"
+
+#. module: account
+#: selection:account.balance.report,display_account:0
+#: selection:account.common.account.report,display_account:0
+#: selection:account.report.general.ledger,display_account:0
+msgid "With balance is not equal to 0"
+msgstr "Con balance distinto a 0"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+msgid "With balance not equal to zero"
+msgstr "Con saldo distinto a 0"
+
+#. module: account
+#: selection:account.balance.report,display_account:0
+#: selection:account.common.account.report,display_account:0
+#: selection:account.report.general.ledger,display_account:0
+#: model:ir.ui.view,arch_db:account.report_generalledger
+#: model:ir.ui.view,arch_db:account.report_trialbalance
+msgid "With movements"
+msgstr "Con movimientos"
+
+#. module: account
+#: code:addons/account/wizard/account_report_aged_partner_balance.py:26
+#, python-format
+msgid "You must set a period length greater than 0."
+msgstr "Debe establecer una longitud de periodo mayor a 0"
+
+#. module: account
+#: code:addons/account/wizard/account_report_aged_partner_balance.py:28
+#, python-format
+msgid "You must set a start date."
+msgstr "Debe establecer una fecha de inicio."
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Your Customers"
+msgstr "Sus clientes"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Your Products"
+msgstr "Sus productos"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_aged_balance_view
+#: model:ir.ui.view,arch_db:account.account_common_report_view
+#: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
+msgid "or"
+msgstr "o"

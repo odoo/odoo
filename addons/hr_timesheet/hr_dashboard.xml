@@ -1,0 +1,25 @@
+<odoo>
+    <!--Hr Department Inherit Kanban view-->
+    <record id="hr_department_view_kanban" model="ir.ui.view">
+        <field name="name">hr.department.kanban.inherit</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+        <field name="groups_id" eval="[(4,ref('hr_timesheet.group_hr_timesheet_user'))]"/>
+        <field name="arch" type="xml">
+            <data>
+
+                <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                    <div class="row">
+                        <div class="col-xs-12 text-left">
+                            <a name="%(act_hr_timesheet_report)d" type="action"
+                               context="{ 'search_default_department_id': [active_id], 'default_department_id': active_id}">
+                            Timesheets
+                        </a>
+                        </div>
+                    </div>
+                </xpath>
+
+            </data>
+        </field>
+    </record>
+</odoo>

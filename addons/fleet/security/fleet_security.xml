@@ -1,0 +1,114 @@
+<?xml version="1.0" ?>
+<odoo>
+        <record id="module_fleet_category" model="ir.module.category">
+            <field name="name">Fleet</field>
+            <field name="sequence">17</field>
+        </record>
+        <record id="fleet_group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_fleet_category"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <record id="fleet_group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('fleet_group_user'))]"/>
+            <field name="category_id" ref="module_fleet_category"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+    <data noupdate="1">
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('fleet.fleet_group_manager'))]"/>
+        </record>
+        <record id="fleet_rule_contract_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her contracts</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_contract"/>
+            <field name="groups" eval="[(4, ref('fleet_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('cost_id.vehicle_id.driver_id','=',user.partner_id.id)]</field>
+        </record>
+        <record id="fleet_rule_cost_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her costs</field>
+            <field name="model_id" ref="model_fleet_vehicle_cost"/>
+            <field name="groups" eval="[(4, ref('fleet_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('vehicle_id.driver_id','=',user.partner_id.id)]</field>
+        </record>
+        <record id="fleet_rule_service_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her vehicle's services</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_services"/>
+            <field name="groups" eval="[(4, ref('fleet_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('cost_id.vehicle_id.driver_id','=',user.partner_id.id)]</field>
+        </record>
+        <record id="fleet_rule_odometer_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her vehicle's odometer</field>
+            <field name="model_id" ref="model_fleet_vehicle_odometer"/>
+            <field name="groups" eval="[(4, ref('fleet_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[('vehicle_id.driver_id','=',user.partner_id.id)]</field>
+        </record>
+        <record id="fleet_rule_fuel_log_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her vehicle's fuel log</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_fuel"/>
+            <field name="groups" eval="[(4, ref('fleet_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[('cost_id.vehicle_id.driver_id','=',user.partner_id.id)]</field>
+        </record>
+        <record id="fleet_rule_vehicle_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her vehicle</field>
+            <field name="model_id" ref="model_fleet_vehicle"/>
+            <field name="groups" eval="[(4, ref('fleet_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('driver_id','=',user.partner_id.id)]</field>
+        </record>
+        <record id="fleet_rule_contract_visibility_manager" model="ir.rule">
+            <field name="name">Manager has all rights on vehicle's contracts</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_contract"/>
+            <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
+        </record>
+        <record id="fleet_rule_cost_visibility_manager" model="ir.rule">
+            <field name="name">Manager has all rights on vehicle's costs</field>
+            <field name="model_id" ref="model_fleet_vehicle_cost"/>
+            <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
+        </record>
+        <record id="fleet_rule_service_visibility_manager" model="ir.rule">
+            <field name="name">Manager has all rights on vehicle's services</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_services"/>
+            <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
+        </record>
+        <record id="fleet_rule_odometer_visibility_manager" model="ir.rule">
+            <field name="name">Manager has all rights on vehicle's vehicle's odometer</field>
+            <field name="model_id" ref="model_fleet_vehicle_odometer"/>
+            <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
+        </record>
+        <record id="fleet_rule_fuel_log_visibility_manager" model="ir.rule">
+            <field name="name">Manager has all rights on vehicle's fuel log</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_fuel"/>
+            <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
+        </record>
+        <record id="fleet_rule_vehicle_visibility_manager" model="ir.rule">
+            <field name="name">Manager has all rights on vehicle</field>
+            <field name="model_id" ref="model_fleet_vehicle"/>
+            <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
+        </record>
+    </data>
+</odoo>

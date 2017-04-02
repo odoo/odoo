@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pack_operation_details_form" model="ir.ui.view">
+        <field name="name">stock.pack.operation.details.form</field>
+        <field name="model">stock.pack.operation</field>
+        <field eval="12" name="priority"/>
+        <field name="arch" type="xml">
+            <form>
+                <group name="qty_to">
+                    <group string="Products">
+                        <field name="lots_visible" invisible="1"/>
+                        <field name="picking_source_location_id" invisible="1"/>
+                        <field name="picking_destination_location_id" invisible="1"/>
+                        <field name="product_id" attrs="{'required': [('package_id', '=', False)]}" readonly="1"/>
+                        <label for="qty_done"/>
+                        <div>
+                            <field name="qty_done" nolabel="1" attrs="{'readonly': [('lots_visible','=',True)]}" class="oe_inline"/>
+                            /
+                            <field name="product_qty" class="oe_inline" readonly="1"/>
+                            <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="product.group_uom" class="oe_inline"/>
+                        </div>
+                    </group>
+                    <group string="Locations" groups="stock.group_stock_multi_locations">
+                        <field name="location_id" domain="[('id', 'child_of', picking_source_location_id)]" options="{'no_create': True}"/>
+                        <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]" options="{'no_create': True}"/>
+                    </group>
+                    <group string="Packages" groups="stock.group_tracking_lot">
+                        <field name="package_id" attrs="{'required': [('product_id', '=', False)]}" domain="[('location_id', '=', location_id)]" context="{'default_location_id': location_id}"/>
+                        <field name="result_package_id" domain="['|', ('location_id', '=', False), ('location_id', '=', location_dest_id)]" context="{'default_location_id': location_dest_id}"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pack_operation_details_form_save" model="ir.ui.view">
+        <field name="name">stock.pack.operation.details.form.save</field>
+        <field name="model">stock.pack.operation</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="stock.view_pack_operation_details_form"/>
+        <field eval="15" name="priority"/>
+        <field name="arch" type="xml">
+            <group name="qty_to" position="after">
+                <footer>
+                    <button name="save" type="object" string="Save" class="oe_highlight"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </group>
+            <field name="product_uom_id" position="after">
+                <button name="split_quantities" attrs="{'invisible': ['|', ('qty_done', '&lt;=', 0.0), ('product_qty', '&lt;=', 0.0)]}" class="oe_link" string="Split" type="object"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="pack_details" model="ir.actions.act_window">
+        <field name="name">Pack Details</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.pack.operation</field>
+        <field name="view_id" ref="view_pack_operation_details_form_save"/>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="view_pack_operation_lot_form" model="ir.ui.view">
+        <field name="name">stock.pack.operation.lots.form</field>
+        <field name="model">stock.pack.operation</field>
+        <field eval="20" name="priority"/>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="product_id" readonly="1"/>
+                    <label for="qty_done"/>
+                    <span>
+                        <field name="qty_done" class="oe_inline" readonly="1"/> of
+                        <field name="product_qty" class="oe_inline" readonly="1"/>
+                        <field name="product_uom_id" class="oe_inline" groups="product.group_uom" readonly="1"/>
+                        <field name="state" invisible="1"/>
+                    </span>
+                </group>
+                <group>
+                    <field name="pack_lot_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'done')]}">
+                        <tree editable="bottom" decoration-success="qty_todo==qty" decoration-danger="(qty_todo &gt; 0) and (qty&gt;qty_todo)">
+                            <field name="lot_name" invisible="not context.get('only_create', False)"/>
+                            <field name="lot_id" invisible="context.get('only_create', False)"
+                                   domain="[('product_id','=', parent.product_id)]"
+                                   context="{'default_product_id': parent.product_id}"/>
+                            <field name="qty_todo" invisible="not context.get('show_reserved') or context.get('serial') or context.get('state_done')" readonly="1"/>
+                            <field name="qty" invisible="context.get('serial')"/>
+                            <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('qty', '&lt;=', 0.99)]}" invisible="not context.get('show_reserved') or context.get('state_done')"/>
+                            <button name="do_plus" type="object" icon="fa-plus-square" attrs="{'invisible': [('plus_visible', '=', False)]}" invisible="not context.get('show_reserved') or context.get('state_done')"/>
+                            <field name="plus_visible" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="save" type="object" string="Save" class="oe_highlight" attrs="{'invisible':[('state','=','done')]}"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pack_operation_lot_lot_form" model="ir.ui.view">
+        <field name="name">stock.pack.operation.lots.form</field>
+        <field name="model">stock.pack.operation.lot</field>
+        <field eval="20" name="priority"/>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="lot_id"/>
+                    <field name="qty"/>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

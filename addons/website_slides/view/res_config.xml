@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <record id="view_website_config_settings" model="ir.ui.view">
+        <field name="name">Website livechat settings</field>
+        <field name="model">website.config.settings</field>
+        <field name="inherit_id" ref="website.view_website_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='social']" position="after">
+                <group string="Website Slides">
+                    <field name="website_slide_google_app_key" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Account Manager">
+      <xpath expr="." position="inside">
+          <link rel='stylesheet' href='/website_portal/static/src/less/website_portal.less'/>
+          <script type="text/javascript" src="/website_portal/static/src/js/website_portal.js"></script>
+      </xpath>
+    </template>
+
+    <template id="portal_archive_groups" name="Portal Archive Groups">
+        <h3 class="page-header">Archives</h3>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="archive_groups" t-as="group">
+                <t t-if="group['date_begin'] == date">
+                    <li class="active">
+                        <a t-att-href="default_url" t-ignore="True"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                    </li>
+                </t>
+                <t t-if="group['date_begin'] != date">
+                    <li>
+                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                    </li>
+                </t>
+            </t>
+        </ul>
+    </template>
+
+    <template id="portal_layout" name="Portal Layout">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <div class="navbar navbar-default">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/my/home">
+                            My Account
+                        </a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
+                        <ul class="nav navbar-nav o_portal_submenu">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="wrap">
+                <div class="container mb64">
+                    <div class="col-md-8">
+                        <t t-raw="0"/>
+                    </div>
+                    <div id="o_my_sidebar" class="col-md-3 col-md-offset-1 o_my_sidebar">
+                        <div class="o_my_contact" t-if="sales_rep">
+                            <t t-call="website_portal.contact"/>
+                        </div>
+                        <div class="o_my_details">
+                            <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
+                            <div t-field="user.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
+                        </div>
+                        <div class="o_my_archives" t-if="archive_groups">
+                            <t t-call="website_portal.portal_archive_groups"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_home" name="My Portal">
+        <t t-call="website_portal.portal_layout">
+            <div class="o_my_home_content">
+                <div class="oe_structure"></div>
+            </div>
+            <div class="col-md-12 oe_structure"/>
+        </t>
+    </template>
+
+    <template id="custom_panel" inherit_id="portal_layout" customize_show="True" name="Portal Editable Panel" active="False">
+        <xpath expr="//div[@id='o_my_sidebar']" position="inside">
+            <div class="oe_structure">
+              <h3 class="page-header">Custom Panel</h3>
+              <p>Place your content here.</p>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="contact" name="Contact">
+        <h3 class="page-header">Saleman</h3>
+          <h5 t-esc="sales_rep.name"/>
+          <p><a t-att-href="'mailto:'+sales_rep.email" t-esc="sales_rep.email"/></p>
+          <p t-esc="sales_rep.phone"/>
+          <p t-esc="sales_rep.city"/>
+    </template>
+
+    <template id="details">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Contact Details</t>
+            <div id="wrap">
+                <div class="container">
+                  <div class="row">
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb mt8">
+                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                <li>Details</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <h1>Contact Details</h1>
+                    <form action="/my/account" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="row o_website_portal_details">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                      <div t-if="error_message" class="alert alert-danger">
+                                          <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
+                                      </div>
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
+                                        <label class="control-label" for="name">Your Name</label>
+                                        <input type="text" name="name" class="form-control" t-att-value="name or partner.name" />
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
+                                        <label class="control-label" for="email">Email</label>
+                                        <input type="email" name="email" class="form-control" t-att-value="email or partner.email" />
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6">
+                                        <label class="control-label" for="phone">Phone</label>
+                                        <input type="tel" name="phone" class="form-control" t-att-value="phone or partner.phone" />
+                                    </div>
+
+                                    <div class="clearfix" />
+                                    <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-lg-6">
+                                        <label class="control-label label-optional" for="company_name">Company Name</label>
+                                        <input type="text" name="company_name" class="form-control" t-att-value="company_name or partner.company_name"/>
+                                    </div>
+                                    <div t-if="has_check_vat" t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
+                                        <label class="control-label label-optional" for="vat">VAT Number</label>
+                                        <input type="text" name="vat" class="form-control" t-att-value="vat or partner.vat" />
+                                    </div>
+
+                                    <div class="clearfix" />
+                                    <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
+                                        <label class="control-label label-optional" for="street">Street</label>
+                                        <input type="text" name="street" class="form-control" t-att-value="street or partner.street"/>
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-lg-6">
+                                        <label class="control-label" for="city">City</label>
+                                        <input type="text" name="city" class="form-control" t-att-value="city or partner.city" />
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-lg-6">
+                                        <label class="control-label" for="zipcode">Zip / Postal Code</label>
+                                        <input type="text" name="zipcode" class="form-control" t-att-value="zipcode or partner.zip" />
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-lg-6">
+                                        <label class="control-label" for="country_id">Country</label>
+                                        <select name="country_id" class="form-control">
+                                            <option value="">Country...</option>
+                                            <t t-foreach="countries or []" t-as="country">
+                                                <option t-att-value="country.id" t-att-selected="country.id == partner.country_id.id">
+                                                    <t t-esc="country.name" />
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6">
+                                        <label class="control-label label-optional" for="state_id">State / Province</label>
+                                        <select name="state_id" class="form-control">
+                                            <option value="">select...</option>
+                                            <t t-foreach="states or []" t-as="state">
+                                                <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == partner.state_id.id">
+                                                    <t t-esc="state.name" />
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                                </div>
+                                <div class="clearfix">
+                                    <button type="submit" class="btn btn-default btn-primary pull-right mb32 ">
+                                        Confirm
+                                        <span class="fa fa-long-arrow-right" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="my_account_link" name="Link to frontend portal" inherit_id="website.layout">
+        <xpath expr="//li[@id='o_logout']" position="before">
+            <li><a href="/my/home" role="menuitem">My Account</a></li>
+        </xpath>
+    </template>
+
+</odoo>

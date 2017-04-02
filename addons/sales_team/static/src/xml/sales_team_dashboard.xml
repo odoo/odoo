@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!--
+        This template is the ribbon at the top of the salesteam dashboard that adds
+        some figures to it. We call this rubbon the "SalesDashboard".
+    -->
+    <t t-name="sales_team.SalesDashboard">
+        <div t-if="show_demo or values" class="o_sales_dashboard">
+            <div t-attf-class="#{show_demo ? 'o_demo' : ''}">
+                <table class="table table-condensed">
+                    <tr>
+                        <td class="o_text">
+                            <div class="o_highlight">To do</div>
+                            Today
+                        </td>
+                        <td class="o_main" title="To Calendar">
+                            <a href="#" class="o_dashboard_action" name="calendar.action_calendar_event">
+                                <span class="o_highlight">
+                                    <t t-if="!show_demo">
+                                        <t t-esc="values['meeting']['today']"/>
+                                    </t>
+                                    <t t-if="show_demo">
+                                        0
+                                    </t>
+                                </span><br/>
+                                Meetings
+                            </a>
+                        </td>
+                        <td class="o_main" title="To Activities">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-extra="today">
+                                <span class="o_highlight">
+                                    <t t-if="!show_demo">
+                                        <t t-esc="values['activity']['today']"/>
+                                    </t>
+                                    <t t-if="show_demo">
+                                        7
+                                    </t>
+                                </span> <br/>
+                                Next Actions
+                            </a>
+                        </td>
+                        <td class="o_main" title="My Pipeline" rowspan="2">
+                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline">
+                                <span class="fa fa-th-large fa-3x"/><br/>
+                                My Pipeline
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_text">Next 7 days</td>
+                        <td class="o_main" title="To Calendar">
+                            <a href="#" class="o_dashboard_action" name="calendar.action_calendar_event">
+                                <t t-if="!show_demo">
+                                    <t t-esc="values['meeting']['next_7_days']"/>
+                                </t>
+                                <t t-if="show_demo">
+                                    9
+                                </t>
+                            </a>
+                        </td>
+                        <td class="o_main" title="To Activities">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-extra="this_week">
+                                <t t-if="!show_demo">
+                                    <t t-esc="values['activity']['next_7_days']"/>
+                                </t>
+                                <t t-if="show_demo">
+                                    28
+                                </t>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <!-- Hide overdue when there is none -->
+                        <td t-if="show_demo or (values and values['activity']['overdue'] != 0)" class="o_warning" title="To Activities">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-extra="overdue">
+                                <t t-if="!show_demo">
+                                    <t t-esc="values['activity']['overdue']"/> overdue
+                                </t>
+                                <t t-if="show_demo">
+                                    2
+                                </t>
+                            </a>
+                        </td>
+                        <td  t-if="show_demo or (values and values['closing']['overdue'] != 0)" class="o_warning" title="To Opportunities">
+                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline" data-extra="overdue_opp">
+                                <t t-if="!show_demo">
+                                    <t t-esc="values['closing']['overdue']"/> exp. closing
+                                </t>
+                                <t t-if="show_demo">
+                                    3 exp. closing
+                                </t>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div><div t-attf-class="#{show_demo ? 'o_demo' : ''}">
+                <table class="hidden-xs table table-condensed">
+                    <tr>
+                        <td class="o_text">
+                            <div class="o_highlight">Performance</div>
+                            This Month
+                        </td>
+                        <td t-attf-class="#{values and values['done']['target'] and values['done']['this_month'] >= values['done']['target'] ? 'o_main' : 'o_secondary'}" title="To Activity Report">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action">
+                                <span class="o_highlight">
+                                    <t t-if="!show_demo">
+                                        <t t-esc="values['done']['this_month']"/>
+                                    </t>
+                                    <t t-if="show_demo">
+                                        94
+                                    </t>
+                                </span> <br/>
+                                Activities Done
+                            </a>
+                        </td>
+                        <td t-attf-class="#{values and values['won']['target'] and values['won']['this_month'] >= values['won']['target'] ? 'o_main' : 'o_secondary'}" title="To Opportunity Report">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph">
+                                <span class="o_highlight">
+                                    <t t-if="!show_demo">
+                                        <t t-esc="widget.render_monetary_field(values['won']['this_month'], values['currency_id'])"/>
+                                    </t>
+                                    <t t-if="show_demo">
+                                        78,140.03€
+                                    </t>
+                                </span> <br/>
+                                Won in Opportunities
+                            </a>
+                        </td>
+                        <td t-if="values['invoiced']" t-attf-class="#{values and values['invoiced']['target'] and values['invoiced']['this_month'] >= values['invoiced']['target'] ? 'o_main' : 'o_secondary'}" title="To Invoice Report">
+                            <a href="#" class="o_dashboard_action" name="account.action_account_invoice_report_all">
+                                <span class="o_highlight">
+                                    <t t-if="!show_demo">
+                                        <t t-esc="widget.render_monetary_field(values['invoiced']['this_month'], values['currency_id'])"/>
+                                    </t>
+                                    <t t-if="show_demo">
+                                        35,029.39€
+                                    </t>
+                                </span> <br/>
+                                Invoiced
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_text">Target</td>
+                        <td class="o_secondary">
+                            <span t-if="!show_demo" class="o_target_to_set" name='done' t-att-value="values['done']['target'] ? values['done']['target'] : undefined" title="Click to set">
+                                <t t-if="values['done']['target']">
+                                    <t t-esc="values['done']['target']"/>
+                                </t>
+                                <t t-if="!values['done']['target']">
+                                    Click to set
+                                </t>
+                            </span>
+                            <span t-if="show_demo">
+                                100
+                            </span>
+                        </td>
+                        <td class="o_secondary">
+                            <span t-if="!show_demo" class="o_target_to_set" name='won' t-att-value="values['won']['target'] ? values['won']['target'] : undefined" title="Click to set">
+                                <t t-if="values['won']['target']">
+                                    <t t-esc="values['won']['target']"/>
+                                </t>
+                                <t t-if="!values['won']['target']">
+                                    Click to set
+                                </t>
+                            </span>
+                            <span t-if="show_demo">
+                                80.000€
+                            </span>
+                        </td>
+                        <td t-if="show_demo or values['invoiced']" class="o_secondary">
+                            <span t-if="!show_demo" class="o_target_to_set" name='invoiced' t-att-value="values['invoiced']['target'] ? values['invoiced']['target'] : undefined" title="Click to set">
+                                <t t-if="values['invoiced']['target']">
+                                    <t t-esc="values['invoiced']['target']"/>
+                                </t>
+                                <t t-if="!values['invoiced']['target']">
+                                    Click to set
+                                </t>
+                            </span>
+                            <span t-if="show_demo">
+                                Click to set
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_text">Last Month</td>
+                        <td class="o_secondary" title="To Activity Report">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action">
+                                <t t-esc="values['done']['last_month']"/>
+                            </a>
+                        </td>
+                        <td class="o_secondary" title="To Opportunity Report">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph">
+                                <t t-esc="widget.render_monetary_field(values['won']['last_month'], values['currency_id'])"/>
+                            </a>
+                        </td>
+                        <td t-if="values['invoiced']" class="o_secondary" title="To Invoice Report">
+                            <a href="#" class="o_dashboard_action" name="account.action_account_invoice_report_all">
+                                <t t-esc="widget.render_monetary_field(values['invoiced']['last_month'], values['currency_id'])"/>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div t-if="show_demo" class="o_welcome_message">
+                <div class="o_welcome_image">
+                    <i class="fa fa-smile-o fa-5x"></i>
+                </div>
+                <div class="o_welcome_content">
+                    <h2>Hi there!</h2>
+                    <h4>Great sales journeys start with a clean pipeline.</h4>
+                    <h4>Create a few opportunities in it.</h4>
+                    <a class="btn btn-primary o_dashboard_action" name="crm.action_your_pipeline">My Pipeline</a>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

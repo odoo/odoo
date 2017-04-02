@@ -1,0 +1,1525 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_slides
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2016\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_slides
+#: model:mail.template,body_html:website_slides.slide_template_shared
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>\n"
+"    ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        View <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,body_html:website_slides.slide_template_published
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>\n"
+"    A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        View <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
+msgid "# Views"
+msgstr "# Προβολές"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_views
+msgid "# of Embedded Views"
+msgstr "# από Ενσωματωμένες προβολές"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
+msgid "# of Website Views"
+msgstr "# από Προβολές ιστοτόπου"
+
+#. module: website_slides
+#: model:mail.template,subject:website_slides.slide_template_shared
+msgid "${user.name} shared a ${object.slide_type} with you!"
+msgstr "${user.name} μοιράστηκε το ${object.slide_type} μαζί σας!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid ""
+"(Un)archiving a channel automatically (un)archives its slides. Do you want "
+"to proceed?"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_search
+msgid ". Please try again with different keywords."
+msgstr ". Παρακαλώ δοκιμάστε ξανά με διαφορετικές λέξεις-κλειδιά."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
+msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Ηλεκτρονικό "
+"ταχυδρομείο</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
+msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Ενσωμάτωση</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
+msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Κοινή χρήση</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "<b>Share:</b>"
+msgstr "<b>Κοινή χρήση:</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-align-justify\"/> Transcript"
+msgstr "<i class=\"fa fa-align-justify\"/> Απομαγνητοφώνηση"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "<i class=\"fa fa-arrow-right\"/> See all"
+msgstr "<i class=\"fa fa-arrow-right\"/> Προβολή όλων"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
+msgstr "<i class=\"fa fa-bar-chart\"/> Στατιστικά"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-circle-o\"/> Website Views"
+msgstr "<i class=\"fa fa-circle-o\"/> Προβολές Ιστότοπου"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "<i class=\"fa fa-cloud-upload\"/> Upload"
+msgstr "<i class=\"fa fa-cloud-upload\"/> Μεταφόρτωση"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-code\"/> Embeded Views"
+msgstr "<i class=\"fa fa-code\"/> Ενσωματωμένες Προβολές"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-comments-o\"/> Comments"
+msgstr "<i class=\"fa fa-comments-o\"/> Σχόλια"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                        Send Email"
+msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"Αποστολή ηλεκτρονικού ταχυσρομείου"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+#: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-exclamation-triangle\"/> This"
+msgstr "<i class=\"fa fa-exclamation-triangle\"/> Αυτό"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-home\"/> About"
+msgstr "<i class=\"fa fa-home\"/> Σχετικά"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "<i class=\"fa fa-home\"/> Home"
+msgstr "<i class=\"fa fa-home\"/> Αρχική"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                                        The social sharing module will be unlocked when a moderator will allow your publication."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"Το άρθρωμα κοινής χρήσης θα ξεκλειδωθεί όταν ο συντονιστής θα σας επιτρέψει τις δημοσιεύσεις."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-play\"/> Total Views"
+msgstr "<i class=\"fa fa-play\"/> Συνολικές Προβολές"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-share-alt\"/> Share"
+msgstr "<i class=\"fa fa-share-alt\"/> Κοινή χρήση"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"fa fa-spinner fa-spin\"/> Loading ..."
+msgstr "<i class=\"fa fa-spinner fa-spin\"/> Φόρτωση..."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-thumbs-down\"/> Dislikes"
+msgstr "<i class=\"fa fa-thumbs-down\"/> Δεν αρέσει"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
+msgstr "<i class=\"fa fa-thumbs-up\"/> Αρέσει"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
+msgstr ""
+"<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
+"<i class=\"fa fa-facebook-square\"/> Facebook"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"google-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
+msgstr ""
+"<span class=\"badge\" id=\"google-badge\">0</span>\n"
+"<i class=\"fa fa-google-plus-square\"/> Google+"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
+msgstr ""
+"<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
+"<i class=\"fa fa-linkedin-square\"/> LinkedIn"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"total-share\">0</span>\n"
+"                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
+msgstr ""
+"<span class=\"badge\" id=\"total-share\">0</span>\n"
+"<i class=\"fa fa-share-alt\"/> Κοινές χρήσεις"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
+msgstr ""
+"<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
+"<i class=\"fa fa-twitter-square\"/> Twitter"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "<span class=\"help-block\">Send presentation through email</span>"
+msgstr ""
+"<span class=\"help-block\">Αποστολή παρουσίασης μέσω ηλεκτρονικού "
+"ταχυδρομείου</span>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid ""
+"<span class=\"help-block\">Use permanent link to share in social "
+"media</span>"
+msgstr ""
+"<span class=\"help-block\">Χρησιμοποίηση μόνιμης σύνδεσης για κοινή χρήση "
+"στα μέσα κοινωνικής δικτύωσης</span>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<span class=\"text-muted small\">views</span>"
+msgstr "<span class=\"text-muted small\">προβολές</span>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "<span class=\"text-muted\">Sort by:</span>"
+msgstr "<span class=\"text-muted\">Ταξινόμηση κατά:</span>"
+
+#. module: website_slides
+#: sql_constraint:slide.tag:0
+msgid "A tag must be unique!"
+msgstr "Η ετικέτα πρέπει να είναι μοναδική!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Actions"
+msgstr "Ενέργειες"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+msgid "Active"
+msgstr "Ενεργή"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Archived"
+msgstr "Αρχειοθετημένα"
+
+#. module: website_slides
+#: selection:slide.slide,download_security:0
+msgid "Authentified Users Only"
+msgstr "Μόνο Επικυρωμένοι Χρήστες"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_5
+msgid "Awesome Timesheet by Odoo"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
+msgid "Can See"
+msgstr "Μπορεί να δει"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_upload
+msgid "Can Upload"
+msgstr "Μπορεί να μεταφορτωθεί."
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_category_ids
+#: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Categories"
+msgstr "Κατηγορίες"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:251
+#: code:addons/website_slides/static/src/xml/website_slides.xml:54
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_category_id
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#: model:ir.ui.view,arch_db:website_slides.view_slides_category_form
+#: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
+#, python-format
+msgid "Category"
+msgstr "Κατηγορία"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Channel"
+msgstr "Κανάλι"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
+msgid "Channel Groups"
+msgstr "Ομάδες Καναλιού"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "Channel Settings"
+msgstr "Ρυθμίσεις Καναλιού"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:171
+#, python-format
+msgid ""
+"Channel contains the given title, please change before Save or Publish."
+msgstr ""
+"Το κανάλι περιέχει τον συγκεκριμένο τίτλο, παρακαλώ αλλάξτε τον πριν από την"
+" Αποθήκευση ή την δημοσίευση."
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
+msgid "Channel for Slides"
+msgstr "Κανάλι για Διαφάνειες"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Channel visibility"
+msgstr "Ορατότητα καναλιού"
+
+#. module: website_slides
+#: model:ir.actions.act_url,name:website_slides.action_open_channels
+#: model:ir.actions.act_window,name:website_slides.action_slide_channels
+#: model:ir.ui.menu,name:website_slides.menu_action_slide_channels
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Channels"
+msgstr "Κανάλια"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
+msgid "Content"
+msgstr "Περιεχόμενα"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:20
+#, python-format
+msgid "Content Preview"
+msgstr "Προεπισκόπηση Περιεχομένου"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:290
+#, python-format
+msgid ""
+"Could not fetch data from url. Document or access right not available.\n"
+"Here is the received response: %s"
+msgstr ""
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:307
+#, python-format
+msgid ""
+"Could not fetch data from url. Document or access right not available:\n"
+"%s"
+msgstr ""
+"Δεν ήταν δυνατή η ανάκτηση δεδομένων από τη διεύθυνση URL. Το έγγραφο ή τα δικαιώματα πρόσβασης δεν είναι διαθέσιμα.\n"
+"%s"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_1
+msgid ""
+"Create a beautiful and professional eCommerce on your website with Odoo. \n"
+"\n"
+"Find out more at https://www.odoo.com/page/e-commerce"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:220
+#, python-format
+msgid "Create new tag '%s'"
+msgstr "Δημιουργία νέας ετικέτας '%s'"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_uid
+msgid "Created by"
+msgstr "Δημιουργήθηκε από"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_date
+msgid "Created on"
+msgstr "Δημιουργήθηκε στις"
+
+#. module: website_slides
+#: model:slide.channel,description:website_slides.channel_public
+msgid ""
+"Default channel for slides, all public users can access content of this "
+"channel."
+msgstr ""
+"Το προεπιλεγμένο κανάλι για διαφάνειες, όλοι οι δημόσιοι χρήστες μπορούν να "
+"έχουν πρόσβαση στο περιεχόμενο αυτού του καναλιού."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:60
+#: code:addons/website_slides/static/src/xml/website_slides.xml:62
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_description
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_description
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#, python-format
+msgid "Description"
+msgstr "Περιγραφή"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:72
+#, python-format
+msgid "Discard"
+msgstr "Απόρριψη"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_2
+msgid ""
+"Discover the all-in-one business management software solution that fits any business size and use case.\n"
+"\n"
+"Learn more at https://odoo.com"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
+msgid "Dislikes"
+msgstr "Δεν αρέσει"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
+msgid "Display Name"
+msgstr "Εμφάνιση Ονόματος"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_category_sequence
+#: model:ir.model.fields,help:website_slides.field_slide_channel_sequence
+msgid "Display order"
+msgstr "Σειρά εμφάνισης"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#: selection:slide.slide,slide_type:0
+msgid "Document"
+msgstr "Έγγραφο"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
+msgid "Document ID"
+msgstr "Κωδικός εγγράφου"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
+msgid "Document URL"
+msgstr "Διεύθυνση διαδικτύου (URL) εγγράφου"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Documents"
+msgstr "Έγγραφα"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Download"
+msgstr "Λήψη"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_5
+msgid ""
+"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
+msgid "Download Security"
+msgstr "Λήψη Ασφάλειας"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Email Address"
+msgstr "Email Address"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
+msgid "Email template to send slide publication through email"
+msgstr ""
+"Πρότυπο ηλεκτρονικού ταχυδρομείου για να στείλετε τη δημοσιευμένη διαφάνεια "
+"μέσω ηλεκτρονικού ταχυδρομείου"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_share_template_id
+msgid "Email template used when sharing a slide"
+msgstr ""
+"Πρότυπο ηλεκτρονικού ταχυδρομείου που χρησιμοποιείται κατά την κοινή χρήση "
+"μιας διαφάνειας"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_code
+msgid "Embed Code"
+msgstr "Κώδικας Ενσωμάτωσης"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embedcount_ids
+msgid "Embed Count"
+msgstr "Πλήθος Ενσωματώσεων"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_embed
+msgid "Embed in your website"
+msgstr "Ενσωμάτωση στον δικό σας ιστότοπο."
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_embed
+msgid "Embedded Slides View Counter"
+msgstr "Μετρητής προβολών ενσωματωμένων διαφανειών"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Embeds"
+msgstr "Ενσωματώσεις"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.channel_private
+msgid "Employee Channel"
+msgstr "Κανάλι Υπαλλήλων"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_access_error_msg
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Error Message"
+msgstr "Μήνυμα σφάλματος"
+
+#. module: website_slides
+#: selection:slide.slide,download_security:0
+msgid "Everyone"
+msgstr "Όλοι"
+
+#. module: website_slides
+#: selection:slide.channel,promote_strategy:0
+msgid "Featured Presentation"
+msgstr "Επιλεγμένη Παρουσίαση"
+
+#. module: website_slides
+#: model:slide.category,name:website_slides.category_1
+msgid "Featured Presentations"
+msgstr "Επιλεγμένες Παρουσιάσεις"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promoted_slide_id
+msgid "Featured Slide"
+msgstr "Επιλεγμένη Διαφάνεια"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promote_strategy
+msgid "Featuring Policy"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/controllers/main.py:300
+#: code:addons/website_slides/static/src/js/slides_upload.js:90
+#, python-format
+msgid "File is too big. File size cannot exceed 25MB"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
+msgid "Full Access"
+msgstr "Πλήρης πρόσβαση"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "General"
+msgstr "Γενικά"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_website_config_settings_website_slide_google_app_key
+msgid "Google Doc Key"
+msgstr "Google Doc Κλειδί"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
+msgid "Graph of Slides"
+msgstr "Γράφημα Διαφανειών"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Group By"
+msgstr "Ομαδοποίηση Κατά"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
+msgid "Groups allowed to see presentations in this channel"
+msgstr "Οι ομάδες που μπορούν να δουν παρουσιάσεις σε αυτό το κανάλι"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_upload_group_ids
+msgid ""
+"Groups allowed to upload presentations in this channel. If void, every user "
+"can upload."
+msgstr ""
+"Οι ομάδες που μπορούν να μεταφορτώσουν παρουσιάσεις σε αυτό το κανάλι. Εάν η"
+" λίστα είναι κενή, τότε κάθε χρήστης μπορεί να μεταφορτώσει."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_id
+msgid "ID"
+msgstr "Κωδικός"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
+msgid "Image"
+msgstr "Εικόνα"
+
+#. module: website_slides
+#: selection:slide.slide,slide_type:0
+msgid "Infographic"
+msgstr "Infographic"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Infographics"
+msgstr "Infographics"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:322
+#, python-format
+msgid ""
+"Internal server error, please try again later or contact administrator.\n"
+"Here is the error message: %s"
+msgstr ""
+"Εσωτερικό σφάλμα διακομιστή, δοκιμάστε ξανά αργότερα ή επικοινωνήστε με τον διαχειριστή.\n"
+"Αυτό είναι το μήνυμα σφάλματος: %s"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:85
+#, python-format
+msgid "Invalid file type. Please select pdf or image file"
+msgstr "Λάθος τύπος αρχείου. Παρακαλώ επιλέξτε αρχείο τύπου pdf ή εικόνα."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
+msgid "Last Modified on"
+msgstr "Τελευταία τροποποίηση στις"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_uid
+msgid "Last Updated by"
+msgstr "Τελευταία Ενημέρωση από"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_date
+msgid "Last Updated on"
+msgstr "Τελευταία Ενημέρωση στις"
+
+#. module: website_slides
+#: selection:slide.channel,promote_strategy:0
+msgid "Latest Published"
+msgstr "Τελευταία Δημοσίευση"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Likes"
+msgstr "Αρέσει"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
+msgid "Medium"
+msgstr "Μέσο"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
+msgid "Message to display when not accessible due to access rights"
+msgstr ""
+"Το μήνυμα που θα εμφανίζεται όταν δεν είναι δυνατή η πρόσβαση λόγω "
+"περιορισμού στα δικαιώματων πρόσβασης"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_mime_type
+msgid "Mime-type"
+msgstr "Mime-type"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: selection:slide.channel,promote_strategy:0
+msgid "Most Viewed"
+msgstr "Περισσότερο Προβεβλημένα"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: selection:slide.channel,promote_strategy:0
+msgid "Most Voted"
+msgstr "Περισσότερο Ψηφισμένα"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_name
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Name"
+msgstr "Περιγραφή"
+
+#. module: website_slides
+#: model:mail.template,subject:website_slides.slide_template_published
+msgid "New ${object.slide_type} published on ${object.channel_id.name}"
+msgstr "Νέο ${object.slide_type} δημοσιεύτηκε στο ${object.channel_id.name}"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Newest"
+msgstr "Νεότερα"
+
+#. module: website_slides
+#: selection:slide.channel,promote_strategy:0
+msgid "No Featured Presentation"
+msgstr "Μη Επιλεγμένη Παρουσίαση"
+
+#. module: website_slides
+#: selection:slide.slide,download_security:0
+msgid "No One"
+msgstr "Κανένας"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.channel_not_found
+msgid "No channel created or published yet."
+msgstr "Κανένα κανάλι δεν έχει δημιουργηθεί ή δεν έχει δημοσιευθεί ακόμη."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "No presentation available."
+msgstr "Δεν υπάρχει διαθέσιμη παρουσίαση."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "No presentation published yet."
+msgstr "Ακόμη δεν έχει δημοσιευθεί κάποια παρουσίαση."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
+msgid "Number of Documents"
+msgstr "Αριθμός εγγράφων"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
+msgid "Number of Infographics"
+msgstr "Αριθμός Infographics"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
+msgid "Number of Presentations"
+msgstr "Αριθμός Παρουσιάσεων"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
+msgid "Number of Videos"
+msgstr "Αριθμός Βίντεος"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_2
+msgid "Odoo All-in-One Software Demonstration"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.category,name:website_slides.category_2
+msgid "Odoo Days"
+msgstr "Odoo Days"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_0
+msgid "Odoo Explained"
+msgstr "Επεξήγηση Odoo"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_6
+msgid "Odoo Marketing - part 1: ATTRACT"
+msgstr "Odoo Marketing - Μέρος 1: ΠΡΟΣΕΛΚΥΣΗ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_7
+msgid "Odoo Marketing - part 1: ATTRACT_2"
+msgstr "Odoo Marketing - Μέρος 1: ΠΡΟΣΕΛΚΥΣΗ_2"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_8
+msgid "Odoo Marketing - part 1: ATTRACT_3"
+msgstr "Odoo Marketing - Μέρος 1: ΠΡΟΣΕΛΚΥΣΗ_3"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_10
+msgid "Odoo Roadmap & Strategy - Fabien Pinckaers"
+msgstr "Odoo πορεία και στρατηγική - Fabien Pinckaers"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_3
+msgid "Odoo Sign Demonstration"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_1
+msgid "Odoo Website & E-commerce Demonstration"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_6
+msgid ""
+"Odoo's fully-integrated marketing app will help you to attract, convert and "
+"close new leads. Check out our three-part video and discover more at "
+"www.odoo.com"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_7
+#: model:slide.slide,description:website_slides.slide_8
+msgid ""
+"Odoo's fully-integrated marketing app will help you to attract, convert and close new leads. Check out our three-part video and discover more at www.odoo.com\n"
+"\n"
+"Video made by Miroslava Ganzarcikova and Sophia Eribo."
+msgstr ""
+"Η πλήρως ενσωματωμένη εφαρμογή Marketing της odoo θα σας βοηθήσει να προσελκύσετε, να μετατρέψει και να κλείσετε πωλήσεις. \n"
+"Δείτε τα τρία μέρη του βίντεο μας και ανακαλύψετε περισσότερα στο www.odoo.com\n"
+"\n"
+"Το βίντεο δημιουργήθηκε από την Miroslava Ganzarcikova και την Sophia Eribo."
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_9
+msgid "Open Days 2014 Infographic"
+msgstr "Open Days 2014 Infographic"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_11
+msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
+msgstr "CMS ανοιχτού κώδικα. Σύγκριση των επιδόσεων - Mantavya Gajjar"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:28
+#, python-format
+msgid "PDF or Image File"
+msgstr "PDF ή αρχείο εικόνας"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.channel_partial
+msgid "Partner Channel"
+msgstr "Κανάλι συνεργατών"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "Please"
+msgstr "Παρακαλώ"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides.js:56
+#, python-format
+msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
+msgstr ""
+"Παρακαλώ <a href=\"/web?redirect=%s\">συνδεθείτε</a> για να ψηφίσετε αυτήν "
+"την διαφάνεια"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:310
+#: code:addons/website_slides/models/slides.py:533
+#, python-format
+msgid "Please enter valid Youtube or Google Doc URL"
+msgstr ""
+"Παρακαλώ εισάγετε μια έγκυρη διεύθυνση διαδικτύου (URL) Youtube ή Google Doc"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:282
+#, python-format
+msgid "Please enter valid youtube or google doc url"
+msgstr ""
+"Παρακαλώ εισάγετε μια έγκυρη διεύθυνση διαδικτύου (URL) youtube ή google doc"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Post"
+msgstr "Ανάρτηση"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"Post comment with email address (confirmation of email is required in order "
+"to publish comment on website) or please"
+msgstr ""
+"Δημοσίευση σχολίου με διεύθυνση ηλεκτρονικού ταχυδρομείου (η επιβεβαίωμένη "
+"διεύθυνση ηλεκτρονικού ταχυδρομείου είναι απαραίτητη για να δημοσιεύσετε ένα"
+" σχόλιο στην ιστοσελίδα) ή παρακαλώ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
+#: selection:slide.slide,slide_type:0
+msgid "Presentation"
+msgstr "Παρουσίαση"
+
+#. module: website_slides
+#: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
+#: model:mail.message.subtype,name:website_slides.mt_channel_slide_published
+msgid "Presentation Published"
+msgstr "Η παρουσίαση δημοσιεύθηκε."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_footer
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: model:website.menu,name:website_slides.website_menu_slides
+msgid "Presentations"
+msgstr "Παρουσιάσεις"
+
+#. module: website_slides
+#: selection:slide.channel,visibility:0
+msgid "Private"
+msgstr "Προσωπικό"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.channels
+msgid "Private channel"
+msgstr "Ιδιωτικό Κανάλι"
+
+#. module: website_slides
+#: selection:slide.channel,visibility:0
+msgid "Public"
+msgstr "Δημόσιο"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.channel_public
+msgid "Public Channel"
+msgstr "Δημόσιο Κανάλι"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
+msgid "Publish Date"
+msgstr "Ημερομηνία δημοσιοποίησης"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Published"
+msgstr "Δημοσιοποιημένη"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
+msgid "Published Template"
+msgstr "Δημοσιοποιημένο πρότυπο"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Related"
+msgstr "Σχετικά"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "Results for"
+msgstr "Αποτελέσματα για"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid ""
+"Review your channel settings to promote your most viewed or recent published"
+" presentation"
+msgstr ""
+"Ελέγξτε τις ρυθμίσεις του καναλιού σας για να προωθήσετε τις περισσότερες "
+"προβολές σας ή τις πρόσφατα δημοσιοποιημένες παρουσιάσεις σας"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_0
+msgid ""
+"Run your business with a comprehensive suite of business apps. Do it easily with Odoo! \n"
+"\n"
+"http://odoo.com/start"
+msgstr ""
+"Λειτουργήστε την επιχείρησή σας με μια ολοκληρωμένη σουίτα εφαρμογών για επιχειρήσεις. Κάντε το εύκολα με Odoo! \n"
+"\n"
+"http://odoo.com/start"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:70
+#, python-format
+msgid "Save and Publish"
+msgstr "Αποθήκευση και Δημοσιοποίηση"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:69
+#, python-format
+msgid "Save as Draft"
+msgstr "Αποθήκευση ως πρόχειρο"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Search Slides"
+msgstr "Αναζήτηση Διαφανειών"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Security"
+msgstr "Ασφάλεια"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.channels
+msgid "Select a Channel"
+msgstr "Επιλέψτε ένα Κανάλι"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_embed
+msgid "Select page to start with"
+msgstr "Επιλέξτε σελίδα για να ξεκινήσει με"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_sequence
+msgid "Sequence"
+msgstr "Ακολουθία"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid "Share Link"
+msgstr "Σύνδεσμος κοινής χρήσης"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Share count"
+msgstr "Μετρητής κοινής χρήσης"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid "Share on Social Networks"
+msgstr "Κοινή χρήση στα κοινωνικά δίκτυα"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "Share with a friend"
+msgstr "Κοινή χρήση με έναν φίλο"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
+msgid "Shared Template"
+msgstr "Πρότυπο Κοινής χρήσης"
+
+#. module: website_slides
+#: selection:slide.channel,visibility:0
+msgid "Show channel but restrict presentations"
+msgstr "Προβολή καναλιού, αλλά να περιοριστούν οι παρουσιάσεις"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Slide"
+msgstr "Διαφάνεια"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_tag
+msgid "Slide Tag"
+msgstr "Ετικέτα διαφάνειας"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_custom_slide_id
+msgid "Slide to Promote"
+msgstr "Διαφάνεια για προώθηση"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.action_slides_slides
+#: model:ir.model,name:website_slides.model_slide_slide
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_slide_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_slide_ids
+#: model:ir.ui.menu,name:website_slides.menu_website_slides_root
+#: model:ir.ui.menu,name:website_slides.submenu_action_slides_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
+msgid "Slides"
+msgstr "Διαφάνειες"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_category
+msgid "Slides Category"
+msgstr "Κατηγορίες Διαφανειών"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_search
+msgid "Sorry, but nothing matches your search criteria"
+msgstr "Συγνώμη, αλλά τίποτα δεν ταιριάζει με τα κριτήρια αναζήτησης"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_3
+msgid ""
+"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
+"\n"
+"Discover more at https://www.odoo.com/page/sign"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
+msgid "Tag"
+msgstr "Εικέτα"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:274
+#: code:addons/website_slides/static/src/xml/website_slides.xml:48
+#: model:ir.actions.act_window,name:website_slides.action_slide_tag
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_tag_ids
+#: model:ir.ui.menu,name:website_slides.menu_slide_tag
+#: model:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
+#, python-format
+msgid "Tags"
+msgstr "Ετικέτες"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Tags..."
+msgstr "Ετικέτες..."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "The"
+msgstr "Το"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
+msgid ""
+"The document type will be set automatically based on the document URL and "
+"properties (e.g. height and width for presentation and document)."
+msgstr ""
+
+#. module: website_slides
+#: sql_constraint:slide.slide:0
+msgid "The slide name must be unique within a channel"
+msgstr "Το όνομα διαφάνειες πρέπει να είναι μοναδικό σε ένα κανάλι"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_url
+msgid "Third Party Website URL"
+msgstr "Διεύθυνση διαδικτύου (URL) εξωτερικού συνεργάτη"
+
+#. module: website_slides
+#: model:slide.channel,access_error_msg:website_slides.channel_partial
+#: model:slide.channel,access_error_msg:website_slides.channel_private
+#: model:slide.channel,access_error_msg:website_slides.channel_public
+msgid "This channel is private and its content is restricted to some users."
+msgstr ""
+"Αυτό το κανάλι είναι ιδιωτικό και το περιεχόμενό της περιορίζεται σε "
+"ορισμένους μόνο χρήστες."
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:286
+#, python-format
+msgid ""
+"This video already exists in this channel <a target=\"_blank\" "
+"href=\"/slides/slide/%s\">click here to view it </a>"
+msgstr ""
+"Αυτό το Βίντεο υπάρχει ήδη σε αυτό το κανάλι. <a target=\"_blank\" "
+"href=\"/slides/slide/%s\">Κάντε κλικ εδώ για να το δείτε.</a>"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
+msgid "Thumbnail"
+msgstr "Μικρογραφία"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:42
+#: code:addons/website_slides/static/src/xml/website_slides.xml:44
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
+#, python-format
+msgid "Title"
+msgstr "Τίτλος"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_total
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_total
+msgid "Total"
+msgstr "Σύνολο"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
+msgid "Total # Views"
+msgstr "Συνολικά # Προβολές"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
+msgid "Transcript"
+msgstr "Απομαγνητοφώνηση"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_type
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Type"
+msgstr "Τύπος"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:141
+#, python-format
+msgid "Uncategorized"
+msgstr "Μη κατηγοριοποιημένη"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "Uncategorized presentation"
+msgstr "Μη κατηγοριοποιημένη παρουσίαση"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:522
+#, python-format
+msgid "Unknown document"
+msgstr "Άγνωστο έγγραφο"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+msgid "Unpublished"
+msgstr "Μη δημοσιοποιημένο"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
+msgid "Upload Groups"
+msgstr "Μεταφόρτωση Ομάδων"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid ""
+"Upload PDF presentations, documents, videos or infographic using the button "
+"below."
+msgstr ""
+"Μεταφορτώσετε PDF παρουσιάσεις, έγγραφα, βίντεο ή infographic "
+"χρησιμοποιώντας την παρακάτω κουμπί."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:9
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#, python-format
+msgid "Upload Presentation"
+msgstr "Μεταφόρτωση Παρουσίασης"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:12
+#, python-format
+msgid "Uploading presentation..."
+msgstr "Μεταφόρτωση παρουσίασης..."
+
+#. module: website_slides
+#: model:slide.channel,description:website_slides.channel_private
+msgid "Used to publish internal slides of company."
+msgstr ""
+"Χρησιμοποιείται για να δημοσιεύσετε εσωτερικές διαφάνειες της εταιρείας."
+
+#. module: website_slides
+#: model:slide.channel,description:website_slides.channel_partial
+msgid "Used to publish slides in partner network privately."
+msgstr ""
+"Χρησιμοποιείται για να δημοσιεύσετε διαφάνειες στο δίκτυο συνεργατών με "
+"ιδιωτικό χαρακτηρισμό."
+
+#. module: website_slides
+#: selection:slide.slide,slide_type:0
+msgid "Video"
+msgstr "Βίντεο"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Videos"
+msgstr "Βίντεος"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+msgid "Views"
+msgstr "Προβολές"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.related_slides
+msgid "Views ."
+msgstr "Προβολές"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
+msgid "Visibility"
+msgstr "Ορατότητα"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Waiting for validation"
+msgstr "Αναμονή για επικύρωση"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Website"
+msgstr "Ιστότοπος"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_message_ids
+msgid "Website Messages"
+msgstr "Μηνύματα Ιστότοπου"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_website_config_settings
+msgid "Website Slides"
+msgstr "Διαφάνειες Ιστότοπου"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_website_message_ids
+msgid "Website communication history"
+msgstr "Ιστορικό επικοινωνίας ιστότοπου"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Write a comment..."
+msgstr "Γράψτε ένα σχόλιο..."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:115
+#, python-format
+msgid "You can not upload password protected file."
+msgstr ""
+"Δεν μπορείτε να μεταφορτώσετε αρχεία τα οποία έχουν κλείδωμα με κωδικό."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides.js:65
+#, python-format
+msgid "You have already voted for this slide"
+msgstr "Έχετε ήδη ψηφίσατε για αυτή την διαφάνεια."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Your Name"
+msgstr "Το Όνομά σας"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:36
+#, python-format
+msgid "Youtube Video URL"
+msgstr "Διεύθυνση διαδικτύου (URL) Youtube Βίντεο"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:34
+#, python-format
+msgid "Youtube or Google Doc URL"
+msgstr "Διεύθυνση διαδικτύου (URL) Youtube ή Google Doc"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
+msgid "Youtube or Google Document ID"
+msgstr "Ταυτότητα (ID) Youtube ή .έγγραφο Google"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_url
+msgid "Youtube or Google Document URL"
+msgstr "Διεύθυνση διαδικτύου (URL) Youtube ή έγγραφο Google"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "by email!"
+msgstr "μέσω ηλεκτρονικού ταχυδρομείου!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "is empty."
+msgstr "είναι κενό."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "is private"
+msgstr "είναι ιδιωτικό"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+#: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
+msgid "is private."
+msgstr "είναι ιδιωτικό."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "login"
+msgstr "σύνδεση"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "on"
+msgstr "στις"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:70
+#, python-format
+msgid "or"
+msgstr "ή"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_search
+msgid "results found for the given criteria"
+msgstr "αποτελέσματα που βρέθηκαν για τα κριτήρια που δώσατε"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "suggest_slide.name"
+msgstr "suggest_slide.name"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "to post comment"
+msgstr "για να προσθέσετε σχόλιο"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "to send this"
+msgstr "για να στείλετε αυτό"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_website_config_settings
+msgid "website.config.settings"
+msgstr "website.config.settings"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "your-friend@domain.com"
+msgstr "your-friend@domain.com"

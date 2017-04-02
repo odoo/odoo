@@ -1,0 +1,50 @@
+# HG changeset patch
+# Parent 7ae0db4c2ddf5d0f7f58db2af8976fcec905cc4e
+# Parent  06f959831b14dd5d2e0a57d3e14bf919e18f8e3a
+
+diff --git a/academy/__manifest__.py b/academy/__manifest__.py
+--- a/academy/__manifest__.py
++++ b/academy/__manifest__.py
+@@ -20,7 +20,7 @@
+     'version': '0.1',
+ 
+     # any module necessary for this one to work correctly
+-    'depends': ['base'],
++    'depends': ['website'],
+ 
+     # always loaded
+     'data': [
+diff --git a/academy/controllers.py b/academy/controllers.py
+--- a/academy/controllers.py
++++ b/academy/controllers.py
+@@ -2,7 +2,7 @@
+ from odoo import http
+ 
+ class Academy(http.Controller):
+-    @http.route('/academy/academy/', auth='public')
++    @http.route('/academy/academy/', auth='public', website=True)
+     def index(self, **kw):
+         Teachers = http.request.env['academy.teachers']
+         return http.request.render('academy.index', {
+diff --git a/academy/templates.xml b/academy/templates.xml
+--- a/academy/templates.xml
++++ b/academy/templates.xml
+@@ -1,9 +1,15 @@
+ <odoo>
+     <data>
+         <template id="index">
+-            <title>Academy</title>
+-            <t t-foreach="teachers" t-as="teacher">
+-                <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
++            <t t-call="website.layout">
++                <t t-set="title">Academy</t>
++                <div class="oe_structure">
++                    <div class="container">
++                        <t t-foreach="teachers" t-as="teacher">
++                            <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
++                        </t>
++                    </div>
++                </div>
+             </t>
+         </template>
+         <!-- <template id="object"> -->

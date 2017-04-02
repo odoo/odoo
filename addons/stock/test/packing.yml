@@ -1,0 +1,181 @@
+-
+  Create a new stockable product 
+- 
+  !record {model: product.product, id: product1, view: False}:
+    name: Nice product
+    type: product
+    categ_id: product.product_category_1
+    list_price: 100.0
+    standard_price: 70.0
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_2
+        min_qty: 2.0
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+- 
+  Create an incoming picking for this product of 300 PCE from suppliers to stock
+- 
+  !record {model: stock.picking, id: pick1}:
+    name: Incoming picking
+    partner_id: base.res_partner_2
+    picking_type_id: picking_type_in
+    move_lines:
+      - product_id: product1
+        product_uom_qty: 300.00
+        location_id: stock_location_suppliers
+        location_dest_id: stock_location_stock
+- 
+  Confirm and assign picking and prepare partial
+- 
+  !python {model: stock.picking, id: pick1}: |
+    self.action_confirm()
+    self.do_prepare_partial()
+- 
+  Put 120 pieces on Pallet 1 (package), 120 pieces on Pallet 2 with lot A and 60 pieces on Pallet 3
+- 
+  !python {model: stock.picking, id: pick1}: |
+    #Change quantity of first to 120 and create 2 others quant operations
+    stock_pack = self.env['stock.pack.operation']
+    stock_quant_pack = self.env['stock.quant.package']
+    #create lot A
+    lot_a = self.env['stock.production.lot'].create({'name': 'Lot A', 'product_id': ref('product1')})
+    #create package
+    package1 = stock_quant_pack.create({'name': 'Pallet 1'})
+    package2 = stock_quant_pack.create({'name': 'Pallet 2'})
+    package3 = stock_quant_pack.create({'name': 'Pallet 3'})
+    #Create package for each line and assign it as result_package_id
+    #create pack operation
+    self.pack_operation_ids[0].write({'result_package_id': package1.id, 'product_qty': 120})
+    new_pack1 = stock_pack.create({
+      'product_id': ref('product1'),
+      'product_uom_id': ref('product.product_uom_unit'),
+      'picking_id': ref('pick1'),
+      'pack_lot_ids': [(0, 0, {'lot_id': lot_a.id, 'qty': 120})],
+      'result_package_id': package2.id,
+      'product_qty': 120,
+      'location_id': ref('stock_location_suppliers'),
+      'location_dest_id': ref('stock_location_stock')
+    })
+    new_pack2 = stock_pack.create({
+      'product_id': ref('product1'),
+      'product_uom_id': ref('product.product_uom_unit'),
+      'picking_id': ref('pick1'),
+      'result_package_id': package3.id,
+      'product_qty': 60,
+      'location_id': ref('stock_location_suppliers'),
+      'location_dest_id': ref('stock_location_stock')
+    })
+- 
+  Transfer the receipt
+- 
+  !python {model: stock.picking, id: pick1}: |
+    self.do_transfer()
+- 
+  Check the system created 3 quants one with 120 pieces on pallet 1, one with 120 pieces on pallet 2 with lot A and 60 pieces on pallet 3
+- 
+  !python {model: stock.quant, id: False}: |
+    quants = self.search([('product_id','=',ref('product1'))])
+    assert len(quants.ids) == 3, "The number of quants created is not correct"
+    for quant in quants:
+      if quant.package_id.name == 'Pallet 1':
+        assert quant.qty == 120, "Should have 120 pieces on pallet 1"
+      elif quant.package_id.name == 'Pallet 2':
+        assert quant.qty == 120, "Should have 120 pieces on pallet 2"
+      elif quant.package_id.name == 'Pallet 3':
+        assert quant.qty == 60, "Should have 60 pieces on pallet 3"
+- 
+  Check there is no backorder or extra moves created
+- 
+  !python {model: stock.picking, id: pick1}: |
+    backorder = self.search([('backorder_id', '=', ref('pick1'))])
+    assert not backorder, ""
+    #Check extra moves created
+    assert len(self.move_lines) == 1, ""
+- 
+  Make a delivery order of 300 pieces to the customer
+- 
+  !record {model: stock.picking, id: delivery_order1}:
+    name: outgoing picking
+    partner_id: base.res_partner_4
+    picking_type_id: stock.picking_type_out
+    move_lines:
+      - product_id: product1
+        product_uom_qty: 300.00
+        location_id: stock_location_stock
+        location_dest_id: stock_location_customers
+- 
+  Assign and confirm
+- 
+  !python {model: stock.picking, id: delivery_order1}: |
+    self.action_confirm()
+    self.action_assign()
+- 
+  Instead of doing the 300 pieces, you decide to take pallet 1 (do not mention product in operation here) and 20 pieces from lot A and 10 pieces from pallet 3
+- 
+  !python {model: stock.picking, id: delivery_order1}: |
+    stock_pack = self.env['stock.pack.operation']
+    self.do_prepare_partial()
+    for rec in self.pack_operation_ids:
+      if rec.package_id.name == 'Pallet 2':
+        lot = self.env["stock.production.lot"].search([('product_id', '=', ref('product1')), ('name','=','Lot A')], limit=1)
+        rec.write({
+          'product_id': ref('product1'),
+          'product_qty': 20,
+          'pack_lot_ids': [(0, 0, {'lot_id': lot.id, 'qty': 20})],
+          'product_uom_id': ref('product.product_uom_unit')
+        })
+      if rec.package_id.name == 'Pallet 3':
+        rec.write({
+          'product_id': ref('product1'),
+          'product_qty': 10,
+          'product_uom_id': ref('product.product_uom_unit')
+        })
+- 
+  Process this picking
+- 
+  !python {model: stock.picking, id: delivery_order1 }: |
+    self.do_transfer()
+- 
+  Check the quants that you have 120 pieces pallet 1 in customers, 100 pieces pallet 2 in stock and 20 with customers and 50 in stock, 10 in customers from pallet 3 
+- 
+  !python {model: stock.quant, id: False}: |
+    records = self.search([('product_id','=',ref('product1'))])
+    for rec in records:
+      if rec.package_id.name == 'Pallet 1' and rec.location_id.id == ref('stock_location_customers'):
+        assert rec.qty == 120, "Should have 120 pieces on pallet 1, got " +  str(rec.qty)
+      elif rec.package_id.name == 'Pallet 2' and rec.location_id.id == ref('stock_location_stock'):
+        assert rec.qty == 100, "Should have 100 pieces in stock on pallet 2, got " +  str(rec.qty)
+      elif rec.lot_id.name == 'Lot A' and rec.location_id.id == ref('stock_location_customers'):
+        assert (rec.qty == 20 and not rec.package_id), "Should have 20 pieces in customer location from pallet 2"
+      elif rec.package_id.name == 'Pallet 3' and rec.location_id.id == ref('stock_location_stock'):
+        assert rec.qty == 50, "Should have 50 pieces in stock on pallet 3"
+      elif not rec.package_id and not rec.lot_id and rec.location_id.id == ref('stock_location_customers'):
+        assert rec.qty == 10, "Should have 10 pieces in customer location from pallet 3"
+      else:
+        assert False, "Unrecognized quant"
+- 
+  Check a backorder was created and on that backorder, prepare partial and process backorder
+- 
+  !python {model: stock.picking, id: False}: |
+    backorders = self.search([('backorder_id', '=', ref('delivery_order1'))])
+    assert backorders, "Backorder should have been created"
+    backorders.action_assign()
+    backorders.do_prepare_partial()
+    picking = backorders[0]
+    assert len(picking.pack_operation_ids) == 2, "Wrong number of pack operation"
+    for pack_op in picking.pack_operation_ids:
+        assert pack_op.product_qty == 1, "Wrong quantity in pack operation (%s found instead of 1)" % (pack_op.product_qty)
+        assert pack_op.package_id.name in ('Pallet 2', 'Pallet 3'), "Wrong pallet info in pack operation (%s found)" % (pack_op.package_id.name)
+    backorders.do_transfer()
+- 
+  Check there are still 0 pieces in stock 
+- 
+  !python {model: stock.quant, id: False}: |
+    records = self.search([('product_id','=',ref('product1')), ('location_id', '=', ref('stock_location_stock'))])
+    total_qty = 0
+    for rec in records:
+      total_qty += rec.qty
+    product = self.env["product.product"].browse(ref('product1'))
+    assert total_qty == 0, "Total quantity in stock should be 0 as the backorder took everything out of stock"
+    assert product.qty_available == 0, "Quantity available should be 0 too"
