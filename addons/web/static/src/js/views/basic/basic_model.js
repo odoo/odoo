@@ -1894,6 +1894,7 @@ var BasicModel = AbstractModel.extend({
         };
 
         dataPoint.getContext = this._getContext.bind(this, dataPoint);
+        dataPoint.getEvalContext = this._getEvalContext.bind(this, dataPoint);
         dataPoint.getDomain = this._getDomain.bind(this, dataPoint);
         dataPoint.getFieldNames = this._getFieldNames.bind(this, dataPoint);
 
