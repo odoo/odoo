@@ -12,6 +12,6 @@ David Tran david.tran@tvtmarine.com https://github.com/tvtma/
 
 List of contributors:
 
-David Tran david.tran@tvtmarine.com https://github.com/tvtma/
-hoanglong87 dhlong.1209@gmail.com https://github.com/tvtma/
-hoanghao2001 hao.hoang@ma.tvtmarine.com https://github.com/tvtma/
+David Tran david.tran@tvtmarine.com https://github.com/davidtranhp
+Long Do dhlong.1209@gmail.com https://github.com/hoanglong87
+Hao Hoang hao.hoang@ma.tvtmarine.com https://github.com/hoanghao2001
