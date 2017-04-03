@@ -2188,6 +2188,47 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('unchanged relational data is sent for onchanges', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[1].p = [4];
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.int_field = obj.foo.length + 1000;
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="foo"/>' +
+                                '<field name="bar"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.deepEqual(args.args[1].p, [[4, 4, false]],
+                        "should send a command for field p even if it hasn't changed");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_input:first').val('trigger an onchange').trigger('input');
+
+        form.destroy();
+    });
+
     QUnit.test('navigation with tab key in form view', function (assert) {
         assert.expect(2);
 

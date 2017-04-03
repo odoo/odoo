@@ -2324,7 +2324,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('many2one and many2many in one2many', function (assert) {
-        assert.expect(5);
+        assert.expect(11);
 
         this.data.turtle.records[1].product_id = 37;
         this.data.partner.records[0].turtles = [2, 3];
@@ -2342,7 +2342,7 @@ QUnit.module('relational_fields', {
                                     '<field name="product_id"/>' +
                                 '</group>' +
                             '</form>' +
-                            '<tree>' +
+                            '<tree editable="top">' +
                                 '<field name="display_name"/>' +
                                 '<field name="product_id"/>' +
                                 '<field name="partner_ids" widget="many2many_tags"/>' +
@@ -2351,6 +2351,20 @@ QUnit.module('relational_fields', {
                     '</group>' +
                 '</form>',
             res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    var commands = args.args[1].turtles;
+                    assert.strictEqual(commands.length, 2,
+                        "should have generated 2 commands");
+                    assert.deepEqual(commands[0], [1, 2, {
+                        partner_ids: [[6, false, [2, 1]]],
+                        product_id: 41,
+                    }], "generated commands should be correct");
+                    assert.deepEqual(commands[1], [4, 3, false],
+                        "generated commands should be correct");
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.strictEqual(form.$('.o_data_row').length, 2,
@@ -2366,6 +2380,32 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual($('.modal .o_form_field').text(), "xphone",
             'should display the form view dialog with the many2one value');
+        $('.modal-footer button').click(); // close the modal
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // edit the m2m of first row
+        form.$('.o_list_view tbody td:first()').click();
+        // remove a tag
+        form.$('.o_form_field_many2manytags .badge:contains(aaa) .o_delete').click();
+        assert.strictEqual(form.$('.o_selected_row .o_form_field_many2manytags .o_badge_text:contains(aaa)').length, 0,
+            "tag should have been correctly removed");
+        // add a tag
+        var $m2mInput = form.$('.o_selected_row .o_form_field_many2manytags input');
+        $m2mInput.click();
+        $m2mInput.autocomplete('widget').find('li:first()').click();
+        assert.strictEqual(form.$('.o_selected_row .o_form_field_many2manytags .o_badge_text:contains(first record)').length, 1,
+            "tag should have been correctly added");
+
+        // edit the m2o of first row
+        var $m2oInput = form.$('.o_selected_row .o_form_field_many2one:first input');
+        $m2oInput.click();
+        $m2oInput.autocomplete('widget').find('li:contains(xpad)').mouseover().click();
+        assert.strictEqual(form.$('.o_selected_row .o_form_field_many2one:first input').val(), 'xpad',
+            "m2o value should have been updated");
+
+        // save (should correctly generate the commands)
+        form.$buttons.find('.o_form_button_save').click();
 
         form.destroy();
     });
