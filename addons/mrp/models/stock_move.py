@@ -32,13 +32,19 @@ class StockMoveLots(models.Model):
     @api.constrains('lot_id', 'quantity_done')
     def _check_lot_id(self):
         if self.move_id.product_id.tracking == 'serial':
+            # Check current MO: no duplicated lines and quantity produced of 1.00
             lots = set([])
-            for move_lot in self.move_id.move_lot_ids.filtered(lambda r: not r.lot_produced_id):
+            for move_lot in self.move_id.move_lot_ids.filtered(lambda r: r.done_wo):
                 if move_lot.lot_id in lots:
                     raise exceptions.UserError(_('You cannot use the same serial number in two different lines.'))
                 if float_compare(move_lot.quantity_done, 1.0, precision_rounding=move_lot.product_id.uom_id.rounding) == 1:
                     raise exceptions.UserError(_('You can only produce 1.0 %s for products with unique serial number.') % move_lot.product_id.uom_id.name)
                 lots.add(move_lot.lot_id)
+            # Check others MO
+            other_move_lot = self.lot_id.move_lot_ids.filtered(lambda r: r != self and r.done_wo and r.move_id.state not in ['cancelled'])
+            if other_move_lot:
+                raise exceptions.UserError(
+                    _('This unique lot number is already used in the following Production Orders: %s') % other_move_lot.mapped('production_id').mapped('name'))
 
     def _compute_plus(self):
         for movelot in self:
