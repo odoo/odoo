@@ -126,7 +126,7 @@
         </xpath>
     </template>
 
-    <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart">
+    <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart" priority="1">
         <xpath expr="//div[@class='product_price']" position="inside">
             <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden" />
             <t t-if="len(product.product_variant_ids) == 1">
