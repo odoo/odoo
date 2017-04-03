@@ -59,7 +59,8 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      */
     on_detach_callback: function() {
         this.is_in_DOM = false;
-        if (this.active_view && this.active_view.controller.on_detach_callback) {
+        var controller = this.active_view && this.active_view.controller;
+        if (controller && controller.on_detach_callback) {
             this.active_view.controller.on_detach_callback();
         }
     },
@@ -282,7 +283,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                         view.$fragment = view.$fragment.contents();
                         view.loaded.resolve();
                     });
-                });
+                }).fail(view.loaded.reject.bind(view.loaded));
             } else {
                 view.loaded = view.loaded.then(function() {
                     view_options = _.extend({}, view_options, self.env);

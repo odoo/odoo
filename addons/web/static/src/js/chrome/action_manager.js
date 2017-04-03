@@ -185,13 +185,17 @@ var ViewManagerAction = WidgetAction.extend({
      * @param {int} [scrollTop] the number of pixels to scroll
      */
     setScrollTop: function(scrollTop) {
-        this.widget.active_view.controller.setScrollTop(scrollTop);
+        var viewController = this.widget.active_view.controller;
+        if (viewController) {
+            viewController.setScrollTop(scrollTop);
+        }
     },
     /**
      * @return {int} the number of pixels the webclient is scrolled when leaving the action
      */
     getScrollTop: function() {
-        return this.widget.active_view.controller.getScrollTop();
+        var viewController = this.widget.active_view.controller;
+        return viewController ? viewController.getScrollTop() : 0;
     },
     /**
      * @return {Array} array of Objects that will be interpreted to display the breadcrumbs
@@ -340,6 +344,16 @@ var ActionManager = Widget.extend({
                 // Hide the main ControlPanel for widgets that do not use it
                 self.main_control_panel.do_hide();
             }
+
+            // most of the time, the self.$el element should already be empty,
+            // because we detached the old action just a few line up.  However,
+            // it may happen that it is not empty, for example when a view
+            // manager was unable to load a view because of a crash.  In any
+            // case, this is done as a safety measure to avoid the 'double view'
+            // situation that we had when the web client was unable to recover
+            // from a crash.
+            self.$el.empty();
+
             dom.append(self.$el, new_widget_fragment, {
                 in_DOM: self.is_in_DOM,
                 callbacks: [{widget: self.inner_widget}],
