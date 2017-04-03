@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from operator import itemgetter
+
 import json
 import datetime
 
@@ -81,7 +83,7 @@ class LunchOrder(models.Model):
         self.ensure_one()
         self.previous_order_widget = json.dumps(False)
 
-        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='id desc')
+        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='date desc, id desc')
         # If we use prev_order.ids, we will have duplicates (identical orders).
         # Therefore, this following part removes duplicates based on product_id and note.
         self.previous_order_ids = {
@@ -90,17 +92,19 @@ class LunchOrder(models.Model):
         }.values()
 
         if self.previous_order_ids:
-            lunch_data = {}
+            lunch_data = []
             for line in self.previous_order_ids:
-                lunch_data[line.id] = {
+                lunch_data.append({
                     'line_id': line.id,
                     'product_id': line.product_id.id,
                     'product_name': line.product_id.name,
                     'supplier': line.supplier.name,
                     'note': line.note,
                     'price': line.price,
+                    'date': line.date,
                     'currency_id': line.currency_id.id,
-                }
+                })
+            lunch_data.sort(key=itemgetter('date', 'line_id'), reverse=True)
             self.previous_order_widget = json.dumps(lunch_data)
 
     @api.one
@@ -155,7 +159,7 @@ class LunchOrder(models.Model):
 class LunchOrderLine(models.Model):
     _name = 'lunch.order.line'
     _description = 'lunch order line'
-    _order = 'date desc'
+    _order = 'date desc, id desc'
 
     name = fields.Char(related='product_id.name', string="Product Name", readonly=True)
     order_id = fields.Many2one('lunch.order', 'Order', ondelete='cascade', required=True)
