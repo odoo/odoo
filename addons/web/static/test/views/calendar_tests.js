@@ -315,6 +315,34 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('rendering, with many2many', function (assert) {
+        assert.expect(1);
+
+        this.data.event.fields.partner_ids.type = 'many2many';
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday"> '+
+                    '<field name="partner_ids" avatar_field="image" write_model="filter_partner" write_field="partner_id"/>'+
+            '</calendar>',
+            archs: archs,
+            mockRPC: mock_check_access_rights,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.strictEqual(calendar.$('.o_calendar_filter_items .o_cal_avatar').length, 3,
+            "should have 3 avatars in the side bar");
+
+        calendar.destroy();
+    });
 });
 
 });
