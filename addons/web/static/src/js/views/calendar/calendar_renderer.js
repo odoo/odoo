@@ -198,7 +198,6 @@ return AbstractRenderer.extend({
      */
     getAvatars: function (record, fieldName, imageField) {
         var field = this.state.fields[fieldName];
-        var value = this._format(record, fieldName);
 
         if (!record[fieldName]) {
             return [];
@@ -210,6 +209,7 @@ return AbstractRenderer.extend({
         } else if (field.type === 'many2one') {
             return ['<img src="/web/image/'+field.relation+'/'+record[fieldName][0]+'/'+imageField+'" />'];
         } else {
+            var value = this._format(record, fieldName);
             var color = this.getColor(value);
             if (isNaN(color)) {
                 return ['<span class="o_avatar_square" style="background-color:'+color+';"/>'];
