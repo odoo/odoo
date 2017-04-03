@@ -262,13 +262,14 @@ class Employee(models.Model):
 
 
 class Department(models.Model):
-
     _name = "hr.department"
     _description = "HR Department"
     _inherit = ['mail.thread']
     _order = "name"
+    _rec_name = 'complete_name'
 
     name = fields.Char('Department Name', required=True)
+    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', store=True)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.user.company_id)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True)
@@ -279,20 +280,18 @@ class Department(models.Model):
     note = fields.Text('Note')
     color = fields.Integer('Color Index', default=1)
 
+    @api.depends('name', 'parent_id.complete_name')
+    def _compute_complete_name(self):
+        for department in self:
+            if department.parent_id:
+                department.complete_name = '%s / %s' % (department.parent_id.complete_name, department.name)
+            else:
+                department.complete_name = department.name
+
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
             raise ValidationError(_('Error! You cannot create recursive departments.'))
-
-    @api.multi
-    def name_get(self):
-        result = []
-        for record in self:
-            name = record.name
-            if record.parent_id:
-                name = "%s / %s" % (record.parent_id.name_get()[0][1], name)
-            result.append((record.id, name))
-        return result
 
     @api.model
     def create(self, vals):
