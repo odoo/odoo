@@ -2324,7 +2324,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('many2one and many2many in one2many', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         this.data.turtle.records[1].product_id = 37;
         this.data.partner.records[0].turtles = [2, 3];
@@ -2359,12 +2359,8 @@ QUnit.module('relational_fields', {
             "should correctly display the m2o");
         assert.strictEqual(form.$('.o_data_row:first td:nth(2) .badge').length, 2,
             "m2m should contain two tags");
-        // the next assert doesn't work for now because the relatedFields of
-        // the m2m embedded in the o2m aren't correctly computed (['id'] instead)
-        // of ['id', 'display_name', 'color'], so the badges are empty as the
-        // display_name is unknown
-        // assert.strictEqual(form.$('.o_data_row:first td:nth(2) .badge:first span').text(),
-        //     'second record', "m2m should contain two tags");
+        assert.strictEqual(form.$('.o_data_row:first td:nth(2) .badge:first span').text(),
+            'second record', "m2m values should have been correctly fetched");
 
         form.$('.o_data_row:first').click();
 
