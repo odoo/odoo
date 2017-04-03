@@ -1886,6 +1886,7 @@
 .openerp .oe_application .oe_form_sheetbg {
   background: url(/web/static/src/img/form_sheetbg.png);
   border-bottom: 1px solid #ddd;
+  z-index: 1;
 }
 .openerp .oe_application .oe_form_sheetbg .oe_subtotal_footer label {
   font-weight: bold;
@@ -2636,6 +2637,10 @@
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field select {
   min-width: 0;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea.field_text {
+  position: relative;
+  z-index: 1;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float.oe_readonly, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer.oe_readonly {
   padding: 6px 0px 0px;
