@@ -1,4 +1,4 @@
-Vietnam, 2016-11-30
+Vietnam, 2017-04-03
 
 T.V.T Marine Automation agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
@@ -13,3 +13,5 @@ David Tran david.tran@tvtmarine.com https://github.com/tvtma/
 List of contributors:
 
 David Tran david.tran@tvtmarine.com https://github.com/tvtma/
+hoanglong87 dhlong.1209@gmail.com https://github.com/tvtma/
+hoanghao2001 hao.hoang@ma.tvtmarine.com https://github.com/tvtma/
