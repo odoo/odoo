@@ -64,7 +64,7 @@ QUnit.module('Views', {
     QUnit.module('PivotView');
 
     QUnit.test('simple pivot rendering', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var pivot = createView({
             View: PivotView,
@@ -73,6 +73,11 @@ QUnit.module('Views', {
             arch: '<pivot string="Partners">' +
                         '<field name="foo" type="measure"/>' +
                 '</pivot>',
+            mockRPC: function (route, args) {
+                assert.strictEqual(args.kwargs.lazy, false,
+                    "the read_group should be done with the lazy=false option");
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.strictEqual(pivot.$('td.o_pivot_cell_value:contains(32)').length, 1,

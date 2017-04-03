@@ -54,7 +54,7 @@ return {
             params.kwargs.groupby = options.groupBy || params.kwargs.groupby || [];
             params.kwargs.domain = options.domain || params.kwargs.domain || [];
             params.kwargs.fields = options.fields || params.kwargs.fields || [];
-            params.kwargs.lazy = options.lazy || params.kwargs.lazy;
+            params.kwargs.lazy = 'lazy' in options ? options.lazy : params.kwargs.lazy;
             var orderBy = options.orderBy || params.orderBy;
             params.kwargs.orderby = orderBy ? this._serializeSort(orderBy) : false;
         }
