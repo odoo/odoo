@@ -375,10 +375,10 @@ class IrMailServer(models.Model):
 
         The default bounce address is used to set the envelop address if no
         envelop address is provided in the message.  It is formed by properly
-        joining the parameters "mail.catchall.alias" and
+        joining the parameters "mail.bounce.alias" and
         "mail.catchall.domain".
 
-        If "mail.catchall.alias" is not set it defaults to "postmaster-odoo".
+        If "mail.bounce.alias" is not set it defaults to "postmaster-odoo".
 
         If "mail.catchall.domain" is not set, return None.
 
