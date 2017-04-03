@@ -183,7 +183,7 @@ QUnit.module('core', {}, function () {
             domain: ['a', '=', 1],
             fields: ['name'],
             groupBy: ['product_id'],
-            lazy: true,
+            lazy: false,
             kwargs: {context: {abc: 'def'}}
         });
 
@@ -194,7 +194,7 @@ QUnit.module('core', {}, function () {
                 domain: ['a', '=', 1],
                 fields: ['name'],
                 groupby: ['product_id'],
-                lazy: true,
+                lazy: false,
                 orderby: false,
             },
             method: 'read_group',
