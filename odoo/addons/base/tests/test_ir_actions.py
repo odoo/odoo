@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
 import odoo.tests.common as common
 import odoo.workflow
@@ -390,6 +390,9 @@ class TestCustomFields(common.TransactionCase):
 
         super(TestCustomFields, self).setUp()
 
+        # do not reload the registry after removing a field
+        self.env = self.env(context={'_force_unlink': True})
+
     def create_field(self, name):
         """ create a custom field and return it """
         model = self.env['ir.model'].search([('model', '=', self.MODEL)])
@@ -401,6 +404,14 @@ class TestCustomFields(common.TransactionCase):
         })
         self.assertIn(name, self.env[self.MODEL]._fields)
         return field
+
+    def create_view(self, name):
+        """ create a view with the given field name """
+        return self.env['ir.ui.view'].create({
+            'name': 'yet another view',
+            'model': self.MODEL,
+            'arch': '<tree string="X"><field name="%s"/></tree>' % name,
+        })
 
     def test_create_custom(self):
         """ custom field names must be start with 'x_' """
@@ -436,3 +447,33 @@ class TestCustomFields(common.TransactionCase):
         field2 = self.create_field('x_bar')
         with self.assertRaises(ValidationError):
             field2.name = field1.name
+
+    def test_remove_without_view(self):
+        """ try removing a custom field that does not occur in views """
+        field = self.create_field('x_foo')
+        field.unlink()
+
+    def test_rename_without_view(self):
+        """ try renaming a custom field that does not occur in views """
+        field = self.create_field('x_foo')
+        field.name = 'x_bar'
+
+    def test_remove_with_view(self):
+        """ try removing a custom field that occurs in a view """
+        field = self.create_field('x_foo')
+        self.create_view('x_foo')
+
+        # try to delete the field, this should fail but not modify the registry
+        with self.assertRaises(UserError):
+            field.unlink()
+        self.assertIn('x_foo', self.env[self.MODEL]._fields)
+
+    def test_rename_with_view(self):
+        """ try renaming a custom field that occurs in a view """
+        field = self.create_field('x_foo')
+        self.create_view('x_foo')
+
+        # try to delete the field, this should fail but not modify the registry
+        with self.assertRaises(UserError):
+            field.name = 'x_bar'
+        self.assertIn('x_foo', self.env[self.MODEL]._fields)

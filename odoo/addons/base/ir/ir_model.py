@@ -9,6 +9,7 @@ from collections import defaultdict
 from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules.registry import Registry
+from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -468,6 +469,21 @@ class IrModelFields(models.Model):
                     continue
                 msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
                 raise UserError(msg % (field, model._field_inverses[field][0]))
+
+        # remove fields from registry, and check that views are not broken
+        fields = [self.env[record.model]._pop_field(record.name) for record in self]
+        try:
+            domain = expression.OR([('arch_db', 'like', record.name)] for record in self)
+            views = self.env['ir.ui.view'].search(domain)
+            views._check_xml()
+        except Exception:
+            raise UserError("\n".join([
+                _("Cannot rename/delete fields that are still present in views:"),
+                ", ".join(map(str, fields)),
+            ]))
+        finally:
+            # the registry has been modified, restore it
+            self.pool.setup_models(self._cr)
 
     @api.multi
     def unlink(self):
