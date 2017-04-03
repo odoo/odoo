@@ -39,9 +39,11 @@ var AbstractField = Widget.extend({
     events: {
         'keydown': '_onKeydown',
     },
-    // for field widgets that may have a large number of field changes quickly,
-    // it could be a good idea to debounce the changes.  In that case, this is
-    // the suggested value.  For example, see InputField.
+    /**
+     * for field widgets that may have a large number of field changes quickly,
+     * it could be a good idea to debounce the changes. In that case, this is
+     * the suggested value. For example, @see DebouncedField.
+     */
     DEBOUNCE: 1000,
     /**
      * if this flag is set to true, the rest of the web client will assume that

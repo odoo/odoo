@@ -45,7 +45,7 @@ var DebouncedField = AbstractField.extend({
         this._super.apply(this, arguments);
 
         if (this.DEBOUNCE && this.mode === 'edit') {
-            this._onInput = _.debounce(this._onInput.bind(this), this.DEBOUNCE);
+            this._doDebouncedAction = _.debounce(this._doDebouncedAction.bind(this), this.DEBOUNCE);
         }
     },
 
@@ -63,6 +63,15 @@ var DebouncedField = AbstractField.extend({
      */
     _getValue: function () {
     },
+    /**
+     * Notifies the outside world of the new value (checked from the DOM).
+     * This method is debounced so that onchanges are not triggered too quickly.
+     *
+     * @private
+     */
+    _doDebouncedAction: function () {
+        this._setValue(this._getValue());
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -70,7 +79,7 @@ var DebouncedField = AbstractField.extend({
 
     /**
      * We immediately notify the outside world when this field confirms its
-     * changes
+     * changes.
      *
      * @private
      */
@@ -78,13 +87,14 @@ var DebouncedField = AbstractField.extend({
         this._setValue(this._getValue());
     },
     /**
-     * We notify the outside world for each change in this field. It does not
-     * necessarily mean that onchanges will be triggered instantly.
+     * Called when the user is typing text -> By default this only calls a
+     * debounced method to notify the outside world of the changes.
+     * @see _doDebouncedAction
      *
      * @private
      */
     _onInput: function () {
-        this._setValue(this._getValue());
+        this._doDebouncedAction();
     },
 });
 
