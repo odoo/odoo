@@ -589,28 +589,7 @@ var BasicModel = AbstractModel.extend({
             }
             var shouldReload = 'reload' in options ? options.reload : true;
             var method = self.isNew(record_id) ? 'create' : 'write';
-            var changes = _.extend({}, record._changes);
-            var commands = self._generateX2ManyCommands(record);
-            for (var fieldName in commands) {
-                if (commands[fieldName] === null) {
-                    delete changes[fieldName];
-                } else {
-                    changes[fieldName] = commands[fieldName];
-                }
-            }
-
-            // replace local ids by actual ids in relational changes
-            for (fieldName in changes) {
-                var field = record.fields[fieldName];
-                if (field.type === 'many2one') {
-                    if (changes[fieldName]) {
-                        var res_id = self.localData[changes[fieldName]].res_id;
-                        changes[fieldName] = res_id;
-                    } else {
-                        changes[fieldName] = false;
-                    }
-                }
-            }
+            var changes = self._generateChanges(record);
 
             if (method === 'create') {
                 var fieldNames = record.getFieldNames();
@@ -864,7 +843,7 @@ var BasicModel = AbstractModel.extend({
         var context = this._getContext(record);
 
         var rawData = this.get(record.id, {raw: true}).data;
-        var commands = this._generateX2ManyCommands(record);
+        var commands = this._generateX2ManyCommands(record, false);
 
         // compute field values
         var fieldNames = record.getFieldNames();
@@ -1623,40 +1602,64 @@ var BasicModel = AbstractModel.extend({
         return $.when.apply($, defs);
     },
     /**
+     * Generates an object mapping field names to their changed value in a given
+     * record (i.e. maps to the new value for basic fields, to the res_id for
+     * many2ones and to commands for x2manys).
+     *
+     * @private
+     * @param {Object} record
+     * @returns {Object} a map from changed fields to their new value
+     */
+    _generateChanges: function (record) {
+        var changes = _.extend({}, record._changes);
+        var commands = this._generateX2ManyCommands(record, true);
+        for (var fieldName in record.fields) {
+            var type = record.fields[fieldName].type;
+            if (type === 'one2many' || type === 'many2many') {
+                if (commands[fieldName].length) { // replace localId by commands
+                    changes[fieldName] = commands[fieldName];
+                } else { // no command -> no change for that field
+                    delete changes[fieldName];
+                }
+            } else if (type === 'many2one' && fieldName in changes) {
+                var value = changes[fieldName];
+                changes[fieldName] = value ? this.localData[value].res_id : false;
+            }
+        }
+        return changes;
+    },
+    /**
      * Read all x2many fields and generate the commands for the server to create
      * or write them...
      *
      * @param {Object} record
+     * @param {boolean} [changesOnly=false] if true, only generates commands for
+     *   fields that have changed
      * @returns {Object} a map from some field names to commands
      */
-    _generateX2ManyCommands: function (record) {
+    _generateX2ManyCommands: function (record, changesOnly) {
         var self = this;
         var commands = {};
-        var type, list, relData, relIds, removedIds, addedIds, keptIds, relRecord, i;
-
         var data = _.extend({}, record.data, record._changes);
-
+        var type;
         for (var fieldName in record.fields) {
             type = record.fields[fieldName].type;
 
             if (type === 'many2many' || type === 'one2many') {
-                // skip if this field is empty
+                commands[fieldName] = [];
                 if (!data[fieldName]) {
-                    commands[fieldName] = null;
+                    // skip if this field is empty
                     continue;
                 }
-                list = this.localData[data[fieldName]];
-                if (!list._changes) {
-                    commands[fieldName] = null;
-                    // skip if this field hasn't changed
+                var list = this.localData[data[fieldName]];
+                if (changesOnly && !list._changes) {
+                    // if only changes are requested, skip if there is no change
                     continue;
                 }
-                relData = _.map(list._changes, function (localId) {
+                var relData = _.map(list._changes || list.data, function (localId) {
                     return self.localData[localId];
                 });
-                relIds = _.pluck(relData, 'res_id');
-                commands[fieldName] = [];
-
+                var relIds = _.pluck(relData, 'res_id');
                 if (type === 'many2many' || list._forceM2MLink) {
                     // deliberately generate a single 'replace' command instead
                     // of a 'delete' and a 'link' commands with the exact diff
@@ -1665,20 +1668,17 @@ var BasicModel = AbstractModel.extend({
                     // an complete override of the actual value of the m2m)
                     commands[fieldName].push(x2ManyCommands.replace_with(relIds));
                 } else if (type === 'one2many') {
-                    removedIds = _.difference(list.res_ids, relIds);
-                    addedIds = _.difference(relIds, list.res_ids);
-                    keptIds = _.intersection(list.res_ids, relIds);
-
-                    // the didChange variable keep track of the fact that at
+                    var removedIds = _.difference(list.res_ids, relIds);
+                    var addedIds = _.difference(relIds, list.res_ids);
+                    var keptIds = _.intersection(list.res_ids, relIds);
+                    // the didChange variable keeps track of the fact that at
                     // least one id was updated
                     var didChange = false;
-
+                    var command, i, relRecord;
                     for (i = 0; i < keptIds.length; i++) {
                         relRecord = _.findWhere(relData, {res_id: keptIds[i]});
-                        var command;
                         if (!_.isEmpty(relRecord._changes)) {
-                            var r = this.get(relRecord.id, {raw: true});
-                            var changes = _.pick(r.data, Object.keys(relRecord._changes));
+                            var changes = this._generateChanges(relRecord);
                             command = x2ManyCommands.update(relRecord.res_id, changes);
                             didChange = true;
                         } else {
@@ -1686,11 +1686,11 @@ var BasicModel = AbstractModel.extend({
                         }
                         commands[fieldName].push(command);
                     }
-                    if (!didChange && addedIds.length === 0 && removedIds.length === 0) {
+                    if (changesOnly && !didChange && addedIds.length === 0 && removedIds.length === 0) {
                         // in this situation, we have no changed ids, no added
                         // ids and no removed ids, so we can safely ignore the
                         // last changes
-                        commands[fieldName] = null;
+                        commands[fieldName] = [];
                     }
                     for (i = 0; i < addedIds.length; i++) {
                         relRecord = _.findWhere(relData, {res_id: addedIds[i]});
@@ -1703,7 +1703,6 @@ var BasicModel = AbstractModel.extend({
                 }
             }
         }
-
         return commands;
     },
     /**
