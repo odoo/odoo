@@ -22,10 +22,10 @@ QUnit.module('Views', {
                     datetime: {string: "Datetime Field", type: 'datetime'},
                 },
                 records: [
-                    {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc"},
-                    {id: 2, bar: true, foo: "blip", int_field: 9, qux: 13, product_id: 5, state: "def"},
-                    {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3, product_id: 3, state: "ghi"},
-                    {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9, product_id: 5, state: "ghi"},
+                    {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: []},
+                    {id: 2, bar: true, foo: "blip", int_field: 9, qux: 13, product_id: 5, state: "def", category_ids: [6]},
+                    {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3, product_id: 3, state: "ghi", category_ids: [7]},
+                    {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9, product_id: 5, state: "ghi", category_ids: []},
                 ]
             },
             product: {
@@ -968,7 +968,6 @@ QUnit.module('Views', {
         assert.expect(3);
 
         this.data.partner.records[0].product_id = false;
-        this.data.partner.records[0].category_ids = [6];
 
         var kanban = createView({
             View: KanbanView,
@@ -990,8 +989,8 @@ QUnit.module('Views', {
             "there should be 4 records");
         assert.strictEqual($('.o_kanban_record:not(.o_kanban_ghost) .btn_a').length, 1,
             "only 1 of them should have the 'Action' button");
-        assert.strictEqual($('.o_kanban_record:not(.o_kanban_ghost) .btn_b').length, 3,
-            "only 3 of them should have the 'Action' button");
+        assert.strictEqual($('.o_kanban_record:not(.o_kanban_ghost) .btn_b').length, 2,
+            "only 2 of them should have the 'Action' button");
 
         kanban.destroy();
     });
@@ -1034,6 +1033,33 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group:first').data('id'), 5,
             "first column should be id 5 before resequencing");
 
+        kanban.destroy();
+    });
+
+    QUnit.test('properly evaluate more complex domains', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="category_ids"/>' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="foo"/>' +
+                                '<button type="object" attrs="{\'invisible\':[\'|\', (\'bar\',\'=\',True), (\'category_ids\', \'!=\', [])]}" class="btn btn-primary pull-right btn-sm" name="channel_join_and_get_info">Join</button>' +
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                '</kanban>',
+        });
+
+        assert.strictEqual(kanban.$('button.oe_kanban_action_button').length, 1,
+            "only one button should be visible");
         kanban.destroy();
     });
 
