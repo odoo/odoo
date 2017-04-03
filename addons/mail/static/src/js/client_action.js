@@ -161,6 +161,30 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
     },
 
+    _isNativeNotificationSupported: function () {
+        // Call this function BEFORE requesting permision, to check if native notification is supported on the main window.
+        // See https://bugs.chromium.org/p/chromium/issues/detail?id=481856#c3
+        try {
+            new Notification('');
+            return true;
+        } catch (e) {
+            if (e.name == 'TypeError') {
+                // Notification not supported on the main window, only on ServiceWorker.
+                return false;
+            }
+            throw e;
+        }
+    },
+
+    _shouldRequestNotificationPermission: function () {
+        if (window.Notification && window.Notification.permission === "default") {
+            // Notification is supported but permission hasn't been granted yet
+            return this._isNativeNotificationSupported();
+        }
+        // Notification permission already granted, or unsupported
+        return false;
+    },
+
     init: function(parent, action, options) {
         this._super.apply(this, arguments);
         this.action_manager = parent;
@@ -170,7 +194,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.options = options || {};
         this.channels_scrolltop = {};
         this.throttled_render_sidebar = _.throttle(this.render_sidebar.bind(this), 100, { leading: false });
-        this.notification_bar = (window.Notification && window.Notification.permission === "default");
+        this.notification_bar = this._shouldRequestNotificationPermission();
         this.selected_message = null;
     },
 
