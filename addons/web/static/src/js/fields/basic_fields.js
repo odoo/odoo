@@ -562,8 +562,6 @@ var FieldFloat = InputField.extend({
         this._super.apply(this, arguments);
         if (this.attrs.digits) {
             this.nodeOptions.digits = JSON.parse(this.attrs.digits);
-        } else {
-            this.nodeOptions.digits = this.field.digits;
         }
     },
 
@@ -591,11 +589,8 @@ var FieldFloat = InputField.extend({
      * @private
      */
     _renderReadonly: function () {
-        var value = this.value;
-        if (this.nodeOptions.digits && this.nodeOptions.digits.length === 2) {
-            value = utils.round_decimals(value, this.nodeOptions.digits[1]);
-        }
-        var $span = $('<span>').addClass('o_form_field o_form_field_number').text(this._formatValue(value));
+        var value = this._formatValue(this.value);
+        var $span = $('<span>').addClass('o_form_field o_form_field_number').text(value);
         this.$el.html($span);
     },
 });
