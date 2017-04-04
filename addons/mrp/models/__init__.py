@@ -15,6 +15,7 @@ import product
 import res_company
 import stock_move
 import stock_picking
+import stock_production
 import stock_quant
 import stock_scrap
 import stock_warehouse
