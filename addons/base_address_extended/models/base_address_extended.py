@@ -137,3 +137,35 @@ class Partner(models.Model):
             # /!\ Note that a write(vals) would cause a recursion since it would bypass the cache
             for k, v in vals.items():
                 partner[k] = v
+
+
+class Company(models.Model):
+    _inherit = 'res.company'
+
+    street_name = fields.Char('Street Name', compute='_compute_address',
+                              inverse='_inverse_street_name')
+    street_number = fields.Char('House Number', compute='_compute_address',
+                                inverse='_inverse_street_number')
+    street_number2 = fields.Char('Door Number', compute='_compute_address',
+                                 inverse='_inverse_street_number2')
+
+    def _get_company_address_fields(self, partner):
+        address_fields = super(Company, self)._get_company_address_fields(partner)
+        address_fields.update({
+            'street_name': partner.street_name,
+            'street_number': partner.street_number,
+            'street_number2': partner.street_number2,
+        })
+        return address_fields
+
+    def _inverse_street_name(self):
+        for company in self:
+            company.partner_id.street_name = company.street_name
+
+    def _inverse_street_number(self):
+        for company in self:
+            company.partner_id.street_number = company.street_number
+
+    def _inverse_street_number2(self):
+        for company in self:
+            company.partner_id.street_number2 = company.street_number2
