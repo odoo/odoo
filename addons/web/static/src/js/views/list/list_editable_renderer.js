@@ -215,7 +215,7 @@ ListRenderer.include({
             return true;
         }
         if ('readonly' in node.modifiers) {
-            var fieldValues = this._getFieldValues(record);
+            var fieldValues = record.getEvalContext();
             return new Domain(node.modifiers.readonly).compute(fieldValues);
         }
         return false;

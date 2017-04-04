@@ -223,7 +223,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _isInvisible: function (record, node) {
         if ('invisible' in node.modifiers) {
-            var fieldValues = this._getFieldValues(record);
+            var fieldValues = record.getEvalContext();
             return new Domain(node.modifiers.invisible).compute(fieldValues);
         }
         return false;
