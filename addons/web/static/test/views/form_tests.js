@@ -363,6 +363,31 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('invisible attrs with zero value in domain and unset value in data', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.int_field.type = 'monetary';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="foo"/>' +
+                        '<group attrs=\'{"invisible": [["int_field", "=", 0.0]]}\'>' +
+                            '<div class="hello">this should be invisible</div>' +
+                            '<field name="int_field"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        assert.notOk(form.$('div.hello').is(':visible'),
+            "attrs invisible should have been computed and applied");
+        form.destroy();
+    });
+
     QUnit.test('rendering stat buttons', function (assert) {
         assert.expect(3);
 

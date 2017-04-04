@@ -29,7 +29,7 @@ return BasicRenderer.extend({
         this.idsForLabels = {};
         this.widgets = [];
         this.mode = params.mode;
-        this.field_values = this._getFieldValues(this.state);
+        this.field_values = this.state.getEvalContext();
     },
 
     //--------------------------------------------------------------------------
@@ -136,7 +136,7 @@ return BasicRenderer.extend({
             // only update the given fields
             return this.updateWidgets(params.fieldNames, state);
         }
-        this.field_values = this._getFieldValues(state);
+        this.field_values = state.getEvalContext();
         return this._super.apply(this, arguments);
     },
     /**
@@ -152,7 +152,7 @@ return BasicRenderer.extend({
      */
     updateWidgets: function (fields, state, event) {
         this.state = state;
-        this.field_values = this._getFieldValues(this.state);
+        this.field_values = this.state.getEvalContext();
         var defs = [];
         _.each(this.widgets, function (widget) {
             if (_.contains(fields, widget.name) || widget.resetOnAnyFieldChange) {

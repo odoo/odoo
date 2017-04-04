@@ -52,44 +52,6 @@ return AbstractRenderer.extend({
         });
     },
     /**
-     * Helper method, used to get an object with the 'raw' field values. It is
-     * important when we want to evaluate if a record matches a given domain.
-     *
-     * A basic model record is a tree structure, but we sometimes need 'pure'
-     * data, so for example, [1,4] for the value of a one2many, not
-     * [{Object}, {Object}].
-     *
-     * @param {Object} record
-     * @returns {Object}
-     */
-    _getFieldValues: function (record) {
-        var result = {};
-        _.each(record.getFieldNames(), function (name) {
-            var field = record.fields[name];
-            var value = record.data[name];
-            result[name] = value;
-            if (!value) {
-                return;
-            }
-            else if (field.type === 'many2one') {
-                result[name] = value.data ? value.data.id || false : false;
-            }
-            else if (field.type === 'one2many' || field.type === 'many2many') {
-                if (value) {
-                    result[name] = _.pluck(value.data, 'res_id');
-                } else {
-                    result[name] = [];
-                }
-            }
-            else if (field.type === 'boolean') {
-                // we want an explicit false value, not null if it is unset
-                result[name] = value || false;
-            }
-        });
-        result.id = record.data.id;
-        return result;
-    },
-    /**
      * Render the view
      *
      * @override

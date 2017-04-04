@@ -268,6 +268,8 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.env=false] if true, will only  return res_id
      *   (if record) or res_ids (if list)
      * @param {boolean} [options.raw=false] if true, will not follow relations
+     * @param {boolean} [options.noUnsetNumeric=false] if true, will set numeric
+     *   values to 0 if not set
      * @returns {Object}
      */
     get: function (id, options) {
@@ -310,6 +312,13 @@ var BasicModel = AbstractModel.extend({
                 }
                 if (!field) {
                     continue;
+                }
+                if (options.noUnsetNumeric) {
+                    if (field.type === 'float' ||
+                        field.type === 'integer' ||
+                        field.type === 'monetary') {
+                        element.data[fieldName] = element.data[fieldName] || 0;
+                    }
                 }
 
                 // get relational datapoint
@@ -1792,7 +1801,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {Object}
      */
     _getEvalContext: function (element) {
-        var evalContext = this.get(element.id, {raw: true}).data;
+        var evalContext = this.get(element.id, {raw: true, noUnsetNumeric: true}).data;
         evalContext.active_model = element.model;
         if (evalContext.id) {
             evalContext.active_id = evalContext.id;
