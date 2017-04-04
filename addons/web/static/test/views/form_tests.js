@@ -2222,5 +2222,36 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('clicking on a stat button with a context', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<sheet>' +
+                        '<div class="oe_button_box" name="button_box">' +
+                            '<button class="oe_stat_button" type="action" name="1" context="{\'test\': active_id}">' +
+                                '<field name="qux" widget="statinfo"/>' +
+                            '</button>' +
+                        '</div>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            intercepts: {
+                execute_action: function (e) {
+                    assert.deepEqual(e.data.action_data.context, {test: 2},
+                        "button context should have been evaluated and given to the action");
+                },
+            },
+        });
+
+        form.$('.oe_stat_button').click();
+
+        form.destroy();
+    });
 });
 });

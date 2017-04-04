@@ -270,7 +270,7 @@ var FormController = BasicController.extend({
         var recordID = record.data.id;
         this.trigger_up('execute_action', {
             action_data: _.extend({}, attrs, {
-                context: _.extend(record.getContext(), attrs.context),
+                context: record.getContext({additionalContext: attrs.context}),
             }),
             model: record.model,
             record_id: recordID,
@@ -579,4 +579,3 @@ var FormController = BasicController.extend({
 return FormController;
 
 });
-

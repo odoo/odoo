@@ -1714,6 +1714,8 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {Object} element an element from the localData
      * @param {Object} [options]
+     * @param {string|Object} [options.additionalContext]
+     *        another context to evaluate and merge to the returned context
      * @param {string} [options.fieldName]
      *        the name of the field whose context needs to be added to the
      *        result (and evaluated)
@@ -1723,6 +1725,9 @@ var BasicModel = AbstractModel.extend({
         var context = new Context(session.user_context, element.context);
         context.set_eval_context(this._getEvalContext(element));
 
+        if (options && options.additionalContext) {
+            context.add(options.additionalContext);
+        }
         if (options && options.fieldName) {
             var viewType = options.viewType || element.viewType;
             var fieldInfo = element.fieldsInfo[viewType][options.fieldName];
