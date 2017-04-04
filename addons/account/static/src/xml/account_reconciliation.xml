@@ -301,10 +301,10 @@
                     <td class="oe_form_group_cell o_form_group_cell" colspan="1" width="99%">
                         <span class="oe_form_field o_form_field oe_form_field_radio o_form_field_radio oe_vertical o_vertical oe_form_required o_form_required">
                             <span>
-                                <t t-if="display_mode_customers" t-call="show_mode_selector_option"><t t-set="value">customers</t><t t-set="title">Customers</t></t>
-                                <t t-if="display_mode_suppliers" t-call="show_mode_selector_option"><t t-set="value">suppliers</t><t t-set="title">Vendors</t></t>
-                                <t t-if="display_mode_others" t-call="show_mode_selector_option"><t t-set="value">others</t><t t-set="title">OtherAccounts</t></t>
-                                <t t-call="show_mode_selector_option"><t t-set="value">all</t><t t-set="title">All</t></t>
+                                <t t-if="display_mode_customers" t-call="show_mode_selector_option"><t t-set="value" t-value="'customers'"/><t t-set="title">Customers</t></t>
+                                <t t-if="display_mode_suppliers" t-call="show_mode_selector_option"><t t-set="value" t-value="'suppliers'"/><t t-set="title">Vendors</t></t>
+                                <t t-if="display_mode_others" t-call="show_mode_selector_option"><t t-set="value" t-value="'others'"/><t t-set="title">OtherAccounts</t></t>
+                                <t t-call="show_mode_selector_option"><t t-set="value" t-value="'all'"/><t t-set="title">All</t></t>
                             </span>
                         </span>
                     </td>
