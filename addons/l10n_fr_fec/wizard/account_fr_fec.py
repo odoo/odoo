@@ -133,7 +133,7 @@ class AccountFrFec(models.TransientModel):
             'Balance initiale ' || MIN(aa.name) AS EcritureNum,
             %s AS EcritureDate,
             MIN(aa.code) AS CompteNum,
-            replace(MIN(aa.name), '|', '/') AS CompteLib,
+            replace(replace(MIN(aa.name), '|', '/'), '\t', '') AS CompteLib,
             '' AS CompAuxNum,
             '' AS CompAuxLib,
             '-' AS PieceRef,
@@ -206,25 +206,25 @@ class AccountFrFec(models.TransientModel):
         # LINES
         sql_query = '''
         SELECT
-            replace(aj.code, '|', '/') AS JournalCode,
-            replace(aj.name, '|', '/') AS JournalLib,
-            replace(am.name, '|', '/') AS EcritureNum,
+            replace(replace(aj.code, '|', '/'), '\t', '') AS JournalCode,
+            replace(replace(aj.name, '|', '/'), '\t', '') AS JournalLib,
+            replace(replace(am.name, '|', '/'), '\t', '') AS EcritureNum,
             TO_CHAR(am.date, 'YYYYMMDD') AS EcritureDate,
             aa.code AS CompteNum,
-            replace(aa.name, '|', '/') AS CompteLib,
+            replace(replace(aa.name, '|', '/'), '\t', '') AS CompteLib,
             CASE WHEN rp.ref IS null OR rp.ref = ''
             THEN COALESCE('ID ' || rp.id, '')
             ELSE rp.ref
             END
             AS CompAuxNum,
-            COALESCE(replace(rp.name, '|', '/'), '') AS CompAuxLib,
+            COALESCE(replace(replace(rp.name, '|', '/'), '\t', ''), '') AS CompAuxLib,
             CASE WHEN am.ref IS null OR am.ref = ''
             THEN '-'
-            ELSE replace(am.ref, '|', '/')
+            ELSE replace(replace(am.ref, '|', '/'), '\t', '')
             END
             AS PieceRef,
             TO_CHAR(am.date, 'YYYYMMDD') AS PieceDate,
-            CASE WHEN aml.name IS NULL THEN '/' ELSE replace(aml.name, '|', '/') END AS EcritureLib,
+            CASE WHEN aml.name IS NULL THEN '/' ELSE replace(replace(aml.name, '|', '/'), '\t', '') END AS EcritureLib,
             replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '999999999999999D99') END, '.', ',') AS Debit,
             replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '999999999999999D99') END, '.', ',') AS Credit,
             CASE WHEN rec.name IS NULL THEN '' ELSE rec.name END AS EcritureLet,
