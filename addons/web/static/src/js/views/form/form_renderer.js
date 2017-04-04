@@ -194,7 +194,7 @@ return BasicRenderer.extend({
         $el.click(function () {
             self.trigger_up('button_clicked', {
                 attrs: node.attrs,
-                record: this.state,
+                record: self.state,
                 show_wow: self.$el.hasClass('o_wow'),  // TODO: implement this (in view)
             });
         });
