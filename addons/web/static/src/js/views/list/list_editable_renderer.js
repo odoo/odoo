@@ -668,8 +668,13 @@ ListRenderer.include({
      * Move the cursor on the next available cell, so either the next available
      * cell on the right, or the first on the next line.  This method is called
      * when the user press the TAB key.
+     *
+     * @param {OdooEvent} event
      */
-    _onMoveNext: function () {
+    _onMoveNext: function (event) {
+        // we need to stop the event, to prevent interference with some other
+        // component up there, such as a form renderer.
+        event.stopPropagation();
         if (this.currentCol < this.columns.length - 1) {
             this._selectCell(this.currentRow, this.currentCol + 1);
         } else if (this.currentRow < this.state.data.length - 1) {

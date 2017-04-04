@@ -367,6 +367,9 @@ var AbstractField = Widget.extend({
      */
     _onKeydown: function (event) {
         if (event.which === $.ui.keyCode.TAB) {
+            // the event needs to be stopped, to prevent other field widgets
+            // to retrigger a move event
+            event.stopPropagation();
             this.trigger_up(event.shiftKey ? 'move_previous' : 'move_next');
             event.preventDefault();
         }
