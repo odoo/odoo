@@ -43,7 +43,7 @@ class WebsiteConfigSettings(models.TransientModel):
     module_website_slides = fields.Boolean("Slides")
     module_website_hr_recruitment = fields.Boolean("Jobs")
     module_website_sale = fields.Boolean("eCommerce")
-    module_website_contract = fields.Boolean("Subscriptions")
+    module_website_subscription = fields.Boolean("Subscriptions")
     module_website_event_sale = fields.Boolean("Event Tickets")
 
     favicon = fields.Binary('Favicon', related='website_id.favicon')
