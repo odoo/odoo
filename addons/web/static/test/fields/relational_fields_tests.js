@@ -2560,6 +2560,38 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('focusing fields in one2many list', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_foo"/>' +
+                                '<field name="turtle_int"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                    '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('.o_data_row:first td:first').click();
+        assert.strictEqual(form.$('.o_form_input[name="turtle_foo"]')[0], document.activeElement,
+            "turtle foo field should have focus");
+
+        form.$('.o_form_input[name="turtle_foo"]').trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+        assert.strictEqual(form.$('.o_form_input[name="turtle_int"]')[0], document.activeElement,
+            "turtle int field should have focus");
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
