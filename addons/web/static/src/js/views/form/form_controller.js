@@ -368,8 +368,10 @@ var FormController = BasicController.extend({
      * @private
      */
     _toReadOnlyMode: function () {
-        this.$el.removeClass('o_form_editable');
-        this.update({mode: "readonly"}, {reload: false});
+        if (this.mode !== 'readonly') {
+            this.$el.removeClass('o_form_editable');
+            this.update({mode: "readonly"}, {reload: false});
+        }
     },
     /**
      * Updates the controller's title according to the new state
