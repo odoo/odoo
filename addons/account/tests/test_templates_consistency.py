@@ -14,16 +14,18 @@ class AccountingTestTemplConsistency(HttpCase):
         :param exceptions: Not copied model's fields.
         '''
 
-        def get_fields(model, add_domain):
+        def get_fields(model, add_domain=None):
             # Retrieve fields to compare
             domain = [('model', '=', model), ('state', '=', 'base'), ('related', '=', False),
-                      ('compute', '=', False), add_domain]
+                      ('compute', '=', False)]
+            if add_domain:
+                domain.append(add_domain)
             return self.env['ir.model.fields'].search(domain)
 
         from_fields = get_fields(model_from, ('name', 'not in', exceptions))
+        to_fields_set = set([f.name for f in get_fields(model_to)])
         for field in from_fields:
-            child_field = get_fields(model_to, ('name', '=', field.name))
-            assert child_field.name is not False,\
+            assert field.name in to_fields_set,\
                 'Missing field "%s" from "%s" in model "%s".' % (field.name, model_from, model_to)
 
     def test_account_account_fields(self):
