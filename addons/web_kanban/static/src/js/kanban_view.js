@@ -307,6 +307,9 @@ var KanbanView = View.extend({
         return this.fields.active;
     },
     _is_quick_create_enabled: function() {
+        if(!_.contains(['char', 'boolean', 'many2one'], this.fields[this.group_by_field].type)){
+            return false;
+        }
         if (!this.quick_creatable || !this.is_action_enabled('create'))
             return false;
         if (this.fields_view.arch.attrs.quick_create !== undefined)
