@@ -485,7 +485,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
             if (field.viewmanager) {
                 _.each(field.viewmanager.views, function(view, view_type) {
                     // add default view if it was not embedded and it is loaded
-                    if (views[view_type] === undefined && view.controller) {
+                    var not_embedded = view.embedded_view === undefined; // ONLY FOR 9.0
+                    if (views[view_type] === undefined && view.controller && not_embedded) {
                         views[view_type] = view.controller.fields_view;
                     }
                 });
