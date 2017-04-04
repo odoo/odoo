@@ -56,20 +56,20 @@
         -->
     <t t-set="emp_count" t-value="0"/>
 
-    <div t-if='widget.emp_data.managers.length &gt; 0' class="o_org_chart_group_up">
-        <t t-if='widget.emp_data.managers_more'>
+    <div t-if='managers.length &gt; 0' class="o_org_chart_group_up">
+        <t t-if='managers_more'>
             <div class="o_org_chart_entry o_org_chart_more media">
                 <div class="media-left">
                     <a class="well media-object text-center o_employee_redirect"
-                            t-att-href="widget.emp_data.managers[0].link"
-                            t-att-data-employee-id="widget.emp_data.managers[0].id">
+                            t-att-href="managers[0].link"
+                            t-att-data-employee-id="managers[0].id">
                         <i t-attf-class="fa fa-angle-double-up"/>
                     </a>
                 </div>
             </div>
         </t>
 
-        <t t-foreach="widget.emp_data.managers" t-as="employee">
+        <t t-foreach="managers" t-as="employee">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-call="hr_org_chart_employee">
                 <t t-set="employee_type" t-value="'manager'"/>
@@ -77,12 +77,12 @@
         </t>
     </div>
 
-    <t t-if="widget.emp_data.children.length || widget.emp_data.managers.length" t-call="hr_org_chart_employee">
+    <t t-if="children.length || managers.length" t-call="hr_org_chart_employee">
         <t t-set="employee_type" t-value="'self'"/>
-        <t t-set="employee" t-value="widget.emp_data.self"/>
+        <t t-set="employee" t-value="self"/>
     </t>
 
-    <t t-if="!widget.emp_data.children.length &amp;&amp; !widget.emp_data.managers.length">
+    <t t-if="!children.length &amp;&amp; !managers.length">
         <div class="alert alert-info">
             <p><b>No hierarchy position.</b></p>
             <p>This employee has no manager or subordinate.</p>
@@ -90,8 +90,8 @@
         </div>
     </t>
 
-    <div t-if="widget.emp_data.children.length" class="o_org_chart_group_down">
-        <t t-foreach="widget.emp_data.children" t-as="employee">
+    <div t-if="children.length" class="o_org_chart_group_down">
+        <t t-foreach="children" t-as="employee">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-if="emp_count &lt; 8">
                 <t t-call="hr_org_chart_employee">
@@ -100,11 +100,11 @@
             </t>
         </t>
 
-        <t t-if="(widget.emp_data.children.length + widget.emp_data.managers.length) &gt; 7">
+        <t t-if="(children.length + managers.length) &gt; 7">
             <div class="o_org_chart_entry o_org_chart_more media">
                 <div class="media-left">
                     <a href="#"
-                        t-att-data-employee-id="widget.emp_data.self.id"
+                        t-att-data-employee-id="self.id"
                         class="well o_org_chart_show_more media-object text-center o_employee_sub_redirect">&#8230;</a>
                 </div>
             </div>
