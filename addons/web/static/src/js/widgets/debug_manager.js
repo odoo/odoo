@@ -176,7 +176,8 @@ var DebugManager = Widget.extend({
                         fields: ['name', 'model', 'type'],
                         limit: 1,
                     })
-                    .then(function (view) {
+                    .then(function (views) {
+                        var view = views[0];
                         self.do_action({
                             type: 'ir.actions.act_window',
                             name: view.name,
@@ -260,17 +261,6 @@ DebugManager.include({
                 search_default_my_filters: true,
                 search_default_model_id: this._action.res_model
             }
-        });
-    },
-    edit_workflow: function () {
-        return this.do_action({
-            res_model: 'workflow',
-            name: _t('Edit Workflow'),
-            domain: [['osv', '=', this._action.res_model]],
-            views: [[false, 'list'], [false, 'form'], [false, 'diagram']],
-            type: 'ir.actions.act_window',
-            view_type: 'list',
-            view_mode: 'list'
         });
     },
     translate: function() {
