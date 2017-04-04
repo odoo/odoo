@@ -37,6 +37,7 @@ help:
 	@echo "  changes    to make an overview of all changed/added/deprecated items"
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
+	@echo "  extractor  to extract embedded snippets into codefiles"
 
 clean:
 	-rm -rf $(BUILDDIR)/*
@@ -157,3 +158,8 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
+
+extractor:
+	$(SPHINXBUILD) -b extractor $(ALLSPHINXOPTS) $(BUILDDIR)/extractor
+	@echo
+	@echo "Extraction finished. The extracted files are in $(BUILDDIR)/extractor."

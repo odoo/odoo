@@ -29,6 +29,7 @@ extensions = [
     'odoo_ext',
     'html_domain',
     'exercise_admonition',
+    'code_extractor',
     'patchqueue'
 ]
 
