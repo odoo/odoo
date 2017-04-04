@@ -14,5 +14,5 @@ class SaleConfigSettings(models.TransientModel):
     module_sale = fields.Boolean("Sales")
     module_website_sign = fields.Boolean("eSign")
     module_helpdesk = fields.Boolean("Helpdesk")
-    module_sale_contract = fields.Boolean("Subscriptions")
+    module_sale_subscription = fields.Boolean("Subscriptions")
     module_account_accountant = fields.Boolean("Accounting")
