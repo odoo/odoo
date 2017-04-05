@@ -402,9 +402,22 @@ var StatementModel = BasicModel.extend({
      */
     togglePartialReconcile: function (handle) {
         var line = this.getLine(handle);
-        var prop = _.find(line.reconciliation_proposition, {'invalid': false});
+        var props = _.filter(line.reconciliation_proposition, {'invalid': false});
+        if (props.length !== 1) {
+            return $.Deferred().reject();
+        }
+        var prop = props[0];
         prop.partial_reconcile = !prop.partial_reconcile;
-        return this._computeLine(line);
+        if (!prop.partial_reconcile) {
+            return this._computeLine(line);
+        }
+        return this._computeLine(line).then(function () {
+            if (prop.partial_reconcile) {
+                line.balance.amount = 0;
+                line.balance.type = 1;
+                line.mode = 'inactive';
+            }
+        });
     },
     /**
      * Change the value of the editable proposition line or create a new one.
@@ -472,9 +485,15 @@ var StatementModel = BasicModel.extend({
             ids.push(line.id);
             values.push({
                 "partner_id": line.st_line.partner_id,
-                "counterpart_aml_dicts": _.map(_.filter(props, function (prop) {return !isNaN(prop.id) && !prop.already_paid;}), self._formatToProcessReconciliation),
-                "payment_aml_ids": _.map(_.filter(props, function (prop) {return !isNaN(prop.id) && prop.already_paid;}), self._formatToProcessReconciliation),
-                "new_aml_dicts": _.map(_.filter(props, function (prop) {return isNaN(prop.id);}), self._formatToProcessReconciliation),
+                "counterpart_aml_dicts": _.map(_.filter(props, function (prop) {
+                    return !isNaN(prop.id) || prop.partial_reconcile;
+                }), self._formatToProcessReconciliation.bind(self, line)),
+                "payment_aml_ids": _.pluck(_.filter(props, function (prop) {
+                    return !isNaN(prop.id) && !prop.partial_reconcile;
+                }), 'id'),
+                "new_aml_dicts": _.map(_.filter(props, function (prop) {
+                    return isNaN(prop.id);
+                }), self._formatToProcessReconciliation.bind(self, line)),
             });
             line.reconciled = true;
             self.valuenow++;
@@ -514,8 +533,8 @@ var StatementModel = BasicModel.extend({
         }
 
         line.reconciliation_proposition.push(prop);
-        _.each(line.reconciliation_proposition, function (line) {
-            line.partial_reconcile = false;
+        _.each(line.reconciliation_proposition, function (prop) {
+            prop.partial_reconcile = false;
         });
     },
     /**
@@ -627,13 +646,6 @@ var StatementModel = BasicModel.extend({
                 'account_code': self.accounts[line.st_line.open_balance_account_id],
             };
             line.balance.type = line.balance.amount ? (line.balance.amount > 0 && line.st_line.partner_id ? 0 : -1) : 1;
-
-            if (line.balance.type === -1) {
-                var props = _.filter(line.reconciliation_proposition, {'invalid': false});
-                if (props.length === 1 && props[0].partial_reconcile) {
-                    line.balance.type = 0;
-                }
-            }
         });
     },
     /**
@@ -678,6 +690,7 @@ var StatementModel = BasicModel.extend({
                 prop.amount = prop.debit || -prop.credit;
                 prop.label = prop.name;
                 prop.account_id = self._formatNameGet(prop.account_id || line.account_id);
+                prop.is_partially_reconciled = prop.amount_str !== prop.total_amount_str;
             });
         }
     },
@@ -791,7 +804,7 @@ var StatementModel = BasicModel.extend({
      * @returns {Boolean}
      */
     _isValid: function (prop) {
-        return prop.account_id && prop.amount && prop.label && !!prop.label.length;
+        return !isNaN(prop.id) || prop.account_id && prop.amount && prop.label && !!prop.label.length;
     },
     /**
      * Fetch 'account.bank.statement.line' propositions.
@@ -804,9 +817,11 @@ var StatementModel = BasicModel.extend({
      */
     _performMoveLine: function (handle) {
         var line = this.getLine(handle);
-        var excluded_ids = _.flatten(_.map(this.lines, function (line) {
-            return _.filter(_.pluck(line.reconciliation_proposition, 'id'), _.isNumber);
-        }));
+        var excluded_ids = _.compact(_.flatten(_.map(this.lines, function (line) {
+            return _.map(line.reconciliation_proposition, function (prop) {
+                return !prop.partial_reconcile && _.isNumber(prop.id) ? prop.id : null;
+            });
+        })));
         var filter = line.filter || "";
         var offset = line.offset;
         var limit = 6;
@@ -821,17 +836,25 @@ var StatementModel = BasicModel.extend({
      * format the proposition to send information server side
      *
      * @private
+     * @param {object} line
      * @param {object} proposition
      * @returns {object}
      */
-    _formatToProcessReconciliation: function (prop) {
+    _formatToProcessReconciliation: function (line, prop) {
+        var amount = prop.partial_reconcile ? -line.st_line.amount : prop.amount;
         var result = {
-            'name' : prop.label,
-            'debit' : prop.amount > 0 ? prop.amount : 0,
-            'credit' : prop.amount < 0 ? -prop.amount : 0,
-            'account_id' : prop.account_id.id,
-            'journal_id' : prop.journal_id && prop.journal_id.id,
+            name : prop.label,
+            debit : amount > 0 ? amount : 0,
+            credit : amount < 0 ? -amount : 0,
         };
+        if (!isNaN(prop.id)) {
+            result.counterpart_aml_id = prop.id;
+        } else {
+            result.account_id = prop.account_id.id;
+            if (prop.journal_id) {
+                result.journal_id = prop.account_id.id;
+            }
+        }
         if (!isNaN(prop.id)) result.counterpart_aml_id = prop.id;
         if (prop.analytic_account_id) result.analytic_account_id = prop.analytic_account_id.id;
         if (prop.tax_id) result.tax_ids = [[4, prop.tax_id.id, null]];
@@ -970,7 +993,7 @@ var ManualModel = StatementModel.extend({
                 });
             } else {
                 var mv_line_ids = _.pluck(_.filter(props, function (prop) {return !isNaN(prop.id);}), 'id');
-                var new_mv_line_dicts = _.map(_.filter(props, function (prop) {return isNaN(prop.id);}), self._formatToProcessReconciliation);
+                var new_mv_line_dicts = _.map(_.filter(props, function (prop) {return isNaN(prop.id);}), self._formatToProcessReconciliation.bind(self, line));
                 process_reconciliations.push({
                     id: null,
                     type: null,
@@ -1127,9 +1150,11 @@ var ManualModel = StatementModel.extend({
      */
     _performMoveLine: function (handle) {
         var line = this.getLine(handle);
-        var excluded_ids = _.flatten(_.map(this.lines, function (line) {
-            return _.filter(_.pluck(line.reconciliation_proposition, 'id'), _.isNumber);
-        }));
+        var excluded_ids = _.compact(_.flatten(_.map(this.lines, function (line) {
+            return _.map(line.reconciliation_proposition, function (prop) {
+                return !prop.partial_reconcile && _.isNumber(prop.id) ? prop.id : null;
+            });
+        })));
         var filter = line.filter || "";
         var offset = line.offset;
         var limit = 6;

@@ -7,14 +7,16 @@ var data = {
             id: {string: "ID", type: 'integer'},
             display_name: {string: "Displayed name", type: 'char'},
             image: {string: "image", type: 'integer'},
+            customer: {string: "customer", type: 'boolean'},
+            supplier: {string: "supplier", type: 'boolean'},
         },
         records: [
-            {id: 1, display_name: "partner 1", image: 'AAA'},
-            {id: 2, display_name: "partner 2", image: 'BBB'},
-            {id: 3, display_name: "partner 3", image: 'CCC'},
-            {id: 4, display_name: "partner 4", image: 'DDD'},
-            {id: 8, display_name: "Agrolait", image: 'EEE'},
-            {id: 12, display_name: "Camptocamp", image: 'FFF'},
+            {id: 1, display_name: "partner 1", image: 'AAA', customer: true},
+            {id: 2, display_name: "partner 2", image: 'BBB', customer: true},
+            {id: 3, display_name: "partner 3", image: 'CCC', customer: true},
+            {id: 4, display_name: "partner 4", image: 'DDD', customer: true},
+            {id: 8, display_name: "Agrolait", image: 'EEE', customer: true},
+            {id: 12, display_name: "Camptocamp", image: 'FFF', supplier: true},
         ],
         mark_as_reconciled: function () {
             return $.when();
@@ -132,14 +134,15 @@ var data = {
             return $.when(auto_reconciliation);
         },
         process_reconciliations: function (args) {
-            var datas = args[0];
-            for (var i in datas) {
-                var data = datas[i];
-                for (var key in move_lines_for_manual_reconciliation) {
-                    move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
-                        return data.mv_line_ids.indexOf(mv_line.id) === -1;
-                    });
-                }
+            var datas = args[1];
+            var ids = _.flatten(_.pluck(_.pluck(datas, 'counterpart_aml_dicts'), 'counterpart_aml_id'));
+            ids = ids.concat(_.flatten(_.pluck(datas, 'payment_aml_ids')));
+            ids = _.compact(ids);
+
+            for (var key in move_lines_for_manual_reconciliation) {
+                move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
+                    return ids.indexOf(mv_line.id) === -1;
+                });
             }
             return $.when();
         },
@@ -554,11 +557,11 @@ QUnit.module('account', {
 
 
     QUnit.test('Reconciliation basic data', function (assert) {
-        assert.expect(20);
+        assert.expect(13);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.params.data,
+            'data': this.params.data
         });
 
         clientAction.appendTo($('#qunit-fixture'));
@@ -591,23 +594,56 @@ QUnit.module('account', {
         clientAction.widgets[3].$('.accounting_view thead td:first').trigger('click');
         assert.strictEqual(clientAction.widgets[3].$el.data('mode'), 'create', "should switch to 'create' mode instead 'match' mode when 'match' mode is empty");
 
-        widget = clientAction.widgets[2];
-
-        assert.notOk( widget.$('.cell_right .line_info_button').length, "should not display the partial reconciliation alert");
-        assert.ok( widget.$('button.btn-primary:not(hidden)').length, "should display the reconcile button");
-        widget.$('.accounting_view thead td:first').trigger('click');
-        widget.$('.match td.cell_label:first').trigger('click');
-        assert.ok( widget.$('.text-danger:not(hidden)').length, "should display counterpart alert");
-        widget.$('.accounting_view tbody td.cell_label:first').trigger('click');
-        assert.ok( widget.$('.text-danger:not(hidden)').length, "should display counterpart alert");
-        assert.strictEqual(widget.$('.cell_right .line_info_button').length, 1, "should display a partial reconciliation alert");
-        widget.$('.cell_right .line_info_button').trigger('click');
-        assert.ok(widget.$('.cell_right .line_info_button').hasClass('do_partial_reconcile_false'), "should display the partial reconciliation information");
-        assert.ok( widget.$('button.btn-default:not(hidden)').length, "should display the validate button");
-
         clientAction.destroy();
     });
 
+
+    QUnit.test('Reconciliation partial', function (assert) {
+        assert.expect(9);
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'process_reconciliations') {
+                    assert.deepEqual(args.args, [
+                        [6],
+                        [{
+                            partner_id: false,
+                            counterpart_aml_dicts:[{
+                                name: "BNK1/2017/0002: SUPP.OUT/2017/0002",
+                                debit: 32.58,
+                                credit: 0,
+                                counterpart_aml_id: 392
+                            }],
+                            payment_aml_ids: [],
+                            new_aml_dicts: []
+                        }]
+                    ], "should call process_reconciliations with partial reconcile values");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        clientAction.appendTo($('body'));
+
+        var widget = clientAction.widgets[1];
+
+        assert.notOk( widget.$('.cell_left .line_info_button').length, "should not display the partial reconciliation alert");
+        widget.$('.accounting_view thead td:first').trigger('click');
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 1, "should display the partial reconciliation alert");
+        assert.ok( widget.$('button.btn-primary:not(hidden)').length, "should not display the reconcile button");
+        assert.ok( widget.$('.text-danger:not(hidden)').length, "should display counterpart alert");
+        widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
+        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 1, "should display a partial reconciliation alert");
+        assert.ok(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_false'), "should display the partial reconciliation information");
+        assert.ok( widget.$('button.btn-default:not(hidden)').length, "should display the validate button");
+        assert.strictEqual( widget.$el.data('mode'), "inactive", "should be inactive mode");
+        widget.$('button.btn-default:not(hidden)').trigger('click');
+
+        clientAction.destroy();
+    });
 
     QUnit.test('Reconciliation title', function (assert) {
         assert.expect(6);
