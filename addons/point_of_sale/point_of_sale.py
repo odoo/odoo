@@ -975,7 +975,7 @@ class pos_order(osv.osv):
     def _force_picking_done(self, cr, uid, picking_id, context=None):
         context = context or {}
         picking_obj = self.pool.get('stock.picking')
-        picking_obj.action_confirm(cr, uid, [picking_id], context=context)
+        picking_obj.action_assign(cr, uid, [picking_id], context=context)
         picking_obj.force_assign(cr, uid, [picking_id], context=context)
         # Mark pack operations as done
         pick = picking_obj.browse(cr, uid, picking_id, context=context)
@@ -1062,7 +1062,9 @@ class pos_order(osv.osv):
             # when the pos.config has no picking_type_id set only the moves will be created
             if move_list and not return_picking_id and not order_picking_id:
                 move_obj.action_confirm(cr, uid, move_list, context=context)
-                move_obj.force_assign(cr, uid, move_list, context=context)
+                move_obj.action_assign(cr, uid, move_list, context=context)
+                move_list_to_force = move_obj.browse(cr, uid, move_list, context=context).filtered(lambda m: m.state in ['confirmed', 'waiting']).ids
+                move_obj.force_assign(cr, uid, move_list_to_force, context=context)
                 active_move_list = [x.id for x in move_obj.browse(cr, uid, move_list, context=context) if x.product_id.tracking == 'none']
                 if active_move_list:
                     move_obj.action_done(cr, uid, active_move_list, context=context)
