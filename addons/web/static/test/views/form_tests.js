@@ -2341,6 +2341,68 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('onchange value are not discarded on o2m edition', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[1].p = [4];
+        this.data.partner.onchanges = {
+            foo: function () {},
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="foo"/>' +
+                                '<field name="bar"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="foo"/>' +
+                                '<field name="product_id"/>' +
+                            '</form>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return $.when({
+                        value: {
+                            p: [[5], [1, 4, {foo: 'foo changed'}]],
+                        },
+                    });
+                }
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].p, [[1, 4, {
+                        foo: 'foo changed',
+                    }]], "should only write value of known fields");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_data_row td:first').text(), 'My little Foo Value',
+            "onchange should have been correctly applied on field in o2m list");
+
+        form.$('.o_form_input:first').val('trigger an onchange').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_row td:first').text(), 'foo changed',
+            "onchange should have been correctly applied on field in o2m list");
+
+        form.$('.o_data_row').click(); // edit the o2m in the dialog
+        assert.strictEqual($('.modal .o_form_field').val(), 'foo changed',
+            "the onchange value hasn't been discarded when opening the o2m");
+
+        form.destroy();
+    });
+
     QUnit.test('navigation with tab key in form view', function (assert) {
         assert.expect(2);
 
