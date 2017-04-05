@@ -43,12 +43,20 @@ class WebsiteConfigSettings(models.TransientModel):
     module_account_invoicing = fields.Boolean("Invoicing")
     module_sale_stock = fields.Boolean("Delivery Orders")
 
-    # the next 2 fields represent sale_pricelist_setting from sale.config.settings, they are split here for the form view, to improve usability
-    sale_pricelist_setting_split_1 = fields.Boolean(default=0, string="Multiple Prices per Product")
-    sale_pricelist_setting_split_2 = fields.Selection([
+    # sale_pricelist_settings splitted in several entries for usability purpose
+    multi_sales_price = fields.Boolean(
+        string="Multiple sales price per product",
+        oldname='sale_pricelist_setting_split_1')
+    multi_sales_price_method = fields.Selection([
         (0, 'Multiple prices per product (e.g. customer segments, currencies)'),
-        (1, 'Prices computed from formulas (discounts, margins, roundings)')
-        ], default=0, string="Sales Price")
+        (1, 'Prices computed from formulas (discounts, margins, roundings)')],
+        string="Sales Price", default=0,
+        oldname='sale_pricelist_setting_split_2')
+    sale_pricelist_setting = fields.Selection([
+        ('fixed', 'A single sales price per product'),
+        ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
+        ('formula', 'Price computed from formulas (discounts, margins, roundings)')
+        ], string="Pricelists")
     group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
         implied_group='product.group_sale_pricelist')
 
@@ -93,6 +101,37 @@ class WebsiteConfigSettings(models.TransientModel):
         value = self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice', default=False)
         return {'automatic_invoice': value}
 
+    @api.onchange('multi_sales_price', 'multi_sales_price_method')
+    def _onchange_sale_price(self):
+        if self.multi_sales_price:
+            if self.multi_sales_price_method:
+                self.sale_pricelist_setting = 'formula'
+            else:
+                self.sale_pricelist_setting = 'percentage'
+        else:
+            self.sale_pricelist_setting = 'fixed'
+
+    @api.onchange('sale_pricelist_setting')
+    def _onchange_sale_pricelist_setting(self):
+        if self.sale_pricelist_setting == 'percentage':
+            self.update({
+                'group_product_pricelist': True,
+                'group_sale_pricelist': True,
+                'group_pricelist_item': False,
+            })
+        elif self.sale_pricelist_setting == 'formula':
+            self.update({
+                'group_product_pricelist': False,
+                'group_sale_pricelist': True,
+                'group_pricelist_item': True,
+            })
+        else:
+            self.update({
+                'group_product_pricelist': False,
+                'group_sale_pricelist': False,
+                'group_pricelist_item': False,
+            })
+
     @api.model
     def get_default_sale_delivery_settings(self, fields):
         sale_delivery_settings = 'none'
@@ -104,18 +143,15 @@ class WebsiteConfigSettings(models.TransientModel):
 
     @api.model
     def get_default_sale_pricelist_setting(self, fields):
-        return {'sale_pricelist_setting_split_1': 0 if self.env['ir.values'].get_defaults_dict('sale.config.settings').get('sale_pricelist_setting', 'fixed') == 'fixed' else 1,
-                'sale_pricelist_setting_split_2': 0 if self.env['ir.values'].get_defaults_dict('sale.config.settings').get('sale_pricelist_setting', 'fixed') != 'formula' else 1}
+        sale_pricelist_setting = self.env['ir.config_parameter'].sudo().get_param('sale.sale_pricelist_setting')
+        return dict(
+            multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
+            multi_sales_price_method=sale_pricelist_setting in ['formula'] and 1 or False,
+            sale_pricelist_setting=sale_pricelist_setting,
+        )
 
-    @api.model
-    def set_sale_pricelist_settings(self):
-        sale_pricelist_setting = 'formula'
-        if self.sale_pricelist_setting_split_1 == 0:
-            sale_pricelist_setting = 'fixed'
-        elif self.sale_pricelist_setting_split_2 == 0:
-            sale_pricelist_setting = 'percentage'
-        return self.env['ir.values'].sudo().set_default(
-            'sale.config.settings', 'sale_pricelist_setting', sale_pricelist_setting)
+    def set_multi_sales_price(self):
+        self.env['ir.config_parameter'].sudo().set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
 
     @api.multi
     def set_sale_tax_defaults(self):
@@ -147,28 +183,6 @@ class WebsiteConfigSettings(models.TransientModel):
                 'sale_pricelist_setting_split_1': True,
             })
 
-    @api.onchange('sale_pricelist_setting_split_1', 'sale_pricelist_setting_split_2')
-    def _onchange_sale_pricelist_setting(self):
-        if self.sale_pricelist_setting_split_1 == 0:
-            self.update({
-                'group_product_pricelist': False,
-                'group_sale_pricelist': False,
-                'group_pricelist_item': False,
-            })
-        else:
-            if self.sale_pricelist_setting_split_2 == 0:
-                self.update({
-                    'group_product_pricelist': True,
-                    'group_sale_pricelist': True,
-                    'group_pricelist_item': False,
-                })
-            else:
-                self.update({
-                    'group_product_pricelist': False,
-                    'group_sale_pricelist': True,
-                    'group_pricelist_item': True,
-                })
-
     @api.onchange('sale_show_tax')
     def _onchange_sale_tax(self):
         if self.sale_show_tax == "subtotal":
@@ -181,3 +195,9 @@ class WebsiteConfigSettings(models.TransientModel):
                 'group_show_price_total': True,
                 'group_show_price_subtotal': False,
             })
+
+    def get_default_sale_show_tax(self, fields):
+        return dict(sale_show_tax=self.env['ir.config_parameter'].sudo().get_param('website.sale_show_tax'))
+
+    def set_sale_show_tax(self):
+        return self.env['ir.config_parameter'].sudo().set_param('website.sale_show_tax', self.sale_show_tax)
