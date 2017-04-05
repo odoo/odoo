@@ -2340,5 +2340,32 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('diplay a stat button outside a buttonbox', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<sheet>' +
+                        '<button class="oe_stat_button" type="action" name="1">' +
+                            '<field name="int_field" widget="statinfo"/>' +
+                        '</button>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('button .o_field_widget').length, 1,
+            "a field widget should be display inside the button");
+        assert.strictEqual(form.$('button .o_field_widget').children().length, 2,
+            "the field widget should have 2 children, the text and the value");
+        assert.strictEqual(parseInt(form.$('button .o_field_widget .o_stat_value').text()), 9,
+            "the value rendered should be the same than the field value");
+        form.destroy();
+    });
 });
 });
