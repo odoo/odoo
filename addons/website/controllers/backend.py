@@ -35,3 +35,25 @@ class WebsiteBackend(http.Controller):
                 ga_client_id = request.env['ir.config_parameter'].sudo().get_param('google_management_client_id', default='')
                 dashboard_data['dashboards']['visits']['ga_client_id'] = ga_client_id
         return dashboard_data
+
+    @http.route('/website/dashboard/set_ga_client_id', type='json', auth='user')
+    def website_set_ga_client_id(self, ga_client_id):
+        if not request.env.user.has_group('base.group_system'):
+            return {
+                'error': {
+                    'title': 'Access Error',
+                    'message': 'You do not have sufficient rights to perform that action.',
+                }
+            }
+        if not ga_client_id.endswith('.apps.googleusercontent.com') or ga_client_id.startswith(" "):
+            return {
+                'error': {
+                    'title': 'Incorrect Client ID',
+                    'message': 'The Google Analytics Client ID you have entered seems incorrect.',
+                }
+            }
+        request.env['website.config.setting'].create({
+            'use_google_analytics_dashboard': True,
+            'google_management_client_id': ga_client_id,
+        })
+        return True
