@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,7 +14,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,7 +35,7 @@ class CompanyLDAP(osv.osv):
     _rec_name = 'ldap_server'
 
     def get_ldap_dicts(self, cr, ids=None):
-        """ 
+        """
         Retrieve res_company_ldap resources from the database in dictionary
         format.
 
@@ -61,7 +61,7 @@ class CompanyLDAP(osv.osv):
         return cr.dictfetchall()
 
     def connect(self, conf):
-        """ 
+        """
         Connect to an LDAP server specified by an ldap
         configuration dictionary.
 
@@ -84,7 +84,7 @@ class CompanyLDAP(osv.osv):
         In order to prevent an unintended 'unauthenticated authentication',
         which is an anonymous bind with a valid dn and a blank password,
         check for empty passwords explicitely (:rfc:`4513#section-6.3.1`)
-        
+
         :param dict conf: LDAP configuration
         :param login: username
         :param password: Password for the LDAP user
@@ -117,9 +117,9 @@ class CompanyLDAP(osv.osv):
         except ldap.LDAPError, e:
             _logger.error('An LDAP exception occurred: %s', e)
         return entry
-        
+
     def query(self, conf, filter, retrieve_attributes=None):
-        """ 
+        """
         Query an LDAP server with the filter argument and scope subtree.
 
         Allow for all authentication methods of the simple authentication
@@ -160,7 +160,7 @@ class CompanyLDAP(osv.osv):
         """
         Compose values for a new resource of model res_users,
         based upon the retrieved ldap entry and the LDAP settings.
-        
+
         :param dict conf: LDAP configuration
         :param login: the new user's login
         :param tuple ldap_entry: single LDAP result (dn, attrs)
@@ -173,7 +173,7 @@ class CompanyLDAP(osv.osv):
                    'company_id': conf['company']
                    }
         return values
-    
+
     def get_or_create_user(self, cr, uid, conf, login, ldap_entry,
                            context=None):
         """
@@ -186,7 +186,7 @@ class CompanyLDAP(osv.osv):
         :return: res_users id
         :rtype: int
         """
-        
+
         user_id = False
         login = tools.ustr(login.lower().strip())
         cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s", (login,))
@@ -212,7 +212,7 @@ class CompanyLDAP(osv.osv):
             ondelete='cascade'),
         'ldap_server': fields.char('LDAP Server address', required=True),
         'ldap_server_port': fields.integer('LDAP Server port', required=True),
-        'ldap_binddn': fields.char('LDAP binddn', 
+        'ldap_binddn': fields.char('LDAP binddn',
             help=("The user account on the LDAP server that is used to query "
                   "the directory. Leave empty to connect anonymously.")),
         'ldap_password': fields.char('LDAP password',
@@ -282,5 +282,5 @@ class users(osv.osv):
                     if ldap_obj.authenticate(conf, res[0], password):
                         return
             raise
-        
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
