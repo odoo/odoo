@@ -112,7 +112,7 @@
 </t>
 
 <t t-name="reconciliation.line.balance">
-    <tr t-if="state.balance.amount">
+    <tr t-if="state.balance.amount &amp;&amp; !(state.reconciliation_proposition[0] || {}).partial_reconcile">
         <td class="cell_action"><span class="toggle_create fa fa-play"></span></td>
         <td class="cell_account_code"><t t-esc="state.balance.account_code"/></td>
         <td class="cell_due_date"></td>
@@ -211,7 +211,8 @@
         <tr t-if="line.partner_id"><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>
         <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
         <tr><td>Due Date</td><td><t t-esc="line.date_maturity === false ? line.date : line.date_maturity"/></td></tr>
-        <tr><td><t t-if="line.is_partially_reconciled">Residual</t><t t-if="! line.is_partially_reconciled">Amount</t></td><td>
+        <tr><td>Amount</td><td><t t-raw="line.total_amount_str"/><t t-if="line.total_amount_currency_str"> (<t t-esc="line.total_amount_currency_str"/>)</t></td></tr>
+        <tr t-if="line.is_partially_reconciled"><td>Residual</td><td>
             <t t-raw="line.amount_str"/><t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
         </td></tr>
         <tr class="one_line_info" t-if='line.already_paid'>

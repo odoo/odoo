@@ -194,7 +194,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .accounting_view tbody .mv_line td': '_onSelectProposition',
         'click .o_reconcile_models button': '_onQuickCreateProposition',
         'click .create .add_line': '_onCreateProposition',
-        'click .accounting_view .cell_right .line_info_button': '_onTogglePartialReconcile',
+        'click .accounting_view .line_info_button.fa-exclamation-triangle': '_onTogglePartialReconcile',
         'click .reconcile_model_create': '_onCreateReconcileModel',
         'click .reconcile_model_edit': '_onEditReconcileModel',
     },
@@ -290,12 +290,18 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
 
-            if (state.balance.amount < 0 && props.length === 1) {
-                var text = !line.partial_reconcile ?
-                    _t("This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open."):
-                    _t("Undo the partial reconciliation.");
+            if ((state.balance.amount !== 0 || line.partial_reconcile) && props.length === 1) {
+                var $cell = $line.find(line.amount > 0 ? '.cell_right' : '.cell_left');
+                var text;
+                if (line.partial_reconcile) {
+                    text = _t("Undo the partial reconciliation.");
+                    $cell.text(state.st_line.amount_str);
+                } else {
+                    text = _t("This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.");
+                }
+
                 $('<span class="do_partial_reconcile_'+(!line.partial_reconcile)+' line_info_button fa fa-exclamation-triangle"/>')
-                    .prependTo($line.find('.cell_right'))
+                    .prependTo($cell)
                     .attr("data-content", text);
             }
             $props.append($line);
@@ -353,7 +359,11 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 type: 'many2one',
                 name: 'partner_id',
                 value: [partnerID, partnerName]
-        }]);
+        }], {
+            partner_id: {
+                domain: [["parent_id", "=", false], "|", ["customer", "=", true], ["supplier", "=", true]]
+            }
+        });
         return this.model.get(recordID);
     },
 
