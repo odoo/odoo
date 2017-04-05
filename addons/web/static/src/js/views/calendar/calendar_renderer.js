@@ -48,6 +48,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         FieldManagerMixin.init.call(this);
 
         this.title = options.title;
+        this.fields = options.fields;
         this.fieldName = options.fieldName;
         this.write_model = options.write_model;
         this.write_field = options.write_field;
@@ -56,20 +57,29 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         this.filters = options.filters;
         this.label = options.label;
         this.getColor = options.getColor;
+    },
+    willStart: function () {
+        var self = this;
+        var defs = [this._super.apply(this, arguments)];
 
         if (this.write_model || this.write_field) {
-            this.many2one = new SidebarFilterM2O(this,
-                this.write_field,
-                this.model.get(this.model.makeRecord(this.write_model, [{
-                    name: this.write_field,
-                    relation: options.fields[this.fieldName].relation,
-                    type: 'many2one',
-                }])),
-                {
-                    mode: 'edit',
-                    can_create: false,
-                });
+            var def = this.model.makeRecord(this.write_model, [{
+                name: this.write_field,
+                relation: this.fields[this.fieldName].relation,
+                type: 'many2one',
+            }]).then(function (recordID) {
+                self.many2one = new SidebarFilterM2O(self,
+                    self.write_field,
+                    self.model.get(recordID),
+                    {
+                        mode: 'edit',
+                        can_create: false,
+                    });
+            });
+            defs.push(def);
         }
+        return $.when.apply($, defs);
+
     },
     start: function () {
         this._super();

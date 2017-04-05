@@ -747,19 +747,18 @@ QUnit.module('Views', {
             var record = model.get(resultID, {raw: true});
             assert.deepEqual(record.data.product_ids, [37], "should have correct initial value");
 
-            var relatedRecordID = model.makeRecord('product', [{
+            model.makeRecord('product', [{
                     name: 'name',
                     string: "Product Name",
                     type: "char",
                     value: "xpod"
                 }
-            ]);
-
-            model.notifyChanges(record.id, {
-                product_ids: {operation: "ADD", id: relatedRecordID}
+            ]).then(function (relatedRecordID) {
+                model.notifyChanges(record.id, {
+                    product_ids: {operation: "ADD", id: relatedRecordID}
+                });
+                model.save(record.id);
             });
-
-            model.save(record.id);
         });
         model.destroy();
     });
@@ -794,22 +793,23 @@ QUnit.module('Views', {
             assert.strictEqual(record.data.product_ids.data.length, 0,
                 "one2many should start with a list of length 0");
 
-            var relatedRecordID = model.makeRecord('product', [{
+            model.makeRecord('product', [{
                     name: 'name',
                     string: "Product Name",
                     type: "char",
                     value: "xpod"
                 }
-            ]);
-            model.notifyChanges(resultID, {
-                product_ids: {operation: "ADD", id: relatedRecordID}
-            });
+            ]).then(function (relatedRecordID) {
+                model.notifyChanges(resultID, {
+                    product_ids: {operation: "ADD", id: relatedRecordID}
+                });
 
-            record = model.get(resultID);
-            assert.strictEqual(record.data.product_ids.data.length, 1,
-                "one2many should be a list of length 1");
-            assert.strictEqual(record.data.product_ids.data[0].data.name, "xpod",
-                "one2many should have correct data");
+                record = model.get(resultID);
+                assert.strictEqual(record.data.product_ids.data.length, 1,
+                    "one2many should be a list of length 1");
+                assert.strictEqual(record.data.product_ids.data[0].data.name, "xpod",
+                    "one2many should have correct data");
+            });
         });
         model.destroy();
     });
@@ -1092,6 +1092,127 @@ QUnit.module('Views', {
             assert.deepEqual(record.data.product_ids, [],
                 "should have correct value for product_ids field");
             assert.notOk(model.isDirty(resultID), "datapoint should not be dirty");
+        });
+        model.destroy();
+    });
+
+    QUnit.test('call makeRecord with a pre-fetched many2one field', function (assert) {
+        assert.expect(3);
+        var rpcCount = 0;
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                rpcCount++;
+                return this._super(route, args);
+            },
+        });
+
+        model.makeRecord('coucou', [{
+            name: 'partner_id',
+            relation: 'partner',
+            type: 'many2one',
+            value: [1, 'first partner'],
+        }], {
+            partner_id: {
+                options: {
+                    no_open: true,
+                },
+            },
+        }).then(function (recordID) {
+            var record = model.get(recordID);
+            assert.deepEqual(record.fieldsInfo.default.partner_id, {options: {no_open: true}},
+                "makeRecord should have generated the fieldsInfo");
+            assert.deepEqual(record.data.partner_id.data, {id: 1, display_name: 'first partner'},
+                "many2one should contain the partner with id 1");
+            assert.strictEqual(rpcCount, 0, "makeRecord should not have done any rpc");
+        });
+        model.destroy();
+    });
+
+    QUnit.test('call makeRecord with a many2many field', function (assert) {
+        assert.expect(5);
+        var rpcCount = 0;
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                rpcCount++;
+                return this._super(route, args);
+            },
+        });
+
+        model.makeRecord('coucou', [{
+            name: 'partner_ids',
+            fields: [{
+                name: 'id',
+                type: 'integer',
+            }, {
+                name: 'display_name',
+                type: 'char',
+            }],
+            relation: 'partner',
+            type: 'many2many',
+            value: [1, 2],
+        }]).then(function (recordID) {
+            var record = model.get(recordID);
+            assert.deepEqual(record.fieldsInfo.default.partner_ids, {},
+                "makeRecord should have generated the fieldsInfo");
+            assert.strictEqual(record.data.partner_ids.count, 2,
+                "there should be 2 elements in the many2many");
+            assert.strictEqual(record.data.partner_ids.data.length, 2,
+                "many2many should be a list of length 2");
+            assert.deepEqual(record.data.partner_ids.data[0].data, {id: 1, display_name: 'first partner'},
+                "many2many should contain the partner with id 1");
+            assert.strictEqual(rpcCount, 1, "makeRecord should have done 1 rpc");
+        });
+        model.destroy();
+    });
+
+    QUnit.test('call makeRecord with a pre-fetched many2many field', function (assert) {
+        assert.expect(5);
+        var rpcCount = 0;
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                rpcCount++;
+                return this._super(route, args);
+            },
+        });
+
+        model.makeRecord('coucou', [{
+            name: 'partner_ids',
+            fields: [{
+                name: 'id',
+                type: 'integer',
+            }, {
+                name: 'display_name',
+                type: 'char',
+            }],
+            relation: 'partner',
+            type: 'many2many',
+            value: [{
+                id: 1,
+                display_name: "first partner",
+            }, {
+                id: 2,
+                display_name: "second partner",
+            }],
+        }]).then(function (recordID) {
+            var record = model.get(recordID);
+            assert.deepEqual(record.fieldsInfo.default.partner_ids, {},
+                "makeRecord should have generated the fieldsInfo");
+            assert.strictEqual(record.data.partner_ids.count, 2,
+                "there should be 2 elements in the many2many");
+            assert.strictEqual(record.data.partner_ids.data.length, 2,
+                "many2many should be a list of length 2");
+            assert.deepEqual(record.data.partner_ids.data[0].data, {id: 1, display_name: 'first partner'},
+                "many2many should contain the partner with id 1");
+            assert.strictEqual(rpcCount, 0, "makeRecord should not have done any rpc");
         });
         model.destroy();
     });

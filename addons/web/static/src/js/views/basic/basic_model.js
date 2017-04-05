@@ -451,39 +451,92 @@ var BasicModel = AbstractModel.extend({
      */
     makeRecord: function (model, fields, fieldInfo) {
         var self = this;
+        var defs = [];
         var record_fields = {};
         _.each(fields, function (field) {
             record_fields[field.name] = _.pick(field, 'type', 'relation', 'domain');
         });
-        var viewInfo = {};
-        viewInfo.default = fieldInfo || _.mapObject(fields, function () {
-            return {};
+        fieldInfo = fieldInfo || {};
+        var fieldsInfo = {};
+        fieldsInfo.default = {};
+        _.each(fields, function (field) {
+            fieldsInfo.default[field.name] = fieldInfo[field.name] || {};
         });
         var record = this._makeDataPoint({
             modelName: model,
             fields: record_fields,
-            fieldsInfo: viewInfo,
+            fieldsInfo: fieldsInfo,
             viewType: 'default',
         });
         _.each(fields, function (field) {
-            if ('value' in field) {
-                if (field.type === 'many2one') {
-                    var id = field.value[0];
-                    var display_name = field.value[1];
-                    var relatedRecord = self._makeDataPoint({
+            var dataPoint;
+            if (field.type === 'many2one') {
+                if (field.value) {
+                    var id = _.isArray(field.value) ? field.value[0] : field.value;
+                    var display_name = _.isArray(field.value) ? field.value[1] : undefined;
+                    dataPoint = self._makeDataPoint({
                         modelName: field.relation,
                         data: {
                             id: id,
                             display_name: display_name,
-                        }
+                        },
                     });
-                    record.data[field.name] = relatedRecord.id;
-                } else {
-                    record.data[field.name] = field.value;
+                    record.data[field.name] = dataPoint.id;
+                    if (display_name === undefined) {
+                        defs.push(self._fetchNameGet(dataPoint));
+                    }
                 }
+            } else if (field.type === 'one2many' || field.type === 'many2many') {
+                var relatedFieldsInfo = {};
+                relatedFieldsInfo.default = {};
+                _.each(field.fields, function (field) {
+                    relatedFieldsInfo.default[field.name] = {};
+                });
+                var dpParams = {
+                    fieldsInfo: relatedFieldsInfo,
+                    modelName: field.relation,
+                    static: true,
+                    type: 'list',
+                    viewType: 'default',
+                };
+                var needLoad = false;
+                // As value, you could either pass:
+                //  - a list of ids related to the record
+                //  - a list of object
+                // We only need to load the datapoint in the first case.
+                if (field.value && field.value.length) {
+                    if (_.isObject(field.value[0])) {
+                        dpParams.res_ids = _.pluck(field.value, 'id');
+                        dataPoint = self._makeDataPoint(dpParams);
+                        _.each(field.value, function (data) {
+                            var recordDP = self._makeDataPoint({
+                                data: data,
+                                modelName: field.relation,
+                                type: 'record',
+                            });
+                            dataPoint.data.push(recordDP.id);
+                        });
+                    } else {
+                        dpParams.res_ids = field.value;
+                        dataPoint = self._makeDataPoint(dpParams);
+                        needLoad = true;
+                    }
+                } else {
+                    dpParams.res_ids = [];
+                    dataPoint = self._makeDataPoint(dpParams);
+                }
+
+                if (needLoad) {
+                    defs.push(self._load(dataPoint));
+                }
+                record.data[field.name] = dataPoint.id;
+            } else if (field.value) {
+                record.data[field.name] = field.value;
             }
         });
-        return record.id;
+        return $.when.apply($, defs).then(function () {
+            return record.id;
+        });
     },
     /**
      * This is an extremely important method.  All changes in any field go
@@ -832,6 +885,7 @@ var BasicModel = AbstractModel.extend({
         var def;
         if (rel_data.display_name === undefined) {
             var field = record.fields[fieldName];
+            // TODO: refactor this to use _fetchNameGet
             def = this._rpc({
                     model: field.relation,
                     method: 'name_get',
@@ -1153,6 +1207,22 @@ var BasicModel = AbstractModel.extend({
                     record.data.display_name = nameGet[1];
                 });
             });
+    },
+    /**
+     * Fetch name_get for a record datapoint.
+     *
+     * @param {Object} dataPoint
+     * @returns {Deferred}
+     */
+    _fetchNameGet: function (dataPoint) {
+        return this._rpc({
+            model: dataPoint.model,
+            method: 'name_get',
+            args: [dataPoint.res_id],
+            context: dataPoint.getContext(),
+        }).then(function (result) {
+            dataPoint.data.display_name = result[0][1];
+        });
     },
     _fetchNameGets: function (list, fieldName) {
         var self = this;
