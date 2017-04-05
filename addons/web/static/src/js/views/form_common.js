@@ -958,7 +958,9 @@ var SelectCreateDialog = ViewDialog.extend({
 
         _.defaults(this.options, { initial_view: "search" });
         this.initial_ids = this.options.initial_ids;
-        this.options = parent.options
+        if (parent.options.no_create){
+            this.options = parent.options
+        }
     },
 
     open: function() {
