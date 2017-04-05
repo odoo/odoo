@@ -1337,7 +1337,6 @@ var FieldSelection = AbstractField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.values = [];
         if (this.field.type === 'many2one') {
             this.values = this.record.specialData[this.name];
         } else {
@@ -1353,34 +1352,23 @@ var FieldSelection = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Format the value to a valid string
-     *
-     * @override
-     * @private
-     * @param {any} value
-     * @returns {string}
-     */
-    _formatValue: function (value) {
-        if (this.field.type === 'many2one') {
-            var options = _.extend({}, this.nodeOptions);
-            return field_utils.format.many2one(value, this.field, this.recordData, options);
-        } else {
-            return this._super(value);
-        }
-    },
-    /**
      * @override
      * @private
      */
     _renderEdit: function () {
-        this.$el.empty();
-        for (var i = 0 ; i < this.values.length ; i++) {
-            this.$el.append($('<option/>', {
-                value: JSON.stringify(this.values[i][0]),
-                html: this.values[i][1]
-            }));
+        if (!this.$el.children().length) {
+            for (var i = 0 ; i < this.values.length ; i++) {
+                this.$el.append($('<option/>', {
+                    value: JSON.stringify(this.values[i][0]),
+                    html: this.values[i][1]
+                }));
+            }
         }
-        this.$el.val(JSON.stringify(this._parseValue(this.value)));
+        var value = this.value;
+        if (this.field.type === 'many2one' && value) {
+            value = value.data.id;
+        }
+        this.$el.val(JSON.stringify(value));
     },
     /**
      * @override
@@ -1388,16 +1376,6 @@ var FieldSelection = AbstractField.extend({
      */
     _renderReadonly: function () {
         this.$el.empty().html(this._formatValue(this.value));
-    },
-    /**
-     * @override
-     * @private
-     */
-    _reset: function () {
-        this._super.apply(this, arguments);
-        if (this.field.type === 'many2one') {
-            this.value = this.value.data.id;
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -1407,6 +1385,7 @@ var FieldSelection = AbstractField.extend({
     /**
      * The small slight difficulty is that we have to set the value differently
      * depending on the field type.
+     *
      * @private
      */
     _onChange: function () {

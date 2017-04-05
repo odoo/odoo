@@ -3196,8 +3196,12 @@ QUnit.module('relational_fields', {
         list.destroy();
     });
 
-    QUnit.test('widget selection on a many2one field', function (assert) {
-        assert.expect(7);
+    QUnit.test('widget selection,  edition and on many2one field', function (assert) {
+        assert.expect(15);
+
+        this.data.partner.onchanges = {product_id: function () {}};
+        this.data.partner.records[0].product_id = 37;
+        this.data.partner.records[0].trululu = false;
 
         var count = 0;
         var form = createView({
@@ -3206,10 +3210,13 @@ QUnit.module('relational_fields', {
             data: this.data,
             arch: '<form string="Partners">' +
                         '<field name="product_id" widget="selection"/>' +
+                        '<field name="trululu" widget="selection"/>' +
+                        '<field name="color" widget="selection"/>' +
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
                 count++;
+                assert.step(args.method);
                 return this._super(route, args);
             },
         });
@@ -3217,14 +3224,25 @@ QUnit.module('relational_fields', {
         assert.ok(!form.$('select').length, "should not have a select tag in dom");
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.ok(form.$('select').length, "should have a select tag in dom");
-        assert.ok(form.$('option:contains(xphone)').length, "should have fetched xphone option");
-        assert.ok(form.$('option:contains(xpad)').length, "should have fetched xpad option");
+        assert.strictEqual(form.$('select').length, 3,
+            "should have 3 select tag in dom");
+        assert.strictEqual(form.$('select[name="product_id"] option:contains(xphone)').length, 1,
+            "should have fetched xphone option");
+        assert.strictEqual(form.$('select[name="product_id"] option:contains(xpad)').length, 1,
+            "should have fetched xpad option");
+        assert.strictEqual(form.$('select[name="product_id"]').val(), "37",
+            "should have correct product_id value");
+        assert.strictEqual(form.$('select[name="trululu"]').val(), "false",
+            "should not have any value in trululu field");
+        form.$('select[name="product_id"]').val(41).trigger('change');
 
-        assert.strictEqual(form.$('select').val(), "false", "should not have any value");
-        form.$('select').val(37).trigger('input');
-        assert.strictEqual(form.$('select').val(), "37", "should have a value of xphone");
+        assert.strictEqual(form.$('select[name="product_id"]').val(), "41",
+            "should have a value of xphone");
 
+        assert.strictEqual(form.$('select[name="color"]').val(), "\"red\"",
+            "should have correct value in color field");
+
+        assert.verifySteps(['read', 'name_search', 'name_search', 'onchange']);
         count = 0;
         form.reload();
         assert.strictEqual(count, 1, "should not reload product_id relation");
