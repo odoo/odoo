@@ -2389,7 +2389,7 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_edit').click();
 
         assert.strictEqual(form.$('.o_data_row td:first').text(), 'My little Foo Value',
-            "onchange should have been correctly applied on field in o2m list");
+            "the initial value should be the default one");
 
         form.$('.o_form_input:first').val('trigger an onchange').trigger('input');
 
@@ -2399,6 +2399,110 @@ QUnit.module('Views', {
         form.$('.o_data_row').click(); // edit the o2m in the dialog
         assert.strictEqual($('.modal .o_form_field').val(), 'foo changed',
             "the onchange value hasn't been discarded when opening the o2m");
+
+        form.destroy();
+    });
+
+    QUnit.test('args of onchanges in o2m fields are correct (inline edition)', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[1].p = [4];
+        this.data.partner.fields.p.relation_field = 'rel_field';
+        this.data.partner.fields.int_field.default = 14;
+        this.data.partner.onchanges = {
+            int_field: function (obj) {
+                obj.foo = '[' + obj.rel_field.foo + '] ' + obj.int_field;
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="foo"/>' +
+                        '<field name="p">' +
+                            '<tree editable="top">' +
+                                '<field name="foo"/>' +
+                                '<field name="int_field"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_data_row td:first').text(), 'My little Foo Value',
+            "the initial value should be the default one");
+
+        form.$('.o_data_row td:nth(1)').click(); // edit the o2m inline
+        form.$('.o_data_row input:nth(1)').val(77).trigger('input');
+
+        assert.strictEqual(form.$('.o_data_row input:first').val(), '[blip] 77',
+            "onchange should have been correctly applied");
+
+        // create a new o2m record
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('.o_data_row input:first').val(), '[blip] 14',
+            "onchange should have been correctly applied after default get");
+
+        form.destroy();
+    });
+
+    QUnit.test('args of onchanges in o2m fields are correct (dialog edition)', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[1].p = [4];
+        this.data.partner.fields.p.relation_field = 'rel_field';
+        this.data.partner.fields.int_field.default = 14;
+        this.data.partner.onchanges = {
+            int_field: function (obj) {
+                obj.foo = '[' + obj.rel_field.foo + '] ' + obj.int_field;
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="foo"/>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="foo"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="foo"/>' +
+                                '<field name="int_field"/>' +
+                            '</form>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_data_row td:first').text(), 'My little Foo Value',
+            "the initial value should be the default one");
+
+        form.$('.o_data_row td:first').click(); // edit the o2m in a dialog
+        $('.modal .o_form_input:nth(1)').val(77).trigger('input');
+        assert.strictEqual($('.modal .o_form_input:first').val(), '[blip] 77',
+            "onchange should have been correctly applied");
+        $('.modal .modal-footer .btn-primary').click(); // save the dialog
+        assert.strictEqual(form.$('.o_data_row td:first').text(), '[blip] 77',
+            "onchange should have been correctly applied");
+
+        // create a new o2m record
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal .o_form_input:first').val(), '[blip] 14',
+            "onchange should have been correctly applied after default get");
+        $('.modal .modal-footer .btn-primary').click(); // save the dialog
+        assert.strictEqual(form.$('.o_data_row:nth(1) td:first').text(), '[blip] 14',
+            "onchange should have been correctly applied after default get");
 
         form.destroy();
     });
