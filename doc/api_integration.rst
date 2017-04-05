@@ -158,7 +158,7 @@ database.
 
             $info = ripcord::client('https://demo.odoo.com/start')->start();
             list($url, $database, $username, $password) =
-              array($info['host'], $info['database'], $info['user'], $info['password']);
+              [$info['host'], $info['database'], $info['user'], $info['password']];
 
         .. note::
 
@@ -281,7 +281,7 @@ to be initialized with authentication.
         $db = Ripcord::client(
             "${url['scheme']}://$username:$password@${url['host']}:$port/RPC2?db=$database"
         );
-        $db->res->users->context_get(0);
+        $db->res->users->context_get([]);
 
     .. snippet:: java
 
@@ -341,13 +341,13 @@ model on which you can keep calling methods.
 
             partners = db.proxy('res.partner')
             partners.check_access_rights(
-                    [], ['read'], {raise_exception: false})
+                [], ['read'], {raise_exception: false})
 
         .. snippet:: php
 
             $partners = $db->res->partner;
             $partners->check_access_rights(
-                0, array('read'), array('raise_exception' => false));
+                [], ['read'], ['raise_exception' => false]);
 
         .. snippet:: java
 
@@ -389,10 +389,9 @@ companies for instance:
 
         .. snippet:: php
 
-            $partners->search(0, array(
-                array(array('is_company', '=', true),
-                      array('customer', '=', true))
-            ));
+            $partners->search([], [
+                [['is_company', '=', true], ['customer', '=', true]]
+            ]);
 
         .. snippet:: java
 
@@ -432,10 +431,9 @@ available to only retrieve a subset of all matched records.
     
         .. snippet:: php
     
-            $partners->search(0, array(
-                array(array('is_company', '=', true),
-                      array('customer', '=', true))
-            ), array('offset'=>10, 'limit'=>5));
+            $partners->search([], [
+                [['is_company', '=', true], ['customer', '=', true]]
+            ], ['offset'=>10, 'limit'=>5]);
     
         .. snippet:: java
     
@@ -481,10 +479,9 @@ only the number of records matching the query. It takes the same
     
         .. snippet:: php
     
-            $partners->search_count(0, array(
-                array(array('is_company', '=', true),
-                      array('customer', '=', true))
-            ));
+            $partners->search_count([], [
+                [['is_company', '=', true], ['customer', '=', true]]
+            ]);
     
         .. snippet:: java
     
@@ -538,10 +535,9 @@ which tends to be a huge amount.
     
         .. snippet:: php
     
-            $ids = $partners->search(0, array(
-                array(array('is_company', '=', true),
-                      array('customer', '=', true))
-            ), array('limit'=>1));
+            $ids = $partners->search([], [
+                [['is_company', '=', true], ['customer', '=', true]]
+            ], ['limit'=>1]);
             $records = $partners->read($ids);
             // count the number of fields fetched by default
             count($records[0]);
@@ -580,7 +576,7 @@ Conversedly, picking only three fields deemed interesting.
 
         .. snippet:: php
 
-            $partners->read($ids, array('fields'=>array('name', 'country_id', 'comment')));
+            $partners->read($ids, ['fields'=>['name', 'country_id', 'comment']]);
 
         .. snippet:: java
 
@@ -624,8 +620,7 @@ updating a record):
 
         .. snippet:: php
 
-            $partners->fields_get(
-                0, array('attributes' => array('string', 'help', 'type')));
+            $partners->fields_get([], ['attributes' => ['string', 'help', 'type']]);
 
         .. snippet:: java
 
@@ -707,10 +702,9 @@ if that list is not provided it will fetch all fields of matched records):
 
         .. snippet:: php
 
-            $partners->search_read(0, array(
-                array(array('is_company', '=', true),
-                      array('customer', '=', true))
-            ), array('fields'=>array('name', 'country_id', 'comment'), 'limit'=>5));
+            $partners->search_read([], [
+                [['is_company', '=', true], ['customer', '=', true]]
+            ], ['fields'=>['name', 'country_id', 'comment'], 'limit'=>5]);
 
         .. snippet:: java
 
@@ -789,8 +783,9 @@ set through the mapping argument, the default value will be used.
 
         .. snippet:: php
 
-            $newids = $partners->create(
-                0, array(array('name'=>"New Partner")));
+            $newids = $partners->create([], [[
+                'name'=>"New Partner"
+            ]]);
 
         .. snippet:: java
 
@@ -849,7 +844,9 @@ a record).
 
         .. snippet:: php
 
-            $partners->write($newids, array(array('name'=>"Newer partner")));
+            $partners->write($newids, [[
+                'name'=>"Newer partner"
+            ]]);
             // get record name after having changed it
             $partners->name_get($newids);
 
@@ -896,9 +893,7 @@ Records can be deleted in bulk by providing their ids to
 
             $partners->unlink($newids);
             // check if the deleted record is still in the database
-            $partners->search(0, array(
-                array(array('id', 'in', $newids))
-            ));
+            $partners->search(0, [[['id', 'in', $newids]]]);
 
         .. snippet:: java
 
@@ -986,14 +981,14 @@ Provides information about Odoo models via its various fields
 
         .. snippet:: php
 
-            $db->ir->model->create(0, array(array(
+            $db->ir->model->create([], [[
                 'name' => "Custom Model",
                 'model' => 'x_custom_model',
                 'state' => 'manual'
-            )));
-            $db->x_custom_model->fields_get(0, array(
-                'attributes' => array('string', 'help', 'type')
-            ));
+            ]]);
+            $db->x_custom_model->fields_get([], [
+                'attributes' => ['string', 'help', 'type']
+            ]);
 
         .. snippet:: ruby
 
@@ -1123,21 +1118,21 @@ activated as actual fields on the model.
 
         .. snippet:: php
 
-            $ids = $db->ir->model->create(0, array(array(
+            $ids = $db->ir->model->create([], [[
                 'name' => "Custom Model",
                 'model' => 'x_custom',
                 'state' => 'manual'
-            )));
-            $db->ir->model->fields->create(0, array(array(
+            ]]);
+            $db->ir->model->fields->create([], [[
                 'model_id' => $ids[0],
                 'name' => 'x_name',
                 'ttype' => 'char',
                 'state' => 'manual',
                 'required' => true
-            )));
-            $record_ids = $db->x_custom->create(0, array(array(
+            ]]);
+            $record_ids = $db->x_custom->create([], [[
                 'x_name' => "test record"
-            )));
+            ]]);
             $db->x_custom->read($record_ids);
 
         .. snippet:: ruby
@@ -1224,9 +1219,9 @@ activated as actual fields on the model.
 .. snippet:: php
     :hide:
 
-    $custom_ids = $db->ir->model->search(0, array(
-        array(array('model', 'ilike', 'x_custom'))
-    ));
+    $custom_ids = $db->ir->model->search([], [
+        [['model', 'ilike', 'x_custom']]
+    ]);
     $db->ir->model->unlink($custom_ids);
 
 .. snippet:: java
