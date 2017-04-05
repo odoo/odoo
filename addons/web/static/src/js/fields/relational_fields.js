@@ -810,6 +810,7 @@ var FieldOne2Many = FieldX2Many.extend({
             context: this.record.getContext(this.recordParams),
             field: this.field,
             fields_view: this.attrs.views && this.attrs.views.form,
+            parentID: this.value.id,
             viewInfo: this.view,
         }));
     },

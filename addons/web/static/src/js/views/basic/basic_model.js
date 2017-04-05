@@ -162,7 +162,6 @@ var BasicModel = AbstractModel.extend({
             fields: list.fields,
             fieldsInfo: list.fieldsInfo,
             parentID: list.id,
-            relationField: list.relationField,
             viewType: list.viewType,
         };
         return this._makeDefaultRecord(list.model, params).then(function (id) {
@@ -863,22 +862,7 @@ var BasicModel = AbstractModel.extend({
         var onchange_spec = this._buildOnchangeSpecs(record);
         var idList = record.data.id ? [record.data.id] : [];
         var context = this._getContext(record);
-
-        var rawData = this.get(record.id, {raw: true}).data;
-        var commands = this._generateX2ManyCommands(record, false);
-
-        // compute field values
-        var fieldNames = record.getFieldNames();
-        var currentData = _.pick(_.extend(rawData, commands), fieldNames);
-        if (record.relationField) {
-            // if there is a relation field, this means that record is an elem
-            // in a one2many.  The relation field is the corresponding many2one
-
-            // parent is the list element containing all the records in the o2m
-            // and parent.parentID is the ID of the main record
-            var parent = this.localData[record.parentID];
-            currentData[record.relationField] = this.get(parent.parentID, {raw:true}).data;
-        }
+        var currentData = this._generateOnChangeData(record);
 
         if (fields.length === 1) {
             fields = fields[0];
@@ -940,6 +924,7 @@ var BasicModel = AbstractModel.extend({
                                     fields: list.fields,
                                     fieldsInfo: list.fieldsInfo,
                                     modelName: list.model,
+                                    parentID: list.id,
                                     viewType: list.viewType,
                                 };
                                 if (command[0] === 1) {
@@ -1660,6 +1645,34 @@ var BasicModel = AbstractModel.extend({
         return changes;
     },
     /**
+     * Generates an object mapping field names to their current value in a given
+     * record. If the record is inside a one2many, the returned object contains
+     * an additional key (the corresponding many2one field name) mapping to the
+     * current value of the parent record.
+     *
+     * @param {Object} record
+     * @returns {Object} the data
+     */
+    _generateOnChangeData: function (record) {
+        var commands = this._generateX2ManyCommands(record, false);
+        var data = _.extend(this.get(record.id, {raw: true}).data, commands);
+
+        // one2many records have a parentID
+        if (record.parentID) {
+            var parent = this.localData[record.parentID];
+            // parent is the list element containing all the records in the
+            // one2many and parent.parentID is the ID of the main record
+            // if there is a relation field, this means that record is an elem
+            // in a one2many. The relation field is the corresponding many2one
+            if (parent.parentID && parent.relationField) {
+                var parentRecord = this.localData[parent.parentID];
+                data[parent.relationField] = this._generateOnChangeData(parentRecord);
+            }
+        }
+
+        return data;
+    },
+    /**
      * Read all x2many fields and generate the commands for the server to create
      * or write them...
      *
@@ -1992,7 +2005,6 @@ var BasicModel = AbstractModel.extend({
                     fieldsInfo: params.fieldsInfo,
                     context: params.context,
                     parentID: params.parentID,
-                    relationField: params.relationField,
                     res_ids: params.res_ids,
                     viewType: params.viewType,
                 });
