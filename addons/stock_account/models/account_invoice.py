@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, models, fields, _
+
+from odoo.tools.float_utils import float_compare, float_round
 
 import logging
 
@@ -77,6 +79,18 @@ class AccountInvoice(models.Model):
                 ]
         return []
 
+    def invoice_validate(self): #Overridden to correct stock valuation entries when necessary (with another valuation move)
+        rslt = super(AccountInvoice, self).invoice_validate()
+
+        for invoice in self:
+            # We only consider vendor bills, when 'purchase' module is installed
+            if invoice.type == 'in_invoice' and hasattr(invoice, 'purchase_id'):
+                for inv_line in invoice.invoice_line_ids:
+                    if inv_line.product_id.valuation == 'real_time':
+                        stock_moves = self.env['stock.move'].search([('purchase_line_id', '=', inv_line.purchase_line_id.id)])
+                        inv_line.balance_stock_valuation(stock_moves)
+        return rslt
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
@@ -102,3 +116,62 @@ class AccountInvoiceLine(models.Model):
             if accounts['stock_input']:
                 return accounts['stock_input']
         return super(AccountInvoiceLine, self).get_invoice_line_account(type, product, fpos, company)
+
+    def balance_stock_valuation(self, stock_moves):
+        for stock_move in stock_moves:
+            valuation_amount = sum(move.amount for move in stock_move.valuation_account_move_ids)
+            currency = self.env['res.company']._company_default_get().currency_id
+            if float_compare(valuation_amount, self.price_subtotal, precision_digits=currency.decimal_places) != 0:
+                balancing_amount = float_round(valuation_amount - self.price_subtotal, precision_digits=2)
+
+                if not balancing_amount:
+                    return #TODO OCO agencer autrement?
+
+                #TODO OCO peut-être mettre cette boucle dans une méthode à part
+                debited_account = None
+                credited_account = None
+                partner = None
+                journal = None
+                for valuation_move in stock_move.valuation_account_move_ids:
+                    for valuation_line in valuation_move.line_ids:
+                        if valuation_line.credit:
+                            credited_account = valuation_line.account_id
+                        elif valuation_line.debit:
+                            debited_account = valuation_line.account_id
+
+                    if debited_account and credited_account:
+                        journal = valuation_move.journal_id
+                        partner = valuation_move.partner_id
+                        break
+
+                debited_correction_vals = {
+                  'name': stock_move.name + _(' - currency rate adjustment'),
+                  'product_id': stock_move.product_id.id,
+                  'quantity': stock_move.product_qty,
+                  'product_uom_id': stock_move.product_id.uom_id.id,
+                  'ref': stock_move.picking_id.name,
+                  'partner_id': partner.id,
+                  'credit': (float_compare(balancing_amount, 0.0, precision_digits=currency.decimal_places)==1) and abs(balancing_amount) or 0.0,
+                  'debit': (float_compare(balancing_amount, 0.0, precision_digits=currency.decimal_places)==-1) and abs(balancing_amount) or 0.0,
+                  'account_id': debited_account.id
+                }
+
+                credited_correction_vals = {
+                  'name': stock_move.name + _(' - currency rate adjustment'),
+                  'product_id': stock_move.product_id.id,
+                  'quantity': stock_move.product_qty,
+                  'product_uom_id': stock_move.product_id.uom_id.id,
+                  'ref': stock_move.picking_id.name,
+                  'partner_id': partner.id,
+                  'credit': (float_compare(balancing_amount, 0.0, precision_digits=currency.decimal_places)==-1) and abs(balancing_amount) or 0.0,
+                  'debit': (float_compare(balancing_amount, 0.0, precision_digits=currency.decimal_places)==1) and abs(balancing_amount) or 0.0,
+                  'account_id': credited_account.id
+                }
+
+                date = self._context.get('force_period_date', fields.Date.context_today(self))
+                correction_move = self.env['account.move'].create({
+                    'journal_id': journal.id,
+                    'line_ids': [(0,False,debited_correction_vals), (0,False,credited_correction_vals)],
+                    'date': date,
+                    'ref':stock_move.picking_id.name + _(' - currency rate adjustment')})
+                correction_move.post()

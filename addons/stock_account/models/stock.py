@@ -86,6 +86,7 @@ class StockQuant(models.Model):
         if move.product_id.type != 'product' or move.product_id.valuation != 'real_time':
             # no stock valuation for consumable products
             return False
+
         if any(quant.owner_id or quant.qty <= 0 for quant in self):
             # if the quant isn't owned by the company, we don't make any valuation en
             # we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
@@ -140,6 +141,7 @@ class StockQuant(models.Model):
                 new_account_move.message_post_with_view('mail.message_origin_link',
                         values={'self': new_account_move, 'origin': move.picking_id},
                         subtype_id=self.env.ref('mail.mt_note').id)
+                move.write({'valuation_account_move_ids': [(4, new_account_move.id, None)]})
 
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
@@ -175,6 +177,8 @@ class StockQuant(models.Model):
 
 class StockMove(models.Model):
     _inherit = "stock.move"
+
+    valuation_account_move_ids = fields.Many2many(comodel_name='account.move', string='Accounting entries', help="Accounting entries used for perpetual valuation of this move.")
 
     @api.multi
     def action_done(self):

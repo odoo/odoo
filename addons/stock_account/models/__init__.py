@@ -3,6 +3,7 @@
 
 import account_chart_template
 import account_invoice
+import account_move
 import product
 import stock
 import stock_config_settings
