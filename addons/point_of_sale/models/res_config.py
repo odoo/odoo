@@ -17,11 +17,12 @@ class PosConfiguration(models.TransientModel):
          implied_group='product.group_sale_pricelist',
          help="""Allows to manage different prices based on rules per category of customers.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc.""")
-    default_sale_price = fields.Boolean("A single sale price per product", default_model='pos.config.settings')
-    default_pricelist_setting = fields.Selection([
+    use_pos_sale_price = fields.Boolean("A single sale price per product", oldname='default_sale_price')
+    pos_pricelist_setting = fields.Selection([
         ('percentage', 'Multiple prices per product (e.g. quantity, shop-specific)'),
         ('formula', 'Price computed from formulas (discounts, margins, rounding)')
-        ], string="Multiple Prices per Products", default_model='pos.config.settings')
+        ], string="Multiple Prices per Products",
+        oldname='default_pricelist_setting')
     module_pos_restaurant = fields.Boolean(string="Restaurant")
     module_pos_loyalty = fields.Boolean(string="Loyalty Program")
     module_pos_discount = fields.Boolean(string="Global Discounts")
@@ -29,22 +30,22 @@ class PosConfiguration(models.TransientModel):
     module_pos_reprint = fields.Boolean(string="Reprint Receipt")
     module_pos_data_drinks = fields.Boolean(string="Import common drinks data")
 
-    @api.onchange('default_sale_price')
+    @api.onchange('use_pos_sale_price')
     def _onchange_fix_sale_price(self):
-        if not self.default_sale_price:
-            self.default_pricelist_setting = False
-        if self.default_sale_price and not self.default_pricelist_setting:
-            self.default_pricelist_setting = 'percentage'
+        if not self.use_pos_sale_price:
+            self.pos_pricelist_setting = False
+        if self.use_pos_sale_price and not self.pos_pricelist_setting:
+            self.pos_pricelist_setting = 'percentage'
 
-    @api.onchange('default_pricelist_setting')
+    @api.onchange('pos_pricelist_setting')
     def _onchange_sale_price(self):
-        if self.default_pricelist_setting == 'percentage':
+        if self.pos_pricelist_setting == 'percentage':
             self.update({
                 'group_product_pricelist': True,
                 'group_sale_pricelist': True,
                 'group_pricelist_item': False,
             })
-        elif self.default_pricelist_setting == 'formula':
+        elif self.pos_pricelist_setting == 'formula':
             self.update({
                 'group_product_pricelist': False,
                 'group_sale_pricelist': True,
@@ -56,3 +57,13 @@ class PosConfiguration(models.TransientModel):
                 'group_sale_pricelist': False,
                 'group_pricelist_item': False,
             })
+
+    def get_default_fields(self, fields):
+        return dict(
+            use_pos_sale_price=self.env['ir.config_parameter'].sudo().get_param('pos.use_pos_sale_price'),
+            pos_pricelist_setting=self.env['ir.config_parameter'].sudo().get_param('pos.pos_pricelist_setting'),
+        )
+
+    def set_fields(self):
+        self.env['ir.config_parameter'].sudo().set_param('pos.use_pos_sale_price', self.use_pos_sale_price)
+        self.env['ir.config_parameter'].sudo().set_param('pos.pos_pricelist_setting', self.pos_pricelist_setting)
