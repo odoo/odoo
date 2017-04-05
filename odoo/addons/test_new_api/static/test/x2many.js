@@ -7,7 +7,11 @@ odoo.define('web.test.x2many', function (require) {
     tour.register('widget_x2many', {
         url: '/web?debug=assets#action=test_new_api.action_discussions',
         test: true,
-    }, [{
+    }, [
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    // Discussions
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    {
         content: "wait web client",
         trigger: '.breadcrumb:contains(Discussions)',
     }, { // create test discussion
@@ -109,24 +113,22 @@ odoo.define('web.test.x2many', function (require) {
         content: "check onchange",
         trigger: '.o_form_textarea[name="message_concat"] textarea:first:propValue([test_trigger] Administrator:a\n[test_trigger] Administrator:b)',
         run: function () {},
-    // FIXME: can't edit a not yet saved o2m record for now (problem 1)
-    // }, { // change message b
-    //     content: "edit message b",
-    //     trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:containsExact(b)',
-    //     extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field tbody .o_data_row:eq(2))) .tab-pane:eq(0) .o_form_field tbody tr td:contains([test_trigger] )',
-    // }, {
-    //     content: "change the body",
-    //     trigger: '.o_form_textarea[name="body"] textarea:first',
-    //     run: 'text bbb',
-    // }, {
-    //     content: "save changes",
-    //     trigger: '.modal-footer button:contains(Save):first',
-    //     extra_trigger: '.o_form_textarea[name="body"] textarea:first:propValue(bbb)',
+    }, { // change message b
+        content: "edit message b",
+        trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:containsExact(b)',
+        extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field tbody .o_data_row:eq(2))) .tab-pane:eq(0) .o_form_field tbody tr td:contains([test_trigger] )',
+    }, {
+        content: "change the body",
+        trigger: '.o_form_textarea[name="body"] textarea:first',
+        run: 'text bbb',
+    }, {
+        content: "save changes",
+        trigger: '.modal-footer button:contains(Save):first',
+        extra_trigger: '.o_form_textarea[name="body"] textarea:first:propValue(bbb)',
     }, { // add message c
         content: "create new message c",
         trigger: '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a',
-        // extra_trigger: 'textarea[name="message_concat"]:propValue([test_trigger] Administrator:a\n[test_trigger] Administrator:bbb)', // FIXME (problem 1)
-        extra_trigger: '.o_form_textarea[name="message_concat"] textarea:propValue([test_trigger] Administrator:a\n[test_trigger] Administrator:b)',
+        extra_trigger: '.o_form_textarea[name="message_concat"] textarea:propValue([test_trigger] Administrator:a\n[test_trigger] Administrator:bbb)',
     }, {
         content: "insert body",
         trigger: '.o_form_textarea[name="body"] textarea:first',
@@ -160,8 +162,7 @@ odoo.define('web.test.x2many', function (require) {
         run: function () {}, // it's a check
     }, {
         content: "check data 2",
-        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tr:has(td:containsExact(b)):has(td:containsExact([test_trigger] Administrator)))',
-        // trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tr:has(td:containsExact(bbb)):has(td:containsExact([test_trigger] Administrator)))', // FIXME (problem 1)
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tr:has(td:containsExact(bbb)):has(td:containsExact([test_trigger] Administrator)))',
         run: function () {}, // it's a check
     }, {
         content: "check data 3",
@@ -199,63 +200,58 @@ odoo.define('web.test.x2many', function (require) {
         content: "save new message e",
         trigger: '.modal-footer button:contains(Save):first',
         extra_trigger: '.o_form_textarea[name="body"] textarea:first:propValue(e)',
-    // FIXME: onchange don't work fine for now (problem 2), but this won't work anyway
-    //        until problem 1 is solved
-    // }, { // change message a
-    //     content: "edit message a",
-    //     trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:containsExact(a)',
-    //     extra_trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:containsExact(e)',
-    // }, {
-    //     content: "change the body",
-    //     trigger: '.o_form_textarea[name="body"] textarea:first',
-    //     run: 'text aaa',
-    // }, {
-    //     content: "save changes",
-    //     trigger: '.modal-footer button:contains(Save):first',
-    //     extra_trigger: '.o_form_textarea[name="body"] textarea:first:propValue(aaa)',
-    // }, { // change message e
-    //     content: "edit message e",
-    //     trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:containsExact(e)',
-    //     extra_trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:contains(aaa)',
-    // }, {
-    //     content: "open the many2one to select another user",
-    //     trigger: '.o_form_input_dropdown > input',
-    //     run: 'text Demo',
-    // }, {
-    //     content: "select another user",
-    //     trigger: '.ui-autocomplete li:contains(Demo User)',
-    //     in_modal: false,
-    // }, {
-    //     content: "test one2many's line onchange after many2one",
-    //     trigger: '.o_form_field:contains([test_trigger] Demo User)',
-    //     run: function () {}, // it's a check
-    // }, {
-    //     content: "test one2many field not triggered onchange",
-    //     trigger: 'textarea[name="message_concat"]:propValueContains([test_trigger] Administrator:e)',
-    //     in_modal: false,
-    //     run: function () {}, // don't change texarea content
-    // }, {
-    //     content: "save changes",
-    //     trigger: '.modal-footer button:contains(Save):contains(Close)'
-    // }, {
-    //     content: "test one2many triggered the onchange on save for the line",
-    //     trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tbody tr td.o_readonly:contains([test_trigger] Demo User))',
-    //     run: function () {}, // it's a check
-    // }, {
-    //     content: "test one2many triggered the onchange on save",
-    //     trigger: 'textarea[name="message_concat"]:propValueContains([test_trigger] Demo User:e)',
-    //     run: function () {}, // don't change texarea content
+    }, { // change message a
+        content: "edit message a",
+        trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:containsExact(a)',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:containsExact(e)',
+    }, {
+        content: "change the body",
+        trigger: '.o_form_textarea[name="body"] textarea:first',
+        run: 'text aaa',
+    }, {
+        content: "save changes",
+        trigger: '.modal-footer button:contains(Save):first',
+        extra_trigger: '.o_form_textarea[name="body"] textarea:first:propValue(aaa)',
+    }, { // change message e
+        content: "edit message e",
+        trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:containsExact(e)',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:contains(aaa)',
+    }, {
+        content: "open the many2one to select another user",
+        trigger: '.o_form_input_dropdown > input',
+        run: 'text Demo',
+    }, {
+        content: "select another user",
+        trigger: '.ui-autocomplete li:contains(Demo User)',
+        in_modal: false,
+    }, {
+        content: "test one2many's line onchange after many2one",
+        trigger: '.o_form_field:contains([test_trigger] Demo User)',
+        run: function () {}, // it's a check
+    }, {
+        content: "test one2many field not triggered onchange",
+        trigger: '.o_form_textarea[name="message_concat"] textarea:first:propValueContains([test_trigger] Administrator:e)',
+        in_modal: false,
+        run: function () {}, // don't change texarea content
+    }, {
+        content: "save changes",
+        trigger: '.modal-footer button:contains(Save):contains(Close)'
+    }, {
+        content: "test one2many triggered the onchange on save for the line",
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tbody tr td.o_readonly:contains([test_trigger] Demo User))',
+        run: function () {}, // it's a check
+    }, {
+        content: "test one2many triggered the onchange on save",
+        trigger: '.o_form_textarea[name="message_concat"] textarea:first:propValueContains([test_trigger] Demo User:e)',
+        run: function () {}, // don't change texarea content
     }, { // remove
         content: "remove b",
-        trigger: '.tab-pane:eq(0) .o_form_field tbody tr:has(td:containsExact(b)) .o_list_record_delete',
-        // trigger: '.tab-pane:eq(0) .o_form_field tbody tr:has(td:containsExact(bbb)) .o_list_record_delete', // FIXME (problem 2)
-        extra_trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:containsExact(e)',
-        // extra_trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:contains(aaa)', // FIXME (problem 2)
+        trigger: '.tab-pane:eq(0) .o_form_field tbody tr:has(td:containsExact(bbb)) .o_list_record_delete',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field tbody tr td:containsExact(aaa)',
     }, {
         content: "remove e",
         trigger: 'tr:has(td:containsExact(e)) .o_list_record_delete',
-        extra_trigger: 'body:not(:has(tr:has(td:containsExact(b))))',
-        // extra_trigger: 'body:not(:has(tr:has(td:containsExact(bbb))))', // FIXME (problem 2)
+        extra_trigger: 'body:not(:has(tr:has(td:containsExact(bbb))))',
     }, { // save
         content: "save discussion",
         trigger: 'button.o_form_button_save',
@@ -266,13 +262,11 @@ odoo.define('web.test.x2many', function (require) {
         run: function () {}, // it's a check
     }, {
         content: "check data 5",
-        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tbody:has(tr td:containsExact(a)):has(tr td:containsExact(c)):has(tr td:containsExact(d)))',
-        // trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tbody:has(tr td:containsExact(aaa)):has(tr td:containsExact(c)):has(tr td:containsExact(d)))', // FIXME (problem 2)
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tbody:has(tr td:containsExact(aaa)):has(tr td:containsExact(c)):has(tr td:containsExact(d)))',
         run: function () {}, // it's a check
     }, {
         content: "check data 6",
-        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tbody tr:has(td:containsExact([test_trigger] Administrator)):has(td:containsExact(a)))',
-        // trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tbody tr:has(td:containsExact([test_trigger] Administrator)):has(td:containsExact(aaa)))', // FIXME (problem 2)
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field tbody tr:has(td:containsExact([test_trigger] Administrator)):has(td:containsExact(aaa)))',
         run: function () {}, // it's a check
     }, {
         content: "check data 7",
@@ -297,8 +291,7 @@ odoo.define('web.test.x2many', function (require) {
         in_modal: false,
     }, {
         content: "test one2many's line onchange after many2one",
-        trigger: '.o_form_field:contains([] Demo User)',
-        // trigger: '.o_form_field:contains([test_trigger] Demo User)', // FIXME (problem 2)
+        trigger: '.o_form_field:contains([test_trigger] Demo User)',
         run: function () {}, // it's a check
     }, {
         content: "insert body",
@@ -314,8 +307,7 @@ odoo.define('web.test.x2many', function (require) {
         extra_trigger: '.tab-pane:eq(0) .o_form_field tbody:has(tr td:containsExact(ddd))',
     }, { // check onchange data
         content: "check data 8",
-        trigger: '.o_form_textarea[name="message_concat"] textarea:propValueContains([test_trigger] Administrator:a\n[test_trigger] Administrator:c\n[test_trigger] Administrator:d\n[test_trigger] Demo User:ddd)',
-        // trigger: 'textarea[name="message_concat"]:propValueContains([test_trigger] Administrator:aaa\n[test_trigger] Administrator:c\n[test_trigger] Administrator:d\n[test_trigger] Demo User:ddd)',  // FIXME (problem 2)
+        trigger: '.o_form_textarea[name="message_concat"] textarea:propValueContains([test_trigger] Administrator:aaa\n[test_trigger] Administrator:c\n[test_trigger] Administrator:d\n[test_trigger] Demo User:ddd)',
         run: function () {}, // don't change texarea content
     }, {
         content: "check data 9",
@@ -333,6 +325,7 @@ odoo.define('web.test.x2many', function (require) {
     },
 
     /////////////////////////////////////////////////////////////////////////////////////////////
+    // Discussions 2
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     {
@@ -371,8 +364,7 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "click on a field of the editable list to edit content",
         trigger: '.o_list_view .o_data_row:eq(1) td',
-        extra_trigger: '.o_list_view:contains(test_trigger)',
-        // extra_trigger: '.o_list_view:contains(test_trigger2)', // FIXME (problem 2)
+        extra_trigger: '.o_list_view:contains(test_trigger2)',
     }, {
         content: "change text value",
         trigger: '.o_form_textarea[name="body"] textarea:first',
@@ -382,23 +374,20 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.o_list_view .o_form_field_many2one[name="author"] input',
         run: 'click'
     }, {
-    // FIXME (problem 2)
-    //     content: "test one2many's line onchange",
-    //     trigger: '.o_list_view .o_selected_row td:nth(3):contains(3)',
-    //     run: function () {}, // don't blur the many2one
-    // }, {
+        content: "test one2many's line onchange",
+        trigger: '.o_list_view .o_selected_row td:nth(3):contains(3)',
+        run: function () {}, // don't blur the many2one
+    }, {
         content: "open the many2one to select an other user",
         trigger: '.o_list_view .o_form_field_many2one[name="author"] .o_form_input_dropdown > input',
         run: 'text Demo',
     }, {
         content: "select an other user",
         trigger: '.ui-autocomplete li a:contains(Demo User)',
-    // FIXME (problem 2)
-    // }, {
-    //     content: "test one2many's line onchange after many2one",
-    //     trigger: '.o_list_editable_form span.o_form_field:contains([test_trigger] Demo User)',
-    //     // trigger: '.o_list_editable_form span.o_form_field:contains([test_trigger2] Demo User)',
-    //     run: function () {}, // don't blur the many2one
+    }, {
+        content: "test one2many's line onchange after many2one",
+        trigger: '.o_list_view td:contains([test_trigger2] Demo User)',
+        run: function () {}, // don't blur the many2one
     }, {
         content: "change text value",
         trigger: '.o_form_textarea[name="body"] textarea:first',
@@ -408,11 +397,10 @@ odoo.define('web.test.x2many', function (require) {
         trigger: 'input.o_form_required',
         run: 'click'
     }, {
-    // FIXME (problem 2)
-    //     content: "test one2many onchange",
-    //     trigger: '.o_form_textarea[name="message_concat"] textarea:first:propValueContains([test_trigger2] Demo User:ccccc)',
-    //     run: function () {}, // don't change texarea content
-    // }, {
+        content: "test one2many onchange",
+        trigger: '.o_form_textarea[name="message_concat"] textarea:first:propValueContains([test_trigger2] Demo User:ccccc)',
+        run: function () {}, // don't change texarea content
+    }, {
         content: "click outside to trigger one2many onchange",
         trigger: '.o_form_field_many2manytags .o_form_input_dropdown > input',
     }, {
@@ -430,12 +418,10 @@ odoo.define('web.test.x2many', function (require) {
         trigger: 'button.o_form_button_save',
         extra_trigger: 'body:not(:has(tr:has(td:containsExact(d))))',
     }, { // check saved data
-    // FIXME (problem 2)
-    //     content: "check data 10",
-    //     trigger: '.o_form_textarea:containsExact([test_trigger2] Administrator:aaa\n[test_trigger2] Demo User:ccccc)',
-    //     trigger: '.o_form_textarea:containsExact([test_trigger2] Administrator:aaa\n[test_trigger2] Demo User:ccccc)',
-    //     run: function () {}, // don't change texarea content
-    // }, {
+        content: "check data 10",
+        trigger: '.o_form_textarea:containsExact([test_trigger2] Administrator:aaa\n[test_trigger2] Demo User:ccccc)',
+        run: function () {}, // don't change texarea content
+    }, {
         content: "check data 11",
         trigger: '.tab-pane:eq(0) .o_form_field tbody .o_data_row:eq(1)',
         extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field tbody .o_data_row:eq(2)))',
@@ -455,16 +441,15 @@ odoo.define('web.test.x2many', function (require) {
         content: "save discussion",
         trigger: 'button.o_form_button_save',
         extra_trigger: '.o_form_textarea[name="body"] textarea:first:propValueContains(eee)',
-    // FIXME (problem 2) + add an item doesn't work at the end of the tour (problem 3)
-    // }, { // check saved data
-    //     content: "check data 12",
-    //     trigger: '.o_form_textarea[name="body"] textarea:first:containsExact([test_trigger2] Administrator:aaa\n[test_trigger2] Demo User:ccccc\n[test_trigger2] Administrator:eee)',
-    //     run: function () {}, // it's a check
-    // }, {
-    //     content: "check data 13",
-    //     trigger: '.tab-pane:eq(0) .o_form_field tbody .o_data_row:eq(2)',
-    //     extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field tbody .o_data_row:eq(3)))',
-    //     run: function () {}, // it's a check
+    }, { // check saved data
+        content: "check data 12",
+        trigger: '.o_form_textarea[name="message_concat"]:containsExact([test_trigger2] Administrator:aaa\n[test_trigger2] Demo User:ccccc\n[test_trigger2] Administrator:eee)',
+        run: function () {}, // it's a check
+    }, {
+        content: "check data 13",
+        trigger: '.tab-pane:eq(0) .o_form_field tbody .o_data_row:eq(2)',
+        extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field tbody .o_data_row:eq(3)))',
+        run: function () {}, // it's a check
     }]);
 
 // FIXME: apply https://github.com/odoo/odoo/commit/a2479396204d900b267d2446001769bdcbd1f9fa
