@@ -32,7 +32,7 @@ class SaleConfiguration(models.TransientModel):
     group_warning_sale = fields.Boolean("Warnings", implied_group='sale.group_warning_sale')
     module_website_quote = fields.Boolean("Online Quotations & Templates")
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
-    multi_sales_price = fields.Boolean("Multiple sales price per product", default_model='sale.config.settings')
+    multi_sales_price = fields.Boolean("Multiple sales price per product")
     multi_sales_price_method = fields.Selection([
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
         ('formula', 'Price computed from formulas (discounts, margins, roundings)')
@@ -54,8 +54,7 @@ class SaleConfiguration(models.TransientModel):
         help="Allows you to send pro-forma.")
     sale_show_tax = fields.Selection([
         ('subtotal', 'Tax-Excluded Prices'),
-        ('total', 'Tax-Included Prices')], "Tax Display",
-        default='subtotal',
+        ('total', 'Tax-Included Prices')], string="Tax Display",
         required=True)
     default_invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
@@ -63,10 +62,11 @@ class SaleConfiguration(models.TransientModel):
         ], 'Invoicing Policy',
         default='order',
         default_model='product.template')
-    deposit_product_id_setting = fields.Many2one(
+    default_deposit_product_id = fields.Many2one(
         'product.product',
         'Deposit Product',
         domain="[('type', '=', 'service')]",
+        oldname='deposit_product_id_setting',
         help='Default product used for payment advances')
     auto_done_setting = fields.Boolean("Lock Confirmed Orders")
     module_sale_contract = fields.Boolean("Subscriptions")
@@ -88,16 +88,6 @@ class SaleConfiguration(models.TransientModel):
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
 
-    @api.model
-    def get_default_sale_pricelist_setting(self, fields):
-        sale_pricelist_setting = self.env['ir.values'].get_default('sale.config.settings', 'sale_pricelist_setting')
-        multi_sales_price = sale_pricelist_setting in ['percentage', 'formula']
-        return {
-            'sale_pricelist_setting': sale_pricelist_setting,
-            'multi_sales_price': multi_sales_price,
-            'multi_sales_price_method': multi_sales_price and sale_pricelist_setting or False
-        }
-
     @api.onchange('multi_sales_price', 'multi_sales_price_method')
     def _onchange_sale_price(self):
         if self.multi_sales_price and not self.multi_sales_price_method:
@@ -105,6 +95,9 @@ class SaleConfiguration(models.TransientModel):
                 'multi_sales_price_method': 'percentage',
             })
         self.sale_pricelist_setting = self.multi_sales_price and self.multi_sales_price_method or 'fixed'
+
+    @api.onchange('sale_pricelist_setting')
+    def _onchange_sale_pricelist_setting(self):
         if self.sale_pricelist_setting == 'percentage':
             self.update({
                 'group_product_pricelist': True,
@@ -124,18 +117,6 @@ class SaleConfiguration(models.TransientModel):
                 'group_pricelist_item': False,
             })
 
-    def set_default_sale_pricelist_setting(self):
-        return self.env['ir.values'].sudo().set_default('sale.config.settings', 'sale_pricelist_setting', self.sale_pricelist_setting)
-
-    def set_deposit_product_id_defaults(self):
-        return self.env['ir.values'].sudo().set_default('sale.config.settings', 'deposit_product_id_setting', self.deposit_product_id_setting.id)
-
-    def set_auto_done_defaults(self):
-        return self.env['ir.values'].sudo().set_default('sale.config.settings', 'auto_done_setting', self.auto_done_setting)
-
-    def set_sale_tax_defaults(self):
-        return self.env['ir.values'].sudo().set_default('sale.config.settings', 'sale_show_tax', self.sale_show_tax)
-
     @api.onchange('sale_show_tax')
     def _onchange_sale_tax(self):
         if self.sale_show_tax == "subtotal":
@@ -149,12 +130,32 @@ class SaleConfiguration(models.TransientModel):
                 'group_show_price_subtotal': False,
             })
 
+    def get_default_sale_show_tax(self, fields):
+        return dict(
+            sale_show_tax=self.group_show_price_total and 'total' or 'subtotal'
+        )
+
+    def get_multi_sales_price(self, fields):
+        sale_pricelist_setting = self.env['ir.config_parameter'].sudo().get_param('sale.sale_pricelist_setting')
+        return dict(
+            multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
+            multi_sales_price_method=sale_pricelist_setting in ['percentage', 'formula'] and sale_pricelist_setting or False,
+            sale_pricelist_setting=sale_pricelist_setting,
+        )
+
+    def set_multi_sales_price(self):
+        self.env['ir.config_parameter'].sudo().set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
+
     @api.model
     def get_default_fields(self, fields):
         return dict(
             use_sale_note=self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note', default=False),
+            auto_done_setting=self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'),
+            default_deposit_product_id=self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id'),
         )
 
     @api.multi
     def set_fields(self):
         self.env['ir.config_parameter'].sudo().set_param("sale.use_sale_note", self.use_sale_note)
+        self.env['ir.config_parameter'].sudo().set_param("sale.auto_done_setting", self.auto_done_setting)
+        self.env['ir.config_parameter'].sudo().set_param("sale.default_deposit_product_id", self.default_deposit_product_id.id)
