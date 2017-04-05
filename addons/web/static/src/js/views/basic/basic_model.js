@@ -942,10 +942,16 @@ var BasicModel = AbstractModel.extend({
                                     params.res_id = command[1];
                                 }
                                 rec = self._makeDataPoint(params);
-                                var data = command[2];
-                                _.each(Object.keys(data), function (name) {
+                                var data = {};
+                                _.each(Object.keys(command[2]), function (name) {
                                     var field = rec.fields[name];
-                                    if (field && field.type === 'many2one') {
+                                    if (!field) {
+                                        // ignore if this field is unknown as we don't
+                                        // know if it requires a special handling
+                                        return;
+                                    }
+                                    data[name] = command[2][name];
+                                    if (field.type === 'many2one') {
                                         var r = self._makeDataPoint({
                                             modelName: field.relation,
                                             data: {
@@ -957,9 +963,6 @@ var BasicModel = AbstractModel.extend({
                                     }
                                 });
                                 rec._changes = data;
-                                for (var f in rec._changes) {
-                                    rec.data[f] = null;
-                                }
                                 list._changes.push(rec.id);
                             }
                             if (command[0] === 5) {
