@@ -547,6 +547,7 @@ return BasicRenderer.extend({
             widget.fa_icon = node.attrs.icon.indexOf('fa-') === 0;
         }
         var $button = $(qweb.render('WidgetButton', {widget: widget}));
+        $button.append(_.map(node.children, this._renderNode.bind(this)));
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);
         return $button;
