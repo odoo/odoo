@@ -1447,11 +1447,11 @@ var FieldRadio = FieldSelection.extend({
         this.$("input").prop("checked", false);
         var key;
         if (this.field.type === 'many2one') {
-            key = this._parseValue(this.value);
+            key = this.value && this.value.data.id;
         } else {
             key = this.value;
         }
-        this.$('input[data-value="' + key  + '"]').prop('checked', true);
+        this.$('input[data-value="' + key + '"]').prop('checked', true);
     },
 
     //--------------------------------------------------------------------------

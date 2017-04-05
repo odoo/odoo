@@ -3510,6 +3510,36 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('fieldradio change value by onchange', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges = {bar: function (obj) {
+            obj.product_id = obj.bar ? 41 : 37;
+            obj.color = obj.bar ? 'red' : 'black';
+        }};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="bar"/>' +
+                    '<field name="product_id" widget="radio"/>' +
+                    '<field name="color" widget="radio"/>' +
+                '</form>',
+        });
+
+        form.$("input[type='checkbox']").click();
+        assert.strictEqual(form.$('input.o_form_radio[data-value="37"]:checked').length, 1, "one of the input should be checked");
+        assert.strictEqual(form.$('input.o_form_radio[data-value="black"]:checked').length, 1, "the other of the input should be checked");
+        form.$("input[type='checkbox']").click();
+        assert.strictEqual(form.$('input.o_form_radio[data-value="41"]:checked').length, 1, "the other of the input should be checked");
+        assert.strictEqual(form.$('input.o_form_radio[data-value="red"]:checked').length, 1, "one of the input should be checked");
+
+        form.destroy();
+    });
+
+
     QUnit.test('fieldradio widget on a selection in a new record', function (assert) {
         assert.expect(4);
 
