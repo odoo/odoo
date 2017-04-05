@@ -361,7 +361,10 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 value: [partnerID, partnerName]
         }], {
             partner_id: {
-                domain: [["parent_id", "=", false], "|", ["customer", "=", true], ["supplier", "=", true]]
+                domain: [["parent_id", "=", false], "|", ["customer", "=", true], ["supplier", "=", true]],
+                options: {
+                    no_open: true
+                }
             }
         });
         return this.model.get(recordID);
