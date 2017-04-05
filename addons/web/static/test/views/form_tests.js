@@ -1113,14 +1113,13 @@ QUnit.module('Views', {
         });
         form.$('.oe_stat_button').first().click();
         assert.strictEqual(count, 1, "should have triggered a execute action");
-        assert.strictEqual(form.mode, "readonly", "form view should be in readonly mode");
+        assert.strictEqual(form.mode, "edit", "form view should be in edit mode");
 
 
-        form.$buttons.find('.o_form_button_edit').click();
         form.$('input').val("tralala").trigger('input');
         form.$('.oe_stat_button').first().click();
 
-        assert.strictEqual(form.mode, "readonly", "form view should be in readonly mode");
+        assert.strictEqual(form.mode, "edit", "form view should be in edit mode");
         assert.strictEqual(count, 2, "should have triggered a execute action");
         form.destroy();
     });
