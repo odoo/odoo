@@ -4,6 +4,8 @@ odoo.define('website_sale.utils', function (require) {
     var animate_clone =  function(cart, $elem, offset_top, offset_left) {
         cart.find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function(){
             $(this).removeClass("o_shadow_animation").dequeue();
+        }).delay(2000).queue(function(){
+            $(this).removeClass("o_red_highlight").dequeue();
         });
         var imgtodrag = $elem.find('img').eq(0);
         if (imgtodrag.length) {
