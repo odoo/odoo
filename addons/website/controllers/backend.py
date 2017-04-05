@@ -30,7 +30,7 @@ class WebsiteBackend(http.Controller):
             }
         }
         if has_group_designer:
-            ga_dashboard = request.env['ir.values'].sudo().get_default('website.config.settings', 'has_google_analytics_dashboard')
+            ga_dashboard = request.env['ir.config_parameter'].sudo().get_param('website.has_google_analytics_dashboard')
             if ga_dashboard:
                 ga_client_id = request.env['ir.config_parameter'].sudo().get_param('google_management_client_id', default='')
                 dashboard_data['dashboards']['visits']['ga_client_id'] = ga_client_id

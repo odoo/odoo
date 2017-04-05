@@ -6,7 +6,6 @@ from odoo.exceptions import AccessDenied
 
 
 class WebsiteConfigSettings(models.TransientModel):
-
     _name = 'website.config.settings'
     _inherit = 'res.config.settings'
 
@@ -71,20 +70,20 @@ class WebsiteConfigSettings(models.TransientModel):
         for config in self:
             config.language_count = len(self.language_ids)
 
-    def set_has_google_analytics(self):
+    @api.model
+    def get_default_fields(self, fields):
         if not self.user_has_groups('website.group_website_designer'):
             raise AccessDenied()
-        return self.env['ir.values'].sudo().set_default(
-            'website.config.settings', 'has_google_analytics', self.has_google_analytics)
+        return dict(
+            has_google_analytics=self.env['ir.config_parameter'].sudo().get_param('website.has_google_analytics'),
+            has_google_analytics_dashboard=self.env['ir.config_parameter'].sudo().get_param('website.has_google_analytics_dashboard'),
+            has_google_maps=self.env['ir.config_parameter'].sudo().get_param('website.has_google_maps'),
+        )
 
-    def set_has_google_analytics_dashboard(self):
+    @api.multi
+    def set_fields(self):
         if not self.user_has_groups('website.group_website_designer'):
             raise AccessDenied()
-        return self.env['ir.values'].sudo().set_default(
-            'website.config.settings', 'has_google_analytics_dashboard', self.has_google_analytics_dashboard)
-
-    def set_has_google_maps(self):
-        if not self.user_has_groups('website.group_website_designer'):
-            raise AccessDenied()
-        return self.env['ir.values'].sudo().set_default(
-            'website.config.settings', 'has_google_maps', self.has_google_maps)
+        self.env['ir.config_parameter'].sudo().set_param('website.has_google_analytics', self.has_google_analytics)
+        self.env['ir.config_parameter'].sudo().set_param('website.has_google_analytics_dashboard', self.has_google_analytics_dashboard)
+        self.env['ir.config_parameter'].sudo().set_param('website.has_google_maps', self.has_google_maps)
