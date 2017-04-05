@@ -250,7 +250,7 @@
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
-        <field name="context">{'default_technician_user_id': uid}</field>
+        <field name="context">{'default_technician_user_id': uid, 'search_default_my_requests': 1,}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new maintenance request.
@@ -296,6 +296,7 @@
         <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
         <field name="context">{
             'default_maintenance_team_id': active_id,
+            'search_default_my_requests': 1,
         }</field>
         <field name="domain">[('maintenance_team_id', '=', active_id), ('maintenance_type', 'in', context.get('maintenance_type', ['preventive', 'corrective']))]</field>
     </record>
