@@ -31,7 +31,10 @@ class StockConfigSettings(models.TransientModel):
         help="Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).")
     group_warning_stock = fields.Boolean("Warnings", implied_group='stock.group_warning_stock')
     propagation_minimum_delta = fields.Integer(related='company_id.propagation_minimum_delta', string="No Rescheduling Propagation")
-    default_new_propagation_minimum_delta = fields.Boolean(string="No Rescheduling Propagation", default_model="stock.config.settings", help="Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. \n This option allows to not propagate the rescheduling if the change is not critical.")
+    use_propagation_minimum_delta = fields.Boolean(
+        string="No Rescheduling Propagation",
+        oldname='default_new_propagation_minimum_delta',
+        help="Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. \n This option allows to not propagate the rescheduling if the change is not critical.")
     module_stock_picking_wave = fields.Boolean("Picking Waves")
     module_stock_calendar = fields.Boolean("Vendor Calendar for Reordering",
         help='Scheduled dates of requests for quotation generated from reordering rules are based on vendor lead times (defined on products).\nBy default, such a scheduling is made on calendar days. This option allow to adapt the scheduling with vendor calendars to set on reordering rules.')
@@ -51,6 +54,11 @@ class StockConfigSettings(models.TransientModel):
     module_sale = fields.Boolean(string="Sales")
     module_purchase = fields.Boolean(string="Purchase")
 
+    @api.onchange('use_propagation_minimum_delta')
+    def _onchange_use_propagation_minimum_delta(self):
+        if not self.use_propagation_minimum_delta:
+            self.propagation_minimum_delta = 1
+
     @api.onchange('group_stock_multi_locations')
     def _onchange_group_stock_multi_locations(self):
         if not self.group_stock_multi_locations:
@@ -66,6 +74,16 @@ class StockConfigSettings(models.TransientModel):
     def onchange_adv_location(self):
         if self.group_stock_adv_location and not self.group_stock_multi_locations:
             self.group_stock_multi_locations = True
+
+    @api.model
+    def get_default_fields(self, fields):
+        return dict(
+            use_propagation_minimum_delta=self.env['ir.config_parameter'].sudo().get_param('stock.use_propagation_minimum_delta')
+        )
+
+    @api.multi
+    def set_default_fields(self):
+        self.env['ir.config_parameter'].sudo().set_param('stock.use_propagation_minimum_delta', self.use_propagation_minimum_delta)
 
     @api.multi
     def set_group_stock_multi_locations(self):
