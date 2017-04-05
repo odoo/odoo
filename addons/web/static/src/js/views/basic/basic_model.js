@@ -504,6 +504,8 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {string} id local id for a resource
      * @param {Object} [options]
+     * @param {boolean} [options.keepChanges=false] if true, doesn't discard the
+     *   changes on the record before reloading it
      * @returns {Deferred -> string} resolves to the id of the resource
      */
     reload: function (id, options) {
@@ -520,7 +522,9 @@ var BasicModel = AbstractModel.extend({
                 };
                 return this._makeDefaultRecord(element.model, params);
             }
-            this.discardChanges(id);
+            if (!options.keepChanges) {
+                this.discardChanges(id);
+            }
         }
 
         if (options.context !== undefined) {

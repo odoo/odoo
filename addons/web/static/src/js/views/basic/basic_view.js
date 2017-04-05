@@ -66,6 +66,7 @@ var BasicView = AbstractView.extend({
             if (fieldNames.length && !this.model.isNew(record.id)) {
                 return this.model.reload(this.recordID, {
                     fieldNames: fieldNames,
+                    keepChanges: true,
                     viewType: viewType,
                 });
             } else {
