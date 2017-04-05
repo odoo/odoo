@@ -96,21 +96,19 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     },
 
     on_save_ga_client_id: function(ga_client_id) {
-
-        if (!ga_client_id.endsWith(".apps.googleusercontent.com") || ga_client_id.startsWith(" ")) {
-            this.do_warn(_t('Incorrect Client ID'), _t('The Google Analytics Client ID you have entered seems incorrect.'));
-            return;
-        }
-
         var self = this;
-        this._rpc({
-                model: 'ir.config_parameter',
-                method: 'set_param',
-                args: ['google_management_client_id', ga_client_id],
-            })
-            .then(function(){
-                self.on_date_range_button('week');
-            });
+        return this._rpc({
+            route: '/website/dashboard/set_ga_client_id',
+            params: {
+                'ga_client_id': ga_client_id
+            },
+        }).then(function (result) {
+            if (result.error) {
+                self.do_warn(result.error.title, result.error.message);
+                return;
+            }
+            self.on_date_range_button('week');
+        });
     },
 
     render_dashboards: function() {
