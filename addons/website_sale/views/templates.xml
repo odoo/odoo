@@ -136,8 +136,8 @@
     <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart" priority="1">
         <xpath expr="//div[hasclass('product_price')]" position="inside">
             <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden" />
-            <t t-if="len(product.product_variant_ids) == 1">
-                <a class="btn btn-default btn-xs a-submit">
+            <t t-if="len(product.product_variant_ids) == 1" >
+                <a class="btn btn-default btn-xs a-submit" t-attf-data-has_optional="#{product.optional_product_ids and 1 or 0}">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
