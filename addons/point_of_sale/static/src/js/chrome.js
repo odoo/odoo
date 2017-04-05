@@ -11,6 +11,7 @@ var CrashManager = require('web.CrashManager');
 
 
 var _t = core._t;
+var _lt = core._lt;
 var QWeb = core.qweb;
 
 /* -------- The Order Selector -------- */
@@ -704,7 +705,7 @@ var Chrome = PosBaseWidget.extend({
             'widget': HeaderButtonWidget,
             'append':  '.pos-rightheader',
             'args': {
-                label: _t('Close'),
+                label: _lt('Close'),
                 action: function(){ 
                     var self = this;
                     if (!this.confirmed) {
