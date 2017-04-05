@@ -550,6 +550,8 @@ class PosOrder(models.Model):
         Move = self.env['stock.move']
         StockWarehouse = self.env['stock.warehouse']
         for order in self:
+            if not order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):
+                continue
             address = order.partner_id.address_get(['delivery']) or {}
             picking_type = order.picking_type_id
             return_pick_type = order.picking_type_id.return_picking_type_id or order.picking_type_id
