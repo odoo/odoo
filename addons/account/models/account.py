@@ -117,7 +117,8 @@ class AccountAccount(models.Model):
     def name_get(self):
         result = []
         for account in self:
-            name = account.code + ' ' + account.name
+            name = ' '.join([account.code or '',
+                             account.name or ''])
             result.append((account.id, name))
         return result
 
