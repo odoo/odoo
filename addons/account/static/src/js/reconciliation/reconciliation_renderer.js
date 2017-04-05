@@ -396,19 +396,21 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         }, {
             type: 'char',
             name: 'label',
-            attrs: {string: ""}
         }, {
             type: 'float',
             name: 'amount',
-            attrs: {string: ""},
-        }]);
+        }], {
+            account_id: {string: _t("Account")},
+            label: {string: _t("Label")},
+            amount: {string: _t("Account")}
+        });
         var record = this.model.get(this.handleCreateRecord);
 
         this.fields.account_id = new relational_fields.FieldMany2One(this,
             'account_id', record, {mode: 'edit', required: true});
 
         this.fields.journal_id = new relational_fields.FieldMany2One(this,
-            'journal_id', record, {mode: 'edit', required: true});
+            'journal_id', record, {mode: 'edit'});
 
         this.fields.tax_id = new relational_fields.FieldMany2One(this,
             'tax_id', record, {mode: 'edit'});
@@ -542,6 +544,16 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onCreateProposition: function () {
         document.activeElement && document.activeElement.blur();
+        var invalid = [];
+        _.each(this.fields, function (field) {
+            if (!field.isValid()) {
+                invalid.push(field.string);
+            }
+        });
+        if (invalid.length) {
+            this.do_warn(_("Some fields are undefined"), invalid.join(', '));
+            return;
+        }
         this.trigger_up('create_proposition');
     },
     /**
