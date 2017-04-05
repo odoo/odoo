@@ -34,7 +34,7 @@ class Rpc2(http.Controller):
             marshaller = lambda result:(
                 "<?xml version='1.0'?>\n"
                 "<methodResponse>%s</methodResponse>\n" %
-                    XMLRPCMarshaller('utf-8', allow_none=True).dumps((result,))
+                    XMLRPCMarshaller('utf-8').dumps((result,))
             )
             try:
                 params, method = xmlrpclib.loads(req.stream.read())
@@ -52,6 +52,7 @@ class Rpc2(http.Controller):
         elif req.mimetype == 'application/json':
             request = {}
             try:
+                # FIXME: reject parsing null for coherence?
                 request = json.load(req.stream)
                 assert 'id' in request, "Notification requests are not supported"
                 result = self.dispatch(
@@ -72,6 +73,7 @@ class Rpc2(http.Controller):
                         'data': http.serialize_exception(e)
                     }
                 }
+            # FIXME: reject marshalling None for coherence
             response = JSONMarshaller().encode(resp)
         else:
             return werkzeug.exceptions.UnsupportedMediaType(
