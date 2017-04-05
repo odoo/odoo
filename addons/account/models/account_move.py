@@ -244,9 +244,9 @@ class AccountMove(models.Model):
                                                   journal_id=journal_id)
             reversed_moves |= reversed_move
             #unreconcile all lines reversed
-            aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile)
+            aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
             aml.remove_move_reconcile()
-            #reconcile together the reconciliable aml and their newly created counterpart
+            #reconcile together the reconciliable and the liquidity aml and their newly created counterpart
             for account in [x.account_id for x in aml]:
                 to_rec = aml.filtered(lambda y: y.account_id == account)
                 to_rec |= reversed_move.line_ids.filtered(lambda y: y.account_id == account)
@@ -803,6 +803,11 @@ class AccountMoveLine(models.Model):
     def _get_pair_to_reconcile(self):
         #field is either 'amount_residual' or 'amount_residual_currency' (if the reconciled account has a secondary currency set)
         field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
+        #reconciliation on bank accounts are special cases as we don't want to set them as reconciliable
+        #but we still want to reconcile entries that are reversed together in order to clear those lines
+        #in the bank reconciliation report.
+        if not self[0].account_id.reconcile and self[0].account_id.internal_type == 'liquidity':
+            field = 'balance'
         rounding = self[0].company_id.currency_id.rounding
         if self[0].currency_id and all([x.amount_currency and x.currency_id == self[0].currency_id for x in self]):
             #or if all lines share the same currency
@@ -898,7 +903,7 @@ class AccountMoveLine(models.Model):
             raise UserError(_('To reconcile the entries company should be the same for all entries!'))
         if len(set(all_accounts)) > 1:
             raise UserError(_('Entries are not of the same account!'))
-        if not all_accounts[0].reconcile:
+        if not (all_accounts[0].reconcile or all_accounts[0].internal_type == 'liquidity'):
             raise UserError(_('The account %s (%s) is not marked as reconciliable !') % (all_accounts[0].name, all_accounts[0].code))
         if len(partners) > 1:
             raise UserError(_('The partner has to be the same on all lines for receivable and payable accounts!'))
