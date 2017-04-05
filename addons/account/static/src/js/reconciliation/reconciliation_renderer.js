@@ -37,23 +37,27 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @override
      */
     start: function () {
-        this._super();
+        var self = this;
+        var defs = [this._super.apply(this, arguments)];
         this.time = Date.now();
         this.$progress = this.$('.progress');
 
         if (this._initialState.bank_statement_id) {
-            this.handleNameRecord = this.model.makeRecord("account.bank.statement", [{
+            var def = this.model.makeRecord("account.bank.statement", [{
                 type: 'char',
                 name: 'name',
                 attrs: {string: ""},
                 value: this._initialState.bank_statement_id.display_name
-            }]);
-            this.name = new basic_fields.FieldChar(this,
-                'name', this.model.get(this.handleNameRecord),
-                {mode: 'edit', required: true});
+            }]).then(function (recordID) {
+                self.handleNameRecord = recordID;
+                self.name = new basic_fields.FieldChar(self,
+                    'name', self.model.get(self.handleNameRecord),
+                    {mode: 'edit', required: true});
 
-            this.name.appendTo(this.$('.statement_name_edition'));
-            this.$('.statement_name').text(this._initialState.bank_statement_id.display_name);
+                self.name.appendTo(self.$('.statement_name_edition'));
+                self.$('.statement_name').text(self._initialState.bank_statement_id.display_name);
+            });
+            defs.push(def);
         }
 
         this.$('h1.statement_name').text(this._initialState.title);
@@ -66,6 +70,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             }
         }.bind(this);
         $('body').on('keyup', this.enterHandler);
+
+        return $.when.apply($, defs);
     },
     /**
      * @override
@@ -213,21 +219,23 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         this.model = model;
         this._initialState = state;
-
-        this.fields = {
-            'partner_id' : new relational_fields.FieldMany2One(this,
-                'partner_id',
-                this._makePartnerRecord(state.st_line.partner_id, state.st_line.partner_name),
-                {mode: 'edit'}
-            )
-        };
     },
 
     /**
      * @override
      */
     start: function () {
-        this.fields.partner_id.appendTo(this.$('.accounting_view caption'));
+        var self = this;
+        var def1 = this._makePartnerRecord(this._initialState.st_line.partner_id, this._initialState.st_line.partner_name).then(function (recordID) {
+            self.fields = {
+                partner_id : new relational_fields.FieldMany2One(self,
+                    'partner_id',
+                    self.model.get(recordID),
+                    {mode: 'edit'}
+                )
+            };
+            self.fields.partner_id.appendTo(self.$('.accounting_view caption'));
+        });
         this.$('thead .line_info_button').attr("data-content", qweb.render('reconciliation.line.statement_line.details', {'state': this._initialState}));
         this.$el.popover({
             'selector': '.line_info_button',
@@ -238,7 +246,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             'animation': false,
             'toggle': 'popover'
         });
-        delete this._initialState;
+        var def2 = this._super.apply(this, arguments);
+        return $.when(def1, def2);
     },
 
     //--------------------------------------------------------------------------
@@ -251,15 +260,17 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {object} state - statement line
      */
     update: function (state) {
+        var self = this;
         // isValid
         this.$('caption .o_buttons button.o_validate').toggleClass('hidden', !!state.balance.type);
         this.$('caption .o_buttons button.o_reconcile').toggleClass('hidden', state.balance.type <= 0);
         this.$('caption .o_buttons .o_no_valid').toggleClass('hidden', state.balance.type >= 0);
 
-        // parnter_id
-        var record = this._makePartnerRecord(state.st_line.partner_id, state.st_line.partner_name);
-        this.fields.partner_id.reset(record);
-        this.$el.attr('data-partner', state.st_line.partner_id);
+        // partner_id
+        this._makePartnerRecord(state.st_line.partner_id, state.st_line.partner_name).then(function (recordID) {
+            self.fields.partner_id.reset(self.model.get(recordID));
+            self.$el.attr('data-partner', state.st_line.partner_id);
+        });
 
         // mode
         this.$('.create, .match').each(function () {
@@ -332,7 +343,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
             var data = this.model.get(this.handleCreateRecord).data;
             this.model.notifyChanges(this.handleCreateRecord, state.createForm);
-            record = this.model.get(this.handleCreateRecord);
+            var record = this.model.get(this.handleCreateRecord);
             _.each(this.fields, function (field, fieldName) {
                 if (fieldName === "partner_id") return;
                 if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
@@ -351,15 +362,18 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      * @param {integer} partnerID
      * @param {string} partnerName
-     * @returns {object} dataPoint
+     * @returns {string} local id of the dataPoint
      */
     _makePartnerRecord: function (partnerID, partnerName) {
-        var recordID = this.model.makeRecord('account.bank.statement.line', [{
-                relation: 'res.partner',
-                type: 'many2one',
-                name: 'partner_id',
-                value: [partnerID, partnerName]
-        }], {
+        var field = {
+            relation: 'res.partner',
+            type: 'many2one',
+            name: 'partner_id',
+        };
+        if (partnerID) {
+            field.value = [partnerID, partnerName];
+        }
+        return this.model.makeRecord('account.bank.statement.line', [field], {
             partner_id: {
                 domain: [["parent_id", "=", false], "|", ["customer", "=", true], ["supplier", "=", true]],
                 options: {
@@ -367,7 +381,6 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 }
             }
         });
-        return this.model.get(recordID);
     },
 
     /**
@@ -377,7 +390,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {object} state - statement line
      */
     _renderCreate: function (state) {
-        this.handleCreateRecord = this.model.makeRecord('account.bank.statement.line', [{
+        var self = this;
+        this.model.makeRecord('account.bank.statement.line', [{
             relation: 'account.account',
             type: 'many2one',
             name: 'account_id',
@@ -403,35 +417,37 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             account_id: {string: _t("Account")},
             label: {string: _t("Label")},
             amount: {string: _t("Account")}
+        }).then(function (recordID) {
+            self.handleCreateRecord = recordID;
+            var record = self.model.get(self.handleCreateRecord);
+
+            self.fields.account_id = new relational_fields.FieldMany2One(self,
+                'account_id', record, {mode: 'edit', required: true});
+
+            self.fields.journal_id = new relational_fields.FieldMany2One(self,
+                'journal_id', record, {mode: 'edit'});
+
+            self.fields.tax_id = new relational_fields.FieldMany2One(self,
+                'tax_id', record, {mode: 'edit'});
+
+            self.fields.analytic_account_id = new relational_fields.FieldMany2One(self,
+                'analytic_account_id', record, {mode: 'edit'});
+
+            self.fields.label = new basic_fields.FieldChar(self,
+                'label', record, {mode: 'edit', required: true});
+
+            self.fields.amount = new basic_fields.FieldFloat(self,
+                'amount', record, {mode: 'edit', required: true});
+
+            var $create = $(qweb.render("reconciliation.line.create", {'state': state}));
+            self.fields.account_id.appendTo($create.find('.create_account_id .o_td_field'));
+            self.fields.journal_id.appendTo($create.find('.create_journal_id .o_td_field'));
+            self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
+            self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
+            self.fields.label.appendTo($create.find('.create_label .o_td_field'));
+            self.fields.amount.appendTo($create.find('.create_amount .o_td_field'));
+            self.$('.create').append($create);
         });
-        var record = this.model.get(this.handleCreateRecord);
-
-        this.fields.account_id = new relational_fields.FieldMany2One(this,
-            'account_id', record, {mode: 'edit', required: true});
-
-        this.fields.journal_id = new relational_fields.FieldMany2One(this,
-            'journal_id', record, {mode: 'edit'});
-
-        this.fields.tax_id = new relational_fields.FieldMany2One(this,
-            'tax_id', record, {mode: 'edit'});
-
-        this.fields.analytic_account_id = new relational_fields.FieldMany2One(this,
-            'analytic_account_id', record, {mode: 'edit'});
-
-        this.fields.label = new basic_fields.FieldChar(this,
-            'label', record, {mode: 'edit', required: true});
-
-        this.fields.amount = new basic_fields.FieldFloat(this,
-            'amount', record, {mode: 'edit', required: true});
-
-        var $create = $(qweb.render("reconciliation.line.create", {'state': state}));
-        this.fields.account_id.appendTo($create.find('.create_account_id .o_td_field'));
-        this.fields.journal_id.appendTo($create.find('.create_journal_id .o_td_field'));
-        this.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
-        this.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
-        this.fields.label.appendTo($create.find('.create_label .o_td_field'));
-        this.fields.amount.appendTo($create.find('.create_amount .o_td_field'));
-        this.$('.create').append($create);
     },
 
     //--------------------------------------------------------------------------
@@ -598,33 +614,6 @@ var ManualRenderer = StatementRenderer.extend({
  */
 var ManualLineRenderer = LineRenderer.extend({
     template: "reconciliation.manual.line",
-
-    /**
-     * create partner_id field in readonly mode
-     *
-     * @override
-     */
-    init: function (parent, model, state) {
-        this._super.apply(this, arguments);
-        if (state.partner_id) {
-            this.fields.partner_id = new relational_fields.FieldMany2One(this,
-                'partner_id',
-                this._makePartnerRecord(state.partner_id, state.partner_name),
-                {mode: 'readonly'}
-            );
-        } else {
-            this.fields.title_account_id = new relational_fields.FieldMany2One(this,
-                'account_id',
-                this.model.get(this.model.makeRecord('account.move.line', [{
-                    relation: 'account.account',
-                    type: 'many2one',
-                    name: 'account_id',
-                    value: [state.account_id.id, state.account_id.display_name]
-                }])),
-                {mode: 'readonly'}
-            );
-        }
-    },
      /**
      * @override
      * @param {string} handle
@@ -643,13 +632,44 @@ var ManualLineRenderer = LineRenderer.extend({
      * @override
      */
     start: function () {
-        this._super();
-        if (!this.fields.title_account_id) {
-            this.fields.partner_id.$el.prependTo(this.$('.accounting_view thead td:eq(1) span:first'));
-        } else {
-            this.fields.partner_id.destroy();
-            this.fields.title_account_id.appendTo(this.$('.accounting_view thead td:eq(1) span:first'));
-        }
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            var defs = [];
+            var def;
+            if (self._initialState.partner_id) {
+                def = self._makePartnerRecord(self._initialState.partner_id, self._initialState.partner_name).then(function (recordID) {
+                    self.fields.partner_id = new relational_fields.FieldMany2One(self,
+                        'partner_id',
+                        self.model.get(recordID),
+                        {mode: 'readonly'}
+                    );
+                });
+                defs.push(def);
+            } else {
+                def = self.model.makeRecord('account.move.line', [{
+                    relation: 'account.account',
+                    type: 'many2one',
+                    name: 'account_id',
+                    value: [self._initialState.account_id.id, self._initialState.account_id.display_name],
+                }]).then(function (recordID) {
+                    self.fields.title_account_id = new relational_fields.FieldMany2One(self,
+                        'account_id',
+                        self.model.get(recordID),
+                        {mode: 'readonly'}
+                    );
+                });
+                defs.push(def);
+            }
+
+            return $.when.apply($, defs).then(function () {
+                if (!self.fields.title_account_id) {
+                    self.fields.partner_id.$el.prependTo(self.$('.accounting_view thead td:eq(1) span:first'));
+                } else {
+                    self.fields.partner_id.destroy();
+                    self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(1) span:first'));
+                }
+            });
+        });
     },
     /**
      * @override
