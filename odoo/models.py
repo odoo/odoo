@@ -4379,7 +4379,8 @@ class BaseModel(object):
         """
         self.ensure_one()
         vals = self.copy_data(default)[0]
-        new = self.create(vals)
+        # To avoid to create a translation in the lang of the user, copy_translation will do it
+        new = self.with_context(lang=None).create(vals)
         self.copy_translations(new)
         return new
 
