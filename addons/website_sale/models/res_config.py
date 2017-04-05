@@ -153,11 +153,6 @@ class WebsiteConfigSettings(models.TransientModel):
     def set_multi_sales_price(self):
         self.env['ir.config_parameter'].sudo().set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
 
-    @api.multi
-    def set_sale_tax_defaults(self):
-        return self.env['ir.values'].sudo().set_default(
-            'website.config.settings', 'sale_show_tax', self.sale_show_tax)
-
     @api.onchange('sale_delivery_settings')
     def _onchange_sale_delivery_settings(self):
         if self.sale_delivery_settings == 'none':
