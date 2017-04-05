@@ -2043,7 +2043,7 @@ class BaseModel(object):
     def _read_group_resolve_many2one_fields(self, data, fields):
         many2onefields = {field['field'] for field in fields if field['type'] == 'many2one'}
         for field in many2onefields:
-            ids_set = {d[field] for d in data}
+            ids_set = {d[field] for d in data if d[field]}
             m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
             data_dict = dict(m2o_records.name_get())
             for d in data:
