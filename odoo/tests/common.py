@@ -26,6 +26,7 @@ import werkzeug
 
 import odoo
 from odoo import api
+from odoo.tools.lazy_decimal import json_decimal_default
 
 _logger = logging.getLogger(__name__)
 
@@ -430,7 +431,10 @@ class HttpCase(TransactionCase):
         self.authenticate(login, login)
 
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
-        cmd = ['phantomjs', phantomtest, json.dumps(options)]
+        cmd = ['phantomjs', phantomtest, json.dumps(
+            options,
+            default=json_decimal_default
+        )]
         self.phantom_run(cmd, timeout)
 
 def can_import(module):

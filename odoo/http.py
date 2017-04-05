@@ -52,6 +52,10 @@ from odoo.tools import ustr, consteq, frozendict
 
 from odoo.modules.module import module_manifest
 
+from odoo.tools.lazy_decimal import Decimal as LazyDecimal
+from odoo.tools.lazy_decimal import json_decimal_default
+
+
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
 rpc_response = logging.getLogger(__name__ + '.rpc.response')
@@ -290,7 +294,7 @@ class WebRequest(object):
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
+           be used as response."""
         self._failed = exception # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
@@ -573,7 +577,7 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
+
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
@@ -596,7 +600,8 @@ class JsonRequest(WebRequest):
 
         # Read POST content or POST Form Data named "request"
         try:
-            self.jsonrequest = json.loads(request)
+            #self.jsonrequest = json.loads(request)
+            self.jsonrequest = json.loads(request, parse_float=LazyDecimal)
         except ValueError:
             msg = 'Invalid JSON data: %r' % (request,)
             _logger.info('%s: %s', self.httprequest.path, msg)
@@ -621,10 +626,12 @@ class JsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['session_id'] = self.session.sid
             mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response),)
+            #body = "%s(%s);" % (self.jsonp, json.dumps(response),)
+            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=json_decimal_default),)
         else:
             mime = 'application/json'
-            body = json.dumps(response)
+            #body = json.dumps(response)
+            body = json.dumps(response, default=json_decimal_default)
 
         return Response(
                     body, headers=[('Content-Type', mime),

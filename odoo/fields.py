@@ -22,6 +22,9 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.translate import html_translate, _
 import odoo.tools.sql as sql
 
+from odoo.tools.lazy_decimal import Decimal as LazyDecimal
+
+
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 EMPTY_DICT = frozendict()
@@ -1169,7 +1172,8 @@ class Integer(Field):
         # Integer values greater than 2^31-1 are not supported in pure XMLRPC,
         # so we have to pass them as floats :-(
         if value and value > xmlrpclib.MAXINT:
-            return float(value)
+            #return float(value)
+            return LazyDecimal(value or 0)
         return value
 
     def _update(self, records, value):
@@ -1230,11 +1234,15 @@ class Float(Field):
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
-        value = float(value or 0.0)
+        #value = float(value or 0.0)
+        value = LazyDecimal(value or 0.0)
         if not validate:
             return value
         digits = self.digits
-        return float_round(value, precision_digits=digits[1]) if digits else value
+        #return float_round(value, precision_digits=digits[1]) if digits else value
+        if digits:
+            value = value.quantize(LazyDecimal(10) ** LazyDecimal(digits[1] * -1))
+        return value
 
     def convert_to_export(self, value, record):
         if value or value == 0.0:
