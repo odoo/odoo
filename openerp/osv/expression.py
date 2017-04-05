@@ -155,11 +155,13 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # for consistency. This list doesn't contain '<>' as it is simpified to '!='
 # by the normalize_operator() function (so later part of the code deals with
 # only one representation).
-# Internals (i.e. not available to the user) 'inselect' and 'not inselect'
+# Internals (i.e. not available to the user) 'inselect' and 'not inselect' and
+# 'existsselect' and 'not existsselect'
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
                   'child_of')
+INTERNAL_TERM_OPERATORS = ('inselect', 'not inselect', 'existsselect', 'not existsselect')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
@@ -405,14 +407,14 @@ def is_leaf(element, internal=False):
         - second element if a valid op
 
         :param tuple element: a leaf in form (left, operator, right)
-        :param boolean internal: allow or not the 'inselect' internal operator
+        :param boolean internal: allow or not the 'inselect', etc internal operators
             in the term. This should be always left to False.
 
         Note: OLD TODO change the share wizard to use this function.
     """
     INTERNAL_OPS = TERM_OPERATORS + ('<>',)
     if internal:
-        INTERNAL_OPS += ('inselect', 'not inselect')
+        INTERNAL_OPS += INTERNAL_TERM_OPERATORS
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
@@ -441,7 +443,6 @@ def select_from_where(cr, select_field, from_table, where_field, where_ids, wher
                 res.extend([r[0] for r in cr.fetchall()])
     return res
 
-
 def select_distinct_from_where_not_null(cr, select_field, from_table):
     cr.execute('SELECT distinct("%s") FROM "%s" where "%s" is not null' % (select_field, from_table, select_field))
     return [r[0] for r in cr.fetchall()]
@@ -450,6 +451,12 @@ def get_unaccent_wrapper(cr):
     if openerp.modules.registry.RegistryManager.get(cr.dbname).has_unaccent:
         return lambda x: "unaccent(%s)" % (x,)
     return lambda x: x
+
+def make_existsselect_leaf(operator, ids, rel_table, rel_id1, rel_id2):
+    exists_op = 'not existsselect' if operator in NEGATIVE_TERM_OPERATORS else 'existsselect'
+    ids_str = ",".join(['%s'] * len(ids))
+    existsselect = 'SELECT 1 FROM "%s" WHERE "%s"={exists_link} AND "%s" IN (%s)' % (rel_table, rel_id1, rel_id2, ids_str)
+    return ('id', exists_op, (existsselect, (ids, )))
 
 # --------------------------------------------------
 # ExtendedLeaf class for managing leafs and contexts
@@ -992,17 +999,17 @@ class expression(object):
 
             elif column._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = column._sql_names(model)
+
                 #FIXME
                 if operator == 'child_of':
-                    def _rec_convert(ids):
-                        if comodel == model:
-                            return ids
-                        return select_from_where(cr, rel_id1, rel_table, rel_id2, ids, operator)
-
                     ids2 = to_ids(right, comodel, context)
                     dom = child_of_domain('id', ids2, comodel)
                     ids2 = comodel.search(cr, uid, dom, context=context)
-                    push(create_substitution_leaf(leaf, ('id', 'in', _rec_convert(ids2)), model))
+                    if comodel == model:
+                        push(create_substitution_leaf(leaf, ('id', 'in', ids2), model))
+                    else:
+                        existsselect_leaf = make_existsselect_leaf('in', ids2, rel_table, rel_id1, rel_id2)
+                        push(create_substitution_leaf(leaf, existsselect_leaf, internal=True))
                 else:
                     call_null_m2m = True
                     if right is not False:
@@ -1024,8 +1031,8 @@ class expression(object):
                                 operator = 'in'  # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
-                            m2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            push(create_substitution_leaf(leaf, ('id', m2m_op, select_from_where(cr, rel_id1, rel_table, rel_id2, res_ids, operator) or [0]), model))
+                            existsselect_leaf = make_existsselect_leaf(operator, res_ids, rel_table, rel_id1, rel_id2)
+                            push(create_substitution_leaf(leaf, existsselect_leaf, internal=True))
 
                     if call_null_m2m:
                         m2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
@@ -1143,7 +1150,7 @@ class expression(object):
         left, operator, right = leaf
 
         # final sanity checks - should never fail
-        assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
+        assert operator in (TERM_OPERATORS + INTERNAL_TERM_OPERATORS), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
         assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields \
             or left in MAGIC_COLUMNS, "Invalid field %r in domain term %r" % (left, leaf)
@@ -1166,6 +1173,16 @@ class expression(object):
 
         elif operator == 'not inselect':
             query = '(%s."%s" not in (%s))' % (table_alias, left, right[0])
+            params = right[1]
+
+        elif operator == 'existsselect':
+            exists_link = '%s."%s"' % (table_alias, left)
+            query = '(EXISTS (%s))' % (right[0].format(exists_link=exists_link), )
+            params = right[1]
+
+        elif operator == 'not existsselect':
+            exists_link = '%s."%s"' % (table_alias, left)
+            query = '(NOT EXISTS (%s))' % (right[0].format(exists_link=exists_link), )
             params = right[1]
 
         elif operator in ['in', 'not in']:
