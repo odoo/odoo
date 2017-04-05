@@ -903,36 +903,6 @@ QUnit.module('account', {
     });
 
 
-    QUnit.test('Reconciliation manual open record', function (assert) {
-        assert.expect(2);
-
-        var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
-
-        testUtils.addMockEnvironment(clientAction, {
-            'data': this.params.data,
-        });
-        clientAction.appendTo($('#qunit-fixture'));
-
-        testUtils.intercept(clientAction, 'call_service', function (event) {
-            if (event.data.args[0].indexOf('get_formview_action') !== -1) {
-                assert.equal(event.data.args[1].model, 'account.account', "should open the account.account from view ");
-                event.data.callback($.when());
-            }
-        });
-        clientAction.$('.accounting_view:first thead .o_form_uri').trigger('click');
-
-        testUtils.intercept(clientAction, 'call_service', function (event) {
-            if (event.data.args[0].indexOf('get_formview_action') !== -1) {
-                assert.equal(event.data.args[1].model, 'res.partner', "should open the res.partner from view ");
-                event.data.callback($.when());
-            }
-        });
-        clientAction.$('.accounting_view:eq(1) thead .o_form_uri').trigger('click');
-
-        clientAction.destroy();
-    });
-
-
     QUnit.test('Reconciliation manual', function (assert) {
         assert.expect(9);
 
