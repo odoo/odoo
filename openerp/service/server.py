@@ -346,7 +346,7 @@ class ThreadedServer(CommonServer):
         _logger.debug('current thread: %r', me)
         for thread in threading.enumerate():
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
-            if thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id and thread not in self.initial_threads: #le dernier not, pcq starter les tests unitaires ajoute un thread ServerComm qui se terminera jamais
+            if thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id and thread not in self.initial_threads:
                 while thread.isAlive():
                     _logger.debug('join and sleep')
                     # Need a busyloop here as thread.join() masks signals
