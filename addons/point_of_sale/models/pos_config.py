@@ -180,7 +180,7 @@ class PosConfig(models.Model):
             raise UserError(_("The company of the sales journal is different than the one of point of sale"))
 
     @api.constrains('company_id', 'invoice_journal_id')
-    def _check_company_journal(self):
+    def _check_company_invoice_journal(self):
         if self.invoice_journal_id and self.invoice_journal_id.company_id.id != self.company_id.id:
             raise UserError(_("The invoice journal and the point of sale must belong to the same company"))
 

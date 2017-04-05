@@ -176,11 +176,7 @@ class PosOrder(models.Model):
         # Oldlin trick
         invoice_line = InvoiceLine.sudo().new(inv_line)
         invoice_line._onchange_product_id()
-        invoice_line.invoice_line_tax_ids = invoice_line.invoice_line_tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id).ids
-        fiscal_position_id = line.order_id.fiscal_position_id
-        if fiscal_position_id:
-            invoice_line.invoice_line_tax_ids = fiscal_position_id.map_tax(invoice_line.invoice_line_tax_ids, line.product_id, line.order_id.partner_id)
-        invoice_line.invoice_line_tax_ids = invoice_line.invoice_line_tax_ids.ids
+        invoice_line.invoice_line_tax_ids = line.tax_ids
         # We convert a new id object back to a dictionary to write to
         # bridge between old and new api
         inv_line = invoice_line._convert_to_write({name: invoice_line[name] for name in invoice_line._cache})
@@ -277,12 +273,12 @@ class PosOrder(models.Model):
                     'analytic_account_id': self._prepare_analytic_account(line),
                     'credit': ((amount > 0) and amount) or 0.0,
                     'debit': ((amount < 0) and -amount) or 0.0,
-                    'tax_ids': [(6, 0, line.tax_ids_after_fiscal_position.ids)],
+                    'tax_ids': [(6, 0, line.tax_ids.ids)],
                     'partner_id': partner_id
                 })
 
                 # Create the tax lines
-                taxes = line.tax_ids_after_fiscal_position.filtered(lambda t: t.company_id.id == current_company.id)
+                taxes = line.tax_ids.filtered(lambda t: t.company_id.id == current_company.id)
                 if not taxes:
                     continue
                 for tax in taxes.compute_all(line.price_unit * (100.0 - line.discount) / 100.0, cur, line.qty)['taxes']:
@@ -377,7 +373,9 @@ class PosOrder(models.Model):
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
     pos_reference = fields.Char(string='Receipt Ref', readonly=True, copy=False)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True)
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', default=lambda self: self._default_session().config_id.default_fiscal_position_id)
+    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True, states={'draft': [('readonly', False)]},
+                                         default=lambda self: self._default_session().config_id.default_fiscal_position_id)
+    allowed_fiscal_position_ids = fields.Many2many("account.fiscal.position", related="session_id.config_id.fiscal_position_ids", string="Fiscal Positions")
 
     @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
     def _compute_amount_all(self):
@@ -390,10 +388,23 @@ class PosOrder(models.Model):
             amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
             order.amount_total = order.amount_tax + amount_untaxed
 
+    @api.onchange('fiscal_position_id')
+    def _onchange_fiscal_position_id(self):
+        """
+        Trigger the recompute of the taxes if the fiscal position is changed on the Pos order.
+        """
+        fpos = self.fiscal_position_id
+        for line in self.lines:
+            taxes = line.product_id.taxes_id.filtered(lambda tax: tax.company_id.id == self.company_id.id)
+            line.tax_ids = taxes and fpos.map_tax(taxes) or fpos.map_tax(line.tax_ids)
+
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         if self.partner_id:
             self.pricelist = self.partner_id.property_product_pricelist.id
+            fiscal_pos = self.partner_id.property_account_position_id
+            if self.state == 'draft':
+                self.fiscal_position_id = fiscal_pos in self.allowed_fiscal_position_ids and fiscal_pos
 
     @api.multi
     def write(self, vals):
@@ -780,9 +791,8 @@ class PosOrderLine(models.Model):
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade')
     create_date = fields.Datetime(string='Creation Date', readonly=True)
-    tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
-    tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
+    tax_ids = fields.Many2many('account.tax', string='Taxes', domain=[('type_tax_use', '=', 'sale')])
 
     @api.model
     def create(self, values):
@@ -838,7 +848,10 @@ class PosOrderLine(models.Model):
                 self.product_id, self.qty or 1.0, self.order_id.partner_id)
             self._onchange_qty()
             self.price_unit = price
-            self.tax_ids = self.product_id.taxes_id
+            taxes = self.product_id.taxes_id.filtered(lambda t: t.company_id.id == self.order_id.company_id.id)
+            if self.order_id.fiscal_position_id:
+                taxes = self.order_id.fiscal_position_id.map_tax(taxes)
+            self.tax_ids = taxes
 
     @api.onchange('qty', 'discount', 'price_unit', 'tax_ids')
     def _onchange_qty(self):
@@ -847,16 +860,10 @@ class PosOrderLine(models.Model):
                 raise UserError(_('You have to select a pricelist in the sale form !'))
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
             self.price_subtotal = self.price_subtotal_incl = price * self.qty
-            if (self.product_id.taxes_id):
-                taxes = self.product_id.taxes_id.compute_all(price, self.order_id.pricelist_id.currency_id, self.qty, product=self.product_id, partner=False)
+            if self.tax_ids:
+                taxes = self.tax_ids.compute_all(price, self.order_id.pricelist_id.currency_id, self.qty, product=self.product_id, partner=False)
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
-
-    @api.multi
-    def _get_tax_ids_after_fiscal_position(self):
-        for line in self:
-            line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids, line.product_id, line.order_id.partner_id)
-
 
 class PosOrderLineLot(models.Model):
     _name = "pos.pack.operation.lot"
@@ -925,8 +932,8 @@ class ReportSaleDetails(models.AbstractModel):
                 products_sold.setdefault(key, 0.0)
                 products_sold[key] += line.qty
 
-                if line.tax_ids_after_fiscal_position:
-                    line_taxes = line.tax_ids_after_fiscal_position.compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+                if line.tax_ids:
+                    line_taxes = line.tax_ids.compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
                     for tax in line_taxes['taxes']:
                         taxes.setdefault(tax['id'], {'name': tax['name'], 'tax_amount':0.0, 'base_amount':0.0})
                         taxes[tax['id']]['tax_amount'] += tax['amount']
@@ -970,3 +977,4 @@ class ReportSaleDetails(models.AbstractModel):
         configs = self.env['pos.config'].browse(data['config_ids'])
         data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs))
         return self.env['report'].render('point_of_sale.report_saledetails', data)
+
