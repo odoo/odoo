@@ -95,7 +95,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_note(self):
-        return self.env.user.company_id.sale_note
+        return self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note or ''
 
     @api.model
     def _get_default_team(self):
@@ -225,7 +225,7 @@ class SaleOrder(models.Model):
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
         }
-        if self.env.user.company_id.sale_note:
+        if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
 
         if self.partner_id.user_id:
