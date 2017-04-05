@@ -56,9 +56,9 @@
         <field name="arch" type="xml">
             <form string="Maintenance Request">
                 <header>
-                    <button string="Cancel" name="archive_equipment_request" type="object" attrs="{'invisible': [('archive', '=', True)]}"/>
-                    <button string="Reopen Request" name="reset_equipment_request" type="object" attrs="{'invisible': [('archive', '=', False)]}"/>
-                    <field name="stage_id" widget="statusbar" clickable="true" attrs="{'invisible': [('archive', '=', True)]}"/>
+                    <button string="Cancel" name="archive_equipment_request" type="object" attrs="{'invisible': [('archive', '=', True)]}" groups="maintenance.group_equipment_manager"/>
+                    <button string="Reopen Request" name="reset_equipment_request" type="object" attrs="{'invisible': [('archive', '=', False)]}" groups="maintenance.group_equipment_manager"/>
+                    <field name="stage_id" widget="statusbar" attrs="{'invisible': [('archive', '=', True)]}"/>
                 </header>
                 <sheet>
                     <div attrs="{'invisible': [('archive', '=', False)]}">
@@ -88,9 +88,9 @@
                             <field name="technician_user_id" string="Responsible"/>
                             <label for="schedule_date"/>
                             <div class="o_row">
-                                <field name="schedule_date"/>
+                                <field name="schedule_date" readonly="1"/>
                                 <label string="for"/>
-                                <field name="duration" class="oe_inline"/> hours
+                                <field name="duration" readonly="1" class="oe_inline"/> hours
                             </div>
                             <field name="priority" widget="priority"/>
                         </group>
@@ -223,6 +223,24 @@
                 <field name="name"/>
                 <field name="technician_user_id"/>
             </calendar>
+        </field>
+    </record>
+
+   <record id="hr_equipment_request_view_form_readonly_emp" model="ir.ui.view">
+        <field name="name">hr.equipment.request.view.form.readonly.emp</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="groups_id" eval="[(6, 0, [ref('maintenance.group_equipment_manager') ])]"/>
+        <field name="arch" type="xml">
+            <field name='stage_id' position="attributes">
+                <attribute name="clickable">1</attribute>
+            </field>
+            <field name='schedule_date' position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
+            <field name="duration" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
         </field>
     </record>
 
@@ -964,38 +982,40 @@
         name="Equipments"
         parent="menu_maintenance_title"
         action="hr_equipment_action"
-        groups="group_equipment_manager,base.group_user"
+        groups="group_equipment_manager"
         sequence="2"/>
 
     <menuitem
         id="menu_m_reports"
         name="Reporting"
         parent="menu_maintenance_title"
-        groups="group_equipment_manager,base.group_user"
+        groups="group_equipment_manager"
         sequence="3"/>
 
     <menuitem
         id="menu_m_reports_oee"
         name="Overall Equipment Effectiveness (OEE)"
         parent="menu_m_reports"
-        groups="group_equipment_manager,base.group_user"
+        groups="group_equipment_manager"
         sequence="1"/>
 
     <menuitem
         id="menu_m_reports_losses"
         name="Losses Analysis"
         parent="menu_m_reports"
-        groups="group_equipment_manager,base.group_user"
+        groups="group_equipment_manager"
         sequence="2"/>
 
     <menuitem
         id="maintenance_reporting"
         name="Reporting"
         parent="menu_maintenance_title"
+        groups="group_equipment_manager"
         sequence="20"/>
     <menuitem
         id="maintenance_request_reporting"
         action="maintenance_request_action_reports"
+        groups="group_equipment_manager"
         parent="maintenance_reporting"/>
 
     <menuitem
