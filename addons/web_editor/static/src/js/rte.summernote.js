@@ -147,8 +147,6 @@ renderer.tplPopovers = function (lang, options) {
     }
     var $colorfa = $airPopover.find('.note-color').clone();
     $colorfa.find("ul.dropdown-menu").css('min-width', '172px');
-    $colorfa.find('button[data-event="color"]').attr('data-value', '{"foreColor": "#f00"}')
-        .find("i").css({'background': '', 'color': '#f00'});
     $resizefa.after($colorfa);
 
     // show dialog box and delete
