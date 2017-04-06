@@ -640,10 +640,15 @@ var BasicModel = AbstractModel.extend({
                             record.res_ids.push(id);
                             record.count++;
                         }
-                        // erase changes as they have been applied
-                        record._changes = {};
-
-                        return shouldReload ? self._fetchRecord(record) : false;
+                        if (shouldReload) {
+                            // erase changes as they have been applied
+                            record._changes = {};
+                            return self._fetchRecord(record);
+                        } else {
+                            _.extend(record.data, record._changes);
+                            record._changes = {};
+                            return false;
+                        }
                     });
             } else {
                 return $.when(record_id);
