@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.account_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div id="msg_account_asset" position="replace">
-                <div class="content-group">
+                <div class="content-group" attrs="{'invisible': [('module_account_asset', '=', False)]}">
                     <div class="mt16">
                         <button name="%(account_asset.action_account_asset_asset_list_normal_purchase)d" icon="fa-arrow-right" type="action" string="Asset Types" class="btn-link"/>
                     </div>
