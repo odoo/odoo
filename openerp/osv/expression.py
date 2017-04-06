@@ -869,8 +869,7 @@ class expression(object):
             # Making search easier when there is a left operand as column.o2m or column.m2m
             elif len(path) > 1 and column and column._type in ['many2many', 'one2many']:
                 right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=context)
-                table_ids = model.search(cr, uid, [(path[0], 'in', right_ids)], context=dict(context, active_test=False))
-                leaf.leaf = ('id', 'in', table_ids)
+                leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
             elif not column:
