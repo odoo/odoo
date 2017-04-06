@@ -1950,8 +1950,9 @@ var FieldDomain = AbstractField.extend({
  * This widget is intended to be used on Text fields. It will provide Ace Editor
  * for editing XML and Python.
  */
-var AceEditor = AbstractField.extend({
+var AceEditor = DebouncedField.extend({
     template: "AceEditor",
+    events: {}, // events are triggered manually for this debounced widget
     /**
      * @override willStart from AbstractField (Widget)
      * Loads the ace library if not already loaded.
@@ -1967,7 +1968,7 @@ var AceEditor = AbstractField.extend({
                 );
             });
         }
-        return $.when(this._super(), this.loadJS_def);
+        return $.when(this._super.apply(this, arguments), this.loadJS_def);
     },
     /**
      * @override start from AbstractField (Widget)
@@ -1976,7 +1977,7 @@ var AceEditor = AbstractField.extend({
      */
     start: function () {
         this._startAce(this.$('.ace-view-editor')[0]);
-        return this._super();
+        return this._super.apply(this, arguments);
     },
     /**
      * @override destroy from AbstractField (Widget)
@@ -1991,6 +1992,13 @@ var AceEditor = AbstractField.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     * @private
+     */
+    _getValue: function () {
+        return this.aceSession.getValue();
+    },
     /**
      * @override _render from AbstractField
      * The rendering is the same for edit and readonly mode: changing the ace
@@ -2015,7 +2023,6 @@ var AceEditor = AbstractField.extend({
      * @param {Node} node - the DOM element the ace library must initialize on
      */
     _startAce: function (node) {
-        var self = this;
         this.aceEditor = ace.edit(node);
         this.aceEditor.setOptions({
             maxLines: Infinity,
@@ -2042,9 +2049,8 @@ var AceEditor = AbstractField.extend({
             useSoftTabs: true,
         });
         if (this.mode === "edit") {
-            this.aceEditor.on("change", _.debounce(function () {
-                self._setValue(self.aceSession.getValue());
-            }, 0)); // debounce because aceSession.setValue triggers 2 changes...
+            this.aceEditor.on("change", this._onInput.bind(this));
+            this.aceEditor.on("blur", this._onChange.bind(this));
         }
     },
 });
