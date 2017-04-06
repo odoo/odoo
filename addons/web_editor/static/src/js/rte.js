@@ -533,9 +533,8 @@ var RTE = Widget.extend({
             }, 150); // setTimeout to remove flickering when change to editable zone (re-create an editor)
             this.$last = null;
         }
-        if ($editable.length && (!this.$last || this.$last[0] !== $editable[0]) &&
-                ($target.closest('[contenteditable]').attr('contenteditable') || "").toLowerCase() !== 'false') {
-
+        if (($editable.length && ($target.closest('[contenteditable]').attr('contenteditable') || "").toLowerCase() !== 'false' || dom.isImg($target[0]))
+            && (!this.$last || this.$last[0] !== $editable[0])) {
             $editable.summernote(this.config($editable));
 
             $editable.data('NoteHistory', history);
