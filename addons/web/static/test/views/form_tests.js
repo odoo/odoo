@@ -660,12 +660,9 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-
     QUnit.test('buttons in form view, new record', function (assert) {
         // this simulates a situation similar to the settings forms.
-        assert.expect(1);
-
-        var rpcCount = 0;
+        assert.expect(5);
 
         var form = createView({
             View: FormView,
@@ -682,20 +679,19 @@ QUnit.module('Views', {
                         '</group>' +
                     '</sheet>' +
                 '</form>',
-            mockRPC: function () {
-                rpcCount++;
+            mockRPC: function (route, args) {
+                assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
         });
 
         testUtils.intercept(form, 'execute_action', function (event) {
+            assert.step('execute_action');
             event.data.on_success();
         });
-        rpcCount = 0;
         form.$('.o_form_statusbar button.p').click();
 
-        assert.strictEqual(rpcCount, 3,
-            "should have done 3 rpcs: 1 create, 1 read (before _callButtonAction, and 1 read (after)");
+        assert.verifySteps(['default_get', 'create', 'execute_action', 'read']);
         form.destroy();
     });
 
@@ -1079,7 +1075,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('clicking on stat buttons in edit mode', function (assert) {
-        assert.expect(5);
+        assert.expect(8);
 
         var form = createView({
             View: FormView,
@@ -1102,6 +1098,7 @@ QUnit.module('Views', {
                 if (args.method === 'write') {
                     assert.strictEqual(args.args[1].foo, "tralala", "should have saved the changes");
                 }
+                assert.step(args.method);
                 return this._super(route, args);
             },
         });
@@ -1123,8 +1120,10 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.mode, "edit", "form view should be in edit mode");
         assert.strictEqual(count, 2, "should have triggered a execute action");
+        assert.verifySteps(['read', 'write']);
         form.destroy();
     });
+
 
     QUnit.test('buttons with attr "special" do not trigger a save', function (assert) {
         assert.expect(4);

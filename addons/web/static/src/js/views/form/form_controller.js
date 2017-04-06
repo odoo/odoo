@@ -453,7 +453,7 @@ var FormController = BasicController.extend({
             def = this._callButtonAction(attrs, event.data.record);
         } else {
             // save the record but don't switch to readonly mode
-            def = this.saveRecord({stayInEdit: true}).then(function () {
+            def = this.saveRecord({stayInEdit: true, reload: false}).then(function () {
                 return self._callButtonAction(attrs, event.data.record);
             });
         }
