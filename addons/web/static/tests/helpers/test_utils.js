@@ -10,13 +10,14 @@ odoo.define('web.test_utils', function (require) {
  * instance of a view, appended in the dom, ready to be tested.
  */
 
-var AbstractField = require('web.AbstractField');
+var basic_fields = require('web.basic_fields');
 var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
 var Widget = require('web.Widget');
 
+var DebouncedField = basic_fields.DebouncedField;
 
 /**
  * intercepts an event bubbling up the widget hierarchy. The event intercepted
@@ -244,8 +245,8 @@ function addMockEnvironment(widget, params) {
     var widgetDestroy;
 
     // make sure the debounce value for input fields is set to 0
-    var initialDebounce = AbstractField.prototype.DEBOUNCE;
-    AbstractField.prototype.DEBOUNCE = params.fieldDebounce || 0;
+    var initialDebounce = DebouncedField.prototype.DEBOUNCE;
+    DebouncedField.prototype.DEBOUNCE = params.fieldDebounce || 0;
 
     if ('session' in params) {
         var initialSession = _.extend({}, session);
@@ -269,7 +270,7 @@ function addMockEnvironment(widget, params) {
                 delete config[key];
             }
             _.extend(config, initialConfig);
-            AbstractField.prototype.DEBOUNCE = initialDebounce;
+            DebouncedField.prototype.DEBOUNCE = initialDebounce;
             widgetDestroy.call(this);
         };
     }
