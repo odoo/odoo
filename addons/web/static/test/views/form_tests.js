@@ -33,6 +33,7 @@ QUnit.module('Views', {
                     state: {string: "State", type: "selection", selection: [["ab", "AB"], ["cd", "CD"], ["ef", "EF"]]},
                     date: {string: "Some Date", type: "date"},
                     datetime: {string: "Datetime Field", type: 'datetime'},
+                    product_ids: {string: "one2many product", type: "one2many", relation: "product"},
                 },
                 records: [{
                     id: 1,
@@ -67,7 +68,8 @@ QUnit.module('Views', {
             },
             product: {
                 fields: {
-                    name: {string: "Product Name", type: "char"}
+                    name: {string: "Product Name", type: "char"},
+                    partner_type_id: {string: "Partner type", type: "many2one", relation: "partner_type"},
                 },
                 records: [{
                     id: 37,
@@ -2630,6 +2632,47 @@ QUnit.module('Views', {
             "the field widget should have 2 children, the text and the value");
         assert.strictEqual(parseInt(form.$('button .o_field_widget .o_stat_value').text()), 9,
             "the value rendered should be the same than the field value");
+        form.destroy();
+    });
+
+    QUnit.test('one2many default value creation', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].product_ids = [37];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="product_ids" nolabel="1">' +
+                                '<tree editable="top" create="0">' +
+                                    '<field name="name" readonly="1"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({
+                        product_ids: [[0, 0, {
+                            name: 'xdroid',
+                            partner_type_id: 12,
+                        }]]
+                    });
+                }
+                if (args.method === 'create') {
+                    var command = args.args[0].product_ids[0];
+                    assert.strictEqual(command[2].partner_type_id, 12,
+                        "the default partner_type_id should be equal to 12");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_save').click();
         form.destroy();
     });
 });
