@@ -932,6 +932,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.inited = True
         self._default_values()
         self.modified = False
+        self.rotate = False
 
     def __getattr__(self, attr):
         return self.get(attr, None)
@@ -963,6 +964,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
+        self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login
