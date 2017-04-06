@@ -27,6 +27,7 @@ class ProjectTaskMergeWizard(models.TransientModel):
             self.target_task_id = self.env['project.task'].create(values)
         else:
             self.target_task_id.write(values)
+        self.merge_followers()
         self.target_task_id.message_post_with_view(
             self.env.ref('project.mail_template_task_merge'),
             values={'target': True, 'tasks': self.task_ids - self.target_task_id},
@@ -48,6 +49,13 @@ class ProjectTaskMergeWizard(models.TransientModel):
     @api.multi
     def merge_description(self):
         return '<br/>'.join(self.task_ids.mapped(lambda task: "Description from task <b>%s</b>:<br/>%s" % (task.name, task.description or 'No description')))
+
+    @api.multi
+    def merge_followers(self):
+        self.target_task_id.message_subscribe(
+            partner_ids=(self.task_ids - self.target_task_id).mapped('message_partner_ids').ids,
+            channel_ids=(self.task_ids - self.target_task_id).mapped('message_channel_ids').ids,
+        )
 
     @api.model
     def default_get(self, fields):
