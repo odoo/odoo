@@ -1621,3 +1621,68 @@ class TestStockFlow(TestStockCommon):
         # There should be no quant in the inventory loss location
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', location_loss.id)])
         self.assertEqual(len(quant), 0)
+
+    def test_74_move_state_waiting_mto(self):
+        """ This test will check that when a move is unreserved, its state changes to 'waiting' if
+        it has ancestors or if it has a 'procure_method' equal to 'make_to_order' else the state
+        changes to 'confirmed'.
+        """
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        move_mto_alone = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'procure_method':'make_to_order'})
+        move_with_ancestors = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'move_dest_id': move_with_ancestors.id})
+        other_move = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+
+        move_mto_alone.action_confirm()
+        move_with_ancestors.action_confirm()
+        other_move.action_confirm()
+
+        move_mto_alone.do_unreserve()
+        move_with_ancestors.do_unreserve()
+        other_move.do_unreserve()
+
+        self.assertEquals(move_mto_alone.state, "waiting")
+        self.assertEquals(move_with_ancestors.state, "waiting")
+        self.assertEquals(other_move.state, "confirmed")
+
+        move_mto_alone.recalculate_move_state()
+        move_with_ancestors.recalculate_move_state()
+        other_move.recalculate_move_state()
+
+        self.assertEquals(move_mto_alone.state, "waiting")
+        self.assertEquals(move_with_ancestors.state, "waiting")
+        self.assertEquals(other_move.state, "confirmed")
