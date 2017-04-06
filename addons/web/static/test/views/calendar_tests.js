@@ -10,14 +10,6 @@ var createView = testUtils.createView;
 var initialDate = new Date("2016-12-12T08:00:00Z");
 
 
-function mock_check_access_rights(route, args) {
-    if (args.method === "check_access_rights") {
-        if (!args.model) throw new Error('"model" is undefined to call "check_access_rights"');
-        return $.when(true);
-    }
-    return this._super(route, args);
-}
-
 QUnit.module('Views', {
     beforeEach: function () {
         session.uid = -1; // TO CHECK
@@ -41,7 +33,10 @@ QUnit.module('Views', {
                     {id: 4, user_id: session.uid, partner_id: 1, name: "event 4", start: "2016-12-14 15:55:05", stop: "2016-12-14 18:55:05", allday: true, partner_ids: [1], type: 2},
                     {id: 5, user_id: 4, partner_id: 4, name: "event 5", start: "2016-12-13 15:55:05", stop: "2016-12-20 18:55:05", allday: false, partner_ids: [2,3], type: 2},
                     {id: 6, user_id: session.uid, partner_id: 1, name: "event 6", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [3], type: 3}
-                ]
+                ],
+                check_access_rights: function () {
+                    return $.when(true);
+                }
             },
             user: {
                 fields: {
@@ -166,7 +161,6 @@ QUnit.module('Views', {
                     '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
             '</calendar>',
             archs: archs,
-            mockRPC: mock_check_access_rights,
             viewOptions: {
                 initialDate: initialDate,
             },
@@ -237,7 +231,6 @@ QUnit.module('Views', {
                     '<field name="name"/>'+
             '</calendar>',
             archs: archs,
-            mockRPC: mock_check_access_rights,
             viewOptions: {
                 initialDate: initialDate,
             },
@@ -332,7 +325,6 @@ QUnit.module('Views', {
                     '<field name="partner_ids" avatar_field="image" write_model="filter_partner" write_field="partner_id"/>'+
             '</calendar>',
             archs: archs,
-            mockRPC: mock_check_access_rights,
             viewOptions: {
                 initialDate: initialDate,
             },

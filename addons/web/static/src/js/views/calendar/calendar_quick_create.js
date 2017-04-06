@@ -22,15 +22,15 @@ var QuickCreate = Dialog.extend({
      * @param {Widget} parent
      * @param {Object} buttons
      * @param {Object} options
-     * @param {Object} data_template
+     * @param {Object} dataTemplate
      * @param {Object} dataCalendar
      */
-    init: function (parent, buttons, options, data_template, dataCalendar) {
+    init: function (parent, buttons, options, dataTemplate, dataCalendar) {
         this._buttons = buttons || false;
         this.options = options;
 
         // Can hold data pre-set from where you clicked on agenda
-        this.data_template = data_template || {};
+        this.dataTemplate = dataTemplate || {};
         this.$input = $();
 
         var self = this;
@@ -108,6 +108,7 @@ var QuickCreate = Dialog.extend({
      * Gathers data from the quick create dialog a launch quick_create(data) method
      */
     _quickAdd: function (dataCalendar) {
+        dataCalendar = $.extend({}, this.dataTemplate, dataCalendar);
         var val = this.$input.val().trim();
         dataCalendar.title = val;
         return (val)? this.trigger_up('quickCreate', {data: dataCalendar, options: this.options}) : false;

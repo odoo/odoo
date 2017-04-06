@@ -370,7 +370,7 @@ return AbstractRenderer.extend({
         $calendar.find('.fc-bg .fc-day[data-date="'+highlightDate+'"]')
                  .addClass('o_target_date');
 
-        this.$small_calendar.datepicker("setDate", this.state.highlight_date)
+        this.$small_calendar.datepicker("setDate", this.state.highlight_date.toDate())
                             .find('.o_selected_range')
                             .removeClass('o_color o_selected_range');
         var $a;
