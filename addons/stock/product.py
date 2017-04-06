@@ -337,6 +337,10 @@ class product_product(osv.osv):
         template_obj = self.pool.get("product.template")
         templ_ids = list(set([x.product_tmpl_id.id for x in self.browse(cr, uid, ids, context=context)]))
         return template_obj.action_view_routes(cr, uid, templ_ids, context=context)
+    
+    def onchange_track_all(self, cr, uid, ids, track_all, context=None):
+        product_template_ids = self.browse(cr, uid, ids, context).product_tmpl_id.id
+        return self.pool.get('product.template').onchange_track_all(cr, uid, [product_template_ids], track_all, context)
 
 class product_template(osv.osv):
     _name = 'product.template'
@@ -446,6 +450,18 @@ class product_template(osv.osv):
         result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
         return result
 
+    def onchange_track_all(self, cr, uid, ids, track_all, context=None):
+        warning = {}
+        if ids and track_all:
+            quant_ids = self.pool.get('stock.quant').search(cr, uid, [('product_id.product_tmpl_id','in',ids), ('lot_id','=', False), ('location_id.usage','=', 'internal')])
+            if quant_ids:
+                warning_msgs =  _("There are Quants without lot for this product. You need to assign serial number (e.g. by creating an inventory) first to prevent inventory loss.")
+                if warning_msgs:
+                    warning = {
+                        'title': _('Configuration Error!'),
+                        'message' : warning_msgs
+                       }
+        return {'warning' : warning}
 
     def _get_products(self, cr, uid, ids, context=None):
         products = []
