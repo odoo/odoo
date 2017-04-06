@@ -803,6 +803,9 @@ class IrModelFields(models.Model):
     def _instanciate(self, field_data, partial):
         """ Return a field instance corresponding to parameters ``field_data``. """
         attrs = self._instanciate_attrs(field_data, partial)
+        if partial and not attrs:
+            # field not instanciable yet, ignore.
+            return None
         return fields.Field.by_type[field_data['ttype']](**attrs)
 
 
