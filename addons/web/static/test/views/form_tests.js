@@ -2507,6 +2507,40 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('context of onchanges contains the context of changed fields', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.onchanges = {
+            foo: function () {},
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="foo" context="{\'test\': 1}"/>' +
+                        '<field name="int_field" context="{\'int_ctx\': 1}"/>' +
+                    '</group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.strictEqual(args.args[4].test, 1,
+                        "the context of the field triggering the onchange should be given");
+                    assert.strictEqual(args.args[4].int_ctx, undefined,
+                        "the context of other fields should not be given");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 2,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_input:first').val('coucou').trigger('input');
+
+        form.destroy();
+    });
+
     QUnit.test('navigation with tab key in form view', function (assert) {
         assert.expect(2);
 
