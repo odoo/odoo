@@ -1346,9 +1346,9 @@ class AccountPartialReconcile(models.Model):
         for rec in self:
             if not rec.company_id.currency_exchange_journal_id:
                 raise UserError(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-            if not self.company_id.income_currency_exchange_account_id.id:
+            if not rec.company_id.income_currency_exchange_account_id.id:
                 raise UserError(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-            if not self.company_id.expense_currency_exchange_account_id.id:
+            if not rec.company_id.expense_currency_exchange_account_id.id:
                 raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
             move_vals = {'journal_id': rec.company_id.currency_exchange_journal_id.id, 'rate_diff_partial_rec_id': rec.id}
 
