@@ -31,6 +31,12 @@ var DebouncedField = AbstractField.extend({
         'input': '_onInput',
         'change': '_onChange',
     }),
+    /**
+     * for field widgets that may have a large number of field changes quickly,
+     * it could be a good idea to debounce the changes. In that case, this is
+     * the suggested value.
+     */
+    DEBOUNCE: 1000,
 
     /**
      * Override init to debounce the input changes to make sure they are not
@@ -2044,6 +2050,7 @@ var AceEditor = AbstractField.extend({
 });
 
 return {
+    DebouncedField: DebouncedField,
     EmailWidget: EmailWidget,
     FieldBinaryFile: FieldBinaryFile,
     FieldBinaryImage: FieldBinaryImage,
