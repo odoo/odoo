@@ -647,8 +647,8 @@
     </li>
 </t>
 <div t-name="Priority" class="o_priority">
-    <a t-if="!widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" href="#" t-att-data-value="v[0]" t-att-title="v[1]" class="o_priority_star fa"/>
-    <span t-if="widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" t-att-data-value="v[0]" t-att-title="v[1]" class="o_priority_star fa"/>
+    <a t-if="!widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" href="#" t-att-data-value="v[0]" t-att-title="widget.no_title ? '' : v[1]" class="o_priority_star fa"/>
+    <span t-if="widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" t-att-data-value="v[0]" t-att-title="widget.no_title ? '' : v[1]" class="o_priority_star fa"/>
 </div>
 <t t-name="FieldEmail" t-extend="FieldChar">
     <t t-jquery="span" t-operation="replace">
