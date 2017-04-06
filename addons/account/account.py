@@ -709,19 +709,21 @@ class account_account(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
+        checked_fields = {'company_id', 'active', 'type', 'code'}.intersection(vals)
+        records = self.read(cr, uid, ids, fields=checked_fields, context=context)
+        def changed(field):
+            return field in checked_fields and {record[field] for record in records} != {vals[field]}
+
         # Dont allow changing the company_id when account_move_line already exist
-        if 'company_id' in vals:
+        if changed('company_id'):
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)], context=context)
             if move_lines:
-                # Allow the write if the value is the same
-                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'], context=context)]:
-                    if vals['company_id']!=i:
-                        raise osv.except_osv(_('Warning!'), _('You cannot change the owner company of an account that already contains journal items.'))
-        if 'active' in vals and not vals['active']:
+                raise osv.except_osv(_('Warning!'), _('You cannot change the owner company of an account that already contains journal items.'))
+        if changed('active') and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context=context)
-        if 'type' in vals.keys():
+        if changed('type'):
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
-        if 'code' in vals.keys():
+        if changed('code'):
             self._check_allow_code_change(cr, uid, ids, context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
