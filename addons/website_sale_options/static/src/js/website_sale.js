@@ -97,15 +97,21 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                         });
                     });
                 });
-        } else {
+        }else {
+            var $target = $(event.currentTarget);
             $form.ajaxSubmit({
                 url:  '/shop/cart/update_option',
                 data: {lang: base.get_context().lang},
                 success: function (quantity) {
-                    website_sale_utils.animate_clone($('#my_cart'), $form, 10, 10);
                     var $q = $(".my_cart_quantity");
-                    $q.parent().parent().removeClass("hidden", !quantity);
+                    if (parseInt(quantity)) {
+                        $("li#my_cart").removeClass("hidden");
+                    }
+                    website_sale_utils.animate_clone($('#my_cart'), $form, 10, 10);
                     $q.html(quantity).hide().fadeIn(600);
+                    if($target.attr("id") == 'add_to_cart') {
+                        window.location.href = "/shop/cart";
+                    }
                 }
             });
         }
