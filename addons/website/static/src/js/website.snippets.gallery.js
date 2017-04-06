@@ -208,7 +208,7 @@ options.registry.gallery = options.Class.extend({
             $slideshow = $(qweb.render('website.gallery.slideshow', params));
         this.replace($slideshow);
         this.$target.find(".item img").each(function (index) {
-            $(this).attr('data-index', index).data('index', index);
+            $(this).attr({'data-index': index, 'contenteditable': true});
         });
         this.$target.css("height", Math.round(window.innerHeight*0.7));
 

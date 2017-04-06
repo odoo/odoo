@@ -535,7 +535,6 @@ var RTE = Widget.extend({
         }
         if ($editable.length && (!this.$last || this.$last[0] !== $editable[0]) &&
                 ($target.closest('[contenteditable]').attr('contenteditable') || "").toLowerCase() !== 'false') {
-
             $editable.summernote(this.config($editable));
 
             $editable.data('NoteHistory', history);
