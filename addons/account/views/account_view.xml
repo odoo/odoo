@@ -145,6 +145,13 @@
             src_model="res.partner"/>
 
         <act_window
+            id="account.action_all_partner_invoices"
+            name="All partner invoices"
+            res_model="account.invoice"
+            domain="[('partner_id', '=', active_id)]"
+            src_model="res.partner"/>
+
+        <act_window
             id="act_account_acount_move_line_open_unreconciled"
             name="Unreconciled Entries"
             res_model="account.move.line"
