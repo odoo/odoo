@@ -896,7 +896,7 @@ class Lead(models.Model):
             'nb_opportunities': 0,
         }
 
-        opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid)])
+        opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid), ('activity_date_deadline', '!=', False)])
 
         for opp in opportunities:
             # Expected closing
