@@ -1462,9 +1462,7 @@ class AccountPartialReconcile(models.Model):
     @api.multi
     def _prepare_exchange_diff_move(self, move_date):
         self.ensure_one()
-        res = {'journal_id': self.company_id.currency_exchange_journal_id.id,
-               'rate_diff_partial_rec_id': self.id,
-               }
+        res = {'journal_id': self.company_id.currency_exchange_journal_id.id}
         # The move date should be the maximum date between payment and invoice
         # (in case of payment in advance). However, we should make sure the
         # move date is not recorded after the end of year closing.
