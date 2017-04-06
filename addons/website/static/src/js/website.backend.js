@@ -7,11 +7,29 @@ var field_registry = require('web.field_registry');
 
 var _t = core._t;
 
-
 var WidgetWebsiteButton = AbstractField.extend({
     template: 'WidgetWebsiteButton',
 
-    render: function () {
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    isSet: function () {
+        return true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
         this._super.apply(this, arguments);
 
         var $value = this.$('.o_value');
@@ -25,9 +43,6 @@ var WidgetWebsiteButton = AbstractField.extend({
                   .removeClass('text-success')
                   .addClass('text-danger');
         }
-    },
-    is_set: function () {
-        return true;
     },
 });
 
