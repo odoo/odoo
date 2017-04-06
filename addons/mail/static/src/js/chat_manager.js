@@ -532,10 +532,21 @@ function on_partner_notification (data) {
         on_channel_seen_notification(data);
     } else if (data.info === 'transient_message') {
         on_transient_message_notification(data);
+    } else if (data.info === 'signup_welcome_message') {
+        on_signup_welcome_notification(data);
     } else {
         on_chat_session_notification(data);
     }
 }
+
+function on_signup_welcome_notification(data) {
+    var def_channel = chat_manager.create_channel(data.partner_id, "dm");
+    $.when(def_channel, chat_manager.is_web_client_ready).then(function(channel){
+        chat_manager.bus.trigger("open_chat", channel);
+        chat_manager.bus.trigger("show_welcome_msg", channel, data);
+    });
+}
+
 
 function on_toggle_star_notification (data) {
     _.each(data.message_ids, function (msg_id) {
@@ -1024,6 +1035,7 @@ var chat_manager = {
             return _.sortBy(autocomplete_data, 'label');
         });
     },
+    is_web_client_ready: $.Deferred(),
 };
 
 chat_manager.bus.on('client_action_open', null, function (open) {

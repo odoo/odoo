@@ -7,14 +7,13 @@
             <div class="o_mail_chat_sidebar"/>
             <div class="o_mail_chat_content">
                 <t t-if="widget.notification_bar">
-                    <div class="o_mail_annoying_notification_bar">
-                        <span class="o_mail_request_permission">Odoo needs your permission to <a href="#"> enable desktop notifications</a>.</span>
-                        <span class="fa fa-close"></span>
+                    <div class="o_mail_notification_bar">
                     </div>
                 </t>
             </div>
         </div>
     </t>
+
     <t t-name="mail.chat.Sidebar">
         <div class="o_mail_chat_sidebar">
             <div t-attf-class="o_mail_chat_channel_item #{(active_channel_id == 'channel_inbox') ? 'o_active': ''}"

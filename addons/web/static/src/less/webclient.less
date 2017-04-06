@@ -76,6 +76,36 @@ a {
     }
 }
 
+.o_annoying_notification_bar {
+    margin-top: 25px;
+    max-width: 768px;
+    width: 100%;
+    background-color: #DFA941;
+    color: white;
+    -webkit-box-flex: 0;
+    flex: 0 0 auto;
+    .o-flex-display();
+
+    .o_request_permission {
+        .o-flex-display();
+        justify-content: center;
+        .o-flex(1,1, auto);
+    }
+    > span {
+        line-height: 40px;
+        > a {
+            color: white;
+            margin-left: 5px;
+            text-decoration: underline;
+        }
+
+        &.fa-close {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+    }
+}
+
 // Buttons
 .o_icon_button {
     background-color: transparent;
@@ -86,4 +116,14 @@ a {
 
 .oe_highlight {
     .btn-primary;
+}
+
+.o_mail_notification_bar {
+    .o_annoying_notification_bar {
+        margin-top: 0px;
+        max-width: 100%;
+        > span {
+            font-size: 16px;
+        }
+    }
 }

@@ -20,6 +20,16 @@
     </t>
 </t>
 
+<!--Template for common notificaton bar-->
+<t t-name="NotificationBar">
+    <t t-if="widget.notification_bar">
+        <div class="o_annoying_notification_bar">
+            <span class="o_request_permission">Odoo needs your permission to <a href="#"> enable desktop notifications</a>.</span>
+            <span class="fa fa-close"></span>
+        </div>
+    </t>
+</t>
+
 <div t-name="CrashManager.warning" class="o_dialog_warning">
     <t t-js="d">
         var message = d.message ? d.message : d.error.data.message;

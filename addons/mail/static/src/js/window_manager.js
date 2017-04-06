@@ -191,6 +191,12 @@ function toggle_fold_chat (channel) {
         session.window.toggle_fold(channel.is_folded);
     }
 }
+function show_welcome_msg(channel, msg){
+    var session = _.find(chat_sessions, {id: channel.id});
+    if (session) {
+        session.window.$header.after(msg.body);
+    }
+}
 
 function compute_available_slots (nb_windows) {
     if (config.device.size_class === config.device.SIZES.XS) {
@@ -304,6 +310,7 @@ function update_sessions (message, scrollBottom) {
 
 
 core.bus.on('web_client_ready', null, function () {
+    chat_manager.is_web_client_ready.resolve();
     chat_manager.bus.on('open_chat', null, open_chat);
     chat_manager.bus.on('close_chat', null, function (channel, options) {
         var session = _.find(chat_sessions, {id: channel.id});
@@ -313,6 +320,7 @@ core.bus.on('web_client_ready', null, function () {
     });
     chat_manager.bus.on('channel_toggle_fold', null, toggle_fold_chat);
 
+    chat_manager.bus.on('show_welcome_msg', null, show_welcome_msg);
     chat_manager.bus.on('new_message', null, function (message) {
         update_sessions(message, true);
     });

@@ -31,6 +31,7 @@ class ResPartner(models.Model):
     signup_expiration = fields.Datetime(copy=False)
     signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
+    invite_by = fields.Many2one('res.partner', help="Invited by parter")
 
     @api.multi
     def _compute_signup_valid(self):
@@ -111,7 +112,7 @@ class ResPartner(models.Model):
                 token = random_token()
                 while self._signup_retrieve_partner(token):
                     token = random_token()
-                partner.write({'signup_token': token, 'signup_type': signup_type, 'signup_expiration': expiration})
+                partner.write({'signup_token': token, 'signup_type': signup_type, 'signup_expiration': expiration, 'invite_by': self.env.user.partner_id.id})
         return True
 
     @api.model
@@ -152,4 +153,21 @@ class ResPartner(models.Model):
             res['login'] = partner.user_ids[0].login
         else:
             res['email'] = res['login'] = partner.email or ''
+        res['invite_by'] = partner.invite_by.id
         return res
+
+    def send_welcome_notification(self):
+        # send notification to invited partner
+        msg = _("<b>%s</b> just created account. Chat here !") % self.env.user.partner_id.name
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.id), {
+            'body': "<div class='alert alert-success'>" + msg + "</div>",
+            'partner_id': self.env.user.partner_id.id,
+            'info': 'signup_welcome_message',
+        })
+        # send notification to current login partner
+        msg = _("Chat with <b>%s</b> here !") % self.name
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), {
+            'body': "<div class='alert alert-success'>" + msg + "</div>",
+            'partner_id': self.id,
+            'info': 'signup_welcome_message',
+        })
