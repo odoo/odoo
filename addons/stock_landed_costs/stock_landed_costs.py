@@ -98,11 +98,10 @@ class stock_landed_cost(osv.osv):
         """
         aml_obj = self.pool.get('account.move.line')
         user_obj = self.pool.get('res.users')
+
         if context is None:
-            context = {}
-        ctx = context.copy()
-        ctx['recompute'] = False
-        ctx['check_move_validity'] = False
+            context = {'check_move_validity': False}
+
         base_line = {
             'name': line.name,
             'move_id': move_id,
@@ -119,8 +118,8 @@ class stock_landed_cost(osv.osv):
             # negative cost, reverse the entry
             debit_line['credit'] = -diff
             credit_line['debit'] = -diff
-        aml_obj.create(cr, uid, debit_line, context=ctx)
-        aml_obj.create(cr, uid, credit_line, context=ctx)
+        aml_obj.create(cr, uid, debit_line, context=context)
+        aml_obj.create(cr, uid, credit_line, context=context)
 
         #Create account move lines for quants already out of stock
         if qty_out > 0:
@@ -140,8 +139,8 @@ class stock_landed_cost(osv.osv):
                 # negative cost, reverse the entry
                 debit_line['credit'] = -diff
                 credit_line['debit'] = -diff
-            aml_obj.create(cr, uid, debit_line, context=ctx)
-            aml_obj.create(cr, uid, credit_line, context=ctx)
+            aml_obj.create(cr, uid, debit_line, context=context)
+            aml_obj.create(cr, uid, credit_line, context=context)
 
             if user_obj.browse(cr, uid, [uid], context=context).company_id.anglo_saxon_accounting:
                 debit_line = dict(base_line,
@@ -160,8 +159,8 @@ class stock_landed_cost(osv.osv):
                     # negative cost, reverse the entry
                     debit_line['credit'] = -diff
                     credit_line['debit'] = -diff
-                aml_obj.create(cr, uid, debit_line, context=ctx)
-                aml_obj.create(cr, uid, credit_line, context=ctx)
+                aml_obj.create(cr, uid, debit_line, context=context)
+                aml_obj.create(cr, uid, credit_line, context=context)
         return True
 
     def _create_account_move(self, cr, uid, cost, context=None):
@@ -203,6 +202,14 @@ class stock_landed_cost(osv.osv):
             if not cost.valuation_adjustment_lines or not self._check_sum(cr, uid, cost, context=context):
                 raise UserError(_('You cannot validate a landed cost which has no valid valuation adjustments lines. Did you click on Compute?'))
             move_id = self._create_account_move(cr, uid, cost, context=context)
+
+            context_no_recompute = None
+            if context:
+                context_no_recompute = context.copy()
+                context_no_recompute['recompute'] = False
+                context_no_recompute['check_move_validity'] = False
+                context_no_recompute['prefetch_fields'] = False
+
             for line in cost.valuation_adjustment_lines:
                 if not line.move_id:
                     continue
@@ -244,12 +251,13 @@ class stock_landed_cost(osv.osv):
                 if quant_correct:
                     quant_dict[quant_correct.id] = quant_correct.cost + diff_correct
                 for key, value in quant_dict.items():
-                    quant_obj.write(cr, SUPERUSER_ID, key, {'cost': value}, context=context)
+                    quant_obj.write(cr, SUPERUSER_ID, key, {'cost': value}, context=context_no_recompute)
                 qty_out = 0
                 for quant in line.move_id.quant_ids:
                     if quant.location_id.usage != 'internal':
                         qty_out += quant.qty
-                self._create_accounting_entries(cr, uid, line, move_id, qty_out, context=context)
+                self._create_accounting_entries(cr, uid, line, move_id, qty_out, context=context_no_recompute)
+
             self.recompute(cr, uid, context=context)
             self.pool.get('account.move').assert_balanced(cr, uid, [move_id], context=context)
             self.write(cr, uid, cost.id, {'state': 'done', 'account_move_id': move_id}, context=context)
