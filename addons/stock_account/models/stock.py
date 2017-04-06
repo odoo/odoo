@@ -123,9 +123,7 @@ class StockQuant(models.Model):
 
     def _create_account_move_line(self, move, credit_account_id, debit_account_id, journal_id):
         # group quants by cost
-        quant_cost_qty = defaultdict(lambda: 0.0)
-        for quant in self:
-            quant_cost_qty[quant.cost] += quant.qty
+        quant_cost_qty = self._group_quants_by_cost(move)
 
         AccountMove = self.env['account.move']
         for cost, qty in quant_cost_qty.iteritems():
@@ -142,6 +140,31 @@ class StockQuant(models.Model):
                         values={'self': new_account_move, 'origin': move.picking_id},
                         subtype_id=self.env.ref('mail.mt_note').id)
                 move.write({'valuation_account_move_ids': [(4, new_account_move.id, None)]})
+
+    def _group_quants_by_cost(self, stock_move):
+        rslt = defaultdict(lambda: 0.0)
+        for quant in self:
+            cost = quant.cost
+
+            if hasattr(stock_move, 'purchase_line_id') \
+                and quant.product_id.valuation == 'real_time' \
+                and quant.product_id.cost_method == 'real':
+
+                po_line = stock_move.purchase_line_id
+                invoiced_qty = po_line.qty_invoiced
+
+                #TODO OCO s'assurer que la façon dont ça peut être scindé ici soit cohérente avec le cas n°1 !
+                #En effet : si une partie de la commande n'a pas été facturée, on l'évalue
+                #sans tenir compte des factures, au prix du quant: ça peut causer une situation hybride entre les cas 1 et 2
+
+                if invoiced_qty:
+                    invoiced_cost = sum(inv_line.price_subtotal for inv_line in po_line.invoice_lines)
+                    not_invoiced_cost = float_round(quant.qty - invoiced_qty, precision_digits=po_line.product_uom.rounding) * quant.cost
+                    cost = invoiced_cost + not_invoiced_cost
+
+        rslt[cost] += quant.qty
+
+        return rslt
 
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
