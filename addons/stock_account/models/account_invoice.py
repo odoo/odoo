@@ -86,9 +86,9 @@ class AccountInvoice(models.Model):
             # We only consider vendor bills, when 'purchase' module is installed
             if invoice.type == 'in_invoice' and hasattr(invoice, 'purchase_id'):
                 for inv_line in invoice.invoice_line_ids:
-                    if inv_line.product_id.valuation == 'real_time':
-                        stock_moves = self.env['stock.move'].search([('purchase_line_id', '=', inv_line.purchase_line_id.id)])
-                        inv_line.balance_stock_valuation(stock_moves)
+                    if inv_line.product_id.valuation == 'real_time' and inv_line.product_id.cost_method == 'real': #TODO OCO il ne faut pas aussi que la cost-method soit 'real' ? >> vérifier
+                        inv_line.balance_stock_valuation()
+
         return rslt
 
 
@@ -117,12 +117,18 @@ class AccountInvoiceLine(models.Model):
                 return accounts['stock_input']
         return super(AccountInvoiceLine, self).get_invoice_line_account(type, product, fpos, company)
 
-    def balance_stock_valuation(self, stock_moves):
+    def balance_stock_valuation(self):
+        stock_moves = self.env['stock.move'].search([('purchase_line_id', '=', self.purchase_line_id.id)])
         for stock_move in stock_moves:
-            valuation_amount = sum(move.amount for move in stock_move.valuation_account_move_ids)
+            whole_move_valuation = sum(move.amount for move in stock_move.valuation_account_move_ids)
             currency = self.env['res.company']._company_default_get().currency_id
-            if float_compare(valuation_amount, self.price_subtotal, precision_digits=currency.decimal_places) != 0:
-                balancing_amount = float_round(valuation_amount - self.price_subtotal, precision_digits=2)
+            valuation_per_unit = float_round(whole_move_valuation / stock_move.ordered_qty, precision_digits=currency.decimal_places)
+
+            if valuation_per_unit and float_compare(valuation_per_unit, self.price_unit, precision_digits=currency.decimal_places) != 0:
+
+                balancing_amount = float_round((valuation_per_unit * self.quantity) - self.price_subtotal, precision_digits=currency.decimal_places)
+
+                #TODO OCO ajouter qqch pour gérer le cas erronné où on refait une facture alors que la PO est déjà intégralement facturée ?? (ce serait pas mal, sans ça on créera des mouvements d'évaluation du stock pour rien qui pourriront la DB)
 
                 if not balancing_amount:
                     return #TODO OCO agencer autrement?
