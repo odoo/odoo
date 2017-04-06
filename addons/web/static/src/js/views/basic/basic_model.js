@@ -1058,7 +1058,7 @@ var BasicModel = AbstractModel.extend({
                         return this.notifyChanges(id, command.data);
                     }));
                 } else {
-                    defs.push(this.addDefaultRecord(list.id));
+                    defs.push(this.addDefaultRecord(list.id, {position: command.position}));
                 }
                 break;
             case 'UPDATE':
@@ -1715,20 +1715,29 @@ var BasicModel = AbstractModel.extend({
                     var removedIds = _.difference(list.res_ids, relIds);
                     var addedIds = _.difference(relIds, list.res_ids);
                     var keptIds = _.intersection(list.res_ids, relIds);
+
                     // the didChange variable keeps track of the fact that at
                     // least one id was updated
                     var didChange = false;
-                    var command, i, relRecord;
-                    for (i = 0; i < keptIds.length; i++) {
-                        relRecord = _.findWhere(relData, {res_id: keptIds[i]});
-                        if (!_.isEmpty(relRecord._changes)) {
-                            var changes = this._generateChanges(relRecord);
-                            command = x2ManyCommands.update(relRecord.res_id, changes);
-                            didChange = true;
-                        } else {
-                            command = x2ManyCommands.link_to(keptIds[i]);
+                    var command, relRecord;
+                    for (var i = 0; i < relIds.length; i++) {
+                        if (_.contains(keptIds, relIds[i])) {
+                            // this is an id that already existed
+                            relRecord = _.findWhere(relData, {res_id: relIds[i]});
+                            if (!_.isEmpty(relRecord._changes)) {
+                                var changes = this._generateChanges(relRecord);
+                                command = x2ManyCommands.update(relRecord.res_id, changes);
+                                didChange = true;
+                            } else {
+                                command = x2ManyCommands.link_to(relIds[i]);
+                            }
+                            commands[fieldName].push(command);
+                        } else if (_.contains(addedIds, relIds[i])) {
+                            // this is a new id
+                            relRecord = _.findWhere(relData, {res_id: relIds[i]});
+                            relRecord = this.get(relRecord.id, {raw: true});
+                            commands[fieldName].push(x2ManyCommands.create(_.omit(relRecord.data, 'id')));
                         }
-                        commands[fieldName].push(command);
                     }
                     if (changesOnly && !didChange && addedIds.length === 0 && removedIds.length === 0) {
                         // in this situation, we have no changed ids, no added
@@ -1736,11 +1745,7 @@ var BasicModel = AbstractModel.extend({
                         // last changes
                         commands[fieldName] = [];
                     }
-                    for (i = 0; i < addedIds.length; i++) {
-                        relRecord = _.findWhere(relData, {res_id: addedIds[i]});
-                        relRecord = this.get(relRecord.id, {raw: true});
-                        commands[fieldName].push(x2ManyCommands.create(_.omit(relRecord.data, 'id')));
-                    }
+                    // add delete commands
                     for (i = 0; i < removedIds.length; i++) {
                         commands[fieldName].push(x2ManyCommands.delete(removedIds[i]));
                     }

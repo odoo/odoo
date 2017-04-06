@@ -777,8 +777,8 @@ var FieldOne2Many = FieldX2Many.extend({
         return this._super.apply(this, arguments).then(function () {
             if (event && event.target === self && self.view.arch.tag === 'tree') {
                 if (event.data.changes[self.name].operation === 'CREATE') {
-                    // todo: get last record if editable = bottom
-                    var newID = self.value.data[0].id;
+                    var index = self.editable === 'top' ? 0 : self.value.data.length - 1;
+                    var newID = self.value.data[index].id;
                     self.renderer.editRecord(newID);
                 }
             }
