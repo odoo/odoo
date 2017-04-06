@@ -67,6 +67,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             self.dashboards_data = result.dashboards;
             self.currency_id = result.currency_id;
             self.groups = result.groups;
+            self.website_id = result.website_id
         });
     },
 
@@ -77,7 +78,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         var dialog = new Dialog(this, {
             size: 'medium',
             title: _t('Google Analytics'),
-            $content: QWeb.render('website.ga_dialog_content', {ga_key: this.dashboards_data.visits.ga_client_id}),
+            $content: QWeb.render('website.ga_dialog_content', {ga_key: this.dashboards_data.visits.ga_client_id, ga_analytics_key: this.dashboards_data.visits.ga_analytics_key}),
             buttons: [
                 {
                     text: _t("Save"),
@@ -85,7 +86,8 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                     close: true,
                     click: function() {
                         var ga_client_id = dialog.$el.find('input[name="ga_client_id"]').val();
-                        self.on_save_ga_client_id(ga_client_id);
+                        var ga_analytics_key = dialog.$el.find('input[name="ga_analytics_key"]').val();
+                        self.on_save_ga_client_id(ga_client_id,ga_analytics_key);
                     },
                 },
                 {
@@ -96,16 +98,24 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         }).open();
     },
 
-    on_save_ga_client_id: function(ga_client_id) {
+    on_save_ga_client_id: function(ga_client_id, ga_analytics_key) {
 
         if (!ga_client_id.endsWith(".apps.googleusercontent.com") || ga_client_id.startsWith(" ")) {
             this.do_warn(_t('Incorrect Client ID'), _t('The Google Analytics Client ID you have entered seems incorrect.'));
             return;
         }
+        if (!ga_analytics_key && ga_client_id) {
+            this.do_warn(_t('Please enter your Tracking ID.'));
+            return;
+        }
 
         var self = this;
-        new Model('ir.config_parameter').call('set_param', ['google_management_client_id', ga_client_id]).then(function(){
-            self.on_date_range_button('week');
+        new Model('website').call('write', [[self.website_id], {'google_analytics_key': ga_analytics_key, 'google_management_client_id': ga_client_id}]).then(function(){
+            var has_google_analytics = new Model('ir.values').call('set_default',['website.config.settings', 'has_google_analytics', true]);
+            var has_google_analytics_dashboard = new Model('ir.values').call('set_default',['website.config.settings', 'has_google_analytics_dashboard', true]);
+            $.when(has_google_analytics, has_google_analytics_dashboard).then(function(){
+                self.on_date_range_button('week');
+            });
         });
     },
 
