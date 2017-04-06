@@ -662,7 +662,9 @@ QUnit.module('Views', {
 
     QUnit.test('buttons in form view, new record', function (assert) {
         // this simulates a situation similar to the settings forms.
-        assert.expect(5);
+        assert.expect(6);
+
+        var resID;
 
         var form = createView({
             View: FormView,
@@ -681,12 +683,20 @@ QUnit.module('Views', {
                 '</form>',
             mockRPC: function (route, args) {
                 assert.step(args.method);
+                if (args.method === 'create') {
+                    return this._super.apply(this, arguments).then(function (result) {
+                        resID = result;
+                        return resID;
+                    });
+                }
                 return this._super.apply(this, arguments);
             },
         });
 
         testUtils.intercept(form, 'execute_action', function (event) {
             assert.step('execute_action');
+            assert.strictEqual(event.data.record_id, resID,
+                "execute action should be done on correct record id");
             event.data.on_success();
         });
         form.$('.o_form_statusbar button.p').click();

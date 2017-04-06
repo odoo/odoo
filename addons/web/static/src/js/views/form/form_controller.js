@@ -454,7 +454,11 @@ var FormController = BasicController.extend({
         } else {
             // save the record but don't switch to readonly mode
             def = this.saveRecord({stayInEdit: true, reload: false}).then(function () {
-                return self._callButtonAction(attrs, event.data.record);
+                // we need to reget the record to make sure we have changes made
+                // by the basic model, such as the new res_id, if the record is
+                // new.
+                var record = self.model.get(event.data.record.id);
+                return self._callButtonAction(attrs, record);
             });
         }
         def.then(function () {
