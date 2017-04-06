@@ -2065,6 +2065,7 @@ var BasicModel = AbstractModel.extend({
                                         fields: fields,
                                         viewType: viewType,
                                     });
+                                    x2manyList._changes = x2manyList._changes || [];
                                     x2manyList._changes.push(r.id);
                                     r._changes = value[2];
 

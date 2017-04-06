@@ -1043,4 +1043,30 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('default_get with one2many values', function (assert) {
+        assert.expect(1);
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({
+                        product_ids: [[0, 0, {"name": "xdroid"}]]
+                    });
+                }
+                return this._super(route, args);
+            },
+        });
+        var params = {
+            fieldNames: ['product_ids'],
+            fields: this.data.partner.fields,
+            modelName: 'partner',
+            type: 'record',
+        };
+        model.load(params).then(function (resultID) {
+            assert.strictEqual(typeof resultID, 'string', "result should be a valid id");
+        });
+        model.destroy();
+    });
 });});
