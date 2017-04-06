@@ -71,18 +71,25 @@
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                             <div class="row mt16">
-                                                <label class="col-md-3 o_light_label" string="Analytics Key" for="google_analytics_key"/>
-                                                <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"/>
+                                                <label class="col-md-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
+                                                <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
+                                                    attrs="{'required': [('google_management_client_id', '!=', False)]}"/>
                                             </div>
+                                        </div>
+                                        <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                            <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html"
+                                                    class="oe_link fa fa-arrow-right" target="_blank">
+                                                How to get my Tracking ID
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-xs-12 col-md-6 o_setting_box" id="google_analytics_dashboard_setting">
-                                    <div class="o_setting_left_pane">
+                                    <div class="o_setting_left_pane" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                         <field name="has_google_analytics_dashboard"/>
                                     </div>
-                                    <div class="o_setting_right_pane">
+                                    <div class="o_setting_right_pane" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                         <label for="has_google_analytics_dashboard"/>
                                         <div class="text-muted">
                                             See Google Analytics data on your Website Dashboard
@@ -98,9 +105,9 @@
                                             </div>
                                         </div>
                                         <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
-                                            <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics.html"
+                                            <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html"
                                                 class="oe_link fa fa-arrow-right" target="_blank">
-                                                Tutorial
+                                                How to get my Client ID
                                             </a>
                                         </div>
                                     </div>
