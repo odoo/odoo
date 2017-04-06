@@ -861,12 +861,15 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var onchange_spec = this._buildOnchangeSpecs(record);
         var idList = record.data.id ? [record.data.id] : [];
-        var context = this._getContext(record);
-        var currentData = this._generateOnChangeData(record);
-
+        var options = {};
         if (fields.length === 1) {
             fields = fields[0];
+            // if only one field changed, add its context to the RPC context
+            options.fieldName = fields;
         }
+        var context = this._getContext(record, options);
+        var currentData = this._generateOnChangeData(record);
+
         return self._rpc({
                 model: record.model,
                 method: 'onchange',
