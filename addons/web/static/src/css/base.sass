@@ -1402,6 +1402,7 @@ $sheet-padding: 16px
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
             border-bottom: 1px solid #ddd
+            z-index: 1
             // Customize font weight according bootstrap3
             .oe_subtotal_footer label
                 font-weight: bold
@@ -1999,6 +2000,9 @@ $sheet-padding: 16px
                 margin: 0
             input, textarea, select
                 min-width: 0
+            textarea.field_text
+                position: relative
+                z-index: 1
             &.oe_form_field_float,&.oe_form_view_integer
                 &.oe_readonly
                     padding: 6px 0px 0px

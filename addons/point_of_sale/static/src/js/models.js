@@ -1035,7 +1035,9 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.trigger('change',this);
         },
         get_unit_price: function(){
-            return round_di(this.price || 0, this.pos.dp['Product Price'])
+            var digits = this.pos.dp['Product Price'];
+            // round and truncate to mimic _sybmbol_set behavior
+            return parseFloat(round_di(this.price || 0, digits).toFixed(digits));
         },
         get_unit_display_price: function(){
             if (this.pos.config.iface_tax_included) {
