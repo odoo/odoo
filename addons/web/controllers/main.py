@@ -648,7 +648,7 @@ class Database(http.Controller):
         try:
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
-            dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code])
+            dispatch_rpc('db', 'create_database', [master_pwd, name.replace(' ', '_'), bool(post.get('demo')), lang, password, post['login'], country_code])
             request.session.authenticate(name, post['login'], password)
             return http.local_redirect('/web/')
         except Exception, e:
