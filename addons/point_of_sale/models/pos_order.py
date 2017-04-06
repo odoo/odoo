@@ -348,10 +348,10 @@ class PosOrder(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.user.company_id)
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one('res.users', string='Salesman', help="Person who uses the cash register. It can be a reliever, a student or an interim employee.", default=lambda self: self.env.uid)
-    amount_tax = fields.Float(compute='_compute_amount_all', string='Taxes', digits=0)
-    amount_total = fields.Float(compute='_compute_amount_all', string='Total', digits=0)
-    amount_paid = fields.Float(compute='_compute_amount_all', string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits=0)
-    amount_return = fields.Float(compute='_compute_amount_all', string='Returned', digits=0)
+    amount_tax = fields.Float(compute='_compute_amount_all', string='Taxes', digits=0, store=True)
+    amount_total = fields.Float(compute='_compute_amount_all', string='Total', digits=0, store=True)
+    amount_paid = fields.Float(compute='_compute_amount_all', string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits=0, store=True)
+    amount_return = fields.Float(compute='_compute_amount_all', string='Returned', digits=0, store=True)
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
     statement_ids = fields.One2many('account.bank.statement.line', 'pos_statement_id', string='Payments', states={'draft': [('readonly', False)]}, readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
@@ -379,7 +379,7 @@ class PosOrder(models.Model):
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True)
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', default=lambda self: self._default_session().config_id.default_fiscal_position_id)
 
-    @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
+    @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount', 'lines.price_subtotal')
     def _compute_amount_all(self):
         for order in self:
             order.amount_paid = order.amount_return = order.amount_tax = 0.0
@@ -775,8 +775,8 @@ class PosOrderLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
     price_unit = fields.Float(string='Unit Price', digits=0)
     qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), default=1)
-    price_subtotal = fields.Float(compute='_compute_amount_line_all', digits=0, string='Subtotal w/o Tax')
-    price_subtotal_incl = fields.Float(compute='_compute_amount_line_all', digits=0, string='Subtotal')
+    price_subtotal = fields.Float(compute='_compute_amount_line_all', digits=0, string='Subtotal w/o Tax', store=True)
+    price_subtotal_incl = fields.Float(compute='_compute_amount_line_all', digits=0, string='Subtotal', store=True)
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade')
     create_date = fields.Datetime(string='Creation Date', readonly=True)
