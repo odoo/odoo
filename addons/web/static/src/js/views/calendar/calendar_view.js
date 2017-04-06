@@ -132,7 +132,7 @@ var CalendarView = AbstractView.extend({
         this.loadParams.filters = filters;
         this.loadParams.mode = attrs.mode;
         this.loadParams.scale_zoom = attrs.scale_zoom;
-        this.loadParams.initialDate = params.initialDate || new Date();
+        this.loadParams.initialDate = moment(params.initialDate || new Date());
     },
 });
 

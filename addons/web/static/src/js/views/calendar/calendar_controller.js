@@ -102,14 +102,7 @@ var CalendarController = AbstractController.extend({
      * @param {integer} record.id
      */
     _updateRecord: function (record) {
-        // Cannot modify actual name yet
-        var data = _.omit(this.model.calendarEventToRecord(record), 'name');
-        this._rpc({
-                model: this.model.modelName,
-                method: 'write',
-                args: [record.id, data],
-            })
-            .then(this.reload.bind(this));
+        this.model.updateRecord(record).reload.bind(this);
     },
 
     //--------------------------------------------------------------------------
@@ -155,23 +148,16 @@ var CalendarController = AbstractController.extend({
      */
     _onQuickCreate: function (event) {
         var self = this;
-        var data = this.model.calendarEventToRecord(event.data.data);
-        var options = event.data.options;
-        return this._rpc({
-                model: this.model.modelName,
-                method: 'create',
-                args: [$.extend({}, this.quick.data_template, data)],
-                context: _.pick(options, 'context'),
-            })
+        this.model.createRecord(event)
             .then(function (id) {
                 self.quick.destroy();
                 self.quick = null;
                 self.reload(id);
             }, function () {
                 // This will occurs if there are some more fields required
-                data.disable_quick_create = true;
-                data.on_save = this.destroy.bind(this);
-                self._onOpenCreate({data: data});
+                event.data.options.disable_quick_create = true;
+                event.data.options.on_save = this.destroy.bind(this);
+                self._onOpenCreate(event.data);
             });
     },
     /**
@@ -194,7 +180,13 @@ var CalendarController = AbstractController.extend({
             context['default_' + this.mapping.date_delay] = data.duration;
         }
         if (this.mapping.all_day) {
-            context['default_' + this.mapping.all_day] = true;
+            context['default_' + this.mapping.all_day] = data[this.mapping.all_day];
+        }
+
+        for (var k in context) {
+            if (context[k] && context[k]._isAMomentObject) {
+                context[k] = context[k].clone().utc().format('YYYY-MM-DD HH:mm:ss');
+            }
         }
 
         var options = _.extend({}, this.options, {context: context});
@@ -203,7 +195,6 @@ var CalendarController = AbstractController.extend({
             if (this.quick != null) {
                 this.quick.destroy();
                 this.quick = null;
-                return;
             }
             this.quick = new QuickCreate(this, true, options, data, event.data);
             this.quick.on('added', this, this.reload.bind(this));
@@ -262,11 +253,7 @@ var CalendarController = AbstractController.extend({
                         click: function () {
                             Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
                                 confirm_callback: function () {
-                                    self._rpc({
-                                            model: self.modelName,
-                                            method: 'unlink',
-                                            args: [id],
-                                        })
+                                    self.model.deleteRecords([id], self.modelName)
                                         .then(function () {
                                             self.dialog.destroy();
                                             self.reload();

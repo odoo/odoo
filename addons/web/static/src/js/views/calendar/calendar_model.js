@@ -2,11 +2,10 @@ odoo.define('web.CalendarModel', function (require) {
 "use strict";
 
 var AbstractModel = require('web.AbstractModel');
+var core = require('web.core');
 var field_utils = require('web.field_utils');
 var session = require('web.session');
 var time = require('web.time');
-var core = require('web.core');
-var data = require('web.data');
 
 var _t = core._t;
 
@@ -15,6 +14,10 @@ var scales = [
     'week',
     'month'
 ];
+
+function dateToServer (date) {
+    return date.clone().utc().format('YYYY-MM-DD HH:mm:ss');
+}
 
 return AbstractModel.extend({
     init: function () {
@@ -32,8 +35,8 @@ return AbstractModel.extend({
     calendarEventToRecord: function (event) {
         // Normalize event_end without changing fullcalendars event.
         var data = {'name': event.title};
-        var start = moment(new Date(event.start));
-        var end = moment(new Date(event.end));
+        var start = event.start;
+        var end = event.end;
 
         //Bug when we move an all_day event from week or day view, we don't have
         // a date.end or duration...
@@ -64,10 +67,6 @@ return AbstractModel.extend({
                 start.utc().hours(7);
                 end.utc().hours(19);
             }
-        } else {
-            var offset = start.utcOffset();
-            start.utc().add(-offset, 'minutes');
-            end.utc().add(-offset, 'minutes');
         }
 
         if (this.mapping.all_day) {
@@ -82,13 +81,13 @@ return AbstractModel.extend({
             }
         }
 
-        data[this.mapping.date_start] = time.datetime_to_str(start.toDate());
-        if (this.mapping.date_delay) {
-            data[this.mapping.date_delay] = (end.diff(start) <= 0 ? end.endOf('day').diff(start) : end.diff(start)) / 1000 / 3600;
+        data[this.mapping.date_start] = start;
+        if (this.mapping.date_stop) {
+            data[this.mapping.date_stop] = end;
         }
 
-        if (this.mapping.date_stop) {
-            data[this.mapping.date_stop] = time.datetime_to_str(end.toDate());
+        if (this.mapping.date_delay) {
+            data[this.mapping.date_delay] = (end.diff(start) <= 0 ? end.endOf('day').diff(start) : end.diff(start)) / 1000 / 3600;
         }
 
         return data;
@@ -118,6 +117,23 @@ return AbstractModel.extend({
             });
         }
         return true;
+    },
+    /**
+     * @param {OdooEvent} event
+     */
+    createRecord: function (event) {
+        var data = this.calendarEventToRecord(event.data.data);
+        for (var k in data) {
+            if (data[k] && data[k]._isAMomentObject) {
+                data[k] = dateToServer(data[k]);
+            }
+        }
+        return this._rpc({
+                model: this.modelName,
+                method: 'create',
+                args: [data],
+                context: _.pick(event.data.options, 'context'),
+            });
     },
     /**
      * @todo I think this is dead code
@@ -201,10 +217,10 @@ return AbstractModel.extend({
         return this.preload_def.then(this._loadCalendar.bind(this));
     },
     next: function () {
-        this.setDate(moment(this.data.target_date).add(1, this.data.scale));
+        this.setDate(this.data.target_date.clone().add(1, this.data.scale));
     },
     prev: function () {
-        this.setDate(moment(this.data.target_date).add(-1, this.data.scale));
+        this.setDate(this.data.target_date.clone().add(-1, this.data.scale));
     },
     /**
      * @todo: this should not work. it ignores the domain/context
@@ -218,37 +234,23 @@ return AbstractModel.extend({
         return this._loadCalendar();
     },
     /**
-     * @param {any} start
-     * @param {any} highlight
+     * @param {Moment} start
+     * @param {boolean} highlight
      */
     setDate: function (start, highlight) {
-        this.data.start_date = this.data.end_date = this.data.target_date = this.data.highlight_date = new Date(start);
+        this.data.start_date = this.data.end_date = this.data.target_date = this.data.highlight_date = start;
         switch (this.data.scale) {
             case 'month':
-                this.data.start_date = moment(this.data.start_date)
-                                            .startOf('month')
-                                            .startOf('week')
-                                            .toDate();
-                this.data.end_date = moment(this.data.start_date)
-                                            .add(5, 'week')
-                                            .endOf('week')
-                                            .toDate();
+                this.data.start_date = this.data.start_date.clone().startOf('month').startOf('week');
+                this.data.end_date = this.data.start_date.clone().add(5, 'week').endOf('week');
                 break;
             case 'week':
-                this.data.start_date = moment(this.data.start_date)
-                                            .startOf('week')
-                                            .toDate();
-                this.data.end_date = moment(this.data.end_date)
-                                            .endOf('week')
-                                            .toDate();
+                this.data.start_date = this.data.start_date.clone().startOf('week');
+                this.data.end_date = this.data.end_date.clone().endOf('week');
                 break;
             default:
-                this.data.start_date = moment(this.data.start_date)
-                                            .startOf('day')
-                                            .toDate();
-                this.data.end_date = moment(this.data.end_date)
-                                            .endOf('day')
-                                            .toDate();
+                this.data.start_date = this.data.start_date.clone().startOf('day');
+                this.data.end_date = this.data.end_date.clone().endOf('day');
         }
         if (highlight) {
             this.data.highlight_date = this.data.target_date;
@@ -262,11 +264,30 @@ return AbstractModel.extend({
         this.setDate(this.data.target_date);
     },
     today: function () {
-        this.setDate(new Date());
+        this.setDate(moment(new Date()));
     },
     toggleFullWidth: function () {
         var fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') !== 'true';
         this.call('local_storage', 'setItem', 'calendar_fullWidth', fullWidth);
+    },
+    /**
+     * @param {Object} record
+     * @param {integer} record.id
+     */
+    updateRecord: function (record) {
+        // Cannot modify actual name yet
+        var data = _.omit(this.calendarEventToRecord(record), 'name');
+        for (var k in data) {
+            if (data[k] && data[k]._isAMomentObject) {
+                data[k] = dateToServer(data[k]);
+            }
+        }
+        return this._rpc({
+            model: this.modelName,
+            method: 'write',
+            args: [record.id, data],
+            context: _.pick(event.data.options, 'context'),
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -347,12 +368,11 @@ return AbstractModel.extend({
     _getRangeDomain: function () {
         // Build OpenERP Domain to filter object by this.mapping.date_start field
         // between given start, end dates.
-        var format = time.datetime_to_str;
-        var domain = [[this.mapping.date_start, '<=', format(this.data.end_date)]];
+        var domain = [[this.mapping.date_start, '<=', dateToServer(this.data.end_date)]];
         if (this.mapping.date_stop) {
-            domain.push([this.mapping.date_stop, '>=', format(this.data.start_date)]);
+            domain.push([this.mapping.date_stop, '>=', dateToServer(this.data.start_date)]);
         } else if (!this.mapping.date_delay) {
-            domain.push([this.mapping.date_start, '>=', format(this.data.start_date)]);
+            domain.push([this.mapping.date_start, '>=', dateToServer(this.data.start_date)]);
         }
         return domain;
     },
@@ -552,25 +572,21 @@ return AbstractModel.extend({
             attendees = [];
 
         if (!all_day) {
-            date_start = time.auto_str_to_date(evt[this.mapping.date_start]);
-            date_stop = this.mapping.date_stop ? time.auto_str_to_date(evt[this.mapping.date_stop]) : null;
+            date_start = field_utils.parse.datetime(evt[this.mapping.date_start]);
+            date_stop = this.mapping.date_stop ? field_utils.parse.datetime(evt[this.mapping.date_stop]) : null;
         } else {
-            date_start = time.auto_str_to_date(evt[this.mapping.date_start].split(' ')[0],'start');
-            date_stop = this.mapping.date_stop ? time.auto_str_to_date(evt[this.mapping.date_stop].split(' ')[0],'start') : null;
+            date_start = field_utils.parse.datetime(evt[this.mapping.date_start].split(' ')[0],'start');
+            date_stop = this.mapping.date_stop ? field_utils.parse.datetime(evt[this.mapping.date_stop].split(' ')[0],'start') : null;
         }
 
         if (!date_stop && date_delay) {
-            var m_start = moment(date_start).add(date_delay,'hours');
-            date_stop = m_start.toDate();
+            date_stop = date_start.clone().add(date_delay,'hours');
         }
-
-        date_start = moment(date_start);
-        date_stop = moment(date_stop);
 
         var r = {
             'record': evt,
-            'start': date_start.format('YYYY-MM-DD HH:mm:ss'),
-            'end': date_stop.format('YYYY-MM-DD HH:mm:ss'),
+            'start': dateToServer(date_start),
+            'end': dateToServer(date_stop),
             'r_start':date_start.clone(),
             'r_end':date_stop.clone(),
             'title': the_title,
