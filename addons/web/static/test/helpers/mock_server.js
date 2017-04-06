@@ -896,26 +896,26 @@ var MockServer = Class.extend({
                 continue;
             }
             if (_.contains(['one2many', 'many2many'], field.type)) {
+                var ids = [];
                 // convert commands
                 _.each(value, function (command) {
                     if (command[0] === 0) { // CREATE
                         var id = self._mockCreate(field.relation, command[2]);
-                        record[field_changed].push(id);
+                        ids.push(id);
                     } else if (command[0] === 1) { // UPDATE
                         self._mockWrite(field.relation, [[command[1]], command[2]]);
                     } else if (command[0] === 2) { // DELETE
-                        record[field_changed] = _.without(record[field_changed], command[1]);
                     } else if (command[0] === 4) { // LINK_TO
-                        // nothing to do, this command is called by a one2many,
-                        // and should do nothing in a non concurrent environment.
+                        ids.push(command[1]);
                     } else if (command[0] === 5) { // DELETE ALL
-                        record[field_changed] = [];
+                        ids = [];
                     } else if (command[0] === 6) { // REPLACE WITH
-                        record[field_changed] = command[2];
+                        ids = command[2];
                     } else {
                         console.error('Command ' + JSON.stringify(command) + ' not supported by the MockServer');
                     }
                 });
+                record[field_changed] = ids;
             } else if (field.type === 'many2one') {
                 if (value) {
                     var relatedRecord = _.findWhere(this.data[field.relation].records, {

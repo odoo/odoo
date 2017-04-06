@@ -2628,6 +2628,98 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list editable = top', function (assert) {
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    var commands = args.args[1].turtles;
+                    assert.strictEqual(commands[0][0], 0,
+                        "first command is a create");
+                    assert.strictEqual(commands[1][0], 4,
+                        "second command is a link to");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should start with one data row");
+
+        form.$('.o_form_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            "should have 2 data rows");
+        assert.ok(form.$('tr.o_data_row:first:contains(My little Foo Value)').length, 1,
+            "first row should be the new value");
+        assert.ok(form.$('tr.o_data_row:first').hasClass('o_selected_row'),
+            "first row should be selected");
+
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
+    QUnit.test('one2many list editable = bottom', function (assert) {
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    var commands = args.args[1].turtles;
+                    assert.strictEqual(commands[0][0], 4,
+                        "first command is a link to");
+                    assert.strictEqual(commands[1][0], 0,
+                        "second command is a create");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should start with one data row");
+
+        form.$('.o_form_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            "should have 2 data rows");
+        assert.ok(form.$('tr.o_data_row:eq(1):contains(My little Foo Value)').length, 1,
+            "second row should be the new value");
+        assert.ok(form.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
+            "second row should be selected");
+
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
