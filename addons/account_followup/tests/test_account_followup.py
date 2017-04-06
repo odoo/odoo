@@ -4,6 +4,8 @@ from openerp import tools
 from openerp.tests.common import TransactionCase
 from openerp.osv import fields
 
+from openerp.osv import fields
+
 class TestAccountFollowup(TransactionCase):
     def setUp(self):
         """ setUp ***"""
