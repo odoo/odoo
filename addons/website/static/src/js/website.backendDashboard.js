@@ -76,7 +76,10 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         var dialog = new Dialog(this, {
             size: 'medium',
             title: _t('Google Analytics'),
-            $content: QWeb.render('website.ga_dialog_content', {ga_key: this.dashboards_data.visits.ga_client_id}),
+            $content: QWeb.render('website.ga_dialog_content', {
+                ga_key: this.dashboards_data.visits.ga_client_id,
+                ga_analytics_key: this.dashboards_data.visits.ga_analytics_key,
+            }),
             buttons: [
                 {
                     text: _t("Save"),
@@ -84,7 +87,8 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                     close: true,
                     click: function() {
                         var ga_client_id = dialog.$el.find('input[name="ga_client_id"]').val();
-                        self.on_save_ga_client_id(ga_client_id);
+                        var ga_analytics_key = dialog.$el.find('input[name="ga_analytics_key"]').val();
+                        self.on_save_ga_client_id(ga_client_id, ga_analytics_key);
                     },
                 },
                 {
@@ -95,12 +99,13 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         }).open();
     },
 
-    on_save_ga_client_id: function(ga_client_id) {
+    on_save_ga_client_id: function(ga_client_id, ga_analytics_key) {
         var self = this;
         return this._rpc({
-            route: '/website/dashboard/set_ga_client_id',
+            route: '/website/dashboard/set_ga_data',
             params: {
-                'ga_client_id': ga_client_id
+                'ga_client_id': ga_client_id,
+                'ga_analytics_key': ga_analytics_key,
             },
         }).then(function (result) {
             if (result.error) {

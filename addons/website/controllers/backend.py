@@ -30,14 +30,16 @@ class WebsiteBackend(http.Controller):
             }
         }
         if has_group_designer:
-            ga_dashboard = request.env['ir.config_parameter'].sudo().get_param('website.has_google_analytics_dashboard')
-            if ga_dashboard:
-                ga_client_id = request.env['ir.config_parameter'].sudo().get_param('google_management_client_id', default='')
-                dashboard_data['dashboards']['visits']['ga_client_id'] = ga_client_id
+            config = request.env['website.config.settings'].sudo().create({})
+            if config.has_google_analytics_dashboard:
+                dashboard_data['dashboards']['visits'] = dict(
+                    ga_client_id=config.google_management_client_id or '',  # void string instead of stringified False
+                    ga_analytics_key=config.google_analytics_key or '',  # void string instead of stringified False
+                )
         return dashboard_data
 
-    @http.route('/website/dashboard/set_ga_client_id', type='json', auth='user')
-    def website_set_ga_client_id(self, ga_client_id):
+    @http.route('/website/dashboard/set_ga_data', type='json', auth='user')
+    def website_set_ga_data(self, ga_client_id, ga_analytics_key):
         if not request.env.user.has_group('base.group_system'):
             return {
                 'error': {
@@ -45,15 +47,17 @@ class WebsiteBackend(http.Controller):
                     'message': 'You do not have sufficient rights to perform that action.',
                 }
             }
-        if not ga_client_id.endswith('.apps.googleusercontent.com') or ga_client_id.startswith(" "):
+        if not ga_analytics_key or not ga_client_id.endswith('.apps.googleusercontent.com'):
             return {
                 'error': {
-                    'title': 'Incorrect Client ID',
-                    'message': 'The Google Analytics Client ID you have entered seems incorrect.',
+                    'title': 'Incorrect Client ID / Key',
+                    'message': 'The Google Analytics Client ID or Key you entered seems incorrect.',
                 }
             }
-        request.env['website.config.setting'].create({
-            'use_google_analytics_dashboard': True,
+        request.env['website.config.settings'].create({
+            'has_google_analytics': True,
+            'has_google_analytics_dashboard': True,
             'google_management_client_id': ga_client_id,
-        })
+            'google_analytics_key': ga_analytics_key,
+        }).execute()
         return True

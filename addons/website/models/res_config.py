@@ -54,6 +54,19 @@ class WebsiteConfigSettings(models.TransientModel):
     has_google_analytics_dashboard = fields.Boolean("Google Analytics in Dashboard")
     has_google_maps = fields.Boolean("Google Maps")
 
+    @api.onchange('has_google_analytics')
+    def onchange_has_google_analytics(self):
+        if not self.has_google_analytics:
+            self.has_google_analytics_dashboard = False
+        if not self.has_google_analytics:
+            self.google_analytics_key = False
+
+    @api.onchange('has_google_analytics_dashboard')
+    def onchange_has_google_analytics_dashboard(self):
+        if not self.has_google_analytics_dashboard:
+            self.google_management_client_id = False
+            self.google_management_client_secret = False
+
     def get_default_google_maps_api_key(self, fields):
         if not self.user_has_groups('website.group_website_designer'):
             raise AccessDenied()
