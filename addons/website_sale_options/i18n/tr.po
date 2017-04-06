@@ -1,42 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_options
-#
+# 
 # Translators:
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: website_sale_options
-#: code:addons/website_sale_options/models/sale_order.py:44
-#: code:addons/website_sale_options/models/sale_order.py:56
-#, python-format
-msgid ""
-"%s\n"
-"Option for: %s"
-msgstr ""
-"%s\n"
-"Option for: %s"
-
-#. module: website_sale_options
-#: model:product.attribute.value,name:website_sale_options.product_attribute_value_1
-msgid "1 year"
-msgstr "1 yıl"
-
-#. module: website_sale_options
-#: model:product.attribute.value,name:website_sale_options.product_attribute_value_2
-msgid "2 year"
-msgstr "2 yıl"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
@@ -54,7 +40,7 @@ msgstr ""
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid "<small>Remove from cart</small>"
+msgid "<small>Remove <span class=\"hidden-xs\"> from Cart</span></small>"
 msgstr ""
 
 #. module: website_sale_options
@@ -66,13 +52,13 @@ msgstr ""
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid "<strong>Add to Cart</strong>"
+msgid "<strong>Add<span class=\"hidden-xs\"> to Cart</span></strong>"
 msgstr ""
 
 #. module: website_sale_options
-#: model:product.attribute,name:website_sale_options.product_attribute_1
-msgid "Duration"
-msgstr "Süre"
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "Add to cart"
+msgstr ""
 
 #. module: website_sale_options
 #: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line_linked_line_id
@@ -80,9 +66,28 @@ msgid "Linked Order Line"
 msgstr "Bağlantılı Sipariş Satırı"
 
 #. module: website_sale_options
+#: code:addons/website_sale_options/models/sale_order.py:46
+#, python-format
+msgid "Option for:"
+msgstr ""
+
+#. module: website_sale_options
+#: code:addons/website_sale_options/models/sale_order.py:48
+#, python-format
+msgid "Option:"
+msgstr ""
+
+#. module: website_sale_options
 #: model:ir.model.fields,field_description:website_sale_options.field_product_template_optional_product_ids
 msgid "Optional Products"
-msgstr "Opsiyonel Ürünler"
+msgstr "Tamamlayıcı Ürünler"
+
+#. module: website_sale_options
+#: model:ir.model.fields,help:website_sale_options.field_product_template_optional_product_ids
+msgid ""
+"Optional Products are suggested whenever the customer hits *Add to Cart* "
+"(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
+msgstr ""
 
 #. module: website_sale_options
 #: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line_option_line_ids
@@ -97,7 +102,7 @@ msgstr "Fiyat"
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Product"
-msgstr "Ürünler"
+msgstr "Ürün"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_product_template
@@ -111,18 +116,8 @@ msgstr "Ürün mevcut değil"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid "Product to add in your shopping cart"
-msgstr "Ürün alışveriş sepetinize eklemek için"
-
-#. module: website_sale_options
-#: model:ir.model.fields,help:website_sale_options.field_product_template_optional_product_ids
-msgid "Products to propose when add to cart."
-msgstr "Sepete eklerken Ürünler önermek."
-
-#. module: website_sale_options
-#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Quantity"
-msgstr "Miktar"
+msgstr "Adet"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order
@@ -132,37 +127,9 @@ msgstr "Satış Siparişi"
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Satış Siparişi Satırı"
+msgstr "Satış Sipariş Satırı"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Select Your Options:"
-msgstr "Opsiyonları Seçin:"
-
-#. module: website_sale_options
-#: model:product.product,name:website_sale_options.product_product_1
-#: model:product.product,name:website_sale_options.service_cost_01
-#: model:product.template,name:website_sale_options.product_product_1_product_template
-#: model:product.template,name:website_sale_options.service_cost_01_product_template
-msgid "Warranty"
-msgstr "Garanti"
-
-#. module: website_sale_options
-#: model:product.product,description_sale:website_sale_options.product_product_1
-#: model:product.product,description_sale:website_sale_options.service_cost_01
-#: model:product.template,description_sale:website_sale_options.product_product_1_product_template
-#: model:product.template,description_sale:website_sale_options.service_cost_01_product_template
-msgid ""
-"Warranty, issued to the purchaser of an article by its manufacturer, "
-"promising to repair or replace it if necessary within a specified period of "
-"time."
-msgstr ""
-"Belli bir süre içinde üreticinin ürüne tamir veya birebir değişim garantisi "
-"vermesi."
-
-#. module: website_sale_options
-#. openerp-web
-#: code:addons/website_sale_options/static/src/js/website_sale.test.js:13
-#, python-format
-msgid "click in modal on 'Proceed to checkout' button"
-msgstr ""
+msgstr "Tamamlayıcı Ürün Seçenekleri:"

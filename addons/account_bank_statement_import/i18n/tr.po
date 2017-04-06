@@ -1,31 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_bank_statement_import
-#
+# 
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Alexander B. <road2monstercat@gmail.com>, 2017
+# selim kartal <kartalselim37@gmail.com>, 2017
+# Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2017
+# Ömer Kaan Gürbüz <omerkaan0101omerkaangrbz@gmail.com>, 2017
+# ilyas kurt <ilyaskrt19@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-05-31 17:57+0000\n"
-"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: ilyas kurt <ilyaskrt19@gmail.com>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:240
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
 msgstr "%d işlemi zaten içeaktarılmış ve gözardı edildi."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:240
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr "1 işlem zaten içeaktarılmış ve gözardı edildi."
@@ -48,27 +60,27 @@ msgstr "İzin Verilen Hesap Tipleri (denetlenmemesi için boş bırak)"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_control_ids
 msgid "Accounts Allowed"
-msgstr "İzin Verilmiş Hesaplar"
+msgstr "İzinli Hesaplar"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
 msgid "Allow Cancelling Entries"
-msgstr "Kayıtları İptale İzin ver"
+msgstr "Kayıtları İptale İzin Ver"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:242
 #, python-format
 msgid "Already imported items"
 msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
-msgid "At least one inbound"
+msgid "At Least One Inbound"
 msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
-msgid "At least one outbound"
+msgid "At Least One Outbound"
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -112,21 +124,21 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Cancel"
-msgstr "Vazgeç"
+msgstr "İptal"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
 #, python-format
 msgid ""
-"Cannot find in which journal import this statement. Please manually select a "
-"journal."
+"Cannot find in which journal import this statement. Please manually select a"
+" journal."
 msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and "
-"refunds made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and"
+" refunds made from this journal"
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -141,7 +153,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Choose a file to import..."
-msgstr ""
+msgstr "İçe Aktarılacak Dosyayı Seç"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
@@ -151,7 +163,7 @@ msgstr "Firma"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
 msgid "Company related to this journal"
-msgstr "Bu yevmiyeyle ilişkili şirket"
+msgstr "Bu yevmiyeyle bağlantılı şirket"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:106
@@ -171,12 +183,12 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_date
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_create_date
 msgid "Created on"
-msgstr "Oluşturuldu"
+msgstr "Oluşturulma zamanı"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
 msgid "Currency"
-msgstr "Para Birimi"
+msgstr "Kur"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_inbound_payment_method_ids
@@ -186,7 +198,7 @@ msgstr "Borç Metodu"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid "Dedicated Refund Sequence"
-msgstr ""
+msgstr "Adanmış İade Sırası"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -202,16 +214,7 @@ msgstr "Varsayılan Borç Hesabı"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_display_name
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_name
 msgid "Display Name"
-msgstr "Adı Göster"
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
-msgid ""
-"Display this bank account on the footer of printed documents like invoices "
-"and sales orders."
-msgstr ""
-"Bu banka hesabını satış siparişleri ve faturalar gibi belgelerin altında "
-"gösterve satış siparişlerinde."
+msgstr "Ad Görünümü"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -254,18 +257,18 @@ msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
 msgstr ""
-"Bu kutu işaretlenirse, faturalardan muhasebe kalemleri oluşturulurken onları "
-"gruplandırmaya çalışacaktır."
+"Bu kutu işaretlenirse, faturalardan muhasebe kalemleri oluşturulurken onları"
+" gruplandırmaya çalışacaktır."
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
 msgid "Import"
-msgstr "İçeaktar"
+msgstr "İçe Aktar"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
 msgid "Import Bank Statement"
-msgstr "Banka Hesap Özeti"
+msgstr "Banka Hesap Özeti içe al"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
@@ -299,6 +302,7 @@ msgstr "Borç tutarı için varsayılan hesap olarak davranır"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
 msgid "Journal"
 msgstr "Yevmiye"
 
@@ -315,11 +319,6 @@ msgid "Journal Name"
 msgstr "Yevmiye Adı"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
-msgid "Journal id"
-msgstr ""
-
-#. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
@@ -328,19 +327,19 @@ msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
-msgid "Kanban dashboard"
+msgid "Kanban Dashboard"
 msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
-msgid "Kanban dashboard graph"
+msgid "Kanban Dashboard Graph"
 msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation___last_update
 msgid "Last Modified on"
-msgstr "Son değiştirme tarihi"
+msgstr "Son Güncelleme"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_write_uid
@@ -352,7 +351,7 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_write_date
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_write_date
 msgid "Last Updated on"
-msgstr "Son Güncellenen"
+msgstr "Son Güncelleme"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
@@ -389,25 +388,24 @@ msgstr "Tamam"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
 msgid "Payment Methods"
-msgstr "Ödeme Şekilleri"
+msgstr "Ödeme Yöntemleri"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid "Profit Account"
-msgstr "Kâr Hesabı"
+msgstr "Kar Hesabı"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
 msgid "Refund Entry Sequence"
-msgstr ""
+msgstr "İade Giriş Sırası"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
 msgid ""
 "Select 'Sale' for customer invoices journals.\n"
 "Select 'Purchase' for vendor bills journals.\n"
-"Select 'Cash' or 'Bank' for journals that are used in customer or vendor "
-"payments.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
 
@@ -424,17 +422,12 @@ msgstr "Sıra"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "Short Code"
-msgstr ""
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
-msgid "Show in Invoices Footer"
-msgstr ""
+msgstr "Kısa Kod"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr ""
+msgstr "Gösterge Panosunda Yevmiyeyi göster"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -447,7 +440,8 @@ msgstr ""
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
 #, python-format
-msgid "The account of this statement (%s) is not the same as the journal (%s)."
+msgid ""
+"The account of this statement (%s) is not the same as the journal (%s)."
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -516,8 +510,8 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid ""
-"Used to register a profit when the ending balance of a cash register differs "
-"from what the system computes"
+"Used to register a profit when the ending balance of a cash register differs"
+" from what the system computes"
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -526,7 +520,7 @@ msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:232
 #, python-format
 msgid "You have already imported that file."
 msgstr ""
@@ -534,4 +528,4 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "_Import"
-msgstr "_Import"
+msgstr "_İçe Aktar"
