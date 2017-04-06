@@ -1,42 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mass_mailing
-#
+# 
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-05-31 18:09+0000\n"
-"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "&amp;times;"
 msgstr "&amp;times;"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
-msgid "<span class=\"oe_snippet_thumbnail_title\">Newsletter Popup</span>"
-msgstr ""
-"<span class=\"oe_snippet_thumbnail_title\">Haber bülteni açılır penceresi</"
-"span>"
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-msgid "<span class=\"oe_snippet_thumbnail_title\">Newsletter</span>"
-msgstr "<span class=\"oe_snippet_thumbnail_title\">Haber bülteni</span>"
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid ""
 "<strong>Newsletter Popup!</strong> The newsletter popup snippet effect is "
 "active on this page. Click"
@@ -57,8 +49,14 @@ msgid "Add a Newsletter Subscribe Popup"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_options
+#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
+msgid ""
+"Allow the use of a pop-up snippet on website to encourage visitors to sign "
+"up on a mass mailing list"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
 msgstr "Bülteni Değiştir"
 
@@ -68,15 +66,32 @@ msgid "Choose your mailing subscriptions."
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: website_mass_mailing
+#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
+msgid ""
+"Do not add extra content on website pages to encourage visitors to sign up"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Here To Edit Dialog Content"
 msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
+msgid "Mailing List"
+msgstr "E-Posta Grubu"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
 msgid "Mailing Subscriptions"
-msgstr ""
+msgstr "Eposta Üyelikleri"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -86,18 +101,23 @@ msgid "Newsletter"
 msgstr "Bülten"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.view_mail_mass_mailing_list_form
+msgid "Popup Content"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Subscribe"
 msgstr "Abone Ol"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks"
 msgstr "Teşekkürler"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks for your subscription!"
 msgstr "Aboneliğiniz için teşekkürler!"
 
@@ -109,17 +129,52 @@ msgid "Type Here ..."
 msgstr "Buraya Yaz ..."
 
 #. module: website_mass_mailing
+#: model:res.groups,name:website_mass_mailing.group_website_popup_on_exit
+msgid "Use subscription pop up on the website"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
+msgid "Website Pop-up"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_content
+msgid "Website Popup Content"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_redirect_url
+msgid "Website Popup Redirect URL"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 msgid "You are not subscribed to any of our mailing list."
 msgstr ""
 
 #. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:154
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
+#, python-format
 msgid "Your changes have been saved."
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:157
+#, python-format
+msgid "Your changes have not been saved, try again later."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_mass_mailing_config_settings
+msgid "mass.mailing.config.settings"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "your email..."
 msgstr "E-posta adresiniz..."

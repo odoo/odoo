@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_account
-#
+# 
 # Translators:
-# Ahmet Altınışık <aaltinisik@altinkaya.com.tr>, 2016
+# Ediz Duman <neps1192@gmail.com>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-01-14 10:12+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: google_account
@@ -26,12 +29,12 @@ msgstr "Oluşturan"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_create_date
 msgid "Created on"
-msgstr "Oluşturuldu"
+msgstr "Oluşturulma zamanı"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_display_name
 msgid "Display Name"
-msgstr "Görünen İsim"
+msgstr "Ad Görünümü"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_id
@@ -41,7 +44,7 @@ msgstr "ID"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service___last_update
 msgid "Last Modified on"
-msgstr "Son değiştirme tarihi"
+msgstr "Son Güncelleme"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_write_uid
@@ -51,10 +54,16 @@ msgstr "Son Güncelleyen"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_write_date
 msgid "Last Updated on"
-msgstr "Son Güncellenen"
+msgstr "Son Güncelleme"
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:98
+#: code:addons/google_account/models/google_service.py:169
+#, python-format
+msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:117
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -62,7 +71,7 @@ msgid ""
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:37
+#: code:addons/google_account/models/google_service.py:52
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -70,7 +79,7 @@ msgid ""
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:128
+#: code:addons/google_account/models/google_service.py:144
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -78,7 +87,7 @@ msgid ""
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:173
+#: code:addons/google_account/models/google_service.py:193
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Google da yaptığınız isteğinizle ilgili bir şeyler yanlış gitti"

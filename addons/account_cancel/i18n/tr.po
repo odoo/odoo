@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_cancel
-#
+# 
 # Translators:
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-01-03 09:24+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_cancel
@@ -28,16 +32,15 @@ msgid "Bank Statement Line"
 msgstr "Banka Hesap Özeti Kalemi"
 
 #. module: account_cancel
-#: model:ir.ui.view,arch_db:account_cancel.bank_statement_cancel_form_inherit
 #: model:ir.ui.view,arch_db:account_cancel.payment_cancel_form_inherit
 msgid "Cancel"
-msgstr "Vazgeç"
+msgstr "İptal"
 
 #. module: account_cancel
 #: model:ir.ui.view,arch_db:account_cancel.invoice_form_cancel_inherit
 #: model:ir.ui.view,arch_db:account_cancel.invoice_supplier_cancel_form_inherit
 msgid "Cancel Invoice"
-msgstr "Fatura İptal et"
+msgstr "Fatura İptal Et"
 
 #. module: account_cancel
 #: code:addons/account_cancel/models/account_bank_statement.py:28
@@ -49,3 +52,8 @@ msgstr "Lütfen Hesap Özetini iptal etmeden önce yeniye çevirin."
 #: model:ir.ui.view,arch_db:account_cancel.bank_statement_draft_form_inherit
 msgid "Reset to New"
 msgstr "Yeni Sıfırla"
+
+#. module: account_cancel
+#: model:ir.ui.view,arch_db:account_cancel.bank_statement_cancel_form_inherit
+msgid "Revert reconciliation"
+msgstr ""

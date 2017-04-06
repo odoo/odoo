@@ -1,21 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_test
-#
+# 
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-05-25 08:19+0000\n"
-"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_test
@@ -47,7 +52,7 @@ msgstr "Bunun için Muhasebe testi"
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
 msgid "Active"
-msgstr "Etkin"
+msgstr "Aktif"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
@@ -59,8 +64,8 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of "
-"statement lines"
+"Check on bank statement that the Closing Balance = Starting Balance + sum of"
+" statement lines"
 msgstr ""
 "Hesap özetinde Kapanış Bakiyesi = Açılış Bakiyesi + hesap özeti kalemleri "
 "toplamı olduğunu denetleyin"
@@ -68,7 +73,8 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr "Ödenmiş/uzlaştırılmış faturaların 'Açık' durumda olmadığını denetleyin"
+msgstr ""
+"Ödenmiş/uzlaştırılmış faturaların 'Açık' durumda olmadığını denetleyin"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -82,8 +88,8 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
-"Payable and Receivable Accounts"
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
+" Payable and Receivable Accounts"
 msgstr ""
 "Uzlaştırılmış Satış/Satınalma faturasının Alacak ve Borç Hesaplarında "
 "uzlaştırılmış girişler olup olmadığını denetleyin"
@@ -106,55 +112,44 @@ msgstr "Kod Yardımı"
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your "
-"test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was "
-"succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named "
-"`column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your "
-"code:\n"
+"Should you need them, you can also use the following variables into your code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct "
-"indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"Kod her zaman, testinizin sonucunda ‘sonuç’ olarak adlandırılan bir değişken "
-"oluşturmalıdır, bu bir\n"
-"liste ya da bir sözlük olabilir. Eğer ‘sonuç’ boş bir listeyse, bu testin "
-"başarılı olduğu anlamındadır. Aksi\n"
+"Kod her zaman, testinizin sonucunda ‘sonuç’ olarak adlandırılan bir değişken oluşturmalıdır, bu bir\n"
+"liste ya da bir sözlük olabilir. Eğer ‘sonuç’ boş bir listeyse, bu testin başarılı olduğu anlamındadır. Aksi\n"
 "takdirde ‘sonuç’ içinde ne varsa çevirisini yapın ve yazdırın.\n"
 "\n"
-"Testinizin sonucu bir sözlük ise, ‘sonuç’ içeriğini hangi sırada yazdırmayı "
-"seçmeniz için ‘sütun_sırası’\n"
+"Testinizin sonucu bir sözlük ise, ‘sonuç’ içeriğini hangi sırada yazdırmayı seçmeniz için ‘sütun_sırası’\n"
 "adıyla bir değişken oluşturmalısınız.\n"
 "\n"
 "Gerekirse kodunuza aşağıdaki değişkenleri de ekleyebilirsiniz:\n"
 "    * cr: veritabanı imleçi\n"
 "    * uid: geçerli kullanıcı ID\n"
 "\n"
-"Kod her durumda doğru satırbaşı girintisi ile (gerekirse) geçerli piton "
-"komutları olmalı.\n"
+"Kod her durumda doğru satırbaşı girintisi ile (gerekirse) geçerli piton komutları olmalı.\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
@@ -167,18 +162,18 @@ msgstr "Oluşturan"
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_date
 msgid "Created on"
-msgstr "Oluşturuldu"
+msgstr "Oluşturulma zamanı"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Description"
-msgstr "Açıklama"
+msgstr "Tanım"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_display_name
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_display_name
 msgid "Display Name"
-msgstr "Adı Göster"
+msgstr "Ad Görünümü"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -195,7 +190,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
 msgid "Last Modified on"
-msgstr "Son değiştirme tarihi"
+msgstr "Son Güncelleme"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
@@ -205,7 +200,7 @@ msgstr "Son Güncelleyen"
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
 msgid "Last Updated on"
-msgstr "Son Güncellenen"
+msgstr "Son Güncelleme"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -270,7 +265,7 @@ msgid "Tests"
 msgstr "Testler"
 
 #. module: account_test
-#: code:addons/account_test/report/account_test_report.py:49
+#: code:addons/account_test/report/report_account_test.py:52
 #, python-format
 msgid "The test was passed successfully"
 msgstr "Testler başarıyla geçildi"
