@@ -9,8 +9,7 @@ from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 
-
-URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
+from openerp.addons.link_tracker.models.link_tracker import URL_REGEX
 
 
 class MailMail(osv.Model):
