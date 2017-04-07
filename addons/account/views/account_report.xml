@@ -13,7 +13,7 @@
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
         />
 
-        <record id="account_invoices" model="ir.actions.report.xml">
+        <record id="account_invoices" model="ir.actions.report">
             <field name="print_report_name">(object.type == 'out_invoice' and object.state == 'draft' and 'Draft Invoice' or
             object.type == 'out_invoice' and object.state in ('open','paid') and 'Invoice'+'-'+(object.number) or
             object.type == 'out_refund' and object.state == 'draft' and 'Credit Note' or
@@ -33,7 +33,7 @@
             file="account.report_invoice_duplicate"
             attachment_use="False"
         />
-        <record id="account_invoice_action_report_duplicate" model="ir.actions.report.xml">
+        <record id="account_invoice_action_report_duplicate" model="ir.actions.report">
             <field name="print_report_name">(object.type == 'out_invoice' and object.state == 'draft' and 'Duplicate Invoice' or
             object.type == 'out_invoice' and object.state in ('open','paid') and 'Duplicate Invoice'+'-'+(object.number) or
             object.type == 'out_refund' and object.state == 'draft' and 'Duplicate Credit Note' or
@@ -52,7 +52,7 @@
             name="account.report_overdue"
             file="account.report_overdue"
             />
-        <record id="action_report_print_overdue" model="ir.actions.report.xml">
+        <record id="action_report_print_overdue" model="ir.actions.report">
             <field name="print_report_name">'Due Payments'+'-'+(object.name)</field>
         </record>
 

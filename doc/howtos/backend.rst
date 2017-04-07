@@ -1502,7 +1502,7 @@ Odoo 8.0 comes with a new report engine based on :ref:`reference/qweb`,
 
 A report is a combination two elements:
 
-* an ``ir.actions.report.xml``, for which a ``<report>`` shortcut element is
+* an ``ir.actions.report``, for which a ``<report>`` shortcut element is
   provided, it sets up various basic parameters for the report (default
   type, whether the report should be saved to the database after generation,…)
 

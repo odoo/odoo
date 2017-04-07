@@ -37,7 +37,7 @@ class IrUiMenu(models.Model):
                                       "If this field is empty, Odoo will compute visibility based on the related object's read access.")
     complete_name = fields.Char(compute='_compute_complete_name', string='Full Path')
     web_icon = fields.Char(string='Web Icon File')
-    action = fields.Reference(selection=[('ir.actions.report.xml', 'ir.actions.report.xml'),
+    action = fields.Reference(selection=[('ir.actions.report', 'ir.actions.report'),
                                          ('ir.actions.act_window', 'ir.actions.act_window'),
                                          ('ir.actions.act_url', 'ir.actions.act_url'),
                                          ('ir.actions.server', 'ir.actions.server'),
@@ -99,7 +99,7 @@ class IrUiMenu(models.Model):
         access = self.env['ir.model.access']
         MODEL_GETTER = {
             'ir.actions.act_window': lambda action: action.res_model,
-            'ir.actions.report.xml': lambda action: action.model,
+            'ir.actions.report': lambda action: action.model,
             'ir.actions.server': lambda action: action.model_id.model,
         }
         for menu in action_menus:

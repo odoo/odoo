@@ -8,7 +8,7 @@
         name="report_intrastat.report_intrastatinvoice"
         file="report_intrastat.report_intrastatinvoice"
     />
-    <record id="account_intrastatinvoices" model="ir.actions.report.xml">
+    <record id="account_intrastatinvoices" model="ir.actions.report">
         <field name="print_report_name">(object.type == 'out_invoice' and object.state == 'draft' and 'Intrastat Invoice' or
         object.type == 'out_invoice' and object.state in ('open','paid') and 'Intrastat Invoice'+'-'+(object.number) or
         object.type == 'out_refund' and object.state == 'draft' and 'Intrastat Credit Note' or

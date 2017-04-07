@@ -8,7 +8,6 @@
 """
 
 import odoo
-import odoo.report
 import odoo.tools as tools
 import logging
 
@@ -24,24 +23,20 @@ _test_logger = logging.getLogger('odoo.tests')
 
 def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, report_type=None):
     """ Try to render a report <rname> with contents of ids
-    
+
         This function should also check for common pitfalls of reports.
     """
-    if data is None:
-        data = {}
     if context is None:
         context = {}
-    if rname.startswith('report.'):
-        rname_s = rname[7:]
-    else:
-        rname_s = rname
     _test_logger.info("  - Trying %s.create(%r)", rname, ids)
 
-    res = odoo.report.render_report(cr, uid, ids, rname_s, data, context=context)
-    if not isinstance(res, tuple):
-        raise RuntimeError("Result of %s.create() should be a (data,format) tuple, now it is a %s" % \
-                                (rname, type(res)))
-    (res_data, res_format) = res
+    env = odoo.api.Environment(cr, uid, context)
+
+    report_id = env['ir.actions.report'].search([('report_name', '=', rname)], limit=1)
+    if not report_id:
+        raise Exception("Required report does not exist: %s" % rname)
+
+    res_data, res_format = report_id.render(ids, data=data)
 
     if not res_data:
         raise ValueError("Report %s produced an empty result!" % rname)
@@ -53,7 +48,6 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
     if res_format == 'pdf':
         if res_data[:5] != '%PDF-':
             raise ValueError("Report %s produced a non-pdf header, %r" % (rname, res_data[:10]))
-
         res_text = False
         try:
             fd, rfname = tempfile.mkstemp(suffix=res_format)
@@ -256,7 +250,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                         action_name, b['string'], b['type'])
             return res
 
-        elif action['type']=='ir.actions.report.xml':
+        elif action['type']=='ir.actions.report':
             if 'window' in datas:
                 del datas['window']
             if not datas:
@@ -267,7 +261,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             ids = datas.get('ids')
             if 'ids' in datas:
                 del datas['ids']
-            res = try_report(cr, uid, 'report.'+action['report_name'], ids, datas, context, our_module=our_module)
+            res = try_report(cr, uid, action['report_name'], ids, datas, context, our_module=our_module)
             return res
         else:
             raise Exception("Cannot handle action of type %s" % act_model)

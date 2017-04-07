@@ -9,7 +9,7 @@
             name="stock.report_picking"
             file="stock.report_picking_operations"
         />
-        <record id="action_report_picking" model="ir.actions.report.xml">
+        <record id="action_report_picking" model="ir.actions.report">
             <field name="print_report_name">'Picking Operations'+'-'+(object.partner_id.name or '')+'-'+(object.name)</field>
         </record>
         <report
@@ -20,7 +20,7 @@
             name="stock.report_deliveryslip"
             file="stock.report_deliveryslip"
         />
-        <record id="action_report_delivery" model="ir.actions.report.xml">
+        <record id="action_report_delivery" model="ir.actions.report">
             <field name="print_report_name">'Delivery Slip'+'-'+(object.partner_id.name or '')+'-'+(object.name)</field>
         </record>
         <report
@@ -31,17 +31,17 @@
             name="stock.report_inventory" 
             file="stock.report_inventory" 
         />
-        <record id="action_report_inventory" model="ir.actions.report.xml">
+        <record id="action_report_inventory" model="ir.actions.report">
             <field name="print_report_name">'Inventory'+'-'+(object.name)</field>
         </record>
         <report id="action_report_quant_package_barcode" model="stock.quant.package" report_type="qweb-pdf" name="stock.report_package_barcode" string="Package BarCode with Contents" file="stock.report_package_barcode"/>
         <report id="action_report_quant_package_barcode_small" model="stock.quant.package" report_type="qweb-pdf" name="stock.report_package_barcode_small" string="Package BarCode" file="stock.report_package_barcode"/>
         <report id="action_report_location_barcode" model="stock.location" report_type="qweb-pdf" name="stock.report_location_barcode" string="Location BarCode" file="stock.report_location_barcode"/>
-        <record id="action_report_location_barcode" model="ir.actions.report.xml">
+        <record id="action_report_location_barcode" model="ir.actions.report">
             <field name="print_report_name">(object.name)+'-'+'Location'</field>
         </record>
         <report id="action_report_lot_barcode" model="stock.production.lot" report_type="qweb-pdf" name="stock.report_lot_barcode" string="Lot BarCode" file="stock.report_lot_barcode"/>
-        <record id="action_report_lot_barcode" model="ir.actions.report.xml">
+        <record id="action_report_lot_barcode" model="ir.actions.report">
             <field name="print_report_name">'Lot/Serial'+'-'+(object.name)</field>
         </record>
     </data>

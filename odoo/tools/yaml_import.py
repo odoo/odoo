@@ -793,18 +793,11 @@ class YamlInterpreter(object):
         for dest, f in (('name','string'), ('model','model'), ('report_name','name')):
             values[dest] = getattr(node, f)
             assert values[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
+        for field,dest in (('file', 'report_file'), ('attachment','attachment'),('attachment_use','attachment_use')):
             if getattr(node, field):
                 values[dest] = getattr(node, field)
         if node.auto:
             values['auto'] = safe_eval(node.auto)
-        if node.sxw:
-            sxw_file = file_open(node.sxw)
-            try:
-                sxw_content = sxw_file.read()
-                values['report_sxw_content'] = sxw_content
-            finally:
-                sxw_file.close()
         if node.header:
             values['header'] = safe_eval(node.header)
         values['multi'] = node.multi and safe_eval(node.multi)
@@ -813,13 +806,13 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
 
-        id = self.sudo_env['ir.model.data']._update("ir.actions.report.xml", \
+        id = self.sudo_env['ir.model.data']._update("ir.actions.report", \
                 self.module, values, xml_id, noupdate=self.isnoupdate(node), mode=self.mode)
         self.id_map[xml_id] = int(id)
 
         if not node.menu or safe_eval(node.menu):
             keyword = node.keyword or 'client_print_multi'
-            value = 'ir.actions.report.xml,%s' % id
+            value = 'ir.actions.report,%s' % id
             ir_values = self.env['ir.values']
             res_id = False
             model = values['model']

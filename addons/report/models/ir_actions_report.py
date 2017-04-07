@@ -4,7 +4,7 @@
 from odoo import api, fields, models
 
 class ir_actions_report(models.Model):
-    _inherit = 'ir.actions.report.xml'
+    _inherit = 'ir.actions.report'
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format')
     print_report_name = fields.Char('Printed Report Name',
@@ -12,7 +12,7 @@ class ir_actions_report(models.Model):
 
     @api.multi
     def associated_view(self):
-        """Used in the ir.actions.report.xml form view in order to search naively after the view(s)
+        """Used in the ir.actions.report form view in order to search naively after the view(s)
         used in the rendering.
         """
         self.ensure_one()

@@ -110,11 +110,6 @@ class ReportController(Controller):
                 response.headers.add('Content-Disposition', content_disposition(filename))
                 response.set_cookie('fileToken', token)
                 return response
-            elif type == 'controller':
-                reqheaders = Headers(request.httprequest.headers)
-                response = Client(request.httprequest.app, BaseResponse).get(url, headers=reqheaders, follow_redirects=True)
-                response.set_cookie('fileToken', token)
-                return response
             else:
                 return
         except Exception as e:

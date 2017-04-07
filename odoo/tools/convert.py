@@ -285,16 +285,12 @@ form: module.record_id""" % (xml_id,)
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.get(f,'').encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),
-                           ('attachment','attachment'),('attachment_use','attachment_use'), ('usage','usage'),
-                           ('report_type', 'report_type'), ('parser', 'parser')):
+        for field,dest in (('attachment','attachment'),('attachment_use','attachment_use'), ('usage','usage'),
+                           ('file', 'report_file'), ('report_type', 'report_type'), ('parser', 'parser')):
             if rec.get(field):
                 res[dest] = rec.get(field).encode('utf8')
         if rec.get('auto'):
             res['auto'] = safe_eval(rec.get('auto','False'))
-        if rec.get('sxw'):
-            sxw_content = file_open(rec.get('sxw')).read()
-            res['report_sxw_content'] = sxw_content
         if rec.get('header'):
             res['header'] = safe_eval(rec.get('header','False'))
 
@@ -319,19 +315,19 @@ form: module.record_id""" % (xml_id,)
             pf_id = self.id_get(pf_name)
             res['paperformat_id'] = pf_id
 
-        id = self.env['ir.model.data']._update("ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
+        id = self.env['ir.model.data']._update("ir.actions.report", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
         if not rec.get('menu') or safe_eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
-            value = 'ir.actions.report.xml,'+str(id)
+            value = 'ir.actions.report,'+str(id)
             action = self.env['ir.values'].set_action(res['name'], keyword, res['model'], value)
-            self.env['ir.actions.report.xml'].browse(id).write({'ir_values_id': action.id})
+            self.env['ir.actions.report'].browse(id).write({'ir_values_id': action.id})
         elif self.mode=='update' and safe_eval(rec.get('menu','False'))==False:
             # Special check for report having attribute menu=False on update
-            value = 'ir.actions.report.xml,'+str(id)
+            value = 'ir.actions.report,'+str(id)
             self._remove_ir_values(res['name'], value, res['model'])
-            self.env['ir.actions.report.xml'].browse(id).write({'ir_values_id': False})
+            self.env['ir.actions.report'].browse(id).write({'ir_values_id': False})
         return id
 
     def _tag_function(self, rec, data_node=None, mode=None):

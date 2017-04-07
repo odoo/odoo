@@ -2,10 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import os
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
-from odoo.report import render_report
 from odoo.tools import config, test_reports
 from odoo.addons.hr_payroll.tests.common import TestPayslipBase
 
@@ -72,14 +69,14 @@ class TestPayslipFlow(TestPayslipBase):
         })
 
         # I print the payslip report
-        data, format = render_report(self.env.cr, self.env.uid, richard_payslip.ids, 'hr_payroll.report_payslip', {}, {})
+        data, data_format = self.env.ref('hr_payroll.action_report_payslip').render(richard_payslip.ids)
         if config.get('test_report_directory'):
-            open(os.path.join(config['test_report_directory'], 'hr_payroll-payslip.'+ format), 'wb+').write(data)
+            open(os.path.join(config['test_report_directory'], 'hr_payroll-payslip.'+ data_format), 'wb+').write(data)
 
         # I print the payslip details report
-        data, format = render_report(self.env.cr, self.env.uid, richard_payslip.ids, 'hr_payroll.report_payslipdetails', {}, {})
+        data, data_format = self.env.ref('hr_payroll.payslip_details_report').render(richard_payslip.ids)
         if config.get('test_report_directory'):
-            open(os.path.join(config['test_report_directory'], 'hr_payroll-payslipdetails.'+ format), 'wb+').write(data)
+            open(os.path.join(config['test_report_directory'], 'hr_payroll-payslipdetails.'+ data_format), 'wb+').write(data)
 
         # I print the contribution register report
         context = {'model': 'hr.contribution.register', 'active_ids': [self.ref('hr_payroll.hr_houserent_register')]}

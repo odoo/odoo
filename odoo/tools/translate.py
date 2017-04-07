@@ -860,24 +860,6 @@ def trans_generate(lang, modules, cr):
                 for dummy, val in field.selection:
                     push_translation(module, 'selection', name, 0, encode(val))
 
-        elif model=='ir.actions.report.xml':
-            name = encode(record.report_name)
-            fname = ""
-            if record.report_rml:
-                fname = record.report_rml
-                parse_func = trans_parse_rml
-                report_type = "report"
-            elif record.report_xsl:
-                continue
-            if fname and record.report_type in ('pdf', 'xsl'):
-                try:
-                    with file_open(fname) as report_file:
-                        d = etree.parse(report_file)
-                        for t in parse_func(d.iter()):
-                            push_translation(module, report_type, name, 0, t)
-                except (IOError, etree.XMLSyntaxError):
-                    _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
-
         for field_name, field in record._fields.iteritems():
             if field.translate:
                 name = model + "," + field_name

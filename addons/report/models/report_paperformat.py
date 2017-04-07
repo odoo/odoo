@@ -60,7 +60,7 @@ class report_paperformat(models.Model):
     header_line = fields.Boolean('Display a header line', default=False)
     header_spacing = fields.Integer('Header spacing', default=35)
     dpi = fields.Integer('Output DPI', required=True, default=90)
-    report_ids = fields.One2many('ir.actions.report.xml', 'paperformat_id', 'Associated reports', help="Explicitly associated reports")
+    report_ids = fields.One2many('ir.actions.report', 'paperformat_id', 'Associated reports', help="Explicitly associated reports")
 
     @api.constrains('format')
     def _check_format_or_page(self):

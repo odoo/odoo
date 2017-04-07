@@ -29,6 +29,6 @@ class RepoortIntrastatTest(common.TransactionCase):
         })
 
     def test_00_create_pdf(self):
-        data, report_format = self.env['ir.actions.report.xml'].render_report(self.invoice.ids, 'report_intrastat.report_intrastatinvoice', {})
+        data, data_format = self.env.ref('report_intrastat.account_intrastatinvoices').render(self.invoice.ids)
         if tools.config['test_report_directory']:
-            open(os.path.join(tools.config['test_report_directory'], 'report_intrastat-intrastat_report.' + report_format), 'wb+').write(data)
+            open(os.path.join(tools.config['test_report_directory'], 'report_intrastat-intrastat_report.' + data_format), 'wb+').write(data)

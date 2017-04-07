@@ -1157,7 +1157,7 @@ class Action(http.Controller):
         if base_action:
             ctx = dict(request.context)
             action_type = base_action[0]['type']
-            if action_type == 'ir.actions.report.xml':
+            if action_type == 'ir.actions.report':
                 ctx.update({'bin_size': True})
             if additional_context:
                 ctx.update(additional_context)
@@ -1498,7 +1498,7 @@ class Reports(http.Controller):
             report_struct['format'], 'octet-stream')
         file_name = action.get('name', 'report')
         if 'name' not in action:
-            reports = request.env['ir.actions.report.xml']
+            reports = request.env['ir.actions.report']
             reports = reports.search([('report_name', '=', action['report_name'])])
             if reports:
                 file_name = reports[0].name

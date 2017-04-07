@@ -218,10 +218,10 @@ section of the view, and allowing a few *optional* attributes:
 ``report``
 ----------
 
-Creates a ``ir.actions.report.xml`` record with a few default values.
+Creates a ``ir.actions.report`` record with a few default values.
 
 Mostly just proxies attributes to the corresponding fields on
-``ir.actions.report.xml``, but also automatically creates the item in the
+``ir.actions.report``, but also automatically creates the item in the
 :guilabel:`More` menu of the report's ``model``.
 
 .. ignored url, act_window and ir_set

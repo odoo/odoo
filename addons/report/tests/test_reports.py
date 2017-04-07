@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 class TestReports(odoo.tests.TransactionCase):
     def test_reports(self):
         domain = [('report_type', 'like', 'qweb')]
-        for report in self.env['ir.actions.report.xml'].search(domain):
+        for report in self.env['ir.actions.report'].search(domain):
             report_model = 'report.%s' % report.report_name
             try:
                 self.env[report_model]

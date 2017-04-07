@@ -311,7 +311,7 @@ class MarketingCampaignActivity(models.Model):
              "- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
              "- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record")
     email_template_id = fields.Many2one('mail.template', "Email Template", help='The email to send when this activity is activated')
-    report_id = fields.Many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated')
+    report_id = fields.Many2one('ir.actions.report', "Report", help='The report to generate when this activity is activated')
     server_action_id = fields.Many2one('ir.actions.server', string='Action',
         help="The action to perform when this activity is activated")
     to_ids = fields.One2many('marketing.campaign.transition', 'activity_from_id', 'Next Activities')
@@ -343,7 +343,7 @@ class MarketingCampaignActivity(models.Model):
     @api.multi
     def _process_wi_report(self, workitem):
         self.ensure_one()
-        return self.report_id.render_report(workitem.res_id, self.report_id.report_name, None)
+        return self.report_id.render(workitem.res_id)
 
     @api.multi
     def _process_wi_action(self, workitem):
@@ -611,7 +611,7 @@ class MarketingCampaignWorkitem(models.Model):
                 'model': self.object_id.model
             }
             res = {
-                'type': 'ir.actions.report.xml',
+                'type': 'ir.actions.report',
                 'report_name': self.activity_id.report_id.report_name,
                 'datas': datas,
             }

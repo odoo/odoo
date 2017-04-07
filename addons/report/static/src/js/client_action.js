@@ -180,7 +180,7 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
 
     on_click_print: function () {
         var action = {
-            'type': 'ir.actions.report.xml',
+            'type': 'ir.actions.report',
             'report_type': 'qweb-pdf',
             'report_name': this.report_name,
             'report_file': this.report_file,

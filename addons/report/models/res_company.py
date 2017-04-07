@@ -29,17 +29,10 @@ class ResCompany(models.Model):
 
     @api.model_cr
     def init(self):
-        # set a default paperformat based on rml one.
         for company in self.search([('paperformat_id', '=', False)]):
             paperformat_euro = self.env.ref('report.paperformat_euro', False)
-            paperformat_us = self.env.ref('report.paperformat_us', False)
-            paperformat_id = {
-                'a4': paperformat_euro and paperformat_euro.id or False,
-                'us_letter': paperformat_us and paperformat_us.id or False,
-            }.get(company.rml_paper_format) or paperformat_euro
-
-            if paperformat_id:
-                company.write({'paperformat_id': paperformat_id})
+            if paperformat_euro:
+                company.write({'paperformat_id': paperformat_euro.id})
 
         sup = super(ResCompany, self)
         if hasattr(sup, 'init'):
