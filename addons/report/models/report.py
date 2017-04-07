@@ -446,8 +446,16 @@ class Report(models.Model):
                 out, err = process.communicate()
 
                 if process.returncode not in [0, 1]:
-                    raise UserError(_('Wkhtmltopdf failed (error code: %s). '
-                                      'Message: %s') % (str(process.returncode), err))
+                    if process.returncode == -11:
+                        msg = _('Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s'
+                                      ) % (str(process.returncode), err[-1000:])
+                        _logger.info(msg)
+                        raise UserError(msg)
+                    else:
+                        msg = _('Wkhtmltopdf failed (error code: %s). '
+                                      'Message: %s') % (str(process.returncode), err[-1000:])
+                        _logger.info(msg)
+                        raise UserError(msg)
 
                 # Save the pdf in attachment if marked
                 if reporthtml[0] is not False and save_in_attachment.get(reporthtml[0]):
