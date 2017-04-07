@@ -869,7 +869,7 @@ The first step is to list the test file(s). This is done through the
         'name': "Demonstration of web/javascript tests",
         'category': 'Hidden',
         'depends': ['web'],
-        'test': ['static/test/demo.js'],
+        'test': ['static/tests/demo.js'],
     }
 
 and to create the corresponding test file(s)
@@ -989,7 +989,7 @@ test module:
         'category': 'Hidden',
         'depends': ['web'],
         'js': ['static/src/js/demo.js'],
-        'test': ['static/test/demo.js'],
+        'test': ['static/tests/demo.js'],
     }
 
 ::
@@ -1066,7 +1066,7 @@ qweb before running the test case:
         'category': 'Hidden',
         'depends': ['web'],
         'js': ['static/src/js/demo.js'],
-        'test': ['static/test/demo.js'],
+        'test': ['static/tests/demo.js'],
         'qweb': ['static/src/xml/demo.xml'],
     }
 
