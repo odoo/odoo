@@ -154,7 +154,6 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
-    >>> file_open('../../base/report/rml_template.xsl', subdir='addons/hr/report', pathinfo=True)
 
     @param name name of the file
     @param mode file open mode

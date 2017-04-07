@@ -186,7 +186,7 @@ class Report(models.Model):
 
         html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
 
-        # Get the ir.actions.report.xml record we are working on.
+        # Get the ir.actions.report record we are working on.
         report = self._get_report_from_name(report_name)
         # Check if we have to save the report or if we have to get one from the db.
         save_in_attachment = self._check_attachment_use(docids, report)
@@ -267,7 +267,7 @@ class Report(models.Model):
 
     @api.noguess
     def get_action(self, docids, report_name, data=None, config=True):
-        """Return an action of type ir.actions.report.xml.
+        """Return an action of type ir.actions.report.
 
         :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
@@ -297,14 +297,14 @@ class Report(models.Model):
                 active_ids = docids
             context = dict(self.env.context, active_ids=active_ids)
 
-        report = self.env['ir.actions.report.xml'].with_context(context).search([('report_name', '=', report_name)])
+        report = self.env['ir.actions.report'].with_context(context).search([('report_name', '=', report_name)])
         if not report:
             raise UserError(_("Bad Report Reference") + _("This report is not loaded into the database: %s.") % report_name)
 
         return {
             'context': context,
             'data': data,
-            'type': 'ir.actions.report.xml',
+            'type': 'ir.actions.report',
             'report_name': report.report_name,
             'report_type': report.report_type,
             'report_file': report.report_file,
@@ -515,10 +515,10 @@ class Report(models.Model):
 
     @api.model
     def _get_report_from_name(self, report_name):
-        """Get the first record of ir.actions.report.xml having the ``report_name`` as value for
+        """Get the first record of ir.actions.report having the ``report_name`` as value for
         the field report_name.
         """
-        report_obj = self.env['ir.actions.report.xml']
+        report_obj = self.env['ir.actions.report']
         qwebtypes = ['qweb-pdf', 'qweb-html']
         conditions = [('report_type', 'in', qwebtypes), ('report_name', '=', report_name)]
         context = self.env['res.users'].context_get()

@@ -1304,24 +1304,18 @@ class BaseModel(object):
 
         # Add related action information if aksed
         if toolbar:
-            toclean = ('report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml', 'report_sxw_content_data', 'report_rml_content_data')
-            def clean(x):
-                x = x[2]
-                for key in toclean:
-                    x.pop(key, None)
-                return x
             IrValues = self.env['ir.values']
             resprint = IrValues.get_actions('client_print_multi', self._name)
             resaction = IrValues.get_actions('client_action_multi', self._name)
             resrelate = IrValues.get_actions('client_action_relate', self._name)
-            resprint = [clean(print_)
+            resprint = [print_[2]
                         for print_ in resprint
                         if view_type == 'tree' or not print_[2].get('multi')]
-            resaction = [clean(action)
+            resaction = [action[2]
                          for action in resaction
                          if view_type == 'tree' or not action[2].get('multi')]
             #When multi="True" set it will display only in More of the list view
-            resrelate = [clean(action)
+            resrelate = [action[2]
                          for action in resrelate
                          if (action[2].get('multi') and view_type == 'tree') or (not action[2].get('multi') and view_type == 'form')]
 
@@ -3980,17 +3974,6 @@ class BaseModel(object):
     # backwards compatibility
     get_xml_id = get_external_id
     _get_xml_ids = _get_external_ids
-
-    @api.multi
-    def print_report(self, name, data):
-        """
-        Render the report ``name`` for the given IDs. The report must be defined
-        for this model, not another.
-        """
-        report = self.env['ir.actions.report.xml']._lookup_report(name)
-        assert self._name == report.table
-        cr, uid, context = self.env.args
-        return report.create(cr, uid, self.ids, data, context)
 
     # Transience
     @classmethod

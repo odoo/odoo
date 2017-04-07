@@ -861,7 +861,7 @@ var ActionManager = Widget.extend({
                 return self.do_action(action, options);
             });
     },
-    ir_actions_report_xml: function(action, options) {
+    ir_actions_report: function(action, options) {
         var self = this;
         framework.blockUI();
         action = _.clone(action);

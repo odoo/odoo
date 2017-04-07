@@ -8,7 +8,7 @@
             name="purchase.report_purchaseorder" 
             file="purchase.report_purchaseorder" 
         />
-        <record id="action_report_purchase_order" model="ir.actions.report.xml">
+        <record id="action_report_purchase_order" model="ir.actions.report">
             <field name="print_report_name">(object.state in ('draft', 'sent') and 'Request for Quotation'+'-'+(object.name) or 'Purchase Order'+'-'+(object.name))</field>
         </record>
 
@@ -20,7 +20,7 @@
             name="purchase.report_purchasequotation" 
             file="purchase.report_purchasequotation"
         />
-        <record id="report_purchase_quotation" model="ir.actions.report.xml">
+        <record id="report_purchase_quotation" model="ir.actions.report">
             <field name="print_report_name">'Request for Quotation'+'-'+(object.name)</field>
         </record>
 </odoo>

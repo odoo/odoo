@@ -10,7 +10,7 @@
     />
 
     <!-- used from POS UI, no need to be in print menu -->
-    <record id="pos_invoice_report" model="ir.actions.report.xml">
+    <record id="pos_invoice_report" model="ir.actions.report">
         <field name="name">Invoice</field>
         <field name="model">pos.order</field>
         <field name="report_type">qweb-pdf</field>
@@ -18,7 +18,7 @@
         <field name="print_report_name">'Invoice'+'-'+(object.name)</field>
     </record>
 
-    <record id="sale_details_report" model="ir.actions.report.xml">
+    <record id="sale_details_report" model="ir.actions.report">
         <field name="name">Sales Details</field>
         <field name="model">report.point_of_sale.details</field>
         <field name="report_type">qweb-pdf</field>

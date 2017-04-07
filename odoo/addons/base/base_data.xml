@@ -67,26 +67,6 @@ Administrator</span>]]></field>
             <field eval="10" name="sequence"/>
         </record>
 
-        <!-- Basic fonts family included in PDF standart, will always be in the font list -->
-        <record model="res.font" id="base.font_helvetica">
-            <field name="name">Helvetica</field>
-            <field name="family">Helvetica</field>
-            <field name="path">/dev/null</field>
-            <field name="mode">all</field>
-        </record>
-        <record model="res.font" id="base.font_times">
-            <field name="name">Times</field>
-            <field name="family">Times</field>
-            <field name="path">/dev/null</field>
-            <field name="mode">all</field>
-        </record>
-        <record model="res.font" id="base.font_courier">
-            <field name="name">Courier</field>
-            <field name="family">Courier</field>
-            <field name="path">/dev/null</field>
-            <field name="mode">all</field>
-        </record>
-
         <record id="public_partner" model="res.partner">
             <field name="name">Public user</field>
             <field name="active" eval="False"/>

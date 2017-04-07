@@ -2,9 +2,9 @@
 <odoo>
         <!-- Adding a print_report_name field inside to the report action form view -->
         <record id="act_report_xml_view_inherit_report" model="ir.ui.view">
-            <field name="name">ir.actions.report.xml.form.inherit</field>
+            <field name="name">ir.actions.report.form.inherit</field>
             <field name="inherit_id" ref="base.act_report_xml_view" />
-            <field name="model">ir.actions.report.xml</field>
+            <field name="model">ir.actions.report</field>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='report_name']" position="after">
@@ -18,7 +18,7 @@
         <record id="act_report_xml_view_inherit" model="ir.ui.view">
             <field name="name">act_report_xml_view_inherit</field>
             <field name="inherit_id" ref="base.act_report_xml_view" />
-            <field name="model">ir.actions.report.xml</field>
+            <field name="model">ir.actions.report</field>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='report_type']" position="after">
