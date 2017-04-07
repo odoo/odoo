@@ -116,6 +116,9 @@ widgets.SidebarFilter.include({
     },
     initialize_m2o: function() {
         var self = this;
+        if (!this.view.useContacts) {
+            return;
+        }
         this.dfm = new form_common.DefaultFieldManager(self);
         this.dfm.extend_field_desc({
             partner_id: {

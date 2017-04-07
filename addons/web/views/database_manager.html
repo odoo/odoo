@@ -61,7 +61,7 @@
     <div class="row">
       <div class="col-md-12">
         <label for="name" class="control-label">Database Name</label>
-        <input id="name" type="text" name="name" class="form-control" required="required" autocomplete="off"/>
+        <input id="name" type="text" name="name" class="form-control" required="required" autocomplete="off" pattern="^[a-zA-Z][a-zA-Z0-9_]+$" title="Only alphanumerical characters and underscore are allowed"/>
       </div>
     </div>
   </div>
@@ -208,7 +208,7 @@
             </div>
             <div class="form-group">
               <label for="name" class="control-label">Database Name</label>
-              <input id="name" type="text" name="name" class="form-control" required="required"/>
+              <input id="name" type="text" name="name" class="form-control" required="required" pattern="^[a-zA-Z][a-zA-Z0-9_]+$" title="Only alphanumerical characters and underscore are allowed"/>
             </div>
             <div class="form-group">
                 <label for="copy">This database might have been moved or copied.</label>
@@ -281,7 +281,7 @@
             </div>
             <div class="form-group">
               <label for="new_name" class="control-label">New Name</label>
-              <input id="new_name" type="text" name="new_name" class="form-control" required="required"/>
+              <input id="new_name" type="text" name="new_name" class="form-control" required="required" pattern="^[a-zA-Z][a-zA-Z0-9_]+$" title="Only alphanumerical characters and underscore are allowed"/>
             </div>
           </div>
           <div class="modal-footer">
