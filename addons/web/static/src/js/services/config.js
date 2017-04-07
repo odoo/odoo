@@ -36,7 +36,7 @@ function set_size_class() {
         bus.trigger('size_class', sc);
     }
 }
-
+config.is_mobile = config.device.size_class <= config.device.SIZES.XS;
 return config;
 
 });
