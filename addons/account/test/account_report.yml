@@ -14,9 +14,8 @@
 -
   !python {model: account.invoice, id: False}: |
     import os
-    import odoo.report
     from odoo import tools
-    data, format = odoo.report.render_report(self.env.cr, self.env.uid, [ref('account.account_invoice_customer0')], 'account.report_invoice', {}, {})
+    data, format = ref('account.report_invoice').render(ref('account.account_invoice_customer0'))
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
 -
@@ -24,9 +23,8 @@
 -
   !python {model: res.partner, id: False}: |
     import os
-    import odoo.report
     from odoo import tools
-    data, format = odoo.report.render_report(self.env.cr, self.env.uid, [ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')], 'account.report_overdue', {}, {})
+    data, format = ref('account.report_overdue').render([ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')])
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
 -

@@ -25,26 +25,6 @@ def log(logger, level, prefix, msg, depth=None):
         logger.log(level, indent+line)
         indent=indent_after
 
-def LocalService(name):
-    """
-    The odoo.netsvc.LocalService() function is deprecated. It still works
-    in one case: reports. For reports, odoo.report.render_report() should
-    be used (methods on the Model should be provided too in the future).
-    """
-    assert odoo.conf.deprecation.allow_local_service
-    _logger.warning("LocalService() is deprecated since march 2013 (it was called with '%s')." % name)
-
-    if name.startswith('report.'):
-        report = odoo.report.interface.report_int._reports.get(name)
-        if report:
-            return report
-        else:
-            dbname = getattr(threading.currentThread(), 'dbname', None)
-            if dbname:
-                registry = odoo.registry(dbname)
-                with registry.cursor() as cr:
-                    return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
-
 path_prefix = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 
 class PostgreSQLHandler(logging.Handler):

@@ -63,9 +63,9 @@ class TestIrValues(TransactionCase):
         ir_values.set_action('OnDblClick Action 2', action_slot='tree_but_open', model='res.partner', action='ir.actions.act_window,%d' % act_id_2, res_id=False)
         ir_values.set_action('Side Wizard', action_slot='client_action_multi', model='res.partner', action='ir.actions.act_window,%d' % act_id_3, res_id=False)
 
-        reports = self.env['ir.actions.report.xml'].search([])
+        reports = self.env['ir.actions.report'].search([])
         report_id = next(report.id for report in reports if not report.groups_id)
-        ir_values.set_action('Nice Report', action_slot='client_print_multi', model='res.partner', action='ir.actions.report.xml,%d' % report_id, res_id=False)
+        ir_values.set_action('Nice Report', action_slot='client_print_multi', model='res.partner', action='ir.actions.report,%d' % report_id, res_id=False)
 
         # Replace one action binding to set a new name.
         ir_values.set_action('OnDblClick Action New', action_slot='tree_but_open', model='res.partner', action='ir.actions.act_window,%d' % act_id_1, res_id=False)

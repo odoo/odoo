@@ -15,7 +15,6 @@ import urlparse
 from urllib import urlencode, quote as quote
 
 from odoo import _, api, fields, models, tools
-from odoo import report as odoo_report
 from odoo.exceptions import UserError
 from odoo.tools import pycompat
 
@@ -155,7 +154,7 @@ class MailTemplate(models.Model):
     report_name = fields.Char('Report Filename', translate=True,
                               help="Name to use for the generated report file (may contain placeholders)\n"
                                    "The extension can be omitted and will then come from the report type.")
-    report_template = fields.Many2one('ir.actions.report.xml', 'Optional report to print and attach')
+    report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
@@ -508,10 +507,9 @@ class MailTemplate(models.Model):
                     report = template.report_template
                     report_service = report.report_name
 
-                    if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, format = Template.env['report'].get_pdf([res_id], report_service), 'pdf'
-                    else:
-                        result, format = odoo_report.render_report(self._cr, self._uid, [res_id], report_service, {'model': template.model}, Template._context)
+                    if report.report_type not in ['qweb-html', 'qweb-pdf']:
+                        raise UserError(_('Unsupported report type %s found.') % report.report_type)
+                    result, format = Template.env['report'].get_pdf([res_id], report_service), 'pdf'
 
                     # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)

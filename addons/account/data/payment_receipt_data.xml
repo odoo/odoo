@@ -6,7 +6,7 @@
             <field name="model_id" ref="account.model_account_payment" />
             <field name="name">Print Receipt</field>
             <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.report.xml,' +str(ref('action_report_payment_receipt'))" />
+            <field name="value" eval="'ir.actions.report,' +str(ref('action_report_payment_receipt'))" />
             <field name="key">action</field>
             <field name="model">account.payment</field>
         </record>

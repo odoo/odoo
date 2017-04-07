@@ -44,7 +44,6 @@ var make_report_url = function (action) {
     var report_urls = {
         'qweb-html': '/report/html/' + action.report_name,
         'qweb-pdf': '/report/pdf/' + action.report_name,
-        'controller': action.report_file,
     };
     // We may have to build a query string with `action.data`. It's the place
     // were report's using a wizard to customize the output traditionally put
@@ -69,7 +68,7 @@ var make_report_url = function (action) {
 };
 
 ActionManager.include({
-    ir_actions_report_xml: function (action, options) {
+    ir_actions_report: function (action, options) {
         var self = this;
         action = _.clone(action);
 
@@ -132,14 +131,6 @@ ActionManager.include({
                     return self.do_action('report.client_action', client_action_options);
                 }
             });
-        } else if (action.report_type === 'controller') {
-            framework.blockUI();
-            var response = [
-                report_urls.controller,
-                action.report_type,
-            ];
-            var c = crash_manager;
-            return trigger_download(self.getSession(), response, c, action, options);
         } else {
             return self._super(action, options);
         }

@@ -61,7 +61,6 @@ from . import modules
 from . import netsvc
 from . import osv
 from . import release
-from . import report
 from . import service
 from . import sql_db
 from . import tools

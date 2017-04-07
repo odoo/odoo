@@ -10,11 +10,6 @@ from odoo.tools import pickle
 import logging
 _logger = logging.getLogger(__name__)
 
-
-EXCLUDED_FIELDS = set(('code',
-    'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
-    'report_sxw_content_data', 'report_rml_content_data', 'search_view', ))
-
 #: Possible slots to bind an action to with :meth:`~.set_action`
 ACTION_SLOTS = [
     "client_action_multi",      # sidebar wizard action
@@ -419,14 +414,10 @@ class IrValues(models.Model):
         # process values and their action
         results = {}
         for id, name, action in actions:
-            fields = [field for field in action._fields if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = {
-                    field: action._fields[field].convert_to_read(action[field], action)
-                    for field in fields
-                }
-                if action._name in ('ir.actions.report.xml', 'ir.actions.act_window'):
+                action_def = dict([(k, v.convert_to_read(action[k], action)) for k, v in action._fields.items()])
+                if action._name in ('ir.actions.report', 'ir.actions.act_window'):
                     if action.groups_id and not action.groups_id & self.env.user.groups_id:
                         if name == 'Menuitem':
                             raise AccessError(_('You do not have the permission to perform this operation!!!'))
