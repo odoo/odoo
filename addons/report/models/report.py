@@ -447,10 +447,7 @@ class Report(models.Model):
 
                 if process.returncode not in [0, 1]:
                     if process.returncode == -11:
-                        msg = _('Wkhtmltopdf failed (error code: %s). \n'
-                                      'Help : this error may come from a limitation of memory '
-                                      'or a limitation of max handle files. \n'
-                                      'Error message : %s'
+                        msg = _('Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s'
                                       ) % (str(process.returncode), err[-1000:])
                         _logger.info(msg)
                         raise UserError(msg)
