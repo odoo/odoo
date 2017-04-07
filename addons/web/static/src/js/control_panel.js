@@ -238,7 +238,7 @@ var ControlPanel = Widget.extend({
             searchview.toggle_visibility(!is_hidden);
         }
 
-        this.nodes.$searchview.toggle(!is_hidden);
+        this.nodes.$searchview.toggleClass('o_hidden', !!is_hidden);
         this.$el.toggleClass('o_breadcrumb_full', !!is_hidden);
     },
 });
