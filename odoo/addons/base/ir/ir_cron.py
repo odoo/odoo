@@ -95,8 +95,10 @@ class ir_cron(models.Model):
                 end_time = time.time()
                 _logger.debug('%.3fs (cron %s, server action %d with uid %d)', end_time - start_time, cron_name, server_action_id, self.env.uid)
             self.pool.signal_caches_change()
-        except Exception, e:
+            return True
+        except Exception as e:
             self._handle_callback_exception(cron_name, server_action_id, job_id, e)
+            return False
 
     @classmethod
     def _process_job(cls, job_cr, job, cron_cr):
@@ -107,6 +109,7 @@ class ir_cron(models.Model):
         :param cron_cr: cursor holding lock on the cron job row, to use to update the next exec date,
             must not be committed/rolled back!
         """
+        job_success = False
         try:
             with api.Environment.manage():
                 cron = api.Environment(job_cr, job['user_id'], {})[cls._name]
@@ -123,7 +126,7 @@ class ir_cron(models.Model):
                     if numbercall > 0:
                         numbercall -= 1
                     if not ok or job['doall']:
-                        cron._callback(job['cron_name'], job['ir_actions_server_id'], job['id'])
+                        job_success = cron._callback(job['cron_name'], job['ir_actions_server_id'], job['id'])
                     if numbercall:
                         nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
                     ok = True
@@ -137,18 +140,23 @@ class ir_cron(models.Model):
         finally:
             job_cr.commit()
             cron_cr.commit()
+        return job_success
 
     @classmethod
     def _acquire_job(cls, db_name):
         # TODO remove 'check' argument from addons/base_automation/base_automation.py
-        """ Try to process one cron job.
+        """Processes pending cron jobs.
 
         This selects in database all the jobs that should be processed. It then
         tries to lock each of them and, if it succeeds, run the cron job (if it
         doesn't succeed, it means the job was already locked to be taken care
         of by another thread) and return.
 
-        If a job was processed, returns True, otherwise returns False.
+        Returns a dictionary holding the following information:
+
+            ``successes``: the number of successfully triggered jobs
+            ``failures``: the number of failed jobs (error during execution)
+            ``nextcall``: the date of the next planned job
         """
         db = odoo.sql_db.db_connect(db_name)
         threading.current_thread().dbname = db_name
@@ -176,6 +184,7 @@ class ir_cron(models.Model):
         except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
 
+        res = dict(successes=0, failures=0, nextcall=None)
         for job in jobs:
             lock_cr = db.cursor()
             try:
@@ -200,9 +209,11 @@ class ir_cron(models.Model):
                 job_cr = db.cursor()
                 try:
                     registry = odoo.registry(db_name)
-                    registry[cls._name]._process_job(job_cr, job, lock_cr)
+                    success = registry[cls._name]._process_job(job_cr, job, lock_cr)
+                    res['successes' if success else 'failures'] += 1
                 except Exception:
                     _logger.exception('Unexpected exception while processing cron job %r', job)
+                    res['failures'] += 1
                 finally:
                     job_cr.close()
 
@@ -218,8 +229,15 @@ class ir_cron(models.Model):
                 # we're exiting due to an exception while acquiring the lock
                 lock_cr.close()
 
+        with db.cursor() as cr:
+            cr.execute("SELECT MIN(nextcall) as nextcall FROM ir_cron WHERE active")
+            row = cr.dictfetchone()
+            if row:
+                res['nextcall'] = row['nextcall']
+
         if hasattr(threading.current_thread(), 'dbname'):  # cron job could have removed it as side-effect
             del threading.current_thread().dbname
+        return res
 
     @api.multi
     def _try_lock(self):

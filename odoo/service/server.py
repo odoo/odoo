@@ -217,14 +217,11 @@ class ThreadedServer(CommonServer):
             registries = odoo.modules.registry.Registry.registries
             _logger.debug('cron%d polling for jobs', number)
             for db_name, registry in registries.iteritems():
-                while registry.ready:
+                if registry.ready:
                     try:
-                        acquired = odoo.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
-                        if not acquired:
-                            break
+                        odoo.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                     except Exception:
                         _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
-                        break
 
     def cron_spawn(self):
         """ Start the above runner function in a daemon thread.
@@ -803,7 +800,7 @@ class WorkerCron(Worker):
                 start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
 
             import odoo.addons.base as base
-            base.ir.ir_cron.ir_cron._acquire_job(db_name)
+            res = base.ir.ir_cron.ir_cron._acquire_job(db_name)
             odoo.modules.registry.Registry.delete(db_name)
 
             # dont keep cursors in multi database mode
@@ -813,8 +810,9 @@ class WorkerCron(Worker):
                 run_time = time.time() - start_time
                 end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
                 vms_diff = (end_vms - start_vms) / 1024
-                logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % \
-                    (db_name, run_time, start_vms / 1024, end_vms / 1024, vms_diff)
+                logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk) successes: %d failures:%d' % \
+                    (db_name, run_time, start_vms / 1024, end_vms / 1024, vms_diff,
+                     res['successes'], res['failures'])
                 _logger.debug("WorkerCron (%s) %s", self.pid, logline)
 
             self.request_count += 1
