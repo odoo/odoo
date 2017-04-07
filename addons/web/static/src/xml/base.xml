@@ -1211,7 +1211,9 @@
 </t>
 
 <div t-name="Pager">
-    <span class="o_pager_value"></span> / <span class="o_pager_limit"></span>
+    <span class="o_pager_counter">
+        <span class="o_pager_value"></span> / <span class="o_pager_limit"></span>
+    </span>
     <span class="btn-group btn-group-sm">
         <!-- accesskeys not wanted in X2Many widgets -->
         <t t-if="!widget.getParent().x2m">
