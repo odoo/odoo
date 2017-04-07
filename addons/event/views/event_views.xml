@@ -51,36 +51,6 @@
                         </div>
                         <h2>Communication</h2>
                         <div class="row mt16 o_settings_container" name="event_type_communication">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="use_reply_to"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="use_reply_to"/>
-                                    <div class="row">
-                                        <div class="col-md-8 mt16" attrs="{'invisible': [('use_reply_to', '=', False)]}">
-                                            <label for="default_reply_to"/>
-                                            <field name="default_reply_to"
-                                                attrs="{'required': [('use_reply_to', '=', True)]}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="use_hashtag"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="use_hashtag"/>
-                                    <div class="row">
-                                        <div class="col-md-8 mt16" attrs="{'invisible': [('use_hashtag', '=', False)]}">
-                                            <label for="default_hashtag"/>
-                                            <field name="default_hashtag"
-                                                attrs="{'required': [('use_hashtag', '=', True)]}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-xs-12 col-md-12 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="use_mail_schedule"/>
@@ -97,6 +67,21 @@
                                                     <field name="interval_type"/>
                                                 </tree>
                                             </field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_hashtag"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="use_hashtag"/>
+                                    <div class="row">
+                                        <div class="col-md-8 mt16" attrs="{'invisible': [('use_hashtag', '=', False)]}">
+                                            <label for="default_hashtag"/>
+                                            <field name="default_hashtag"
+                                                attrs="{'required': [('use_hashtag', '=', True)]}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -234,7 +219,6 @@
                             </group>
                             <group>
                                 <field name="event_type_id" options="{'no_create':True}"/>
-                                <field name="reply_to" string="Contact Email"/>
                                 <label for="twitter_hashtag"/>
                                 <div>
                                     <span class="oe_inline"># </span>
