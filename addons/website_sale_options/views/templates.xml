@@ -55,7 +55,7 @@
                   </div>
                 </td>
                 <td>
-                  <span t-attf-class="text-danger oe_default_price" t-att-style="'' if (compute_currency(product.lst_price) - product.price) &gt; 0.1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
+                  <span t-attf-class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
