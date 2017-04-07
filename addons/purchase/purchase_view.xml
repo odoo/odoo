@@ -482,7 +482,10 @@
                         <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by' : 'state'}" />
+                        <!-- Commented out because of the 'state' field's attribute typo "stored=True"
+                             that can't be fixed in 9.0 as it would change the schema. Hence the only
+                             option is to disable this filter. Not to be forward ported to 10.0 !
+                        <filter string="Status" domain="[]" context="{'group_by' : 'state'}" /> -->
                     </group>
                 </search>
             </field>
