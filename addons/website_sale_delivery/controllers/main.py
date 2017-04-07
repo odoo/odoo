@@ -47,4 +47,5 @@ class WebsiteSaleDelivery(WebsiteSale):
             delivery_carriers = order._get_delivery_methods()
             values['deliveries'] = delivery_carriers.sudo().with_context(order_id=order.id)
 
+        values['delivery_action_id'] = request.env.ref('delivery.action_delivery_carrier_form').id
         return values

@@ -706,6 +706,7 @@ class WebsiteSale(http.Controller):
             errors=[],
             partner=order.partner_id.id,
             order=order,
+            payment_action_id=request.env.ref('payment.action_payment_acquirer').id,
         )
 
         acquirers = request.env['payment.acquirer'].search(
