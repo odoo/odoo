@@ -1915,6 +1915,10 @@ var BasicModel = AbstractModel.extend({
      * Returns the evaluation context that should be used when evaluating the
      * context/domain associated to a given element from the localData.
      *
+     * It is actually quite subtle.  We need to add some magic keys: active_id
+     * and active_ids.  Also, the session user context is added in the mix to be
+     * sure.  This allows some domains to use the uid key for example
+     *
      * @param {Object} element - an element from the localData
      * @returns {Object}
      */
@@ -1932,7 +1936,7 @@ var BasicModel = AbstractModel.extend({
             }
             _.extend(evalContext, {parent: parent.data});
         }
-        return evalContext;
+        return _.extend({}, session.user_context, evalContext);
     },
     /**
      * Returns the list of field names of the given element according to its

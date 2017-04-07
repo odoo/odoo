@@ -31,6 +31,7 @@ QUnit.module('relational_fields', {
                     },
                     date: {string: "Some Date", type: "date"},
                     datetime: {string: "Datetime Field", type: 'datetime'},
+                    user_id: {string: "User", type: 'many2one', relation: 'user'},
                 },
                 records: [{
                     id: 1,
@@ -43,6 +44,7 @@ QUnit.module('relational_fields', {
                     turtles: [2],
                     timmy: [],
                     trululu: 4,
+                    user_id: 17,
                 }, {
                     id: 2,
                     display_name: "second record",
@@ -56,6 +58,7 @@ QUnit.module('relational_fields', {
                     product_id: 37,
                     date: "2017-01-25",
                     datetime: "2016-12-12 10:55:05",
+                    user_id: 17,
                 }, {
                     id: 4,
                     display_name: "aaa",
@@ -119,7 +122,19 @@ QUnit.module('relational_fields', {
                     turtle_qux: 9.8,
                     partner_ids: [],
                 }],
-            }
+            },
+            user: {
+                fields: {
+                    name: {string: "Name", type: "char"}
+                },
+                records: [{
+                    id: 17,
+                    name: "Aline",
+                }, {
+                    id: 19,
+                    name: "Christine",
+                }]
+            },
         };
     }
 }, function () {
@@ -3098,6 +3113,30 @@ QUnit.module('relational_fields', {
             "all status should be disabled");
         assert.ok(form.$('.o_statusbar_status button[data-value="4"]').hasClass('btn-primary'),
             "selected status should be btn-primary");
+
+        form.destroy();
+    });
+
+    QUnit.test('static statusbar widget on many2one field with domain', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<header><field name="trululu" domain="[(\'user_id\',\'=\',uid)]" widget="statusbar"/></header>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read') {
+                    assert.deepEqual(args.args[0], ['|', ['id', '=', 4], ['user_id', '=', 17]],
+                        "search_read should sent the correct domain");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+            session: {user_context: {uid: 17}},
+        });
 
         form.destroy();
     });
