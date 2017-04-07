@@ -4,6 +4,7 @@ import openerp
 
 from openerp.tests import common
 from openerp.tools.misc import mute_logger
+import unittest
 
 def ok(n):
     """ Successful import of ``n`` records
@@ -75,6 +76,37 @@ class ImporterCase(common.TransactionCase):
             'module': '__test__'
         })
         return '__test__.' + name
+
+class test_DummyModule(unittest.TestCase):
+
+    def test_sys_modules_manipulation(self):
+        import sys
+        from openerp import tools
+
+        default_name = 'openerp.tools.yaml_import.unsafe_eval'
+        marker = object()
+        fake_namespace = {}
+
+        # no module present at the dummy module default location
+        self.assertIs(sys.modules.get(default_name, marker), marker)
+        with tools.DummyModule(fake_namespace, marker=marker) as dummy:
+            self.assertEqual(dummy.__name__, default_name)
+            # dummy module present at dummy module default location
+            self.assertIs(sys.modules.get(default_name), dummy)
+            self.assertIs(dummy.marker, marker)
+        # module no longer present at the dummy module default location
+        self.assertIs(sys.modules.get(default_name, marker), marker)
+        # but it mutated the fake_namespace we passed to it:
+        self.assertIs(fake_namespace['marker'], marker)
+
+        # this test module is present at this module's location
+        self.assertIs(sys.modules[__name__].__dict__, globals())
+        with tools.DummyModule(fake_namespace, __name__=__name__) as dummy:
+            # now dummy is present at this module's location
+            self.assertIs(sys.modules[__name__].__dict__, fake_namespace)
+            self.assertIs(sys.modules[__name__], dummy)
+        # now this test module is back at this module's location
+        self.assertIs(sys.modules[__name__].__dict__, globals())
 
 class test_ids_stuff(ImporterCase):
     model_name = 'export.integer'
