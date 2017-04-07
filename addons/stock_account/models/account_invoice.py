@@ -112,33 +112,55 @@ class AccountInvoiceLine(models.Model):
 
     def get_invoice_line_account(self, type, product, fpos, company):
         if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type == 'product':
-            accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
+            accounts = product.product_tmpl_id._get_product_accounts(fiscal_pos=fpos)
             if accounts['stock_input']:
                 return accounts['stock_input']
         return super(AccountInvoiceLine, self).get_invoice_line_account(type, product, fpos, company)
 
+    def _get_valuation_for(self, stock_move, exclude_corrected=False):
+        valuation_account = self.product_id.product_tmpl_id._get_product_accounts()['stock_valuation']
+        rslt = 0.0
+        for account_move in stock_move.stock_account_valuation_account_move_ids:
+            if not exclude_corrected or not account_move.stock_account_valuation_correction:
+                for line in account_move.line_ids:
+                    if line.account_id == valuation_account:
+                        rslt += line.balance
+        return rslt
+
     def balance_stock_valuation(self):
         stock_moves = self.env['stock.move'].search([('purchase_line_id', '=', self.purchase_line_id.id)])
         for stock_move in stock_moves:
-            whole_move_valuation = sum(move.amount for move in stock_move.valuation_account_move_ids)
+            whole_move_initial_valuation = self._get_valuation_for(stock_move, exclude_corrected=True)
             currency = self.env['res.company']._company_default_get().currency_id
-            valuation_per_unit = float_round(whole_move_valuation / stock_move.ordered_qty, precision_digits=currency.decimal_places)
+            initial_valuation_per_unit = whole_move_initial_valuation / stock_move.ordered_qty
 
-            if valuation_per_unit and float_compare(valuation_per_unit, self.price_unit, precision_digits=currency.decimal_places) != 0:
-
-                balancing_amount = float_round((valuation_per_unit * self.quantity) - self.price_subtotal, precision_digits=currency.decimal_places)
-
+            if whole_move_initial_valuation and float_compare(initial_valuation_per_unit, self.price_unit, precision_digits=currency.decimal_places) != 0:
                 #TODO OCO ajouter qqch pour gérer le cas erronné où on refait une facture alors que la PO est déjà intégralement facturée ?? (ce serait pas mal, sans ça on créera des mouvements d'évaluation du stock pour rien qui pourriront la DB)
+                qty_left_to_invoice = stock_move.ordered_qty - self.purchase_line_id.qty_invoiced
+                _logger.warn("test :"+str(stock_move.ordered_qty))
+                if float_compare(self.quantity, qty_left_to_invoice , precision_rounding=self.purchase_line_id.product_uom.rounding) == 0:
+                    #TODO OCO il y a un prob ici !
+                    valuation_still_to_correct = whole_move_initial_valuation - (stock_move.stock_account_valuation_corrected_quantity * inital_valuation_per_unit)
+                    balancing_amount = float_round(valuation_still_to_correct - self.price_subtotal, precision_digits=currency.decimal_places)
+                    #En fait ici, il faut refaire une multiplication quté_corrigée * initial_valuation_per_unit
+                    #Retirer cette valeur de whole
+                    #Ca nous donne la "valuation" à corriger
+                    #On en retire self.price_subtotal et on a le montant à écrire dans les compte (balancing_amount)
+                    #To be sure we don't get precision errors impeaching a complete balancing of the invoice with the valuation
+                else:
+                    balancing_amount = float_round((initial_valuation_per_unit * self.quantity) - self.price_subtotal, precision_digits=currency.decimal_places)
 
-                if not balancing_amount:
-                    return #TODO OCO agencer autrement?
+                if not balancing_amount: #Then the currency rate has not changed and we don't need to do anything
+                    return
+
+                #TODO OCO: et si c'est reçu en plusieurs fois ??
 
                 #TODO OCO peut-être mettre cette boucle dans une méthode à part
                 debited_account = None
                 credited_account = None
                 partner = None
                 journal = None
-                for valuation_move in stock_move.valuation_account_move_ids:
+                for valuation_move in stock_move.stock_account_valuation_account_move_ids:
                     for valuation_line in valuation_move.line_ids:
                         if valuation_line.credit:
                             credited_account = valuation_line.account_id
@@ -153,7 +175,7 @@ class AccountInvoiceLine(models.Model):
                 debited_correction_vals = {
                   'name': stock_move.name + _(' - currency rate adjustment'),
                   'product_id': stock_move.product_id.id,
-                  'quantity': stock_move.product_qty,
+                  'quantity': self.quantity,
                   'product_uom_id': stock_move.product_id.uom_id.id,
                   'ref': stock_move.picking_id.name,
                   'partner_id': partner.id,
@@ -165,7 +187,7 @@ class AccountInvoiceLine(models.Model):
                 credited_correction_vals = {
                   'name': stock_move.name + _(' - currency rate adjustment'),
                   'product_id': stock_move.product_id.id,
-                  'quantity': stock_move.product_qty,
+                  'quantity': self.quantity,
                   'product_uom_id': stock_move.product_id.uom_id.id,
                   'ref': stock_move.picking_id.name,
                   'partner_id': partner.id,
@@ -179,5 +201,8 @@ class AccountInvoiceLine(models.Model):
                     'journal_id': journal.id,
                     'line_ids': [(0,False,debited_correction_vals), (0,False,credited_correction_vals)],
                     'date': date,
-                    'ref':stock_move.picking_id.name + _(' - currency rate adjustment')})
+                    'ref': stock_move.picking_id.name + _(' - currency rate adjustment'),
+                    'stock_account_valuation_correction': True})
                 correction_move.post()
+                stock_move.write({'stock_account_valuation_account_move_ids': [(4, correction_move.id, None)]})
+                stock_move.stock_account_valuation_corrected_quantity += self.quantity

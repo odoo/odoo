@@ -139,7 +139,7 @@ class StockQuant(models.Model):
                 new_account_move.message_post_with_view('mail.message_origin_link',
                         values={'self': new_account_move, 'origin': move.picking_id},
                         subtype_id=self.env.ref('mail.mt_note').id)
-                move.write({'valuation_account_move_ids': [(4, new_account_move.id, None)]})
+                move.write({'stock_account_valuation_account_move_ids': [(4, new_account_move.id, None)]})
 
     def _group_quants_by_cost(self, stock_move):
         rslt = defaultdict(lambda: 0.0)
@@ -158,6 +158,9 @@ class StockQuant(models.Model):
                 #sans tenir compte des factures, au prix du quant: ça peut causer une situation hybride entre les cas 1 et 2
 
                 if invoiced_qty:
+                    #TODO OCO bien s'assurer que s'il y a eu plusieurs factures avant, elles sont prises en compte comme il faut (il me semble que oui, vu le code)
+                    #TODO OCO et si les quantités reçues sont différentes des quantités facturées ?
+                    #   => Si la facture ou la réception est faite en plusieurs fois ? (juste la facture, la réception pose moins problème avec le quant)
                     invoiced_cost = sum(inv_line.price_subtotal for inv_line in po_line.invoice_lines)
                     not_invoiced_cost = float_round(quant.qty - invoiced_qty, precision_digits=po_line.product_uom.rounding) * quant.cost
                     cost = invoiced_cost + not_invoiced_cost
@@ -201,7 +204,9 @@ class StockQuant(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    valuation_account_move_ids = fields.Many2many(comodel_name='account.move', string='Accounting entries', help="Accounting entries used for perpetual valuation of this move.")
+    stock_account_valuation_account_move_ids = fields.Many2many(comodel_name='account.move', string='Accounting entries', help="Accounting entries used for perpetual valuation of this move.")
+    stock_account_valuation_corrected_quantity = fields.Integer(default=0)#TODO OCO DOC
+    #TODO OCO pas besoin de ce champ, la po line contient le nombre de produits facturés
 
     @api.multi
     def action_done(self):
