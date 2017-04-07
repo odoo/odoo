@@ -1480,6 +1480,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         }
     },
     click_next: function() {
+        this.pos.push_order();
         this.pos.get_order().finalize();
     },
     click_back: function() {

@@ -2213,7 +2213,6 @@ exports.Order = Backbone.Model.extend({
         });
     },
     finalize: function(){
-        this.push_order();
         this.destroy();
     },
     destroy: function(){
