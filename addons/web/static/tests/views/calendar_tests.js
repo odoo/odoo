@@ -214,7 +214,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create and change events', function (assert) {
-        assert.expect(19);
+        assert.expect(21);
 
         var calendar = createView({
             View: CalendarView,
@@ -272,6 +272,19 @@ QUnit.module('Views', {
         assert.strictEqual(calendar.$('.fc-event:contains(new event in quick create)').length, 1, "should display the new record");
         assert.strictEqual(calendar.$('td.fc-event-container[colspan]').length, 2, "should the new record have only one day");
 
+        // create a new event, quick create only (validated by pressing enter key)
+
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+
+        assert.ok($('.modal-dialog.modal-sm').length, "should open the quick create dialog");
+
+        $('.modal-body input:first')
+            .val('new event in quick create validated by pressing enter key.')
+            .trigger($.Event('keyup', {keyCode: $.ui.keyCode.ENTER}));
+
+        assert.strictEqual(calendar.$('.fc-event:contains(new event in quick create validated by pressing enter key.)').length, 1, "should display the new record");
+
         // create a new event with 2 days
 
         $cell = calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day:eq(2)');
@@ -300,7 +313,7 @@ QUnit.module('Views', {
         $('.modal button.btn:contains(Ok)').trigger('click');
         assert.notOk(calendar.$('.fc-event:contains(event 4) .fc-content').length, "the record should be deleted");
 
-        assert.strictEqual(calendar.$('.fc-event-container .fc-event').length, 8, "should display 8 events");
+        assert.strictEqual(calendar.$('.fc-event-container .fc-event').length, 9, "should display 9 events");
         // move to next month
         calendar.$buttons.find('.o_calendar_button_next').click();
 

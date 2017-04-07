@@ -31,6 +31,7 @@ var QuickCreate = Dialog.extend({
 
         // Can hold data pre-set from where you clicked on agenda
         this.dataTemplate = dataTemplate || {};
+        this.dataCalendar = dataCalendar;
         this.$input = $();
 
         var self = this;
@@ -68,7 +69,7 @@ var QuickCreate = Dialog.extend({
         this.$input = this.$('input').keyup(function enterHandler (e) {
             if(e.keyCode === $.ui.keyCode.ENTER) {
                 self.$input.off('keyup', enterHandler);
-                if (!self._quickAdd()){
+                if (!self._quickAdd(self.dataCalendar)){
                     self.$input.on('keyup', enterHandler);
                 }
             } else if (e.keyCode === $.ui.keyCode.ESCAPE && self._buttons) {
