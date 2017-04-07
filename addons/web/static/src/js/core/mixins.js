@@ -447,15 +447,17 @@ var ServicesMixin = {
         return result;
     },
     /**
-     * Build a RPC query
+     * Builds and executes RPC query. Returns a deferred's promise resolved with
+     * the RPC result.
      *
      * @param {string} arg1 either a route or a model
      * @param {string} method if a model is given, this argument is a method
-     * @returns {RPCBuilder}
+     * @returns {Deferred's Promise}
      */
     _rpc: function (params, options) {
         var query = rpc.buildQuery(params);
-        return this.call('ajax', 'rpc', query.route, query.params, options);
+        var def = this.call('ajax', 'rpc', query.route, query.params, options);
+        return def ? def.promise() : $.Deferred().promise();
     },
     loadFieldView: function (dataset, view_id, view_type, options) {
         return this.loadViews(dataset.model, dataset.get_context(), [[view_id, view_type]], options).then(function (result) {

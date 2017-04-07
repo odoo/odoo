@@ -377,6 +377,19 @@ QUnit.module('core', {}, function () {
             done();
         });
     });
+
+    QUnit.test("calling _rpc on destroyed widgets", function (assert) {
+        assert.expect(1);
+
+        var widget = new Widget();
+        widget.destroy();
+        widget._rpc({route: '/a/route'}).always(function () {
+            throw Error("Calling _rpc on a destroyed widget should return a " +
+                "deferred that is never resolved nor rejected");
+        });
+        assert.ok(true,
+            "there should be no crash when calling _rpc on a destroyed widget");
+    });
 });
 
 });
