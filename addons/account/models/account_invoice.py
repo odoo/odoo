@@ -484,7 +484,7 @@ class AccountInvoice(models.Model):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term_id.id
 
-            delivery_partner_id = self.partner_shipping_id.id or self.partner_id.address_get(['delivery'])['delivery']
+            delivery_partner_id = self.get_delivery_partner_id()
             fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, delivery_id=delivery_partner_id)
 
             # If partner has no warning, check its company
@@ -513,6 +513,10 @@ class AccountInvoice(models.Model):
             return {'domain': {'partner_bank_id': [('id', 'in', bank_ids.ids)]}}
         return {}
 
+    @api.multi
+    def get_delivery_partner_id(self):
+        self.ensure_one()
+        return self.partner_id.address_get(['delivery'])['delivery']
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
