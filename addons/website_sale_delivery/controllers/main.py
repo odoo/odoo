@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import http
+
+from odoo import http, _
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
@@ -32,3 +33,18 @@ class WebsiteSaleDelivery(WebsiteSale):
             if line.is_delivery:
                 ret['transaction']['shipping'] = line.price_unit
         return ret
+
+    def _get_shop_payment_values(self, order, **kwargs):
+        values = super(WebsiteSaleDelivery, self)._get_shop_payment_values(order, **kwargs)
+        if not order._get_delivery_methods():
+            values['errors'].append(
+                (_('Sorry, we are unable to ship your order'),
+                 _('No shipping method is available for your current order and shipping address. '
+                   'Please contact us for more information.')))
+
+        has_stockable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
+        if has_stockable_products:
+            delivery_carriers = order._get_delivery_methods()
+            values['deliveries'] = delivery_carriers.sudo().with_context(order_id=order.id)
+
+        return values
