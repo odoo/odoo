@@ -316,17 +316,6 @@ class ResPartner(models.Model):
             domain += overdue_domain
         return domain
 
-    @api.multi
-    def _compute_issued_total(self):
-        """ Returns the issued total as will be displayed on partner view """
-        today = fields.Date.context_today(self)
-        for partner in self:
-            domain = partner.get_followup_lines_domain(today, overdue_only=True)
-            issued_total = 0
-            for aml in self.env['account.move.line'].search(domain):
-                issued_total += aml.amount_residual
-            partner.issued_total = issued_total
-
     @api.one
     def _compute_has_unreconciled_entries(self):
         # Avoid useless work if has_unreconciled_entries is not relevant for this partner
@@ -387,7 +376,6 @@ class ResPartner(models.Model):
 
     contracts_count = fields.Integer(compute='_journal_item_count', string="Contracts", type='integer')
     journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")
-    issued_total = fields.Monetary(compute='_compute_issued_total', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable", oldname="property_account_payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",

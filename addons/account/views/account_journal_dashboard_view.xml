@@ -19,8 +19,13 @@
                                 <div class="row">
                                     <t t-if="(journal_type == 'bank' || journal_type == 'cash')" t-call="JournalBodyBankCash"/>
                                     <t t-if="journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodySalePurchase"/>
-                                    <div t-if="journal_type == 'general' || journal_type == 'situation'" class="row">
-                                    </div>
+                                    <t t-if="journal_type == 'general' || journal_type == 'situation'">
+                                        <div class="col-xs-6 o_kanban_primary_left">
+                                            <button type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'view_no_maturity': 1}" class="btn btn-primary btn-sm">
+                                                <span>Journal Entries</span>
+                                            </button>
+                                        </div>
+                                    </t>
                                 </div>
                                 <t t-if="journal_type == 'bank' || journal_type == 'cash' || journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodyGraph"/>
                             </div><div class="container o_kanban_card_manage_pane o_invisible">
@@ -166,10 +171,10 @@
                                     <span>View</span>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line'}">Journal Entries</a>
+                                    <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'view_no_maturity': 1}">Journal Entries</a>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_toreview': 1}">Entries to Review</a>
+                                    <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_toreview': 1, 'view_no_maturity': 1}">Entries to Review</a>
                                 </div>
                                 <div>
                                     <a type="object" name="open_action" context="{'action_name': 'action_account_moves_all_a'}" groups="base.group_no_one">Journal Items</a>
@@ -214,11 +219,11 @@
                                 <button type="object" name="action_open_reconcile" class="btn btn-primary btn-sm"> Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items</button>
                             </t>
                             <t t-if="journal_type == 'bank'">
-                                <div name="bank_journal_default_cta" t-if="! dashboard.bank_statements_source">
+                                <div name="bank_journal_default_cta" t-if="dashboard.bank_statements_source == 'undefined'">
                                     <button t-if="dashboard.number_to_reconcile == 0" type="object" name="create_bank_statement" class="btn btn-primary btn-sm">New Statement</button>
                                     <a t-if="dashboard.number_to_reconcile > 0" type="object" name="create_bank_statement" class="oe_inline">New Statement</a>
                                 </div>
-                                <div name="bank_journal_cta" t-if="dashboard.bank_statements_source">
+                                <div name="bank_journal_cta" t-if="dashboard.bank_statements_source != 'undefined'">
                                     <button t-if="dashboard.bank_statements_source == 'manual' &amp;&amp; dashboard.number_to_reconcile == 0" type="object" name="create_bank_statement" class="btn btn-primary btn-sm">New Statement</button>
                                     <a t-if="dashboard.bank_statements_source == 'manual' &amp;&amp; dashboard.number_to_reconcile > 0" type="object" name="create_bank_statement" class="oe_inline">New Statement</a>
                                 </div>

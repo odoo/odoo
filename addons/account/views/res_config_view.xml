@@ -99,7 +99,7 @@
                             <div class="col-xs-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
-                                    <label string="Currency"/>
+                                    <label string="Main Currency"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Main currency of your company
@@ -107,10 +107,7 @@
                                     <div class="content-group">
                                         <div class="row mt16">
                                             <label for="currency_id" class="col-md-3 o_light_label"/>
-                                            <field name="currency_id"/>
-                                        </div>
-                                        <div>
-                                            <button name="%(base.action_currency_form)d" icon="fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link"/>
+                                            <field name="currency_id" options="{'no_create_edit': True, 'no_open': True}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +123,7 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
                                         <div class="mt16">
-                                            <button name="%(base.action_currency_form_company)d" icon="fa-arrow-right" type="action" string="Currencies" class="btn-link"/>
+                                            <button name="%(base.action_currency_form)d" icon="fa-arrow-right" type="action" string="Activate Currencies" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>

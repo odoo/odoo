@@ -311,15 +311,19 @@
                     <sheet>
                         <field name="type" invisible="1"/>
                         <div class="oe_title">
-                            <label for="bank_acc_number" required="1" class="oe_edit_only"/>
-                            <h1><field name="bank_acc_number" required="1"/></h1>
+                            <label for="name" class="oe_edit_only" string="Bank Account Name"/>
+                            <h1><field name="name"/></h1>
                         </div>
-                        <group col="4">
-                            <field name="bank_id"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                            <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                            <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
-                            <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
+                        <group>
+                            <group>
+                                <field name="bank_acc_number"/>
+                                <field name="bank_id"/>
+                            </group><group>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                                <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
+                                <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -1275,17 +1279,16 @@
                                 string="Reconciled entries">
                             </button>
                         </div>
-                    <label for="name" class="oe_edit_only" attrs="{'invisible':[('name','=','/')]}"/>
                     <h1>
                         <field name="name" readonly="True" attrs="{'invisible':[('name','=','/')]}"/>
                     </h1>
                     <group>
                         <group>
-                            <field name="journal_id" options="{'no_open': True, 'no_create': True}"/>
                             <field name="date"/>
+                            <field name="ref"/>
                         </group>
                         <group>
-                            <field name="ref" required="1"/>
+                            <field name="journal_id" options="{'no_open': True, 'no_create': True}"/>
                             <field name="company_id" required="1" groups="base.group_multi_company"/>
                             <field name="amount" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
@@ -1306,7 +1309,7 @@
                                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
-                                    <field name="date_maturity" required="0"/>
+                                    <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
                                 </tree>
                             </field>
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
@@ -1355,7 +1358,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
-            <field name="context">{'search_default_misc_filter':1}</field>
+            <field name="context">{'search_default_misc_filter':1, 'view_no_maturity': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a journal entry.
@@ -2012,6 +2015,6 @@
             <field name="tag">manual_reconciliation_view</field>
         </record>
 
-        <menuitem id="menu_action_manual_reconciliation" name="Manual Payments &amp; Invoices Matching" parent="menu_finance_entries" action="action_manual_reconciliation" sequence="25"/>
+        <menuitem id="menu_action_manual_reconciliation" parent="menu_finance_entries" action="action_manual_reconciliation" sequence="25"/>
     </data>
 </odoo>

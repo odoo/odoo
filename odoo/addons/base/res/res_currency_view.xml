@@ -135,16 +135,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_currency_search"/>
-            <field name="context">{'active_test': False, 'search_default_active': 1}</field>
-        </record>
-
-        <record id="action_currency_form_company" model="ir.actions.act_window">
-            <field name="name">Currencies</field>
-            <field name="res_model">res.currency</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_currency_search"/>
-            <field name="context">{'active_test': False, 'search_default_active': 1}</field>
+            <field name="context">{'active_test': False, 'search_default_inactive': 1, 'search_default_active': 1}</field>
         </record>
 
         <!-- We override the view res_company here because the action wasn't defined before -->
@@ -156,7 +147,7 @@
                 <xpath expr="//field[@id='company_currency']" position="after">
                     <label for="id"/>
                     <p class="text-muted">
-                        Activate <a href="" type="action" name="%(base.action_currency_form_company)d">here</a> a new currency before creating a new company.
+                        <a href="" type="action" name="%(base.action_currency_form)d">Activate more currencies</a>.
                     </p>
                 </xpath>
             </field>

@@ -242,7 +242,7 @@ class AccountJournal(models.Model):
 
     # Bank journals fields
     bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False)
-    bank_statements_source = fields.Selection([('no_feeds', 'No Feeds'),('manual', 'Record Manually')], string='Bank Feeds', default='no_feeds')
+    bank_statements_source = fields.Selection([('undefined', 'Undefined Yet'),('manual', 'Record Manually')], string='Bank Feeds', default='undefined')
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
