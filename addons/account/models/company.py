@@ -20,7 +20,7 @@ class ResCompany(models.Model):
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
     accounts_code_digits = fields.Integer(string='Number of digits in an account code')
-    tax_cash_basis_journal_id = fields.Many2one('account.journal', string="Tax Cash Basis Journal")
+    tax_cash_basis_journal_id = fields.Many2one('account.journal', string="Cash Basis Journal")
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round per Line'),
         ('round_globally', 'Round Globally'),

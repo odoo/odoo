@@ -14,13 +14,13 @@
                     <div class="o_setting_right_pane">
                         <label string="Fiscal Year"/>
                         <div class="text-muted">
-                            Last day of your fiscal year
+                            Last day of your fiscal year, for automatic opening entries
                         </div>
                          <div class="content-group">
                             <div class="row mt16">
-                                <label string="Last Day" class="col-md-4 o_light_label"/>
-                                <field name="fiscalyear_last_month" class="col-md-4 oe_inline"/>
-                                <field name="fiscalyear_last_day" class="col-md-4 oe_inline text-center"/>
+                                <label string="Last Day" class="col-md-3 o_light_label"/>
+                                <field name="fiscalyear_last_month" style="width: 100px; margin-right: 8px;"/>
+                                <field name="fiscalyear_last_day" class="oe_inline"/>
                             </div>
                         </div>
                     </div>
@@ -34,10 +34,10 @@
                         </div>
                          <div class="content-group">
                             <div class="row mt16">
-                                <label for="fiscalyear_lock_date" class="col-md-6 o_light_label"/>
-                                <field name="fiscalyear_lock_date" class="col-md-6 oe_inline"/>
-                                <label for="period_lock_date" class="col-md-6 o_light_label"/>
-                                <field name="period_lock_date" class="col-md-6 oe_inline"/>
+                                <label for="fiscalyear_lock_date" class="col-md-5 o_light_label"/>
+                                <field name="fiscalyear_lock_date"/>
+                                <label for="period_lock_date" class="col-md-5 o_light_label"/>
+                                <field name="period_lock_date"/>
                             </div>
                         </div>
                     </div>
@@ -85,7 +85,12 @@
                         <div class="text-muted">
                             Journal used to declare taxes at payment date
                         </div>
-                        <field name="tax_cash_basis_journal_id"/>
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="tax_cash_basis_journal_id" class="col-md-3 o_light_label"/>
+                                <field name="tax_cash_basis_journal_id"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

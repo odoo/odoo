@@ -94,6 +94,32 @@
                                 </div>
                             </div>
                         </div>
+                        <h2>Accounting Reports</h2>
+                        <div class="row mt16 o_settings_container" id="accounting_reports">
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="account_accountant" title="If you do not check this box, you will be able to do invoicing &amp; payments, but not accounting (Journal Items, Chart of  Accounts, ...).">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_accountant"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_account_accountant"/>
+                                    <div class="text-muted">
+                                        Add all accounting features: journal entries, legal statements, etc.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="fiscalyear" invisible="1"/>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="dynamic_report" invisible="1">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_reports" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_account_reports"/>
+                                    <div class="text-muted" id="account_reports">
+                                        Navigate easily through reports and see what is behind the numbers
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <h2>Currencies</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-xs-12 col-md-6 o_setting_box">
@@ -130,7 +156,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_currency_rate_live" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_currency_rate_live" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Automatic Rates"/>
@@ -155,7 +181,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_print_docsaway" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_print_docsaway" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_print_docsaway"/>
@@ -169,7 +195,7 @@
                         <div class="row mt16 o_settings_container">
                             <div class="col-xs-12 col-md-6 o_setting_box" id="account_followup" title="This feature is useful if you issue a high amounts of invoices.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_reports_followup" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_account_reports_followup" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Follow-up Levels"/>
@@ -185,7 +211,7 @@
                             </div>
                              <div class="col-xs-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_batch_deposit" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_account_batch_deposit" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Batch Deposits"/>
@@ -200,7 +226,7 @@
                         <div class="row mt16 o_settings_container">
                             <div class="col-xs-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_l10n_us_check_printing" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_l10n_us_check_printing" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Checks" for="module_l10n_us_check_printing"/>
@@ -212,7 +238,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" title="If you check this box, you will be able to register your payment using SEPA.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_sepa" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_account_sepa" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="sepa_right_pane">
                                     <label string="SEPA Payments" for="module_account_sepa"/>
@@ -227,7 +253,7 @@
                         <div class="row mt16 o_settings_container" id="bank_cash">
                             <div class="col-xs-12 col-md-6 o_setting_box" id="account_yodlee" title="Get your bank statements automatically imported every 4 hours, or in one-click, using Yodlee and Plaid services. Once installed, set “Bank Feeds” to “Bank Synchronization” in bank account settings. Then, click “Configure” on the online account to enter your bank credentials.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_account_yodlee" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Automatic Import"/>
@@ -238,7 +264,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_bank_statement_import_csv" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_account_bank_statement_import_csv" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="CSV Import"/>
@@ -249,7 +275,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_bank_statement_import_qif" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_account_bank_statement_import_qif" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="QIF Import"/>
@@ -260,7 +286,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_bank_statement_import_ofx" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_account_bank_statement_import_ofx" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="OFX Import"/>
@@ -271,38 +297,12 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_bank_statement_import_camt" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="module_account_bank_statement_import_camt" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="CAMT Import"/>
                                     <div class="text-muted">
                                         Import your bank statements in CAMT.053
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2>Accounting Reports</h2>
-                        <div class="row mt16 o_settings_container" id="accounting_reports">
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="account_accountant" title="If you do not check this box, you will be able to do invoicing &amp; payments, but not accounting (Journal Items, Chart of  Accounts, ...).">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_account_accountant"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_account_accountant"/>
-                                    <div class="text-muted">
-                                        Add all accounting features: journal entries, legal statements, etc.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="fiscalyear" invisible="1"/>
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="dynamic_report" invisible="1">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_account_reports" class="oe_inline" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_account_reports"/>
-                                    <div class="text-muted" id="account_reports">
-                                        Navigate easily through reports and see what is behind the numbers
                                     </div>
                                 </div>
                             </div>
@@ -330,7 +330,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" id="account_budget" title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_budget" class="oe_inline"/>
+                                    <field name="module_account_budget"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_account_budget"/>
