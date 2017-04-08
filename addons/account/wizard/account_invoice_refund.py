@@ -108,8 +108,10 @@ class AccountInvoiceRefund(models.TransientModel):
                         if inv_refund.payment_term_id.id:
                             inv_refund._onchange_payment_term_date_invoice()
                         created_inv.append(inv_refund.id)
-                xml_id = (inv.type in ['out_refund', 'out_invoice']) and 'action_invoice_tree1' or \
-                         (inv.type in ['in_refund', 'in_invoice']) and 'action_invoice_tree2'
+                xml_id = inv.type == 'out_invoice' and 'action_invoice_out_refund' or \
+                         inv.type == 'out_refund' and 'action_invoice_tree1' or \
+                         inv.type == 'in_invoice' and 'action_invoice_in_refund' or \
+                         inv.type == 'in_refund' and 'action_invoice_tree2'
                 # Put the reason in the chatter
                 subject = _("Invoice refund")
                 body = description

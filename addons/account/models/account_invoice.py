@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.misc import formatLang
 
-from odoo.exceptions import UserError, RedirectWarning, ValidationError
+from odoo.exceptions import UserError, RedirectWarning, ValidationError, Warning
 
 import odoo.addons.decimal_precision as dp
 import logging
@@ -57,6 +57,12 @@ class AccountInvoice(models.Model):
         self.amount_total_company_signed = amount_total_company_signed * sign
         self.amount_total_signed = self.amount_total * sign
         self.amount_untaxed_signed = amount_untaxed_signed * sign
+
+    @api.onchange('amount_total')
+    def _onchange_amount_total(self):
+        for inv in self:
+            if inv.amount_total < 0:
+                raise Warning(_('You cannot validate an invoice with a negative total amount. You should create a credit note instead.'))
 
     @api.model
     def _default_journal(self):
@@ -573,6 +579,8 @@ class AccountInvoice(models.Model):
         to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
         if to_open_invoices.filtered(lambda inv: inv.state != 'draft'):
             raise UserError(_("Invoice must be in draft state in order to validate it."))
+        if to_open_invoices.filtered(lambda inv: inv.amount_total < 0):
+            raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead."))
         to_open_invoices.action_date_assign()
         to_open_invoices.action_move_create()
         return to_open_invoices.invoice_validate()
