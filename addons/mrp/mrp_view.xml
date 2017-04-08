@@ -673,6 +673,7 @@
                     <button name="action_assign" states="confirmed,picking_except" string="Check Availability" type="object" class="oe_highlight"/>
                     <button name="force_production" states="confirmed" string="Force Reservation" type="object"/>
                     <button name="button_produce" states="ready" string="Mark as Started"/>
+                    <button name="action_terminate" type="object" states="in_production" string="Terminate Production"/>
                     <button name="button_cancel" states="draft,ready,in_production" string="Cancel Production"/>
                     <button name="action_cancel" type="object" states="confirmed" string="Cancel Production"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"confirmed":"blue"}'/>
@@ -847,6 +848,8 @@
                         help="Manufacturing Orders which are ready to start production."/>
                     <filter icon="terp-check" string="In Production" name="inprogress" domain="[('state','=','in_production')]"
                         help="Manufacturing Orders which are currently in production."/>
+                    <filter icon="terp-check" string="Produced" name="produced" domain="[('move_created_ids2.state','=','done')]"
+                        help="Manufacturing Orders for which products are already produced."/>
                     <separator/>
                     <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                         help="Production started late"/>
