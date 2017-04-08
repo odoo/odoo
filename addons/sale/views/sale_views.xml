@@ -190,7 +190,6 @@
                             <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
                         </group>
                         <group>
-                            <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
                             <field name="confirmation_date" attrs="{'invisible': [('state', 'in', ['draft', 'sent', 'cancel'])]}"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
@@ -347,6 +346,7 @@
                                            groups="analytic.group_analytic_accounting"/>
                                 </group>
                                 <group name="sale_pay" string="Invoicing">
+                                    <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
                                     <field name="invoice_status"
                                         attrs="{'invisible': [('state', 'not in', ('sale','done'))]}"/>

@@ -3,7 +3,7 @@
     'name': 'Account Bank Statement Import',
     'category': 'Accounting',
     'version': '1.0',
-    'depends': ['account'],
+    'depends': ['account_accountant'],
     'description': """Generic Wizard to Import Bank Statements. Includes the import of files in .OFX format""",
     'data': [
         'account_bank_statement_import_view.xml',
