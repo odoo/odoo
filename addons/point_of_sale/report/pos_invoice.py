@@ -19,8 +19,10 @@
 #
 ##############################################################################
 
+
 from openerp.osv import osv
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 
 
 class PosInvoiceReport(osv.AbstractModel):
@@ -50,4 +52,4 @@ class PosInvoiceReport(osv.AbstractModel):
             'doc_model': report.model,
             'docs': selected_orders,
         }
-        return report_obj.render(cr, uid, ids, 'account.report_invoice', docargs, context=context)
+        return report_obj.render(cr, SUPERUSER_ID, ids, 'account.report_invoice', docargs, context=context)
