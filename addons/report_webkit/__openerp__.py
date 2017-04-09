@@ -48,7 +48,7 @@ The module allows:
     - Raw HTML debugger
     - Book printing capabilities
     - Margins definition
-    - Paper size definition
+    - Paper size definition (event custom paper size)
 
 Multiple headers and logos can be defined per company. CSS style, header and
 footer body are defined per company.

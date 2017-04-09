@@ -26,6 +26,8 @@
                             <field name='company_id'/>
                             <field name="orientation"/>
                             <field name="format"/>
+                            <field name="paper_width" attrs="{'invisible': [('format', '!=', 'custom')], 'required': [('format', '=', 'custom')]}" />
+                            <field name="paper_height" attrs="{'invisible': [('format', '!=', 'custom')], 'required': [('format', '=', 'custom')]}" />
                         </group><group>
                             <field name="margin_top"/>
                             <field name="margin_bottom"/>
