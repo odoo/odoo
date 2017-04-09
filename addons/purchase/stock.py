@@ -184,6 +184,29 @@ class stock_move(osv.osv):
             return [tax.id for tax in move.origin_returned_move_id.purchase_line_id.taxes_id]
         return super(stock_move, self)._get_taxes(cr, uid, move, context=context)
 
+    def action_done(self, cr, uid, ids, context=None):
+        moves = self.browse(cr, uid, ids, context=context)
+        for move in moves:
+            if move.purchase_line_id:
+                order_line = move.purchase_line_id
+                order = order_line.order_id
+                if order.currency_id == order.company_id.currency_id:
+                    continue
+
+                price_unit = order_line.price_unit
+                if order_line.taxes_id:
+                    taxes = self.pool['account.tax'].compute_all(cr, uid, order_line.taxes_id, price_unit, 1.0,
+                                                                     order_line.product_id, order.partner_id)
+                    price_unit = taxes['total']
+                if order_line.product_uom.id != order_line.product_id.uom_id.id:
+                    price_unit *= order_line.product_uom.factor / order_line.product_id.uom_id.factor
+                if order.currency_id.id != order.company_id.currency_id.id:
+                    #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
+                    price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
+                move.write({'price_unit': price_unit}, context=context)
+
+        return super(stock_move, self).action_done(cr, uid, ids, context=context)
+
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     
