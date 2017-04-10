@@ -293,7 +293,7 @@
                             <field name="owner_user_id" string="Owner"/>
                         </group>
                         <group>
-                            <field name="maintenance_team_id"/>
+                            <field name="maintenance_team_id" attrs="{'required': [('period', '!=', 0)]}"/>
                             <field name="technician_user_id"/>
                             <field name="assign_date" groups="base.group_no_one"/>
                             <field name="scrap_date" groups="base.group_no_one"/>
