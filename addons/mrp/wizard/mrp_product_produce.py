@@ -23,13 +23,13 @@ class mrp_product_produce(osv.osv_memory):
 
     _columns = {
         'product_id': fields.many2one('product.product', type='many2one'),
-        'product_qty': fields.float('Select Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_qty': fields.float('Actual Quantity Produced', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'mode': fields.selection([('consume_produce', 'Consume & Produce'),
                                   ('consume', 'Consume Only')], 'Mode', required=True,
                                   help="'Consume only' mode will only consume the products with the quantity selected.\n"
                                         "'Consume & Produce' mode will consume as well as produce the products with the quantity selected "
                                         "and it will finish the production order when total ordered quantities are produced."),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot'), #Should only be visible when it is consume and produce mode
+        'lot_id': fields.many2one('stock.production.lot', 'Lot'), # Should only be visible when it is consume and produce mode
         'consume_lines': fields.one2many('mrp.product.produce.line', 'produce_id', 'Products Consumed'),
         'tracking': fields.related('product_id', 'tracking', type='selection',
                                    selection=[('serial', 'By Unique Serial Number'), ('lot', 'By Lots'), ('none', 'No Tracking')]),
@@ -55,7 +55,6 @@ class mrp_product_produce(osv.osv_memory):
         for consume in consume_lines:
             new_consume_lines.append([0, False, consume])
         return {'value': {'consume_lines': new_consume_lines}}
-
 
     def _get_product_qty(self, cr, uid, context=None):
         """ To obtain product quantity
