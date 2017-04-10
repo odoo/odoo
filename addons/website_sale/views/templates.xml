@@ -1475,9 +1475,8 @@
                             <h1 class="mb32">Order <em t-field="order.name" /> Confirmed</h1>
                             <div class="thanks_msg">
                                 <h2>Thank you for your order.
-                                          <a class="btn btn-primary pull-right hidden-xs" href="/shop/print" target="_blank"><i class="fa fa-print"></i> Print
-                                          </a></h2>
-                                <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id"></div>
+                                    <a class="btn btn-primary pull-right hidden-xs" href="/shop/print" target="_blank"><i class="fa fa-print"></i> Print</a>
+                                </h2>
                             </div>
                         </div>
                     </div>
@@ -1590,40 +1589,6 @@
         </t>
     </template>
 
-    <template id="order_state_message" name="Order State Message">
-        <t groups="base.group_system">
-            <a class="btn btn-primary pull-right" target="_blank" t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer',acquirer_id.id, 'payment.action_payment_acquirer')">
-                <i class="fa fa-cog"></i> Configure Transfer Details</a>
-        </t>
-        <t t-if="(not_order and state == 'error') or (not tx_ids and state == 'error')">
-            <p>There seems to be an error with your request.</p>
-        </t>
-        <t t-if="not tx_ids and state == 'done'">
-            <p>Your order has been confirmed, thank you for your loyalty.</p>
-        </t>
-        <t t-if="tx_ids and state == 'done'">
-            <p>Your payment has been received.</p>
-        </t>
-        <t t-if="tx_ids and state == 'authorized'">
-            <p>Your payment has been authorized.</p>
-        </t>
-        <t t-if="tx_ids and state == 'cancel'">
-            <p>The payment seems to have been canceled.</p>
-        </t>
-        <t t-if="tx_ids and state == 'pending' and validation">
-            <p>Your transaction is waiting a manual confirmation.</p>
-            <br />
-            <t t-if="tx_post_msg">
-                <div class="hidden-print">
-                    <t t-raw="tx_post_msg" />
-                </div>
-            </t>
-        </t>
-        <t t-if="tx_ids and state not in ['done', 'cancel', 'pending', 'authorized']">
-            <p>Your transaction is waiting confirmation.</p>
-        </t>
-    </template>
-
     <template id="total">
         <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order">
             <div class="row" id="order_total_untaxed">
@@ -1648,36 +1613,31 @@
     </template>
 
     <template id="payment_confirmation_status">
-        <t t-if="order.payment_acquirer_id.auto_confirm == 'none'">
-            <div class="panel panel-info">
-                <div class="panel-heading" t-raw="order.payment_acquirer_id.pending_msg" />
+        <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
+            <div t-att-class="' panel ' + (order.payment_tx_id.state == 'pending' and 'panel-info') or (order.payment_tx_id.state == 'done' and 'panel-success') or 'panel-danger'">
+                <a groups="base.group_system" class="btn btn-primary pull-right" target="_blank"
+                        t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', order.payment_acquirer_id.id, 'payment.action_payment_acquirer')">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <div class="panel-heading">
+                    <t t-if="order.payment_tx_id.state == 'pending'">
+                        <t t-raw="order.payment_acquirer_id.pending_msg"/>
+                    </t>
+                    <t t-if="order.payment_tx_id.state == 'done'">
+                        <t t-raw="order.payment_acquirer_id.done_msg"/>
+                    </t>
+                    <t t-if="order.payment_tx_id.state == 'cancel'">
+                        <t t-raw="order.payment_acquirer_id.cancel_msg"/>
+                    </t>
+                    <t t-if="order.payment_tx_id.state == 'error'">
+                        <t t-raw="order.payment_acquirer_id.error_msg"/>
+                    </t>
+                </div>
                 <div class="panel-body" t-if="order.payment_acquirer_id.post_msg">
                     <t t-raw="order.payment_acquirer_id.post_msg" />
                 </div>
             </div>
-        </t>
-        <t t-if="order.payment_acquirer_id.auto_confirm != 'none'">
-            <t t-if="order.payment_tx_id.state == 'pending'">
-                <div class="alert alert-info" role="alert">
-                    <t t-raw="order.payment_acquirer_id.pending_msg" />
-                </div>
-            </t>
-            <t t-if="order.payment_tx_id.state == 'done'">
-                <div class="alert alert-success" role="alert">
-                    <t t-raw="order.payment_acquirer_id.done_msg" />
-                </div>
-            </t>
-            <t t-if="order.payment_tx_id.state == 'cancel'">
-                <div class="alert alert-danger" role="alert">
-                    <t t-raw="order.payment_acquirer_id.cancel_msg" />
-                </div>
-            </t>
-            <t t-if="order.payment_tx_id.state == 'error'">
-                <div class="alert alert-danger" role="alert">
-                    <t t-raw="order.payment_acquirer_id.error_msg" />
-                </div>
-            </t>
-        </t>
+        </div>
     </template>
 
     <template id="payment_token_form">
