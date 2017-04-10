@@ -52,7 +52,9 @@
             <field name="price_extra">18.00</field>
         </record>
 
-        <!-- -->
+        <record id="product.product_product_11_product_template" model="product.template">
+            <field name="optional_product_ids" eval="[(4,ref('product.product_product_6_product_template'))]"/>
+        </record>
 
     </data>
 </odoo>

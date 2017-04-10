@@ -101,7 +101,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
             var $target = $(event.currentTarget);
             $form.ajaxSubmit({
                 url:  '/shop/cart/update_option',
-                data: {lang: base.get_context().lang},
+                data: {lang: weContext.get().lang},
                 success: function (quantity) {
                     var $q = $(".my_cart_quantity");
                     if (parseInt(quantity)) {
