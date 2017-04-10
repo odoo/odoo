@@ -232,6 +232,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
     },
     widgetFocused: function() {
         // Clear click flag if used to focus a widget
+        $(event.target).parent().find('i.fa-exclamation-triangle').remove();
         this.__clicked_inside = false;
         if (this.__blur_timeout) {
             clearTimeout(this.__blur_timeout);
@@ -239,18 +240,33 @@ var FormView = View.extend(common.FieldManagerMixin, {
         }
     },
     widgetBlurred: function() {
+        var self = this;
         if (this.__clicked_inside) {
+            self.fawarning();
             // clicked in an other section of the form (than the currently
             // focused widget) => just ignore the blurring entirely?
             this.__clicked_inside = false;
             return;
         }
-        var self = this;
         // clear timeout, if any
         this.widgetFocused();
+        self.fawarning();
         this.__blur_timeout = setTimeout(function () {
             self.trigger('blurred');
         }, 0);
+    },
+
+    fawarning: function() {
+        if ($(event.target).hasClass("o_form_required") || $(event.target).closest('.o_form_field').hasClass('o_form_required')) {
+            if (!event.target.value || event.target.value == "false") {
+                if($(event.target).next().is('button.fa-globe')) {
+                    $(event.target).next().after("<i class='fa fa-exclamation-triangle'></i>");
+                }
+                else {
+                    $(event.target).after("<i class='fa fa-exclamation-triangle'></i>");
+                }
+            }
+        }
     },
 
     do_load_state: function(state, warm) {
@@ -757,6 +773,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             confirm_callback: function() {
                 self.$el.removeClass('oe_form_dirty');
                 this.on('closed', null, function() { // 'this' is the dialog widget
+                    $('i.fa-exclamation-triangle').remove();
                     def.resolve();
                 });
             },
