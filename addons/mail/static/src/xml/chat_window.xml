@@ -13,7 +13,8 @@
             <div class="o_chat_content">
             </div>
             <div t-if='!widget.options.input_less' class="o_chat_composer">
-                <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
+                <div class="o_mail_typing_people"></div>
+                <input class="o_composer_text_field o_mail_typing_input" t-att-placeholder="widget.options.placeholder"/>
             </div>
         </div>
     </t>

@@ -98,7 +98,8 @@ var LivechatButton = Widget.extend({
     },
     _on_notification: function(notification){
         if (this.channel && (notification[0] === this.channel.uuid)) {
-            if(notification[1]._type === "history_command") { // history request
+            var message = notification[1];
+            if(message._type === "history_command") { // history request
                 var cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
                 var history = cookie ? JSON.parse(cookie) : [];
                 session.rpc("/im_livechat/history", {
@@ -106,12 +107,16 @@ var LivechatButton = Widget.extend({
                     channel_uuid: this.channel.uuid,
                     page_history: history,
                 });
-            }else{ // normal message
-                this.add_message(notification[1]);
+            }
+            if(message._type === 'message'){ // normal message
+                this.add_message(message);
                 this.render_messages();
                 if (this.chat_window.folded || !this.chat_window.thread.is_at_bottom()) {
                     this.chat_window.update_unread(this.chat_window.unread_msgs+1);
                 }
+            }
+            if(message._type === 'typing'){ // typing notification
+                this.chat_window.typing_notifier.apply_typing(message);
             }
         }
     },
@@ -204,6 +209,12 @@ var LivechatButton = Widget.extend({
                 self.chat_window.update_unread(0);
             }
         }, 100));
+        this.chat_window.on('notify_typing', null, function(status){
+            session.rpc("/im_livechat/notify_typing", {
+                uuid: self.channel.uuid,
+                status: status,
+            });
+        });
     },
 
     close_chat: function () {

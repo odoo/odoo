@@ -236,6 +236,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
         this.basic_composer.on('post_message', this, this.on_post_message);
         this.basic_composer.on('input_focused', this, this.on_composer_input_focused);
+        this.basic_composer.on('notify_typing', this, this.on_notify_typing);
         this.extended_composer.on('post_message', this, this.on_post_message);
         this.extended_composer.on('input_focused', this, this.on_composer_input_focused);
 
@@ -263,6 +264,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('update_starred', self, self.throttled_render_sidebar);
                 chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_render_sidebar);
                 chat_manager.bus.on('update_dm_presence', self, self.throttled_render_sidebar);
+                chat_manager.bus.on('typing_received', self, self.on_typing_received);
                 self.thread.$el.on("scroll", null, _.debounce(function () {
                     if (self.thread.is_at_bottom()) {
                         chat_manager.mark_channel_as_seen(self.channel);
@@ -638,6 +640,17 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var partners = chat_manager.get_mention_partner_suggestions(this.channel);
         composer.mention_set_enabled_commands(commands);
         composer.mention_set_prefetched_partners(partners);
+    },
+    on_notify_typing: function(status){
+        var channel = chat_manager.get_channel(this.channel.id);
+        if (!channel.mass_mailing){
+            chat_manager.typing_notify(this.channel.id, status);
+        }
+    },
+    on_typing_received: function(channel_id, notif){
+        if (this.channel.id === channel_id){
+            this.basic_composer.typing_notifier.apply_typing(notif);
+        }
     },
 
     on_click_button_invite: function () {

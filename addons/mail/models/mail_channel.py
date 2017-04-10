@@ -175,9 +175,9 @@ class Channel(models.Model):
 
     @api.multi
     def _action_unfollow(self, partner):
-        channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
+        channel_info = self.channel_info()[0]  # must be computed before leaving the channel (access rights)
         result = self.write({'channel_partner_ids': [(3, partner.id)]})
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner.id), channel_info)
+        partner._notify_transient_message('mail_channel_unsubscribe', channel_info)
         if not self.email_send:
             notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
             # post 'channel left' message as root since the partner just unsubscribed from the channel
@@ -291,7 +291,7 @@ class Channel(models.Model):
             user_id = partner.user_ids and partner.user_ids[0] or False
             if user_id:
                 for channel_info in self.sudo(user_id).channel_info():
-                    notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
+                    notifications.append([(self._cr.dbname, 'res.partner', partner.id), dict(channel_info, _type='mail_channel')])
         return notifications
 
     @api.multi
@@ -315,14 +315,42 @@ class Channel(models.Model):
         message_values = message.message_format()[0]
         notifications = []
         for channel in self:
-            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_values)])
+            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_values, _type='message')])
             # add uuid to allow anonymous to listen
             if channel.public == 'public':
-                notifications.append([channel.uuid, dict(message_values)])
+                notifications.append([channel.uuid, dict(message_values, _type='message')])
         return notifications
 
     @api.multi
-    def channel_info(self, extra_info = False):
+    def notify_typing(self, typing_status):
+        """ Broadcast the typing notification to channel members
+            :param status : the typing status to sent
+        """
+        notifications = self._channel_typing_notifications(typing_status)
+        self.env['bus.bus'].sendmany(notifications)
+
+    @api.multi
+    def _channel_typing_notifications(self, status):
+        """ Generate the bus notifications for the given typing status
+            :param status : the typing status to sent
+            :returns list of bus notifications (tuple (bus_channe, message_content))
+        """
+        notification_values = {
+            '_type': 'typing',
+            'typing_status': status,
+            'partner_id': self.env.user.partner_id.id,
+            'name': self.env.user.partner_id.name,
+        }
+        notifications = []
+        for channel in self.filtered(lambda channel: not channel.email_send):  # do not broadcast to mailing lists
+            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(notification_values)])
+            # add uuid to allow anonymous to listen
+            if channel.public == 'public':
+                notifications.append([channel.uuid, dict(notification_values)])
+        return notifications
+
+    @api.multi
+    def channel_info(self):
         """ Get the informations header for the current channels
             :returns a list of channels values
             :rtype : list(dict)
@@ -345,8 +373,6 @@ class Channel(models.Model):
                 'mass_mailing': channel.email_send,
                 'group_based_subscription': bool(channel.group_ids),
             }
-            if extra_info:
-                info['info'] = extra_info
             # add the partner for 'direct mesage' channel
             if channel.channel_type == 'chat':
                 info['direct_partner'] = (channel.sudo()
@@ -453,7 +479,8 @@ class Channel(models.Model):
                 'fold_state': state,
                 'is_minimized': bool(state != 'closed'),
             })
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), session_state.channel_id.channel_info()[0])
+            channel_info = session_state.channel_id.channel_info()[0]
+            self.env.user.partner_id._notify_transient_message('mail_channel', channel_info)
 
     @api.model
     def channel_minimize(self, uuid, minimized=True):
@@ -464,7 +491,7 @@ class Channel(models.Model):
         domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.uuid', '=', uuid)]
         channel_partners = self.env['mail.channel.partner'].search(domain)
         channel_partners.write(values)
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_partners.channel_id.channel_info()[0])
+        self.env.user.partner_id._notify_transient_message('mail_channel', channel_partners.channel_id.channel_info()[0])
 
     @api.model
     def channel_pin(self, uuid, pinned=False):
@@ -472,7 +499,8 @@ class Channel(models.Model):
         channel = self.search([('uuid', '=', uuid)])
         channel_partners = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
         if not pinned:
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel.channel_info('unsubscribe')[0])
+            # send unsubscribe notification to partner
+            self.env.user.partner_id._notify_transient_message('mail_channel_unsubscribe', channel.channel_info()[0])
         if channel_partners:
             channel_partners.write({'is_pinned': pinned})
 
@@ -482,7 +510,7 @@ class Channel(models.Model):
         if self.channel_message_ids.ids:
             last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
             self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({'seen_message_id': last_message_id})
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), {'info': 'channel_seen', 'id': self.id, 'last_message_id': last_message_id})
+            self.env.user.partner_id._notify_transient_message('mail_channel_seen', {'id': self.id, 'last_message_id': last_message_id})
             return last_message_id
 
     @api.multi
@@ -554,7 +582,7 @@ class Channel(models.Model):
         self.action_follow()
 
         channel_info = self.channel_info()[0]
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
+        self.env.user.partner_id._notify_transient_message('mail_channel', channel_info)
         return channel_info
 
     @api.model
@@ -572,10 +600,10 @@ class Channel(models.Model):
             'email_send': False,
             'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
-        channel_info = new_channel.channel_info('creation')[0]
+        channel_info = new_channel.channel_info()[0]
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)
         new_channel.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
+        self.env.user.partner_id._notify_transient_message('mail_channel_creation', channel_info)
         return channel_info
 
     @api.model
@@ -647,11 +675,13 @@ class Channel(models.Model):
 
     def _send_transient_message(self, partner_to, content):
         """ Notifies partner_to that a message (not stored in DB) has been
-            written in this channel """
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_to.id), {
+            written in this channel
+            :param partner_to: res.partner record who send message
+            :param content: message sentence (string)
+        """
+        partner_to._notify_transient_message('mail_transient_message', {
             'body': "<span class='o_mail_notification'>" + content + "</span>",
             'channel_ids': [self.id],
-            'info': 'transient_message',
         })
 
     def _define_command_help(self):

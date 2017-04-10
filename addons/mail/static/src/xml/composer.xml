@@ -13,9 +13,10 @@
                  </div>
              </div>
          </t>
+         <div t-if="!widget.extended" class="o_mail_typing_people"></div>
          <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
              <div class="o_composer_input">
-                 <textarea class="o_composer_text_field" tabindex="2" placeholder="Write something..."/>
+                 <textarea t-attf-class="o_composer_text_field #{!widget.extended ? 'o_mail_typing_input' : ''}" tabindex="2" placeholder="Write something..."/>
              </div>
              <t t-if="!widget.extended">
                  <div class="btn-group o_composer_buttons">

@@ -3,6 +3,7 @@ odoo.define('mail.composer', function (require) {
 
 var chat_manager = require('mail.chat_manager');
 var utils = require('mail.utils');
+var TypingNotifier = require('mail.TypingNotifier');
 
 var core = require('web.core');
 var data = require('web.data');
@@ -458,6 +459,11 @@ var BasicComposer = Widget.extend({
         // Mention
         this.mention_manager.prependTo(this.$('.o_composer'));
 
+        // Typing notification
+        self.typing_notifier = new TypingNotifier(self);
+        self.typing_notifier.on('notify_typing', self, function(status){
+            self.trigger('notify_typing', status);
+        });
         return this._super();
     },
 

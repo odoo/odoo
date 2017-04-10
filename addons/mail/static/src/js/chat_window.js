@@ -6,6 +6,7 @@ var ChatThread = require('mail.ChatThread');
 var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
+var TypingNotifier = require('mail.TypingNotifier');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -41,6 +42,7 @@ return Widget.extend({
         this.is_hidden = false;
     },
     start: function () {
+        var self = this;
         this.$input = this.$('.o_composer_text_field');
         this.$header = this.$('.o_chat_header');
 
@@ -59,7 +61,14 @@ return Widget.extend({
             this.focus_input();
         }
         var def = this.thread.replace(this.$('.o_chat_content'));
-        return $.when(this._super(), def);
+        return $.when(this._super(), def).then(function(){
+            if (!self.options.input_less){
+                self.typing_notifier = new TypingNotifier(self);
+                self.typing_notifier.on('notify_typing', self, function(status){
+                    self.trigger('notify_typing', status, self.channel_id);
+                });
+            }
+        });
     },
     render: function (messages) {
         this.update_unread(this.unread_msgs);

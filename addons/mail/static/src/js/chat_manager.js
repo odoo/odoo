@@ -80,6 +80,9 @@ function add_message (data, options) {
 
     if (!msg) {
         msg = chat_manager.make_message(data);
+        if ('channel_id' in options){
+            add_channel_to_message(msg, options.channel_id);
+        }
         // Keep the array ordered by id when inserting the new message
         messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         _.each(msg.channel_ids, function (channel_id) {
@@ -112,8 +115,13 @@ function add_message (data, options) {
         if (!options.silent) {
             chat_manager.bus.trigger('new_message', msg);
         }
-    } else if (options.domain && options.domain !== []) {
-        add_to_cache(msg, options.domain);
+    } else {
+        if (options.domain && options.domain !== []) {
+            add_to_cache(msg, options.domain);
+        }
+        if ('channel_id' in options){
+            add_channel_to_message(msg, options.channel_id);
+        }
     }
     return msg;
 }
@@ -129,7 +137,7 @@ function make_message (data) {
         is_author: data.author_id && data.author_id[0] === session.partner_id,
         is_note: data.is_note,
         is_system_notification: (data.message_type === 'notification' && data.model === 'mail.channel')
-            || data.info === 'transient_message',
+            || data._type === 'mail_transient_message',
         attachment_ids: data.attachment_ids || [],
         subject: data.subject,
         email_from: data.email_from,
@@ -137,7 +145,7 @@ function make_message (data) {
         customer_email_data: data.customer_email_data,
         record_name: data.record_name,
         tracking_value_ids: data.tracking_value_ids,
-        channel_ids: data.channel_ids,
+        channel_ids: data.channel_ids || [],
         model: data.model,
         res_id: data.res_id,
         url: session.url("/mail/view?message_id=" + data.id),
@@ -192,7 +200,7 @@ function make_message (data) {
     } else {
         msg.displayed_author = (msg.author_id === ODOOBOT_ID) && "OdooBot" ||
                                msg.author_id && msg.author_id[1] ||
-                               msg.email_from || _t('Anonymous');
+                               msg.email_from || _t('Visitor');
     }
 
     // Don't redirect on author clicked of self-posted or OdooBot messages
@@ -448,27 +456,30 @@ function on_notification (notifications) {
     // rejoin the channel that we just left.  The next few lines remove the
     // extra notification to prevent that situation to occur.
     var unsubscribed_notif = _.find(notifications, function (notif) {
-        return notif[1].info === "unsubscribe";
+        return notif[1]._type === "mail_channel_unsubscribe";
     });
     if (unsubscribed_notif) {
         notifications = _.reject(notifications, function (notif) {
-            return notif[0][1] === "mail.channel" && notif[0][2] === unsubscribed_notif[1].id;
+            return _.isArray(notif[0]) && notif[0][1] === "mail.channel" && notif[0][2] === unsubscribed_notif[1].id;
         });
     }
     _.each(notifications, function (notification) {
-        var model = notification[0][1];
-        if (model === 'ir.needaction') {
-            // new message in the inbox
-            on_needaction_notification(notification[1]);
-        } else if (model === 'mail.channel') {
-            // new message in a channel
-            on_channel_notification(notification[1]);
-        } else if (model === 'res.partner') {
-            // channel joined/left, message marked as read/(un)starred, chat open/closed
-            on_partner_notification(notification[1]);
-        } else if (model === 'bus.presence') {
-            // update presence of users
-            on_presence_notification(notification[1]);
+        // we only process the bus channel that are tuple, but don't crash if it's a uuid.
+        if (_.isArray(notification[0])){
+            var model = notification[0][1];
+            if (model === 'ir.needaction') {
+                // new message in the inbox
+                on_needaction_notification(notification[1]);
+            } else if (model === 'mail.channel') {
+                // new message in a channel
+                on_channel_notification(notification[0][2], notification[1]);
+            } else if (model === 'res.partner') {
+                // channel joined/left, message marked as read/(un)starred, chat open/closed
+                on_partner_notification(notification[1]);
+            } else if (model === 'bus.presence') {
+                // update presence of users
+                on_presence_notification(notification[1]);
+            }
         }
     });
 }
@@ -492,24 +503,25 @@ function on_needaction_notification (message) {
     chat_manager.bus.trigger('update_needaction', needaction_counter);
 }
 
-function on_channel_notification (message) {
-    var def;
-    var channel_already_in_cache = true;
-    if (message.channel_ids.length === 1) {
-        channel_already_in_cache = !!chat_manager.get_channel(message.channel_ids[0]);
-        def = chat_manager.join_channel(message.channel_ids[0], {autoswitch: false});
-    } else {
-        def = $.when();
+function on_channel_notification (channel_id, message) {
+    if (message._type === 'message'){
+        var channel_already_in_cache = true;
+        channel_already_in_cache = !!chat_manager.get_channel(channel_id);
+        chat_manager.join_channel(channel_id, {autoswitch: false}).then(function () {
+            // don't increment unread if channel wasn't in cache yet as its unread counter has just been fetched
+            add_message(message, {channel_id: channel_id, show_notification: true, increment_unread: channel_already_in_cache });
+            invalidate_caches(message.channel_ids);
+        });
     }
-    def.then(function () {
-        // don't increment unread if channel wasn't in cache yet as its unread counter has just been fetched
-        add_message(message, { show_notification: true, increment_unread: channel_already_in_cache });
-        invalidate_caches(message.channel_ids);
-    });
+    if (message._type === 'typing'){
+        if(message.partner_id !== session.partner_id){ // don't process its own typing notifications
+            chat_manager.bus.trigger('typing_received', channel_id, message);
+        }
+    }
 }
 
 function on_partner_notification (data) {
-    if (data.info === "unsubscribe") {
+    if (data._type === "mail_channel_unsubscribe") {
         var channel = chat_manager.get_channel(data.id);
         if (channel) {
             var msg;
@@ -522,17 +534,17 @@ function on_partner_notification (data) {
             chat_manager.bus.trigger("unsubscribe_from_channel", data.id);
             web_client.do_notify(_("Unsubscribed"), msg);
         }
-    } else if (data.type === 'toggle_star') {
+    } else if (data._type === 'mail_toggle_star') {
         on_toggle_star_notification(data);
-    } else if (data.type === 'mark_as_read') {
+    } else if (data._type === 'mail_mark_as_read') {
         on_mark_as_read_notification(data);
-    } else if (data.type === 'mark_as_unread') {
+    } else if (data._type === 'mail_mark_as_unread') {
         on_mark_as_unread_notification(data);
-    } else if (data.info === 'channel_seen') {
+    } else if (data._type === 'mail_channel_seen') {
         on_channel_seen_notification(data);
-    } else if (data.info === 'transient_message') {
+    } else if (data._type === 'mail_transient_message') {
         on_transient_message_notification(data);
-    } else {
+    } else if(data._type === 'mail_channel' || data._type === 'mail_channel_creation') {
         on_chat_session_notification(data);
     }
 }
@@ -619,7 +631,7 @@ function on_chat_session_notification (chat_session) {
     var channel;
     if ((chat_session.channel_type === "channel") && (chat_session.state === "open")) {
         add_channel(chat_session, {autoswitch: false});
-        if (!chat_session.is_minimized && chat_session.info !== 'creation') {
+        if (!chat_session.is_minimized && chat_session._type !== 'mail_channel_creation') {
             web_client.do_notify(_t("Invitation"), _t("You have been invited to: ") + chat_session.name);
         }
     }
@@ -925,6 +937,10 @@ var chat_manager = {
             args.state = folded ? 'folded' : 'open';
         }
         return ChannelModel.call("channel_fold", [], args, {shadow: true});
+    },
+    // Typing notifications
+    typing_notify: function(channel_id, status){
+        return ChannelModel.call("notify_typing", [channel_id, status]);
     },
     /**
      * Special redirection handling for given model and id

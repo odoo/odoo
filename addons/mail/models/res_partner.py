@@ -235,7 +235,8 @@ class Partner(models.Model):
         message_values = message.message_format()[0]
         notifications = []
         for partner in self:
-            notifications.append([(self._cr.dbname, 'ir.needaction', partner.id), dict(message_values)])
+            message_vals = dict(message_values, channel_ids=(partner.channel_ids & message.channel_ids).ids)
+            notifications.append([(self._cr.dbname, 'ir.needaction', partner.id), message_vals])
         self.env['bus.bus'].sendmany(notifications)
 
     @api.model
@@ -284,6 +285,6 @@ class Partner(models.Model):
         if len(users) < limit:
             partners = self.search_read(search_dom, fields, limit=limit)
             # Remove duplicates
-            partners = [p for p in partners if not len([u for u in users if u['id'] == p['id']])] 
+            partners = [p for p in partners if not len([u for u in users if u['id'] == p['id']])]
 
         return [users, partners]

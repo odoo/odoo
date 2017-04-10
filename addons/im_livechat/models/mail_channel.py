@@ -57,11 +57,34 @@ class MailChannel(models.Model):
         return notifications
 
     @api.multi
-    def channel_info(self, extra_info=False):
+    def _channel_typing_notifications(self, status):
+        """ When anonymous user is typing, all logged user are notified with the anonymous_name. Anonymous
+            should not be broadcasted with its own notifications (thougth channel_uuid bus channel).
+            Logged users are broadcasted and broadcast on the public bus channel.
+        """
+        notifications = super(MailChannel, self)._channel_typing_notifications(status)
+        # change the name of the anonymous user, for all logged users
+        if self._context.get('livechat_anonymous_name'):
+            for notification in notifications:
+                notification[1]['name'] = self._context.get('livechat_anonymous_name')
+        else:
+            # broadcast typing notifications of logged users to public bus channel
+            for channel in self:
+                if channel.channel_type == 'livechat':
+                    notifications.append([channel.uuid, {
+                        '_type': 'typing',
+                        'typing_status': status,
+                        'partner_id': self.env.user.partner_id.id,
+                        'name': self.env.user.partner_id.name
+                    }])
+        return notifications
+
+    @api.multi
+    def channel_info(self):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
             :rtype : list(dict)
         """
-        channel_infos = super(MailChannel, self).channel_info(extra_info)
+        channel_infos = super(MailChannel, self).channel_info()
         # add the operator id
         if self.env.context.get('im_livechat_operator_partner_id'):
             partner_name = self.env['res.partner'].browse(self.env.context.get('im_livechat_operator_partner_id')).name_get()[0]
