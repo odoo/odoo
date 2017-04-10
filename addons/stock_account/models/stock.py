@@ -146,7 +146,7 @@ class StockQuant(models.Model):
         for quant in self:
             cost = quant.cost
 
-            if hasattr(stock_move, 'purchase_line_id') \
+            """if hasattr(stock_move, 'purchase_line_id') \
                 and quant.product_id.valuation == 'real_time' \
                 and quant.product_id.cost_method == 'real':
 
@@ -161,9 +161,13 @@ class StockQuant(models.Model):
                     #TODO OCO bien s'assurer que s'il y a eu plusieurs factures avant, elles sont prises en compte comme il faut (il me semble que oui, vu le code)
                     #TODO OCO et si les quantités reçues sont différentes des quantités facturées ?
                     #   => Si la facture ou la réception est faite en plusieurs fois ? (juste la facture, la réception pose moins problème avec le quant)
+                    # si on fait plusieurs réceptions avec chaque fois une facture propre, c'est un peu la merde (parce qu'on fera une moyenne des factures, et ça, ça ne va pas !)
+                    #       ===> Itérer sur les inv line et les trier par ancienneté !
                     invoiced_cost = sum(inv_line.price_subtotal for inv_line in po_line.invoice_lines)
-                    not_invoiced_cost = float_round(quant.qty - invoiced_qty, precision_digits=po_line.product_uom.rounding) * quant.cost
-                    cost = invoiced_cost + not_invoiced_cost
+                    not_invoiced_cost = (quant.qty - invoiced_qty) * quant.cost
+                    cost = float_round(invoiced_cost + not_invoiced_cost, precision_digits=2) #TODO OCO: récupérer la currency (ET PAS CELLE DE LA PO) pour faire le rounding!
+                TODO OCO: à zigouiller, à priori (et du coup, tu peux remettre la fonction dans son état d'origine).
+            """
 
         rslt[cost] += quant.qty
 
@@ -171,8 +175,43 @@ class StockQuant(models.Model):
 
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
-        quant._account_entry_move(move)
+
         if move.product_id.valuation == 'real_time':
+
+            if hasattr(move, 'purchase_line_id') and quant.product_id.cost_method == 'real':
+                po_line = move.purchase_line_id
+                previously_received_counter = po_line.qty_received
+                qty_left_to_assign = quant.qty
+                _logger.warn("Ils sont cinq")
+                for invoice_line in po_line.invoice_lines.sorted(lambda line: line.invoice_id.date):
+                    if not qty_left_to_assign:
+                        break
+                    _logger.warn("Cinq jeunes et fougueux pilotes")
+                    product_precision = invoice_line.uom_id.rounding
+                    if float_compare(previously_received_counter, invoice_line.quantity, precision_rounding=product_precision) == -1:
+                        _logger.warn("Recrutes parmi les meilleurs")
+                        difference = invoice_line.quantity - previously_received_counter
+
+                        difference_cmp = float_compare(difference, qty_left_to_assign, precision_rounding=product_precision)
+                        if difference_cmp >= 0: #difference is greater or equal
+                            _logger.warn("Pour liberer les colonies de l'espace "+str(invoice_line.price_unit))
+                            quant.sudo().write({'cost': invoice_line.price_unit})
+                        else: #qty_left_to_assign is greater
+                            _logger.warn("Du joug de leurs oppresseurs")
+                            new_quant = quant._quant_split(quant.qty - difference) #Creates another Quant with quantity=difference
+                            new_quant.sudo().write({'cost': invoice_line.price_unit})
+                            #TODO OCO attention !! Il semblerait bien que cette histoire de split ne marche pas comme tu veux !
+
+                        qty_left_to_assign -= min(difference, qty_left_to_assign)
+
+                    previously_received_counter -= min(invoice_line.quantity, previously_received_counter)
+
+            quant._account_entry_move(move)
+            #TODO OCO: appeler la même chose sur les quants obtenus en splittant aurait du sens, non ?
+            #   => A vérifier, car quand il split ci-dessous, il ne fait rien de tel :/
+            # !! Ca ne pose pas problème car il split APRES l'appel, contrairement à toi, andouille !
+            # ======>>> Il faut donc bien faire cet appel, à priori.
+
             # If the precision required for the variable quant cost is larger than the accounting
             # precision, inconsistencies between the stock valuation and the accounting entries
             # may arise.

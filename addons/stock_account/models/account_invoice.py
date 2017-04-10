@@ -86,7 +86,7 @@ class AccountInvoice(models.Model):
             # We only consider vendor bills, when 'purchase' module is installed
             if invoice.type == 'in_invoice' and hasattr(invoice, 'purchase_id'):
                 for inv_line in invoice.invoice_line_ids:
-                    if inv_line.product_id.valuation == 'real_time' and inv_line.product_id.cost_method == 'real': #TODO OCO il ne faut pas aussi que la cost-method soit 'real' ? >> vérifier
+                    if inv_line.product_id.valuation == 'real_time' and inv_line.product_id.cost_method == 'real':
                         inv_line.balance_stock_valuation()
 
         return rslt
@@ -128,6 +128,79 @@ class AccountInvoiceLine(models.Model):
         return rslt
 
     def balance_stock_valuation(self):
+        global_quantity_to_correct = self.quantity
+        stock_moves = self.env['stock.move'].search([('purchase_line_id', '=', self.purchase_line_id.id)])
+        for stock_move in stock_moves.sorted(key=lambda m: m.date): #TODO OCO bien vérifier que les dates les plus anciennes sont bien traitées avant
+
+            if not global_quantity_to_correct:
+                break
+
+            for valuation_move in stock_move.stock_account_valuation_account_move_ids.sorted(key=lambda v:v.date): #TODO OCO là aussi vérifier le tri par date
+                if valuation_move.stock_account_valuation_corrected_qty != valuation_move.stock_account_move_qty and not valuation_move.stock_account_valuation_correction:
+                    to_correct_on_move = valuation_move.stock_account_move_qty - valuation_move.stock_account_valuation_corrected_qty
+
+                    correction_qty = min(to_correct_on_move, global_quantity_to_correct)
+                    unit_value_for_correction = valuation_move.amount / valuation_move.stock_account_move_qty
+
+                    if correction_qty == to_correct_on_move:
+                        #Special case to smooth rounding errors in case some happened before
+                        amount_before_correction = valuation_move.amount - valuation_move.stock_account_valuation_corrected_qty * unit_value_for_correction
+                    else:
+                        amount_before_correction = correction_qty * unit_value_for_correction
+
+                    amount_after_correction = correction_qty * self.price_unit
+                    balancing_amount = float_round(amount_before_correction - amount_after_correction, precision_digits = self.currency_id.decimal_places)
+
+                    if not balancing_amount:
+                        continue
+
+                    debited_account = self.env['account.move.line'].search([('move_id', '=', valuation_move.id), ('debit', '!=', 0.0)], limit=1).account_id
+                    credited_account = self.env['account.move.line'].search([('move_id', '=', valuation_move.id), ('credit', '!=', 0.0)], limit=1).account_id
+
+                    #TODO OCO une méthode avec ça:
+                    debited_correction_vals = {
+                        'name': stock_move.name + _(' - currency rate adjustment'),
+                        'product_id': stock_move.product_id.id,
+                        'quantity': correction_qty,
+                        'product_uom_id': stock_move.product_id.uom_id.id,
+                        'ref': stock_move.picking_id.name,
+                        'partner_id': valuation_move.partner_id.id,
+                        'credit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==1) and abs(balancing_amount) or 0.0,
+                        'debit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==-1) and abs(balancing_amount) or 0.0,
+                        'account_id': debited_account.id
+                    }
+
+                    credited_correction_vals = {
+                        'name': stock_move.name + _(' - currency rate adjustment'),
+                        'product_id': stock_move.product_id.id,
+                        'quantity': correction_qty,
+                        'product_uom_id': stock_move.product_id.uom_id.id,
+                        'ref': stock_move.picking_id.name,
+                        'partner_id': valuation_move.partner_id.id,
+                        'credit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==-1) and abs(balancing_amount) or 0.0,
+                        'debit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==1) and abs(balancing_amount) or 0.0,
+                        'account_id': credited_account.id
+                    }
+
+                    date = self._context.get('force_period_date', fields.Date.context_today(self))
+                    correction_move = self.env['account.move'].create({
+                        'journal_id': valuation_move.journal_id.id,
+                        'line_ids': [(0,False,debited_correction_vals), (0,False,credited_correction_vals)],
+                        'date': date,
+                        'ref': stock_move.picking_id.name + _(' - currency rate adjustment'),
+                        'stock_account_valuation_correction': True})
+                    correction_move.post()
+                    stock_move.write({'stock_account_valuation_account_move_ids': [(4, correction_move.id, None)]})
+                    stock_move.stock_account_valuation_corrected_quantity += self.quantity
+
+                    #TODO OCO : ça, ça ne va pas dans une méthode à part !!
+                    valuation_move.stock_account_valuation_corrected_qty += correction_qty
+                    global_quantity_to_correct -= correction_qty
+
+
+
+
+        """
         stock_moves = self.env['stock.move'].search([('purchase_line_id', '=', self.purchase_line_id.id)])
         for stock_move in stock_moves:
             whole_move_initial_valuation = self._get_valuation_for(stock_move, exclude_corrected=True)
@@ -206,3 +279,4 @@ class AccountInvoiceLine(models.Model):
                 correction_move.post()
                 stock_move.write({'stock_account_valuation_account_move_ids': [(4, correction_move.id, None)]})
                 stock_move.stock_account_valuation_corrected_quantity += self.quantity
+        """
