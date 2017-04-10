@@ -152,18 +152,18 @@ class TestFloatPrecision(TransactionCase):
         currency = self.env.ref('base.EUR')
         currency_rate = self.env['res.currency.rate']
 
-        def try_roundtrip(value, expected):
-            rate = currency_rate.create({'name':'2000-01-01',
+        def try_roundtrip(value, expected, date):
+            rate = currency_rate.create({'name': date,
                                          'rate': value,
                                          'currency_id': currency.id})
             self.assertEqual(rate.rate, expected,
                              'Roundtrip error: got %s back from db, expected %s' % (rate, expected))
 
         # res.currency.rate uses 6 digits of precision by default
-        try_roundtrip(2.6748955, 2.674896)
-        try_roundtrip(-2.6748955, -2.674896)
-        try_roundtrip(10000.999999, 10000.999999)
-        try_roundtrip(-10000.999999, -10000.999999)
+        try_roundtrip(2.6748955, 2.674896, '2000-01-01')
+        try_roundtrip(-2.6748955, -2.674896, '2000-01-02')
+        try_roundtrip(10000.999999, 10000.999999, '2000-01-03')
+        try_roundtrip(-10000.999999, -10000.999999, '2000-01-04')
 
     def test_float_split_05(self):
         """ Test split method with 2 digits. """
