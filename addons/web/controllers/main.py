@@ -200,7 +200,11 @@ def concat_xml(file_list):
             contents = fp.read()
             checksum.update(contents)
             fp.seek(0)
-            xml = ElementTree.parse(fp).getroot()
+            try:
+                xml = ElementTree.parse(fp).getroot()
+            except ElementTree.ParseError as e:
+                _logger.error("Could not parse file %s: %s" % (fname, e.msg))
+                raise e
 
         if root is None:
             root = ElementTree.Element(xml.tag)
