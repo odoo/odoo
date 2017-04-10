@@ -260,7 +260,7 @@ class website(osv.osv):
             lang = {
                 'hreflang': ('-'.join(lg)).lower(),
                 'short': lg[0],
-                'href': req.url_root[0:-1] + lg_path + uri,
+                'href': lg_path + uri,
             }
             langs.append(lang)
         for lang in langs:
