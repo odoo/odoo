@@ -1893,7 +1893,7 @@ eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent,
                 $font.className = className.join(' ') + ' ' + sValue;
                 $font.style.color = '';
             } else {
-                $font.className = $font.className.replace(/(^|\s+)text-\S+/);
+                $font.className = $font.className.replace(/(^|\s+)text-\S+/, '');
                 $font.style.color = sValue !== 'inherit' ? sValue : "";
             }
         } else {
