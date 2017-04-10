@@ -1,42 +1,234 @@
+@o-theme-kanban-gray: #fcfcfc;
+
 .o_kanban_view.o_theme_kanban {
+    background-color: @o-theme-kanban-gray;
+
     &.o_kanban_ungrouped {
         .o-justify-content(center);
+        padding: 12px;
+        min-height: 100%;
 
         .o_kanban_record {
-            .o-flex(0, 0, auto);
-            width: 100%;
+            .o-flex(0, 1, auto);
+            width: 50%;
+            margin: 0;
+
+            &:first-child, &:nth-child(2) {
+                @media (max-width: @screen-xs-max) {
+                    margin-top: 10px;
+                }
+            }
+
             @media (min-width: @screen-sm-min) {
-                width: 45%;
+                width: percentage(1/3);
+            }
+
+            @media (min-width: @screen-md-min) {
+                width: percentage(1/4);
             }
         }
     }
 
     .o_kanban_record {
-        padding: 0;
+        padding: 1% 3% 3%;
+        box-shadow: none;
+        background: none;
+        border: none;
+        -webkit-font-smoothing: antialiased;
 
-        position: relative;
-        overflow: hidden;
+        .o_browser_bar {
+          background: white;
+          border-bottom: 1px solid darken(@o-theme-kanban-gray, 6%);
+          .size(100%, 20px);
+
+          &:before {
+            content: "•••";
+            display: block;
+            padding-left: 10px;
+            color: darken(@o-theme-kanban-gray, 6%);
+            font: 12px/20px Courier, monospace;
+            letter-spacing: -1px;
+          }
+        }
+
+        &.o_theme_installed .o_theme_preview_top {
+            border-color: @odoo-brand-optional;
+
+            &::after {
+                .o-position-absolute(10px, 10px);
+                .square(20px);
+                display: block;
+                line-height: 20px;
+                text-align: center;
+                background-color: @odoo-brand-optional;
+                border-radius: 100%;
+                font-family: 'FontAwesome';
+                color: white;
+                content: "\f00c";
+            }
+        }
+
+        .o_theme_preview_top {
+            background: white;
+            border: 1px solid darken(@o-theme-kanban-gray, 20%);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+            margin-bottom: 5px;
+            .o-transform-origin(center, bottom);
+            .o-transition(all, .1s);
+
+            .o_theme_cover, .o_theme_logo, .o_theme_screenshot {
+                width: 100%;
+                padding-bottom: 127%;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-color: @gray-lighter;
+                background-size: 40% 32%;
+                .o-transition(opacity, 100ms);
+
+                &.o_theme_cover {
+                    background-size: contain;
+                }
+
+                &.o_theme_screenshot {
+                    background-size: cover;
+                }
+            }
+        }
+
+        .o_theme_preview_bottom {
+            h5, h6 {
+                line-height: 16px;
+            }
+        }
+
         .o_button_area {
-            .o-position-absolute(@bottom: -100px, @right: 0);
-            .o-transition(bottom, 400ms, ease);
-            width: 100%;
-            padding: @odoo-horizontal-padding/2;
-            background-color: fade(@odoo-brand-secondary, 70%);
+            .o-position-absolute(0, 0);
+            .o-transition(opacity, 100ms);
+            .o-flex-display();
+            .o-flex-flow(row, wrap);
+            .o-justify-content(center);
+            .square(100%);
+            padding: 10% 7%;
             text-align: right;
-        }
-        &:hover .o_button_area {
-            bottom: 0;
+            opacity: 0;
+            visibility: hidden;
+
+            .btn {
+                font-weight: bold;
+                padding: 2% 5%;
+
+                &:first-child {
+                    margin-bottom: 5%;
+                }
+
+                &.btn-default {
+                    border: 1px solid @gray-light;
+                    color: @gray-light;
+
+                    &:hover, &:focus, &:active {
+                        background-color: @o-theme-kanban-gray;
+                    }
+                }
+            }
+
+            hr {
+                display: none;
+                border-color: lighten(@gray-light, 25%);
+                width: 100%;
+            }
+
+            &.o_has_screenshot {
+                padding: 20% 15%;
+                .o-flex-flow(column, wrap);
+
+                .btn {
+                    padding: 5% 10%;
+
+                    &:first-child {
+                        margin-bottom: 0%;
+                    }
+                }
+
+                hr {
+                    display: block;
+                }
+            }
         }
 
-        > div {
-            width: 100%;
-            padding-bottom: 50%;
-            background-repeat: no-repeat;
-            background-position: center center;
-            .o-background-size(auto 90%);
-            
-            &.o_screenshot {
-                .o-background-size(cover);
+        &:not(.o_theme_installed) {
+            .o_theme_preview_top:hover {
+                .o-transition(all, .3s);
+                .o-transform(scale(1.0125));
+                border-color: darken(@o-theme-kanban-gray, 16%);
+                box-shadow: 0 10px 9px -8px rgba(0, 0, 0, .3);
+
+                // Because of bad rendering, avoid to perform scale tranformation if pixel ratio = 1 (Chrome only)
+                @media screen and (-webkit-device-pixel-ratio:1) and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+                    .o-transform(scale(1) translateY(-1%));
+                }
+
+                .o_button_area {
+                    opacity: 1;
+                    visibility: visible;
+                    .o-transition(opacity, 0.2s, ease, 0.1s);
+                }
+
+                .o_theme_cover, .o_theme_logo, .o_theme_screenshot {
+                    opacity: 0.1;
+                    .o-transition(opacity, 0.2s, ease, 0.1s);
+                }
+            }
+        }
+    }
+
+    &.o_kanban_grouped {
+        .o_kanban_group {
+            background-color: @o-theme-kanban-gray;
+
+            .o_column_title {
+                padding: 0 3%;
+                color: @text-color;
+            }
+
+            .o_theme_preview_top {
+                border-color: darken(@o-theme-kanban-gray, 16%);
+            }
+
+            &:nth-child(even) {
+                background-color: darken(@o-theme-kanban-gray, 4%);
+
+                .o_theme_cover, .o_theme_logo {
+                    background-color: white;
+                }
+            }
+        }
+
+        .o_kanban_record {
+            margin-bottom: 20px;
+
+            .o_theme_preview_top {
+                .o_theme_cover, .o_theme_logo {
+                    padding-bottom: 50%;
+                    background-size: 32% 62%;
+                    background-position: center center;
+
+                    &.o_theme_cover {
+                        background-size: cover;
+                    }
+                }
+            }
+
+            .o_button_area {
+                .o-flex-flow(row, wrap);
+                .o-align-content(center);
+                padding: 20px 20% 40px;
+
+                .btn {
+                    padding: 4px 14px;
+                }
             }
         }
     }
