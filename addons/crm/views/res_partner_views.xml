@@ -89,16 +89,6 @@
             </field>
         </record>
 
-        <!-- open activities related to given partner -->
-        <record id="crm_activity_report_action_tree" model="ir.actions.act_window">
-            <field name="name">Activities</field>
-            <field name="res_model">crm.activity.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="context">{}</field>
-            <field name="domain">[('partner_id', '=', active_id)]</field>
-        </record>
-
         <!-- Add contextual button on partner form view -->
         <record id="view_partners_form_crm1" model="ir.ui.view">
             <field name="name">view.res.partner.form.crm.inherited1</field>
@@ -121,11 +111,6 @@
                             icon="fa-calendar"
                             context="{'partner_id': active_id, 'partner_name': name}">
                             <field string="Meetings" name="meeting_count" widget="statinfo"/>
-                        </button>
-                        <button class="oe_stat_button" type="action"
-                            name="%(crm.crm_activity_report_action_tree)d"
-                            icon="fa-clock-o">
-                            <field string="Activities" name="activities_count" widget="statinfo"/>
                         </button>
                     </button>
                 </data>
