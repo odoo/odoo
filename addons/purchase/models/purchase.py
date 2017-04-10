@@ -991,7 +991,7 @@ class ProcurementOrder(models.Model):
             if not suppliers:
                 procurement.message_post(body=_('No vendor associated to product %s. Please set one to fix this procurement.') % (procurement.product_id.name))
                 continue
-            supplier = self._make_po_select_supplier(suppliers)
+            supplier = procurement._make_po_select_supplier(suppliers)
             partner = supplier.name
 
             gpo = procurement.rule_id.group_propagation_option
