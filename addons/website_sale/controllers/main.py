@@ -860,35 +860,15 @@ class WebsiteSale(http.Controller):
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
-        order = request.env['sale.order'].sudo().browse(sale_order_id)
+        order = request.env['sale.order'].sudo().browse(sale_order_id).exists()
         assert order.id == request.session.get('sale_last_order_id')
 
-        values = {}
-        flag = False
-        if not order:
-            values.update({'not_order': True, 'state': 'error'})
-        else:
-            tx = request.env['payment.transaction'].sudo().search(
-                ['|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)], limit=1
-            )
-
-            if not tx:
-                if order.amount_total:
-                    values.update({'tx_ids': False, 'state': 'error'})
-                else:
-                    values.update({'tx_ids': False, 'state': 'done', 'validation': None})
-            else:
-                state = tx.state
-                flag = state == 'pending'
-                values.update({
-                    'tx_ids': True,
-                    'state': state,
-                    'acquirer_id': tx.acquirer_id,
-                    'validation': tx.acquirer_id.auto_confirm == 'none',
-                    'tx_post_msg': tx.acquirer_id.post_msg or None
-                })
-
-        return {'recall': flag, 'message': request.env['ir.ui.view'].render_template("website_sale.order_state_message", values)}
+        return {
+            'recall': order.payment_tx_id.state == 'pending',
+            'message': request.env['ir.ui.view'].render_template("website_sale.payment_confirmation_status", {
+                'order': order
+            })
+        }
 
     @http.route('/shop/payment/validate', type='http', auth="public", website=True)
     def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
