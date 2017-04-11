@@ -3611,6 +3611,56 @@ QUnit.module('relational_fields', {
         list.destroy();
     });
 
+    QUnit.test('field many2many_tags keeps focus when being edited', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.records[0].timmy = [12];
+        this.data.partner.onchanges.foo = function (obj) {
+            obj.timmy = [[5]]; // DELETE command
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="timmy" widget="many2many_tags"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_form_field_many2manytags > span').length, 1,
+            "should contain one tag");
+
+        // update foo, which will trigger an onchange and update timmy
+        // -> m2mtags input should not have taken the focus
+        form.$('.o_form_input:first').focus();
+        form.$('.o_form_input:first').val('trigger onchange').trigger('input');
+        assert.strictEqual(form.$('.o_form_field_many2manytags > span').length, 0,
+            "should contain no tags");
+        assert.strictEqual(form.$('.o_form_input:first').get(0), document.activeElement,
+            "foo input should have kept the focus");
+
+        // add a tag -> m2mtags input should still have the focus
+        form.$('.o_form_field_many2manytags input').click(); // opens the dropdown
+        form.$('.o_form_field_many2manytags input').autocomplete('widget').find('li:first').click();
+        assert.strictEqual(form.$('.o_form_field_many2manytags > span').length, 1,
+            "should contain a tag");
+        assert.strictEqual(form.$('.o_form_field_many2manytags input').get(0), document.activeElement,
+            "m2m tags input should have kept the focus");
+
+        // remove a tag -> m2mtags input should still have the focus
+        form.$('.o_form_field_many2manytags .o_delete').click();
+        assert.strictEqual(form.$('.o_form_field_many2manytags > span').length, 0,
+            "should contain no tags");
+        assert.strictEqual(form.$('.o_form_field_many2manytags input').get(0), document.activeElement,
+            "m2m tags input should have kept the focus");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldRadio');
 
     QUnit.test('fieldradio widget on a many2one in a new record', function (assert) {
