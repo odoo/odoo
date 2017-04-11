@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-11-15 12:31+0000\n"
-"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report
@@ -201,7 +202,7 @@ msgstr "Цаасны үндсэн формат ?"
 #: code:addons/report/static/src/xml/report.xml:12
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Хэрэгсэхгүй"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
@@ -221,7 +222,7 @@ msgstr "Харуулах толгой мөр"
 #: code:addons/report/static/src/xml/report.xml:8
 #, python-format
 msgid "Edit"
-msgstr ""
+msgstr "Засах"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
@@ -242,6 +243,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Email:"
 msgstr "Э-Мэйл:"
+
+#. module: report
+#: code:addons/report/models/report_paperformat.py:68
+#, python-format
+msgid "Error ! You cannot select a format AND specific page width/height."
+msgstr ""
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -266,7 +273,7 @@ msgstr "Folio 27  210 x 330 мм"
 #. module: report
 #: model:ir.model,name:report.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP шилжүүлэг"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
@@ -415,7 +422,7 @@ msgstr ""
 #: code:addons/report/static/src/xml/report.xml:5
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "Хэвлэх"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
@@ -452,7 +459,7 @@ msgstr "Баруун захалбар (мм)"
 #: code:addons/report/static/src/xml/report.xml:11
 #, python-format
 msgid "Save"
-msgstr ""
+msgstr "Хадгалах"
 
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_format
@@ -504,13 +511,11 @@ msgstr "Дээд захалбар (мм)"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a href=\"http://"
-"wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
 msgstr ""
 "Энэ систем дээр Wkhtmltopdf-г олсонгүй. \n"
-"Тайлан html байдлаар харагдана.<br><br><a href=\"http://wkhtmltopdf.org/\" "
-"target=\"_blank\">\n"
+"Тайлан html байдлаар харагдана.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
 
 #. module: report
@@ -531,6 +536,14 @@ msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf амжилтгүй боллоо (алдааны код: %s). Зурвас: %s"
 
 #. module: report
+#: code:addons/report/models/report.py:450
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#. module: report
 #. openerp-web
 #: code:addons/report/static/src/js/qwebactionmanager.js:19
 #, python-format
@@ -547,17 +560,15 @@ msgstr ""
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
-"and footers as well as\n"
-"support for table-breaking between pages.<br><br><a href=\"http://"
-"wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
+"support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
 
 #. module: report
 #: model:ir.model,name:report.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: report
 #. openerp-web
@@ -565,8 +576,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The \n"
-"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
-"target=\"_blank\">wkhtmltopdf.org</a>"
+"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
 
 #. module: report

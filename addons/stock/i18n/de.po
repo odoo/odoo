@@ -2822,6 +2822,12 @@ msgid ""
 "the system won't propose anything.  You can also let the system propose for "
 "a single product / lot /... "
 msgstr ""
+"Wenn Sie eine vollständige Inventur durchführen, können Sie 'Alle Produkte' "
+"wählen. Die Inventur wird dann mit aktuellem Bestand vorgetragen. Wenn Sie "
+"nur vereizelte Produkte (z.B. zyklusweise Zählung), dann können Sie "
+"'Manuelle Produktauswahl' auswählen und das System schlägt gar nichts "
+"vor.Sie können das System aber auch Vorträge für einzelne Produkte / Lose / "
+"... erstellen lassen."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5364,6 +5370,7 @@ msgid ""
 "Remaining Quantity in default UoM according to operations matched with this "
 "move"
 msgstr ""
+"Verbleibende Menge in Standard-ME passend zu Vorgängen dieser Lagerumbuchung"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6304,7 +6311,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "Das Ziellager muss für alle Kommissionierungen das Gleiche sein."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -6427,7 +6434,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:132
 #, python-format
 msgid "The selected inventory options are not coherent."
-msgstr ""
+msgstr "Die ausgewählten Inventuroptionen passen nicht zueinander."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:222
@@ -6439,7 +6446,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:515
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "Das Herkunftslager muss für alle Kommissionierungen das Gleiche sein."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_picking_id
@@ -7309,6 +7316,9 @@ msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
 msgstr ""
+"Wenn Sie eine Seriennummer (Los) auswählen, wird die Menge an diese "
+"Seriennummer (dieses Los) angepasst und nicht an der Gesamtproduktmenge "
+"festgemacht."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_wizard_id

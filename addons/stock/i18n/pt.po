@@ -12,14 +12,13 @@
 # Vitor Fernandes <vmlf01@gmail.com>, 2016
 # Joao Vieira <joao.f.vieira@gmail.com>, 2016
 # Daniel Reis <dreis.pt@gmail.com>, 2016
-# Ricardo Correia <rcorreiavv@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-22 14:03+0000\n"
 "PO-Revision-Date: 2016-11-22 14:03+0000\n"
-"Last-Translator: Ricardo Correia <rcorreiavv@gmail.com>, 2016\n"
+"Last-Translator: Daniel Reis <dreis.pt@gmail.com>, 2016\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -162,6 +161,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Process the "
 "products</span>"
 msgstr ""
+"<span class=\"label label-default text-center odoo_purple\">Processar os "
+"produtos</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -169,6 +170,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Delivery</span>"
 msgstr ""
+"<span class=\"label label-default text-center odoo_purple\">Validar a "
+"Entrega</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -221,6 +224,11 @@ msgid ""
 "                                        <span class=\"small\">&gt; 50 vendors</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
+"                                        <strong>Importar</strong><br/>\n"
+"                                        <span class=\"small\">&gt; 50 vendedores</span>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -231,6 +239,11 @@ msgid ""
 "                                        <span class=\"small\">&lt; 50 vendors</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
+"                                        <strong> Criar manualmente</strong><br/>\n"
+"                                        <span class=\"small\">&lt; 50 vendedorers</span>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -280,22 +293,22 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr "<span><strong>Endereço de Cliente:</strong></span>"
+msgstr "<span><strong>Morada do cliente:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Delivery Address:</strong></span>"
-msgstr "<span><strong>Endereço de Entrega:</strong></span>"
+msgstr "<span><strong>Morada de entrega:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr "<span><strong>Endereço de Fornecedor:</strong></span>"
+msgstr "<span><strong>Morada do fornecedor:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr "<span><strong>Endereço Armazém:</strong></span>"
+msgstr "<span><strong>Morada do armazém:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -445,6 +458,8 @@ msgid ""
 "<strong>Manufacture:</strong> the product is manufactured internally or the "
 "service is supplied from internal resources"
 msgstr ""
+"<strong>Fabrico:</strong> o produto é fabricado manufaturado ou o serviço é "
+"fornecido dos recursos internos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -654,7 +669,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Advanced: Apply Procurement Rules"
-msgstr "Avançado: Aplicar Regras de Arovisionamento"
+msgstr "Avançado: Aplicar Regras de Aquisição"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -759,7 +774,7 @@ msgstr "Um aviso informativo ou de bloqueio pode ser definido em um aprceiro"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_ancestor_ids
 msgid "Ancestors"
-msgstr ""
+msgstr "Antepassados"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_2
@@ -825,7 +840,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
 msgid "Ask New Products"
-msgstr "Pedir novos artigos"
+msgstr "Pedir Novos Produtos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -860,7 +875,7 @@ msgstr "Automático Sem Etapa Adicionada"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
 msgid "Automatic Procurements"
-msgstr "Aprovisionamentos automáticos"
+msgstr "Aquisições Automáticas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_string_availability_info
@@ -1393,7 +1408,7 @@ msgstr ""
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Create Procurement"
-msgstr "Criar Aprovisionamentos"
+msgstr "Criar Aquisição"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1838,7 +1853,7 @@ msgstr "Nota de Entrega"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
 msgid "Delivery Type"
-msgstr ""
+msgstr "Tipo de Entrega"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2275,7 +2290,7 @@ msgstr "Global"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_procurement_rules
 msgid "Global Procurement Rules"
-msgstr "Regras de Aprovisionamento Globais"
+msgstr "Regras de Aquisição Globais"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_location_path
@@ -3408,7 +3423,7 @@ msgstr "Regra MTO"
 #. module: stock
 #: model:ir.model,name:stock.model_make_procurement
 msgid "Make Procurements"
-msgstr "Elaborar aprovisionamentos"
+msgstr "Elaborar Aquisições"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:442
@@ -3530,7 +3545,7 @@ msgstr "Operação Manual"
 #. module: stock
 #: selection:stock.picking.type,code:0
 msgid "Manufacturing Operation"
-msgstr ""
+msgstr "Operação de Fabrico"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -3676,7 +3691,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_move_dest_id
 msgid "Move which caused (created) the procurement"
-msgstr "Movimento que causou (criou) o aprovisionamento"
+msgstr "Movimento que originou (criou) a aquisição"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_quant_ids
@@ -3700,7 +3715,7 @@ msgstr "Movimentos"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_move_ids
 msgid "Moves created by the procurement"
-msgstr "Movimentos criados pelo aprovisionamento"
+msgstr "Movimentos criados pela aquisição"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_group_id
@@ -3795,7 +3810,7 @@ msgstr "Sem Movimento de Stock para Já"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "No Tracking"
-msgstr "Sem rastreamento"
+msgstr "Sem Monitorização"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_adv_location:0
@@ -4598,7 +4613,7 @@ msgstr "Aquisição"
 #: model:ir.ui.menu,name:stock.menu_stock_procurement_action
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Procurement Exceptions"
-msgstr "Exceções de aquisição"
+msgstr "Exceções de Aquisição"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_group_id
@@ -4606,7 +4621,7 @@ msgstr "Exceções de aquisição"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_group_id
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Procurement Group"
-msgstr "Grupo de Aprovisionamento"
+msgstr "Grupo de Aquisição"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_order_location_id
@@ -4614,7 +4629,7 @@ msgstr "Grupo de Aprovisionamento"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_procurement
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_procurement
 msgid "Procurement Location"
-msgstr "Localização de aquisição"
+msgstr "Localização de Aquisição"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_make_procurement
@@ -4623,25 +4638,25 @@ msgstr "Localização de aquisição"
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
 msgid "Procurement Request"
-msgstr "Requisição de aquisição"
+msgstr "Pedido de Aquisição"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Requisição de Aprovisionamento"
+msgstr "Pedido de Aquisição"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
 #: model:ir.model.fields,field_description:stock.field_stock_move_rule_id
 msgid "Procurement Rule"
-msgstr "Regras de Compra"
+msgstr "Regras de Aquisição"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.procrules
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_pull_ids
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Procurement Rules"
-msgstr "Regras de Aprovisionamento"
+msgstr "Regras de Aquisição"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_procurement_op
@@ -4649,7 +4664,7 @@ msgstr "Regras de Aprovisionamento"
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model:stock.location,name:stock.location_procurement
 msgid "Procurements"
-msgstr "Aprovisionamentos"
+msgstr "Aquisições"
 
 #. module: stock
 #: code:addons/stock/models/product.py:363
@@ -4858,7 +4873,7 @@ msgstr "Multiplicador de Qtd deve ser maior ou igual a zero."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_quality
 msgid "Quality"
-msgstr ""
+msgstr "Qualidade"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:94
@@ -5570,8 +5585,8 @@ msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
-"Define um local se produzir num local fixo. Este pode ser um local parceiro "
-"se subcontratar as operações de fabrico."
+"Define uma localização se produzir numa localização fixa. Isto pode ser uma "
+"localização de parceiro se subcontratar as operações de fabrico."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
@@ -6525,14 +6540,14 @@ msgstr ""
 #. module: stock
 #: selection:stock.config.settings,group_stock_production_lot:0
 msgid "Track lots or serial numbers"
-msgstr "Rastrear lotes de números de série"
+msgstr "Monitorizar lotes ou números de série"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_tracking
 #: model:ir.model.fields,field_description:stock.field_product_template_tracking
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_tracking
 msgid "Tracking"
-msgstr "Rastrear"
+msgstr "Monitorizar"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:958
@@ -7472,7 +7487,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scrap
 msgid "stock.scrap"
-msgstr ""
+msgstr "stock.scrap"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

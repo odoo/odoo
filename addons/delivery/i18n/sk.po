@@ -2,12 +2,20 @@
 # This file contains the translation of the following modules:
 # * delivery
 # 
+# Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Matus Krnac <matus.krnac@gmail.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
+# palica <pavol.cupka@gmail.com>, 2017
+# gebri <gebri@inmail.sk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: gebri <gebri@inmail.sk>, 2017\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,27 +26,27 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rules_count
 msgid "# Analytic Rules"
-msgstr ""
+msgstr "# Analytické pravidlá"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_count
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# Kusovník"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr ""
+msgstr "# Fakturované v Nákupe"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr ""
+msgstr "# Fakturované v Predaji"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_mo_count
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Výrobných objednávok"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
@@ -48,12 +56,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
 msgid "# Purchases"
-msgstr ""
+msgstr "# Nákupy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_count
 msgid "# Sales"
-msgstr ""
+msgstr "# predajov"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:74
@@ -67,19 +75,19 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>Prepravca</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
-msgstr ""
+msgstr "<strong>Váha</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
@@ -88,6 +96,8 @@ msgid ""
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
+"Popis Produktu ktorý chcete odkomunikovať vašim zákazníkom. Tento\n"
+"popis bude skopírovaný na každú Predajnú objednávku, Dodaciu objednávku a Zákaznícku Faktúru/Refund"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
@@ -96,13 +106,15 @@ msgid ""
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
 msgstr ""
+"Popis Produktu ktorý chcete odkomunikovať vašim dodávateľom. Tento\n"
+"popis bude skopírovaný na každú Nákupnú objednávku, Potvrdenku a Dodaciu účetnku/Refund."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr ""
+msgstr "Precízny popis produktu, používaný iba pre interné informačné účely."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
@@ -117,7 +129,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Potrebná akcia"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
@@ -127,12 +139,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
 msgid "Active"
-msgstr ""
+msgstr "Aktívny"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_amount
 msgid "Amount"
-msgstr ""
+msgstr "Suma"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_amount
@@ -140,31 +152,33 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Množstvo objednávky aby bolo možné profitovať z dopravy zadarmo, vyjadrené "
+"vo firemnej mene"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr ""
+msgstr "Archivovaný"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
 msgid "Asset Type"
-msgstr ""
+msgstr "Typ aktíva"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_value_ids
 msgid "Attributes"
-msgstr ""
+msgstr "Vlastnosti"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available
 msgid "Available"
-msgstr ""
+msgstr "Dostupné"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available_in_pos
 msgid "Available in the Point of Sale"
-msgstr ""
+msgstr "Dostupné v mieste predaja"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_produce_delay
@@ -172,27 +186,30 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Priemerné oneskorenie v dňoch na výrobu tohto produktu. V prípade "
+"viacúrovňového  kusovníka, výrobné dodacie lehoty jednotlivých komponentov  "
+"budú pridané."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "Priem. cena na faktúrach zákazníkov."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "Priem. cena na dodacích účtenkách."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_avg_price
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_avg_price
 msgid "Avg. Unit Price"
-msgstr ""
+msgstr "Priem. jednotková cena"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_barcode
 msgid "Barcode"
-msgstr ""
+msgstr "Čiarový kód"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_list_price
@@ -200,26 +217,28 @@ msgid ""
 "Base price to compute the customer price. Sometimes called the catalog "
 "price."
 msgstr ""
+"Základná cena pre výpočet spotrebiteľských cien. Niekedy sa nazýva "
+"katalógová cena."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
 msgid "Based on Rules"
-msgstr ""
+msgstr "Na základe pravidiel"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image
 msgid "Big-sized image"
-msgstr ""
+msgstr "Big-sized image"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_ids
 msgid "Bill of Materials"
-msgstr ""
+msgstr "Kusovník materiálov"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
 msgid "Bulk Weight"
-msgstr ""
+msgstr "Hromadná váha"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
@@ -229,18 +248,18 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
 msgid "Can be Purchased"
-msgstr ""
+msgstr "Môže byť zakúpené"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rental
 msgid "Can be Rent"
-msgstr ""
+msgstr "Môže sa prenajímať"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_sale_ok
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_ok
 msgid "Can be Sold"
-msgstr ""
+msgstr "Môže sa predávať"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
@@ -252,7 +271,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušiť"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
@@ -263,63 +282,66 @@ msgstr ""
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr ""
+msgstr "Prepavca"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
 msgid "Category Routes"
-msgstr ""
+msgstr "Trasy kategórie"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Skontrolujte či je výrobok spôsobilý pre členstvo."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
 msgstr ""
+"Skontrolujte, či by mal byť produkt vážený použitím integrácie hardvérovej "
+"stupnice"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
 msgstr ""
+"Skontrolujte, či chcete, aby sa tento produkt objavil v mieste predaja"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Click to define a new delivery method."
-msgstr ""
+msgstr "Kliknite pre definovanie novej doručovacej metódy."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
 msgid "Color Index"
-msgstr ""
+msgstr "Farebný index"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_company_id
 msgid "Company"
-msgstr ""
+msgstr "Spoločnosť"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
-msgstr ""
+msgstr "Podmienka"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
 msgid "Control Purchase Bills"
-msgstr ""
+msgstr "Kontrola nákupných účteniek"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
 msgid "Cost"
-msgstr ""
+msgstr "Náklady"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_standard_price
 msgid "Cost Price"
-msgstr ""
+msgstr "Nákladová cena"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
@@ -333,16 +355,19 @@ msgid ""
 " and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
 msgstr ""
+"Cena na šablónu produktu pre štandardné ocenenie sklasu v účtovníctve a "
+"používa sa ako základná cena nákupných objednávok. Vyjadrené v predvolených"
+"  merných jednotkách produktu."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
 msgid "Costing Method"
-msgstr ""
+msgstr "Metóda kalkulácie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_country_ids
 msgid "Countries"
-msgstr ""
+msgstr "Krajiny"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_project_id
@@ -355,18 +380,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Created by "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Created on "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Mena"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_qty_available
@@ -377,11 +402,20 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Aktuálne množstvo produktov.\n"
+"\n"
+"V kontexte s jedným Umiestneniením zásob, toto zahŕňa aj tovar uložené na tomto mieste, alebo hociktorom z jeho potomkov.\n"
+"\n"
+"V kontexte s jedným Skladom, toto zahŕňa aj tovar uložený v sortimente tohto skladu, alebo niektorom z jeho potomkov.\n"
+"\n"
+"uložené v Umiestnení zásob  Skladu tohoto Obchodu, alebo niektorom z jeho potomkov.\n"
+"\n"
+"V opačnom prípade, toto zahŕňa tovar uložený v ktoromkoľvek Umiestení zásob typu \"interné\""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
 msgid "Customer Lead Time"
-msgstr ""
+msgstr "Dodacia lehota zákazníka"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
@@ -391,27 +425,27 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
 msgid "Customer Taxes"
-msgstr ""
+msgstr "Zákazníkove dane"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_from
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Dátum od ktorého bude členstvo aktívne."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Dátum poslednej správy záznamu."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Dátum dokedy bude členstvo aktívne"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
 msgid "Default Unit of Measure used for all stock operation."
-msgstr ""
+msgstr "Predvolená merná jednotka používaná pre všetky skladové operácie."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_po_id
@@ -419,18 +453,20 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
+"Predvolená Merná jednotka používaná pre nákupné objednávky. Musí byť v "
+"rovnakej kategórii ako predvolená merná jednotka."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Typ odložených príjmov"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_count
 #: model:ir.ui.menu,name:delivery.menu_delivery
 #: model:ir.ui.menu,name:delivery.sale_menu_delivery
 msgid "Delivery"
-msgstr ""
+msgstr "Dodanie"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -446,24 +482,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order_carrier_id
 msgid "Delivery Method"
-msgstr ""
+msgstr "Dodacia metóda"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Dodacie metódy"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "Pravidlá dodacích cien"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
 msgid "Delivery Product"
-msgstr ""
+msgstr "Dodávka produktu"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_route_ids
@@ -471,21 +507,23 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
 msgstr ""
+"V závislosti od nainštalovaných modulov, toto vám umožní definovať trasu "
+"produktu: či bude kúpený, vyrobený, MTO / MTS, ..."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
 msgid "Description on Picking"
-msgstr ""
+msgstr "Popis na Vyberaní"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination"
-msgstr ""
+msgstr "Cieľ"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_event_ok
@@ -493,22 +531,24 @@ msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
 msgstr ""
+"Zistite, či výrobok musí automaticky vytvoriť registráciu udalosti pri "
+"potvrdení riadku objednávky predaja."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "Určite poradie zobrazenia"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Discard"
-msgstr ""
+msgstr "Vyradiť"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Názov obrazovky "
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -517,66 +557,70 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
+"Každý doručovateľ (napr. UPS) môže mať niekoľko doručovacích metód (napr.\n"
+"UPS Express, UPS Standard) so sadou cenových pravidiel priložených\n"
+"ku každej metóde."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
 msgid "Environment"
-msgstr ""
+msgstr "Prostredie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
 msgid "Estimated Delivery Price"
-msgstr ""
+msgstr "Odhadovaná cena dodania"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
 msgid "Event Registration"
-msgstr ""
+msgstr "Registrácia udalosti"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "Vstupenky udalosti"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin
 msgid "Expected Margin"
-msgstr ""
+msgstr "Očakávaná marža"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin_rate
 msgid "Expected Margin (%)"
-msgstr ""
+msgstr "Očakávaná marža (%)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_expected
 msgid "Expected Sale"
-msgstr ""
+msgstr "Očakávaný predaj"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_expected_margin
 msgid "Expected Sale - Normal Cost"
-msgstr ""
+msgstr "Očakávaný predaj - normálna cena"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sales_gap
 msgid "Expected Sale - Turn Over"
-msgstr ""
+msgstr "Očakávaný predaj - obrat"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_expected_margin_rate
 msgid "Expected margin * 100 / Expected Sale"
-msgstr ""
+msgstr "Očakávaná marža * 100 / Oçakávaný predaj"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_expense_id
 msgid "Expense Account"
-msgstr ""
+msgstr "Účet výdajov"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Vyplňte toto pole ak máte v pláne faktúrovať dopravu založenú na vyberaní."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -589,27 +633,27 @@ msgstr ""
 #: selection:delivery.carrier,delivery_type:0
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_fixed_price
 msgid "Fixed Price"
-msgstr ""
+msgstr "Pevná cena"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Odberatelia"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Odberatelia (Kanály)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Odberatelia (Partneri)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Odhadnúť množstvo"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
@@ -619,17 +663,24 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Odhadované množstvo (vyrátané ako Množstvo skladom - Odchádzajúce + Prichádzajúce)\n"
+"\n"
+"V kontexte s jedným Umiestnenením zásob, toto zahŕňa aj tovar uložený na tomto mieste, alebo hociktorom z jeho potomkov. \n"
+"\n"
+"V kontexte s jedným Skladom, toto zahŕňa aj tovar uložený v sortimente tohto skladu, alebo niektorým z jeho potomkov. \n"
+"\n"
+"V opačnom prípade toto zahŕňa tovar uložený v ktoromkoľvek Umiestení zásob typu \"interné\""
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
 msgid "Free delivery charges"
-msgstr ""
+msgstr "Doručenie zdarma"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
 msgid "Free if Order total is more than"
-msgstr ""
+msgstr "Zdarma ak je Objednávka celkom viac ako"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -647,27 +698,29 @@ msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
 msgstr ""
+"Uvádza rôzne spôsoby, ako baliť rovnaký produkt. To nemá žiadny vplyv na "
+"výbery a používa sa predovšetkým ak použijete modul EDI."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
 msgid "Gives the sequence order when calculating delivery carrier."
-msgstr ""
+msgstr "Dáva sekvenčné poradie pri výpočte dodávky doručovateľa."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr ""
+msgstr "Zoskupiť podľa..."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
 msgid "HS Code"
-msgstr ""
+msgstr "HS kód"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
 msgid "Height"
-msgstr ""
+msgstr "Výška"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -678,17 +731,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
@@ -700,6 +753,12 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"Ak je trvalé oceňovanie povolené pre produkt, systém automaticky vytvorí "
+"položky účtovnej knihy zodpovedajúce skladovým pohybom, s cenou produktu ako"
+" stanovuje \"Metóda kalkulácie\". Účet variácie zásob nastavený na kategóriu"
+" výrobkov bude predstavovať aktuálnu hodnotu zásob, a skladové vstupy a "
+"výstupy účtu budú držať ako protipoložka pohybov pre prichádzajúce a "
+"odchádzajúce produkty."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -707,12 +766,14 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
+"V prípade, že objednávka je drahšie ako istá suma, môže zákazník využiť "
+"dopravu zdarma"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
+msgstr "Ak neodškrtnuté, budete môcť skryť produkt bez jeho odstránenia."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image
@@ -721,6 +782,9 @@ msgid ""
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
+"Obrázok varianty produktu (Veľký obrázok produktovej šablóny ak false). "
+"Veľkosť je automaticky zmenená na 1024x1024px obrázok, so zachovaním pomerov"
+" strán."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
@@ -728,6 +792,8 @@ msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
 msgstr ""
+"Obrázok varianty produktu (Stredne veľký obrázok produktovej šablóny ak "
+"false). "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_small
@@ -735,16 +801,17 @@ msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
 msgstr ""
+"Obrázok varianty produktu (Malý obrázok produktovej šablóny ak false). "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
 msgid "Income Account"
-msgstr ""
+msgstr "Príjmový účet"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
 msgid "Incoming"
-msgstr ""
+msgstr "Prichádzajúci"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -759,87 +826,88 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
 msgid "Internal Category"
-msgstr ""
+msgstr "Interná kategória"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_code
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_default_code
 msgid "Internal Reference"
-msgstr ""
+msgstr "Vnútorná referencia"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_barcode
 msgid "International Article Number used for product identification."
-msgstr ""
+msgstr "Medzinárodné číslo položky použité pre identifikáciu výrobku"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_inventory
 msgid "Inventory Location"
-msgstr ""
+msgstr "Umiestnenie inventára"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_valuation
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "Oceňovanie inventára"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr ""
+msgstr "Zásielka faktúry na dodanie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
 msgid "Invoice State"
-msgstr ""
+msgstr "Stav faktúry"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Postup fakturácie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je odberateľ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
 msgid "Is a Delivery"
-msgstr ""
+msgstr "Je dodanie"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
+"Ponechajte prázdne, ak cena závisí od pokročilých cien podľa miesta určenia"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "Dátum poslednej správy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Posledná modifikácia"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Naposledy upravoval"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Naposledy upravované"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_length
 msgid "Length"
-msgstr ""
+msgstr "Dĺžka"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -849,12 +917,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
 msgid "Location"
-msgstr ""
+msgstr "Umiestnenie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
 msgid "Logistical Units"
-msgstr ""
+msgstr "Logistické jednotky"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -872,22 +940,22 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
 msgid "Manufacturing Lead Time"
-msgstr ""
+msgstr "Výrobná dodacia lehota"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
 msgid "Margin"
-msgstr ""
+msgstr "Marža"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
 msgid "Margin Date From"
-msgstr ""
+msgstr "Dátum marže od"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_to
 msgid "Margin Date To"
-msgstr ""
+msgstr "Dátum marže do"
 
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
@@ -907,7 +975,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
 msgid "Maximum Value"
-msgstr ""
+msgstr "Maximálna hodnota"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
@@ -917,49 +985,49 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Stredne veľký obrázok"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
 msgid "Membership"
-msgstr ""
+msgstr "Členstvo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_to
 msgid "Membership End Date"
-msgstr ""
+msgstr "Dátum ukončenia členstva"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_from
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Dátum začiatku členstva"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr ""
+msgstr "Správa pre riadok nákupnej objednávky"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn_msg
 msgid "Message for Sales Order Line"
-msgstr ""
+msgstr "Správa pre riadok predajnej objednávky"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Správy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "Pravidlá pre minimálne zásoby."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_name
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Name"
-msgstr ""
+msgstr "Meno"
 
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
@@ -970,49 +1038,49 @@ msgstr ""
 #: code:addons/delivery/models/sale_order.py:63
 #, python-format
 msgid "No carrier matching."
-msgstr ""
+msgstr "Nezodpovedá žiadny doručovateľ."
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:72
 #, python-format
 msgid "No carrier set for this order."
-msgstr ""
+msgstr "Žiadny doručovateľ nie je nastavený pre túto objednávku."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_normal_cost
 msgid "Normal Cost"
-msgstr ""
+msgstr "Normálna cena"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr ""
+msgstr "Normálna cena - Celková cena"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
 msgid "Normal Delivery Charges"
-msgstr ""
+msgstr "Normálne dodacie poplatky"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Počet akcií"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
 msgid "Number of Packages"
-msgstr ""
+msgstr "Počet balíkov"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Počet správ ktoré vyžadujú akciu"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Počet neprečítaných správ"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_method
@@ -1024,7 +1092,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
 msgid "Operator"
-msgstr ""
+msgstr "Operátor"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_invoice_policy
@@ -1036,12 +1104,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
 msgid "Outgoing"
-msgstr ""
+msgstr "Odchádzajúce"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Package"
-msgstr ""
+msgstr "Balík"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
@@ -1058,60 +1126,60 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
-msgstr ""
+msgstr "Balíky"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
 msgid "Packaging"
-msgstr ""
+msgstr "Balenie"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "Baliace operácie"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "Fyzické balíky"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pos_categ_id
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "Kategória miesta predaja"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price
 msgid "Price"
-msgstr ""
+msgstr "Cena"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_creditor_price_difference
 msgid "Price Difference Account"
-msgstr ""
+msgstr "Cenový rozdiel účtu"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr ""
+msgstr "Cenové pravidlá"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_id
 msgid "Pricelist"
-msgstr ""
+msgstr "Cenník"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Položky cenníka"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
@@ -1121,118 +1189,118 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr ""
+msgstr "Oceňovanie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
 msgid "Pricing Rules"
-msgstr ""
+msgstr "Pravidlá oceňovania"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_procurement
 msgid "Procurement Location"
-msgstr ""
+msgstr "Lokácia obstarávania"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_id
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Čas upozornenia produktu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_line_ids
 msgid "Product Attributes"
-msgstr ""
+msgstr "Atribúty produktu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_email_template_id
 msgid "Product Email Template"
-msgstr ""
+msgstr "Emailová šablóna produktu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "Životnosť produktu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Čas odobratia produktu"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_template
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "Šablóna produktu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_type
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_type
 msgid "Product Type"
-msgstr ""
+msgstr "Typ produktu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Čas použitia výrobku"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
 msgid "Production Location"
-msgstr ""
+msgstr "Lokácia produktu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_ids
 msgid "Products"
-msgstr ""
+msgstr "Produkty"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_project_id
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
-msgstr ""
+msgstr "Poskytovateľ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
 msgid "Purchase Description"
-msgstr ""
+msgstr "Popis nákupu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_gap
 msgid "Purchase Gap"
-msgstr ""
+msgstr "Nákupná medzera"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Riadok nákupnej objednávky"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
 msgid "Purchase Unit of Measure"
-msgstr ""
+msgstr "Merné jednotky nákupu"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_product_qty
 msgid "Quantity"
-msgstr ""
+msgstr "Množstvo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_qty_available
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Množstvo skladom"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_incoming_qty
@@ -1242,6 +1310,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
+"Množstvo produktov s naplánovaným príchodom.\n"
+"V kontexte s jednou Lokáciou skladu, toto zahŕňa tovar prichádzajúci do tejto Lokácie, alebo ktorýchkoľvek z jeho podriadených.\n"
+"V kontexte s jedným Skladiskom, toto zahŕňa tovar prichádzajúci do tejto Lokácie skladu tohto Skladiska, alebo ktorýchkoľvek z jeho podriadených.\n"
+"V opačnom prípade, toto zahŕňa tovar prichádzajúci do akejkoľvek lokácie skladu s typom \"interná\"."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
@@ -1251,6 +1323,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
+"Množstvo produktov s naplánovaným odchodom.\n"
+"V kontexte s jednou Lokáciou skladu, toto zahŕňa tovar odchádzajúci do tejto Lokácie, alebo ktorýchkoľvek z jeho podriadených.\n"
+"V kontexte s jedným Skladiskom, toto zahŕňa tovar odchádzajúci do tejto Lokácie skladu tohto Skladiska, alebo ktorýchkoľvek z jeho podriadených.\n"
+"V opačnom prípade, toto zahŕňa tovar odchádzajúci z akejkoľvek lokácie skladu s typom \"interná\"."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
@@ -1260,12 +1336,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
 msgid "Receipt"
-msgstr ""
+msgstr "Potvrdenka"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
-msgstr ""
+msgstr "Pravidlá doobjednávania"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
@@ -1280,22 +1356,22 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Vrátiť výber"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
 msgid "Routes"
-msgstr ""
+msgstr "Trasy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
 msgid "Sale Base Price"
-msgstr ""
+msgstr "Predajná základná cena"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_sale
 msgid "Sale Description"
-msgstr ""
+msgstr "Popis predaja"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_list_price
@@ -1304,33 +1380,33 @@ msgstr ""
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Sale Price"
-msgstr ""
+msgstr "Predajná cena"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_gap
 msgid "Sales Gap"
-msgstr ""
+msgstr "Predajná medzera"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Predajná objednávka"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn
 msgid "Sales Order Line"
-msgstr ""
+msgstr "RIadok predajnej objednávky"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Save"
-msgstr ""
+msgstr "Uložiť"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Vyberte kategóriu pre aktuálny produkt"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:296
@@ -1339,6 +1415,8 @@ msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "carrier(s) criteria."
 msgstr ""
+"Zvolený produkt v doručovacej metóde nenapĺňa žiadne z doručovacích "
+"kritérií."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_line_warn
@@ -1348,22 +1426,25 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Zvolenie možnosti \"Varovanie\" notifikuje používateľa správou, Zvolenie "
+"\"Blokovanie správy\" hodí výnimku so správou a zablokuje tok. Správa musí "
+"byť napísaná v ďalšom poli."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr ""
+msgstr "Odoslať odosielateľovi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sequence
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sekvencia"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Set price"
-msgstr ""
+msgstr "Nastaviť cenu"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
@@ -1381,7 +1462,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
-msgstr ""
+msgstr "Cena dopravy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
@@ -1391,18 +1472,19 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "Malý obrázok"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_product_sale_ok
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
 msgstr ""
+"Špecifikujte či produkt môže byť zvolený v riadku predajnej objednávky."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Špecifikujte či produkt môže byť zvolený ako HR výdavky."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
@@ -1421,22 +1503,22 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
 msgid "States"
-msgstr ""
+msgstr "Stavy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Účet vstupov skladu"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Pohyb Skladu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_output
 msgid "Stock Output Account"
-msgstr ""
+msgstr "Účet výstupov skladu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
@@ -1451,18 +1533,18 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr ""
+msgstr "Súčet násobenia nákupnej ceny a množstva účteniek predajcov"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr ""
+msgstr "Súčet násobenia faktúrovej ceny a mnoźstva zákaznických faktúr"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr ""
+msgstr "Súčet násobenia faktúrovej ceny a množstva účteniek predajcov"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_expected
@@ -1470,16 +1552,17 @@ msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
 msgstr ""
+"Súčet násobenia predajnj katalógovej ceny a množstva zákaznických faktúr"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
-msgstr ""
+msgstr "Súčet množstva na faktúrach zákazníkov"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "Súčet množstva v účtenkách dodávateľov"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pricelist_id
@@ -1497,7 +1580,7 @@ msgstr ""
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
 msgid "The Poste"
-msgstr ""
+msgstr "Poste"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
@@ -1506,12 +1589,14 @@ msgid ""
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
 msgstr ""
+"Priemerne meǩanie v dňoch medzi potvrdením zákaznickej objednávky a dodaním "
+"hotových produktov. Je to čas ktorý sľúbite vašim zákazníkom."
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:54
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
+msgstr "Stav objednávky musí byť koncept pre pridanie riakdov objednávky."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_lst_price
@@ -1523,12 +1608,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
 msgid "The volume in m3."
-msgstr ""
+msgstr "Objem v m3."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Váha obsahu v kg, nezahŕňajúc akékoľvek balenie, atď."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -1537,6 +1622,9 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Tieto metódy umožňujú automaticky vyrátať cenu dodania\n"
+"v závislosti od vášich nastavení, na predajných objednávkach (na základe\n"
+"cenovej ponuky) alebo faktúry (na základe dodacích objednávok)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
@@ -1544,6 +1632,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
 msgstr ""
+"Tento účet bude použitý pre faktúry namiesto predvoleného do nákladov hodnôt"
+" pre aktuálny produkt."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
@@ -1551,6 +1641,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
 msgstr ""
+"Toto konto sa použije pre faktúry namiesto predvolené hodnoty predaja pre "
+"tento produkt."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
@@ -1558,11 +1650,13 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
 msgstr ""
+"tento účet bude použitý na vyčíslenie rozdielu medzi nákupnou cenou a "
+"skutočným nákladom."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "Táto doručovacia metóda bude použitá pri fakturácii z odberov."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_variant
@@ -1570,11 +1664,13 @@ msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
 msgstr ""
+"Toto pole obsahuje obrázok použitý ako obrázok pre túto produktovú variantu,"
+" obmedzený na 1024x1024px."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "Toto je súčet extra ceny všetkych atribútov"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
@@ -1587,6 +1683,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
 msgstr ""
+"Táto skladová lokácia bude použitá namiesto predvolenej, ako zdrojová "
+"lokácia pre skladové pohyby generované výrobnými objednávkami."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
@@ -1594,6 +1692,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
 msgstr ""
+"Táto skladová lokácia bude použitá namiesto predvolenej, ako zdrojová "
+"lokácia pre skladové pohyby generované obstarávaniami. "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
@@ -1601,47 +1701,51 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
+"Táto skladová lokácia bude použitá namiesto predvolenej, ako zdrojová "
+"lokácia pre skladové pohyby generované keď robíte inventúru."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
 msgstr ""
+"Tie kategórie sa pouźívajú pre zoskupovanie podobných produktov pre miesto "
+"predaja,"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_to_weight
 msgid "To Weigh With Scale"
-msgstr ""
+msgstr "Pre váženie s mierkou"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
 msgid "Total Cost"
-msgstr ""
+msgstr "Celkové Náklady"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin
 msgid "Total Margin"
-msgstr ""
+msgstr "Celková marža"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin_rate
 msgid "Total Margin Rate(%)"
-msgstr ""
+msgstr "Hodnota celkovej marže(%)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin_rate
 msgid "Total margin * 100 / Turnover"
-msgstr ""
+msgstr "Celková marźa * 100 / Obrat"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "Sledovať službu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr ""
+msgstr "Sledovanie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
@@ -1651,44 +1755,44 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Prevod"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_turnover
 msgid "Turnover"
-msgstr ""
+msgstr "Zvrat"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin
 msgid "Turnover - Standard price"
-msgstr ""
+msgstr "Obrat - Štandardná cena"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_uom_id
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Merná jednotka"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "Merná jednotka (Merná jednotka) je jednotka merania pre Hmotnosť"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking_weight_uom_id
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Jednotka merania pre Váhu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neprečítané správy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Počítadlo neprečítaných správ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
@@ -1698,17 +1802,17 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
 msgid "Variable"
-msgstr ""
+msgstr "Premenná"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable_factor
 msgid "Variable Factor"
-msgstr ""
+msgstr "Premnný faktor"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_variant
 msgid "Variant Image"
-msgstr ""
+msgstr "Obrázok varianty"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
@@ -1718,12 +1822,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr ""
+msgstr "Dane predajcu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
 msgid "Vendors"
-msgstr ""
+msgstr "Predajcovia"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1731,17 +1835,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_volume
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_volume
 msgid "Volume"
-msgstr ""
+msgstr "Objem"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warehouse_id
 msgid "Warehouse"
-msgstr ""
+msgstr "Sklad"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warranty
 msgid "Warranty"
-msgstr ""
+msgstr "Záruka"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1752,13 +1856,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_weight
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight"
-msgstr ""
+msgstr "Hmotnosť"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 msgid "Weight * Volume"
-msgstr ""
+msgstr "Váha * Objem"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
@@ -1776,6 +1880,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
+"Keď je vydané nové sériové číslo, toto je počet dní pred oznámením "
+"upozornenia."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
@@ -1783,6 +1889,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
 msgstr ""
+"Keď je vydané nové sériové číslo, toto je počet dní pred tým než s tovar "
+"môže stať nebezpečným a nesmie byť konzumovaný."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
@@ -1790,6 +1898,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
+"Keď je vydané nové sériové číslo, toto je počet dní pred tým než by mal byť "
+"tovar odstránený zo skladu."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
@@ -1797,6 +1907,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
+"Keď je vydané nové sériové číslo, toto je počet dní pred tým než sa tovar "
+"začne zhoršuje, bez toho aby už bol nebezpečný."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_input
@@ -1806,6 +1918,11 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Pri oceňovaní zásob v reálnom čase, bude náprotivok položky účtovnej knihy "
+"pre všetky prichádzajúce skladové pohyby zverejnený v tomto účte, ak "
+"neexistuje osobitný oceňovací účet nastavený v zdrojovej lokácii. Toto je "
+"predvolená hodnota pre všetky produkty v tejto kategórii. Pokiaľ nie je "
+"nastavená na produkte, použije sa jeden z produktovej kategórie."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1815,6 +1932,11 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
+"Pri oceňovaní zásob v reálnom čase, bude náprotivok položky účtovnej knihy "
+"pre všetky prichádzajúce skladové pohyby zverejnený v tomto účte, ak "
+"neexistuje osobitný oceňovací účet nastavený v zdrojovej lokácii. Toto je "
+"predvolená hodnota pre všetky produkty v tejto kategórii. Pokiaľ nie je "
+"nastavená na produkte, použije sa jeden z produktovej kategórie."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
@@ -1823,11 +1945,14 @@ msgid ""
 "this template. The customer will receive an email for each product linked to"
 " an email template."
 msgstr ""
+"Pri overovaní faktúry bude zaslaný email zákazníkovi založený na tejto "
+"šablóne. Zákazník dostane email pre každý výrobok spojený s emailovou "
+"šablónou."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width
 msgid "Width"
-msgstr ""
+msgstr "Šírka"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -1849,18 +1974,20 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
+"Spôsob doručovania nemá presmerovanie na internetových stránkach "
+"poskytovateľa kuriéra pre sledovanie tejto objednávky."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
 msgid "Zip From"
-msgstr ""
+msgstr "PSČ od"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
 msgid "Zip To"
-msgstr ""
+msgstr "PSČ do"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr ""
+msgstr "napr. UPS Express"

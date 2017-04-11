@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * portal
-#
+# 
 # Translators:
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-11-15 12:29+0000\n"
-"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
@@ -26,24 +27,21 @@ msgid ""
 "    Dear ${object.user_id.name or ''},\n"
 "</p>\n"
 "<p>\n"
-"    You have been given access to ${user.company_id.name}'s ${object."
-"wizard_id.portal_id.name}.\n"
+"    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
 "</p>\n"
 "<p>\n"
 "    Your login account data is:\n"
 "</p>\n"
 "<ul>\n"
 "    <li>Username: ${object.user_id.login or ''}</li>\n"
-"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or "
-"''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "</ul>\n"
 "<p>\n"
 "\tYou can set or change your password via the following url:\n"
 "</p>\n"
 "<ul>\n"
-"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}"
-"</a></li>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
 "</ul>\n"
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
@@ -173,16 +171,12 @@ msgstr "Портал хэрэглэгчийн тохиргоо"
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be "
-"valid and unique.\n"
-"                        If necessary, you can fix any contact's email "
-"address directly in the list."
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
 "Доорх жагсаалтын порталь харъяалагдах холбогчдыг сонгоно уу.\n"
-"                        Холбогч бүрийн имэйл хаяг нь үл давхцах бөгөөд зөв "
-"байх ёстой.\n"
-"                        Хэрэв шаардлагатай бол жагсаалтад шууд имэйлийг "
-"засварлах боломжтой."
+"                        Холбогч бүрийн имэйл хаяг нь үл давхцах бөгөөд зөв байх ёстой.\n"
+"                        Хэрэв шаардлагатай бол жагсаалтад шууд имэйлийг засварлах боломжтой."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
@@ -200,7 +194,8 @@ msgstr "Зарим холбох хаягууд буруу эмэйлтэй ба�
 #: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr "Зарим холбох хаяг байгаа портал хэрэглэгчтэй ижил эмэйл хаягтай байна:"
+msgstr ""
+"Зарим холбох хаяг байгаа портал хэрэглэгчтэй ижил эмэйл хаягтай байна:"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
@@ -242,7 +237,8 @@ msgstr "Визард"
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:179
 #, python-format
-msgid "You must have an email address in your User Preferences to send emails."
+msgid ""
+"You must have an email address in your User Preferences to send emails."
 msgstr "Хэрэглэгчийн тохиргоо дотороо имэйл хаягтай байх ёстой."
 
 #. module: portal

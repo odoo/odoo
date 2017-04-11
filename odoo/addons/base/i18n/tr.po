@@ -9,7 +9,7 @@
 # gezgin biri <gezginbiri@hotmail.com>, 2016
 # Alper Çiftçi <inactive+alprciftci@transifex.com>, 2016
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
-# thermodynamic thermodynamic <emirhanayar2004@gmail.com>, 2016
+# Thermo Dynamic <emirhanayar2004@gmail.com>, 2016
 # alisan alacam <alisanalacam@gmail.com>, 2016
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # Azar Huseynli <azerbay1984@gmail.com>, 2016
@@ -5440,7 +5440,7 @@ msgstr "Yapılandırmasını çoğaltması yamazsınız!"
 #. module: base
 #: code:addons/base/ir/ir_model.py:549
 #, python-format
-msgid "Cannot rename field to %s, because that field already exists!"
+msgid "Cannot rename/delete fields that are still present in views:"
 msgstr ""
 
 #. module: base
@@ -7320,7 +7320,7 @@ msgstr "Dominik Cumhuriyeti - muhasebe"
 #. module: base
 #: selection:ir.actions.todo,state:0
 msgid "Done"
-msgstr "Tamamla"
+msgstr "Tamamlanmış"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -7906,6 +7906,19 @@ msgstr "Alan Türü"
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "`%(field_name)s` alanı mevcut değil"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:298
+#, python-format
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:307
+#, python-format
+msgid "Field names must be unique per model."
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields

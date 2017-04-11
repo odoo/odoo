@@ -10,7 +10,7 @@
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Kimmo Lehtonen <leban@netzionale.com>, 2016
-# Timo Koukkari <timo.koukkari@seamk.fi>, 2016
+# Timo Koukkari <ti.ko@netikka.fi>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 # Kari Lindgren <karisatu@gmail.com>, 2016
@@ -5478,8 +5478,8 @@ msgstr "Konfiguraatiota ei voi monistaa!"
 #. module: base
 #: code:addons/base/ir/ir_model.py:549
 #, python-format
-msgid "Cannot rename field to %s, because that field already exists!"
-msgstr "Ei voi muuttaa kentän nimeä %s, koska se kenttä on jo olemassa!"
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_lang.py:219
@@ -7968,6 +7968,19 @@ msgid "Field `%(field_name)s` does not exist"
 msgstr "Kenttää '%(field_name)s' ei ole olemassa"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:298
+#, python-format
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:307
+#, python-format
+msgid "Field names must be unique per model."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: model:ir.model,name:base.model_ir_model_fields
 #: model:ir.model.fields,field_description:base.field_ir_model_field_id
@@ -8899,7 +8912,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "How to define a computed field"
-msgstr ""
+msgstr "Kuinka määritellä laskettu kenttä"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey

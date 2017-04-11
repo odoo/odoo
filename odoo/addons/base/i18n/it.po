@@ -5428,8 +5428,8 @@ msgstr "Impossibile duplicare la configurazione!"
 #. module: base
 #: code:addons/base/ir/ir_model.py:549
 #, python-format
-msgid "Cannot rename field to %s, because that field already exists!"
-msgstr "Non puoi rinominare il campo in %s, perché quel campo esiste già!"
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_lang.py:219
@@ -7880,6 +7880,19 @@ msgstr "Tipo Campo"
 #: code:addons/base/ir/ir_ui_view.py:895
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:298
+#, python-format
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:307
+#, python-format
+msgid "Field names must be unique per model."
 msgstr ""
 
 #. module: base
@@ -14507,6 +14520,8 @@ msgid ""
 "The priority of the job, as an integer: 0 means higher priority, 10 means "
 "lower priority."
 msgstr ""
+"La priorità del lavoro, come numero intero: 0 significa priorità maggiore, "
+"10 inferiore."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate_rate

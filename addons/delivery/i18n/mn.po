@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * delivery
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
+# Nasan-Ochir L <nasaaskii@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-02-11 10:34+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Nasan-Ochir L <nasaaskii@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -87,13 +90,13 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers. "
-"This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
 "Захиалагчтай харилцах гэж байгаа барааны тодорхойлолт. Энэ тодорхойлолт нь "
-"борлуулалтын захиалга, хүргэх захиалга, захиалагчийн нэхэмжлэл, буцаалт бүрд "
-"хуулагдана."
+"борлуулалтын захиалга, хүргэх захиалга, захиалагчийн нэхэмжлэл, буцаалт бүрд"
+" хуулагдана."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
@@ -114,15 +117,10 @@ msgstr "Зөвхөн дотоод мэдээллийн зорилгоор хэр
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_type
 msgid ""
-"A stockable product is a product for which you manage stock. The \"Inventory"
-"\" app has to be installed.\n"
-"A consumable product, on the other hand, is a product for which stock is not "
-"managed.\n"
+"A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not managed.\n"
 "A service is a non-material product you provide.\n"
-"A digital content is a non-material product you sell online. The files "
-"attached to the products are the one that are sold on the e-commerce such as "
-"e-books, music, pictures,... The \"Digital Product\" module has to be "
-"installed."
+"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
 
 #. module: delivery
@@ -155,7 +153,7 @@ msgstr "Үнэгүй хүргэх захиалгын үнд нь компани�
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr ""
+msgstr "Архивласан"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -210,8 +208,10 @@ msgstr "Зураасан код"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_list_price
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog price."
-msgstr "Захиалагчийн үнийг тооцоолох суурь үнэ. Заримдаа каталогийн үнэ гэдэг."
+"Base price to compute the customer price. Sometimes called the catalog "
+"price."
+msgstr ""
+"Захиалагчийн үнийг тооцоолох суурь үнэ. Заримдаа каталогийн үнэ гэдэг."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -236,7 +236,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
 msgid "Can be Expensed"
-msgstr ""
+msgstr "Зарлага болгох"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
@@ -257,7 +257,8 @@ msgstr "Борлуулж болох"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
 msgid ""
-"Can be changed during the 'put in pack' to adjust the weight of the shipping."
+"Can be changed during the 'put in pack' to adjust the weight of the "
+"shipping."
 msgstr ""
 
 #. module: delivery
@@ -310,7 +311,7 @@ msgstr "Өнгөний Индекс"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_company_id
 msgid "Company"
-msgstr "Компани"
+msgstr "Байгууллага"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -340,8 +341,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
 msgid ""
-"Cost of the product template used for standard stock valuation in accounting "
-"and used as a base price on purchase orders. Expressed in the default unit "
+"Cost of the product template used for standard stock valuation in accounting"
+" and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
 msgstr ""
 
@@ -358,8 +359,8 @@ msgstr "Улс гүрнүүд"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_project_id
 msgid ""
-"Create a task under this project on sale order validation. This setting must "
-"be set for each company."
+"Create a task under this project on sale order validation. This setting must"
+" be set for each company."
 msgstr ""
 
 #. module: delivery
@@ -383,22 +384,15 @@ msgstr "Валют"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_qty_available
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its "
-"children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Барааны одоогийн тоо хэмжээ.\n"
-"Нэг хадгалах байрлалын хувьд энэ нь тухайн байрлал болон түүний дэд бүх "
-"байрлалуудад хадгалагдаж байгаа бараанууд байна.\n"
-"Нэг агуулахын хувьд энэ нь тухайн агуулахын хадгалах байрлал, дэлгүүр болон "
-"түүний дэд бүх байрлалуудад хадгалагдаж байгаа бараанууд байна.\n"
-"Бусад тохиолдолд, энэ нь 'дотоод' төрөлтэй хадгалах байрлалд хадгалагдаж "
-"байгаа бараанууд байна."
+"Нэг хадгалах байрлалын хувьд энэ нь тухайн байрлал болон түүний дэд бүх байрлалуудад хадгалагдаж байгаа бараанууд байна.\n"
+"Нэг агуулахын хувьд энэ нь тухайн агуулахын хадгалах байрлал, дэлгүүр болон түүний дэд бүх байрлалуудад хадгалагдаж байгаа бараанууд байна.\n"
+"Бусад тохиолдолд, энэ нь 'дотоод' төрөлтэй хадгалах байрлалд хадгалагдаж байгаа бараанууд байна."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
@@ -462,6 +456,11 @@ msgid "Delivery Carrier"
 msgstr ""
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Delivery Information"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order_carrier_id
 msgid "Delivery Method"
@@ -490,8 +489,8 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
 msgstr ""
-"Ямар модулиуд сууснаас хамаараад энэ нь барааны машрут тодорхойлох боломжийг "
-"олгоно: худалдан авах, үйлдвэрлэх, Захиалуулах/Нөөцлүүлэх алин болох..."
+"Ямар модулиуд сууснаас хамаараад энэ нь барааны машрут тодорхойлох боломжийг"
+" олгоно: худалдан авах, үйлдвэрлэх, Захиалуулах/Нөөцлүүлэх алин болох..."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
@@ -525,7 +524,7 @@ msgstr "Харуулах эрэмийг тодорхойлно"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Discard"
-msgstr ""
+msgstr "Хэрэгсэхгүй"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
@@ -537,15 +536,14 @@ msgstr "Дэлгэцийн Нэр"
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
 msgid "Environment"
-msgstr ""
+msgstr "Орчин"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
@@ -555,7 +553,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
 msgid "Event Registration"
-msgstr ""
+msgstr "Үйл явдлын бүртгэл"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
@@ -639,21 +637,14 @@ msgstr "Тоо хэмжээний урьдчилсан таамаг"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in "
-"this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Тоо хэмжээний урьдчилсан таамаг (Тооцоолохдоо = Гарт байгаа тоо хэмжээнээс - "
-"Гарах + Ирэх)\n"
-"Нэг хадгалах байрлалын хувьд энэ байрлал болон дэд байрлалуудад хадгалагдаж "
-"байгаа бараанууд байна.\n"
-"Нэг агуулахын хувьд агуулахын хадгалах байрлал болон дэд байрлалуудад "
-"хадгалагдаж байгаа бараанууд байна.\n"
-"Бусад тохиолдолд, 'дотоод' гэсэн төрөлтэй хадгалах байрлалд хадгалагдаж "
-"байгаа бараанууд байна."
+"Тоо хэмжээний урьдчилсан таамаг (Тооцоолохдоо = Гарт байгаа тоо хэмжээнээс - Гарах + Ирэх)\n"
+"Нэг хадгалах байрлалын хувьд энэ байрлал болон дэд байрлалуудад хадгалагдаж байгаа бараанууд байна.\n"
+"Нэг агуулахын хувьд агуулахын хадгалах байрлал болон дэд байрлалуудад хадгалагдаж байгаа бараанууд байна.\n"
+"Бусад тохиолдолд, 'дотоод' гэсэн төрөлтэй хадгалах байрлалд хадгалагдаж байгаа бараанууд байна."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -694,13 +685,18 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr ""
+msgstr "Бүлэглэх"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
 msgid "HS Code"
 msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_height
+msgid "Height"
+msgstr "Өндөр"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -717,7 +713,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread
 msgid "If checked new messages require your attention."
 msgstr ""
-"Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+"Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
+"шаардана."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
@@ -755,8 +752,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image
 msgid ""
-"Image of the product variant (Big-sized image of product template if false). "
-"It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false)."
+" It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
 "Барааны хувилбарын зураг (Хэрэв худал бол барааны үлгэрийн том хэмжээтэй "
@@ -886,7 +883,7 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_length
 msgid "Length"
-msgstr ""
+msgstr "Урт"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -911,18 +908,20 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered "
-"quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related "
-"timesheet.\n"
-"Create a task and track hours: Create a task on the sale order validation "
-"and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sale order validation and track the work hours."
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
 msgid "Manufacturing Lead Time"
 msgstr "Үйлдвэрлэлийн хүлээлт"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
+msgid "Margin"
+msgstr "Бохир ашиг"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -937,6 +936,11 @@ msgstr "Бохир ашгийн эцсийн огноо"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
+msgid "Max Weight"
 msgstr ""
 
 #. module: delivery
@@ -977,12 +981,12 @@ msgstr "Гишүүнчлэлийн эхлэх огноо"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr ""
+msgstr "Худалдан авалтын захиалгын мэссэж"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn_msg
 msgid "Message for Sales Order Line"
-msgstr ""
+msgstr "Борлуулалтын захиалгын мөрын мэдэгдэл"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -1000,6 +1004,11 @@ msgstr "Зохистой нөөцийн дүрмүүд"
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Name"
 msgstr "Нэр"
+
+#. module: delivery
+#: selection:product.packaging,package_carrier_type:0
+msgid "No carrier integration"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1065,8 +1074,7 @@ msgstr "Оператор"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_invoice_policy
 msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
-"Delivered Quantity: Invoiced based on the quantity the vendor delivered "
-"(time or deliveries)."
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
 
 #. module: delivery
@@ -1075,14 +1083,36 @@ msgid "Outgoing"
 msgstr "Гаргалт"
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Package"
+msgstr "Баглаа"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
+msgid "Package Code"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:35
+#: code:addons/delivery/models/stock_picking.py:128
+#, python-format
+msgid "Package Details"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
 msgstr "Баглаа"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_product_packaging
+msgid "Packaging"
+msgstr "Баглаа"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "Баглах Ажиллагаа"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -1097,7 +1127,7 @@ msgstr "Бодит Баглаанууд"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pos_categ_id
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "Кассын ангилал"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1150,7 +1180,7 @@ msgstr "Татан авалтын байрлал"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_id
 msgid "Product"
-msgstr ""
+msgstr "Бараа"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_alert_time
@@ -1207,14 +1237,14 @@ msgstr "Бараанууд"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_project_id
 msgid "Project"
-msgstr ""
+msgstr "Төсөл"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
-msgstr ""
+msgstr "Нийлүүлэгч"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
@@ -1229,7 +1259,7 @@ msgstr "Худалдааны Цоорхой"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Захиалгын мөр"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
@@ -1252,39 +1282,27 @@ msgstr "Гарт байгаа тоо хэмжээ"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_incoming_qty
 msgid ""
 "Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with "
-"'internal' type."
+"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
 "Ирэхээр төлөвлөгдсөн барааны тоо хэмжээ.\n"
-"Нэг хадгалах байрлалын хувьд энэ байрлал болон дэд байрлалууд руу нь ирж "
-"байгаа бараанууд байна.\n"
-"Нэг агуулахын хувьд энэ агуулханы хадгалах байрлал болон дэд байрлалууд руу "
-"нь ирж байгаа бараанууд байна.\n"
-"Бусад тохиолдолд 'дотоод' төрөл бүхий бүх хадгалах байрлал руу ирж байгаа "
-"бараанууд байна."
+"Нэг хадгалах байрлалын хувьд энэ байрлал болон дэд байрлалууд руу нь ирж байгаа бараанууд байна.\n"
+"Нэг агуулахын хувьд энэ агуулханы хадгалах байрлал болон дэд байрлалууд руу нь ирж байгаа бараанууд байна.\n"
+"Бусад тохиолдолд 'дотоод' төрөл бүхий бүх хадгалах байрлал руу ирж байгаа бараанууд байна."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
 msgid ""
 "Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this "
-"Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock "
-"Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' "
-"type."
+"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
 "Гарахаар төлөвлөгдсөн барааны тоо хэмжээ.\n"
-"Нэг хадгалах байрлалын хувьд энэ байрлал болон дэд байрлалуудаас гарах "
-"бараанууд байна.\n"
-"Нэг агуулахын хувьд энэ агуулханы хадгалах байрлал болон дэд байрлалуудаас "
-"гарах бараанууд байна.\n"
-"Бусад тохиолдолд 'дотоод' төрөл бүхий бүх хадгалах байрлалуудаас гарах "
-"бараанууд байна."
+"Нэг хадгалах байрлалын хувьд энэ байрлал болон дэд байрлалуудаас гарах бараанууд байна.\n"
+"Нэг агуулахын хувьд энэ агуулханы хадгалах байрлал болон дэд байрлалуудаас гарах бараанууд байна.\n"
+"Бусад тохиолдолд 'дотоод' төрөл бүхий бүх хадгалах байрлалуудаас гарах бараанууд байна."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
@@ -1314,7 +1332,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Бэлтгэлтийн Буцаалт"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1359,7 +1377,7 @@ msgstr "Борлуулалтын Захиалгын Мөр"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Save"
-msgstr ""
+msgstr "Хадгалах"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
@@ -1382,6 +1400,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"\"Анхааруулга\" сонголтыг сонгосноор хэрэглэгчид мессеж анхааруулагдах "
+"болно. \"Хориглох Мессеж\"-г сонгосноор алдааг өгч урсгалыг зогсоох болно. "
+"Мессеж нь дараагийн талбарт бичигдэх ёстой."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1408,8 +1429,8 @@ msgstr ""
 #: code:addons/delivery/models/stock_picking.py:147
 #, python-format
 msgid ""
-"Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: "
-"%.2f %s"
+"Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost:"
+" %.2f %s"
 msgstr ""
 
 #. module: delivery
@@ -1441,12 +1462,9 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually once a year).\n"
-"                Average Price: The cost price is recomputed at each incoming "
-"shipment and used for the product valuation.\n"
-"                Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: delivery
@@ -1495,7 +1513,8 @@ msgstr ""
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
 msgstr ""
-"Нэхэмжлэлийн үнэ ба захиалагчийн нэхэмжлэлийн тоо хэмжээний үржвэрийн нийлбэр"
+"Нэхэмжлэлийн үнэ ба захиалагчийн нэхэмжлэлийн тоо хэмжээний үржвэрийн "
+"нийлбэр"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_cost
@@ -1505,7 +1524,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_expected
 msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+"Sum of Multiplication of Sale Catalog price and quantity of Customer "
+"Invoices"
 msgstr ""
 "Каталогийн үнэ ба нийлүүлэгчийн нэхэмжлэл дахь тоо хэмжээний үржвэрийн "
 "нийлбэр"
@@ -1541,8 +1561,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid ""
-"The average delay in days between the confirmation of the customer order and "
-"the delivery of the finished products. It's the time you promise to your "
+"The average delay in days between the confirmation of the customer order and"
+" the delivery of the finished products. It's the time you promise to your "
 "customers."
 msgstr ""
 "Захиалагч батласнаас барааг хүргэж дуусах хүртэлх дундаж хүлээлт өдөрөөр. "
@@ -1575,8 +1595,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "These methods allow to automatically compute the delivery price\n"
-"                according to your settings; on the sales order (based on "
-"the\n"
+"                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 
@@ -1611,8 +1630,8 @@ msgstr "Бэлтгэлээс нэхэмжлэх тохиолдолд энэ хү
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_variant
 msgid ""
-"This field holds the image used as image for the product variant, limited to "
-"1024x1024px."
+"This field holds the image used as image for the product variant, limited to"
+" 1024x1024px."
 msgstr ""
 "Энэ талбар нь барааны хувилбарын зурагийг хадгалахад зориулагдсан, "
 "1024x1024px-р хязгаарлагдана."
@@ -1642,8 +1661,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
 msgstr ""
-"Татан авалтаас үүсэх агуулахын хөдөлгөөний гарах байрлалын анхны утгын оронд "
-"энэ байрлал хэрэглэгдэнэ."
+"Татан авалтаас үүсэх агуулахын хөдөлгөөний гарах байрлалын анхны утгын оронд"
+" энэ байрлал хэрэглэгдэнэ."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
@@ -1693,7 +1712,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr "Тээвэрлэлт"
+msgstr "Хөтлөж байна"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
+msgid "Tracking Reference"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1718,7 +1742,8 @@ msgstr "Хэмжих нэгж"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
-msgid "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
 msgstr "Хэмжих нэгж нь жинг хэмжих нэгж юм"
 
 #. module: delivery
@@ -1765,6 +1790,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
 msgid "Vendor Taxes"
 msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
+msgid "Vendors"
+msgstr "Нийлүүлэгчид"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1877,14 +1907,14 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
 msgid ""
 "When validating an invoice, an email will be sent to the customer based on "
-"this template. The customer will receive an email for each product linked to "
-"an email template."
+"this template. The customer will receive an email for each product linked to"
+" an email template."
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width
 msgid "Width"
-msgstr ""
+msgstr "Өргөн"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0

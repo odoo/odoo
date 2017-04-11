@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-03-10 13:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: procurement
@@ -33,10 +35,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are "
-"usually\n"
-"                created automatically from <i>sales orders, pull logistic "
-"rules or\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
 
@@ -58,7 +58,7 @@ msgstr "Нэг мөсөн"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Archived"
-msgstr ""
+msgstr "Архивласан"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -83,8 +83,9 @@ msgstr "Татан авалт шалгах"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but "
-"can be manually set by the procurement manager to force an unusual behavior."
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
 msgstr ""
 "Татан авалтыг шийдвэрлэхээр сонгогдсон дүрэм. Ихэнхдээ систем автоматаар "
 "сонгодог боловч зарим тохиолдолд татан авалтын менежер ялгаатай дүрмээр "
@@ -101,7 +102,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_company_id
 msgid "Company"
-msgstr "Компани"
+msgstr "Байгууллага"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -133,6 +134,11 @@ msgstr "Үүсгэгч"
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
 msgid "Created on"
 msgstr "Үүсгэсэн"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
+msgid "Delivery Type"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -479,7 +485,8 @@ msgstr "Төлөв"
 #: model:ir.model.fields,help:procurement.field_procurement_rule_name
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
-"Энэ талбарт баглааны эх үүсвэр болон үүний хөдөлгөөний нэр бөглөгдсөн байдаг."
+"Энэ талбарт баглааны эх үүсвэр болон үүний хөдөлгөөний нэр бөглөгдсөн "
+"байдаг."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -502,8 +509,7 @@ msgstr "Маш яаралтай"
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fulfill the need: "
-"purchase\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
 

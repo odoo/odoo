@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Nasan-Ochir L <nasaaskii@gmail.com>, 2017
+# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-11-15 12:15+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"POT-Creation-Date: 2017-02-03 14:29+0000\n"
+"PO-Revision-Date: 2017-02-03 14:29+0000\n"
+"Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
@@ -34,16 +37,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</"
-"span>"
+"                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</"
-"span>"
+"                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
 
 #. module: payment
@@ -90,8 +91,8 @@ msgstr ""
 msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but will not be paid. Do not "
-"hesitate to contact us if you have any questions on the status of your order."
-"</span>"
+"hesitate to contact us if you have any questions on the status of your "
+"order.</span>"
 msgstr ""
 
 #. module: payment
@@ -112,7 +113,8 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
-"<span><i>Pending</i>... The order will be validated after the payment.</span>"
+"<span><i>Pending</i>... The order will be validated after the "
+"payment.</span>"
 msgstr ""
 
 #. module: payment
@@ -165,7 +167,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Always"
-msgstr ""
+msgstr "Байнга"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
@@ -182,8 +184,8 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid ""
-"Authorize & capture the amount, confirm the SO and auto-validate the invoice "
-"on acquirer confirmation"
+"Authorize & capture the amount, confirm the SO and auto-validate the invoice"
+" on acquirer confirmation"
 msgstr ""
 
 #. module: payment
@@ -239,12 +241,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_payment_method_id_code
 msgid "Code"
-msgstr ""
+msgstr "Код"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
-msgstr "Компани"
+msgstr "Байгууллага"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -254,7 +256,7 @@ msgstr "Тохиргоо"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Configure"
-msgstr ""
+msgstr "Тохируулга"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
@@ -313,7 +315,7 @@ msgstr "Валют"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_custom
 msgid "Custom"
-msgstr ""
+msgstr "Өөриймшүүлсэн"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -323,7 +325,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
 msgid "Description"
-msgstr ""
+msgstr "Тодорхойлолт"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_save_token
@@ -366,6 +368,11 @@ msgstr "Ноорог"
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
 msgstr "Э-мэйл"
+
+#. module: payment
+#: model:account.payment.method,name:payment.account_payment_method_electronic_in
+msgid "Electronic"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -465,7 +472,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Install"
-msgstr ""
+msgstr "Суулгах"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
@@ -592,7 +599,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Never"
-msgstr ""
+msgstr "Хэзээч үгүй"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
@@ -798,9 +805,9 @@ msgstr "Жижиг-хэмжээт зураг"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px"
+" image, with aspect ratio preserved. Use this field anywhere a small image "
+"is required."
 msgstr ""
 
 #. module: payment
@@ -850,8 +857,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with "
-"the following evaluation context:"
+"                                            It is be rendered with qWeb with the following evaluation context:"
 msgstr ""
 
 #. module: payment
@@ -918,15 +924,15 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
-"You will be redirected to the Buckaroo website after clicking on the payment "
-"button."
+"You will be redirected to the Buckaroo website after clicking on the payment"
+" button."
 msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
 msgid ""
-"You will be redirected to the Ingenico website after clicking on the payment "
-"button."
+"You will be redirected to the Ingenico website after clicking on the payment"
+" button."
 msgstr ""
 
 #. module: payment

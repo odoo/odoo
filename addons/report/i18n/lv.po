@@ -2,12 +2,15 @@
 # This file contains the translation of the following modules:
 # * report
 # 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -164,24 +167,24 @@ msgstr ""
 #. module: report
 #: model:ir.model,name:report.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Uzņēmumi"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_create_uid
 #: model:ir.model.fields,field_description:report.field_report_paperformat_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Izveidoja"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_create_date
 #: model:ir.model.fields,field_description:report.field_report_paperformat_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Izveidots"
 
 #. module: report
 #: selection:report.paperformat,format:0
 msgid "Custom"
-msgstr ""
+msgstr "Pielāgots"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -198,7 +201,7 @@ msgstr ""
 #: code:addons/report/static/src/xml/report.xml:12
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Atmest"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
@@ -218,7 +221,7 @@ msgstr ""
 #: code:addons/report/static/src/xml/report.xml:8
 #, python-format
 msgid "Edit"
-msgstr ""
+msgstr "Labot"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
@@ -259,7 +262,7 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Fax:"
-msgstr ""
+msgstr "Fakss:"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -269,7 +272,7 @@ msgstr ""
 #. module: report
 #: model:ir.model,name:report.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP maršrutēšana"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
@@ -282,7 +285,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: report
 #: selection:report.paperformat,orientation:0
@@ -301,13 +304,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:report.field_report_paperformat_write_uid
 #: model:ir.model.fields,field_description:report.field_report_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Pēdējo reizi atjaunoja"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_write_date
 #: model:ir.model.fields,field_description:report.field_report_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Pēdējās izmaiņas"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -332,7 +335,7 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_name
 msgid "Name"
-msgstr ""
+msgstr "Nosaukums"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_orientation
@@ -418,7 +421,7 @@ msgstr ""
 #: code:addons/report/static/src/xml/report.xml:5
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "Drukāt"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
@@ -436,14 +439,14 @@ msgstr ""
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
-msgstr ""
+msgstr "Atskaite"
 
 #. module: report
 #: model:ir.actions.act_window,name:report.reports_action
 #: model:ir.ui.menu,name:report.reporting_menuitem
 #: model:ir.ui.menu,name:report.reports_menuitem
 msgid "Reports"
-msgstr ""
+msgstr "Atskaites"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_right
@@ -455,7 +458,7 @@ msgstr ""
 #: code:addons/report/static/src/xml/report.xml:11
 #, python-format
 msgid "Save"
-msgstr ""
+msgstr "Saglabāt"
 
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_format
@@ -529,6 +532,14 @@ msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr ""
 
 #. module: report
+#: code:addons/report/models/report.py:450
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#. module: report
 #. openerp-web
 #: code:addons/report/static/src/js/qwebactionmanager.js:19
 #, python-format
@@ -551,7 +562,7 @@ msgstr ""
 #. module: report
 #: model:ir.model,name:report.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: report
 #. openerp-web

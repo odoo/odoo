@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # * base_vat
 # 
+# Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,7 +22,7 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Spoločnosti"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
@@ -26,11 +30,14 @@ msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr ""
+"Ak zaškrtnuté, DPH číslo partnera bude plne porovnané s EÚ službou VIES "
+"namiesto prostredníctvom jednoduchého overovacieho formátu (kontrolný "
+"súčet)."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:131
@@ -39,6 +46,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"DPH číslo [%s] pre partnera [%s] sa zdá byť neplatné.\n"
+"Poznámka: očakávaný formát je %s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:130
@@ -47,13 +56,15 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"DPH číslo [%s] pre partnera [%s] buďto neprešlo VIES DPH overovaciou "
+"kontrolou, alebo nebolo v očakávanom formáte %s."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 msgid "VIES VAT Check"
-msgstr ""
+msgstr "VIES DPH kontrola"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
-msgstr ""
+msgstr "napr. BE0477472701"

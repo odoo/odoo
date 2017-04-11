@@ -6,15 +6,15 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
 # xlu <xlu@seznam.cz>, 2016
+# Chris <krystof.reklamy13@gmail.com>, 2016
 # Ladislav Tomm <tomm@helemik.cz>, 2016
-# Chris <krystof.reklamy13@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Chris <krystof.reklamy13@gmail.com>, 2017\n"
+"Last-Translator: Ladislav Tomm <tomm@helemik.cz>, 2016\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +106,7 @@ msgstr "Datum od"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date To"
-msgstr ""
+msgstr "Datum do"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
@@ -215,18 +215,18 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
 msgid "My Current Timesheet"
-msgstr "Můj současný časový rozvrh"
+msgstr "Můj současný výkaz"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timesheet_sheet
 msgid "My Timesheet"
-msgstr "Mé časové rozvrhy"
+msgstr "Můj výkaz"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
 msgid "My Timesheets"
-msgstr ""
+msgstr "Mé výkazy"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -236,7 +236,7 @@ msgstr "Nové"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 msgid "New timesheet to approve."
-msgstr ""
+msgstr "Nový výkaz ke schválení."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
@@ -259,19 +259,19 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Open"
-msgstr "Otevřít"
+msgstr "Otevřený"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:26
 #, python-format
 msgid "Open Timesheet"
-msgstr "Otevři časový rozvrh"
+msgstr "Otevři výkaz"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_project_config_settings_timesheet_range
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_res_company_timesheet_range
 msgid "Periodicity on which you validate your timesheets."
-msgstr "Četnost kontrol platnosti časových rozvrhů."
+msgstr "Četnost kontrol platnosti výkazů."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_name
@@ -296,7 +296,7 @@ msgstr "Hledat účet"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Search Timesheet"
-msgstr "Prohledej časové rozvrhy"
+msgstr "Prohledej výkazy"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -329,7 +329,7 @@ msgstr "Shrnutí"
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
-msgstr "Časový rozvrh"
+msgstr "Výkaz"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -339,7 +339,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Period"
-msgstr ""
+msgstr "Období výkazu"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
@@ -360,7 +360,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_timesheet_ids
 msgid "Timesheet lines"
-msgstr "Linky časového rozvrhu"
+msgstr "Řádky výkazu"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_range
@@ -385,7 +385,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Timesheets"
-msgstr "Časové rozvrhy"
+msgstr "Výkazy"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_approved
@@ -464,7 +464,7 @@ msgstr "Týden"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:146
 #, python-format
 msgid "Week "
-msgstr "Týden"
+msgstr "Týden "
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:154
@@ -518,7 +518,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "to"
-msgstr "pro"
+msgstr "do"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_confirmed

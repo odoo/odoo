@@ -1,21 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_equipment
-#
+# * maintenance
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Erdenebold Ts <erdenebold10@gmail.com>, 2017
+# Nasan-Ochir L <nasaaskii@gmail.com>, 2017
+# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2015-12-23 08:27+0000\n"
-"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: maintenance
@@ -46,12 +50,12 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>Reports</span>"
-msgstr ""
+msgstr "<span>Тайлангууд</span>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>View</span>"
-msgstr ""
+msgstr "<span>Харах</span>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_defaults
@@ -59,7 +63,7 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Python dictionary бөгөөд өөр нэрт шинэ бичлэг үүсгэхэд анхны утгыг олгохоор "
+"Python dictionary бөгөөд шинэ бичлэг үүсгэхэд анхны утгыг олгохоор "
 "тооцоологддог."
 
 #. module: maintenance
@@ -101,7 +105,7 @@ msgstr "Давхар нэрлэгдсэн модель"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "All"
-msgstr ""
+msgstr "Бүх"
 
 #. module: maintenance
 #: sql_constraint:maintenance.equipment:0
@@ -111,12 +115,12 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_archive
 msgid "Archive"
-msgstr ""
+msgstr "Хадгалах газар"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Archived"
-msgstr ""
+msgstr "Архивласан"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
@@ -212,7 +216,7 @@ msgstr "Хаах огноо"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_color
 msgid "Color"
-msgstr ""
+msgstr "Өнгө"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_color
@@ -239,7 +243,7 @@ msgstr "Тохиргоо"
 #. module: maintenance
 #: selection:maintenance.request,maintenance_type:0
 msgid "Corrective"
-msgstr ""
+msgstr "Засвар"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_cost
@@ -278,7 +282,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Хяналтын самбар"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_next_action_date
@@ -320,17 +324,17 @@ msgstr "Дэлгэцийн Нэр"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Done"
-msgstr ""
+msgstr "Дууссан"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_duration
 msgid "Duration"
-msgstr ""
+msgstr "Үргэлжлэх хугацаа"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_duration
 msgid "Duration in minutes and seconds."
-msgstr ""
+msgstr "Үргэлжлэх хугацаа минут ба секундээр"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -450,8 +454,8 @@ msgstr "ID"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task "
-"creation alias)"
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
 msgstr ""
 "Хуурмаг нэрийг агуулж байгаа эх бичлэгийн ID (Ж: даалгавар үүсгэсэн хуурмаг "
 "нэрийг агуулж байгаа төсөл)"
@@ -635,7 +639,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "Дэлгэрэнгүй <i class=\"fa fa-caret-down\"/>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -714,8 +718,8 @@ msgstr "Эцэг салбар бичлэгийн ID"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not "
-"necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Өөр хуурмаг нэрийг хадгалагч модель.  Хуурмаг нэрийн сурвалж хадгалагч "
@@ -728,9 +732,18 @@ msgid "Phones"
 msgstr ""
 
 #. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+
+#. module: maintenance
 #: selection:maintenance.request,maintenance_type:0
 msgid "Preventive"
-msgstr ""
+msgstr "Урьдчилан сануулах"
 
 #. module: maintenance
 #: code:addons/maintenance/models/maintenance.py:210
@@ -781,7 +794,7 @@ msgstr "Засагдсан"
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports
 msgid "Reporting"
-msgstr ""
+msgstr "Тайлан"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -830,12 +843,12 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Scheduled"
-msgstr ""
+msgstr "Төлөвлөгдсөн"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_schedule_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Товлогдсон огноо"
 
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_4
@@ -918,7 +931,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_maintenance_team_id
 msgid "Team"
-msgstr ""
+msgstr "Баг"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_team_action_settings
@@ -938,9 +951,9 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
-"email that does not reply to an existing record will cause the creation of a "
-"new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
 msgstr ""
 "Хуурмаг нэрийн харгалзах модель (Odoo-н баримтын төрөл). Байгаа ямар нэг "
 "бичлэг рүү хариулж байгаа биш бүх эмэйл энэ моделийн шин бичлэгийг үүсгэнэ "
@@ -977,10 +990,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment "
-"to\n"
-"                an employee or departement. You will manage allocations, "
-"issues\n"
+"                Create some laptop, printer or phone and link each equipment to\n"
+"                an employee or departement. You will manage allocations, issues\n"
 "                and maintenance of equipment."
 msgstr ""
 
@@ -988,21 +999,19 @@ msgstr ""
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment "
-"to an employee or departement.\n"
-"                You will manage allocations, issues and maintenance of "
-"equipment."
+"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
+"                You will manage allocations, issues and maintenance of equipment."
 msgstr ""
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "To Do"
-msgstr ""
+msgstr "Хийх"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "To do"
-msgstr ""
+msgstr "Хийх ажил"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count
@@ -1087,14 +1096,14 @@ msgstr "Баталгаа"
 #: code:addons/maintenance/models/maintenance.py:75
 #, python-format
 msgid ""
-"You cannot delete an equipment category containing equipments or maintenance "
-"requests."
+"You cannot delete an equipment category containing equipments or maintenance"
+" requests."
 msgstr ""
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "days"
-msgstr ""
+msgstr "өдөр"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1105,7 +1114,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "hours"
-msgstr ""
+msgstr "цаг"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_graph

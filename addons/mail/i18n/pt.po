@@ -5,8 +5,8 @@
 # Translators:
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Ricardo Correia <rcorreiavv@gmail.com>, 2016
 # Manuela Silva <manuela.silva@sky.com>, 2016
+# Ricardo Correia <rcorreiavv@gmail.com>, 2016
 # Vitor Fernandes <vmlf01@gmail.com>, 2016
 # José Gomes <jg@opencloud.pro>, 2016
 # Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
@@ -233,7 +233,7 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr ""
-"<div><p>Olá,</p><p>%s convidou-o a seguir um novo documento.</p></div>"
+"<div><p>Olá,</p><p>%s convidou-o para seguir um novo documento.</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -276,9 +276,9 @@ msgid ""
 "                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"<strong>Envio de email em massa</strong> nos\n"
-"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">registos selecionados</span>\n"
-"<span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">filtro de pesquisa atual</span>.\n"
+"<strong>Envio de e-mail em volume</strong> nos\n"
+"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">os registos selecionados</span>\n"
+"<span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">o filtro de procura atual</span>.\n"
 "</span>\n"
 "<span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Seguidores do documento e</span>"
 
@@ -469,7 +469,7 @@ msgstr "Adicione um canal"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add channels to notify..."
-msgstr "Adicionar canais para notificar"
+msgstr "Adicionar canais para notificar..."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -814,12 +814,12 @@ msgstr "Parceiro/Canais"
 #: model:ir.actions.client,name:mail.mail_channel_action_client_chat
 #, python-format
 msgid "Chat"
-msgstr "Chat"
+msgstr "Conversar"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr "Discussão do Chat"
+msgstr "Discussão da Conversação"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -949,14 +949,14 @@ msgstr "Estado de Conversa Dobrado"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
 msgid "Conversation is minimized"
-msgstr ""
+msgstr "A conversa está minimizada"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:14
 #, python-format
 msgid "Conversations"
-msgstr ""
+msgstr "Conversações"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_message_bounce
@@ -992,7 +992,7 @@ msgstr "Data de Criação"
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_create_uid
 msgid "Created by"
-msgstr "Criada por"
+msgstr "Criado por"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_date
@@ -1105,25 +1105,25 @@ msgstr "Data da última mensagem publicada no registo"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr ""
+msgstr "Caro"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_default
 msgid "Default"
-msgstr "Por omissão"
+msgstr "Predefinição"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_null_value
 #: model:ir.model.fields,field_description:mail.field_mail_template_null_value
 msgid "Default Value"
-msgstr "Valor por Omissão"
+msgstr "Valor Predefinido"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_defaults
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_defaults
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_defaults
 msgid "Default Values"
-msgstr "Valores predefinidos"
+msgstr "Valores Predefinidos"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_use_default_to
@@ -1147,7 +1147,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete Emails"
-msgstr ""
+msgstr "Eliminar Mensagens"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
@@ -2412,7 +2412,7 @@ msgstr "Ouvintes"
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
-msgstr "Conversa de Chat ao Vivo"
+msgstr "Conversa da Conversação Live"
 
 #. module: mail
 #. openerp-web
@@ -2466,7 +2466,7 @@ msgstr "Entrega de Mensagem Falhada"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr "Valor de Rastreamento do Email"
+msgstr "Valor de Monitorização do Correio"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
@@ -2555,7 +2555,7 @@ msgstr "ID Mensagem"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
 msgid "Message Notifications"
-msgstr ""
+msgstr "Notificações de Mensagem"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_record_name
@@ -3254,7 +3254,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:48
 #, python-format
 msgid "Open chat"
-msgstr "Conversa aberta"
+msgstr "Conversação aberta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
@@ -3485,7 +3485,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Please, wait while the file is uploading."
-msgstr "Por favor, aguarde enquanto o arquivo está sendo carregado."
+msgstr "Por favor, aguarde, enquanto o ficheiro está a ser enviado."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_contact
@@ -4235,19 +4235,19 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Tracking"
-msgstr "Rastrear"
+msgstr "Monitorizar"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_tree
 msgid "Tracking Value"
-msgstr "Valor de Rastreamento"
+msgstr "Valor de Monitorização"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr "Valores de Rastreamento"
+msgstr "Valores de Monitorização"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_tracking_value_ids
@@ -4255,7 +4255,7 @@ msgstr "Valores de Rastreamento"
 #: model:ir.model.fields,field_description:mail.field_mail_message_tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_tracking_value_ids
 msgid "Tracking values"
-msgstr "Valores de Rastreamento"
+msgstr "Valores de monitorização"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_message_type
@@ -4465,14 +4465,14 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:186
 #, python-format
 msgid "Uploading"
-msgstr "Uploading"
+msgstr "A Enviar"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Uploading error"
-msgstr "Erro de carregamento"
+msgstr "Erro de envio"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_use_active_domain

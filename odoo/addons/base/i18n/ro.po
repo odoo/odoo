@@ -3141,8 +3141,8 @@ msgstr ""
 "Acest modul adauga 'Marja' la comanda de vânzare.\n"
 "=============================================\n"
 "\n"
-"Astfel se obtine profitabilitatea calculand diferenta dintre Pretul\n"
-"Unitar si Pretul de Cost.\n"
+"Astfel se obține profitabilitatea calculând diferența dintre Prețul\n"
+"Unitar și Prețul de Cost.\n"
 "    "
 
 #. module: base
@@ -4710,7 +4710,7 @@ msgstr "Activ(a)"
 #: model:ir.model.fields,field_description:base.field_wkf_activities
 #: model:ir.ui.menu,name:base.menu_workflow_activity
 msgid "Activities"
-msgstr "Activitati"
+msgstr "Activități"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_act_id
@@ -5086,22 +5086,22 @@ msgstr "Aplică actualizările planificate"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_create
 msgid "Apply for Create"
-msgstr "Aplică pentru creare"
+msgstr "Aplicată la creare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_unlink
 msgid "Apply for Delete"
-msgstr "Aplică pentru ștergere"
+msgstr "Aplicată la ștergere"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_read
 msgid "Apply for Read"
-msgstr "Se aplică pentru citire"
+msgstr "Aplicată la citire"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_write
 msgid "Apply for Write"
-msgstr "Aplicați pentru scriere"
+msgstr "Aplicată la scriere"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_appraisal
@@ -5814,8 +5814,8 @@ msgstr "Configurația nu poate fi copiată!"
 #. module: base
 #: code:addons/base/ir/ir_model.py:549
 #, python-format
-msgid "Cannot rename field to %s, because that field already exists!"
-msgstr "Câmpul nu se poate redenumi %s, deoarece deja exista!"
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_lang.py:219
@@ -8285,6 +8285,19 @@ msgid "Field `%(field_name)s` does not exist"
 msgstr "Câmpul `%(field_name)s` nu există"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:298
+#, python-format
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:307
+#, python-format
+msgid "Field names must be unique per model."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: model:ir.model,name:base.model_ir_model_fields
 #: model:ir.model.fields,field_description:base.field_ir_model_field_id
@@ -8755,7 +8768,7 @@ msgstr ""
 "Regulile globale (nespecifice unui grup) sunt restrictii si nu pot fi "
 "evitate. Regulile grupului local ofera permisiuni suplimentare, dar sunt "
 "constranse in limitele celor globale. Regulile primului grup limiteaza mai "
-"mult decat regulile globale, dar orice regula suplimentara a grupului va "
+"mult decât regulile globale, dar orice regula suplimentara a grupului va "
 "adauga mai multe permisiuni"
 
 #. module: base
@@ -10880,7 +10893,7 @@ msgstr "Producător"
 #: model:ir.module.category,name:base.module_category_manufacturing
 #: model:ir.module.module,shortdesc:base.module_mrp
 msgid "Manufacturing"
-msgstr "Fabricație"
+msgstr " Producție"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
@@ -11429,7 +11442,7 @@ msgstr "My Document(s)"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "My Partners"
-msgstr "My Partners"
+msgstr "Partenerii mei"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -11806,6 +11819,8 @@ msgid ""
 "                a customer: discussions, history of business opportunities,\n"
 "                documents, etc."
 msgstr ""
+"Odoo vă ajută să urmăriți cu ușurință toate activitățile legate de un "
+"client: discuții, istorie de oportunități de afaceri, documente, etc."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -11814,6 +11829,8 @@ msgid ""
 "                a supplier: discussions, history of purchases,\n"
 "                documents, etc."
 msgstr ""
+"Odoo vă ajută să urmăriți cu ușurință toate activitățile legate de un "
+"furnizor: discuții, istorie de achiziții, documente, etc."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_padding
@@ -13267,7 +13284,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_multi
 msgid "Restrict to lists"
-msgstr ""
+msgstr "Utilizat doar în liste"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
@@ -14968,9 +14985,9 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"Operatiunea solicitata nu poate fi finalizata din cauza restrictiilor de securitate. Va rugam sa contactati administratorul de sistem.\n"
+"Operațiunea solicitată nu poate fi finalizată din cauza restricțiilor de securitate. Vă rugam să contactați administratorul de sistem.\n"
 "\n"
-"(Tip de document: %s, Operatiune: %s)"
+"(Tip de document: %s, Operațiune: %s)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_language_install
@@ -16080,7 +16097,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_mode
 msgid "View mode"
-msgstr ""
+msgstr "Mod Vizualizare"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_view_type

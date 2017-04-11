@@ -9,13 +9,14 @@
 # Bole <bole@dajmi5.com>, 2016
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2016
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016
+# Tina Milas <tina@uvid.hr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016\n"
+"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,7 +148,7 @@ msgstr "Automatski generirano"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_8
 msgid "Ball Joint Replacement"
-msgstr ""
+msgstr "Zamjena kuglastog zgloba"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_9
@@ -197,7 +198,7 @@ msgstr "CO2 emisija vozila"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
 msgid "Calculation Benefit In Kind"
-msgstr ""
+msgstr "Obračun primitka u naravi"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_14
@@ -245,7 +246,7 @@ msgstr "Odaberite da li je ugovor još uvijek valjan ili ne"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type_category
 msgid "Choose wheter the service refer to contracts, vehicle services or both"
-msgstr ""
+msgstr "Odaberite odnosi li se usluga na ugovore, usluge vozila ili oboje"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
@@ -265,42 +266,42 @@ msgstr "Kliknite za stvaranje novog troška."
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
 msgid "Click to create a new fuel log."
-msgstr ""
+msgstr "Kliknite za kreiranje nove evidencije potrošnje goriva."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
 msgid "Click to create a new make."
-msgstr ""
+msgstr "Kliknite za kreiranje nove marke."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "Click to create a new model."
-msgstr ""
+msgstr "Kliknite za kreiranje novog modela."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "Click to create a new odometer log."
-msgstr ""
+msgstr "Kliknite za kreiranje nove evidencije kilometraže."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid "Click to create a new service entry."
-msgstr ""
+msgstr "Kliknite za kreiranje novog unosa usluge."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Click to create a new type of service."
-msgstr ""
+msgstr "Kliknite za kreiranje novog tipa usluge."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Click to create a new vehicle."
-msgstr ""
+msgstr "Kliknite za kreiranje novog vozila."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
 msgid "Click to create a vehicle status."
-msgstr ""
+msgstr "Kliknite za kreiranje statusa vozila."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_color
@@ -384,7 +385,7 @@ msgstr "Evidencija ugovora"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_purchaser_id
 msgid "Contractor"
-msgstr ""
+msgstr "Ugovaratelj"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_count
@@ -423,7 +424,7 @@ msgstr "Trošak vezan uz vozilo"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cost that is paid only once at the creation of the contract"
-msgstr ""
+msgstr "Trošak koji je plaćen samo jednom pri kreiranju ugovora"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_subtype_id
@@ -431,7 +432,7 @@ msgstr ""
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_cost_subtype_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_cost_subtype_id
 msgid "Cost type purchased with this cost"
-msgstr ""
+msgstr "Tip troška dobiven ovim troškom"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_count
@@ -456,6 +457,9 @@ msgid ""
 "Costs paid at regular intervals, depending on the cost frequency.If the cost"
 " frequency is set to unique, the cost will be logged at the start date"
 msgstr ""
+"Trošak koji se plaća u redovitim intervalima ovisno o frekvenciji troška. "
+"Ako je frekvencija troška postavljena na jedinstveno, trošak se vodi od "
+"početnog datuma"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -543,7 +547,7 @@ msgstr "Datum nabave vozila"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_2
 msgid "Depreciation and Interests"
-msgstr ""
+msgstr "Deprecijacija i kamate"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -597,11 +601,15 @@ msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "                (reparation, insurances, periodic maintenance)."
 msgstr ""
+"Svaki ugovor (npr. leasing) može uključivati nekoliko usluga\n"
+"(Popravak, osiguranja, periodično održavanje)."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Each service can used in contracts, as a standalone service or both."
 msgstr ""
+"Svaka usluga može biti korištena u ugovorima kao samostalna usluga ili "
+"oboje."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
@@ -647,7 +655,7 @@ msgstr "Zamjena remena na motoru"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Entry into service tax"
-msgstr ""
+msgstr "Unos u porez na uslugu"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
@@ -735,7 +743,7 @@ msgstr "Generirani troškovi"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Generated Recurring Costs"
-msgstr ""
+msgstr "Generirani ponavljajući troškovi"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
@@ -754,7 +762,7 @@ msgstr "Ima alarm"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_overdue
 msgid "Has Contracts Overdue"
-msgstr ""
+msgstr "Ima neizvršene ugovore"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_due_soon
@@ -784,7 +792,7 @@ msgstr "Zamjena grijača"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_28
 msgid "Heater Hose Replacement"
-msgstr ""
+msgstr "Zamjena crijeva grijača"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
@@ -793,6 +801,9 @@ msgid ""
 "                also filter logs of a particular vehicle using the search\n"
 "                field."
 msgstr ""
+"Ovdje možete dodavati troškove goriva za sva vozila. Također\n"
+"možete filtrirati evidencije određenog vozila korištenjem\n"
+"polja za pretraživanje."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
@@ -801,6 +812,9 @@ msgid ""
 "                You can also show odometer value for a particular vehicle using\n"
 "                the search field."
 msgstr ""
+"Ovdje možete dodavati kilometražu za sva vozila.\n"
+"Također možete prikazati kilometražu određenog vozila korištenjem\n"
+"polja za pretraživanje."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower
@@ -856,7 +870,7 @@ msgstr "Uključene usluge"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Indicative Cost"
-msgstr ""
+msgstr "Indikativni trošak"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_indicative_costs
@@ -867,13 +881,13 @@ msgstr "Indikativni troškovi"
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_costs_reporting_non_effective_action
 msgid "Indicative Costs Analysis"
-msgstr ""
+msgstr "Analiza indikativnih troškova"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_sum_cost
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Indicative Costs Total"
-msgstr ""
+msgstr "Ukupni indikativni troškovi"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle
@@ -970,7 +984,7 @@ msgstr "Registarska oznaka"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_license_plate
 msgid "License plate number of the vehicle (i = plate number for a car)"
-msgstr ""
+msgstr "Registarska oznaka vozila"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_liter
@@ -1011,12 +1025,12 @@ msgstr "Logo (mali)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_name
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Make"
-msgstr ""
+msgstr "Marka"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_id
 msgid "Make of the vehicle"
-msgstr ""
+msgstr "Marka vozila"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -1025,11 +1039,14 @@ msgid ""
 "                their related services, costs. Odoo will automatically warn\n"
 "                you when some contracts have to be renewed."
 msgstr ""
+"Upravljajte svim svojim ugovorima (leasing, osiguranja itd.) s\n"
+"njihovim povezanim uslugama, troškovima. Odoo će Vas automatski\n"
+"upozoriti kada budete trebali obnoviti ugovore."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
 msgid "Management Fee"
-msgstr ""
+msgstr "Naknada za upravljanje"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_manager
@@ -1055,6 +1072,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"Srednja slika marke vozila. Veličina je automatski promijenjena na 128x128px"
+" sa zadržanim proporcijama. Koristite ovo polje u obliku pogleda ili nekom "
+"kanban pogledu."
 
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
@@ -1072,13 +1092,13 @@ msgstr "Model"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_tree
 msgid "Model Make"
-msgstr ""
+msgstr "Model marke"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
 msgid "Model make of Vehicle"
-msgstr ""
+msgstr "Model marke vozila"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_name
@@ -1188,7 +1208,7 @@ msgstr "Dnevnici kilometraže"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit
 msgid "Odometer Unit"
-msgstr ""
+msgstr "Jedinica mjerača prijeđenih kilometara"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer
@@ -1202,7 +1222,7 @@ msgstr "Stanje kilometraže"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_graph
 msgid "Odometer Values Per Vehicle"
-msgstr ""
+msgstr "Stanje kilometraže po vozilu"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1234,6 +1254,9 @@ msgid ""
 "                on your vehicle. Services can be of many type: occasional\n"
 "                repair, fixed maintenance, etc."
 msgstr ""
+"Odoo Vam pomaže pratiti sve usluge odrađene\n"
+"na Vašem vozilu. Usluge mogu biti različitog tipa: povremeni\n"
+"popravak, standardno održavanje itd."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
@@ -1242,6 +1265,9 @@ msgid ""
 "                vehicles. Costs are created automatically from services,\n"
 "                contracts (fixed or recurring) and fuel logs."
 msgstr ""
+"Odoo Vam pomaže upravljati troškovima Vaših\n"
+"vozila. Troškovi se kreiraju automatski iz usluga,\n"
+"ugovora (fiksnih ili ponavljajućih) i evidencije potrošnje goriva."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1250,6 +1276,8 @@ msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
 "          Costs are generally created from services and contract and appears here."
 msgstr ""
+"Odoo Vam pomaže upravljati troškovima Vaših vozila\n"
+"Troškovi se obično kreiraju iz usluga i ugovora i pojavljuju se ovdje."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
@@ -1257,6 +1285,8 @@ msgid ""
 "Odoo will warn you when services or contract have to be\n"
 "                renewed."
 msgstr ""
+"Odoo će Vas upozoriti kada bude vrijeme za usluge ili obnavljanje\n"
+"ugovora."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1271,7 +1301,7 @@ msgstr "Zamjena uljne pumpe"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_omnium
 msgid "Omnium"
-msgstr ""
+msgstr "Omnium"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_16
@@ -1415,12 +1445,12 @@ msgstr "Izvještaji"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
 msgid "Residual value (Excluding VAT)"
-msgstr ""
+msgstr "Ostatak vrijednosti (bez poreza)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_19
 msgid "Residual value in %"
-msgstr ""
+msgstr "Ostatak vrijednosti u %"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_38
@@ -1485,7 +1515,7 @@ msgstr "Mjesečni troškovi održavanja"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Services Details"
-msgstr ""
+msgstr "Detalji usluge"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services
@@ -1519,6 +1549,8 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Mala slika marke vozila. Automatski je promijenjena veličina na 64x64px sa "
+"zadržanim proporcijama. Koristite ovo polje gdje god je potrebna mala slika."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -1577,7 +1609,7 @@ msgstr "Oznake"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_3
 msgid "Tax roll"
-msgstr ""
+msgstr "Porezni razrez"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1602,6 +1634,8 @@ msgid ""
 "Thanks to the different filters, Odoo can only print the effective\n"
 "          costs, sort them by type and by vehicle."
 msgstr ""
+"Zahvaljujući različitim filterima, Odoo može ispisati samo stvarne\n"
+"troškove, sortirati ih po tipu i vozilu."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
@@ -1769,7 +1803,7 @@ msgstr "Troškovi vozila"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Vehicle Costs by Month"
-msgstr ""
+msgstr "Troškovi vozila po mjesecu"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
@@ -1854,7 +1888,7 @@ msgstr "Troškovi vozila"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 msgid "Vehicles odometers"
-msgstr ""
+msgstr "Kilometar satovi vozila"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_insurer_id
@@ -1902,22 +1936,22 @@ msgstr "Zamjena brisača"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Write here all other information relative to this contract"
-msgstr ""
+msgstr "Ovdje upišite sve ostale informacije vezane za ovaj ugovor"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_notes
 msgid "Write here all supplementary information relative to this contract"
-msgstr ""
+msgstr "Ovdje upišite sve dodatne informacije vezane za ovaj ugovor"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 msgid "Write here any other information"
-msgstr ""
+msgstr "Ovdje upišite ostale informacije"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Write here any other information related to the service completed."
-msgstr ""
+msgstr "Ovdje upišite ostale informacije povezane s izvršenim uslugama"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
@@ -1935,11 +1969,13 @@ msgid ""
 "You can customize available status to track the evolution of\n"
 "                each vehicle. Example: Active, Being Repaired, Sold."
 msgstr ""
+"Možete prilagoditi statuse dostupnosti kako biste pratili razvoj\n"
+"svakog vozila. Naprimjer: aktivan, na popravku, prodan."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
-msgstr ""
+msgstr "Možete definirati više modela (npr. A3, A4) za svaku marku (Audi)."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
@@ -1948,6 +1984,9 @@ msgid ""
 "                contracts, services, fixed and recurring costs, odometers and\n"
 "                fuel logs associated to each vehicle."
 msgstr ""
+"Moći ćete upravljati svojim voznim parkom praćenjem\n"
+"ugovora, usluga, fiksnih i ponavljajućih troškova, kilometraže i\n"
+"evidencije potrošnje goriva za svako vozilo."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form

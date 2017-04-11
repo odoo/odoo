@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # * account_test
 # 
+# Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,33 +26,36 @@ msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
 msgstr ""
+"<br/>\n"
+"<strong>Popis:</strong>"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
-msgstr ""
+msgstr "<strong>Názov:</strong>"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr ""
+msgstr "Účtovnícke testy"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr ""
+msgstr "Účtovné testy na"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
 msgid "Active"
-msgstr ""
+msgstr "Aktívny"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
+"Zaškrtnite ak sú riadky pohybov vyrovnané a majú rovnaký dátum a obdobie"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -55,11 +63,13 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
 msgstr ""
+"Skontrolujte na bankovom výpise či Konečný zostatok = Počiatočný zostatok + "
+"súčet riadkov výpisu"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr ""
+msgstr "Skontrolujte či zaplatené/zladené faktúry nie v stave 'Otvorené'"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -67,6 +77,8 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
+"Skontrolujte či zladené účtovné pohyby, ktoré definujú účty Záväzkov a "
+"Pohľadávok, patria k rovnakým zladeným výpisom"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -74,21 +86,23 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
 msgstr ""
+"Skontrolujte či zladená faktúra pre Predaje/Nákupy má zladene vstupy pre "
+"účty Záväzkov a Pohľadávok"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "Skontrolujte zostatok: súčet debetu = súčet kreditu"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Click to create Accounting Test."
-msgstr ""
+msgstr "Kliknite pre vytvorenie Účtovného testu."
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
-msgstr ""
+msgstr "Kódová pomoc"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -114,129 +128,149 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
+"Kód by mal vždy nastaviť premennú pomenovanú 'výsledok' s výsledkom vášho testu, ktorý môźe byť zoznam alebo\n"
+"slovník. Ak je 'výsledok' prázdny zoznam, znamená to že test bol úspešný. Inak sa bude\n"
+"snažiť peložiť  vytlačiť obsah 'výsledku'.\n"
+"\n"
+"Ak je výsleodk vášho testu slovník, môžete nastaviť premennú `column_order` pre výber\n"
+"poradia v akom chcete vytlačiť obsah 'výsledku'.\n"
+"\n"
+"Ak by ste ich potrebovali, môžete použiť nasledujúce premenné vo vašom kóde:\n"
+"* cr: kurzor do databázy\n"
+"* uid: ID aktuálneho používateľa\n"
+"\n"
+"V akomkoľvek prípade, kód musí byť právna python závierka so správnou zarážkou (v prípade potreby).\n"
+"\n"
+"Príklad: \n"
+"sql = '''VYBRAŤ id, name, ref, date\n"
+"Z account_move_line \n"
+"KDE account_id V (VYBRAŤ id Z account_account KDE type = 'view')\n"
+"'''\n"
+"cr.execute(sql)\n"
+"result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Created by "
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Created on "
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_display_name
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Názov obrazovky "
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Expression"
-msgstr ""
+msgstr "Výraz"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Posledná modifikácia"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Naposledy upravoval"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Naposledy upravované"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
-msgstr ""
+msgstr "Kód Pyton"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_code_exec
 msgid "Python code"
-msgstr ""
+msgstr "Kód Pyton"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sekvencia"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "Test 1: Všeobecný zostatok"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "Test 3: Riadky pohybov"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr ""
+msgstr "Test 5.1 : Účtovné riadky Záväzkov a Pohľadávok zladených faktúr"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
+msgstr "Test 5.2 : Zladené faktúry a účty Záväzkov/Pohľadávok"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "Test 6 : Stav faktúry"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr ""
+msgstr "Test 7 : Konečný zostatok na bankových výpisoch"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
 msgid "Test Description"
-msgstr ""
+msgstr "Popis testu"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
 msgid "Test Name"
-msgstr ""
+msgstr "Názov testu"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 #: model:ir.ui.view,arch_db:account_test.account_assert_tree
 msgid "Tests"
-msgstr ""
+msgstr "Testy"
 
 #. module: account_test
 #: code:addons/account_test/report/report_account_test.py:51
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
+msgstr "Test bol prejdený úspešne"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "accounting.assert.test"
-msgstr ""
+msgstr "accounting.assert.test"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "report.account_test.report_accounttest"
-msgstr ""
+msgstr "report.account_test.report_accounttest "

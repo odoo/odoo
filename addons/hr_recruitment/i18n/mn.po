@@ -1,21 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_recruitment
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Nasan-Ochir L <nasaaskii@gmail.com>, 2017
+# ERDENESAIKHAN BATZORIG <esab.orgil@gmail.com>, 2017
+# Erdenebold Ts <erdenebold10@gmail.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-05-10 07:47+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_recruitment
@@ -35,8 +40,7 @@ msgid ""
 "\n"
 "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
 "<p>Thank you for your enquiry.<br />\n"
-"Your resume got our interest. I will contact you as soon as possible to "
-"plan\n"
+"Your resume got our interest. I will contact you as soon as possible to plan\n"
 "next steps of the recruitment process.</p>\n"
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
@@ -47,8 +51,7 @@ msgstr ""
 msgid ""
 "\n"
 "<p>Dear all,</p>\n"
-"<p>I’m very pleased to announce that <strong> ${object.name} </strong> will "
-"be\n"
+"<p>I’m very pleased to announce that <strong> ${object.name} </strong> will be\n"
 "joining us as a ${object.job_id.name}\n"
 "%if object.department_id:\n"
 "    in ${object.department_id.name}.\n"
@@ -90,12 +93,12 @@ msgstr "<span>Шинэ</span>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>Reports</span>"
-msgstr ""
+msgstr "<span>Тайлангууд</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>View</span>"
-msgstr ""
+msgstr "<span>Харах</span>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_defaults
@@ -103,7 +106,7 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Python dictionary бөгөөд өөр нэрт шинэ бичлэг үүсгэхэд анхны утгыг олгохоор "
+"Python dictionary бөгөөд шинэ бичлэг үүсгэхэд анхны утгыг олгохоор "
 "тооцоологддог."
 
 #. module: hr_recruitment
@@ -198,20 +201,16 @@ msgstr "Горилогчид"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 msgid ""
-"Applicants and their attached CV are created automatically when an email is "
-"sent.\n"
-"                If you install the document management modules, all resumes "
-"are indexed automatically,\n"
+"Applicants and their attached CV are created automatically when an email is sent.\n"
+"                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
-"Applicants and their attached CV are created automatically when an email is "
-"sent.\n"
-"            If you install the document management modules, all resumes are "
-"indexed automatically, \n"
+"Applicants and their attached CV are created automatically when an email is sent.\n"
+"            If you install the document management modules, all resumes are indexed automatically, \n"
 "            so that you can easily search through their content."
 msgstr ""
 
@@ -272,7 +271,7 @@ msgstr "Үнэлгээ"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Archived"
-msgstr ""
+msgstr "Архивласан"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_open
@@ -381,7 +380,7 @@ msgstr "Өнгөний Индекс"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_company_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Company"
-msgstr "Компани"
+msgstr "Байгууллага"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_configuration
@@ -414,7 +413,7 @@ msgstr "Холбогдох эмэйл"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
 msgid "Content"
-msgstr ""
+msgstr "Агуулга"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -434,12 +433,12 @@ msgstr "Батлагдсан хөдөлмөрийн гэрээ"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create"
-msgstr ""
+msgstr "Үүсгэх"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
-msgstr "Үүсгэх огноо"
+msgstr "Үүүсгэсэн Огноо"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -568,7 +567,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_department
 msgid "Departments"
-msgstr ""
+msgstr "Хэлтсүүд"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
@@ -578,7 +577,7 @@ msgstr "Тодорхойлолт"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Discard"
-msgstr ""
+msgstr "Хэрэгсэхгүй"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_display_name
@@ -667,7 +666,8 @@ msgid "Employees"
 msgstr "Ажилчид"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
 msgid "Excellent"
 msgstr "Гойд сайн"
 
@@ -727,7 +727,8 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "Үеүүдийн жагсаалтыг харуулахдаа дарааллыг өгнө."
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
 msgid "Good"
 msgstr "Сайн"
 
@@ -745,7 +746,7 @@ msgstr "Бүлэглэх"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
-msgstr ""
+msgstr "Цалинт ажилтангууд"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
@@ -766,8 +767,8 @@ msgstr "ID"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task "
-"creation alias)"
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
 msgstr ""
 "Хуурмаг нэрийг агуулж байгаа эх бичлэгийн ID (Ж: даалгавар үүсгэсэн хуурмаг "
 "нэрийг агуулж байгаа төсөл)"
@@ -921,7 +922,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
 msgid "Manager"
-msgstr ""
+msgstr "Менежер"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -946,7 +947,7 @@ msgstr "Гар утас:"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "Дэлгэрэнгүй <i class=\"fa fa-caret-down\"/>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1037,7 +1038,8 @@ msgid "No document yet."
 msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
 msgid "Normal"
 msgstr "Хэвийн"
 
@@ -1055,8 +1057,7 @@ msgstr "Төслийн даалгаврыг хаах хүртэлх хоноги
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
-"                process and follow up all operations: meetings, interviews, "
-"etc."
+"                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
 
 #. module: hr_recruitment
@@ -1120,8 +1121,8 @@ msgstr "Эцэг салбар бичлэгийн ID"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not "
-"necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Өөр хуурмаг нэрийг хадгалагч модель.  Хуурмаг нэрийн сурвалж хадгалагч "
@@ -1137,6 +1138,15 @@ msgstr "Харилцагч"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
 msgid "Phone"
 msgstr "Утас"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_probability
@@ -1213,6 +1223,11 @@ msgstr "Татгалзах"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Refused"
+msgstr "Татгалзсан"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Reopen Application"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1418,9 +1433,9 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
-"email that does not reply to an existing record will cause the creation of a "
-"new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
 msgstr ""
 "Хуурмаг нэрийн харгалзах модель (Odoo-н баримтын төрөл). Байгаа ямар нэг "
 "бичлэг рүү хариулж байгаа биш бүх эмэйл энэ моделийн шин бичлэгийг үүсгэнэ "
@@ -1488,8 +1503,8 @@ msgstr "Энэ нь хүргэлтийн арга юм. Ж: Ил захиада�
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_source_id
 msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of "
-"email list"
+"This is the source of the link Ex: Search Engine, another domain, or name of"
+" email list"
 msgstr ""
 "Энэ нь холбоосын эх үүсвэр. Ж: хайлтаар, өөр дөмэйнээс, мэйлийн жагсаалтаас"
 
@@ -1498,8 +1513,7 @@ msgstr ""
 msgid ""
 "This menu helps you search through resumes and motivation\n"
 "                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT\n"
-"                files so that you can search keywords from the content of "
-"these\n"
+"                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
 
@@ -1565,7 +1579,8 @@ msgid "User Email"
 msgstr "Хэрэглэгчийн имэйл"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
 msgid "Very Good"
 msgstr "Онц"
 
@@ -1590,8 +1605,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
-"                can easily find all the information you need for each "
-"person;\n"
+"                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
 
