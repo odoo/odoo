@@ -750,7 +750,7 @@ class AccountMoveLine(models.Model):
         """
         for datum in data:
             if len(datum['mv_line_ids']) >= 1 or len(datum['mv_line_ids']) + len(datum['new_mv_line_dicts']) >= 2:
-                self.process_reconciliation(datum['mv_line_ids'], datum['new_mv_line_dicts'])
+                self.env['account.move.line'].browse(datum['mv_line_ids']).process_reconciliation(datum['new_mv_line_dicts'])
 
             if datum['type'] == 'partner':
                 partners = self.env['res.partner'].browse(datum['id'])
