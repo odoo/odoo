@@ -20,4 +20,6 @@ class AccountMove(models.Model):
     stock_account_move_qty = fields.Integer(compute='_compute_stock_account_qty')
     stock_account_needing_correction = fields.Integer(compute='_compute_stock_account_qty')
     stock_account_valuation_corrected_qty = fields.Integer(default=0)
-    #TODO OCO : intégrer ce champ dans le cas 2
+
+    def mark_valuation_as_fully_corrected(self):
+        self.stock_account_valuation_corrected_qty = self.stock_account_move_qty

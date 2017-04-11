@@ -81,7 +81,7 @@ class StockQuant(models.Model):
             if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
                 move._store_average_cost_price()
 
-    def _account_entry_move(self, move):
+    def _account_entry_move(self, move, cur_rate_already_ok=False):
         """ Accounting Valuation Entries """
         if move.product_id.type != 'product' or move.product_id.valuation != 'real_time':
             # no stock valuation for consumable products
@@ -104,24 +104,24 @@ class StockQuant(models.Model):
         if company_to and (move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage == 'internal' or company_from != company_to):
             journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
             if location_from and location_from.usage == 'customer':  # goods returned from customer
-                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_dest, acc_valuation, journal_id)
+                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_dest, acc_valuation, journal_id, cur_rate_already_ok=cur_rate_already_ok)
             else:
-                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_src, acc_valuation, journal_id)
+                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_src, acc_valuation, journal_id, cur_rate_already_ok=cur_rate_already_ok)
 
         # Create Journal Entry for products leaving the company
         if company_from and (move.location_id.usage == 'internal' and move.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
             journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
             if location_to and location_to.usage == 'supplier':  # goods returned to supplier
-                self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_src, journal_id)
+                self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_src, journal_id, cur_rate_already_ok=cur_rate_already_ok)
             else:
-                self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_dest, journal_id)
+                self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_dest, journal_id, cur_rate_already_ok=cur_rate_already_ok)
 
         if move.company_id.anglo_saxon_accounting and move.location_id.usage == 'supplier' and move.location_dest_id.usage == 'customer':
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
             self.with_context(force_company=move.company_id.id)._create_account_move_line(move, acc_src, acc_dest, journal_id)
 
-    def _create_account_move_line(self, move, credit_account_id, debit_account_id, journal_id):
+    def _create_account_move_line(self, move, credit_account_id, debit_account_id, journal_id, cur_rate_already_ok=False):
         # group quants by cost
         quant_cost_qty = self._group_quants_by_cost(move)
 
@@ -135,6 +135,10 @@ class StockQuant(models.Model):
                     'line_ids': move_lines,
                     'date': date,
                     'ref': move.picking_id.name})
+
+                if cur_rate_already_ok:
+                    new_account_move.mark_valuation_as_fully_corrected()
+
                 new_account_move.post()
                 new_account_move.message_post_with_view('mail.message_origin_link',
                         values={'self': new_account_move, 'origin': move.picking_id},
@@ -145,30 +149,6 @@ class StockQuant(models.Model):
         rslt = defaultdict(lambda: 0.0)
         for quant in self:
             cost = quant.cost
-
-            """if hasattr(stock_move, 'purchase_line_id') \
-                and quant.product_id.valuation == 'real_time' \
-                and quant.product_id.cost_method == 'real':
-
-                po_line = stock_move.purchase_line_id
-                invoiced_qty = po_line.qty_invoiced
-
-                #TODO OCO s'assurer que la façon dont ça peut être scindé ici soit cohérente avec le cas n°1 !
-                #En effet : si une partie de la commande n'a pas été facturée, on l'évalue
-                #sans tenir compte des factures, au prix du quant: ça peut causer une situation hybride entre les cas 1 et 2
-
-                if invoiced_qty:
-                    #TODO OCO bien s'assurer que s'il y a eu plusieurs factures avant, elles sont prises en compte comme il faut (il me semble que oui, vu le code)
-                    #TODO OCO et si les quantités reçues sont différentes des quantités facturées ?
-                    #   => Si la facture ou la réception est faite en plusieurs fois ? (juste la facture, la réception pose moins problème avec le quant)
-                    # si on fait plusieurs réceptions avec chaque fois une facture propre, c'est un peu la merde (parce qu'on fera une moyenne des factures, et ça, ça ne va pas !)
-                    #       ===> Itérer sur les inv line et les trier par ancienneté !
-                    invoiced_cost = sum(inv_line.price_subtotal for inv_line in po_line.invoice_lines)
-                    not_invoiced_cost = (quant.qty - invoiced_qty) * quant.cost
-                    cost = float_round(invoiced_cost + not_invoiced_cost, precision_digits=2) #TODO OCO: récupérer la currency (ET PAS CELLE DE LA PO) pour faire le rounding!
-                TODO OCO: à zigouiller, à priori (et du coup, tu peux remettre la fonction dans son état d'origine).
-            """
-
         rslt[cost] += quant.qty
 
         return rslt
@@ -177,40 +157,36 @@ class StockQuant(models.Model):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
 
         if move.product_id.valuation == 'real_time':
-
+            #TODO OCO: faire dans une méthode ?
             if hasattr(move, 'purchase_line_id') and quant.product_id.cost_method == 'real':
                 po_line = move.purchase_line_id
                 previously_received_counter = po_line.qty_received
                 qty_left_to_assign = quant.qty
-                _logger.warn("Ils sont cinq")
-                for invoice_line in po_line.invoice_lines.sorted(lambda line: line.invoice_id.date):
+                split_quants_created = []
+                for invoice_line in po_line.invoice_lines.filtered(lambda line: line.invoice_id.state in ('open','paid')).sorted(lambda line: line.invoice_id.date):
                     if not qty_left_to_assign:
                         break
-                    _logger.warn("Cinq jeunes et fougueux pilotes")
                     product_precision = invoice_line.uom_id.rounding
                     if float_compare(previously_received_counter, invoice_line.quantity, precision_rounding=product_precision) == -1:
-                        _logger.warn("Recrutes parmi les meilleurs")
                         difference = invoice_line.quantity - previously_received_counter
 
                         difference_cmp = float_compare(difference, qty_left_to_assign, precision_rounding=product_precision)
                         if difference_cmp >= 0: #difference is greater or equal
-                            _logger.warn("Pour liberer les colonies de l'espace "+str(invoice_line.price_unit))
-                            quant.sudo().write({'cost': invoice_line.price_unit})
+                            quant.cost = invoice_line.price_unit
                         else: #qty_left_to_assign is greater
-                            _logger.warn("Du joug de leurs oppresseurs")
                             new_quant = quant._quant_split(quant.qty - difference) #Creates another Quant with quantity=difference
-                            new_quant.sudo().write({'cost': invoice_line.price_unit})
-                            #TODO OCO attention !! Il semblerait bien que cette histoire de split ne marche pas comme tu veux !
+                            new_quant.cost = invoice_line.price_unit
+                            split_quants_created.append(new_quant)
 
                         qty_left_to_assign -= min(difference, qty_left_to_assign)
 
                     previously_received_counter -= min(invoice_line.quantity, previously_received_counter)
 
-            quant._account_entry_move(move)
-            #TODO OCO: appeler la même chose sur les quants obtenus en splittant aurait du sens, non ?
-            #   => A vérifier, car quand il split ci-dessous, il ne fait rien de tel :/
-            # !! Ca ne pose pas problème car il split APRES l'appel, contrairement à toi, andouille !
-            # ======>>> Il faut donc bien faire cet appel, à priori.
+            quant._account_entry_move(move, cur_rate_already_ok= qty_left_to_assign==0)
+            for split_quant in split_quants_created:
+                # If the quant has been split, it was to match an invoice, so the
+                # split's results' prices cannot be changed by the currency rate.
+                split_quant._account_entry_move(move, cur_rate_already_ok=True)
 
             # If the precision required for the variable quant cost is larger than the accounting
             # precision, inconsistencies between the stock valuation and the accounting entries
@@ -244,8 +220,6 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     stock_account_valuation_account_move_ids = fields.Many2many(comodel_name='account.move', string='Accounting entries', help="Accounting entries used for perpetual valuation of this move.")
-    stock_account_valuation_corrected_quantity = fields.Integer(default=0)#TODO OCO DOC
-    #TODO OCO pas besoin de ce champ, la po line contient le nombre de produits facturés
 
     @api.multi
     def action_done(self):
