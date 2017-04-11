@@ -63,7 +63,7 @@ class StockQuant(models.Model):
     @api.multi
     def _price_update(self, newprice):
         ''' This function is called at the end of negative quant reconciliation
-        and does the accounting entries adjustemnts and the update of the product
+        and does the accounting entries adjustments and the update of the product
         cost price if needed '''
         super(StockQuant, self)._price_update(newprice)
         for quant in self:
@@ -143,6 +143,7 @@ class StockQuant(models.Model):
                 new_account_move.message_post_with_view('mail.message_origin_link',
                         values={'self': new_account_move, 'origin': move.picking_id},
                         subtype_id=self.env.ref('mail.mt_note').id)
+                # Adds the account_move to the list of valuations made for that stock_move
                 move.write({'stock_account_valuation_account_move_ids': [(4, new_account_move.id, None)]})
 
     def _group_quants_by_cost(self, stock_move):
@@ -182,41 +183,47 @@ class StockQuant(models.Model):
         return quant
 
     def _create_valuation_moves(self, stock_move):
-        if self.product_id.valuation == 'real_time':
-            cur_rate_corrected=False
+        """ Creates the valuation account_move for this Quant in the given
+        stock_move.
+        """
+        cur_rate_corrected=False
+        if self.product_id.valuation == 'real_time' \
+            and hasattr(stock_move, 'purchase_line_id') \
+            and self.product_id.cost_method == 'real':
 
-            if hasattr(stock_move, 'purchase_line_id') and self.product_id.cost_method == 'real':
-                po_line = stock_move.purchase_line_id
-                previously_received_counter = po_line.qty_received
-                qty_left_to_assign = self.qty
-                split_quants_created = []
-                for invoice_line in po_line.invoice_lines.filtered(lambda line: line.invoice_id.state in ('open','paid')).sorted(lambda line: line.invoice_id.date):
-                    if not qty_left_to_assign:
-                        break
-                    product_precision = invoice_line.uom_id.rounding
-                    if float_compare(previously_received_counter, invoice_line.quantity, precision_rounding=product_precision) == -1:
-                        difference = invoice_line.quantity - previously_received_counter
+            po_line = stock_move.purchase_line_id
+            previously_received_counter = po_line.qty_received
+            qty_left_to_assign = self.qty
+            split_quants_created = []
+            for invoice_line in po_line.invoice_lines.filtered(lambda line: line.invoice_id.state in ('open','paid')).sorted(lambda line: line.invoice_id.date):
+                if not qty_left_to_assign:
+                    break
 
-                        difference_cmp = float_compare(difference, qty_left_to_assign, precision_rounding=product_precision)
-                        if difference_cmp >= 0: #difference is greater or equal
-                            self.cost = invoice_line.price_unit
-                        else: #qty_left_to_assign is greater
-                            new_quant = self._quant_split(self.qty - difference) #Creates another Quant with quantity=difference
-                            new_quant.cost = invoice_line.price_unit
-                            split_quants_created.append(new_quant)
+                product_precision = invoice_line.uom_id.rounding
+                # This condition, put in the loop, ensures that its content is
+                # only executed for invoice lines for which we did not receive
+                # the goods yet. These invoice lines can thus be used for
+                # stock valuation of the current move.
+                if float_compare(previously_received_counter, invoice_line.quantity, precision_rounding=product_precision) == -1:
+                    difference = invoice_line.quantity - previously_received_counter
+                    difference_cmp = float_compare(difference, qty_left_to_assign, precision_rounding=product_precision)
+                    if difference_cmp >= 0: #difference is greater or equal
+                        self.cost = invoice_line.price_unit
+                    else: #qty_left_to_assign is greater
+                        new_quant = self._quant_split(self.qty - difference) #Creates another Quant with quantity=difference
+                        new_quant.cost = invoice_line.price_unit
+                        split_quants_created.append(new_quant)
+                    qty_left_to_assign -= min(difference, qty_left_to_assign)
+                previously_received_counter -= min(invoice_line.quantity, previously_received_counter)
+            cur_rate_corrected = qty_left_to_assign==0
 
-                        qty_left_to_assign -= min(difference, qty_left_to_assign)
-
-                    previously_received_counter -= min(invoice_line.quantity, previously_received_counter)
-                cur_rate_corrected = qty_left_to_assign == 0
-
-            self._account_entry_move(stock_move, cur_rate_already_ok= cur_rate_corrected)
             for split_quant in split_quants_created:
-                # If the quant has been split, it was to match an invoice, so the
-                # split's results' prices cannot be changed by the currency rate.
+                # If the Quant has been split, it was to match invoices, so the
+                # split's results' prices cannot be changed by the currency rate;
+                # hence, cur_rate_already_ok = True
                 split_quant._account_entry_move(stock_move, cur_rate_already_ok=True)
-        else:
-            self._account_entry_move(stock_move)
+
+        self._account_entry_move(stock_move, cur_rate_already_ok= cur_rate_corrected)
 
     def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
         res = super(StockQuant, self)._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)

@@ -6,20 +6,14 @@ from odoo import api, models, fields
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    @api.depends('line_ids.quantity', 'stock_account_valuation_corrected_qty')
-    def _compute_stock_account_qty(self):
-        for record in self:
-            rslt = 0.0
-            for line in record.line_ids:
-                if line.debit:
-                    rslt += line.quantity
-            record.stock_account_move_qty = rslt
-            record.stock_account_needing_correction = record.stock_account_move_qty - record.stock_account_valuation_corrected_qty
+    stock_account_valuation_correction = fields.Boolean(string="Is valuation correction move", default=False, help="True if and only if this account move has been created in order to correct the stock valuation of some product, because of the variations of the currency rates.")
+    stock_account_valuation_corrected_qty = fields.Integer(string="Corrected quantity", default=0, help="Quantity of items associated with this account whose valuation has already been corrected by an invoice. Always 0 <= ... <= quantity.")
 
-    stock_account_valuation_correction = fields.Boolean(string="Is valuation correction move", default=False)
-    stock_account_move_qty = fields.Integer(compute='_compute_stock_account_qty')
-    stock_account_needing_correction = fields.Integer(compute='_compute_stock_account_qty')
-    stock_account_valuation_corrected_qty = fields.Integer(default=0)
 
     def mark_valuation_as_fully_corrected(self):
-        self.stock_account_valuation_corrected_qty = self.stock_account_move_qty
+        """ Marks this account move as a stock valuation having been fully
+        corrected by one or more other account moves to match the exact amount
+        that had been invoiced (which can be different from the inital one
+        because of changes in the currency rates).
+        """
+        self.stock_account_valuation_corrected_qty = self.quantity

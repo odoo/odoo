@@ -79,7 +79,11 @@ class AccountInvoice(models.Model):
                 ]
         return []
 
-    def invoice_validate(self): #Overridden to correct stock valuation entries when necessary (with another valuation move)
+    def invoice_validate(self):
+        """ Overridden to correct stock valuation entries related to this invoice
+        so that they match it. This is done with new account moves in the accounts
+        used to achieve this valuation
+        """
         rslt = super(AccountInvoice, self).invoice_validate()
 
         for invoice in self:
@@ -88,7 +92,6 @@ class AccountInvoice(models.Model):
                 for inv_line in invoice.invoice_line_ids:
                     if inv_line.product_id.valuation == 'real_time' and inv_line.product_id.cost_method == 'real':
                         inv_line.balance_stock_valuation()
-
         return rslt
 
 
@@ -128,22 +131,30 @@ class AccountInvoiceLine(models.Model):
         return rslt
 
     def balance_stock_valuation(self):
+        """ If there already exists some stock valuations for this invoice line (i.e.
+        all or part of the goods it corresponds to have been received and have
+        hence generated on or more stock moves and an associated valuation for
+        each of them), we correct it so that it matches with the value given
+        by the invoice line.
+        """
         global_quantity_to_correct = self.quantity
         stock_moves = self.env['stock.move'].search([('purchase_line_id', '=', self.purchase_line_id.id)])
-        for stock_move in stock_moves.sorted(key=lambda m: m.date):
+        for stock_move in stock_moves.sorted(key=lambda m: m.date): # We sort by date : older valuations are corrected first
 
             if float_is_zero(global_quantity_to_correct, precision_rounding=self.uom_id.rounding):
                 break
 
             for valuation_move in stock_move.stock_account_valuation_account_move_ids.sorted(key=lambda v:v.date):
-                if valuation_move.stock_account_valuation_corrected_qty != valuation_move.stock_account_move_qty and not valuation_move.stock_account_valuation_correction:
-                    to_correct_on_move = valuation_move.stock_account_move_qty - valuation_move.stock_account_valuation_corrected_qty
 
+                # We don't consider valuation moves that were made to correct others,
+                # nor the ones which have already been fully corrected.
+                if valuation_move.stock_account_valuation_corrected_qty != valuation_move.quantity and not valuation_move.stock_account_valuation_correction:
+                    to_correct_on_move = valuation_move.quantity - valuation_move.stock_account_valuation_corrected_qty
                     correction_qty = min(to_correct_on_move, global_quantity_to_correct)
-                    unit_value_for_correction = valuation_move.amount / valuation_move.stock_account_move_qty
+                    unit_value_for_correction = valuation_move.amount / valuation_move.quantity
 
                     if correction_qty == to_correct_on_move:
-                        #Special case to smooth rounding errors in case some happened before
+                        # Special case to smooth rounding errors in case some happened before
                         amount_before_correction = valuation_move.amount - valuation_move.stock_account_valuation_corrected_qty * unit_value_for_correction
                     else:
                         amount_before_correction = correction_qty * unit_value_for_correction
@@ -151,18 +162,19 @@ class AccountInvoiceLine(models.Model):
                     amount_after_correction = correction_qty * self.price_unit
                     balancing_amount = float_round(amount_before_correction - amount_after_correction, precision_digits = self.currency_id.decimal_places)
 
-                    if float_is_zero(balancing_amount, precision_rounding=self.currency_id.rounding):
-                        continue
-
-                    debited_account = self.env['account.move.line'].search([('move_id', '=', valuation_move.id), ('debit', '!=', 0.0)], limit=1).account_id
-                    credited_account = self.env['account.move.line'].search([('move_id', '=', valuation_move.id), ('credit', '!=', 0.0)], limit=1).account_id
-
-                    self._write_valuation_correction_move(stock_move, correction_qty, valuation_move, balancing_amount, debited_account, credited_account)
+                    if not float_is_zero(balancing_amount, precision_rounding=self.currency_id.rounding):
+                        debited_account = self.env['account.move.line'].search([('move_id', '=', valuation_move.id), ('debit', '!=', 0.0)], limit=1).account_id
+                        credited_account = self.env['account.move.line'].search([('move_id', '=', valuation_move.id), ('credit', '!=', 0.0)], limit=1).account_id
+                        self._write_valuation_correction_move(stock_move, correction_qty, valuation_move, balancing_amount, debited_account, credited_account)
+                    # else: Nothing to correct, the valuation is already correct
 
                     valuation_move.stock_account_valuation_corrected_qty += correction_qty
                     global_quantity_to_correct -= correction_qty
 
     def _write_valuation_correction_move(self, stock_move, correction_qty, valuation_move, balancing_amount, debited_account, credited_account):
+        """ Creates the valuation move corresponding to the given parameters, with
+        one account line for debit, and another one for credit.
+        """
         debited_correction_vals = {
             'name': stock_move.name + _(' - currency rate adjustment'),
             'product_id': stock_move.product_id.id,
@@ -194,6 +206,7 @@ class AccountInvoiceLine(models.Model):
                 'date': date,
                 'ref': stock_move.picking_id.name + _(' - currency rate adjustment'),
                 'stock_account_valuation_correction': True})
+
         correction_move.post()
         stock_move.write({'stock_account_valuation_account_move_ids': [(4, correction_move.id, None)]})
 
