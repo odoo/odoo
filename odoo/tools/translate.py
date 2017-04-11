@@ -846,7 +846,7 @@ def trans_generate(lang, modules, cr):
         if model=='ir.model.fields':
             try:
                 field_name = encode(record.name)
-            except AttributeError, exc:
+            except AttributeError as exc:
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             field_model = env.get(record.model)

@@ -96,7 +96,7 @@ class WebsiteSaleForm(WebsiteForm):
         model_record = request.env.ref('sale.model_sale_order')
         try:
             data = self.extract_data(model_record, kwargs)
-        except ValidationError, e:
+        except ValidationError as e:
             return json.dumps({'error_fields': e.args[0]})
 
         order = request.website.sale_get_order()
@@ -762,7 +762,7 @@ class WebsiteSale(http.Controller):
                     # Auto-confirm SO if necessary
                     tx._confirm_so()
                     return dict(success=True, url='/shop/payment/validate')
-            except Exception, e:
+            except Exception as e:
                 _logger.warning(_("Payment transaction (%s) failed : <%s>") % (tx.id, str(e)))
                 return dict(success=False, error=_("Payment transaction failed (Contact Administrator)"))
         return dict(success=False, error='Tx missmatch')

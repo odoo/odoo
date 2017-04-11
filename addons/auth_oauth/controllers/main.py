@@ -160,7 +160,7 @@ class OAuthController(http.Controller):
                 redirect = werkzeug.utils.redirect(url, 303)
                 redirect.autocorrect_location_header = False
                 return redirect
-            except Exception, e:
+            except Exception as e:
                 # signup error
                 _logger.exception("OAuth2: %s" % str(e))
                 url = "/web/login?oauth_error=2"

@@ -35,7 +35,7 @@ class WebsiteTwitter(models.Model):
             request = Request(url)
             request.add_header('Authorization', 'Bearer %s' % access_token)
             return json.load(urlopen(request, timeout=URLOPEN_TIMEOUT))
-        except HTTPError, e:
+        except HTTPError as e:
             _logger.debug("Twitter API request failed with code: %r, msg: %r, content: %r",
                           e.code, e.msg, e.fp.read())
             raise

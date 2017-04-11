@@ -523,7 +523,7 @@ class JavascriptAsset(WebAsset):
     def _fetch_content(self):
         try:
             return super(JavascriptAsset, self)._fetch_content()
-        except AssetError, e:
+        except AssetError as e:
             return "console.error(%s);" % json.dumps(e.message)
 
     def to_html(self):
@@ -572,7 +572,7 @@ class StylesheetAsset(WebAsset):
                 content = self.rx_charset.sub('', content)
 
             return content
-        except AssetError, e:
+        except AssetError as e:
             self.bundle.css_errors.append(e.message)
             return ''
 

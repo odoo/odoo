@@ -85,7 +85,7 @@ class GoalDefinition(models.Model):
                 })
                 # dummy search to make sure the domain is valid
                 Obj.search_count(domain)
-            except (ValueError, SyntaxError), e:
+            except (ValueError, SyntaxError) as e:
                 msg = e.message or (e.msg + '\n' + e.text)
                 raise exceptions.UserError(_("The domain for the definition %s seems incorrect, please check it.\n\n%s") % (definition.name, msg))
         return True
@@ -102,7 +102,7 @@ class GoalDefinition(models.Model):
                 if not (field and field.store):
                     raise exceptions.UserError(
                         _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not stored") % (definition.name, definition.field_id.name))
-            except KeyError, e:
+            except KeyError as e:
                 raise exceptions.UserError(
                     _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not found") % (definition.name, e.message))
 

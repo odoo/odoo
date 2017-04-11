@@ -117,7 +117,7 @@ class ReportController(Controller):
                 return response
             else:
                 return
-        except Exception, e:
+        except Exception as e:
             se = _serialize_exception(e)
             error = {
                 'code': 200,

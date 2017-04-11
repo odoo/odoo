@@ -1015,7 +1015,7 @@ class _rml_template(object):
                 self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
             else:
                 self.doc_tmpl.build(fis)
-        except platypus.doctemplate.LayoutError, e:
+        except platypus.doctemplate.LayoutError as e:
             e.name = 'Print Error'
             e.value = 'The document you are trying to print contains a table row that does not fit on one page. Please try to split it in smaller rows or contact your administrator.'
             raise
@@ -1026,7 +1026,7 @@ def parseNode(rml, localcontext=None, fout=None, images=None, path='.', title=No
     #try to override some font mappings
     try:
         SetCustomFonts(r)
-    except Exception, exc:
+    except Exception as exc:
         _logger.info('Cannot set font mapping: %s', "".join(traceback.format_exception_only(type(exc),exc)))
     fp = StringIO()
     r.render(fp)

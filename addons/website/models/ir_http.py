@@ -249,7 +249,7 @@ class Http(models.AbstractModel):
         try:
             _, path = rule.build(arguments)
             assert path is not None
-        except Exception, e:
+        except Exception as e:
             return cls._handle_exception(e, code=404)
 
         if getattr(request, 'website_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
@@ -276,7 +276,7 @@ class Http(models.AbstractModel):
                 else:
                     # if parent excplicitely returns a plain response, then we don't touch it
                     return response
-            except Exception, e:
+            except Exception as e:
                 if 'werkzeug' in config['dev_mode'] and (not isinstance(exception, QWebException) or not exception.qweb.get('cause')):
                     raise
                 exception = e

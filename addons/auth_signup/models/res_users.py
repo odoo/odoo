@@ -93,7 +93,7 @@ class ResUsers(models.Model):
         try:
             with self.env.cr.savepoint():
                 return template_user.with_context(no_reset_password=True).copy(values)
-        except Exception, e:
+        except Exception as e:
             # copy may failed if asked login is not available.
             raise SignupError(ustr(e))
 

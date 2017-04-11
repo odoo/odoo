@@ -291,7 +291,7 @@ class GoogleCalendar(models.AbstractModel):
 
         try:
             status, content, ask_time = self.env['google.service']._do_request(url, params, headers, type='GET')
-        except urllib2.HTTPError, e:
+        except urllib2.HTTPError as e:
             if e.code == 401:  # Token invalid / Acces unauthorized
                 error_msg = _("Your token is invalid or has been revoked !")
 
@@ -356,7 +356,7 @@ class GoogleCalendar(models.AbstractModel):
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary', google_id)
         try:
             status, content, ask_time = self.env['google.service']._do_request(url, params, headers, type='GET')
-        except Exception, e:
+        except Exception as e:
             _logger.info("Calendar Synchro - In except of get_one_event_synchro")
             _logger.info(exception_to_unicode(e))
             return False
@@ -550,7 +550,7 @@ class GoogleCalendar(models.AbstractModel):
                     _logger.info("[%s] Calendar Synchro - Failed - NEED RESET  !", user_to_sync)
                 else:
                     _logger.info("[%s] Calendar Synchro - Done with status : %s  !", user_to_sync, resp.get("status"))
-            except Exception, e:
+            except Exception as e:
                 _logger.info("[%s] Calendar Synchro - Exception : %s !", user_to_sync, exception_to_unicode(e))
         _logger.info("Calendar Synchro - Ended by cron")
 
@@ -676,7 +676,7 @@ class GoogleCalendar(models.AbstractModel):
         if lastSync:
             try:
                 all_event_from_google = self.get_event_synchro_dict(lastSync=lastSync)
-            except urllib2.HTTPError, e:
+            except urllib2.HTTPError as e:
                 if e.code == 410:  # GONE, Google is lost.
                     # we need to force the rollback from this cursor, because it locks my res_users but I need to write in this tuple before to raise.
                     self.env.cr.rollback()
@@ -842,7 +842,7 @@ class GoogleCalendar(models.AbstractModel):
                         try:
                             # if already deleted from gmail or never created
                             recs.delete_an_event(current_event[0])
-                        except Exception, e:
+                        except Exception as e:
                             if e.code in (401, 410,):
                                 pass
                             else:

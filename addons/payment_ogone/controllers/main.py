@@ -39,7 +39,7 @@ class OgoneController(http.Controller):
         acq = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
         try:
             acq.s2s_process(post)
-        except Exception, e:
+        except Exception as e:
             # synthax error: 'CHECK ERROR: |Not a valid date\n\n50001111: None'
             error = e.message.splitlines()[0].split('|')[-1] or ''
         return werkzeug.utils.redirect(post.get('return_url', '/') + (error and '#error=%s' % werkzeug.url_quote(error) or ''))

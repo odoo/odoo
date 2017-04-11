@@ -134,7 +134,7 @@ def check(f):
                 tries += 1
                 _logger.info("%s, retry %d/%d in %.04f sec..." % (errorcodes.lookup(e.pgcode), tries, MAX_TRIES_ON_CONCURRENCY_FAILURE, wait_time))
                 time.sleep(wait_time)
-            except IntegrityError, inst:
+            except IntegrityError as inst:
                 registry = odoo.registry(dbname)
                 for key in registry._sql_error.keys():
                     if key in inst[0]:
