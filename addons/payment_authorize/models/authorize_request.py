@@ -150,7 +150,7 @@ class AuthorizeAPI():
         etree.SubElement(root, "transId").text = transaction_id
         customer = etree.SubElement(root, "customer")
         etree.SubElement(customer, "merchantCustomerId").text = 'ODOO-%s-%s' % (partner.id, uuid4().hex[:8])
-        etree.SubElement(customer, "email").text = partner.email
+        etree.SubElement(customer, "email").text = partner.email or ''
         response = self._authorize_request(root)
         res = dict()
         res['profile_id'] = response.find('customerProfileId').text

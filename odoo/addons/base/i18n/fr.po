@@ -7239,8 +7239,8 @@ msgstr "La configuration ne peut pas être dupliquée!"
 #. module: base
 #: code:addons/base/ir/ir_model.py:549
 #, python-format
-msgid "Cannot rename field to %s, because that field already exists!"
-msgstr "Impossible de renommer le champ en %s, ce champ existe déjà !"
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_lang.py:219
@@ -9801,6 +9801,19 @@ msgstr "Type de Champ"
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "Le champ `%(field_name)s` n'existe pas"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:298
+#, python-format
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:307
+#, python-format
+msgid "Field names must be unique per model."
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -17926,7 +17939,7 @@ msgstr "Image d'icône Web"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_search
 msgid "Web-only translations"
-msgstr "Traductions pour le Web seulement"
+msgstr "Traductions du client web"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
