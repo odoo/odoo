@@ -963,6 +963,17 @@ var FieldMany2ManyTags = AbstractField.extend({
     isSet: function () {
         return !!this.value && this.value.count;
     },
+    /**
+     * Reset the focus on this field if it was the origin of the onchange call.
+     *
+     * @override
+     */
+    reset: function (record, event) {
+        this._super.apply(this, arguments);
+        if (event && event.target === this) {
+            this.activate();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
