@@ -341,7 +341,12 @@ class PosOrder(models.Model):
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.user.company_id)
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
-    user_id = fields.Many2one('res.users', string='Salesman', help="Person who uses the cash register. It can be a reliever, a student or an interim employee.", default=lambda self: self.env.uid)
+    user_id = fields.Many2one(
+        comodel_name='res.users', string='Salesman',
+        help="Person who uses the cash register. It can be a reliever, a student or an interim employee.",
+        default=lambda self: self.env.uid,
+        states={'done': [('readonly', True)], 'invoiced': [('readonly', True)]},
+    )
     amount_tax = fields.Float(compute='_compute_amount_all', string='Taxes', digits=0)
     amount_total = fields.Float(compute='_compute_amount_all', string='Total', digits=0)
     amount_paid = fields.Float(compute='_compute_amount_all', string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits=0)
@@ -366,12 +371,22 @@ class PosOrder(models.Model):
     account_move = fields.Many2one('account.move', string='Journal Entry', readonly=True, copy=False)
     picking_id = fields.Many2one('stock.picking', string='Picking', readonly=True, copy=False)
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Picking Type")
-    location_id = fields.Many2one('stock.location', related='session_id.config_id.stock_location_id', string="Location", store=True)
+    location_id = fields.Many2one(
+        comodel_name='stock.location',
+        related='session_id.config_id.stock_location_id',
+        string="Location", store=True,
+        readonly=True,
+    )
     note = fields.Text(string='Internal Notes')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
     pos_reference = fields.Char(string='Receipt Ref', readonly=True, copy=False)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sale Journal', store=True, readonly=True)
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', default=lambda self: self._default_session().config_id.default_fiscal_position_id)
+    fiscal_position_id = fields.Many2one(
+        comodel_name='account.fiscal.position', string='Fiscal Position',
+        default=lambda self: self._default_session().config_id.default_fiscal_position_id,
+        readonly=True,
+        states={'draft': [('readonly', False)]},
+    )
 
     @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
     def _compute_amount_all(self):
