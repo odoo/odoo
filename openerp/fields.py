@@ -630,7 +630,8 @@ class Field(object):
 
             if field is self:
                 self.recursive = True
-                continue
+                if not i:
+                    continue            # self directly depends on self, give up
 
             # add trigger on field and its inverses to recompute self
             model._field_triggers.add(field, (self, '.'.join(path[:i] or ['id'])))
