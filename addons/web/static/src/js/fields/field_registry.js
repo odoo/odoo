@@ -20,7 +20,6 @@ registry
     .add('abstract', AbstractField)
     .add('input', basic_fields.InputField)
     .add('integer', basic_fields.FieldInteger)
-    .add('html', basic_fields.FieldHtml)
     .add('boolean', basic_fields.FieldBoolean)
     .add('date', basic_fields.FieldDate)
     .add('datetime', basic_fields.FieldDateTime)

@@ -192,6 +192,16 @@ var AbstractField = Widget.extend({
     activate: function () {
     },
     /**
+     * This function should be implemented by widgets that are not able to
+     * notify their environment when their value changes (maybe because their
+     * are not aware of the changes). It is called before saving, and should
+     * call _setValue() to notify the environment if the value changed.
+     *
+     * @abstract
+     */
+    commitChanges: function () {
+    },
+    /**
      * this method is used to determine if the field value is set to a meaningful
      * value.  This is useful to determine if a field should be displayed as empty
      *
