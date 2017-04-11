@@ -134,7 +134,7 @@ class AccountAccount(models.Model):
         if vals.get('company_id', False):
             move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
             for account in self:
-                if (account.company_id.id <> vals['company_id']) and move_lines:
+                if (account.company_id.id != vals['company_id']) and move_lines:
                     raise UserError(_('You cannot change the owner company of an account that already contains journal items.'))
         # If user change the reconcile flag, all aml should be recomputed for that account and this is very costly.
         # So to prevent some bugs we add a constraint saying that you cannot change the reconcile field if there is any aml existing
