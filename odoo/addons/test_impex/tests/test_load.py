@@ -3,6 +3,7 @@
 
 import json
 import pkgutil
+import re
 
 from odoo.tests import common
 from odoo.tools.misc import mute_logger
@@ -1116,14 +1117,41 @@ class test_unique(ImporterCase):
         ])
         self.assertFalse(result['ids'])
         self.assertEqual(result['messages'], [
-            dict(message=u"The value for the field 'value' already exists. "
-                         u"This might be 'Value' in the current model, "
-                         u"or a field of the same name in an o2m.",
+            dict(message=u"The value for the field 'value' already exists "
+                         u"(this is probably 'Value' in the current model).",
                  type='error', rows={'from': 1, 'to': 1},
                  record=1, field='value'),
-            dict(message=u"The value for the field 'value' already exists. "
-                         u"This might be 'Value' in the current model, "
-                         u"or a field of the same name in an o2m.",
+            dict(message=u"The value for the field 'value' already exists "
+                         u"(this is probably 'Value' in the current model).",
                  type='error', rows={'from': 4, 'to': 4},
                  record=4, field='value'),
         ])
+
+    @mute_logger('odoo.sql_db')
+    def test_unique_pair(self):
+        result = self.import_(['value2', 'value3'], [
+            ['0', '1'],
+            ['1', '0'],
+            ['1', '1'],
+            ['1', '1'],
+        ])
+        self.assertFalse(result['ids'])
+        self.assertEqual(len(result['messages']), 1)
+        message = result['messages'][0]
+        self.assertEqual(message['type'], 'error')
+        self.assertEqual(message['record'], 3)
+        self.assertEqual(message['rows'], {'from': 3, 'to': 3})
+        m = re.match(
+            r"The values for the fields '([^']+)' already exist "
+            r"\(they are probably '([^']+)' in the current model\)\.",
+            message['message']
+        )
+        self.assertIsNotNone(m)
+        self.assertItemsEqual(
+            m.group(1).split(', '),
+            ['value2', 'value3']
+        )
+        self.assertItemsEqual(
+            m.group(2).split(', '),
+            ['Value2', 'Value3']
+        )

@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models
 
+
 def selection_fn(model):
     return [(str(key), val) for key, val in enumerate(["Corge", "Grault", "Wheee", "Moog"])]
 
@@ -148,7 +149,10 @@ class OnlyOne(models.Model):
     _name = 'export.unique'
 
     value = fields.Integer()
+    value2 = fields.Integer()
+    value3 = fields.Integer()
 
     _sql_constraints = [
         ('value_unique', 'unique (value)', "The value must be unique"),
+        ('pair_unique', 'unique (value2, value3)', "The values must be unique"),
     ]
