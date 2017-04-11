@@ -71,7 +71,7 @@ class AcquirerBuckaroo(models.Model):
                     del values[key]
                     break
 
-            items = sorted(values.items(), key=lambda (x, y): x.lower())
+            items = sorted(values.items(), key=lambda pair: pair[0].lower())
             sign = ''.join('%s=%s' % (k, urllib.unquote_plus(v)) for k, v in items)
         else:
             sign = ''.join('%s=%s' % (k, get_value(k)) for k in keys)
