@@ -157,41 +157,43 @@ class AccountInvoiceLine(models.Model):
                     debited_account = self.env['account.move.line'].search([('move_id', '=', valuation_move.id), ('debit', '!=', 0.0)], limit=1).account_id
                     credited_account = self.env['account.move.line'].search([('move_id', '=', valuation_move.id), ('credit', '!=', 0.0)], limit=1).account_id
 
-                    #TODO OCO une méthode avec ça:
-                    debited_correction_vals = {
-                        'name': stock_move.name + _(' - currency rate adjustment'),
-                        'product_id': stock_move.product_id.id,
-                        'quantity': correction_qty,
-                        'product_uom_id': stock_move.product_id.uom_id.id,
-                        'ref': stock_move.picking_id.name,
-                        'partner_id': valuation_move.partner_id.id,
-                        'credit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==1) and abs(balancing_amount) or 0.0,
-                        'debit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==-1) and abs(balancing_amount) or 0.0,
-                        'account_id': debited_account.id
-                    }
+                    self._write_valuation_correction_move(stock_move, correction_qty, valuation_move, balancing_amount, debited_account, credited_account)
 
-                    credited_correction_vals = {
-                        'name': stock_move.name + _(' - currency rate adjustment'),
-                        'product_id': stock_move.product_id.id,
-                        'quantity': correction_qty,
-                        'product_uom_id': stock_move.product_id.uom_id.id,
-                        'ref': stock_move.picking_id.name,
-                        'partner_id': valuation_move.partner_id.id,
-                        'credit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==-1) and abs(balancing_amount) or 0.0,
-                        'debit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==1) and abs(balancing_amount) or 0.0,
-                        'account_id': credited_account.id
-                    }
-
-                    date = self._context.get('force_period_date', fields.Date.context_today(self))
-                    correction_move = self.env['account.move'].create({
-                        'journal_id': valuation_move.journal_id.id,
-                        'line_ids': [(0,False,debited_correction_vals), (0,False,credited_correction_vals)],
-                        'date': date,
-                        'ref': stock_move.picking_id.name + _(' - currency rate adjustment'),
-                        'stock_account_valuation_correction': True})
-                    correction_move.post()
-                    stock_move.write({'stock_account_valuation_account_move_ids': [(4, correction_move.id, None)]})
-
-                    #TODO OCO : ça, ça ne va pas dans une méthode à part !!
                     valuation_move.stock_account_valuation_corrected_qty += correction_qty
                     global_quantity_to_correct -= correction_qty
+
+    def _write_valuation_correction_move(self, stock_move, correction_qty, valuation_move, balancing_amount, debited_account, credited_account):
+        debited_correction_vals = {
+            'name': stock_move.name + _(' - currency rate adjustment'),
+            'product_id': stock_move.product_id.id,
+            'quantity': correction_qty,
+            'product_uom_id': stock_move.product_id.uom_id.id,
+            'ref': stock_move.picking_id.name,
+            'partner_id': valuation_move.partner_id.id,
+            'credit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==1) and abs(balancing_amount) or 0.0,
+            'debit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==-1) and abs(balancing_amount) or 0.0,
+            'account_id': debited_account.id
+        }
+
+        credited_correction_vals = {
+            'name': stock_move.name + _(' - currency rate adjustment'),
+            'product_id': stock_move.product_id.id,
+            'quantity': correction_qty,
+            'product_uom_id': stock_move.product_id.uom_id.id,
+            'ref': stock_move.picking_id.name,
+            'partner_id': valuation_move.partner_id.id,
+            'credit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==-1) and abs(balancing_amount) or 0.0,
+            'debit': (float_compare(balancing_amount, 0.0, precision_digits=self.currency_id.decimal_places)==1) and abs(balancing_amount) or 0.0,
+            'account_id': credited_account.id
+        }
+
+        date = self._context.get('force_period_date', fields.Date.context_today(self))
+        correction_move = self.env['account.move'].create({
+                'journal_id': valuation_move.journal_id.id,
+                'line_ids': [(0,False,debited_correction_vals), (0,False,credited_correction_vals)],
+                'date': date,
+                'ref': stock_move.picking_id.name + _(' - currency rate adjustment'),
+                'stock_account_valuation_correction': True})
+        correction_move.post()
+        stock_move.write({'stock_account_valuation_account_move_ids': [(4, correction_move.id, None)]})
+

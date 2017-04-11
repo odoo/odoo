@@ -156,38 +156,9 @@ class StockQuant(models.Model):
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
 
-        if move.product_id.valuation == 'real_time':
-            #TODO OCO: faire dans une méthode ?
-            if hasattr(move, 'purchase_line_id') and quant.product_id.cost_method == 'real':
-                po_line = move.purchase_line_id
-                previously_received_counter = po_line.qty_received
-                qty_left_to_assign = quant.qty
-                split_quants_created = []
-                for invoice_line in po_line.invoice_lines.filtered(lambda line: line.invoice_id.state in ('open','paid')).sorted(lambda line: line.invoice_id.date):
-                    if not qty_left_to_assign:
-                        break
-                    product_precision = invoice_line.uom_id.rounding
-                    if float_compare(previously_received_counter, invoice_line.quantity, precision_rounding=product_precision) == -1:
-                        difference = invoice_line.quantity - previously_received_counter
+        quant._create_valuation_moves(move)
 
-                        difference_cmp = float_compare(difference, qty_left_to_assign, precision_rounding=product_precision)
-                        if difference_cmp >= 0: #difference is greater or equal
-                            quant.cost = invoice_line.price_unit
-                        else: #qty_left_to_assign is greater
-                            new_quant = quant._quant_split(quant.qty - difference) #Creates another Quant with quantity=difference
-                            new_quant.cost = invoice_line.price_unit
-                            split_quants_created.append(new_quant)
-
-                        qty_left_to_assign -= min(difference, qty_left_to_assign)
-
-                    previously_received_counter -= min(invoice_line.quantity, previously_received_counter)
-
-            quant._account_entry_move(move, cur_rate_already_ok= qty_left_to_assign==0)
-            for split_quant in split_quants_created:
-                # If the quant has been split, it was to match an invoice, so the
-                # split's results' prices cannot be changed by the currency rate.
-                split_quant._account_entry_move(move, cur_rate_already_ok=True)
-
+        if quant.product_id.valuation == 'real_time':
             # If the precision required for the variable quant cost is larger than the accounting
             # precision, inconsistencies between the stock valuation and the accounting entries
             # may arise.
@@ -209,6 +180,43 @@ class StockQuant(models.Model):
                 quant.sudo().write({'cost': cost_rounded})
                 quant_correct.sudo().write({'cost': cost_correct})
         return quant
+
+    def _create_valuation_moves(self, stock_move):
+        if self.product_id.valuation == 'real_time':
+            cur_rate_corrected=False
+
+            if hasattr(stock_move, 'purchase_line_id') and self.product_id.cost_method == 'real':
+                po_line = stock_move.purchase_line_id
+                previously_received_counter = po_line.qty_received
+                qty_left_to_assign = self.qty
+                split_quants_created = []
+                for invoice_line in po_line.invoice_lines.filtered(lambda line: line.invoice_id.state in ('open','paid')).sorted(lambda line: line.invoice_id.date):
+                    if not qty_left_to_assign:
+                        break
+                    product_precision = invoice_line.uom_id.rounding
+                    if float_compare(previously_received_counter, invoice_line.quantity, precision_rounding=product_precision) == -1:
+                        difference = invoice_line.quantity - previously_received_counter
+
+                        difference_cmp = float_compare(difference, qty_left_to_assign, precision_rounding=product_precision)
+                        if difference_cmp >= 0: #difference is greater or equal
+                            self.cost = invoice_line.price_unit
+                        else: #qty_left_to_assign is greater
+                            new_quant = self._quant_split(self.qty - difference) #Creates another Quant with quantity=difference
+                            new_quant.cost = invoice_line.price_unit
+                            split_quants_created.append(new_quant)
+
+                        qty_left_to_assign -= min(difference, qty_left_to_assign)
+
+                    previously_received_counter -= min(invoice_line.quantity, previously_received_counter)
+                cur_rate_corrected = qty_left_to_assign == 0
+
+            self._account_entry_move(stock_move, cur_rate_already_ok= cur_rate_corrected)
+            for split_quant in split_quants_created:
+                # If the quant has been split, it was to match an invoice, so the
+                # split's results' prices cannot be changed by the currency rate.
+                split_quant._account_entry_move(stock_move, cur_rate_already_ok=True)
+        else:
+            self._account_entry_move(stock_move)
 
     def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
         res = super(StockQuant, self)._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
