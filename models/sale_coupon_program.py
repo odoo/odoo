@@ -32,7 +32,7 @@ class SaleCouponProgram(models.Model):
     promo_code_usage = fields.Selection([
         ('no_code_needed', 'Automatically Applied'),
         ('code_needed', 'Use a code')],
-        help="Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulable)\n" +
+        help="Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulative)\n" +
              "Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n")
     promo_code = fields.Char('Promotion Code', copy=False,
         help="A promotion code is a code that is associated with a marketing discount. For example, a retailer might tell frequent customers to enter the promotion code 'THX001' to receive a 10%% discount on their whole order.")
@@ -143,9 +143,9 @@ class SaleCouponProgram(models.Model):
         elif self.rule_date_from and self.rule_date_from > order.date_order or self.rule_date_to and order.date_order > self.rule_date_to:
             message = {'error': _('Promo code is expired')}
         elif order.promo_code:
-            message = {'error': _('Promotionals codes are not cumulable.')}
+            message = {'error': _('Promotionals codes are not cumulative.')}
         elif self._is_global_discount_program() and order.applied_coupon_ids.mapped('program_id').filtered(lambda program: program._is_global_discount_program()):
-            message = {'error': _('Global discounts are not cumulable.')}
+            message = {'error': _('Global discounts are not cumulative.')}
         elif self.promo_applicability == 'on_current_order' and self.reward_type == 'product' and not order._is_reward_in_order_lines(self):
             message = {'error': _('The reward products should be in the sales order lines to apply the discount.')}
         else:
