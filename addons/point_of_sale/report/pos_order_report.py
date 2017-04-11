@@ -12,7 +12,7 @@ class PosOrderReport(models.Model):
 
     date = fields.Datetime(string='Date Order', readonly=True)
     order_id = fields.Many2one('pos.order', string='Order', readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', readonly=True)
     state = fields.Selection(
