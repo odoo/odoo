@@ -287,8 +287,9 @@ class ProcurementOrder(models.Model):
 
         OrderPoint = self.env['stock.warehouse.orderpoint']
 
-        orderpoints_noprefetch = OrderPoint.with_context(prefetch_fields=False).search(
-            company_id and [('company_id', '=', company_id)] or [],
+        domain = [('company_id', '=', company_id)] if company_id else []
+        domain += [('product_id.active', '=', True)]
+        orderpoints_noprefetch = OrderPoint.with_context(prefetch_fields=False).search(domain,
             order=self._procurement_from_orderpoint_get_order()).ids
         while orderpoints_noprefetch:
             if use_new_cursor:
