@@ -510,8 +510,7 @@ class configmanager(object):
             for sec in p.sections():
                 if sec == 'options':
                     continue
-                if not self.misc.has_key(sec):
-                    self.misc[sec]= {}
+                self.misc.setdefault(sec, {})
                 for (name, value) in p.items(sec):
                     if value=='True' or value=='true':
                         value = True
