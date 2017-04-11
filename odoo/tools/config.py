@@ -551,7 +551,7 @@ class configmanager(object):
             try:
                 p.write(file(self.rcfile, 'w'))
                 if not rc_exists:
-                    os.chmod(self.rcfile, 0600)
+                    os.chmod(self.rcfile, 0o600)
             except IOError:
                 sys.stderr.write("ERROR: couldn't write the config file\n")
 
@@ -585,9 +585,9 @@ class configmanager(object):
             try:
                 # bootstrap parent dir +rwx
                 if not os.path.exists(add_dir):
-                    os.makedirs(add_dir, 0700)
+                    os.makedirs(add_dir, 0o700)
                 # try to make +rx placeholder dir, will need manual +w to activate it
-                os.makedirs(d, 0500)
+                os.makedirs(d, 0o500)
             except OSError:
                 logging.getLogger(__name__).debug('Failed to create addons data dir %s', d)
         return d
@@ -596,7 +596,7 @@ class configmanager(object):
     def session_dir(self):
         d = os.path.join(self['data_dir'], 'sessions')
         if not os.path.exists(d):
-            os.makedirs(d, 0700)
+            os.makedirs(d, 0o700)
         else:
             assert os.access(d, os.W_OK), \
                 "%s: directory is not writable" % d

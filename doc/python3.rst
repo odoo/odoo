@@ -109,3 +109,23 @@ Removed/renamed methods
 
 ``in`` for dicts was introduced in Python 2.3, leading to ``has_key`` being
 redundant, and removed in Python 3.
+
+Minor syntax changes
+--------------------
+
+* the ability to unpack a parameter (in the parameter declaration list) has
+  been removed in Python 3 e.g.::
+
+      def foo((bar, baz), qux):
+          …
+
+  is now invalid
+
+* octal literals must be prefixed by ``0o`` (or ``0O``). Following the C
+  family, in Python 2 an octal literal simply has a leading 0, which can be
+  confusing and easy to get wrong when e.g. padding for readability (e.g.
+  ``0013`` would be the decimal 11 rather than 13).
+
+  In Python 3, leading zeroes followed by neither a 0 nor a period is an
+  error, octal literals now follow the hexadecimal convention with a ``0o``
+  prefix.
