@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-11 13:50+0000\n"
+"PO-Revision-Date: 2017-04-11 13:50+0000\n"
 "Last-Translator: Mikhail - <expromt.core@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -888,6 +888,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:124
 #: code:addons/point_of_sale/static/src/xml/pos.xml:635
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_partner_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_partner_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
 msgid "Customer"
@@ -2017,7 +2018,6 @@ msgstr "Категория предка"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_partner_id
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "Partner"
 msgstr "Партнёр"
@@ -2190,7 +2190,6 @@ msgstr "Продажи ТП"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
-#: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_config_id
@@ -2239,6 +2238,7 @@ msgid "Point of Sale Name"
 msgstr "Имя точки продаж"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
@@ -3536,11 +3536,6 @@ msgstr "Виртуальная клавиатура"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_stock_location_id
 msgid "Warehouse"
 msgstr "Склад"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_website_tag_ids
-msgid "Website tags"
-msgstr "Теги вебсайта"
 
 #. module: point_of_sale
 #. openerp-web

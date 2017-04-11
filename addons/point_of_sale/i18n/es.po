@@ -26,15 +26,15 @@
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # Gafic SLP Albert Cabedo (GAFIC, SLP) <albertgafic@gmail.com>, 2016
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
 # Gelo Joga Landoo <gj@landoo.es>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Gelo Joga Landoo <gj@landoo.es>, 2017\n"
+"POT-Creation-Date: 2017-04-11 13:50+0000\n"
+"PO-Revision-Date: 2017-04-11 13:50+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -883,6 +883,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:124
 #: code:addons/point_of_sale/static/src/xml/pos.xml:635
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_partner_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_partner_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
 msgid "Customer"
@@ -2006,7 +2007,6 @@ msgstr "Categoría padre"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_partner_id
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "Partner"
 msgstr "Empresa"
@@ -2180,7 +2180,6 @@ msgstr "Pedidos TPV"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
-#: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_config_id
@@ -2229,6 +2228,7 @@ msgid "Point of Sale Name"
 msgstr "Nombre del TPV"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
@@ -2996,6 +2996,8 @@ msgid ""
 "The default fiscal position must be included in the available fiscal "
 "positions of the point of sale"
 msgstr ""
+"La posición fiscal por defecto debe de ser incluida en las posiciones "
+"fiscales disponibles del punto de venta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_tax_included
@@ -3021,6 +3023,7 @@ msgstr ""
 msgid ""
 "The invoice journal and the point of sale must belong to the same company"
 msgstr ""
+"El diario de ventas y el punto de venta deben pertenecer a la misma compañía"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:98
@@ -3205,6 +3208,8 @@ msgid ""
 "This cashbox line is used by default when opening or closing a balance for "
 "this point of sale"
 msgstr ""
+"Esta linea de caja se usa por defecto cuando se abre o cierra un balance en "
+"este punto de venta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_journal_amount_authorized_diff
@@ -3254,6 +3259,8 @@ msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Esta factura se ha creado desde la sesión del punto de venta: <a href=# "
+"data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_restaurant
@@ -3316,6 +3323,8 @@ msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Esta transferencia se ha creado desde la sesión del punto de venta: <a "
+"href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_template_pos_categ_id
@@ -3490,7 +3499,7 @@ msgstr "Usuarios"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_uuid
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3522,16 +3531,11 @@ msgid "Warehouse"
 msgstr "Almacén"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_website_tag_ids
-msgid "Website tags"
-msgstr "Etiquetas del sitio web"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1325
 #, python-format
 msgid "Weighing"
-msgstr ""
+msgstr "Peso"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:12
@@ -3558,6 +3562,8 @@ msgid ""
 "You can define another list of available currencies on the\n"
 "                                <i>Cash Registers</i> tab of the"
 msgstr ""
+"Puede definir otra lista de monedas disponibles en la pestaña <i>Cajas "
+"Registradoras</i> del"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:394
@@ -3839,7 +3845,7 @@ msgstr "report.point_of_sale.report_invoice"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
 msgid "report.point_of_sale.report_saledetails"
-msgstr ""
+msgstr "report.point_of_sale.report_saledetails"
 
 #. module: point_of_sale
 #. openerp-web

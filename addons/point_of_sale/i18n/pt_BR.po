@@ -14,13 +14,14 @@
 # Cesar Silveira <cesar.consultant@gmail.com>, 2016
 # Munique Shih <muniqueshih@hotmail.com>, 2016
 # Hélio Dias Brito Teixeira <helio.dbt@gmail.com>, 2016
+# Silmar <pinheirosilmar@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Hélio Dias Brito Teixeira <helio.dbt@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-04-11 13:50+0000\n"
+"PO-Revision-Date: 2017-04-11 13:50+0000\n"
+"Last-Translator: Silmar <pinheirosilmar@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:711
 #, python-format
 msgid " REFUND"
-msgstr ""
+msgstr "DEVOLUÇÃO"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr_lines
@@ -169,7 +170,7 @@ msgstr "Total"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>User</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Usuário</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -386,12 +387,12 @@ msgstr "Aplicar Desconto"
 #: code:addons/point_of_sale/static/src/js/screens.js:1907
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
-msgstr ""
+msgstr "Você tem certeza que os clientes querem pagar"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_auto
 msgid "Automatic Receipt Printing"
-msgstr ""
+msgstr "Impressão de recibo automático"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_cashdrawer
@@ -856,6 +857,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:124
 #: code:addons/point_of_sale/static/src/xml/pos.xml:635
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_partner_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_partner_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
 msgid "Customer"
@@ -1971,7 +1973,6 @@ msgstr "Categoria superior(pai)"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_partner_id
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "Partner"
 msgstr "Parceiro"
@@ -2140,7 +2141,6 @@ msgstr "Encomendas PoS"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
-#: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_config_id
@@ -2189,6 +2189,7 @@ msgid "Point of Sale Name"
 msgstr "Nome do Ponto de Vendas"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
@@ -3454,11 +3455,6 @@ msgstr "Teclado virtual"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_stock_location_id
 msgid "Warehouse"
 msgstr "Armazém"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_website_tag_ids
-msgid "Website tags"
-msgstr "Etiquetas do Site"
 
 #. module: point_of_sale
 #. openerp-web
