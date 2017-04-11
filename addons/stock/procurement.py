@@ -459,6 +459,8 @@ class procurement_order(osv.osv):
         product_obj = self.pool.get('product.product')
 
         dom = company_id and [('company_id', '=', company_id)] or []
+        # DO NOT FORWARDPORT
+        dom += [('product_id.active', '=', True)]
         orderpoint_ids = orderpoint_obj.search(cr, uid, dom, order="location_id", context=context)
         prev_ids = []
         tot_procs = []
