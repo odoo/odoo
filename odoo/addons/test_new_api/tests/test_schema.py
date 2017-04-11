@@ -346,21 +346,21 @@ class TestSchema(common.TransactionCase):
 
     def test_10_datetime(self):
         """ check the database representation of a datetime field """
-        model = self.env['res.currency.rate']
+        model = self.env['ir.property']
         columns_data = self.get_columns_data(model._table)
-        self.assertEqual(columns_data['name'], {
+        self.assertEqual(columns_data['value_datetime'], {
             'character_maximum_length': None,
             'column_default': None,
-            'column_name': u'name',
+            'column_name': u'value_datetime',
             'data_type': u'timestamp without time zone',
             'datetime_precision': 6,
-            'is_nullable': u'NO',
+            'is_nullable': u'YES',
             'is_updatable': u'YES',
             'numeric_precision': None,
             'numeric_precision_radix': None,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': u'res_currency_rate',
+            'table_name': u'ir_property',
             'table_schema': u'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': u'timestamp',
