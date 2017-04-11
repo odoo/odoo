@@ -1,22 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * purchase
-#
+# 
 # Translators:
-# Nasan-Ochir L <nasaaskii@gmail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2017
+# Nasan-Ochir L <nasaaskii@gmail.com>, 2017
+# Jacara <baskhuujacara@gmail.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
+# Erdenebold Ts <erdenebold10@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-06-22 09:11+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-29 13:59+0000\n"
+"Last-Translator: Erdenebold Ts <erdenebold10@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase
@@ -30,16 +34,14 @@ msgid ""
 "    ${object.partner_id.name}\n"
 "% endif\n"
 ",</p><p>\n"
-"Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or "
-"'purchase order confirmation'} <strong>${object.name}</strong>\n"
+"Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} <strong>${object.name}</strong>\n"
 "% if object.partner_ref:\n"
 "    with reference: ${object.partner_ref}\n"
 "% endif\n"
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</"
-"strong>\n"
+"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -57,17 +59,14 @@ msgid ""
 "% endif\n"
 ",</p>\n"
 "<p>\n"
-"Please find in attachment a <strong>${object.state in ('draft', 'sent') and "
-"'request for quotation' or 'purchase order confirmation'} ${object.name}</"
-"strong>\n"
+"Please find in attachment a <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
 "% if object.partner_ref:\n"
 "    with reference: ${object.partner_ref}\n"
 "% endif\n"
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</"
-"strong>\n"
+"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -124,8 +123,8 @@ msgstr "${object.company_id.name} Захиалга (Код ${object.name or 'б/
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
 msgid ""
-"<span>(*) This configuration is related to the company you're logged into.</"
-"span>"
+"<span>(*) This configuration is related to the company you're logged "
+"into.</span>"
 msgstr ""
 
 #. module: purchase
@@ -184,7 +183,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Нийт</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -229,7 +228,8 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.config.settings,module_purchase_requisition:0
 msgid ""
-"Allow using call for tenders to get quotes from multiple suppliers (advanced)"
+"Allow using call for tenders to get quotes from multiple suppliers "
+"(advanced)"
 msgstr ""
 
 #. module: purchase
@@ -266,7 +266,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_account_analytic_id
 msgid "Analytic Account"
-msgstr "Шинжилгээний Данс"
+msgstr "Шинжилгээний данс"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -350,7 +350,7 @@ msgstr ""
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "Хориглох мессеж"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:796
@@ -378,11 +378,8 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_purchase_requisition
 msgid ""
-"Calls for tenders are used when you want to generate requests for quotations "
-"to several vendors for a given set of products.\n"
-"You can configure per product if you directly do a Request for Quotation to "
-"one vendor or if you want a Call for Tenders to compare offers from several "
-"vendors."
+"Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
+"You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors."
 msgstr ""
 
 #. module: purchase
@@ -465,7 +462,7 @@ msgstr "Компаниуд"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_company_id
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Company"
-msgstr "Компани"
+msgstr "Байгууллага"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:294
@@ -633,6 +630,11 @@ msgid "Email composition wizard"
 msgstr "Имэйл үүсгэх харилцах цонх"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_survey_mail_compose_message
+msgid "Email composition wizard for Survey"
+msgstr "Судалгаанд зориулсан эмэйл үүсгэх харилцах цонх"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
 msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
@@ -664,7 +666,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Бохир жин"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -714,8 +716,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"Олон улсын Худалдааны Нөхцөл нь олон улсын худалдаанд хэрэглэгддэг урьдчилан "
-"тодорхойлсон цуврал нөхцлүүд байдаг."
+"Олон улсын Худалдааны Нөхцөл нь олон улсын худалдаанд хэрэглэгддэг урьдчилан"
+" тодорхойлсон цуврал нөхцлүүд байдаг."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice
@@ -787,7 +789,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
 msgid "Logistics"
-msgstr ""
+msgstr "Логистик"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
@@ -814,20 +816,20 @@ msgstr "Нэхэмжлэх заавар"
 #: model:ir.model.fields,help:purchase.field_res_company_po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for procuring products, they will be scheduled that many days earlier "
-"to cope with unexpected vendor delays."
+"Orders for procuring products, they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
 msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
 msgid "Message for Purchase Order"
-msgstr ""
+msgstr "Худалдан авах захиалгын мессеж"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr ""
+msgstr "Худалдан авалтын захиалгын мэссэж"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation_amount
@@ -856,7 +858,7 @@ msgstr "Шинэ Мэйл"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "Мессеж байхгүй"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
@@ -957,7 +959,7 @@ msgstr "PO_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Packaging"
-msgstr ""
+msgstr "Баглаа"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -978,7 +980,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_payment_term_id
 msgid "Payment Terms"
-msgstr ""
+msgstr "Төлбөрийн Нөхцөл"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1237,7 +1239,7 @@ msgstr "Худалдан авалтын стандарт үнэ"
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "Purchases"
-msgstr "Худалдан авалт"
+msgstr "Нийлүүлэгч"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1265,7 +1267,7 @@ msgstr "Үнийн санал"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ"
-msgstr ""
+msgstr "Үнийн санал"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
@@ -1333,8 +1335,8 @@ msgstr "Хэмжих нэгжийн код"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_origin
 msgid ""
-"Reference of the document that generated this purchase order request (e.g. a "
-"sale order or an internal procurement request)"
+"Reference of the document that generated this purchase order request (e.g. a"
+" sale order or an internal procurement request)"
 msgstr ""
 
 #. module: purchase
@@ -1348,7 +1350,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
 msgid "Reports"
-msgstr ""
+msgstr "Тайлан"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
@@ -1401,6 +1403,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"\"Анхааруулга\" сонголтыг сонгосноор хэрэглэгчид мессеж анхааруулагдах "
+"болно. \"Хориглох Мессеж\"-г сонгосноор алдааг өгч урсгалыг зогсоох болно. "
+"Мессеж нь дараагийн талбарт бичигдэх ёстой."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1415,7 +1420,7 @@ msgstr "Үнийн хүсэлтийг эмэйлээр илгээх"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Дараалал"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_costing_method:0
@@ -1512,8 +1517,7 @@ msgstr "Гэрээний заалт/нөхцөл"
 #: model:ir.actions.act_window,help:purchase.product_product_action
 msgid ""
 "The product form contains detailed information to improve the\n"
-"                purchase process: prices, procurement logistics, accounting "
-"data,\n"
+"                purchase process: prices, procurement logistics, accounting data,\n"
 "                available vendors, etc."
 msgstr ""
 
@@ -1521,8 +1525,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid ""
 "The product form contains detailed information to improve the\n"
-"            purchase process: prices, procurement logistics, accounting "
-"data,\n"
+"            purchase process: prices, procurement logistics, accounting data,\n"
 "            available vendors, etc."
 msgstr ""
 
@@ -1538,8 +1541,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to "
-"control the receipt\n"
+"                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
 
@@ -1651,7 +1653,16 @@ msgstr "Шилжүүлэх"
 #: code:addons/purchase/models/purchase.py:345
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been done."
+"Unable to cancel purchase order %s as some receptions have already been "
+"done."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:348
+#, python-format
+msgid ""
+"Unable to cancel this purchase order. You must first cancel related vendor "
+"bills."
 msgstr ""
 
 #. module: purchase
@@ -1704,8 +1715,7 @@ msgstr ""
 msgid ""
 "Use this menu to search within your purchase orders by\n"
 "                references, vendor, products, etc. For each purchase order,\n"
-"                you can track the related discussion with the vendor, "
-"control\n"
+"                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
 msgstr ""
 
@@ -1769,7 +1779,7 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Vendors"
-msgstr ""
+msgstr "Нийлүүлэгчид"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1783,7 +1793,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Эзлэхүүн"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1802,24 +1812,24 @@ msgstr "Агуулах"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "Сануулга"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:251
 #: code:addons/purchase/models/purchase.py:730
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "%s-д зориулсан анхааруулга"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on the Purchase Order"
-msgstr ""
+msgstr "Худалдан авалтын анхааруулга"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning when Purchasing this Product"
-msgstr ""
+msgstr "Энэ барааг худалдах үеийн сануулга"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
@@ -1852,8 +1862,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:purchase.product_product_action
 msgid ""
 "You must define a product for everything you purchase, whether\n"
-"                it's a physical product, a consumable or services you buy "
-"to\n"
+"                it's a physical product, a consumable or services you buy to\n"
 "                subcontractors."
 msgstr ""
 

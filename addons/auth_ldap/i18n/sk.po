@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # * auth_ldap
 # 
+# Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,53 +26,55 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
+"Automaticky vytvorte lokálne používateľské účty pre nových používateľov "
+"autentifikovaných cez LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Spoločnosti"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_company
 msgid "Company"
-msgstr ""
+msgstr "Spoločnosť"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
 msgid "Create user"
-msgstr ""
+msgstr "Vytvoriť používateľa"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Created by "
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Created on "
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Názov obrazovky "
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_general_configuration_form_inherit_auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
-msgstr ""
+msgstr "LDAP konfigurácia"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
 #: model:ir.ui.view,arch_db:auth_ldap.view_general_configuration_form_inherit_auth_ldap
 msgid "LDAP Parameters"
-msgstr ""
+msgstr "LDAP parametre"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_base_config_settings_ldaps
@@ -77,57 +84,57 @@ msgstr ""
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
 msgid "LDAP Server address"
-msgstr ""
+msgstr "LDAP adresa servera"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
 msgid "LDAP Server port"
-msgstr ""
+msgstr "LDAP port servera"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
 msgid "LDAP base"
-msgstr ""
+msgstr "LDAP základ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
 msgid "LDAP binddn"
-msgstr ""
+msgstr "LDAP binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_filter
 msgid "LDAP filter"
-msgstr ""
+msgstr "LDAP filter"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_password
 msgid "LDAP password"
-msgstr ""
+msgstr "LDAP heslo"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Posledná modifikácia"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Naposledy upravoval"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Naposledy upravované"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr ""
+msgstr "Prihlasovacie údaje"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr ""
+msgstr "Proces parametrov"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
@@ -136,26 +143,29 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
+"Vyžiadajte zabezpečné TLS/SSL zašifrovanie pri pripájaní na LDAP server. "
+"Táto možnosť vyžaduje server s aktivovaným STARTTLS, inak všetky autorizačné"
+" pokusy zlyhajú"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sekvencia"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr ""
+msgstr "Informácia servera"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr ""
+msgstr "Nastavte svoj LDAP server"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
 msgid "Template User"
-msgstr ""
+msgstr "Šablóna užívateľa"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
@@ -163,6 +173,7 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
+"Heslo účtu používateľa na LDAP serveri ktorý je používaný na dotaz adresára."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
@@ -170,33 +181,35 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
+"Účet používateľa na LDAP serveri ktorý je používaný na dotaz adresára. "
+"Nechajte prázdne pre anonymné pripojenie."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
 msgid "Use TLS"
-msgstr ""
+msgstr "Použiť TLS"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr ""
+msgstr "Informácia používateľa"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
 msgid "User to copy when creating new users"
-msgstr ""
+msgstr "Pouźívateľna skopírovanie pri vytváraní nových používateľov"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Používatelia"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "res.company.ldap"
-msgstr ""
+msgstr "res.company.ldap"

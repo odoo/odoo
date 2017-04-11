@@ -84,16 +84,16 @@ msgstr ""
 "da ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
-"% se for _on-line:\n"
+"% if is_on-line:\n"
 "    <br/><br/>\n"
 "    <center>\n"
-"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">View Invoice</a>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Ver fatura</a>\n"
 "    </center>\n"
 "% endif\n"
 "    <br/><br/>\n"
 "\n"
 "% if object.state=='paid':\n"
-"    <p>Esta fatura j]a foi paga.</p>\n"
+"    <p>Esta fatura já foi paga.</p>\n"
 "% else:\n"
 "    <p>Por favor, remita o seu pagamento logo que possível.</p>\n"
 "% endif\n"
@@ -549,7 +549,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr "<span title=\"Balance in Odoo\">Saldo em GL</span>"
+msgstr "<span title=\"Balance in Odoo\">Saldo no GL</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1272,7 +1272,7 @@ msgstr "Registo de Contas do Parceiro"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_payable_id
 msgid "Account Payable"
-msgstr "Conta a Pagar"
+msgstr "Conta 'A Pagar'"
 
 #. module: account
 #: model:ir.model,name:account.model_account_print_journal
@@ -1287,7 +1287,7 @@ msgstr "Propriedades da Conta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_receivable_id
 msgid "Account Receivable"
-msgstr "Conta a Receber"
+msgstr "Conta 'A Receber'"
 
 #. module: account
 #: model:ir.model,name:account.model_account_financial_report
@@ -4551,12 +4551,12 @@ msgstr "Referência livre"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Payable accounts"
-msgstr "Das contas a Pagar"
+msgstr "Das contas 'A Pagar'"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Receivable accounts"
-msgstr "Das contas a Receber"
+msgstr "Das contas 'A Receber'"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -5594,6 +5594,8 @@ msgid ""
 "It's recommended that you do not delete any accounts, even if they are not "
 "relevant. Simply make them inactive."
 msgstr ""
+"É recomendado que não elimine quaisquer contas, mesmo se elas não forem "
+"relevantes. Simplesmente torne-as inativas."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -5787,12 +5789,12 @@ msgstr "Justificação"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban dashboard"
-msgstr "Painel Kanban"
+msgstr "Painel do Kanban"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
 msgid "Kanban dashboard graph"
-msgstr "Gráfico do painel Kanban"
+msgstr "Gráfico do painel do Kanban"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6086,7 +6088,7 @@ msgstr "Notas Legais..."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr ""
+msgstr "Menções legais que têm de ser impressas nas faturas."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:149
@@ -6197,7 +6199,7 @@ msgstr "Moeda principal da empresa."
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Make Manual Tax Adjustments"
-msgstr ""
+msgstr "Efetuar Ajustes Manuais do Imposto"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6374,7 +6376,7 @@ msgstr "Menos Passivos Não Correntes"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Payable Accounts"
-msgstr "Menos Contas a Pagar"
+msgstr "Menos Contas 'A Pagar'"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -6804,6 +6806,8 @@ msgid ""
 "Once you have created your chart of accounts, you will need to update your "
 "account balances."
 msgstr ""
+"Assim que tiver criado o seu plano de contas, terá de atualizar os seus "
+"saldos da conta."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6812,6 +6816,9 @@ msgid ""
 "                        to access your statements from the Accounting Dashboard. \n"
 "                        The available methods for synchronization are as follows."
 msgstr ""
+"Assim que as suas contas bancárias estiverem registadas, irá poder\n"
+"aceder aos extratos bancários a partir do Painel de Contabilidade.\n"
+"Os métodos disponíveis para a sincronização são:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7123,12 +7130,12 @@ msgstr "Registo de Parceiros"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable
 msgid "Partner Ledger: Payable"
-msgstr "Registo de Parceiro: A Pagar"
+msgstr "Registo de parceiro: A Pagar"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_receivable
 msgid "Partner Ledger: Receivable"
-msgstr "Registo de Parceiro: A Receber"
+msgstr "Registo de parceiro: A Receber"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
@@ -7172,7 +7179,7 @@ msgstr "Pagável"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_payable_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Payable Account"
-msgstr "Conta Pagável"
+msgstr "Conta 'A Pagar'"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -7181,7 +7188,7 @@ msgstr "Conta Pagável"
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 #: model:ir.ui.view,arch_db:account.view_account_search
 msgid "Payable Accounts"
-msgstr "Contas Pagáveis"
+msgstr "Contas 'A Pagar'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_debit_limit
@@ -7770,13 +7777,13 @@ msgstr "Motivo..."
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Receivable"
-msgstr "Recebível"
+msgstr "A Receber"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_receivable_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Receivable Account"
-msgstr "Conta a Receber"
+msgstr "Conta 'A Receber'"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -7786,7 +7793,7 @@ msgstr "Conta a Receber"
 #: model:ir.ui.view,arch_db:account.view_account_form
 #: model:ir.ui.view,arch_db:account.view_account_search
 msgid "Receivable Accounts"
-msgstr "Contas a Receber"
+msgstr "Contas 'A Receber'"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -7794,7 +7801,7 @@ msgstr "Contas a Receber"
 #: selection:account.report.partner.ledger,result_selection:0
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Receivable and Payable Accounts"
-msgstr "Contas a receber e a pagar"
+msgstr "Contas 'A Receber' e 'A Pagar'"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -8548,7 +8555,7 @@ msgid ""
 "Simplify your cash, checks, or credit cards deposits with an integrated "
 "batch payment function."
 msgstr ""
-"Simplifique os depósitos de dinheiro, cheques ou cartões de crédito com a "
+"Simplifique os depósitos de dinheiro, cheques ou cartões de crédito com uma "
 "função integrada de pagamento em lote."
 
 #. module: account
@@ -9210,6 +9217,9 @@ msgid ""
 "The first step is to set up your company's information. This is mostly used "
 "in printed business documents like orders and invoices."
 msgstr ""
+"O primeiro passo para configurar a informação da sua empresa. Esta é "
+"utilizada principalmente nos documentos de negócio impressos, tais como "
+"encomendas e faturas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_position_id
@@ -9348,6 +9358,8 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"A conta selecionada do seu Movimento de Diário pede que forneça uma moeda "
+"secundária. Deverá remover a moeda secundária na conta."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1325
@@ -9522,6 +9534,9 @@ msgid ""
 "This allows you to manage the revenue recognition on selling products. It keeps track of the installments occurred on those revenue recognitions, and creates account moves for those installment lines\n"
 "-This installs the module account_deferred_revenue."
 msgstr ""
+"Isto permite-lhe gerir os o reconhecimento de receita nos produtos vendidos. \n"
+"Este mantém o controle das prestações ocorridas nesses reconhecimentos de receita, e cria movimentos de conta para essas linhas de prestação. \n"
+"- Isto instala o módulo account_deferred_revenue."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
@@ -9662,6 +9677,8 @@ msgid ""
 "This move's amount is higher than the transaction's amount. Click to "
 "register a partial payment and keep the payment balance open."
 msgstr ""
+"Este montante do movimento é superior ao montante da transação. Clique para "
+"registar um pagamento parcial e manter o saldo do pagamento em aberto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_debit_credit
@@ -9735,6 +9752,7 @@ msgstr "Este imposto de compra será atribuído por padrão em novos produtos."
 msgid ""
 "This role is best suited for managing the day to day accounting operations:"
 msgstr ""
+"Esta função é adequada para a gestão diária das operações de contabilidade:"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_default_sale_tax_id
@@ -9865,12 +9883,12 @@ msgstr "Total Faturado"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_debit
 msgid "Total Payable"
-msgstr "Total a Pagar"
+msgstr "Total Pagável"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_credit
 msgid "Total Receivable"
-msgstr "Total a Receber"
+msgstr "Total A Receber"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_residual
@@ -10105,7 +10123,7 @@ msgstr "Montante sem Impostos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount in Company Currency"
-msgstr ""
+msgstr "Montante Sem Imposto na Moeda da Empresa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10432,7 +10450,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "Se este diário deverá ser exibido no painel ou não"
+msgstr "Se este diário deverá ser exibido ou não no painel"
 
 #. module: account
 #. openerp-web
@@ -10626,6 +10644,8 @@ msgid ""
 "You cannot change the value of the reconciliation on this account as it "
 "already has some moves"
 msgstr ""
+"Não pode alterar o valor da reconciliação nesta conta porque esta já tem "
+"alguns movimentos."
 
 #. module: account
 #: code:addons/account/models/account_move.py:418
@@ -10691,6 +10711,8 @@ msgid ""
 "You cannot empty the account number once set.\n"
 "If you would like to delete the account number, you can do it from the Bank Accounts list."
 msgstr ""
+"Não pode limpar o número da conta uma vez definida. \n"
+"Se pretender eliminar o número de conta, pode fazer isso a partir da lista de Contas Bancárias."
 
 #. module: account
 #: code:addons/account/models/account.py:96
@@ -10949,13 +10971,6 @@ msgstr "activar esta funcionalidade"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:298
-#, python-format
-msgid "all"
-msgstr "todos"
-
-#. module: account
-#. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:17
 #, python-format
 msgid "assign to invoice"
@@ -10980,13 +10995,6 @@ msgstr "código"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "create a journal entry"
 msgstr "criar um movimento do diário"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:295
-#, python-format
-msgid "customers"
-msgstr "clientes"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -11025,13 +11033,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "or"
 msgstr "ou"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:297
-#, python-format
-msgid "others"
-msgstr "outros"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -11119,13 +11120,6 @@ msgstr "definir logótipo da empresa"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "setup your bank accounts."
 msgstr "configure as suas contas bancárias"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
-#, python-format
-msgid "suppliers"
-msgstr "fornecedores"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

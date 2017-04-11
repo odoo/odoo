@@ -323,7 +323,7 @@ msgstr "Registru 28 431.8 x 279.4 mm"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_left
 msgid "Left Margin (mm)"
-msgstr "Marginea din stanga (mm)"
+msgstr "Marginea din stânga (mm)"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -540,6 +540,14 @@ msgstr "Pagină web:"
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf eșuat (cod eroare: %s). Mesaj: %s"
+
+#. module: report
+#: code:addons/report/models/report.py:450
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
 
 #. module: report
 #. openerp-web
