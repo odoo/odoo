@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
                 # FORWARDPORT UP TO 10.0
                 if order.company_id.tax_calculation_rounding_method == 'round_globally':
                     price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                    taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_id)
+                    taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=order.partner_shipping_id)
                     amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
                 else:
                     amount_tax += line.price_tax
@@ -503,11 +503,11 @@ class SaleOrder(models.Model):
                 group = tax.tax_group_id
                 res.setdefault(group, 0.0)
                 amount = tax.compute_all(line.price_reduce + base_tax, quantity=line.product_uom_qty,
-                                         product=line.product_id, partner=line.order_partner_id)['taxes'][0]['amount']
+                                         product=line.product_id, partner=self.partner_shipping_id)['taxes'][0]['amount']
                 res[group] += amount
                 if tax.include_base_amount:
                     base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1, product=line.product_id,
-                                                partner=line.order_partner_id)['taxes'][0]['amount']
+                                                partner=self.partner_shipping_id)['taxes'][0]['amount']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = map(lambda l: (l[0].name, l[1]), res)
         return res
@@ -554,7 +554,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_id)
+            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
             line.update({
                 'price_tax': taxes['total_included'] - taxes['total_excluded'],
                 'price_total': taxes['total_included'],
@@ -620,7 +620,7 @@ class SaleOrderLine(models.Model):
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
             # If company_id is set, always filter taxes by the company
             taxes = line.product_id.taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
-            line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
+            line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id) if fpos else taxes
 
     @api.multi
     def _prepare_order_line_procurement(self, group_id=False):
