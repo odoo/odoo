@@ -1386,7 +1386,7 @@ class AccountMoveLine(models.Model):
             domain += [('company_id', 'in', context['company_ids'])]
 
         if context.get('reconcile_date'):
-            domain += ['|', ('reconciled', '=', False), '|', ('matched_debit_ids.create_date', '>', context['reconcile_date']), ('matched_credit_ids.create_date', '>', context['reconcile_date'])]
+            domain += ['|', ('reconciled', '=', False), '|', ('matched_debit_ids.max_date', '>', context['reconcile_date']), ('matched_credit_ids.max_date', '>', context['reconcile_date'])]
 
         if context.get('account_tag_ids'):
             domain += [('account_id.tag_ids', 'in', context['account_tag_ids'].ids)]
@@ -1430,6 +1430,18 @@ class AccountPartialReconcile(models.Model):
         help='Utility field to express amount currency')
     company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Currency')
     full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile", copy=False)
+    max_date = fields.Datetime(string='Max Date of Matched Lines', compute='_compute_max_date',
+        readonly=True, copy=False, stored=True,
+        help='Technical field used to determine at which date this reconciliation needs to be shown on the aged receivable/payable reports.')
+
+    @api.multi
+    @api.depends('debit_move_id.date', 'credit_move_id.date')
+    def _compute_max_date(self):
+        for rec in self:
+            rec.max_date = max(
+                fields.Datetime.from_string(rec.debit_move_id.date),
+                fields.Datetime.from_string(rec.credit_move_id.date)
+            )
 
     @api.multi
     def _prepare_exchange_diff_line_to_reconcile(self, amount_diff, currency, diff_in_currency, move):
