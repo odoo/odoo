@@ -72,13 +72,19 @@ class WebsiteConfigSettings(models.TransientModel):
             config.language_count = len(self.language_ids)
 
     def set_has_google_analytics(self):
-        return self.env['ir.values'].set_default(
+        if not self.user_has_groups('website.group_website_designer'):
+            raise AccessDenied()
+        return self.env['ir.values'].sudo().set_default(
             'website.config.settings', 'has_google_analytics', self.has_google_analytics)
 
     def set_has_google_analytics_dashboard(self):
-        return self.env['ir.values'].set_default(
+        if not self.user_has_groups('website.group_website_designer'):
+            raise AccessDenied()
+        return self.env['ir.values'].sudo().set_default(
             'website.config.settings', 'has_google_analytics_dashboard', self.has_google_analytics_dashboard)
 
     def set_has_google_maps(self):
-        return self.env['ir.values'].set_default(
+        if not self.user_has_groups('website.group_website_designer'):
+            raise AccessDenied()
+        return self.env['ir.values'].sudo().set_default(
             'website.config.settings', 'has_google_maps', self.has_google_maps)
