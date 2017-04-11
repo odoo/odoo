@@ -98,3 +98,14 @@ Removed Operators
 
 These two operators were long recommended against/deprecated in Python 2,
 Python 3 removed them from the language.
+
+Removed/renamed methods
+-----------------------
+
+.. important::
+
+    * the ``has_key`` method on dicts must be replaced by use of the ``in``
+      operator e.g. ``foo.has_key(bar)`` becomes ``bar in foo``.
+
+``in`` for dicts was introduced in Python 2.3, leading to ``has_key`` being
+redundant, and removed in Python 3.

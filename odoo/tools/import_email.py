@@ -62,7 +62,7 @@ class ReceiverEmail2Event(object):
     
     def get_addresses(self, headers, msg):
         hcontent = ''
-        for header in [h for h in headers if msg.has_key(h)]:
+        for header in [h for h in headers if h in msg]:
             hcontent += msg[header]
         return self.email_re.findall(hcontent)
 

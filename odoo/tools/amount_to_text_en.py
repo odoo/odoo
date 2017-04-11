@@ -94,7 +94,7 @@ def amount_to_text(nbr, lang='en', currency='euro'):
 #        _logger.warning(_("Number too large '%d', can not translate it"))
 #        return str(nbr)
     
-    if not _translate_funcs.has_key(lang):
+    if lang not in _translate_funcs:
         _logger.warning(_("no translation function found for lang: '%s'"), lang)
         #TODO: (default should be en) same as above
         lang = 'en'
