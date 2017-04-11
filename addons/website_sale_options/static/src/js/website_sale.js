@@ -97,8 +97,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                         });
                     });
                 });
-        }else {
-            var $target = $(event.currentTarget);
+        } else {
             $form.ajaxSubmit({
                 url:  '/shop/cart/update_option',
                 data: {lang: weContext.get().lang},
@@ -109,7 +108,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                     }
                     website_sale_utils.animate_clone($('#my_cart'), $form, 10, 10);
                     $q.html(quantity).hide().fadeIn(600);
-                    if($target.attr("id") == 'add_to_cart') {
+                    if($(event.currentTarget).attr("id") == 'add_to_cart') {
                         window.location.href = "/shop/cart";
                     }
                 }
