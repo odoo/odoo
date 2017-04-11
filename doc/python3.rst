@@ -86,3 +86,15 @@ or::
 
 This form was implemented in Python 2.5 and is thus compatible across the
 board.
+
+Removed Operators
+-----------------
+
+.. important::
+
+    * The backtick operator ``\`foo\``` must be converted to an explicit call
+      to the ``repr()`` builtin
+    * The ``<>`` operator must be replaced by ``!=``
+
+These two operators were long recommended against/deprecated in Python 2,
+Python 3 removed them from the language.

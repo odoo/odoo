@@ -276,7 +276,7 @@ class _html2text(sgmllib.SGMLParser):
                             a['count'] = self.acount
                             a['outcount'] = self.outcount
                             self.a.append(a)
-                        self.o("][" + `a['count']` + "]")
+                        self.o("][%r]" % a['count'])
 
         if tag == "img" and start:
             attrsD = {}
@@ -295,7 +295,7 @@ class _html2text(sgmllib.SGMLParser):
                     self.a.append(attrs)
                 self.o("![")
                 self.o(alt)
-                self.o("]["+`attrs['count']`+"]")
+                self.o("][%r]" % attrs['count'])
 
         if tag == 'dl' and start: self.p()
         if tag == 'dt' and not start: self.pbr()
@@ -319,7 +319,7 @@ class _html2text(sgmllib.SGMLParser):
                 if li['name'] == "ul": self.o("* ")
                 elif li['name'] == "ol":
                     li['num'] += 1
-                    self.o(`li['num']`+". ")
+                    self.o("%r. " % li['num'])
                 self.start = 1
             else:
                 self.pbr()
@@ -389,7 +389,7 @@ class _html2text(sgmllib.SGMLParser):
                 newa = []
                 for link in self.a:
                     if self.outcount > link['outcount']:
-                        self.out("   ["+`link['count']`+"]: " + urlparse.urljoin(self.baseurl, link['href']))
+                        self.out("   ["+repr(link['count'])+"]: " + urlparse.urljoin(self.baseurl, link['href']))
                         if link.has_key('title'): self.out(" ("+link['title']+")")
                         self.out("\n")
                     else:
