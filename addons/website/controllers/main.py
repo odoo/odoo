@@ -117,7 +117,7 @@ class Website(Home):
 
         try:
             request.website.get_template(page)
-        except ValueError, e:
+        except ValueError as e:
             # page not found
             if request.website.is_publisher():
                 values.pop('deletable')
@@ -208,7 +208,7 @@ class Website(Home):
     def website_info(self):
         try:
             request.website.get_template('website.website_info').name
-        except Exception, e:
+        except Exception as e:
             return request.env['ir.http']._handle_exception(e, 404)
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])

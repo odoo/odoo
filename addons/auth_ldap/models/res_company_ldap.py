@@ -112,7 +112,7 @@ class CompanyLDAP(models.Model):
                 entry = results[0]
         except ldap.INVALID_CREDENTIALS:
             return False
-        except ldap.LDAPError, e:
+        except ldap.LDAPError as e:
             _logger.error('An LDAP exception occurred: %s', e)
         return entry
 
@@ -149,7 +149,7 @@ class CompanyLDAP(models.Model):
             conn.unbind()
         except ldap.INVALID_CREDENTIALS:
             _logger.error('LDAP bind failed.')
-        except ldap.LDAPError, e:
+        except ldap.LDAPError as e:
             _logger.error('An LDAP exception occurred: %s', e)
         return results
 

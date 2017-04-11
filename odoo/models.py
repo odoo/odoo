@@ -941,7 +941,7 @@ class BaseModel(object):
                 valid = names and not (set(names) & field_names)
                 valid = valid or func(self)
                 extra_error = None
-            except Exception, e:
+            except Exception as e:
                 _logger.debug('Exception while validating constraint', exc_info=True)
                 valid = False
                 extra_error = tools.ustr(e)
@@ -964,9 +964,9 @@ class BaseModel(object):
             if set(check._constrains) & field_names:
                 try:
                     check(self)
-                except ValidationError, e:
+                except ValidationError as e:
                     raise
-                except Exception, e:
+                except Exception as e:
                     raise ValidationError("%s\n\n%s" % (_("Error while validating constraint"), tools.ustr(e)))
 
     @api.model

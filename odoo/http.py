@@ -131,11 +131,11 @@ def dispatch_rpc(service_name, method, params):
         return result
     except NO_POSTMORTEM:
         raise
-    except odoo.exceptions.DeferredException, e:
+    except odoo.exceptions.DeferredException as e:
         _logger.exception(odoo.tools.exception_to_unicode(e))
         odoo.tools.debugger.post_mortem(odoo.tools.config, e.traceback)
         raise
-    except Exception, e:
+    except Exception as e:
         _logger.exception(odoo.tools.exception_to_unicode(e))
         odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
         raise
@@ -687,7 +687,7 @@ class JsonRequest(WebRequest):
                     rpc_request.debug(logline)
 
             return self._json_response(result)
-        except Exception, e:
+        except Exception as e:
             return self._handle_exception(e)
 
 def serialize_exception(e):
@@ -777,7 +777,7 @@ class HttpRequest(WebRequest):
                     'redirect': redirect,
                 })
                 return werkzeug.utils.redirect('/web/login?%s' % query)
-        except werkzeug.exceptions.HTTPException, e:
+        except werkzeug.exceptions.HTTPException as e:
             return e
 
     def dispatch(self):
@@ -1391,7 +1391,7 @@ class Root(object):
         if isinstance(result, Response) and result.is_qweb:
             try:
                 result.flatten()
-            except(Exception), e:
+            except(Exception) as e:
                 if request.db:
                     result = request.registry['ir.http']._handle_exception(e)
                 else:
@@ -1448,7 +1448,7 @@ class Root(object):
             def _dispatch_nodb():
                 try:
                     func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
-                except werkzeug.exceptions.HTTPException, e:
+                except werkzeug.exceptions.HTTPException as e:
                     return request._handle_exception(e)
                 request.set_handler(func, arguments, "none")
                 result = request.dispatch()
@@ -1483,7 +1483,7 @@ class Root(object):
                 response = self.get_response(httprequest, result, explicit_session)
             return response(environ, start_response)
 
-        except werkzeug.exceptions.HTTPException, e:
+        except werkzeug.exceptions.HTTPException as e:
             return e(environ, start_response)
 
     def get_db_router(self, db):

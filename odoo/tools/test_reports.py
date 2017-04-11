@@ -218,7 +218,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                         'type': button.getAttribute('type'),
                         'weight': button_weight,
                     })
-            except Exception, e:
+            except Exception as e:
                 _logger.warning("Cannot resolve the view arch and locate the buttons!", exc_info=True)
                 raise AssertionError(e.args[0])
 

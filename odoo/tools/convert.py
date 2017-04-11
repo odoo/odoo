@@ -781,7 +781,7 @@ form: module.record_id""" % (xml_id,)
             elif rec.tag in self._tags:
                 try:
                     self._tags[rec.tag](rec, de, mode=mode)
-                except Exception, e:
+                except Exception as e:
                     self.cr.rollback()
                     exc_info = sys.exc_info()
                     raise ParseError, (ustr(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline), exc_info[2]

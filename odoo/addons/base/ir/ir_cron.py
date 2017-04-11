@@ -95,7 +95,7 @@ class ir_cron(models.Model):
                 end_time = time.time()
                 _logger.debug('%.3fs (cron %s, server action %d with uid %d)', end_time - start_time, cron_name, server_action_id, self.env.uid)
             self.pool.signal_caches_change()
-        except Exception, e:
+        except Exception as e:
             self._handle_callback_exception(cron_name, server_action_id, job_id, e)
 
     @classmethod
@@ -166,7 +166,7 @@ class ir_cron(models.Model):
                     jobs = cr.dictfetchall()
                 else:
                     _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
-        except psycopg2.ProgrammingError, e:
+        except psycopg2.ProgrammingError as e:
             if e.pgcode == '42P01':
                 # Class 42 — Syntax Error or Access Rule Violation; 42P01: undefined_table
                 # The table ir_cron does not exist; this is probably not an OpenERP database.
@@ -206,7 +206,7 @@ class ir_cron(models.Model):
                 finally:
                     job_cr.close()
 
-            except psycopg2.OperationalError, e:
+            except psycopg2.OperationalError as e:
                 if e.pgcode == '55P03':
                     # Class 55: Object not in prerequisite state; 55P03: lock_not_available
                     _logger.debug('Another process/thread is already busy executing job `%s`, skipping it.', job['cron_name'])

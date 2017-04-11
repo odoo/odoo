@@ -10,7 +10,7 @@ def check_with_xsd(tree_or_str, xsd_path):
     xsd_schema = etree.XMLSchema(xml_schema_doc)
     try:
         xsd_schema.assertValid(tree_or_str)
-    except etree.DocumentInvalid, xml_errors:
+    except etree.DocumentInvalid as xml_errors:
         #import UserError only here to avoid circular import statements with tools.func being imported in exceptions.py
         from odoo.exceptions import UserError
         raise UserError('\n'.join([e.message for e in xml_errors.error_log]))

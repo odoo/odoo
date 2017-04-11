@@ -79,7 +79,7 @@ class ResUsers(models.Model):
             assert len(oauth_user) == 1
             oauth_user.write({'oauth_access_token': params['access_token']})
             return oauth_user.login
-        except AccessDenied, access_denied_exception:
+        except AccessDenied as access_denied_exception:
             if self.env.context.get('no_user_creation'):
                 return None
             state = json.loads(params['state'])

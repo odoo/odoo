@@ -33,7 +33,7 @@ class AuthSignupHome(Home):
             try:
                 self.do_signup(qcontext)
                 return super(AuthSignupHome, self).web_login(*args, **kw)
-            except (SignupError, AssertionError), e:
+            except (SignupError, AssertionError) as e:
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
                     qcontext["error"] = _("Another user is already registered using this email address.")
                 else:
@@ -62,7 +62,7 @@ class AuthSignupHome(Home):
             except SignupError:
                 qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')
-            except Exception, e:
+            except Exception as e:
                 qcontext['error'] = e.message or e.name
 
         response = request.render('auth_signup.reset_password', qcontext)

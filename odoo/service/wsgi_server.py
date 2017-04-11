@@ -55,7 +55,7 @@ def xmlrpc_return(start_response, service, method, params, string_faultcode=Fals
     try:
         result = odoo.http.dispatch_rpc(service, method, params)
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
-    except Exception, e:
+    except Exception as e:
         if string_faultcode:
             response = xmlrpc_handle_exception_string(e)
         else:

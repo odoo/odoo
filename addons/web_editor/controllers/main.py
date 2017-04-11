@@ -173,7 +173,7 @@ class Web_Editor(http.Controller):
                                 u"than 42 million pixel")
                         if not disable_optimization and image.format in ('PNG', 'JPEG'):
                             data = tools.image_save_for_web(image)
-                    except IOError, e:
+                    except IOError as e:
                         pass
 
                     attachment = Attachments.create({
@@ -185,7 +185,7 @@ class Web_Editor(http.Controller):
                     })
                     attachments += attachment
                 uploads += attachments.read(['name', 'mimetype', 'checksum', 'url'])
-            except Exception, e:
+            except Exception as e:
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)
 

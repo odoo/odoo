@@ -67,7 +67,7 @@ def serialize_exception(f):
     def wrap(*args, **kwargs):
         try:
             return f(*args, **kwargs)
-        except Exception, e:
+        except Exception as e:
             _logger.exception("An exception occured during an http request")
             se = _serialize_exception(e)
             error = {
@@ -670,7 +670,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code])
             request.session.authenticate(name, post['login'], password)
             return http.local_redirect('/web/')
-        except Exception, e:
+        except Exception as e:
             error = "Database creation error: %s" % e
         return self._render_template(error=error)
 
@@ -679,7 +679,7 @@ class Database(http.Controller):
         try:
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
             return http.local_redirect('/web/database/manager')
-        except Exception, e:
+        except Exception as e:
             error = "Database duplication error: %s" % e
             return self._render_template(error=error)
 
@@ -689,7 +689,7 @@ class Database(http.Controller):
             dispatch_rpc('db','drop', [master_pwd, name])
             request._cr = None  # dropping a database leads to an unusable cursor
             return http.local_redirect('/web/database/manager')
-        except Exception, e:
+        except Exception as e:
             error = "Database deletion error: %s" % e
             return self._render_template(error=error)
 
@@ -706,7 +706,7 @@ class Database(http.Controller):
             dump_stream = odoo.service.db.dump_db(name, None, backup_format)
             response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
             return response
-        except Exception, e:
+        except Exception as e:
             _logger.exception('Database.backup')
             error = "Database backup error: %s" % e
             return self._render_template(error=error)
@@ -717,7 +717,7 @@ class Database(http.Controller):
             data = base64.b64encode(backup_file.read())
             dispatch_rpc('db', 'restore', [master_pwd, name, data, str2bool(copy)])
             return http.local_redirect('/web/database/manager')
-        except Exception, e:
+        except Exception as e:
             error = "Database restore error: %s" % e
             return self._render_template(error=error)
 
@@ -726,7 +726,7 @@ class Database(http.Controller):
         try:
             dispatch_rpc('db', 'change_admin_password', [master_pwd, master_pwd_new])
             return http.local_redirect('/web/database/manager')
-        except Exception, e:
+        except Exception as e:
             error = "Master password update error: %s" % e
             return self._render_template(error=error)
 
@@ -772,7 +772,7 @@ class Session(http.Controller):
     def get_lang_list(self):
         try:
             return dispatch_rpc('db', 'list_lang', []) or []
-        except Exception, e:
+        except Exception as e:
             return {"error": e, "title": _("Languages")}
 
     @http.route('/web/session/modules', type='json', auth="user")
@@ -1050,7 +1050,7 @@ class Binary(http.Controller):
             data = ufile.read()
             args = [len(data), ufile.filename,
                     ufile.content_type, base64.b64encode(data)]
-        except Exception, e:
+        except Exception as e:
             args = [False, e.message]
         return out % (json.dumps(callback), json.dumps(args))
 

@@ -503,7 +503,7 @@ class Import(models.TransientModel):
                 'advanced_mode': any([len(models.fix_import_export_id_paths(col)) > 1 for col in headers]),
                 'debug': self.user_has_groups('base.group_no_one'),
             }
-        except Exception, error:
+        except Exception as error:
             # Due to lazy generators, UnicodeDecodeError (for
             # instance) may only be raised when serializing the
             # preview to a list in the return.
@@ -616,9 +616,9 @@ class Import(models.TransientModel):
                         if line[index]:
                             try:
                                 line[index] = dt.strftime(dt.strptime(ustr(line[index]).encode('utf-8'), user_format), server_format)
-                            except ValueError, e:
+                            except ValueError as e:
                                 raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, ustr(e.message)))
-                            except Exception, e:
+                            except Exception as e:
                                 raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, ustr(e.message)))
 
             elif field['type'] in ('float', 'monetary') and name in import_fields:
@@ -656,7 +656,7 @@ class Import(models.TransientModel):
             data, import_fields = self._convert_import_data(fields, options)
             # Parse date and float field
             data = self._parse_import_data(data, import_fields, options)
-        except ValueError, error:
+        except ValueError as error:
             return [{
                 'type': 'error',
                 'message': unicode(error),

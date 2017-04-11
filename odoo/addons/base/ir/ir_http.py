@@ -176,7 +176,7 @@ class IrHttp(models.AbstractModel):
         try:
             rule, arguments = cls._find_handler(return_rule=True)
             func = rule.endpoint
-        except werkzeug.exceptions.NotFound, e:
+        except werkzeug.exceptions.NotFound as e:
             return cls._handle_exception(e)
 
         # check authentication level
@@ -195,7 +195,7 @@ class IrHttp(models.AbstractModel):
             result = request.dispatch()
             if isinstance(result, Exception):
                 raise result
-        except Exception, e:
+        except Exception as e:
             return cls._handle_exception(e)
 
         return result

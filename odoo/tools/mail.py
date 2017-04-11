@@ -233,7 +233,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         cleaned = cleaned.replace('%&gt;', '%>')
         # html considerations so real html content match database value
         cleaned.replace(u'\xa0', '&nbsp;')
-    except etree.ParserError, e:
+    except etree.ParserError as e:
         if 'empty' in str(e):
             return ""
         if not silent:

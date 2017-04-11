@@ -28,7 +28,7 @@ class WebsiteForm(http.Controller):
         try:
             data = self.extract_data(model_record, request.params)
         # If we encounter an issue while extracting data
-        except ValidationError, e:
+        except ValidationError as e:
             # I couldn't find a cleaner way to pass data to an exception
             return json.dumps({'error_fields' : e.args[0]})
 

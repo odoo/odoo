@@ -135,7 +135,7 @@ class GoogleService(models.TransientModel):
         try:
             dummy, response, dummy = self._do_request(GOOGLE_TOKEN_ENDPOINT, params=data, headers=headers, type='POST', preuri='')
             return response
-        except urllib2.HTTPError, error:
+        except urllib2.HTTPError as error:
             if error.code == 400:  # invalid grant
                 with registry(request.session.db).cursor() as cur:
                     self.env(cur)['res.users'].browse(self.env.uid).write({'google_%s_rtoken' % service: False})
@@ -182,7 +182,7 @@ class GoogleService(models.TransientModel):
                 ask_time = datetime.strptime(resp.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
             except:
                 pass
-        except urllib2.HTTPError, error:
+        except urllib2.HTTPError as error:
             if error.code in (204, 404):
                 status = error.code
                 response = ""
