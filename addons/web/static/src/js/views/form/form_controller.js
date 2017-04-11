@@ -214,6 +214,11 @@ var FormController = BasicController.extend({
     saveRecord: function (options) {
         var self = this;
         options = options || {};
+
+        // some field widgets (e.g. 'html') can't detect (all) their changes, so
+        // we ask them to commit their current value before saving
+        this.renderer.commitChanges();
+
         var stayInEdit = 'stayInEdit' in options ? options.stayInEdit : false;
         var shouldReload = 'reload' in options ? options.reload : true;
         if (!this.model.isDirty(this.handle) && !this.model.isNew(this.handle)) {

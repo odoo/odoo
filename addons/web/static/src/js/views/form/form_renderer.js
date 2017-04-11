@@ -77,6 +77,14 @@ return BasicRenderer.extend({
         });
     },
     /**
+     * Calls 'commitChanges' on all field widgets, so that they can notify the
+     * environment with their current value (useful for widgets that can't
+     * detect when their value changes, e.g. field 'html').
+     */
+    commitChanges: function () {
+        _.invoke(this.widgets, 'commitChanges');
+    },
+    /**
      * returns the active tab pages for each notebook
      *
      * @todo currently, this method is unused...

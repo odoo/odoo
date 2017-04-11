@@ -702,23 +702,6 @@ var FieldText = DebouncedField.extend({
     },
 });
 
-var FieldHtml = InputField.extend({
-    supportedFieldTypes: ['html'],
-    text_to_html: function (text) {
-        var value = text || "";
-        if (value.match(/^\s*$/)) {
-            value = '<p><br/></p>';
-        } else {
-            value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
-            value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
-        }
-        return value;
-    },
-    _render: function () {
-        this.$el.html(this.text_to_html(this.value));
-    },
-});
-
 /**
  * Displays a handle to modify the sequence.
  */
@@ -2068,7 +2051,6 @@ return {
     FieldDomain: FieldDomain,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,
-    FieldHtml: FieldHtml,
     FieldInteger: FieldInteger,
     FieldMonetary: FieldMonetary,
     FieldPercentPie: FieldPercentPie,

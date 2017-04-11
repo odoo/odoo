@@ -2,18 +2,188 @@ odoo.define('web_editor.backend', function (require) {
 'use strict';
 
 var AbstractField = require('web.AbstractField');
+var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var session = require('web.session');
 var field_registry = require('web.field_registry');
 
+var transcoder = require('web_editor.transcoder');
+
+var DebouncedField = basic_fields.DebouncedField;
 var QWeb = core.qweb;
 
 
 /**
- * FieldTextHtml Widget
- * Intended for FieldText widgets meant to display HTML content. This
- * widget will instantiate an iframe with the editor summernote improved by odoo
+ * FieldTextHtmlSimple Widget
+ * Intended to display HTML content. This widget uses the summernote editor
+ * improved by odoo.
+ *
+ * FIXME: this field has a custom handling of the translation feature, which
+ * hasn't been re-introduced yet (because this feature hasn't been introduced
+ * yet in the fields in general)
  */
+var FieldTextHtmlSimple = DebouncedField.extend({
+    className: 'oe_form_field oe_form_field_html_text',
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Summernote doesn't notify for all changes (e.g. changing the background
+     * color). Moreover, we can't detect that this field looses the focus, so
+     * we can't notify the environment that the value may have changed at that
+     * moment. So we always send the current value before saving.
+     *
+     * @override
+     */
+    commitChanges: function () {
+        this._setValue(this._getValue());
+    },
+    /**
+     * @override
+     */
+    isSet: function () {
+        return this.value && this.value !== "<p><br/></p>" && this.value.match(/\S/);
+    },
+    /**
+     * Do not re-render this field if it was the origin of the onchange call.
+     *
+     * @override
+     */
+    reset: function (record, event) {
+        this._reset(record, event);
+        if (!event || event.target !== this) {
+            if (this.mode === 'edit') {
+                this.$content.html(this._textToHtml(this.value));
+            } else {
+                this._renderReadonly();
+            }
+        }
+        return $.when();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @returns {Object} the summernote configuration
+     */
+    _getSummernoteConfig: function () {
+        var config = {
+            focus: false,
+            height: 180,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']],
+                ['history', ['undo', 'redo']]
+            ],
+            prettifyHtml: false,
+            styleWithSpan: false,
+            inlinemedia: ['p'],
+            lang: "odoo",
+            onChange: this._onInput.bind(this),
+        };
+        if (this.getSession().debug) {
+            config.toolbar.splice(7, 0, ['view', ['codeview']]);
+        }
+        return config;
+    },
+    /**
+     * @override
+     * @private
+     */
+    _getValue: function () {
+        if (this.nodeOptions['style-inline']) {
+            transcoder.class_to_style(this.$content);
+            transcoder.font_to_img(this.$content);
+        }
+        return this.$content.html();
+    },
+    /**
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        this.$textarea = $('<textarea>');
+        this.$textarea.appendTo(this.$el);
+        this.$textarea.summernote(this._getSummernoteConfig());
+        this.$content = this.$('.note-editable:first');
+        this.$content.html(this._textToHtml(this.value));
+        // trigger a mouseup to refresh the editor toolbar
+        this.$content.trigger('mouseup');
+        if (this.nodeOptions['style-inline']) {
+            transcoder.style_to_class(this.$content);
+        }
+        // reset the history (otherwise clicking on undo before editing the
+        // value will empty the editor)
+        var history = this.$content.data('NoteHistory');
+        if (history) {
+            history.reset();
+        }
+    },
+    /**
+     * @override
+     * @private
+     */
+    _renderReadonly: function () {
+        var self = this;
+        this.$el.empty();
+        if (this.nodeOptions['style-inline']) {
+            var $iframe = $('<iframe class="o_readonly"/>');
+            $iframe.on('load', function () {
+                self.$content = $($iframe.contents()[0]).find("body");
+                self.$content.html(self._textToHtml(self.value));
+                self._resize();
+            });
+            $iframe.appendTo(this.$el);
+        } else {
+            this.$content = $('<div class="o_readonly"/>');
+            this.$content.html(this._textToHtml(this.value));
+            this.$content.appendTo(this.$el);
+        }
+    },
+    /**
+     * Sets the height of the iframe.
+     *
+     * @private
+     */
+    _resize: function () {
+        var height = this.$content[0] ? this.$content[0].scrollHeight : 0;
+        this.$('iframe').css('height', Math.max(30, Math.min(height, 500)) + 'px');
+    },
+    /**
+     * @private
+     * @param {string} text
+     * @returns {string} the text converted to html
+     */
+    _textToHtml: function (text) {
+        var value = text || "";
+        try {
+            $(text)[0].innerHTML; // crashes if text isn't html
+        } catch (e) {
+            if (value.match(/^\s*$/)) {
+                value = '<p><br/></p>';
+            } else {
+                value = "<p>" + value.split(/<br\/?>/).join("<br/></p><p>") + "</p>";
+                value = value
+                            .replace(/<p><\/p>/g, '')
+                            .replace('<p><p>', '<p>')
+                            .replace('<p><p ', '<p ')
+                            .replace('</p></p>', '</p>');
+            }
+        }
+        return value;
+    },
+});
+
 var FieldTextHtml = AbstractField.extend({
     template: 'web_editor.FieldTextHtml',
     supportedFieldTypes: ['html'],
@@ -234,11 +404,11 @@ var FieldTextHtml = AbstractField.extend({
 });
 
 field_registry
-    .add('html', AbstractField) // TODO
+    .add('html', FieldTextHtmlSimple)
     .add('html_frame', FieldTextHtml);
 
 return {
-    FieldTextHtmlSimple: AbstractField,
+    FieldTextHtmlSimple: FieldTextHtmlSimple,
     FieldTextHtml: FieldTextHtml,
 };
 
