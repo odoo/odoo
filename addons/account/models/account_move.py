@@ -78,6 +78,15 @@ class AccountMove(models.Model):
             partner = move.line_ids.mapped('partner_id')
             move.partner_id = partner.id if len(partner) == 1 else False
 
+    @api.depends('line_ids.quantity')
+    def _compute_quantity(self):
+        for record in self:
+            rslt = 0.0
+            for line in record.line_ids:
+                if line.debit: # We consider the sum of quantities for debit and credit is the same in the move.
+                    rslt += line.quantity
+            record.quantity = rslt
+
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
@@ -105,6 +114,7 @@ class AccountMove(models.Model):
         string='Tax Cash Basis Entry of',
         help="Technical field used to keep track of the tax cash basis reconciliation."
         "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
+    quantity = fields.Integer(string="Total quantity", compute='_compute_quantity', help="The optional quantity expressed by this move, eg: number of product sold.")
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -149,7 +159,7 @@ class AccountMove(models.Model):
                             if not journal.refund_sequence_id:
                                 raise UserError(_('Please define a sequence for the refunds'))
                             sequence = journal.refund_sequence_id
-                                                            
+
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
