@@ -251,12 +251,19 @@ return BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderButtonBox: function (node) {
+        var self = this;
         var $result = $('<' + node.tag + '>', { 'class': 'o_not_full' });
         // Avoid to show buttons if we are in create mode (edit mode without res_id)
         if (this.mode === 'edit' && !this.state.res_id) {
             return $result;
         }
-        var buttons = _.map(node.children, this._renderStatButton.bind(this));
+        var buttons = _.map(node.children, function (child) {
+            if (child.tag === 'button') {
+                return self._renderStatButton(child);
+            } else {
+                return self._renderNode(child);
+            }
+        });
         var buttons_partition = _.partition(buttons, function ($button) {
             return $button.is('.o_form_invisible');
         });

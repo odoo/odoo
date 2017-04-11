@@ -2644,6 +2644,34 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('diplay something else than a button in a buttonbox', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<div name="button_box" class="oe_button_box">' +
+                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                            '<field name="bar"/>' +
+                        '</button>' +
+                        '<label/>' +
+                    '</div>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('.oe_button_box').children().length, 2,
+            "button box should contain two children");
+        assert.strictEqual(form.$('.oe_button_box .oe_stat_button').length, 1,
+            "button box should only contain one button");
+        assert.strictEqual(form.$('.oe_button_box label').length, 1,
+            "button box should only contain one label");
+
+        form.destroy();
+    });
+
     QUnit.test('one2many default value creation', function (assert) {
         assert.expect(1);
 
