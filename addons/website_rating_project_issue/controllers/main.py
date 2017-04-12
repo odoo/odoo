@@ -3,8 +3,6 @@
 
 from werkzeug.exceptions import NotFound
 
-import datetime
-
 from odoo import http
 from odoo.http import request
 
@@ -27,25 +25,7 @@ class WebsiteRatingProject(http.Controller):
             raise NotFound()
         values = {
             'project': project,
-            'task_data': self._calculate_rating(project.id, "project.task"),
-            'issue_data': self._calculate_rating(project.id, "project.issue"),
+            'partner_task_rating': request.env['project.rating']._get_partner_rating("project_task", "project.task", project_id, limit=50),
+            'partner_issue_rating': request.env['project.rating']._get_partner_rating("project_issue", "project.issue", project_id, limit=50),
         }
         return request.render('website_rating_project_issue.project_rating_page', values)
-
-    def _calculate_rating(self, project_id, model_name):
-        # Calculate rating for Tasks and Issues
-        records = request.env[model_name].sudo().search([('project_id', '=', project_id)])
-        domain = [('res_model', '=', model_name), ('res_id', 'in', records.ids), ('consumed', '=', True)]
-        ratings = request.env['rating.rating'].search(domain, order="id desc", limit=100)
-
-        yesterday = (datetime.date.today() - datetime.timedelta(days=-1)).strftime('%Y-%m-%d 23:59:59')
-        stats = {}
-        for x in (7, 30, 90):
-            todate = (datetime.date.today() - datetime.timedelta(days=x)).strftime('%Y-%m-%d 00:00:00')
-            domdate = domain + [('create_date', '<=', yesterday), ('create_date', '>=', todate)]
-            stats[x] = {1: 0, 5: 0, 10: 0}
-            rating_stats = request.env['rating.rating'].read_group(domdate, [], ['rating'])
-            total = reduce(lambda x, y: y['rating_count'] + x, rating_stats, 0)
-            for rate in rating_stats:
-                stats[x][rate['rating']] = float("%.2f" % (rate['rating_count'] * 100.0 / total))
-        return {'ratings': ratings, 'stats': stats}

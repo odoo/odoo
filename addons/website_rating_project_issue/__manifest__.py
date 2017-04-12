@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Website Rating Project Issue',
+    'name': 'Website Rating Dashboard',
     'version': '0.1',
     'category': 'Project',
     'complexity': 'easy',
