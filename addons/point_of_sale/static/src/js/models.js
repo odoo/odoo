@@ -1252,7 +1252,26 @@ exports.Orderline = Backbone.Model.extend({
     get_unit_price: function(){
         var digits = this.pos.dp['Product Price'];
         // round and truncate to mimic _sybmbol_set behavior
-        return parseFloat(round_di(this.price || 0, digits).toFixed(digits));
+        var self = this;
+        var unit_price = self.price;
+        var current_order = this.pos.get_order();
+        var order_fiscal_position = current_order && current_order.fiscal_position;
+
+        if(order_fiscal_position){
+            var taxes = self.get_taxes();
+            var mapped_included_taxes = [];
+            _(taxes).each(function(tax) {
+                var line_tax = self._map_tax_fiscal_position(tax);
+                if(tax.price_include && tax.id != line_tax.id){
+
+                    mapped_included_taxes.push(tax);
+                }
+            })
+
+            unit_price = self.compute_all(mapped_included_taxes, self.price, 1, self.pos.currency.rounding, true).total_excluded;
+        }
+
+        return parseFloat(round_di(unit_price || 0, digits).toFixed(digits));
     },
     get_unit_display_price: function(){
         if (this.pos.config.iface_tax_included) {
@@ -1345,7 +1364,7 @@ exports.Orderline = Backbone.Model.extend({
         }
         return false;
     },
-    compute_all: function(taxes, price_unit, quantity, currency_rounding) {
+    compute_all: function(taxes, price_unit, quantity, currency_rounding, no_map_tax) {
         var self = this;
         var list_taxes = [];
         var currency_rounding_bak = currency_rounding;
@@ -1356,7 +1375,9 @@ exports.Orderline = Backbone.Model.extend({
         var total_included = total_excluded;
         var base = total_excluded;
         _(taxes).each(function(tax) {
-            tax = self._map_tax_fiscal_position(tax);
+            if (!no_map_tax){
+                tax = self._map_tax_fiscal_position(tax);
+            }
             if (tax.amount_type === 'group'){
                 var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);
                 total_excluded = ret.total_excluded;
