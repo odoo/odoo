@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_event_view_form_inherit_mass_mailing_track" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.mass.mailing.track</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="website_event_track.view_event_form"/>
+        <field name="arch" type="xml">
+            <button name="%(website_event_track.action_event_track_from_event)d" position="after">
+                <button class="oe_stat_button" type="object"
+                        name="action_mass_mailing_track_speakers"
+                        string="Mail Track Speakers"
+                        icon="fa-envelope-o"
+                        attrs="{'invisible': [('track_count', '=', 0)]}">
+                    Mail Track Speakers
+                </button>
+            </button>
+        </field>
+    </record>
+</odoo>
