@@ -1464,7 +1464,7 @@ class AccountPaymentTerm(models.Model):
                     next_date += relativedelta(day=31, months=0)  # Getting last day of next month
                 result.append((fields.Date.to_string(next_date), amt))
                 amount -= amt
-        amount = reduce(lambda x, y: x + y[1], result, 0.0)
+        amount = sum(amt for _, amt in result)
         dist = round(value - amount, prec)
         if dist:
             last_date = result and result[-1][0] or fields.Date.today()

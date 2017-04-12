@@ -10,6 +10,7 @@ import werkzeug
 from werkzeug.utils import escape as _escape
 from itertools import chain, izip, tee
 import __builtin__
+from functools import reduce
 builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
 
 try:
