@@ -1021,7 +1021,7 @@ class pos_order(osv.osv):
                     'location_id': location_id,
                     'location_dest_id': destination_id,
                 }
-                pos_qty = any([x.qty >= 0 for x in order.lines])
+                pos_qty = any([x.qty > 0 for x in order.lines])
                 if pos_qty:
                     order_picking_id = picking_obj.create(cr, uid, picking_vals.copy(), context=context)
                 neg_qty = any([x.qty < 0 for x in order.lines])
