@@ -302,6 +302,25 @@ odoo.define_section('eval.types', ['web.pyeval'], function (test, mock) {
             '2015-02-02');
     });
 
+    test('timedelta', function (assert, pyeval) {
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2017, 2, 15, 1, 7, 31) + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyeval.context()),
+            "2017-02-16 01:07:31");
+        strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 15, 1, 7, 31) - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyeval.context()),
+            "2012-02-15 00:07:31");
+        strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 15, 1, 7, 31) + datetime.timedelta(hours=-1)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyeval.context()),
+            "2012-02-15 00:07:31");
+        strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 15, 1, 7, 31) + datetime.timedelta(minutes=100)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyeval.context()),
+            "2012-02-15 02:47:31");
+    });
+
     test('datetime.tojson', function (assert, pyeval) {
         var result = py.eval(
             'datetime.datetime(2012, 2, 15, 1, 7, 31)',
