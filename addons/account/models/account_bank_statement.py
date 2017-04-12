@@ -518,6 +518,7 @@ class AccountBankStatementLine(models.Model):
             'partner_id': self.partner_id.id,
             'journal_id': self.journal_id.id,
             'statement_id': self.statement_id.id,
+            'account_id': [self.journal_id.default_debit_account_id.id, self.journal_id.default_debit_account_id.display_name],
             'account_code': self.journal_id.default_debit_account_id.code,
             'account_name': self.journal_id.default_debit_account_id.name,
             'partner_name': self.partner_id.name,
@@ -534,10 +535,10 @@ class AccountBankStatementLine(models.Model):
         return data
 
     @api.multi
-    def get_move_lines_for_reconciliation_widget(self, excluded_ids=None, str=False, offset=0, limit=None):
+    def get_move_lines_for_reconciliation_widget(self, partner_id=None, excluded_ids=None, str=False, offset=0, limit=None):
         """ Returns move lines for the bank statement reconciliation widget, formatted as a list of dicts
         """
-        aml_recs = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit)
+        aml_recs = self.get_move_lines_for_reconciliation(partner_id=partner_id, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit)
         target_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
         return aml_recs.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)
 
@@ -545,9 +546,10 @@ class AccountBankStatementLine(models.Model):
     # Reconciliation methods
     ####################################################
 
-    def get_move_lines_for_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, additional_domain=None, overlook_partner=False):
+    def get_move_lines_for_reconciliation(self, partner_id=None, excluded_ids=None, str=False, offset=0, limit=None, additional_domain=None, overlook_partner=False):
         """ Return account.move.line records which can be used for bank statement reconciliation.
 
+            :param partner_id:
             :param excluded_ids:
             :param str:
             :param offset:
@@ -555,13 +557,16 @@ class AccountBankStatementLine(models.Model):
             :param additional_domain:
             :param overlook_partner:
         """
+        if partner_id is None:
+            partner_id = self.partner_id.id
+
         # Blue lines = payment on bank account not assigned to a statement yet
         reconciliation_aml_accounts = [self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id]
         domain_reconciliation = ['&', '&', ('statement_line_id', '=', False), ('account_id', 'in', reconciliation_aml_accounts), ('payment_id','<>', False)]
 
         # Black lines = unreconciled & (not linked to a payment or open balance created by statement
         domain_matching = [('reconciled', '=', False)]
-        if self.partner_id.id or overlook_partner:
+        if partner_id or overlook_partner:
             domain_matching = expression.AND([domain_matching, [('account_id.internal_type', 'in', ['payable', 'receivable'])]])
         else:
             # TODO : find out what use case this permits (match a check payment, registered on a journal whose account type is other instead of liquidity)
@@ -569,14 +574,17 @@ class AccountBankStatementLine(models.Model):
 
         # Let's add what applies to both
         domain = expression.OR([domain_reconciliation, domain_matching])
-        if self.partner_id.id and not overlook_partner:
-            domain = expression.AND([domain, [('partner_id', '=', self.partner_id.id)]])
+        if partner_id and not overlook_partner:
+            domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
 
         # Domain factorized for all reconciliation use cases
-        ctx = dict(self._context or {})
-        ctx['bank_statement_line'] = self
-        generic_domain = self.env['account.move.line'].with_context(ctx).domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str)
-        domain = expression.AND([domain, generic_domain])
+        if str:
+            str_domain = self.env['account.move.line'].domain_move_lines_for_reconciliation(str=str)
+            if not partner_id:
+                str_domain = expression.OR([str_domain, ('partner_id.name', 'ilike', str)])
+            domain = expression.AND([domain, str_domain])
+        if excluded_ids:
+            domain = expression.AND([[('id', 'not in', excluded_ids)], domain])
 
         # Domain from caller
         if additional_domain is None:
@@ -585,7 +593,7 @@ class AccountBankStatementLine(models.Model):
             additional_domain = expression.normalize_domain(additional_domain)
         domain = expression.AND([domain, additional_domain])
 
-        return self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity asc, id asc")
+        return self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
 
     def _get_common_sql_query(self, overlook_partner = False, excluded_ids = None, split = False):
         acc_type = "acc.internal_type IN ('payable', 'receivable')" if (self.partner_id or overlook_partner) else "acc.reconcile = true"
@@ -629,7 +637,7 @@ class AccountBankStatementLine(models.Model):
             select_clause, from_clause, where_clause = self._get_common_sql_query(overlook_partner=True, excluded_ids=excluded_ids, split=True)
             sql_query = select_clause + add_to_select + from_clause + add_to_from + where_clause
             sql_query += " AND (aml.ref= %(ref)s or m.name = %(ref)s) \
-                    ORDER BY temp_field_order, date_maturity asc, aml.id asc"
+                    ORDER BY temp_field_order, date_maturity desc, aml.id desc"
             self.env.cr.execute(sql_query, params)
             results = self.env.cr.fetchone()
             if results:
@@ -641,7 +649,7 @@ class AccountBankStatementLine(models.Model):
         liquidity_amt_clause = currency and '%(amount)s' or 'abs(%(amount)s)'
         sql_query = self._get_common_sql_query(excluded_ids=excluded_ids) + \
                 " AND ("+field+" = %(amount)s OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = " + liquidity_amt_clause + ")) \
-                ORDER BY date_maturity asc, aml.id asc LIMIT 1"
+                ORDER BY date_maturity desc, aml.id desc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()
         if results:
@@ -805,6 +813,8 @@ class AccountBankStatementLine(models.Model):
             for aml_dict in datum.get('counterpart_aml_dicts', []):
                 aml_dict['move_line'] = AccountMoveLine.browse(aml_dict['counterpart_aml_id'])
                 del aml_dict['counterpart_aml_id']
+            if datum.get('partner_id') is not None:
+                st_line.write({'partner_id': datum['partner_id']})
             st_line.process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
 
     def fast_counterpart_creation(self):

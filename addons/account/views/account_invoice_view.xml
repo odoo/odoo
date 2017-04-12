@@ -7,7 +7,7 @@
             <field name="name">account.invoice.calendar</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <calendar string="Invoices" color="journal_id" date_start="date_invoice">
+                <calendar string="Invoices" date_start="date_invoice" color="journal_id">
                     <field name="partner_id"/>
                     <field name="amount_total_signed"/>
                 </calendar>
@@ -173,7 +173,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right text-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'open': 'warning',
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'open': 'warning',
                                             'paid': 'success'}}"/>
                                         </span>
                                     </div>

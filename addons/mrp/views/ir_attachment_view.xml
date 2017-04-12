@@ -22,7 +22,7 @@
                                             <a t-attf-href="/web/content/#{record.id.value}?download=1">
                                                 <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
                                                 <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
-                                                <div t-if="webimage" class="o_kanban_attachment_image">
+                                                <div t-if="webimage" class="o_attachment_image">
                                                     <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
                                                 </div>
                                             </a>

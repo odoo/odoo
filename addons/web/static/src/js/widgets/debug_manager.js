@@ -2,12 +2,11 @@ odoo.define('web.DebugManager', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
-var common = require('web.form_common');
+var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var framework = require('web.framework');
-var Model = require('web.Model');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
@@ -18,8 +17,6 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
-var ADD = function (id) { return [4, id, false]; },
-    REMOVE = function (id) { return [3, id, false]; };
 /**
  * DebugManager base + general features (applicable to any context)
  */
@@ -66,9 +63,17 @@ var DebugManager = Widget.extend({
         // whether the current user is an administrator
         this._is_admin = session.is_system;
         return $.when(
-            new Model('res.users').call('check_access_rights', {operation: 'write', raise_exception: false}),
+            this._rpc({
+                    model: 'res.users',
+                    method: 'check_access_rights',
+                    kwargs: {operation: 'write', raise_exception: false},
+                }),
             session.user_has_group('base.group_no_one'),
-            new Model('ir.model.data').call('xmlid_to_res_id', {xmlid: 'base.group_no_one'}),
+            this._rpc({
+                    model: 'ir.model.data',
+                    method: 'xmlid_to_res_id',
+                    kwargs: {xmlid: 'base.group_no_one'},
+                }),
             this._super()
         ).then(function (can_write_user, has_group_no_one, group_no_one_id) {
             this._features_group = can_write_user && group_no_one_id;
@@ -159,16 +164,20 @@ var DebugManager = Widget.extend({
     },
     select_view: function () {
         var self = this;
-        new common.SelectCreateDialog(this, {
+        new dialogs.SelectCreateDialog(this, {
             res_model: 'ir.ui.view',
             title: _t('Select a view'),
             disable_multiple_selection: true,
             on_selected: function (element_ids) {
-                new Model('ir.ui.view')
-                    .query(['name', 'model', 'type'])
-                    .filter([['id', '=', element_ids[0]]])
-                    .first()
-                    .then(function (view) {
+                self._rpc({
+                        model: 'ir.ui.view',
+                        method: 'search_read',
+                        domain: [['id', '=', element_ids[0]]],
+                        fields: ['name', 'model', 'type'],
+                        limit: 1,
+                    })
+                    .then(function (views) {
+                        var view = views[0];
                         self.do_action({
                             type: 'ir.actions.act_window',
                             name: view.name,
@@ -226,16 +235,21 @@ DebugManager.include({
     get_view_fields: function () {
         var self = this;
         var model = this._action.res_model;
-        new Model(model).call('fields_get', {
-            attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
-        }).done(function (fields) {
-            new Dialog(self, {
-                title: _.str.sprintf(_t("Fields of %s"), model),
-                $content: $(QWeb.render('WebClient.DebugManager.Action.Fields', {
-                    fields: fields
-                }))
-            }).open();
-        });
+        this._rpc({
+                model: model,
+                method: 'fields_get',
+                kwargs: {
+                    attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
+                },
+            })
+            .done(function (fields) {
+                new Dialog(self, {
+                    title: _.str.sprintf(_t("Fields of %s"), model),
+                    $content: $(QWeb.render('WebClient.DebugManager.Action.Fields', {
+                        fields: fields
+                    }))
+                }).open();
+            });
     },
     manage_filters: function () {
         this.do_action({
@@ -249,22 +263,13 @@ DebugManager.include({
             }
         });
     },
-    edit_workflow: function () {
-        return this.do_action({
-            res_model: 'workflow',
-            name: _t('Edit Workflow'),
-            domain: [['osv', '=', this._action.res_model]],
-            views: [[false, 'list'], [false, 'form'], [false, 'diagram']],
-            type: 'ir.actions.act_window',
-            view_type: 'list',
-            view_mode: 'list'
-        });
-    },
     translate: function() {
-        var model = this._action.res_model;
-        new Model("ir.translation")
-                .call('get_technical_translations', [model])
-                .then(this.do_action);
+        this._rpc({
+                model: 'ir.translation',
+                method: 'get_technical_translations',
+                args: [this._action.res_model],
+            })
+            .then(this.do_action);
     }
 });
 
@@ -278,16 +283,22 @@ DebugManager.include({
         this._can_edit_views = false;
         return $.when(
             this._super(),
-            new Model('ir.ui.view').call(
-                'check_access_rights', {operation: 'write', raise_exception: false}
-            ).then(function (ar) {
-                this._can_edit_views = ar;
-            }.bind(this))
+            this._rpc({
+                    model: 'ir.ui.view',
+                    method: 'check_access_rights',
+                    kwargs: {operation: 'write', raise_exception: false},
+                })
+                .then(function (ar) {
+                    this._can_edit_views = ar;
+                }.bind(this))
         );
     },
     update: function (tag, descriptor, widget) {
         switch (tag) {
         case 'action':
+            if (this._view_manager) {
+                this._view_manager.off('switch_mode', this);
+            }
             if (!(widget instanceof ViewManager)) {
                 this._active_view = null;
                 this._view_manager = null;
@@ -314,17 +325,17 @@ DebugManager.include({
 
     get_metadata: function() {
         var ds = this._view_manager.dataset;
-        if (!this._active_view.controller.get_selected_ids().length) {
+        if (!this._active_view.controller.getSelectedIds().length) {
             console.warn(_t("No metadata available"));
             return
         }
-        ds.call('get_metadata', [this._active_view.controller.get_selected_ids()]).done(function(result) {
+        ds.call('get_metadata', [this._active_view.controller.getSelectedIds()]).done(function(result) {
             new Dialog(this, {
                 title: _.str.sprintf(_t("Metadata (%s)"), ds.model),
                 size: 'medium',
                 $content: QWeb.render('WebClient.DebugViewLog', {
                     perm : result[0],
-                    format : formats.format_value
+                    format : field_utils.format
                 })
             }).open();
         });
@@ -335,11 +346,11 @@ DebugManager.include({
     fvg: function() {
         var dialog = new Dialog(this, { title: _t("Fields View Get") }).open();
         $('<pre>').text(utils.json_node_to_xml(
-            this._active_view.controller.fields_view.arch, true)
+            this._active_view.controller.renderer.arch, true)
         ).appendTo(dialog.$el);
     },
     print_workflow: function() {
-        var ids = this._active_view.controller.get_selected_ids();
+        var ids = this._active_view.controller.getSelectedIds();
         framework.blockUI();
         var action = {
             context: { active_ids: ids },

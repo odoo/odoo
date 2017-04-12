@@ -2,8 +2,7 @@ odoo.define('website_sale_wishlist.wishlist', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
-var core = require('web.core');
-var Model = require('web.Model');
+var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website_sale_utils = require('website_sale.utils');
@@ -83,8 +82,11 @@ var ProductWishlist = Widget.extend({
         var wish = tr.data('wish-id');
         var product = tr.data('product-id');
 
-        new Model('product.wishlist')
-            .call('write', [[wish], { active: false }, base.get_context()])
+        rpc.query({
+                model: 'product.wishlist',
+                method: 'write',
+                args: [[wish], { active: false }, base.get_context()],
+            })
             .then(function(){
                 $(tr).hide();
             });

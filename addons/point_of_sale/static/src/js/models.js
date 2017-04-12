@@ -1,19 +1,21 @@
 odoo.define('point_of_sale.models', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var BarcodeParser = require('barcodes.BarcodeParser');
 var PosDB = require('point_of_sale.DB');
 var devices = require('point_of_sale.devices');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
-var Model = require('web.DataModel');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
+var rpc = require('web.rpc');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
-var Mutex = utils.Mutex;
+var Mutex = concurrency.Mutex;
 var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
 var Backbone = window.Backbone;
@@ -315,7 +317,7 @@ exports.PosModel = Backbone.Model.extend({
         fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'barcode', 'default_code', 
                  'to_weight', 'uom_id', 'description_sale', 'description',
                  'product_tmpl_id','tracking'],
-        order:  ['sequence','default_code','name'],
+        order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: [['sale_ok','=',true],['available_in_pos','=',true]],
         context: function(self){ return { pricelist: self.pricelist.id, display_default_code: false }; },
         loaded: function(self, products){
@@ -493,31 +495,31 @@ exports.PosModel = Backbone.Model.extend({
                 var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                 var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
                 progress += progress_step;
-                
-                var records;
+
                 if( model.model ){
-                    if (model.ids) {
-                        records = new Model(model.model).call('read',[ids,fields],context);
-                    } else {
-                        records = new Model(model.model)
-                            .query(fields)
-                            .filter(domain)
-                            .order_by(order)
-                            .context(context)
-                            .all();
+                    var method = model.ids ? 'read' : 'search_read';
+                    var args = model.ids ? [ids, fields] : [domain, fields];
+                    var params = {
+                        model: model.model,
+                        method: method,
+                        args: args,
+                        context: context,
+                    };
+                    if (method === 'search_read') {
+                        params.orderBy = order;
                     }
-                    records.then(function(result){
-                            try{    // catching exceptions in model.loaded(...)
-                                $.when(model.loaded(self,result,tmp))
-                                    .then(function(){ load_model(index + 1); },
-                                          function(err){ loaded.reject(err); });
-                            }catch(err){
-                                console.error(err.stack);
-                                loaded.reject(err);
-                            }
-                        },function(err){
+                    rpc.query(params).then(function(result){
+                        try{    // catching exceptions in model.loaded(...)
+                            $.when(model.loaded(self,result,tmp))
+                                .then(function(){ load_model(index + 1); },
+                                      function(err){ loaded.reject(err); });
+                        }catch(err){
+                            console.error(err.stack);
                             loaded.reject(err);
-                        });
+                        }
+                    },function(err){
+                        loaded.reject(err);
+                    });
                 }else if( model.loaded ){
                     try{    // catching exceptions in model.loaded(...)
                         $.when(model.loaded(self,tmp))
@@ -547,17 +549,22 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         var def  = new $.Deferred();
         var fields = _.find(this.models,function(model){ return model.model === 'res.partner'; }).fields;
-        new Model('res.partner')
-            .query(fields)
-            .filter([['customer','=',true],['write_date','>',this.db.get_partner_write_date()]])
-            .all({'timeout':3000, 'shadow': true})
+        var domain = [['customer','=',true],['write_date','>',this.db.get_partner_write_date()]];
+        rpc.query({
+                model: 'res.partner',
+                method: 'search_read',
+                args: [domain, fields],
+            }, {
+                timeout: 3000,
+                shadow: true,
+            })
             .then(function(partners){
                 if (self.db.add_partners(partners)) {   // check if the partners we got were real updates
                     def.resolve();
                 } else {
                     def.reject();
                 }
-            }, function(err,event){ event.preventDefault(); def.reject(); });    
+            }, function(err,event){ event.preventDefault(); def.reject(); });
         return def;
     },
 
@@ -881,44 +888,45 @@ exports.PosModel = Backbone.Model.extend({
 
         // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
-        var posOrderModel = new Model('pos.order');
-        return posOrderModel.call('create_from_ui',
-            [_.map(orders, function (order) {
+        var args = [_.map(orders, function (order) {
                 order.to_invoice = options.to_invoice || false;
                 return order;
-            })],
-            undefined,
-            {
-                shadow: !options.to_invoice,
-                timeout: timeout
-            }
-        ).then(function (server_ids) {
-            _.each(order_ids_to_sync, function (order_id) {
-                self.db.remove_order(order_id);
-            });
-            self.set('failed',false);
-            return server_ids;
-        }).fail(function (error, event){
-            if(error.code === 200 ){    // Business Logic Error, not a connection problem
-                //if warning do not need to display traceback!!
-                if (error.data.exception_type == 'warning') {
-                    delete error.data.debug;
-                }
+            })];
+        return rpc.query({
+                model: 'pos.order',
+                method: 'create_from_ui',
+                args: args,
+            }, {
+                timeout: timeout,
+                shadow: !options.to_invoice
+            })
+            .then(function (server_ids) {
+                _.each(order_ids_to_sync, function (order_id) {
+                    self.db.remove_order(order_id);
+                });
+                self.set('failed',false);
+                return server_ids;
+            }).fail(function (error, event){
+                if(error.code === 200 ){    // Business Logic Error, not a connection problem
+                    //if warning do not need to display traceback!!
+                    if (error.data.exception_type == 'warning') {
+                        delete error.data.debug;
+                    }
 
-                // Hide error if already shown before ... 
-                if ((!self.get('failed') || options.show_error) && !options.to_invoice) {
-                    self.gui.show_popup('error-traceback',{
-                        'title': error.data.message,
-                        'body':  error.data.debug
-                    });
+                    // Hide error if already shown before ...
+                    if ((!self.get('failed') || options.show_error) && !options.to_invoice) {
+                        self.gui.show_popup('error-traceback',{
+                            'title': error.data.message,
+                            'body':  error.data.debug
+                        });
+                    }
+                    self.set('failed',error);
                 }
-                self.set('failed',error)
-            }
-            // prevent an error popup creation by the rpc failure
-            // we want the failure to be silent as we send the orders in the background
-            event.preventDefault();
-            console.error('Failed to send orders:', orders);
-        });
+                // prevent an error popup creation by the rpc failure
+                // we want the failure to be silent as we send the orders in the background
+                event.preventDefault();
+                console.error('Failed to send orders:', orders);
+            });
     },
 
     scan_product: function(parsed_code){
@@ -1246,7 +1254,7 @@ exports.Orderline = Backbone.Model.extend({
                 if (unit.rounding) {
                     this.quantity    = round_pr(quant, unit.rounding);
                     var decimals = this.pos.dp['Product Unit of Measure'];
-                    this.quantityStr = formats.format_value(round_di(this.quantity, decimals), { type: 'float', digits: [69, decimals]});
+                    this.quantityStr = field_utils.format.float(round_di(this.quantity, decimals), {digits: [69, decimals]});
                 } else {
                     this.quantity    = round_pr(quant, 1);
                     this.quantityStr = this.quantity.toFixed(0);
@@ -1692,9 +1700,7 @@ exports.Paymentline = Backbone.Model.extend({
         return this.amount;
     },
     get_amount_str: function(){
-        return formats.format_value(this.amount, {
-            type: 'float', digits: [69, this.pos.currency.decimals]
-        });
+        return field_utils.format.float(this.amount, {digits: [69, this.pos.currency.decimals]});
     },
     set_selected: function(selected){
         if(this.selected !== selected){

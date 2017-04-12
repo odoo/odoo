@@ -294,9 +294,7 @@
                         </div>
                     </t>
                     <t t-name="JournalBodyGraph">
-                        <div class="o_kanban_graph_section">
-                            <field name="kanban_dashboard_graph" t-att-graph_type="_.contains(['cash','bank'],journal_type) ? 'line' : 'bar'" widget="dashboard_graph"/>
-                        </div>
+                        <field name="kanban_dashboard_graph" t-att-graph_type="_.contains(['cash','bank'],journal_type) ? 'line' : 'bar'" widget="dashboard_graph"/>
                     </t>
             </templates>
             </kanban>

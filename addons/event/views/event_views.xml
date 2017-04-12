@@ -360,7 +360,7 @@
             <field name="model">event.event</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="event_type_id" date_start="date_begin" date_stop="date_end" string="Event Organization">
+                <calendar date_start="date_begin" date_stop="date_end" string="Event Organization" color="event_type_id">
                     <field name="name"/>
                     <field name="event_type_id"/>
                 </calendar>
@@ -502,7 +502,7 @@
             <field name="model">event.registration</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="event_id" date_start="event_begin_date" date_stop="event_end_date" string="Event Registration">
+                <calendar date_start="event_begin_date" date_stop="event_end_date" string="Event Registration" color="event_id">
                     <field name="event_id"/>
                     <field name="name"/>
                 </calendar>

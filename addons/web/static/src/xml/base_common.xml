@@ -31,49 +31,51 @@
 </t>
 <t t-name="WidgetLabel.tooltip">
     <div class="oe_tooltip_string" t-if="widget.string">
-        <t t-esc="widget.node.attrs.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
+        <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
     </div>
-    <p t-if="widget.node.attrs.help or (widget.field and widget.field.help)" class="oe_tooltip_help"><t t-esc="widget.node.attrs.help || widget.field.help"/></p>
+    <p t-if="widget.attrs.help || widget.field.help" class="oe_tooltip_help">
+        <t t-esc="widget.attrs.help || widget.field.help"/>
+    </p>
     <ul t-if="debug" class="oe_tooltip_technical">
         <li data-item="field" t-if="widget.name">
             <span class="oe_tooltip_technical_title">Field:</span>
             <t t-esc="widget.name"/>
         </li>
-        <li data-item="object" t-if="widget.view and widget.view.fields_view">
+        <li data-item="object">
             <span class="oe_tooltip_technical_title">Object:</span>
-            <t t-esc="widget.view.fields_view.model"/>
+            <t t-esc="widget.model"/>
         </li>
-        <li data-item="type" t-if="widget.field">
+        <li data-item="type">
             <span class="oe_tooltip_technical_title">Type:</span>
             <t t-esc="widget.field.type"/>
         </li>
-        <li t-if="widget.node.attrs.widget" data-item="widget">
+        <li t-if="widget.attrs.widget" data-item="widget">
             <span class="oe_tooltip_technical_title">Widget:</span>
-            <t t-esc="widget.node.attrs.widget"/>
+            <t t-esc="widget.attrs.widget"/>
         </li>
-        <li t-if="widget.node.attrs.size || (widget.field and widget.field.size)" data-item="size">
+        <li t-if="widget.attrs.size || widget.field.size" data-item="size">
             <span class="oe_tooltip_technical_title">Size:</span>
-            <t t-esc="widget.node.attrs.size || widget.field.size"/>
+            <t t-esc="widget.attrs.size || widget.field.size"/>
         </li>
-        <li t-if="widget.node.attrs.context" data-item="context">
+        <li t-if="widget.attrs.context || widget.field.context" data-item="context">
             <span class="oe_tooltip_technical_title">Context:</span>
-            <t t-esc="widget.node.attrs.context"/>
+            <t t-esc="widget.attrs.context || widget.field.context"/>
         </li>
-        <li t-if="widget.node.attrs.domain" data-item="domain">
+        <li t-if="widget.attrs.domain || widget.field.domain" data-item="domain">
             <span class="oe_tooltip_technical_title">Domain:</span>
-            <t t-esc="widget.node.attrs.domain"/>
+            <t t-esc="widget.attrs.domain || widget.field.domain"/>
         </li>
-        <li t-if="widget.node.attrs.modifiers and widget.node.attrs.modifiers != '{}'" data-item="modifiers">
+        <li t-if="widget.attrs.modifiers and widget.attrs.modifiers != '{}'" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="widget.node.attrs.modifiers"/>
+            <t t-esc="widget.attrs.modifiers"/>
         </li>
         <li t-if="widget.field and widget.field.change_default" data-item="change_default">
             <span class="oe_tooltip_technical_title">Change default:</span>
             Yes
         </li>
-        <li t-if="widget.node.attrs.on_change" data-item="on_change">
+        <li t-if="widget.attrs.on_change" data-item="on_change">
             <span class="oe_tooltip_technical_title">On change:</span>
-            <t t-esc="widget.node.attrs.on_change"/>
+            <t t-esc="widget.attrs.on_change"/>
         </li>
         <li t-if="widget.field and widget.field.relation" data-item="relation">
             <span class="oe_tooltip_technical_title">Relation:</span>

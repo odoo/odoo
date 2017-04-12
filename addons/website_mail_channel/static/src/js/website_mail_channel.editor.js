@@ -2,7 +2,7 @@ odoo.define('website_mail_channel.editor', function (require) {
 'use strict';
 
 var core = require('web.core');
-var Model = require('web.Model');
+var rpc = require('web.rpc');
 var base = require('web_editor.base');
 var options = require('web_editor.snippets.options');
 var website = require('website.website');
@@ -18,8 +18,12 @@ options.registry.subscribe = options.Class.extend({
             window_title: _t("Add a Subscribe Button"),
             select: _t("Discussion List"),
             init: function (field) {
-                return new Model('mail.channel')
-                        .call('name_search', ['', [['public','=','public']]], { context: base.get_context() });
+                return rpc.query({
+                        model: 'mail.channel',
+                        method: 'name_search',
+                        args: ['', [['public','=','public']]],
+                        context: base.get_context(),
+                    });
             },
         }).then(function (mail_channel_id) {
             self.$target.attr("data-id", mail_channel_id);

@@ -144,7 +144,7 @@
         <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
     </t>
     <t t-name="ImportView.import_button">
-        <button t-if='widget.options.import_enabled' type="button" class="btn btn-sm btn-default o_button_import">
+        <button t-if='widget and widget.importEnabled' type="button" class="btn btn-sm btn-default o_button_import">
             Import
         </button>
     </t>

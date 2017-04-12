@@ -65,7 +65,7 @@
                         <span class="label label-warning pull-right">Canceled</span>
                     </div>
                     <div class="oe_right">
-                        <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+                        <field name="kanban_state" class="oe_inline" widget="state_selection"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Subject"/>
@@ -158,7 +158,7 @@
                                     <div class="o_kanban_inline_block ml4 mr4">
                                         <field name="activity_ids" widget="kanban_activity" />
                                     </div>
-                                    <field name="kanban_state" widget="kanban_state_selection"/>
+                                    <field name="kanban_state" widget="state_selection"/>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left mr4 mt4">
                                         <field name="priority" widget="priority"/>

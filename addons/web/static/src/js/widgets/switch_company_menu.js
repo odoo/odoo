@@ -1,7 +1,6 @@
 odoo.define('web.SwitchCompanyMenu', function(require) {
 "use strict";
 
-var Model = require('web.Model');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
@@ -19,9 +18,14 @@ var SwitchCompanyMenu = Widget.extend({
         this.$el.on('click', '.dropdown-menu li a[data-menu]', _.debounce(function(ev) {
             ev.preventDefault();
             var company_id = $(ev.currentTarget).data('company-id');
-            new Model('res.users').call('write', [[session.uid], {'company_id': company_id}]).then(function() {
-                location.reload();
-            });
+            self._rpc({
+                    model: 'res.users',
+                    method: 'write',
+                    args: [[session.uid], {'company_id': company_id}],
+                })
+                .then(function() {
+                    location.reload();
+                });
         }, 1500, true));
 
         self.$('.oe_topbar_name').text(session.user_companies.current_company[1]);

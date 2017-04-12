@@ -1207,14 +1207,14 @@ class BaseModel(object):
 
     @api.model
     def load_views(self, views, options=None):
-        """ Returns the fields_views of given views, and optionally filters and fields.
+        """ Returns the fields_views of given views, along with the fields of
+            the current model, and optionally its filters for the given action.
 
         :param views: list of [view_id, view_type]
         :param options['toolbar']: True to include contextual actions when loading fields_views
         :param options['load_filters']: True to return the model's filters
         :param options['action_id']: id of the action to get the filters
-        :param options['load_fields']: True to load the model's fields
-        :return: dictionary with fields_views, filters and fields
+        :return: dictionary with fields_views, fields and optionally filters
         """
         options = options or {}
         result = {}
@@ -1225,12 +1225,11 @@ class BaseModel(object):
                                          toolbar=toolbar if v_type != 'search' else False)
             for [v_id, v_type] in views
         }
+        result['fields'] = self.fields_get()
 
         if options.get('load_filters'):
             result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
 
-        if options.get('load_fields'):
-            result['fields'] = self.fields_get()
 
         return result
 

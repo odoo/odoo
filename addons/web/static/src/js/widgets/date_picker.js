@@ -2,7 +2,7 @@ odoo.define('web.datepicker', function (require) {
 "use strict";
 
 var core = require('web.core');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var time = require('web.time');
 var Widget = require('web.Widget');
 
@@ -50,12 +50,14 @@ var DateWidget = Widget.extend({
         this.picker = this.$input.data('DateTimePicker');
         this.$input.click(this.picker.toggle.bind(this.picker));
         this.set_readonly(false);
-        this.set_value(false);
     },
     set_value: function(value) {
         this.set({'value': value});
-        this.$input.val((value)? this.format_client(value) : '');
-        this.picker.date(this.format_client(value));
+        var formatted_value = value ? this.format_client(value) : null;
+        this.$input.val(formatted_value);
+        if (this.picker) {
+            this.picker.date(formatted_value);
+        }
     },
     get_value: function() {
         return this.get('value');
@@ -82,10 +84,10 @@ var DateWidget = Widget.extend({
         }
     },
     parse_client: function(v) {
-        return formats.parse_value(v, {"widget": this.type_of_date});
+        return field_utils.parse[this.type_of_date](v, {type: this.type_of_date});
     },
     format_client: function(v) {
-        return formats.format_value(v, {"widget": this.type_of_date});
+        return field_utils.format[this.type_of_date](v, {type: this.type_of_date});
     },
     set_datetime_default: function() {
         //when opening datetimepicker the date and time by default should be the one from
@@ -102,9 +104,6 @@ var DateWidget = Widget.extend({
             this.set_value_from_ui();
             this.trigger("datetime_changed");
         }
-    },
-    commit_value: function() {
-        this.change_datetime();
     },
     destroy: function() {
         this.picker.destroy();

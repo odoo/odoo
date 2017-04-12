@@ -6,7 +6,7 @@ var chat_manager = require('mail.chat_manager');
 var core = require('web.core');
 
 core.action_registry.get('mail.chat.instant_messaging').include({
-    _render_sidebar: function (options) {
+    _renderSidebar: function (options) {
         // Override to sort livechat channels by last message's date
         var channel_partition = _.partition(options.channels, function (channel) {
             return channel.type === 'livechat';

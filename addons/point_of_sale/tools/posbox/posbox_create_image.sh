@@ -46,7 +46,6 @@ if [ ! -d $CLONE_DIR ]; then
     cd "${CLONE_DIR}"
     git config core.sparsecheckout true
     echo "addons/web
-addons/web_kanban
 addons/hw_*
 addons/point_of_sale/tools/posbox/configuration
 openerp/

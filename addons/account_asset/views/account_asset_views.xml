@@ -19,7 +19,7 @@
                         </h1>
                     </div>
                     <group>
-                        <field name="type" attrs="{'invisible': 1}"/>
+                        <field name="type" invisible="1"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
                     <group string="Journal Entries">
@@ -144,12 +144,11 @@
                                     <field name="depreciated_value" readonly="1"/>
                                     <field name="amount" widget="monetary" string="Depreciation"/>
                                     <field name="remaining_value" readonly="1" widget="monetary" string="Residual"/>
-                                    <field name="move_check" invisible="1"/>
+                                    <field name="move_check" widget="deprec_lines_toggler" attrs="{'invisible': [('parent_state', '!=', 'open')]}"/>
                                     <field name="move_posted_check" invisible="1"/>
                                     <field name="parent_state" invisible="1"/>
-                                    <button name="create_move" type="object" widget="widgetonbutton"/>
                                 </tree>
-                                <form string="Depreciation Lines"> 
+                                <form string="Depreciation Lines">
                                     <group>
                                         <group>
                                             <field name="parent_state" invisible="1"/>

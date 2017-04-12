@@ -48,21 +48,26 @@
     </t>
 
     <!--
+        Chatter (mail_thread widget) buttons
+    -->
+    <t t-name="mail.Chatter.Buttons">
+        <button t-if="new_message_btn" type="button" class="btn btn-sm btn-primary o_chatter_button_new_message" title="Send a message">
+            New message
+        </button>
+        <button t-if="log_note_btn" class="btn btn-sm btn-link o_chatter_button_log_note" title="Log a note. Followers will not be notified.">
+            Log an internal note
+        </button>
+        <button t-if="schedule_activity_btn" class="btn btn-sm btn-link o_chatter_button_schedule_activity" title="Schedule an activity">
+            Schedule an activity
+        </button>
+    </t>
+
+    <!--
         Chatter main div
     -->
     <t t-name="mail.Chatter">
         <div class="o_chatter">
-            <div class="o_chatter_topbar">
-                <button type="button" class="btn btn-sm btn-primary o_chatter_button_new_message" title="Send a message">
-                    New message
-                </button>
-                <button t-if="widget.options.display_log_button" class="btn btn-sm btn-link o_chatter_button_log_note" title="Log a note. Followers will not be notified.">
-                    Log an internal note
-                </button>
-                <button t-if="widget.options.display_activity_button" class="btn btn-sm btn-link o_activity_schedule" title="Schedule an activity">
-                    Schedule an Activity
-                </button>
-            </div>
+            <div class="o_chatter_topbar"/>
         </div>
     </t>
 

@@ -1,7 +1,7 @@
 odoo.define('crm.partner_assign', function (require) {
 'use strict';
 
-var Model = require('web.Model');
+var rpc = require('web.rpc');
 var website = require('website.website');
 /*
  * This file is intended to add interactivity to survey forms rendered by
@@ -21,8 +21,14 @@ $('.interested_partner_assign_confirm').on('click',function(e){
     var $btn = $(this);
     if ($('.interested_partner_assign_form .comment_interested').val() && $('.interested_partner_assign_form .contacted_interested').prop('checked')){
         $btn.prop('disabled', true);
-        new Model('crm.lead')
-            .call("partner_interested",[[parseInt($('.interested_partner_assign_form .assign_lead_id').val())], $('.interested_partner_assign_form .comment_interested').val()])
+        rpc.query({
+                model: 'crm.lead',
+                method: "partner_interested",
+                args: [
+                    [parseInt($('.interested_partner_assign_form .assign_lead_id').val())],
+                    $('.interested_partner_assign_form .comment_interested').val()
+                ],
+            })
             .then(function(){
                 window.location.href = '/my/leads';
             })
@@ -39,13 +45,16 @@ $('.interested_partner_assign_confirm').on('click',function(e){
 $('.desinterested_partner_assign_confirm').on('click',function(){
     var $btn = $(this);
     $btn.prop('disabled', true);
-    new Model('crm.lead')
-        .call("partner_desinterested",
-            [[parseInt($('.desinterested_partner_assign_form .assign_lead_id').val())],
-            $('.desinterested_partner_assign_form .comment_desinterested').val(),
-            $('.desinterested_partner_assign_form .contacted_desinterested').prop('checked'),
-            $('.desinterested_partner_assign_form .customer_mark_spam').prop('checked'),
-            ])
+    rpc.query({
+            model: 'crm.lead',
+            method: 'partner_desinterested',
+            args: [
+                [parseInt($('.desinterested_partner_assign_form .assign_lead_id').val())],
+                $('.desinterested_partner_assign_form .comment_desinterested').val(),
+                $('.desinterested_partner_assign_form .contacted_desinterested').prop('checked'),
+                $('.desinterested_partner_assign_form .customer_mark_spam').prop('checked'),
+            ],
+        })
         .then(function(){
             window.location.href = '/my/leads';
         }).always(function() {
@@ -57,10 +66,14 @@ $('.desinterested_partner_assign_confirm').on('click',function(){
 opp_stage_buttons.on('click',function(e){
     var $btn = $(this);
     $btn.prop('disabled', true);
-    new Model('crm.lead')
-        .call("write", [[parseInt(e.currentTarget.getAttribute('opp'))],{
-            stage_id: parseInt(e.currentTarget.getAttribute('data')),
-        },], {context: {website_partner_assign:1}})
+    rpc.query({
+            model: 'crm.lead',
+            method: 'write',
+            args: [[parseInt(e.currentTarget.getAttribute('opp'))],{
+                stage_id: parseInt(e.currentTarget.getAttribute('data')),
+            },],
+            context: {website_partner_assign:1},
+        })
         .fail(function() {
             $btn.prop('disabled', false);
         })
@@ -78,19 +91,22 @@ $('.edit_contact_form .country_id').on('change', function(){
 $('.edit_contact_confirm').on('click',function(){
     var $btn = $(this);
     $btn.prop('disabled', true);
-    new Model('crm.lead')
-        .call("write", [[parseInt($('.edit_contact_form .opportunity_id').val())],{
-            partner_name: $('.edit_contact_form .partner_name').val(),
-            phone: $('.edit_contact_form .phone').val(),
-            mobile: $('.edit_contact_form .mobile').val(),
-            email_from: $('.edit_contact_form .email_from').val(),
-            street: $('.edit_contact_form .street').val(),
-            street2: $('.edit_contact_form .street2').val(),
-            city: $('.edit_contact_form .city').val(),
-            zip: $('.edit_contact_form .zip').val(),
-            state_id: parseInt($('.edit_contact_form .state_id').find(":selected").attr('value')),
-            country_id: parseInt($('.edit_contact_form .country_id').find(":selected").attr('value')),
-        }])
+    rpc.query({
+            model: 'crm.lead',
+            method: "write",
+            args: [[parseInt($('.edit_contact_form .opportunity_id').val())],{
+                partner_name: $('.edit_contact_form .partner_name').val(),
+                phone: $('.edit_contact_form .phone').val(),
+                mobile: $('.edit_contact_form .mobile').val(),
+                email_from: $('.edit_contact_form .email_from').val(),
+                street: $('.edit_contact_form .street').val(),
+                street2: $('.edit_contact_form .street2').val(),
+                city: $('.edit_contact_form .city').val(),
+                zip: $('.edit_contact_form .zip').val(),
+                state_id: parseInt($('.edit_contact_form .state_id').find(":selected").attr('value')),
+                country_id: parseInt($('.edit_contact_form .country_id').find(":selected").attr('value')),
+            }],
+        })
         .fail(function() {
             $btn.prop('disabled', false);
         })
@@ -103,12 +119,15 @@ $('.edit_contact_confirm').on('click',function(){
 $('.new_opp_confirm').on('click',function(e){
     var $btn = $(this);
     $btn.prop('disabled', true);
-    new Model('crm.lead')
-        .call("create_opp_portal", [{
-            contact_name: $('.new_opp_form .contact_name').val(),
-            title: $('.new_opp_form .title').val(),
-            description: $('.new_opp_form .description').val(),
-        }])
+    rpc.query({
+            model: 'crm.lead',
+            method: 'create_opp_portal',
+            args: [{
+                contact_name: $('.new_opp_form .contact_name').val(),
+                title: $('.new_opp_form .title').val(),
+                description: $('.new_opp_form .description').val(),
+            }],
+        })
         .done(function(response){
             if (response.errors) {
                 $('#new-opp-dialog .alert').remove();
@@ -129,16 +148,19 @@ $('.new_opp_confirm').on('click',function(e){
 $('.edit_opp_confirm').on('click',function(){
     var $btn = $(this);
     $btn.prop('disabled', true);
-    new Model('crm.lead')
-        .call("update_lead_portal", [[parseInt($('.edit_opp_form .opportunity_id').val())],{
-            date_deadline: $('.edit_opp_form .date_deadline').val(),
-            planned_revenue: parseFloat($('.edit_opp_form .planned_revenue').val()),
-            probability: parseFloat($('.edit_opp_form .probability').val()),
-            activity_type_id: parseInt($('.edit_opp_form .next_activity').find(":selected").attr('data')),
-            activity_summary: $('.edit_opp_form .activity_summary').val(),
-            activity_date_deadline: $('.edit_opp_form .activity_date_deadline').val(),
-            priority: $('input[name="PriorityRadioOptions"]:checked').val(),
-        }])
+    rpc.query({
+            model: 'crm.lead',
+            method: 'update_lead_portal',
+            args: [[parseInt($('.edit_opp_form .opportunity_id').val())],{
+                date_deadline: $('.edit_opp_form .date_deadline').val(),
+                planned_revenue: parseFloat($('.edit_opp_form .planned_revenue').val()),
+                probability: parseFloat($('.edit_opp_form .probability').val()),
+                activity_type_id: parseInt($('.edit_opp_form .next_activity').find(":selected").attr('data')),
+                activity_summary: $('.edit_opp_form .activity_summary').val(),
+                activity_date_deadline: $('.edit_opp_form .activity_date_deadline').val(),
+                priority: $('input[name="PriorityRadioOptions"]:checked').val(),
+            }],
+        })
         .fail(function() {
             $btn.prop('disabled', false);
         })

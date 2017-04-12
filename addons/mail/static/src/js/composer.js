@@ -1,13 +1,12 @@
 odoo.define('mail.composer', function (require) {
 "use strict";
 
-var chat_manager = require('mail.chat_manager');
+var chat_mixin = require('mail.chat_mixin');
 var utils = require('mail.utils');
 
 var core = require('web.core');
 var data = require('web.data');
-var dom_utils = require('web.dom_utils');
-var Model = require('web.Model');
+var dom = require('web.dom');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -346,7 +345,7 @@ var MentionManager = Widget.extend({
 
 });
 
-var BasicComposer = Widget.extend({
+var BasicComposer = Widget.extend(chat_mixin, {
     template: "mail.ChatComposer",
 
     events: {
@@ -417,9 +416,6 @@ var BasicComposer = Widget.extend({
 
         // Emojis
         this.emoji_container_classname = 'o_composer_emoji';
-
-        this.PartnerModel = new Model('res.partner');
-        this.ChannelModel = new Model('mail.channel');
     },
 
     start: function () {
@@ -432,7 +428,7 @@ var BasicComposer = Widget.extend({
             self.trigger('input_focused');
         });
         this.$input.val(this.options.default_body);
-        dom_utils.autoresize(this.$input, {parent: this, min_height: this.options.input_min_height});
+        dom.autoresize(this.$input, {parent: this, min_height: this.options.input_min_height});
 
         // Attachments
         $(window).on(this.fileupload_id, this.on_attachment_loaded);
@@ -444,7 +440,7 @@ var BasicComposer = Widget.extend({
             content: function() {
                 if (!self.$emojis) { // lazy rendering
                     self.$emojis = $(QWeb.render('mail.ChatComposer.emojis', {
-                        emojis: chat_manager.get_emojis(),
+                        emojis: self._getEmojis(),
                     }));
                     self.$emojis.filter('.o_mail_emoji').on('click', self, self.on_click_emoji_img);
                 }
@@ -665,18 +661,20 @@ var BasicComposer = Widget.extend({
 
     // Mention
     mention_fetch_throttled: function (model, method, kwargs) {
+        var self = this;
         // Delays the execution of the RPC to prevent unnecessary RPCs when the user is still typing
         var def = $.Deferred();
         clearTimeout(this.mention_fetch_timer);
         this.mention_fetch_timer = setTimeout(function () {
-            return model.call(method, kwargs).then(function (results) {
-                def.resolve(results);
-            });
+            return self._rpc({model: model, method: method, kwargs: kwargs})
+                .then(function (results) {
+                    def.resolve(results);
+                });
         }, 200);
         return def;
     },
     mention_fetch_channels: function (search) {
-        return this.mention_fetch_throttled(this.ChannelModel, 'get_mention_suggestions', {
+        return this.mention_fetch_throttled('mail.channel', 'get_mention_suggestions', {
             limit: this.options.mention_fetch_limit,
             search: search,
         }).then(function (suggestions) {
@@ -706,7 +704,7 @@ var BasicComposer = Widget.extend({
             });
             if (!suggestions.length && !self.options.mention_partners_restricted) {
                 // no result found among prefetched partners, fetch other suggestions
-                suggestions = self.mention_fetch_throttled(self.PartnerModel, 'get_mention_suggestions', {
+                suggestions = mention_fetch_throttled('res.partner', 'get_mention_suggestions', {
                     limit: limit,
                     search: search,
                 });
@@ -719,7 +717,7 @@ var BasicComposer = Widget.extend({
         var def = $.Deferred();
         clearTimeout(this.canned_timeout);
         this.canned_timeout = setTimeout(function() {
-            var canned_responses = chat_manager.get_canned_responses();
+            var canned_responses = self._getCannedResponses();
             var matches = fuzzy.filter(utils.unaccent(search), _.pluck(canned_responses, 'source'));
             var indexes = _.pluck(matches.slice(0, self.options.mention_fetch_limit), 'index');
             def.resolve(_.map(indexes, function (i) {

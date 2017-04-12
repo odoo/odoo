@@ -39,7 +39,7 @@ tour.register('sale_tour', {
     content: _t("Click here to add some lines to your quotations."),
     position: "bottom",
 }, {
-    trigger: ".modal-body .o_form_required input, .o_list_editable .o_form_required input",
+    trigger: ".modal-body .o_form_required input, .o_list_view .o_required_field input",
     extra_trigger: ".o_sale_order",
     content: _t("Select a product, or create a new one on the fly. The product will define the default sales price (that you can change), taxes and description automatically."),
     position: "right",
@@ -50,7 +50,9 @@ tour.register('sale_tour', {
     in_modal: false,
     run: function (actions) {
         actions.auto();
-        actions.auto(".modal-footer .btn-primary");
+        if ($(".modal-footer .btn-primary").length) {
+            actions.auto(".modal-footer .btn-primary");
+        }
     },
     id: "quotation_product_selected",
 }, {
@@ -65,7 +67,7 @@ tour.register('sale_tour', {
     position: "bottom"
 }, {
     trigger: ".breadcrumb li:not(.active):last",
-    extra_trigger: ".o_sale_order [data-id='sent'].btn-primary, .o_sale_order [data-id='sent'].oe_active",
+    extra_trigger: ".o_sale_order [data-value='sent'].btn-primary",
     content: _t("Use the breadcrumbs to <b>go back to preceeding screens</b>."),
     position: "bottom"
 }, {

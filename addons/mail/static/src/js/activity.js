@@ -1,21 +1,21 @@
-odoo.define('mail.activity', function (require) {
+odoo.define('mail.Activity', function (require) {
 "use strict";
 
+var AbstractField = require('web.AbstractField');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
-var form_common = require('web.form_common');
-var Model = require("web.Model");
-var ChatManager = require('mail.chat_manager');
-var QWeb = core.qweb;
+var field_registry = require('web.field_registry');
 var time = require('web.time');
-var _t = core._t;
 
+var QWeb = core.qweb;
+var _t = core._t;
 
 /**
  * Set the 'label_delay' entry in activity data according to the deadline date
  * @param {Array} list of activity Object
  * @return {Array} : list of modified activity Object
  */
-var set_delay_label = function(activities){
+var setDelayLabel = function(activities){
     var today = moment().startOf('day');
     _.each(activities, function(activity){
         var to_display = '';
@@ -38,172 +38,169 @@ var set_delay_label = function(activities){
                 }
             }
         }
-        activity['label_delay'] = to_display;
+        activity.label_delay = to_display;
     });
     return activities;
 };
 
-// -----------------------------------------------------------------------------
-// Activities Widget ('mail_activity' widget)
-//
-// Since it is displayed on a form view, it extends 'AbstractField' widget.
-//
-// Note: the activity widget is moved inside the chatter by the chatter itself
-// for layout purposes.
-// -----------------------------------------------------------------------------
-
-var Activity = form_common.AbstractField.extend({
-    className: 'o_mail_activity',
-
-    events: {
-        "click .o_activity_edit": "on_activity_edit",
-        "click .o_activity_unlink": "on_activity_unlink",
-        "click .o_activity_done": "on_activity_done",
-    },
-
+var AbstractActivityField = AbstractField.extend({
+    // inherited
     init: function () {
         this._super.apply(this, arguments);
-
-        this.context = this.options.context || {};
-        this.model = this.view.dataset.model;
         this.activities = [];
-        this.Activity = new Model('mail.activity');
     },
 
-    start: function () {
-        // Hide the chatter in 'create' mode
-        this.view.on("change:actual_mode", this, this.check_visibility);
-
-        // find chatter if any
-        this.chatter = this.field_manager.fields.message_ids;
-
-        return this._super();
-    },
-
-    get_res_id: function () {
-        return this.view.datarecord.id;
-    },
-
-    check_visibility: function () {
-        this.set({"force_invisible": this.view.get("actual_mode") === "create"});
-    },
-
-    set_value: function (_value) {
-        this.value = _value;
-        this._super(_value);
-    },
-
-    fetch_and_render_value: function () {
-        var self = this;
-
-        return new Model(this.model)
-            .call("read", [[this.get_res_id()], ['activity_ids']])
-            .then(function (results) {
-                self.value = results[0]['activity_ids'];
-                return self.render_value();
+    // private
+    _markActivityDone: function (id, feedback) {
+        return this._rpc({
+                model: 'mail.activity',
+                method: 'action_done',
+                args: [[id]],
+                kwargs: {feedback: feedback},
             });
     },
-
-    render_value: function () {
+    _readActivities: function () {
         var self = this;
-
-        return this.Activity
-            .call("read", [this.value])
-            .then(function (results) {
-                _.each(results, function(result){
-                    result['time_ago'] = moment(time.auto_str_to_date(result.create_date)).fromNow();
+        var missing_ids = _.difference(this.value.res_ids, _.pluck(this.activities, 'id'));
+        var fetch_def;
+        if (missing_ids.length) {
+            fetch_def = this._rpc({
+                    model: 'mail.activity',
+                    method: 'read',
+                    args: [missing_ids],
                 });
-                this.activities = set_delay_label(results);
-                self.$el.html(QWeb.render('mail.activity_items', {
-                    activities: this.activities,
-                }));
+        }
+        return $.when(fetch_def).then(function (results) {
+            // filter out activities that are no longer linked to this record
+            self.activities = _.filter(self.activities.concat(results || []), function (activity) {
+                return _.contains(self.value.res_ids, activity.id);
             });
-    },
-
-    on_activity_schedule: function (event) {
-        event.preventDefault();
-        var self = this;
-        var action = {
-            type: 'ir.actions.act_window',
-            res_model: 'mail.activity',
-            view_mode: 'form',
-            view_type: 'form',
-            views: [
-                [false, 'form']
-            ],
-            target: 'new',
-            context: _.extend({
-                default_res_id: this.get_res_id(),
-                default_res_model: this.model,
-            }, {'mark_done': true}, this.context),
-            res_id: false,
-        };
-        return this.do_action(action, {
-            on_close: function() {
-                self.fetch_and_render_value();
-                self.chatter.refresh_followers();
-                ChatManager.get_messages({model: self.model, res_id: self.get_res_id()});
-            },
+            // sort activities by due date
+            self.activities = _.sortBy(self.activities, 'date_deadline');
         });
     },
-
-    on_activity_edit: function (event) {
-        event.preventDefault();
-        var self = this;
-        var activity_id = this.$(event.currentTarget).data('activity-id');
+    _scheduleActivity: function (id, callback) {
         var action = {
             type: 'ir.actions.act_window',
             res_model: 'mail.activity',
             view_mode: 'form',
             view_type: 'form',
-            views: [
-                [false, 'form']
-            ],
+            views: [[false, 'form']],
             target: 'new',
-            context: _.extend({
-                default_res_id: this.get_res_id(),
+            context: {
+                default_res_id: this.res_id,
                 default_res_model: this.model,
-            }, {'mark_done': true}, this.context),
+            },
+            res_id: id || false,
+        };
+        return this.do_action(action, { on_close: callback });
+    },
+});
+
+// -----------------------------------------------------------------------------
+// Activities Widget for Form views ('mail_activity' widget)
+// -----------------------------------------------------------------------------
+var Activity = AbstractActivityField.extend({
+    className: 'o_mail_activity',
+    events: {
+        'click .o_activity_edit': '_onEditActivity',
+        'click .o_activity_unlink': '_onUnlinkActivity',
+        'click .o_activity_done': '_onMarkActivityDone',
+    },
+
+    // inherited
+    init: function () {
+        this._super.apply(this, arguments);
+        this.dp = new concurrency.DropPrevious();
+    },
+    _render: function () {
+        // note: the rendering of this widget is asynchronous as it needs to
+        // fetch the details of the linked activities
+        var self = this;
+        var fetch_def = this.dp.add(this._readActivities());
+        return fetch_def.then(function () {
+            _.each(self.activities, function (activity) {
+                activity.time_ago = moment(time.auto_str_to_date(activity.create_date)).fromNow();
+            });
+            self.$el.html(QWeb.render('mail.activity_items', {
+                activities: setDelayLabel(self.activities),
+            }));
+        });
+    },
+    _reset: function (record) {
+        this._super.apply(this, arguments);
+        // the mail widgets being persistent, one need to update the res_id on reset
+        this.res_id = record.res_id;
+    },
+
+    // public
+    scheduleActivity: function () {
+        var callback = this._reload.bind(this, {activity: true, thread: true});
+        return this._scheduleActivity(false, callback);
+    },
+    // private
+    _reload: function (fieldsToReload) {
+        this.trigger_up('reload_mail_fields', fieldsToReload);
+    },
+
+    // handlers
+    _onEditActivity: function (event) {
+        event.preventDefault();
+        var self = this;
+        var activity_id = $(event.currentTarget).data('activity-id');
+        var action = {
+            type: 'ir.actions.act_window',
+            res_model: 'mail.activity',
+            view_mode: 'form',
+            view_type: 'form',
+            views: [[false, 'form']],
+            target: 'new',
+            context: {
+                default_res_id: this.res_id,
+                default_res_model: this.model,
+            },
             res_id: activity_id,
         };
-        this.do_action(action, {
+        return this.do_action(action, {
             on_close: function () {
-                self.fetch_and_render_value();
-                self.chatter.refresh_followers();
-                ChatManager.get_messages({model: self.model, res_id: self.get_res_id()});
+                // remove the edited activity from the array of fetched activities to
+                // force a reload of that activity
+                self.activities = _.reject(self.activities, {id: activity_id});
+                self._reload({activity: true, thread: true});
             },
         });
     },
-
-    on_activity_unlink: function (event) {
+    _onUnlinkActivity: function (event) {
         event.preventDefault();
-        var self = this;
-        var activity_id = this.$(event.currentTarget).data('activity-id');
-        this.Activity
-            .call("unlink", [[activity_id]])
-            .then(function () {
-                self.fetch_and_render_value();
-            });
+        var activity_id = $(event.currentTarget).data('activity-id');
+        return this._rpc({
+                model: 'mail.activity',
+                method: 'unlink',
+                args: [[activity_id]],
+            })
+            .then(this._reload.bind(this, {activity: true}));
     },
-
-    on_activity_done: function (event) {
-        var self = this;
+    _onMarkActivityDone: function (event) {
         event.preventDefault();
-        var $popover_el = this.$(event.currentTarget);
+        var self = this;
+        var $popover_el = $(event.currentTarget);
         var activity_id = $popover_el.data('activity-id');
-        if(! $popover_el.data('bs.popover')) {
+        if (!$popover_el.data('bs.popover')) {
             $popover_el.popover({
                 title : _t('Feedback'),
                 html: 'true',
                 trigger:'click',
                 content : function() {
                     var $popover = $(QWeb.render("mail.activity_feedback_form", {}));
-                    $popover.on('click', '.o_activity_popover_done_next', function (e) {
-                        self.set_done(activity_id, _.escape($popover.find('#activity_feedback').val()));
-                        self.on_activity_schedule(e);
+                    $popover.on('click', '.o_activity_popover_done_next', function () {
+                        var feedback = _.escape($popover.find('#activity_feedback').val());
+                        self._markActivityDone(activity_id, feedback)
+                            .then(self.scheduleActivity.bind(self));
                     });
                     $popover.on('click', '.o_activity_popover_done', function () {
-                        self.set_done(activity_id, _.escape($popover.find('#activity_feedback').val()));
+                        var feedback = _.escape($popover.find('#activity_feedback').val());
+                        self._markActivityDone(activity_id, feedback)
+                            .then(self._reload.bind(self, {activity: true, thread: true}));
                     });
                     $popover.on('click', '.o_activity_popover_discard', function () {
                         $popover_el.popover('hide');
@@ -211,47 +208,104 @@ var Activity = form_common.AbstractField.extend({
                     return $popover;
                 },
             }).on("show.bs.popover", function (e) {
-                $(".popover").not(e.target).popover("hide");
+                var $popover = $(this).data("bs.popover").tip();
+                $popover.addClass('o_mail_activity_feedback').attr('tabindex', 0);
+                $(".o_mail_activity_feedback.popover").not(e.target).popover("hide");
             }).on("shown.bs.popover", function () {
                 var $popover = $(this).data("bs.popover").tip();
-                $popover.css({maxWidth: "410px"}).attr('tabindex', 0);
                 $popover.find('#activity_feedback').focus();
-                // Outside click of popover hide the popover
+                $popover.off('focusout');
                 $popover.focusout(function (e) {
-                    if(!e.relatedTarget) {
+                    // outside click of popover hide the popover
+                    // e.relatedTarget is the element receiving the focus
+                    if(!$popover.is(e.relatedTarget) && !$popover.find(e.relatedTarget).length) {
                         $popover.popover('hide');
                     }
                 });
             }).popover('show');
         }
     },
+});
 
-    set_done: function (activity_id, feedback) {
+// -----------------------------------------------------------------------------
+// Activities Widget for Kanban views ('kanban_activity' widget)
+// -----------------------------------------------------------------------------
+var KanbanActivity = AbstractActivityField.extend({
+    template: 'mail.KanbanActivity',
+    events: {
+        'click .o_activity_btn': '_onButtonClicked',
+        'click .o_schedule_activity': '_onScheduleActivity',
+        'click .o_mark_as_done': '_onMarkActivityDone',
+    },
+
+    // inherited
+    init: function (parent, name, record) {
+        this._super.apply(this, arguments);
+        var selection = {};
+        _.each(record.fields.activity_state.selection, function (value) {
+            selection[value[0]] = value[1];
+        });
+        this.selection = selection;
+        this._setState(record);
+    },
+    _render: function () {
+        var $span = this.$(".o_activity_btn > span");
+        $span.removeClass(function (index, classNames) {
+            return classNames.split(/\s+/).filter(function (className) {
+                return _.str.startsWith(className, 'o_activity_color_');
+            }).join(' ');
+        });
+        $span.addClass('o_activity_color_' + (this.activity_state || 'default'));
+        if (this.$el.hasClass('open')) {
+            // note: this part of the rendering might be asynchronous
+            this._renderDropdown();
+        }
+    },
+    _reset: function (record) {
+        this._super.apply(this, arguments);
+        this._setState(record);
+    },
+
+    // private
+    _reload: function () {
+        this.trigger_up('reload', {db_id: this.record_id});
+    },
+    _renderDropdown: function () {
         var self = this;
-        this.Activity
-            .call("action_done", [[activity_id]], {'feedback': feedback})
-            .then(function (msg_id) {
-                self.fetch_and_render_value();
+        this.$('.o_activity').html(QWeb.render("mail.KanbanActivityLoading"));
+        return this._readActivities().then(function () {
+            self.$('.o_activity').html(QWeb.render("mail.KanbanActivityDropdown", {
+                selection: self.selection,
+                records: _.groupBy(setDelayLabel(self.activities), 'state'),
+                uid: self.getSession().uid,
+            }));
+        });
+    },
+    _setState: function (record) {
+        this.record_id = record.id;
+        this.activity_state = this.recordData.activity_state;
+    },
 
-                self.chatter.msg_ids.unshift(msg_id);
-
-                // to stop scrollbar flickering add min height of the thread and remove after
-                // render. on render thread it will remove and add all it's element which cause flickering
-                var thread = self.chatter.thread;
-                thread.$el.css('min-height', thread.$el.height());
-                self.chatter.fetch_and_render_thread(self.chatter.msg_ids).then(function () {
-                    thread.$el.css('min-height', '');
-                });
-
-            });
+    // handlers
+    _onButtonClicked: function (event) {
+        event.preventDefault();
+        this._renderDropdown();
+    },
+    _onMarkActivityDone: function (event) {
+        event.stopPropagation();
+        var activity_id = $(event.currentTarget).data('activity-id');
+        this._markActivityDone(activity_id).then(this._reload.bind(this));
+    },
+    _onScheduleActivity: function (event) {
+        var activity_id = $(event.currentTarget).data('activity-id') || false;
+        return this._scheduleActivity(activity_id, this._reload.bind(this));
     },
 });
 
-core.form_widget_registry.add('mail_activity', Activity);
+field_registry
+    .add('mail_activity', Activity)
+    .add('kanban_activity', KanbanActivity);
 
-return {
-    Activity: Activity,
-    set_delay_label: set_delay_label,
-};
+return Activity;
 
 });
