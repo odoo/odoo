@@ -60,10 +60,10 @@ class ProcurementOrder(models.Model):
                 project = Project.browse(project_id)
         return project
 
-    def _create_service_task(self):
+    def _prepare_service_task_values(self):
         project = self._get_project()
         planned_hours = self._convert_qty_company_hours()
-        task = self.env['project.task'].create({
+        return {
             'name': '%s:%s' % (self.origin or '', self.product_id.name),
             'date_deadline': self.date_planned,
             'planned_hours': planned_hours,
@@ -74,7 +74,11 @@ class ProcurementOrder(models.Model):
             'description': self.name + '\n',
             'project_id': project.id,
             'company_id': self.company_id.id,
-        })
+        }
+
+    def _create_service_task(self):
+        task_values = self._prepare_service_task_values()
+        task = self.env['project.task'].create(task_values)
         self.write({'task_id': task.id})
 
         msg_body = _("Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>") % (self.product_id.name, task.id, task.name)
