@@ -621,6 +621,7 @@ var MockServer = Class.extend({
 
         var records = this._getRecords(model, kwargs.domain);
         if (groupByField) {
+            var originalGroupByField = groupByField;
             var groupByFieldDescr = fields[groupByField.split(':')[0]];
             var groupByFunction, formatValue;
             if (groupByFieldDescr.type === 'date') {
@@ -664,12 +665,12 @@ var MockServer = Class.extend({
                         id: val
                     });
                     if (related_record) {
-                        group[groupByField] = [val, related_record.display_name];
+                        group[originalGroupByField] = [val, related_record.display_name];
                     } else {
-                        group[groupByField] = false;
+                        group[originalGroupByField] = false;
                     }
                 } else {
-                    group[groupByField] = val;
+                    group[originalGroupByField] = val;
                 }
 
                 // compute count key to match dumb server logic...

@@ -52,12 +52,10 @@ var PivotModel = AbstractModel.extend({
         header.root.groupbys.splice(newGroupbyLength);
     },
     /**
-     * @param {string} id
      * @returns {Deferred}
      */
-    expandAll: function (id) {
-        var record = this.localData[id];
-        return this._loadData(record);
+    expandAll: function () {
+        return this._loadData();
     },
     /**
      * Expand (open up) a given header, be it a row or a column.
@@ -132,7 +130,7 @@ var PivotModel = AbstractModel.extend({
      * @returns {Object}
      */
     exportData: function () {
-        var record = this.model.get(this.handle);
+        var record = this.data;
         var measureNbr = record.measures.length;
         var headers = this.renderer._computeHeaders();
         var measureRow = measureNbr > 1 ? _.last(headers) : [];
@@ -236,7 +234,7 @@ var PivotModel = AbstractModel.extend({
             measures: this.initialMeasures,
             sorted_column: {},
         };
-        return this._loadData(params);
+        return this._loadData();
     },
     /**
      * @override
@@ -255,12 +253,12 @@ var PivotModel = AbstractModel.extend({
             this.data.groupedBy = params.groupBy;
         }
         if (!this.data.has_data) {
-            return this._loadData(params);
+            return this._loadData();
         }
 
         var old_row_root = this.data.main_row.root;
         var old_col_root = this.data.main_col.root;
-        return this._loadData(params).then(function () {
+        return this._loadData().then(function () {
             var new_groupby_length;
             if (!('groupBy' in params)) {
                 // we only update the row groupbys according to the old groupbys
@@ -280,18 +278,13 @@ var PivotModel = AbstractModel.extend({
      * Sort the rows, depending on the values of a given column.  This is an
      * in-memory sort.
      *
-     * Note that it returns a deferred. @todo: makes sure this does not return a
-     * deferred.
-     *
-     * @param {any} id
      * @param {any} col_id
      * @param {any} measure
      * @param {any} descending
-     * @returns {Deferred}
      */
-    sortRows: function (id, col_id, measure, descending) {
+    sortRows: function (col_id, measure, descending) {
         var cells = this.data.cells;
-        this._traverseTree(this.data.main_row.root, function (header) { 
+        this._traverseTree(this.data.main_row.root, function (header) {
             header.children.sort(compare);
         });
         this.data.sorted_column = {
@@ -313,7 +306,6 @@ var PivotModel = AbstractModel.extend({
                 value2 = values2 ? values2[measure] : 0;
             return descending ? value1 - value2 : value2 - value1;
         }
-        return $.when(id);
     },
     /**
      * Toggle the active state for a given measure, then reload the data.
