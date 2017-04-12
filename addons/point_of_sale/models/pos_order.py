@@ -562,7 +562,7 @@ class PosOrder(models.Model):
                     'location_id': location_id,
                     'location_dest_id': destination_id,
                 }
-                pos_qty = any([x.qty >= 0 for x in order.lines])
+                pos_qty = any([x.qty > 0 for x in order.lines])
                 if pos_qty:
                     order_picking = Picking.create(picking_vals.copy())
                 neg_qty = any([x.qty < 0 for x in order.lines])

@@ -321,3 +321,19 @@ class Bar(models.Model):
     def _compute_foo(self):
         for bar in self:
             bar.foo = self.env['test_new_api.foo'].search([('name', '=', bar.name)], limit=1)
+
+
+class ComputeRecursive(models.Model):
+    _name = 'test_new_api.recursive'
+
+    name = fields.Char(required=True)
+    parent = fields.Many2one('test_new_api.recursive')
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('name', 'parent.display_name')
+    def _compute_display_name(self):
+        for rec in self:
+            if rec.parent:
+                rec.display_name = rec.parent.display_name + " / " + rec.name
+            else:
+                rec.display_name = rec.name
