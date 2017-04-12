@@ -1621,12 +1621,14 @@ class AccountPaymentTerm(models.Model):
                 if line.option == 'day_after_invoice_date':
                     next_date += relativedelta(days=line.days)
                     if line.day_of_the_month > 0:
-                        next_date += relativedelta(day=line.day_of_the_month)
+                        months_delta = (line.day_of_the_month < next_date.day) and 1 or 0
+                        next_date += relativedelta(day=line.day_of_the_month, months=months_delta)
                 elif line.option == 'fix_day_following_month':
                     next_first_date = next_date + relativedelta(day=1, months=1)  # Getting 1st of next month
                     next_date = next_first_date + relativedelta(days=line.days - 1)
                     if line.day_of_the_month > 0:
-                        next_date += relativedelta(day=line.day_of_the_month)
+                        months_delta = (line.day_of_the_month < next_date.day) and 1 or 0
+                        next_date += relativedelta(day=line.day_of_the_month, months=months_delta)
                 elif line.option == 'last_day_following_month':
                     next_date += relativedelta(day=31, months=1)  # Getting last day of next month
                 elif line.option == 'last_day_current_month':
