@@ -132,7 +132,8 @@ class ProjectIssue(models.Model):
             if not self.partner_id and not self.email_from:
                 self.partner_id = self.project_id.partner_id.id
                 self.email_from = self.project_id.partner_id.email
-            self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+            if self.project_id not in self.stage_id.project_ids:
+                self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
             self.partner_id = default_partner
             self.email_from = default_partner.email
