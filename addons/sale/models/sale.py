@@ -67,7 +67,9 @@ class SaleOrder(models.Model):
                 for inv in invoice_ids:
                     refund_ids += refund_ids.search([('type', '=', 'out_refund'), ('origin', '=', inv.number), ('origin', '!=', False), ('journal_id', '=', inv.journal_id.id)])
 
-            line_invoice_status = [line.invoice_status for line in order.order_line]
+            # Ignore the status of the deposit product
+            deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
+            line_invoice_status = [line.invoice_status for line in order.order_line if line.product_id != deposit_product_id]
 
             if order.state not in ('sale', 'done'):
                 invoice_status = 'no'
