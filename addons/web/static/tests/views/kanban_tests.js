@@ -1063,6 +1063,62 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('edit the kanban color with the colorpicker', function (assert) {
+        assert.expect(5);
+
+        var writeOnColor;
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'category',
+            data: this.data,
+            debug: true,
+            arch: '<kanban>' +
+                    '<field name="color"/>' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div color="color">' +
+                                '<div class="o_dropdown_kanban dropdown">' +
+                                    '<a class="dropdown-toggle btn" data-toggle="dropdown" href="#">' +
+                                            '<span class="fa fa-bars fa-lg"/>' +
+                                    '</a>' +
+                                    '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">' +
+                                        '<li>' +
+                                            '<ul class="oe_kanban_colorpicker"/>' +
+                                        '</li>' +
+                                    '</ul>' +
+                                '</div>' +
+                                '<field name="name"/>' +
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                '</kanban>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write' && 'color' in args.args[1]) {
+                    writeOnColor = true;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var $first_record = kanban.$('.o_kanban_record:first()');
+
+        assert.strictEqual($first_record.find('.oe_kanban_color_10').length, 0,
+            "no record should have the color 10");
+        assert.strictEqual($first_record.find('.oe_kanban_colorpicker').length, 1,
+            "there should be a color picker");
+        assert.strictEqual($first_record.find('.oe_kanban_colorpicker').children().length, 10,
+            "the color picker should have 10 children (the colors)");
+
+        // set the last color
+        $first_record.find('.oe_kanban_colorpicker a.oe_kanban_color_9').click();
+        assert.ok(writeOnColor, "should write on the color field");
+        assert.strictEqual($first_record.find('.oe_kanban_color_9').length, 1,
+            "one record should have the color 10");
+
+        kanban.destroy();
+    });
+
 });
 
 });
