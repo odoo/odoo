@@ -14,12 +14,12 @@ var _lt = core._lt;
 // "child_of", "parent_of", "like", "not like", "=like", "=ilike"
 // are only used if user entered them manually or if got from demo data
 var operator_mapping = {
-    "=": _lt("is equal to"),
-    "!=": _lt("is not equal to"),
-    ">": _lt("greater than"),
-    "<": _lt("less than"),
-    ">=": _lt("greater than or equal to"),
-    "<=": _lt("less than or equal to"),
+    "=": _lt("="),
+    "!=": _lt("not"),
+    ">": _lt(">"),
+    "<": _lt("<"),
+    ">=": _lt(">="),
+    "<=": _lt("<="),
     "ilike": _lt("contains"),
     "not ilike": _lt("not contains"),
     "in": _lt("in"),
@@ -51,6 +51,19 @@ var DomainNode = Widget.extend({
             e.preventDefault();
             e.stopPropagation();
             this.trigger_up("add_node_clicked", {newBranch: !!$(e.currentTarget).data("branch"), child: this});
+        },
+        /// Hovering a button, assign the according animation class to the parent
+        "mouseenter button": function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.$el.addClass('o_hover_btns');
+            this.$el.toggleClass('o_hover_add_node', $(e.target).hasClass('o_domain_add_node_button'));
+            this.$el.toggleClass('o_hover_add_inset_node', $(e.target).hasClass('o_domain_add_node_inset_button'));
+        },
+        "mouseleave button": function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.$el.removeClass('o_hover_btns o_hover_add_node o_hover_add_inset_node');
         },
     },
     /// A DomainNode needs a model and domain to work. It can also receives a set of options
@@ -307,6 +320,7 @@ var DomainSelector = DomainTree.extend({
         // Display technical domain if in debug mode
         this.$debugInput = this.$(".o_domain_debug_input");
         if (this.$debugInput.length) {
+            this.$debugInput.prepend("<span>Console</span>");
             this.$debugInput.val(domainUtils.domainToString(this.getDomain()));
         }
     },
