@@ -598,11 +598,13 @@ QUnit.module('relational_fields', {
                     '</sheet>' +
                 '</form>',
             res_id: 1,
+            session: {
+                tzOffset: 120
+            },
         });
-        // FIXME: this test is locale dependant. we need to do it right.
-        assert.strictEqual(form.$('td:contains(01/25/2017)').length, 1,
+        assert.strictEqual(form.$('td:eq(0)').text(), "01/25/2017",
             "should have formatted the date");
-        assert.strictEqual(form.$('td:contains(12/12/2016 10:55:05)').length, 1,
+        assert.strictEqual(form.$('td:eq(1)').text(), "12/12/2016 12:55:05",
             "should have formatted the datetime");
         form.destroy();
     });

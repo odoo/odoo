@@ -1000,7 +1000,10 @@ QUnit.module('basic_fields', {
             },
             translateParameters: {  // Avoid issues due to localization formats
               date_format: '%m/%d/%Y',
-            }
+            },
+            session: {
+                tzOffset: 120
+            },
         });
 
         assert.strictEqual(form.$('.o_form_field_date').text(), '02/03/2017',
@@ -1094,10 +1097,13 @@ QUnit.module('basic_fields', {
             translateParameters: {  // Avoid issues due to localization formats
                 date_format: '%m/%d/%Y',
                 time_format: '%H:%M:%S',
-            }
+            },
+            session: {
+                tzOffset: 120
+            },
         });
 
-        var expectedDateString = "02/08/2017 10:00:00";
+        var expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
         assert.strictEqual(form.$('.o_form_field_date').text(), expectedDateString,
             'the datetime should be correctly displayed in readonly');
 
@@ -1148,10 +1154,13 @@ QUnit.module('basic_fields', {
             translateParameters: {  // Avoid issues due to localization formats
                 date_format: '%m/%d/%Y',
                 time_format: '%H:%M:%S',
-            }
+            },
+            session: {
+                tzOffset: 120
+            },
         });
 
-        var expectedDateString = "02/08/2017 10:00:00";
+        var expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
         var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector)').first();
         assert.strictEqual($cell.text(), expectedDateString,
             'the datetime should be correctly displayed in readonly');
@@ -1597,7 +1606,7 @@ QUnit.module('basic_fields', {
         assert.ok($cell.hasClass('o_edit_mode'), 'should be set as edit mode');
         assert.strictEqual($cell.find('input').val(), 'yop',
             'should have the corect value in internal input');
-        $cell.find('input').val('new').trigger('input');;
+        $cell.find('input').val('new').trigger('input');
 
         // save
         list.$buttons.find('.o_list_button_save').click();
