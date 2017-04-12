@@ -33,7 +33,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 this.env.currentId = event.data.res_id;
             }
             var options = {};
-            if (event.data.mode) {
+            if (event.data.view_type === 'form' && !this.env.currentId) {
+                options.mode = 'edit';
+            } else if (event.data.mode) {
                 options.mode = event.data.mode;
             }
             this.switch_mode(event.data.view_type, options);
