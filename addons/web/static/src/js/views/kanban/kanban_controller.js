@@ -363,9 +363,14 @@ var KanbanController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onUpdateRecord: function (event) {
+        var self = this;
         var record = event.target;
-        this.alive(this.model.save(record.db_id, event.data))
-            .then(record.update.bind(record));
+        this.model.notifyChanges(record.db_id, event.data).then(function () {
+            self.model.save(record.db_id).then(function () {
+                var state = self.model.get(record.db_id);
+                record.update(state);
+            });
+        });
     },
 });
 
