@@ -630,7 +630,8 @@ class Field(object):
 
             if field is self:
                 self.recursive = True
-                continue
+                if not i:
+                    continue            # self directly depends on self, give up
 
             # add trigger on field and its inverses to recompute self
             model._field_triggers.add(field, (self, '.'.join(path[:i] or ['id'])))
@@ -945,7 +946,7 @@ class Field(object):
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
-            self._compute_value(record)
+            self.compute_value(record)
         else:
             record._cache[self] = SpecialValue(self.null(record.env))
 
