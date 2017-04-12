@@ -60,7 +60,7 @@ var DateWidget = Widget.extend({
         }
     },
     get_value: function() {
-        return this.get('value');
+        return this.get('value').clone();
     },
     set_value_from_ui: function() {
         var value = this.$input.val() || false;
@@ -84,10 +84,10 @@ var DateWidget = Widget.extend({
         }
     },
     parse_client: function(v) {
-        return field_utils.parse[this.type_of_date](v, {type: this.type_of_date});
+        return field_utils.parse[this.type_of_date](v, {timezone: false});
     },
     format_client: function(v) {
-        return field_utils.format[this.type_of_date](v, {type: this.type_of_date});
+        return field_utils.format[this.type_of_date](v, {timezone: false});
     },
     set_datetime_default: function() {
         //when opening datetimepicker the date and time by default should be the one from

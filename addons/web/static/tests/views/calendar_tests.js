@@ -2,8 +2,21 @@ odoo.define('web.calendar_tests', function (require) {
 "use strict";
 
 var CalendarView = require('web.CalendarView');
+var CalendarRenderer = require('web.CalendarRenderer');
 var testUtils = require('web.test_utils');
 var session = require('web.session');
+
+
+CalendarRenderer.include({
+    getAvatars: function () {
+        var res = this._super.apply(this, arguments);
+        for (var k in res) {
+            res[k] = res[k].replace(/src="([^"]+)"/, 'src="#test:\$1"');
+        }
+        return res;
+    }
+});
+
 
 var createView = testUtils.createView;
 
@@ -267,7 +280,7 @@ QUnit.module('Views', {
         assert.ok($('.modal-dialog.modal-sm').length, "should open the quick create dialog");
 
         $('.modal-body input:first').val('new event in quick create').trigger('input');
-        $('.modal button.btn:contains(Create)').trigger('click');
+        $('.modal button.btn:contains(Create)').trigger('click').trigger('click');
 
         assert.strictEqual(calendar.$('.fc-event:contains(new event in quick create)').length, 1, "should display the new record");
         assert.strictEqual(calendar.$('td.fc-event-container[colspan]').length, 2, "should the new record have only one day");
@@ -281,9 +294,10 @@ QUnit.module('Views', {
 
         $('.modal-body input:first')
             .val('new event in quick create validated by pressing enter key.')
+            .trigger($.Event('keyup', {keyCode: $.ui.keyCode.ENTER}))
             .trigger($.Event('keyup', {keyCode: $.ui.keyCode.ENTER}));
 
-        assert.strictEqual(calendar.$('.fc-event:contains(new event in quick create validated by pressing enter key.)').length, 1, "should display the new record");
+        assert.strictEqual(calendar.$('.fc-event:contains(new event in quick create validated by pressing enter key.)').length, 1, "should display the new record by pressing enter key");
 
         // create a new event with 2 days
 
@@ -318,7 +332,109 @@ QUnit.module('Views', {
         calendar.$buttons.find('.o_calendar_button_next').click();
 
         assert.strictEqual(calendar.$('.fc-event-container .fc-event').length, 0, "should display 0 events");
+
         calendar.destroy();
+    });
+
+    QUnit.test('create event with timezone in week mode', function (assert) {
+        assert.expect(7);
+
+        this.data.event.records = [];
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'scale_zoom="week" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                tzOffset: 120
+            },
+        });
+
+
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body'); // => select with click position
+
+        var top = calendar.$('.fc-axis:contains(8am)').offset().top + 5;
+        var left = calendar.$('.fc-day:eq(2)').offset().left + 5;
+
+
+        testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        testUtils.triggerPositionalMouseEvent(left, top + 140, "mousemove");
+
+        assert.strictEqual(calendar.$('.fc-content .fc-time').text(), "08:00 - 12:00",
+            "should display the time in the calendar sticker");
+
+        testUtils.triggerPositionalMouseEvent(left, top + 140, "mouseup");
+        $('.modal input:first').val('new event').trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click');
+        var $newevent = calendar.$('.fc-event:contains(new event)');
+
+        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-12:00newevent",
+            "should display the new event with time and title");
+
+        assert.deepEqual($newevent.data('fcSeg').event.record,
+            {
+                display_name: "new event",
+                start: "2016-12-13 06:00:00",
+                stop: "2016-12-13 10:00:00",
+                allday: false,
+                name: "new event",
+                id: 1
+            },
+            "the new record should have the utc datetime (quickCreate)");
+
+        // delete record
+
+        $newevent.trigger('click');
+        $('.modal button.btn-default:contains(Delete)').trigger('click');
+        $('.modal button.btn-primary:contains(Ok)').trigger('click');
+        assert.strictEqual(calendar.$('.fc-content').length, 0, "should delete the record");
+
+
+        // create again
+
+        testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        testUtils.triggerPositionalMouseEvent(left, top + 140, "mousemove");
+        testUtils.triggerPositionalMouseEvent(left, top + 140, "mouseup");
+        $('.modal input:first').val('new event').trigger('input');
+        $('.modal button.btn:contains(Edit)').trigger('click');
+
+        assert.strictEqual($('.o_form_field[name="start"] input').val(), "12/13/2016 08:00:00",
+            "should display the datetime");
+
+        $('.modal-lg button.btn:contains(Save)').trigger('click');
+        $newevent = calendar.$('.fc-event:contains(new event)');
+
+        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-12:00newevent",
+            "should display the new event with time and title");
+
+        assert.deepEqual($newevent.data('fcSeg').event.record,
+            {
+                display_name: "new event",
+                start: "2016-12-13 06:00:00",
+                stop: "2016-12-13 10:00:00",
+                allday: false,
+                name: "new event",
+                id: 1
+            },
+            "the new record should have the utc datetime (formViewDialog)");
+
+        calendar.destroy();
+        $view.remove();
     });
 
     QUnit.test('rendering, with many2many', function (assert) {

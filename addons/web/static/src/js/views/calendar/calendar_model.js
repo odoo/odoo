@@ -3,7 +3,7 @@ odoo.define('web.CalendarModel', function (require) {
 
 var AbstractModel = require('web.AbstractModel');
 var core = require('web.core');
-var field_utils = require('web.field_utils');
+var fieldUtils = require('web.field_utils');
 var session = require('web.session');
 var time = require('web.time');
 
@@ -35,16 +35,16 @@ return AbstractModel.extend({
     calendarEventToRecord: function (event) {
         // Normalize event_end without changing fullcalendars event.
         var data = {'name': event.title};
-        var start = event.start;
-        var end = event.end;
+        var start = event.start.clone();
+        var end = event.end && event.end.clone();
 
-        //Bug when we move an all_day event from week or day view, we don't have
-        // a date.end or duration...
-        if (end === null || end.diff(start) < 0) {
+        if (!end || end.diff(start) < 0) {
             end = start.clone().add(1, 'h');
         }
 
-        if (event.allDay) {
+        if (event.allDay || end.diff(start) === 86400000) {
+            event.allDay = true;
+
             if (this.scale === 'month') {
                 if (event.r_start) {
                     start.hours(event.r_start.hours())
@@ -61,12 +61,16 @@ return AbstractModel.extend({
                     end.utc();
                 }
             } else if (this.mapping.all_day) {
-                start.utc().startOf('day');
-                end.utc().startOf('day');
+                start.startOf('day');
+                end.startOf('day');
             } else {
-                start.utc().hours(7);
-                end.utc().hours(19);
+                // default hours in the user's timezone
+                start.hours(7).add(-this.getSession().tzOffset, 'minutes');
+                end.hours(19).add(-this.getSession().tzOffset, 'minutes');
             }
+        } else {
+            start.add(-this.getSession().tzOffset, 'minutes');
+            end.add(-this.getSession().tzOffset, 'minutes');
         }
 
         if (this.mapping.all_day) {
@@ -440,7 +444,7 @@ return AbstractModel.extend({
                     var _value = record[filter.write_field];
                     var value = _.isArray(_value) ? _value[0] : _value;
                     var f = _.find(filter.filters, function (f) {return f.value === value;});
-                    var formater = field_utils.format[_.contains(['many2many', 'one2many'], field.type) ? 'many2one' : field.type];
+                    var formater = fieldUtils.format[_.contains(['many2many', 'one2many'], field.type) ? 'many2one' : field.type];
                     return {
                         'id': record.id,
                         'value': value,
@@ -520,7 +524,7 @@ return AbstractModel.extend({
                     fs.push({
                         'color_index': self.model_color === (field.relation || element.model) ? value : false,
                         'value': value,
-                        'label': field_utils.format[field.type](_value, field),
+                        'label': fieldUtils.format[field.type](_value, field),
                         'avatar_model': field.relation || element.model,
                     });
                 });
@@ -572,21 +576,24 @@ return AbstractModel.extend({
             attendees = [];
 
         if (!all_day) {
-            date_start = field_utils.parse.datetime(evt[this.mapping.date_start]);
-            date_stop = this.mapping.date_stop ? field_utils.parse.datetime(evt[this.mapping.date_stop]) : null;
+            date_start = fieldUtils.parse.datetime(evt[this.mapping.date_start]);
+            date_stop = this.mapping.date_stop ? fieldUtils.parse.datetime(evt[this.mapping.date_stop]) : null;
         } else {
-            date_start = field_utils.parse.datetime(evt[this.mapping.date_start].split(' ')[0],'start');
-            date_stop = this.mapping.date_stop ? field_utils.parse.datetime(evt[this.mapping.date_stop].split(' ')[0],'start') : null;
+            date_start = fieldUtils.parse.datetime(evt[this.mapping.date_start].split(' ')[0]);
+            date_stop = this.mapping.date_stop ? fieldUtils.parse.datetime(evt[this.mapping.date_stop].split(' ')[0]) : null;
         }
 
         if (!date_stop && date_delay) {
             date_stop = date_start.clone().add(date_delay,'hours');
         }
 
+        date_start.add(this.getSession().tzOffset, 'minutes');
+        date_stop.add(this.getSession().tzOffset, 'minutes');
+
         var r = {
             'record': evt,
-            'start': dateToServer(date_start),
-            'end': dateToServer(date_stop),
+            'start': date_start,
+            'end': date_stop,
             'r_start':date_start.clone(),
             'r_end':date_stop.clone(),
             'title': the_title,

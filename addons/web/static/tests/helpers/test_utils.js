@@ -395,11 +395,36 @@ function dragAndDrop($el, $to) {
  */
 function triggerMouseEvent($el, type) {
     var pos = $el.offset();
-    var e = new jQuery.Event(type);
+    var e = new $.Event(type);
     e.pageX = pos.left;
     e.pageY = pos.top;
     e.which = 1;
     $el.trigger(e);
+}
+
+/**
+ * simulate a mouse event with a custom event on a position x and y. This is
+ * sometimes necessary because the basic way to trigger an event (such as
+ * $el.trigger('mousemove')); ) is too crude for some uses.
+ *
+ * @param {integer} x
+ * @param {integer} y
+ * @param {string} type a mouse event type, such as 'mousedown' or 'mousemove'
+ */
+function triggerPositionalMouseEvent(x, y, type){
+    var ev = document.createEvent("MouseEvent");
+    var el = document.elementFromPoint(x,y);
+    ev.initMouseEvent(
+        type,
+        true /* bubble */,
+        true /* cancelable */,
+        window, null,
+        x, y, x, y, /* coordinates */
+        false, false, false, false, /* modifier keys */
+        0 /*left button*/, null
+    );
+    el.dispatchEvent(ev);
+    return el;
 }
 
 /**
@@ -436,6 +461,7 @@ return session.is_bound.then(function () {
         addMockEnvironment: addMockEnvironment,
         dragAndDrop: dragAndDrop,
         triggerMouseEvent: triggerMouseEvent,
+        triggerPositionalMouseEvent: triggerPositionalMouseEvent,
         removeSrcAttribute: removeSrcAttribute,
     };
 });

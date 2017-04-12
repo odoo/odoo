@@ -267,8 +267,9 @@ var FieldDate = InputField.extend({
         if (this.mode === 'edit') {
             this.datewidget = this._makeDatePicker();
             this.datewidget.on('datetime_changed', this, function () {
-                if (!this.datewidget.get_value().isSame(this.value)) {
-                    this._setValue(this.datewidget.get_value());
+                var value = this._getDateWidgetValue();
+                if (!value.isSame(this.value)) {
+                    this._setValue(value);
                 }
             });
             def = this.datewidget.appendTo('<div>').done(function () {
@@ -284,6 +285,15 @@ var FieldDate = InputField.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * return the datepicker value
+     *
+     * @private
+     */
+    _getDateWidgetValue: function () {
+        return this.datewidget.get_value();
+    },
 
     /**
      * Instantiates a new DateWidget datepicker.
@@ -315,13 +325,46 @@ var FieldDateTime = FieldDate.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * return the datepicker value
+     *
+     * @private
+     */
+    _getDateWidgetValue: function () {
+        return this.datewidget.get_value().add(-this.getSession().tzOffset, 'minutes');
+    },
+
+    /**
      * Instantiates a new DateTimeWidget datepicker rather than DateWidget.
      *
      * @override
      * @private
      */
     _makeDatePicker: function () {
-        return new datepicker.DateTimeWidget(this, {defaultDate: this.value});
+        var value = this.value && this.value.clone().add(this.getSession().tzOffset, 'minutes');
+        return new datepicker.DateTimeWidget(this, {defaultDate: value});
+    },
+
+    /**
+     * Set the datepicker to the right value rather than the default one.
+     *
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        var value = this.value && this.value.clone().add(this.getSession().tzOffset, 'minutes');
+        this.datewidget.set_value(value);
+        this.$input = this.datewidget.$input;
+    },
+
+    /**
+     * FieldDateTime overrides _formatValue to use the session timezone
+     *
+     * @override
+     * @private
+     * @param {Moment} value
+     */
+    _formatValue: function (value) {
+        return field_utils.format.datetime(value, {timezone: true});
     },
 });
 

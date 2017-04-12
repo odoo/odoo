@@ -2084,19 +2084,22 @@ QUnit.module('Views', {
                     '</group>' +
                 '</form>',
             res_id: 1,
+            session: {
+                tzOffset: 120
+            },
         });
 
         assert.strictEqual(form.$('.o_form_field[name=date]').text(),
             '01/25/2017', "the initial date should be correct");
         assert.strictEqual(form.$('.o_form_field[name=datetime]').text(),
-            '12/12/2016 10:55:05', "the initial datetime should be correct");
+            '12/12/2016 12:55:05', "the initial datetime should be correct");
 
         form.$buttons.find('.o_form_button_edit').click();
 
         assert.strictEqual(form.$('.o_form_field[name=date] input').val(),
             '01/25/2017', "the initial date should be correct in edit");
         assert.strictEqual(form.$('.o_form_field[name=datetime] input').val(),
-            '12/12/2016 10:55:05', "the initial datetime should be correct in edit");
+            '12/12/2016 12:55:05', "the initial datetime should be correct in edit");
 
         // trigger the onchange
         form.$('.o_form_field[name="foo"]').val("coucou").trigger('input');
@@ -2104,7 +2107,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('.o_form_field[name=date] input').val(),
             '12/12/2021', "the initial date should be correct in edit");
         assert.strictEqual(form.$('.o_form_field[name=datetime] input').val(),
-            '12/12/2021 10:55:05', "the initial datetime should be correct in edit");
+            '12/12/2021 12:55:05', "the initial datetime should be correct in edit");
 
         form.destroy();
     });

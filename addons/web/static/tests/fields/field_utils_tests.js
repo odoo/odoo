@@ -56,8 +56,8 @@ QUnit.test("format_datetime", function (assert) {
     assert.expect(1);
 
     var date_string = "2009-05-04 12:34:23";
-    var date = fieldUtils.parse.datetime(date_string);
-    var str = fieldUtils.format.datetime(date);
+    var date = fieldUtils.parse.datetime(date_string, {}, {timezone: false});
+    var str = fieldUtils.format.datetime(date, {timezone: false});
     assert.strictEqual(str, moment(date).format("MM/DD/YYYY HH:mm:ss"));
 });
 

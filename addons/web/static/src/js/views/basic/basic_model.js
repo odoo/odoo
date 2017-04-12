@@ -1023,10 +1023,10 @@ var BasicModel = AbstractModel.extend({
                         });
                     } else if (field.type === 'date') {
                         // process data: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.date(val);
+                        record._changes[name] = fieldUtils.parse.date(val, field, {isUTC: true});
                     } else if (field.type === 'datetime') {
                         // process datetime: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.datetime(val);
+                        record._changes[name] = fieldUtils.parse.datetime(val, field, {isUTC: true});
                     } else {
                         record._changes[name] = val;
                     }
@@ -2195,10 +2195,10 @@ var BasicModel = AbstractModel.extend({
                         });
                     } else if (field.type === 'date') {
                         // process date: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.date(result[name]);
+                        record._changes[name] = fieldUtils.parse.date(result[name], field, {isUTC: true});
                     } else if (field.type === 'datetime') {
                         // process datetime: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.datetime(result[name]);
+                        record._changes[name] = fieldUtils.parse.datetime(result[name], field, {isUTC: true});
                     } else {
                         record._changes[name] = result[name];
                     }
@@ -2268,10 +2268,10 @@ var BasicModel = AbstractModel.extend({
                 }
             } else if (field.type === 'date') {
                 // process data: convert into a moment instance
-                record[fieldName] = fieldUtils.parse.date(val);
+                record[fieldName] = fieldUtils.parse.date(val, field, {isUTC: true});
             } else if (field.type === 'datetime') {
                 // process datetime: convert into a moment instance
-                record[fieldName] = fieldUtils.parse.datetime(val);
+                record[fieldName] = fieldUtils.parse.datetime(val, field, {isUTC: true});
             }
         });
     },
