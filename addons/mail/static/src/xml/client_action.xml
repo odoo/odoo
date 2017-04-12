@@ -82,6 +82,10 @@
         </t>
     </t>
     <t t-name="mail.chat.SidebarItems">
+        <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">
+            <span t-if="display_hash">#</span>
+            <input type="text" t-attf-placeholder="#{input_placeholder}"/>
+        </div>
         <t t-foreach="channels" t-as="channel">
             <t t-set="counter" t-value="channel.is_chat ? channel.unread_counter : channel.needaction_counter"/>
             <div t-if="channel.type === channel_type" t-att-data-channel-id="channel.id" t-att-title="channel.name"
@@ -101,10 +105,6 @@
                       title="Leave this channel" t-att-data-channel-id="channel.id"/>
             </div>
         </t>
-        <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">
-            <span t-if="display_hash">#</span>
-            <input type="text" t-attf-placeholder="#{input_placeholder}"/>
-        </div>
     </t>
 
     <t t-name="mail.chat.UserStatus">
