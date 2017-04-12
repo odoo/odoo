@@ -82,7 +82,7 @@ QUnit.module('Views', {
             partner_type: {
                 fields: {
                     name: {string: "Partner Type", type: "char"},
-                    color: {string: "Color index", type: "int"},
+                    color: {string: "Color index", type: "integer"},
                 },
                 records: [
                     {id: 12, display_name: "gold", color: 2},

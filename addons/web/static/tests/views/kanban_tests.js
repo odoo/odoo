@@ -41,7 +41,7 @@ QUnit.module('Views', {
             category: {
                 fields: {
                     name: {string: "Category Name", type: "char"},
-                    color: {string: "Color index", type: "int"},
+                    color: {string: "Color index", type: "integer"},
                 },
                 records: [
                     {id: 6, name: "gold", color: 2},
