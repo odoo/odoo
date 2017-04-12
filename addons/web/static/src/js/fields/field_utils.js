@@ -183,9 +183,9 @@ function formatMany2one(value) {
  */
 function formatMany2Many(value) {
     if (value.data.length === 0) {
-        return value.data.length + _t('0 records');
+        return _t('No records');
     } else if (value.data.length === 1) {
-        return value.data.length + _t('1 record');
+        return _t('1 record');
     } else {
         return value.data.length + _t(' records');
     }

@@ -70,12 +70,20 @@ QUnit.test("format_many2one", function (assert) {
     }));
 });
 
-
-QUnit.test('formatting chars', function(assert) {
+QUnit.test('format char', function(assert) {
     assert.expect(1);
 
     assert.strictEqual(fieldUtils.format.char(), '',
         "undefined char should be formatted as an empty string");
 });
+
+QUnit.test('format many2many', function(assert) {
+    assert.expect(3);
+
+    assert.strictEqual(fieldUtils.format.many2many({data: []}), 'No records');
+    assert.strictEqual(fieldUtils.format.many2many({data: [1]}), '1 record');
+    assert.strictEqual(fieldUtils.format.many2many({data: [1, 2]}), '2 records');
+});
+
 });
 });
