@@ -476,14 +476,16 @@ class IrModelFields(models.Model):
 
         # remove fields from registry, and check that views are not broken
         fields = [self.env[record.model]._pop_field(record.name) for record in self]
+        domain = expression.OR([('arch_db', 'like', record.name)] for record in self)
+        views = self.env['ir.ui.view'].search(domain)
         try:
-            domain = expression.OR([('arch_db', 'like', record.name)] for record in self)
-            views = self.env['ir.ui.view'].search(domain)
-            views._check_xml()
+            for view in views:
+                view._check_xml()
         except Exception:
             raise UserError("\n".join([
                 _("Cannot rename/delete fields that are still present in views:"),
-                ", ".join(map(str, fields)),
+                _("Fields:") + " " + ", ".join(map(str, fields)),
+                _("View:") + " " + view.name,
             ]))
         finally:
             # the registry has been modified, restore it
