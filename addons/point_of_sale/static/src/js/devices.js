@@ -2,7 +2,8 @@ odoo.define('point_of_sale.devices', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.DataModel');
+var mixins = require('web.mixins');
+var rpc = require('web.rpc');
 var Session = require('web.Session');
 
 var QWeb = core.qweb;
@@ -89,9 +90,9 @@ var JobQueue = function(){
 // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
 // methods are used both to signal an event, and to fetch information.
 
-var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
+var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     init: function(parent,options){
-        core.mixins.PropertiesMixin.init.call(this,parent);
+        mixins.PropertiesMixin.init.call(this,parent);
         var self = this;
         options = options || {};
 
@@ -438,21 +439,25 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         send_printing_job();
     },
 
-    print_sale_details: function() { 
+    print_sale_details: function() {
         var self = this;
-        new Model('report.point_of_sale.report_saledetails').call('get_sale_details').then(function(result){
-            var env = {
-                company: self.pos.company,
-                pos: self.pos,
-                products: result.products,
-                payments: result.payments,
-                taxes: result.taxes,
-                total_paid: result.total_paid,
-                date: (new Date()).toLocaleString(),
-            };
-            var report = QWeb.render('SaleDetailsReport', env);
-            self.print_receipt(report);
-        })
+        rpc.query({
+                model: 'report.point_of_sale.report_saledetails',
+                method: 'get_sale_details',
+            })
+            .then(function(result){
+                var env = {
+                    company: self.pos.company,
+                    pos: self.pos,
+                    products: result.products,
+                    payments: result.payments,
+                    taxes: result.taxes,
+                    total_paid: result.total_paid,
+                    date: (new Date()).toLocaleString(),
+                };
+                var report = QWeb.render('SaleDetailsReport', env);
+                self.print_receipt(report);
+            });
     },
 
     update_customer_facing_display: function(html) {

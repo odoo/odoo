@@ -3,11 +3,11 @@ odoo.define('web.planner.common', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var dom_utils = require('web.dom_utils');
-var Model = require('web.Model');
-var Widget = require('web.Widget');
+var dom = require('web.dom');
+var rpc = require('web.rpc');
 var session = require('web.session');
 var utils = require('web.utils');
+var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 
@@ -67,14 +67,15 @@ var PlannerDialog = Dialog.extend({
      * Fetch the planner's rendered template
      */
     willStart: function() {
-        var def = (new Model('web.planner')).call('render', [
-            this.planner.view_id[0],
-            this.planner.planner_application
-        ], {
-            context: session.user_context
-        }).then((function (template) {
-            this.$template = $(template);
-        }).bind(this));
+        var def = rpc.query({
+                model: 'web.planner',
+                method: 'render',
+                args: [this.planner.view_id[0], this.planner.planner_application],
+                context: session.user_context,
+            })
+            .then((function (template) {
+                this.$template = $(template);
+            }).bind(this));
 
         return $.when(this._super.apply(this, arguments), def);
     },
@@ -262,7 +263,7 @@ var PlannerDialog = Dialog.extend({
         this.$el.scrollTop("0");
 
         this.$('textarea').each(function () {
-            dom_utils.autoresize($(this), {parent: self});
+            dom.autoresize($(this), {parent: self});
         });
     },
     // planner data functions
@@ -353,7 +354,11 @@ var PlannerDialog = Dialog.extend({
         this._save_planner_data();
     },
     _save_planner_data: function() {
-        return (new Model('web.planner')).call('write', [this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}]);
+        return rpc.query({
+                model: 'web.planner',
+                method: 'write',
+                args: [this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}],
+            });
     },
     show_enterprise: function () {
         var buttons = [{
@@ -361,9 +366,14 @@ var PlannerDialog = Dialog.extend({
             classes: 'btn-primary',
             close: true,
             click: function () {
-                new Model("res.users").call("search_count", [[["share", "=", false]]]).then(function (data) {
-                    window.location = "https://www.odoo.com/odoo-enterprise/upgrade?utm_medium=community_upgrade&num_users=" + data;
-                });
+                rpc.query({
+                        model: "res.users",
+                        method: "search_count",
+                        args: [[["share", "=", false]]],
+                    })
+                    .then(function (data) {
+                        window.location = "https://www.odoo.com/odoo-enterprise/upgrade?utm_medium=community_upgrade&num_users=" + data;
+                    });
             },
         }, {
             text: _t("Cancel"),
@@ -387,6 +397,9 @@ var PlannerLauncher = Widget.extend({
     sequence: 100, // force it to be the left-most item in the systray to prevent flickering as it is not displayed in all apps
     events: {
         "click": "show_dialog"
+    },
+    init: function () {
+        this._super.apply(this, arguments);
     },
     start: function () {
         this.$progress = this.$(".progress");

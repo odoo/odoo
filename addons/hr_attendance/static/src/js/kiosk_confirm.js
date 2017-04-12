@@ -2,11 +2,8 @@ odoo.define('hr_attendance.kiosk_confirm', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
 var Widget = require('web.Widget');
-
 var QWeb = core.qweb;
-var _t = core._t;
 
 
 var KioskConfirm = Widget.extend({
@@ -15,16 +12,19 @@ var KioskConfirm = Widget.extend({
         "click .o_hr_attendance_sign_in_out_icon": function () {
             var self = this;
             this.$('.o_hr_attendance_sign_in_out_icon').attr("disabled", "disabled");
-            var hr_employee = new Model('hr.employee');
-            hr_employee.call('attendance_manual', [[this.employee_id], this.next_action])
-            .then(function(result) {
-                if (result.action) {
-                    self.do_action(result.action);
-                } else if (result.warning) {
-                    self.do_warn(result.warning);
-                    self.$('.o_hr_attendance_sign_in_out_icon').removeAttr("disabled");
-                }
-            });
+            this._rpc({
+                    model: 'hr.employee',
+                    method: 'attendance_manual',
+                    args: [[this.employee_id], this.next_action],
+                })
+                .then(function(result) {
+                    if (result.action) {
+                        self.do_action(result.action);
+                    } else if (result.warning) {
+                        self.do_warn(result.warning);
+                        self.$('.o_hr_attendance_sign_in_out_icon').removeAttr("disabled");
+                    }
+                });
         },
         'click .o_hr_attendance_pin_pad_button_0': function() { this.$('.o_hr_attendance_PINbox').val(this.$('.o_hr_attendance_PINbox').val() + 0); },
         'click .o_hr_attendance_pin_pad_button_1': function() { this.$('.o_hr_attendance_PINbox').val(this.$('.o_hr_attendance_PINbox').val() + 1); },
@@ -40,17 +40,20 @@ var KioskConfirm = Widget.extend({
         'click .o_hr_attendance_pin_pad_button_ok': function() {
             var self = this;
             this.$('.o_hr_attendance_pin_pad_button_ok').attr("disabled", "disabled");
-            var hr_employee = new Model('hr.employee');
-            hr_employee.call('attendance_manual', [[this.employee_id], this.next_action, this.$('.o_hr_attendance_PINbox').val()])
-            .then(function(result) {
-                if (result.action) {
-                    self.do_action(result.action);
-                } else if (result.warning) {
-                    self.do_warn(result.warning);
-                    self.$('.o_hr_attendance_PINbox').val('');
-                    setTimeout( function() { self.$('.o_hr_attendance_pin_pad_button_ok').removeAttr("disabled"); }, 500);
-                }
-            });
+            this._rpc({
+                    model: 'hr.employee',
+                    method: 'attendance_manual',
+                    args: [[this.employee_id], this.next_action, this.$('.o_hr_attendance_PINbox').val()],
+                })
+                .then(function(result) {
+                    if (result.action) {
+                        self.do_action(result.action);
+                    } else if (result.warning) {
+                        self.do_warn(result.warning);
+                        self.$('.o_hr_attendance_PINbox').val('');
+                        setTimeout( function() { self.$('.o_hr_attendance_pin_pad_button_ok').removeAttr("disabled"); }, 500);
+                    }
+                });
         },
     },
 
@@ -60,7 +63,6 @@ var KioskConfirm = Widget.extend({
         this.employee_id = action.employee_id;
         this.employee_name = action.employee_name;
         this.employee_state = action.employee_state;
-        var self = this;
     },
 
     start: function () {

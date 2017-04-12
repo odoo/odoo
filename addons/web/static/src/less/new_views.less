@@ -1,0 +1,102 @@
+.o_kanban {
+    height: 100%; // required for grouped kanban views
+}
+
+.o_list_view {
+    tr.o_selected_row {
+        outline: 1px solid lightgray;
+    }
+
+    td.o_edit_mode {
+        position: relative;
+        outline: 1px solid gray;
+        &.o_required_field {
+            outline-width: 2px;
+            z-index: 1;
+        }
+        background-color: white;
+
+        .o_form_input {
+            border: none;
+            padding: 0 5px;
+        }
+
+        > .o_field_widget, > .o_form_field_many2one {
+            .o-position-absolute(0, 0, 0, 0);
+        }
+
+        .o_form_field_many2one .o_form_input_dropdown {
+            .o-flex(1, 1, auto);
+
+            .o_form_input {
+                height: 100%;
+            }
+
+            .o_dropdown_button {
+                display: none;
+            }
+        }
+
+        .o_form_field_many2manytags {
+            .o_form_field_many2one {
+                height: 100%;
+                display: inline-block;
+            }
+        }
+
+        .o_field_boolean {
+            .o-flex-display();
+            .o-align-items(center);
+        }
+    }
+
+    td.o_field_dirty {
+        outline: 1px solid orange;
+    }
+        //
+        // &.o_readonly {
+        //     outline: 2px solid lightgray;
+        // }
+        // div.o_field_dirty {
+        //     outline: 1px solid orange;
+        // }
+    // }
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Rules on fields moved from form_view(_layout).less (community or enterprise)
+// so that they also apply outside a form_view
+
+// Many2One
+.o_form_field_many2one {
+    .o-inline-flex-display();
+    > span, > button {
+        .o-flex(0, 0, auto);
+    }
+}
+// Many2ManyTags
+.o_form_field_many2manytags .badge {
+    cursor: pointer;
+    color: white;
+    font-size: 12px;
+    border: 0;
+}
+// Dropdowns input (many2one, ...)
+.o_form_input_dropdown {
+    .o-flex(1, 0, auto);
+    position: relative;
+
+    > input {
+        padding-right: 15px;
+        cursor: pointer;
+    }
+
+    .o_dropdown_button {
+        pointer-events: none;
+        &:after {
+            .o-caret-down;
+        }
+        .o-position-absolute(0, 0); // ENTERPRISE ONLY
+    }
+}

@@ -3,7 +3,6 @@ odoo.define('web.core', function (require) {
 
 var Bus = require('web.Bus');
 var Class = require('web.Class');
-var mixins = require('web.mixins');
 var QWeb = require('web.QWeb');
 var Registry = require('web.Registry');
 var translation = require('web.translation');
@@ -29,7 +28,6 @@ return {
 
     // core classes and functions
     Class: Class,
-    mixins: mixins,
     bus: bus,
     main_bus: new Bus(),
     _t: translation._t,
@@ -45,7 +43,6 @@ return {
     one2many_view_registry: new Registry(),
     search_filters_registry: new Registry(),
     search_widgets_registry: new Registry(),
-    view_registry: new Registry(),
 
     csrf_token: odoo.csrf_token,
 };

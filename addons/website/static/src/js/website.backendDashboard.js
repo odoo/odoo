@@ -6,8 +6,7 @@ var ajax = require('web.ajax');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var formats = require('web.formats');
-var Model = require('web.Model');
+var field_utils = require('web.field_utils');
 var session = require('web.session');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');
@@ -104,9 +103,14 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         }
 
         var self = this;
-        new Model('ir.config_parameter').call('set_param', ['google_management_client_id', ga_client_id]).then(function(){
-            self.on_date_range_button('week');
-        });
+        this._rpc({
+                model: 'ir.config_parameter',
+                method: 'set_param',
+                args: ['google_management_client_id', ga_client_id],
+            })
+            .then(function(){
+                self.on_date_range_button('week');
+            });
     },
 
     render_dashboards: function() {
@@ -570,12 +574,12 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         if (type === 'currency') {
             return this.render_monetary_field(value, this.currency_id);
         } else {
-            return formats.format_value(value || 0, {type: type, digits: digits}) + ' ' + symbol;
+            return field_utils.format[type](value || 0, {digits: digits}) + ' ' + symbol;
         }
     },
     render_monetary_field: function(value, currency_id) {
         var currency = session.get_currency(currency_id);
-        var formatted_value = formats.format_value(value || 0, {type: "float", digits: currency && currency.digits});
+        var formatted_value = field_utils.format.float(value || 0, {digits: currency && currency.digits});
         if (currency) {
             if (currency.position === "after") {
                 formatted_value += currency.symbol;

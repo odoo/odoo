@@ -21,7 +21,7 @@ Re-implement Odoo's file import system:
 * In a module, so that administrators and users of Odoo who do not
   need or want an online import can avoid it being available to users.
 """,
-    'depends': ['web', 'web_kanban'],
+    'depends': ['web'],
     'category': 'Extra Tools',
     'installable': True,
     'auto_install': True,

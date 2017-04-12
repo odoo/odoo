@@ -2,7 +2,6 @@ odoo.define('web_editor.translate', function (require) {
 'use strict';
 
 var core = require('web.core');
-var Model = require('web.Model');
 var ajax = require('web.ajax');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
@@ -106,7 +105,6 @@ var Translate = Widget.extend({
     template: 'web_editor.editorbar',
     init: function (parent, $target, lang) {
         this.parent = parent;
-        this.ir_translation = new Model('ir.translation');
         this.lang = lang || base.get_context().lang;
         this.setTarget($target);
         this._super.apply(this, arguments);

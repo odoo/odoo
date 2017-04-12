@@ -5,7 +5,6 @@ var ActionManager = require('web.ActionManager');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var framework = require('web.framework');
-var session = require('web.session');
 
 var _t = core._t;
 var _lt = core._lt;
@@ -90,7 +89,7 @@ ActionManager.include({
         } else if (action.report_type === 'qweb-pdf') {
             framework.blockUI();
             // Before doing anything, we check the state of wkhtmltopdf on the server.
-            (wkhtmltopdf_state = wkhtmltopdf_state || session.rpc('/report/check_wkhtmltopdf')).then(function (state) {
+            (wkhtmltopdf_state = wkhtmltopdf_state || this._rpc({route: '/report/check_wkhtmltopdf'})).then(function (state) {
                 // Display a notification to the user according to wkhtmltopdf's state.
                 if (WKHTMLTOPDF_MESSAGES[state]) {
                     self.do_notify(_t('Report'), WKHTMLTOPDF_MESSAGES[state], true);
@@ -109,7 +108,7 @@ ActionManager.include({
                             report_urls['qweb-pdf'],
                             action.report_type, //The 'root' report is considered the maine one, so we use its type for all the others.
                         ];
-                        trigger_download(self.session, response, c, current_action, options);
+                        trigger_download(self.getSession(), response, c, current_action, options);
 
                         treated_actions.push(current_action);
                         current_action = current_action.next_report_to_generate;
@@ -140,9 +139,8 @@ ActionManager.include({
                 action.report_type,
             ];
             var c = crash_manager;
-            return trigger_download(self.session, response, c, action, options);
-        }
-        else {
+            return trigger_download(self.getSession(), response, c, action, options);
+        } else {
             return self._super(action, options);
         }
     }

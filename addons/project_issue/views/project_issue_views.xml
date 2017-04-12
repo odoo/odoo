@@ -17,7 +17,7 @@
                                 options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+                    <field name="kanban_state" class="oe_inline" widget="state_selection"/>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Issue Summary..."/></h1>
                     </div>
@@ -153,7 +153,7 @@
             <field name="model">project.issue</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Issues" date_start="date" color="user_id" date_delay="duration">
+                <calendar string="Issues" date_start="date" date_delay="duration" color="user_id">
                     <field name="name"/>
                     <field name="partner_id"/>
                 </calendar>
@@ -217,7 +217,7 @@
                                         </div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                         <div class="pull-left" groups="base.group_user">
-                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                            <field name="kanban_state" widget="state_selection"/>
                                         </div>
                                     </div>
                                 </div>

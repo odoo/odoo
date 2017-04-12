@@ -10,6 +10,12 @@
     </xpath>
 </template>
 
+<template id="qunit_suite" inherit_id="web.qunit_suite">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/tests/website_tests.js"/>
+    </xpath>
+</template>
+
 <template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Assets">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.less"/>

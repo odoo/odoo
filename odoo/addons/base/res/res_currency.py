@@ -170,6 +170,7 @@ class Currency(models.Model):
         function = ""
         for currency in self.search([]):
             symbol = currency.symbol or currency.name
+            # FIXME: since the removal of compatibility.js, the next instruction crashes
             format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69,%s]}, 0.00)" % currency.decimal_places
             if currency.position == 'after':
                 return_str = "return %s + '\\xA0' + %s;" % (format_number_str, json.dumps(symbol))

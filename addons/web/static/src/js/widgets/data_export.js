@@ -218,35 +218,39 @@ var DataExport = Dialog.extend({
         this.$fields_list = this.$('.o_fields_list');
         this.$import_compat_radios = this.$('.o_import_compat input');
 
-        waitFor.push(this.rpc('/web/export/formats', {}).then(do_setup_export_formats));
+        waitFor.push(this._rpc({route: '/web/export/formats'}).then(do_setup_export_formats));
 
         var got_fields = new $.Deferred();
         this.$import_compat_radios.change(function(e) {
             self.$('.o_field_tree_structure').remove();
 
-            self.rpc("/web/export/get_fields", {
-                model: self.dataset.model,
-                import_compat: !!$(e.target).val(),
-            }).done(function (records) {
-                var compatible_fields = _.map(records, function (record) {return record.id});
-                self.$fields_list
-                    .find('option')
-                    .filter(function () {
-                        var option_field = $(this).attr('value');
-                        if (compatible_fields.indexOf(option_field) === -1) {
-                            return true;
-                        }
-                    })
-                    .remove();
-                got_fields.resolve();
-                self.on_show_data(records);
-            });
+            self._rpc({
+                    route: '/web/export/get_fields',
+                    params: {
+                        model: self.dataset.model,
+                        import_compat: !!$(e.target).val(),
+                    },
+                })
+                .done(function (records) {
+                    var compatible_fields = _.map(records, function (record) {return record.id});
+                    self.$fields_list
+                        .find('option')
+                        .filter(function () {
+                            var option_field = $(this).attr('value');
+                            if (compatible_fields.indexOf(option_field) === -1) {
+                                return true;
+                            }
+                        })
+                        .remove();
+                    got_fields.resolve();
+                    self.on_show_data(records);
+                });
         }).eq(0).change();
         waitFor.push(got_fields);
 
-        waitFor.push(this.getParent().get_active_domain().then(function (domain) {
+        waitFor.push(this.getParent().getActiveDomain().then(function (domain) {
             if (domain === undefined) {
-                self.ids_to_export = self.getParent().get_selected_ids();
+                self.ids_to_export = self.getParent().getSelectedIds();
                 self.domain = self.dataset.domain;
             } else {
                 self.ids_to_export = false;
@@ -296,10 +300,14 @@ var DataExport = Dialog.extend({
                 self.$fields_list.empty();
                 var export_id = self.$('.o_exported_lists_select option:selected').val();
                 if(export_id) {
-                    self.rpc('/web/export/namelist', {
-                        model: self.dataset.model,
-                        export_id: parseInt(export_id, 10),
-                    }).then(do_load_export_field);
+                    self._rpc({
+                            route: '/web/export/namelist',
+                            params: {
+                                model: self.dataset.model,
+                                export_id: parseInt(export_id, 10),
+                            },
+                        })
+                        .then(do_load_export_field);
                 }
             });
             self.$('.o_delete_exported_list').click(function() {
@@ -341,17 +349,21 @@ var DataExport = Dialog.extend({
 
         if(!record.loaded) {
             var self = this;
-            this.rpc("/web/export/get_fields", {
-                model: model,
-                prefix: prefix,
-                parent_name: name,
-                import_compat: !!this.$import_compat_radios.filter(':checked').val(),
-                parent_field_type : record['field_type'],
-                exclude: exclude_fields
-            }).done(function(results) {
-                record.loaded = true;
-                self.on_show_data(results, record.id);
-            });
+            this._rpc({
+                    route: '/web/export/get_fields',
+                    params: {
+                        model: model,
+                        prefix: prefix,
+                        parent_name: name,
+                        import_compat: !!this.$import_compat_radios.filter(':checked').val(),
+                        parent_field_type : record['field_type'],
+                        exclude: exclude_fields
+                    },
+                })
+                .done(function(results) {
+                    record.loaded = true;
+                    self.on_show_data(results, record.id);
+                });
         } else {
             this.show_content(record.id);
         }

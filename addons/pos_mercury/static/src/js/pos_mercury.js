@@ -1,26 +1,20 @@
 odoo.define('pos_mercury.pos_mercury', function (require) {
 "use strict";
 
-var Class   = require('web.Class');
-var Model   = require('web.Model');
-var session = require('web.session');
 var core    = require('web.core');
+var rpc    = require('web.rpc');
 var screens = require('point_of_sale.screens');
 var gui     = require('point_of_sale.gui');
 var pos_model = require('point_of_sale.models');
-var utils = require('web.utils');
 
 var _t      = core._t;
 
-var BarcodeParser = require('barcodes.BarcodeParser');
 var PopupWidget = require('point_of_sale.popups');
 var ScreenWidget = screens.ScreenWidget;
 var PaymentScreenWidget = screens.PaymentScreenWidget;
-var round_pr = utils.round_precision;
 
 pos_model.load_fields("account.journal", "pos_mercury_config_id");
 
-var _modelproto = pos_model.PosModel.prototype;
 pos_model.PosModel = pos_model.PosModel.extend({
     getOnlinePaymentJournals: function () {
         var self = this;
@@ -394,97 +388,103 @@ PaymentScreenWidget.include({
             });
         }
 
-        var mercury_transaction = new Model('pos_mercury.mercury_transaction');
-        mercury_transaction.call('do_payment', [transaction], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
-            // if not receiving a response from Mercury, we should retry
-            if (data === "timeout") {
-                self.retry_mercury_transaction(def, null, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
-                return;
-            }
+        rpc.query({
+                model: 'pos_mercury.mercury_transaction',
+                method: 'do_payment',
+                args: [transaction],
+            }, {
+                timeout: self.server_timeout_in_ms,
+            })
+            .then(function (data) {
+                // if not receiving a response from Mercury, we should retry
+                if (data === "timeout") {
+                    self.retry_mercury_transaction(def, null, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
+                    return;
+                }
 
-            if (data === "not setup") {
-                def.resolve({
-                    message: _t("Please setup your Mercury merchant account.")
-                });
-                return;
-            }
-
-            if (data === "internal error") {
-                def.resolve({
-                    message: _t("Odoo error while processing transaction.")
-                });
-                return;
-            }
-
-            var response = self.pos.decodeMercuryResponse(data);
-            response.journal_id = parsed_result.journal_id;
-
-            if (response.status === 'Approved') {
-                // AP* indicates a duplicate request, so don't add anything for those
-                if (response.message === "AP*" && self._does_credit_payment_line_exist(response.authorize, decodedMagtek['number'],
-                                                                                       response.card_type, decodedMagtek['name'])) {
+                if (data === "not setup") {
                     def.resolve({
-                        message: lookUpCodeTransaction["Approved"][response.error],
-                        auto_close: true,
+                        message: _t("Please setup your Mercury merchant account.")
                     });
-                } else {
-                    // If the payment is approved, add a payment line
-                    var order = self.pos.get_order();
+                    return;
+                }
 
-                    if (swipe_pending_line) {
-                        order.select_paymentline(swipe_pending_line);
-                    } else {
-                        order.add_paymentline(self.pos.getCashRegisterByJournalID(parsed_result.journal_id));
-                    }
+                if (data === "internal error") {
+                    def.resolve({
+                        message: _t("Odoo error while processing transaction.")
+                    });
+                    return;
+                }
 
-                    order.selected_paymentline.paid = true;
-                    order.selected_paymentline.mercury_swipe_pending = false;
-                    order.selected_paymentline.mercury_amount = response.authorize;
-                    order.selected_paymentline.mercury_card_number = decodedMagtek['number'];
-                    order.selected_paymentline.mercury_card_brand = response.card_type;
-                    order.selected_paymentline.mercury_card_owner_name = decodedMagtek['name'];
-                    order.selected_paymentline.mercury_ref_no = response.ref_no;
-                    order.selected_paymentline.mercury_record_no = response.record_no;
-                    order.selected_paymentline.mercury_invoice_no = response.invoice_no;
-                    order.selected_paymentline.mercury_auth_code = response.auth_code;
-                    order.selected_paymentline.mercury_data = response; // used to reverse transactions
-                    order.selected_paymentline.set_credit_card_name();
+                var response = self.pos.decodeMercuryResponse(data);
+                response.journal_id = parsed_result.journal_id;
 
-                    self.order_changes();
-                    self.reset_input();
-                    self.render_paymentlines();
-                    order.trigger('change', order); // needed so that export_to_JSON gets triggered
-
-                    if (response.message === "PARTIAL AP") {
-                        def.resolve({
-                            message: _t("Partially approved"),
-                            auto_close: false,
-                        });
-                    } else {
+                if (response.status === 'Approved') {
+                    // AP* indicates a duplicate request, so don't add anything for those
+                    if (response.message === "AP*" && self._does_credit_payment_line_exist(response.authorize, decodedMagtek['number'],
+                                                                                        response.card_type, decodedMagtek['name'])) {
                         def.resolve({
                             message: lookUpCodeTransaction["Approved"][response.error],
                             auto_close: true,
                         });
+                    } else {
+                        // If the payment is approved, add a payment line
+                        var order = self.pos.get_order();
+
+                        if (swipe_pending_line) {
+                            order.select_paymentline(swipe_pending_line);
+                        } else {
+                            order.add_paymentline(self.pos.getCashRegisterByJournalID(parsed_result.journal_id));
+                        }
+
+                        order.selected_paymentline.paid = true;
+                        order.selected_paymentline.mercury_swipe_pending = false;
+                        order.selected_paymentline.mercury_amount = response.authorize;
+                        order.selected_paymentline.mercury_card_number = decodedMagtek['number'];
+                        order.selected_paymentline.mercury_card_brand = response.card_type;
+                        order.selected_paymentline.mercury_card_owner_name = decodedMagtek['name'];
+                        order.selected_paymentline.mercury_ref_no = response.ref_no;
+                        order.selected_paymentline.mercury_record_no = response.record_no;
+                        order.selected_paymentline.mercury_invoice_no = response.invoice_no;
+                        order.selected_paymentline.mercury_auth_code = response.auth_code;
+                        order.selected_paymentline.mercury_data = response; // used to reverse transactions
+                        order.selected_paymentline.set_credit_card_name();
+
+                        self.order_changes();
+                        self.reset_input();
+                        self.render_paymentlines();
+                        order.trigger('change', order); // needed so that export_to_JSON gets triggered
+
+                        if (response.message === "PARTIAL AP") {
+                            def.resolve({
+                                message: _t("Partially approved"),
+                                auto_close: false,
+                            });
+                        } else {
+                            def.resolve({
+                                message: lookUpCodeTransaction["Approved"][response.error],
+                                auto_close: true,
+                            });
+                        }
                     }
                 }
-            }
 
-            // if an error related to timeout or connectivity issues arised, then retry the same transaction
-            else {
-                if (lookUpCodeTransaction["TimeoutError"][response.error]) { // recoverable error
-                    self.retry_mercury_transaction(def, response, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
-                } else { // not recoverable
-                    def.resolve({
-                        message: "Error " + response.error + ":<br/>" + response.message,
-                        auto_close: false
-                    });
+                // if an error related to timeout or connectivity issues arised, then retry the same transaction
+                else {
+                    if (lookUpCodeTransaction["TimeoutError"][response.error]) { // recoverable error
+                        self.retry_mercury_transaction(def, response, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
+                    } else { // not recoverable
+                        def.resolve({
+                            message: "Error " + response.error + ":<br/>" + response.message,
+                            auto_close: false
+                        });
+                    }
                 }
-            }
 
-        }).fail(function (error, event) {
-            event.preventDefault();
-            self.retry_mercury_transaction(def, null, retry_nr, false, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
-        });
+            }).fail(function (error, event) {
+                event.preventDefault();
+                self.retry_mercury_transaction(def, null, retry_nr, false, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
+            });
     },
 
     credit_code_cancel: function () {
@@ -550,55 +550,60 @@ PaymentScreenWidget.include({
             });
         }
 
-        var mercury_transaction = new Model('pos_mercury.mercury_transaction');
-        mercury_transaction.call(rpc_method, [request_data], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
-            if (data === "timeout") {
-                self.retry_mercury_transaction(def, null, retry_nr, true, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
-                return;
-            }
-
-            if (data === "internal error") {
-                def.resolve({
-                    message: _t("Odoo error while processing transaction.")
-                });
-                return;
-            }
-
-            var response = self.pos.decodeMercuryResponse(data);
-
-            if (! is_voidsale) {
-                if (response.status != 'Approved' || response.message != 'REVERSED') {
-                    // reversal was not successful, send voidsale
-                    self.do_reversal(line, true);
-                } else {
-                    // reversal was successful
-                    def.resolve({
-                        message: _t("Reversal succeeded"),
-                    });
-
-                    self.remove_paymentline_by_ref(line);
+        rpc.query({
+                model: 'pos_mercury.mercury_transaction',
+                method: rpc_method,
+                args: [request_data],
+            }, {
+                timeout: self.server_timeout_in_ms
+            })
+            .then(function (data) {
+                if (data === "timeout") {
+                    self.retry_mercury_transaction(def, null, retry_nr, true, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
+                    return;
                 }
-            } else { // voidsale ended, nothing more we can do
-                if (response.status === 'Approved') {
-                    def.resolve({
-                        message: _t("VoidSale succeeded"),
-                    });
 
-                    self.remove_paymentline_by_ref(line);
-                } else {
+                if (data === "internal error") {
                     def.resolve({
-                        message: "Error " + response.error + ":<br/>" + response.message,
+                        message: _t("Odoo error while processing transaction.")
                     });
+                    return;
                 }
-            }
-        }).fail(function (error, event) {
-            event.preventDefault();
-            self.retry_mercury_transaction(def, null, retry_nr, false, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
-        });
+
+                var response = self.pos.decodeMercuryResponse(data);
+
+                if (! is_voidsale) {
+                    if (response.status != 'Approved' || response.message != 'REVERSED') {
+                        // reversal was not successful, send voidsale
+                        self.do_reversal(line, true);
+                    } else {
+                        // reversal was successful
+                        def.resolve({
+                            message: _t("Reversal succeeded"),
+                        });
+
+                        self.remove_paymentline_by_ref(line);
+                    }
+                } else { // voidsale ended, nothing more we can do
+                    if (response.status === 'Approved') {
+                        def.resolve({
+                            message: _t("VoidSale succeeded"),
+                        });
+
+                        self.remove_paymentline_by_ref(line);
+                    } else {
+                        def.resolve({
+                            message: "Error " + response.error + ":<br/>" + response.message,
+                        });
+                    }
+                }
+            }).fail(function (error, event) {
+                event.preventDefault();
+                self.retry_mercury_transaction(def, null, retry_nr, false, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
+            });
     },
 
     click_delete_paymentline: function (cid) {
-        var self = this;
         var lines = this.pos.get_order().get_paymentlines();
 
         for (var i = 0; i < lines.length; i++) {

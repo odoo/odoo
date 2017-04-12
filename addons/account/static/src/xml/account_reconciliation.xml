@@ -2,369 +2,250 @@
 
 <templates xml:space="preserve">
 
-    <!-- abstract or shared templates -->
+<div t-name="reconciliation" class="o_reconciliation">
+    <div class="o_form_view">
+        <div class="o_form_sheet_bg">
+            <div class="o_form_sheet"/>
+        </div>
+    </div>
+</div>
 
-    <t t-name="reconciliation">
-        <div class="o_form_view"><div class="oe_form_sheetbg o_form_sheet_bg"><div class="oe_form_sheet oe_form_sheet_width o_form_sheet">
-            <h1><t t-esc="title"/></h1>
-            <div t-if="! hide_progress" class="progress progress-striped">
-                <div class="progress-text"><span class="valuenow">0</span> / <span class="valuemax"><t t-esc="total_lines"/></span></div>
-                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" t-att-aria-valuemax="total_lines" style="width: 0%;">
+<t t-name="reconciliation.statement">
+    <div t-if="widget._initialState.valuemax">
+        <div>
+            <h1 class="statement_name"/>
+            <h1 class="statement_name_edition" style="display: none;"><button class="btn btn-primary btn-sm pull-right">OK</button></h1>
+            <div class="progress progress-striped">
+                <div class="progress-text">
+                    <span class="valuenow"><t t-esc="widget._initialState.valuenow"/></span> / <span class="valuemax"><t t-esc="widget._initialState.valuemax"/></span>
                 </div>
+                <div aria-valuemin="0" t-att-aria-valuenow="widget._initialState.valuenow" class="progress-bar" role="progressbar" style="width: 0%;" t-att-aria-valuemax="widget._initialState.valuemax"></div>
             </div>
-            <button class="btn btn-default js_automatic_reconciliation pull-right" title="Let odoo try to reconcile entries for the user">Automatic reconciliation</button>
-            <div class="oe_clear clearer"></div>
-            <div class="notification_area"></div>
-            <div class="interface_options oe_form o_form"></div>
-            <div class="reconciliation_lines_container"></div>
-            <div class="show_more_container"><button class="show_more btn btn-default btn-sm">Show more... (<span class="num_items_remaining"></span> remaining)</button></div>
-            <p class="o_protip text-muted" align="right">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</p>
-        </div></div></div>
-    </t>
-
-    <t t-name="nothing_to_reconcile">
-        <div class="oe_form_sheetbg o_form_view"><div class="oe_form_sheet o_form_sheet oe_form_sheet_width">
-            <div class="notification_area"></div>
-            <div class="oe_view_nocontent"></div>
-        </div></div>
-    </t>
-
-    <t t-name="reconciliation_done_message">
-        <div class='done_message'>
-            <h2><t t-raw="title" /></h2>
-            <p class="action_buttons"></p>
+            <button class="btn btn-default o_automatic_reconciliation pull-right" title="Let odoo try to reconcile entries for the user">Automatic reconciliation</button>
+            <div class="notification_area"/>
         </div>
-    </t>
+        <div class="o_reconciliation_lines"/>
+        <div class="pull-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
+    </div>
+    <div t-else="" class="o_view_nocontent">
+        <p><b>Good Job!</b> Bank statements are fully reconciled.</p>
+        <p>This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so.</p>
+    </div>
+</t>
 
-    <t t-name="reconciliation_notification">
-        <div t-att-class="'notification alert-dismissible alert alert-' + type" role="alert">
-            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true" class="fa fa-times"></span><span class="sr-only">Close</span></button>
-            <t t-esc="message" />
-            <t t-if="details !== undefined">
-                <a class="fa fa-external-link" rel="do_action" href="javascript:void(0)"
-                    t-att-data-action_nam="details.name"
-                    t-att-data-model="details.model"
-                    t-att-data-ids="details.ids">
-                </a>
-            </t>
-        </div>
+<t t-name="reconciliation.manual.statement" t-extend="reconciliation.statement">
+    <t t-jquery="div:first" t-operation="attributes">
+        <attribute name="class">o_manual_statement</attribute>
     </t>
+    <t t-jquery="h1:last" t-operation="replace"></t>
+    <t t-jquery=".o_view_nocontent p" t-operation="replace"></t>
+    <t t-jquery=".o_view_nocontent" t-operation="append">
+        <p><b>Good Job!</b> There is nothing to reconcile.</p>
+        <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
+    </t>
+</t>
 
-    <t t-name="reconciliation_line">
-        <table>
-            <tr>
-                <td>
-                    <table class="accounting_view">
-                        <caption></caption>
-                        <tbody class="tbody_matched_lines"></tbody>
-                        <tbody class="tbody_created_lines"></tbody>
-                        <tbody class="tbody_open_balance"></tbody>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="action_pane match">
-                        <div class="match_controls">
-                            <input type="text" class="filter" placeholder="Filter..." value="" />
-                            <span class="pager_control_right pull-right fa fa-chevron-right"></span>
-                            <span class="pager_control_left pull-right fa fa-chevron-left"></span>
-                        </div>
-                        <table></table>
-                    </div>
-                    <div class="action_pane create">
-                        <div t-if="!presets">
-                            <p style="color: #bbb;">You did not configure any reconcile model yet, you can do it <a style="cursor: pointer;" class="goto_create_preset">there</a>.</p>
-                        </div>
-                        <div class="quick_add" t-att-style="(!presets ? 'display: none' : undefined)">
-                            <div class="btn-group btn-group-sm presets_container"><t t-raw="presets" /></div>
-                            <div class="dropdown presets_config">
-                                <a data-toggle="dropdown" href="#"><span class="fa fa-cog"></span></a>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="Presets config">
-                                    <li><a class="presets_config_create" href="#">Create model</a></li>
-                                    <li><a class="presets_config_edit" href="#">Modify models</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="oe_form o_form create_form">
-                            <table class="o_group o_inner_group o_group_col_6 create_group_left"><!-- here come some form_create_field --></table>
-                            <table class="o_group o_inner_group o_group_col_6 create_group_right"><!-- here come some form_create_field --></table>
-                            <p class="add_line_container"><a href="javascript:void(0)" class="add_line"><i class="fa fa-plus-circle"></i> Save and New</a></p>
-                        </div>
-                    </div>
-                </td>
-            </tr>
+<div t-name="reconciliation.done" class="done_message">
+    <i class="fa fa-4x fa-thumbs-o-up congrats_icon pull-right"></i>
+    <h2>Congrats, you're all done !</h2>
+    <p>It took you <strong><t t-esc="duration"/></strong> to reconcile <strong><t t-esc="number"/> transactions.</strong><br/>That's on average <t t-esc="timePerTransaction"/> seconds per transaction.</p>
+</div>
+
+<t t-name="reconciliation.line">
+    <t t-set="state" t-value="widget._initialState"/>
+    <div class="o_reconciliation_line" t-att-data-mode="state.mode">
+        <table class="accounting_view">
+            <caption>
+                <div class="pull-right o_buttons">
+                    <button t-attf-class="o_validate btn btn-default btn-sm #{!state.balance.type ? '' : 'hidden'}">Validate</button>
+                    <button t-attf-class="o_reconcile btn btn-primary btn-sm #{state.balance.type &gt; 0 ? '' : 'hidden'}">Reconcile</button>
+                    <span t-attf-class="o_no_valid text-danger #{state.balance.type &lt; 0 ? '' : 'hidden'}">Select a partner or choose a counterpart</span>
+                </div>
+            </caption>
+            <thead>
+                <tr>
+                    <td class="cell_action"><span class="toggle_match fa fa-cog"></span></td>
+                    <td class="cell_account_code"><t t-esc="state.st_line.account_code"/></td>
+                    <td class="cell_due_date"><t t-esc="state.st_line.date"/></td>
+                    <td class="cell_label"><t t-if="state.st_line.name" t-esc="state.st_line.name"/> <t t-if="state.st_line.amount_currency_str"> (<t t-esc="state.st_line.amount_currency_str"/>)</t></td>
+                    <td class="cell_left"><t t-if="state.st_line.amount &gt; 0"><t t-raw="state.st_line.amount_str"/></t></td>
+                    <td class="cell_right"><t t-if="state.st_line.amount &lt; 0"><t t-raw="state.st_line.amount_str"/></t></td>
+                    <td class="cell_info_popover"></td>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="state.reconciliation_proposition" t-as="line"><t t-call="reconciliation.line.mv_line"/></t>
+            </tbody>
+            <tfoot>
+                <t t-call="reconciliation.line.balance"/>
+            </tfoot>
         </table>
-    </t>
+        <div class="match">
+            <t t-call="reconciliation.line.match"/>
+        </div>
+        <div class="create"></div>
+    </div>
+</t>
 
-    <t t-name="preset_button">
-        <button type='button' class='btn btn-default preset' t-att-data-presetid="id">
-            <t t-esc="name"/>
-        </button>
+<t t-name="reconciliation.manual.line" t-extend="reconciliation.line">
+    <t t-jquery=".o_buttons" t-operation="replace">
+        <div class="pull-right o_buttons">
+            <button t-attf-class="o_validate btn btn-default btn-sm #{!state.balance.type ? '' : 'hidden'}">Reconcile</button>
+            <button t-attf-class="o_reconcile btn btn-primary btn-sm #{state.balance.type &gt; 0 ? '' : 'hidden'}">Reconcile</button>
+            <button t-attf-class="o_no_valid btn btn-default btn-sm #{state.balance.type &lt; 0 ? '' : 'hidden'}">Skip</button>
+        </div>
     </t>
+    <t t-jquery=".accounting_view tbody" t-operation="append">
+        <t t-if='!_.filter(state.reconciliation_proposition, {"display": true}).length'>
+            <t t-set="line" t-value='{}'/>
+            <t t-call="reconciliation.line.mv_line"/>
+        </t>
+    </t>
+    <t t-jquery=".accounting_view thead tr" t-operation="replace">
+        <tr>
+            <td class="cell_action"><span class="toggle_match fa fa-cog"></span></td>
+            <td colspan="3"><span/><span t-if="state.last_time_entries_checked">Last Reconciliation: <t t-esc="state.last_time_entries_checked"/></span></td>
+            <td colspan="2"><t t-esc="state.st_line.account_code"/></td>
+            <td class="cell_info_popover"></td>
+        </tr>
+    </t>
+</t>
 
-    <t t-name="presets_dropdown">
-        <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                More <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                <t t-foreach="presets" t-as="preset">
-                    <li><a href="javascript:void(0)" class='preset' t-att-data-presetid="preset.id"><t t-esc="preset.name"/></a></li>
-                </t>
+<t t-name="reconciliation.line.balance">
+    <tr t-if="state.balance.amount &amp;&amp; !(state.reconciliation_proposition[0] || {}).partial_reconcile">
+        <td class="cell_action"><span class="toggle_create fa fa-play"></span></td>
+        <td class="cell_account_code"><t t-esc="state.balance.account_code"/></td>
+        <td class="cell_due_date"></td>
+        <td class="cell_label"><t t-if="state.balance.amount &lt; 0">Create Write-off</t><t t-elif="state.st_line.partner_id">Open balance</t><t t-else="">Choose counterpart</t></td>
+        <td class="cell_left"><t t-if="state.balance.amount &lt; 0"><t t-raw="state.balance.amount_str"/></t></td>
+        <td class="cell_right"><t t-if="state.balance.amount &gt; 0"><t t-raw="state.balance.amount_str"/></t></td>
+        <td class="cell_info_popover"></td>
+    </tr>
+</t>
+
+
+<div t-name="reconciliation.line.match">
+    <div class="match_controls">
+        <input class="filter" placeholder="Filter..." type="text" value=""/>
+        <span class="pull-right fa fa-chevron-right disabled"></span>
+        <span class="pull-right fa fa-chevron-left disabled"></span>
+    </div>
+    <table>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+
+<div t-name="reconciliation.line.create">
+    <div class="quick_add">
+        <div class="btn-group btn-group-sm o_reconcile_models" t-if="state.reconcileModels">
+            <t t-foreach="state.reconcileModels" t-as="reconcileModel">
+                <button class="btn btn-default" t-att-data-reconcile-model-id="reconcileModel.id"><t t-esc="reconcileModel.name"/></button>
+            </t>
+            <p t-if="!state.reconcileModels.length" style="color: #bbb;">You did not configure any reconcile model yet, you can do it <a style="cursor: pointer;" class="reconcile_model_create">there</a>.</p>
+        </div>
+        <div class="dropdown pull-right">
+            <a data-toggle="dropdown" href="#"><span class="fa fa-cog"/></a>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="Presets config">
+                <li><a class="reconcile_model_create" href="#">Create model</a></li>
+                <li><a class="reconcile_model_edit" href="#">Modify models</a></li>
             </ul>
         </div>
-    </t>
-
-    <t t-name="form_create_field">
-        <tr t-att-class='"create_" + id'>
-            <td class="o_td_label"><t t-esc="label"/></td>
-            <td t-att-class='"o_td_field create_" + id + "_container"'></td>
+    </div>
+    <table class="pull-left">
+        <tr class="create_account_id">
+            <td class="o_td_label">Account</td>
+            <td class="o_td_field"></td>
         </tr>
-    </t>
-
-    <t t-name="filter_no_match">
-        <tr><td style='text-align: center;'>No result matching '<t t-esc="filter_str" />'</td></tr>
-    </t>
-
-    <t t-name="reconciliation_move_line">
-        <tr t-att-class="'mv_line'+(line.already_paid ? ' already_reconciled' : '')" t-att-data-lineid="line.id" t-att-data-selected="selected">
-            <td class="cell_action"><i class="fa fa-add-remove"></i></td>
-            <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
-            <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
-            <td class="cell_label"><t t-esc="line.q_label"/></td>
-            <td class="cell_debit"><t t-if="line.debit !== 0"><t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t><t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t><t t-esc="line.amount_str"/></t></td>
-            <td class="cell_credit"><t t-if="line.credit !== 0"><t t-if="line.propose_partial_reconcile"><t t-call="icon_do_partial_reconciliation" /></t><t t-if="line.partial_reconcile"><t t-call="icon_undo_partial_reconciliation" /></t><t t-esc="line.amount_str"/></t></td>
-            <td class="cell_info_popover"><span class="line_info_button fa fa-info-circle" t-att-data-content="line.q_popover"></span></td>
+        <tr class="create_tax_id">
+            <td class="o_td_label">Tax</td>
+            <td class="o_td_field"></td>
         </tr>
-    </t>
-
-    <t t-name="reconciliation_move_line_details">
-        <table class='details'>
-            <tr t-if="line.account_code"><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
-            <tr><td>Journal</td><td><t t-esc="line.journal_name"/></td></tr>
-            <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
-            <tr><td>Due Date</td><td><t t-esc="line.q_due_date"/></td></tr>
-            <t t-if="line.is_partially_reconciled">
-                <tr><td>Total</td><td>
-                    <t t-esc="line.total_amount_str"/><t t-if="line.total_amount_currency_str"> (<t t-esc="line.total_amount_currency_str"/>)</t>
-                </td></tr>
-            </t>
-            <tr><td><t t-if="line.is_partially_reconciled">Residual</t><t t-if="! line.is_partially_reconciled">Amount</t></td><td>
-                <t t-esc="line.amount_str"/><t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
-            </td></tr>
-            <tr class="one_line_info" t-if='line.already_paid'>
-                <td colspan="2">This payment is registered but not reconciled.</td>
+        <tr class="create_analytic_account_id">
+            <td class="o_td_label">Analytic Acc.</td>
+            <td class="o_td_field"></td>
+        </tr>
+    </table>
+    <table class="pull-right">
+        <tbody>
+            <tr class="create_journal_id" style="display: none;">
+                <td class="o_td_label">Journal</td>
+                <td class="o_td_field"></td>
             </tr>
-        </table>
-    </t>
+            <tr class="create_label">
+                <td class="o_td_label">Label</td>
+                <td class="o_td_field"></td>
+            </tr>
+            <tr class="create_amount">
+                <td class="o_td_label">Amount</td>
+                <td class="o_td_field"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="add_line_container">
+        <a class="add_line" t-att-style="!state.balance.amout ? 'display: none;' : null"><i class="fa fa-plus-circle"/> Save and New</a>
+    </div>
+</div>
 
-    <t t-name="reconciliation_created_line">
-        <tr class="created_line" tabindex="0" t-att-data-lineid="line.id">
-            <td class="cell_action"><t t-if="! line.no_remove_action"><span class="line_remove_button fa fa-times"></span></t></td>
-            <td class="cell_account_code"><t t-esc="line.account_num"/></td>
-            <td class="cell_due_date"></td>
-            <td class="cell_label"><t t-esc="line.label"/></td>
-            <td class="cell_debit"><t t-if="line.amount &lt; 0"><t t-esc="line.amount_str"/></t></td>
-            <td class="cell_credit"><t t-if="line.amount &gt; 0"><t t-esc="line.amount_str"/></t></td>
-            <td class="cell_info_popover"></td>
+
+<t t-name="reconciliation.line.mv_line">
+    <tr t-if="line.display !== false" t-attf-class="mv_line #{line.already_paid ? ' already_reconciled' : ''} #{line.__invalid ? 'invalid' : ''} #{line.is_tax ? 'is_tax' : ''}" t-att-data-line-id="line.id" t-att-data-selected="selected">
+        <td class="cell_action"><span class="fa fa-add-remove"/></td>
+        <td class="cell_account_code"><t t-esc="line.account_code"/></td>
+        <td class="cell_due_date"><t t-esc="line.date_maturity === false ? line.date : line.date_maturity"/></td>
+        <td class="cell_label"><t t-if="line.partner_id &amp;&amp; line.partner_id !== state.st_line.partner_id"><t t-if="line.partner_name.length"><t t-esc="line.partner_name"/>: </t><t t-esc="line.label || line.name"/><t t-if="line.ref &amp;&amp; line.ref.length"> : </t><t t-esc="line.ref"/></t><t t-else=""><t t-esc="line.ref &amp;&amp; line.ref.length ? line.ref : line.label || line.name"/></t></td>
+        <td class="cell_left"><t t-if="line.amount &lt; 0"><span t-if="line.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money" t-att-data-content="line.amount_currency_str"/><t t-raw="line.amount_str"/></t></td>
+        <td class="cell_right"><t t-if="line.amount &gt; 0"><span t-if="line.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money" t-att-data-content="line.amount_currency_str"/><t t-raw="line.amount_str"/></t></td>
+        <td class="cell_info_popover"></td>
+    </tr>
+</t>
+
+
+<t t-name="reconciliation.line.mv_line.details">
+    <table class='details'>
+        <tr t-if="line.account_code"><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
+        <tr><td>Journal</td><td><t t-esc="line.journal_id[1]"/></td></tr>
+        <tr><td>Label</td><td><t t-esc="line.label"/></td></tr>
+        <tr t-if="line.ref"><td>Ref</td><td><t t-esc="line.ref"/></td></tr>
+        <tr t-if="line.partner_id"><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>
+        <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
+        <tr><td>Due Date</td><td><t t-esc="line.date_maturity === false ? line.date : line.date_maturity"/></td></tr>
+        <tr><td>Amount</td><td><t t-raw="line.total_amount_str"/><t t-if="line.total_amount_currency_str"> (<t t-esc="line.total_amount_currency_str"/>)</t></td></tr>
+        <tr t-if="line.is_partially_reconciled"><td>Residual</td><td>
+            <t t-raw="line.amount_str"/><t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
+        </td></tr>
+        <tr class="one_line_info" t-if='line.already_paid'>
+            <td colspan="2">This payment is registered but not reconciled.</td>
         </tr>
-    </t>
-
-    <t t-name="reconciliation_line_open_balance">
-        <tr class="line_open_balance" tabindex="0">
-            <td class="cell_action"><span class="toggle_create fa fa-play"></span></td>
-            <td class="cell_account_code"><t t-if="account_code" t-esc="account_code"/></td>
-            <td class="cell_due_date"></td>
-            <td class="cell_label"><t t-esc="label" /></td>
-            <td class="cell_debit"><t t-esc="debit"/></td>
-            <td class="cell_credit"><t t-esc="credit"/></td>
-            <td class="cell_info_popover"></td>
-        </tr>
-    </t>
+    </table>
+</t>
 
 
-    <!-- bank statement reconciliation -->
+<t t-name="reconciliation.line.statement_line.details">
+    <table class='details'>
+        <tr><td>Date</td><td><t t-esc="state.st_line.date"/></td></tr>
+        <tr t-if="state.st_line.partner_name"><td>Partner</td><td><t t-esc="state.st_line.partner_name"/></td></tr>
+        <tr t-if="state.st_line.ref"><td>Transaction</td><td><t t-esc="state.st_line.ref"/></td></tr>
+        <tr><td>Description</td><td><t t-esc="state.st_line.name"/></td></tr>
+        <tr><td>Amount</td><td><t t-raw="state.st_line.amount_str"/><t t-if="state.st_line.amount_currency_str"> (<t t-esc="state.st_line.amount_currency_str"/>)</t></td></tr>
+        <tr><td>Account</td><td><t t-esc="state.st_line.account_code"/> <t t-esc="state.st_line.account_name"/></td></tr>
+        <tr t-if="state.st_line.note"><td>Note</td><td><t t-esc="state.st_line.note"/></td></tr>
+    </table>
+</t>
 
-    <t t-name="bank_statement_reconciliation" t-extend="reconciliation">
-        <t t-jquery="h1" t-operation="replace">
-            <t t-if="single_statement">
-                <h1 class="statement_name">
-                    <span><t t-esc="title"/></span>
-                    <table class="change_statement_name_container oe_form o_form"><tr>
-                        <td><input class="change_statement_name_field" type="text"/></td>
-                        <td><button class="change_statement_name_button btn btn-primary btn-sm">OK</button></td>
-                    </tr></table>
-                </h1>
-            </t>
-            <t t-if="!single_statement">
-                <h1><t t-esc="title"/></h1>
-            </t>
+<t t-name="reconciliation.notification">
+    <div t-att-class="'notification alert-dismissible alert alert-' + type" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true" class="fa fa-times"></span><span class="sr-only">Close</span></button>
+        <t t-esc="message" />
+        <t t-if="details !== undefined">
+            <a class="fa fa-external-link" rel="do_action" href="#"
+                t-att-data-action_name="details.name"
+                t-att-data-model="details.model"
+                t-att-data-ids="details.ids">
+            </a>
         </t>
-    </t>
-
-    <t t-name="bank_statement_nothing_to_reconcile" t-extend="nothing_to_reconcile">
-        <t t-jquery=".oe_view_nocontent" t-operation="inner">
-            <p><b>Good Job!</b> Bank statements are fully reconciled.</p>
-            <p>This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so.</p>
-        </t>
-    </t>
-
-    <t t-name="bank_statement_reconciliation_done_message" t-extend="reconciliation_done_message">
-        <t t-jquery="h2" t-operation="after">
-            <t t-if="! all_was_auto_reconciled">
-                <p>It took you <strong><t t-esc="time_taken" /></strong> to reconcile <strong><t t-esc="transactions_done" /> transactions.<br/></strong> That's on average <t t-esc="sec_per_item" /> seconds per transaction.</p>
-                <t t-if="done_with_ctrl_enter !== 0">
-                    <p>You validated <t t-esc="done_with_ctrl_enter" /> reconciliations with the ctrl-enter shortcut.</p>
-                </t>
-                <p class='achievements'>
-                    <t t-foreach="achievements" t-as="achievement">
-                        <i class='fa fa-certificate achievement' t-att-data-title='achievement.title' t-att-data-content='achievement.desc'><i t-att-class="'fa '+achievement.icon"></i></i>
-                    </t>
-                </p>
-            </t>
-        </t>
-        <t t-jquery=".action_buttons" t-operation="inner">
-            <t t-if="single_statement or multiple_statements">
-                <button class="button_back_to_statement btn btn-default btn-sm">Go to bank statements</button>
-                <button class="button_close_statement btn btn-primary btn-sm">
-                    <t t-if="multiple_statements">Close the statements</t>
-                    <t t-else="">Close the statement</t>
-                </button>
-            </t>
-        </t>
-    </t>
-
-    <t t-name="bank_statement_reconciliation_line" t-extend="reconciliation_line">
-        <t t-jquery=".accounting_view caption" t-operation="inner">
-            <button class="button_ok btn btn-default btn-sm"></button>
-            <span class="tip_reconciliation_not_balanced">Select a partner or choose a counterpart</span>
-            <span t-if="! line.has_no_partner" class="partner_name">
-                <t t-esc="line.partner_name"/>
-                <span class="change_partner fa fa-times"></span>
-            </span>
-            <div class="change_partner_container oe_form o_form"></div>
-        </t>
-        <t t-jquery=".accounting_view caption" t-operation="after">
-            <tbody class="tbody_initial_line">
-                <tr class="initial_line" tabindex="0">
-                    <td class="cell_action"><span class="toggle_match fa fa-cog"></span></td>
-                    <td class="cell_account_code"><t t-esc="line.account_code"/></td>
-                    <td class="cell_due_date"><t t-esc="line.date"/></td>
-                    <td class="cell_label"><t t-if="line.name" t-esc="line.name"/>
-                        <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td>
-                    <td class="cell_debit"><t t-if="line.amount &gt; 0">
-                          <t t-esc="line.amount_str"/></t></td>
-                    <td class="cell_credit"><t t-if="line.amount &lt; 0">
-                          <t t-esc="line.amount_str"/></t></td>
-                    <td class="cell_info_popover"><span class="line_info_button fa fa-info-circle" t-att-data-content="line.q_popover"></span></td>
-                </tr>
-            </tbody>
-        </t>
-    </t>
-
-    <t t-name="bank_statement_reconciliation_statement_line_details">
-        <table class='details'>
-            <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
-            <tr t-if="line.partner_name"><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>
-            <tr t-if="line.ref"><td>Transaction</td><td><t t-esc="line.ref"/></td></tr>
-            <tr><td>Description</td><td><t t-esc="line.name"/></td></tr>
-            <tr><td>Amount</td><td><t t-esc="line.amount_str"/><t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td></tr>
-            <tr><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
-            <tr t-if="line.note"><td>Note</td><td><t t-esc="line.note"/></td></tr>
-        </table>
-    </t>
-
-    <t t-name="icon_do_partial_reconciliation">
-        <t t-set="message_content">This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.</t>
-        <i class="do_partial_reconcile_button fa fa-exclamation-triangle" t-att-data-content="message_content"></i>
-    </t>
-
-    <t t-name="icon_undo_partial_reconciliation">
-        <t t-set="message_content">Undo the partial reconciliation.</t>
-        <i class="undo_partial_reconcile_button fa fa-exclamation-triangle" t-att-data-content="message_content"></i>
-    </t>
-
-    <!-- manual reconciliation -->
-
-    <t t-name="show_mode_selector_option">
-        <div>
-            <span class="oe_radio_input o_radio_input"><input type="radio" name="modeselektor" t-att-val="value" t-attf-id="mode_{{value}}" t-att-checked="(mode === value ? true : undefined)" /></span>
-            <label t-attf-for="mode_{{value}}"><t t-esc="title"/></label>
-        </div>
-    </t>
-
-    <t t-name="manual_reconciliation" t-extend="reconciliation">
-        <t t-jquery=".interface_options" t-operation="append">
-            <table t-if="show_mode_selector" border="0" cellpadding="0" cellspacing="0" class="oe_form_group o_form_group"><tbody>
-                <tr class="oe_form_group_row o_form_group_row">
-                    <td class="oe_form_group_cell o_form_group_cell oe_form_group_cell_label o_form_group_cell_label" colspan="1">
-                        <label for="oe-field-input-5" class="oe_form_label o_form_label oe_align_right o_align_right">Show</label>
-                    </td>
-                    <td class="oe_form_group_cell o_form_group_cell" colspan="1" width="99%">
-                        <span class="oe_form_field o_form_field oe_form_field_radio o_form_field_radio oe_vertical o_vertical oe_form_required o_form_required">
-                            <span>
-                                <t t-if="display_mode_customers" t-call="show_mode_selector_option"><t t-set="value">customers</t><t t-set="title">Customers</t></t>
-                                <t t-if="display_mode_suppliers" t-call="show_mode_selector_option"><t t-set="value">suppliers</t><t t-set="title">Vendors</t></t>
-                                <t t-if="display_mode_others" t-call="show_mode_selector_option"><t t-set="value">others</t><t t-set="title">OtherAccounts</t></t>
-                                <t t-call="show_mode_selector_option"><t t-set="value">all</t><t t-set="title">All</t></t>
-                            </span>
-                        </span>
-                    </td>
-                </tr>
-            </tbody></table>
-        </t>
-    </t>
-
-    <t t-name="manual_reconciliation_nothing_to_reconcile" t-extend="nothing_to_reconcile">
-        <t t-jquery=".oe_view_nocontent" t-operation="inner">
-            <p><b>Good Job!</b> There is nothing to reconcile.</p>
-            <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
-        </t>
-    </t>
-
-    <t t-name="manual_reconciliation_done_message">
-        <div class='done_message'>
-            <p><b>Good Job!</b> There is nothing to reconcile.</p>
-            <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
-        </div>
-    </t>
-
-    <t t-name="manual_reconciliation_line" t-extend="reconciliation_line">
-        <t t-jquery=".accounting_view" t-operation="before">
-            <button class="button_reconcile btn btn-default btn-sm">Reconcile</button>
-        </t>
-        <t t-jquery=".accounting_view caption" t-operation="replace">
-            <thead><tr>
-                <td class="cell_action"></td>
-                <td class="cell-title" colspan="2">
-                    <span class="cell_item_name"><t t-if="data.partner_name" t-esc="data.partner_name" /><t t-if="data.partner_name === undefined" t-esc="data.account_code" /></span>
-                    <span class="cell_last_time_entries_checked" t-if="data.last_time_entries_checked">Last Reconciliation : <t t-esc="data.last_time_entries_checked" /></span>
-                </td>
-                <td class="cell_title_account_code" colspan="2"><t t-esc="data.account_code" /></td>
-                <td class="cell_info_popover"></td>
-            </tr></thead>
-        </t>
-    </t>
-
-    <t t-name="manual_reconciliation_line_open_balance" t-extend="reconciliation_line_open_balance">
-        <t t-jquery=".cell_account_code" t-operation="replace"></t>
-    </t>
-
-    <t t-name="manual_reconciliation_created_line" t-extend="reconciliation_created_line">
-        <t t-jquery=".cell_account_code" t-operation="replace"></t>
-    </t>
-
-    <t t-name="manual_reconciliation_move_line" t-extend="reconciliation_move_line">
-        <t t-jquery=".cell_account_code" t-operation="replace"></t>
-<!--
-        <t t-jquery=".cell_debit" t-operation="replace"><td class="cell_debit"><t t-if="line.debit !== 0"><t t-esc="line.amount_str"/>
-            <t t-if="line.amount_currency_str">&#xA0;(<t t-esc="line.amount_currency_str" />)</t>
-        </t></td></t>
-        <t t-jquery=".cell_credit" t-operation="replace"><td class="cell_credit"><t t-if="line.credit !== 0"><t t-esc="line.amount_str"/>
-            <t t-if="line.amount_currency_str">&#xA0;(<t t-esc="line.amount_currency_str" />)</t>
-        </t></td></t>
--->
-    </t>
+    </div>
+</t>
 
 </templates>

@@ -1,0 +1,77 @@
+<template>
+
+<t t-name="KanbanView.buttons">
+    <div>
+        <button type="button" class="btn btn-primary btn-sm o-kanban-button-new" accesskey="c">
+            <t t-esc="create_text || _t('Create')"/>
+        </button>
+    </div>
+</t>
+
+<t t-name="KanbanView.Group">
+    <div class="o_kanban_group" t-att-data-id="widget.id">
+        <div class="o_kanban_header" t-att-title="widget.data_records.length + ' records'" data-delay="500">
+            <span class="o_column_title"><t t-esc="widget.title"/></span>
+            <span class="o_column_unfold"><i class="fa fa-arrows-h"/></span>
+            <span class="o_kanban_config dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear"/></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
+                    <t t-if="widget.grouped_by_m2o">
+                        <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
+                        <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
+                    </t>
+                    <t t-if="widget.has_active_field">
+                        <li><a class="o_column_archive" href="#">Archive Records</a></li>
+                        <li><a class="o_column_unarchive" href="#">Restore Records</a></li>
+                    </t>
+                </ul>
+            </span>
+            <t t-if="widget.quick_create">
+                <span class="o_kanban_quick_add"><i class="fa fa-plus"/></span>
+            </t>
+        </div>
+        <div t-if="widget.remaining > 0" class="o_kanban_load_more">
+            <t t-call="KanbanView.LoadMore"/>
+        </div>
+    </div>
+</t>
+
+<t t-name="KanbanView.LoadMore">
+    <a href="#">Load more... (<t t-esc="widget.remaining"/> remaining)</a>
+</t>
+
+<t t-name="KanbanView.ColumnQuickCreate">
+    <div class="o_column_quick_create">
+        <div class="o_column_header">
+            <span class="o_kanban_add_column"><i class="fa fa-chevron-right"/></span>
+            <span class="o_kanban_title">Add new Column</span>
+        </div>
+        <div class="o_kanban_quick_create">
+            <input type="text" placeholder="Add"/>
+            <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+            <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
+        </div>
+    </div>
+</t>
+
+<t t-name="KanbanView.QuickCreate">
+    <div class="o_kanban_quick_create">
+        <input type="text" placeholder="Add"/>
+        <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+        <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
+    </div>
+</t>
+
+<t t-name="KanbanColorPicker">
+    <li t-foreach="10" t-as="color">
+        <a href="#" t-att-data-color="color_index" t-attf-class="oe_kanban_color_#{color}"/>
+    </li>
+</t>
+<t t-name="KanbanView.nocontent">
+    <div class="oe_view_nocontent">
+        <t t-raw="content"/>
+    </div>
+</t>
+
+</template>

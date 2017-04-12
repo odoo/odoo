@@ -103,7 +103,7 @@
         <field name="name">resource.calendar.leaves.calendar</field>
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
-            <calendar color="resource_id" date_start="date_from" date_stop="date_to" string="Resource">
+            <calendar date_start="date_from" date_stop="date_to" string="Resource" color="resource_id">
                 <field name="name"/>
             </calendar>
         </field>
@@ -129,7 +129,7 @@
             </form>
         </field>
     </record>
-    
+
     <record id="resource_calendar_leave_tree" model="ir.ui.view">
         <field name="name">resource.calendar.leaves.tree</field>
         <field name="model">resource.calendar.leaves</field>

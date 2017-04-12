@@ -10,10 +10,8 @@ var config = require('web.config');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var data = require('web.data');
-var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
-var framework = require('web.framework');
-var Model = require('web.Model');
+var dom = require('web.dom');
 
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
@@ -71,8 +69,12 @@ var PartnerInviteDialog = Dialog.extend({
         var self = this;
         var data = this.$input.select2('data');
         if(data.length >= 1){
-            var ChannelModel = new Model('mail.channel');
-            return ChannelModel.call('channel_invite', [this.channel_id], {partner_ids: _.pluck(data, 'id')})
+            return this._rpc({
+                    model: 'mail.channel',
+                    method: 'channel_invite',
+                    args: [this.channel_id],
+                    kwargs: {partner_ids: _.pluck(data, 'id')},
+                })
                 .then(function(){
                     var names = _.escape(_.pluck(data, 'text').join(', '));
                     var notification = _.str.sprintf(_t('You added <b>%s</b> to the conversation.'), names);
@@ -114,15 +116,16 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             this.$(".o_mail_annoying_notification_bar").slideUp();
         },
         "click .o_mail_request_permission": function (event) {
+            var self = this;
             event.preventDefault();
             this.$(".o_mail_annoying_notification_bar").slideUp();
             var def = window.Notification.requestPermission();
             if (def) {
                 def.then(function (value) {
                     if (value === 'denied') {
-                        utils.send_notification(_t('Permission denied'), _t('Odoo will not have the permission to send native notifications on this device.'));
+                        utils.send_notification(self, _t('Permission denied'), _t('Odoo will not have the permission to send native notifications on this device.'));
                     } else {
-                        utils.send_notification(_t('Permission granted'), _t('Odoo has now the permission to send you native notifications on this device.'));
+                        utils.send_notification(self, _t('Permission granted'), _t('Odoo has now the permission to send you native notifications on this device.'));
                     }
                 });
             }
@@ -164,7 +167,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.action = action;
         this.options = options || {};
         this.channels_scrolltop = {};
-        this.throttled_render_sidebar = _.throttle(this.render_sidebar.bind(this), 100, { leading: false });
+        this.throttled_renderSidebar = _.throttle(this.renderSidebar.bind(this), 100, { leading: false });
         this.notification_bar = (window.Notification && window.Notification.permission === "default");
         this.selected_message = null;
     },
@@ -172,8 +175,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     willStart: function () {
         var self = this;
         var view_id = this.action && this.action.search_view_id && this.action.search_view_id[0];
-        var def = data_manager
-            .load_fields_view(this.dataset, view_id, 'search', false)
+        var def = this
+            .loadFieldView(this.dataset, view_id, 'search')
             .then(function (fields_view) {
                 self.fields_view = fields_view;
             });
@@ -246,7 +249,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             self.$searchview_buttons = self.searchview.$buttons.contents();
         });
 
-        this.render_sidebar();
+        this.renderSidebar();
 
         return $.when(def1, def2, def3, def4)
             .then(this.set_channel.bind(this, default_channel))
@@ -259,10 +262,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                     query.is_displayed = query.is_displayed || (channel.id === self.channel.id && self.thread.is_at_bottom());
                 });
                 chat_manager.bus.on('unsubscribe_from_channel', self, self.on_channel_unsubscribed);
-                chat_manager.bus.on('update_needaction', self, self.throttled_render_sidebar);
-                chat_manager.bus.on('update_starred', self, self.throttled_render_sidebar);
-                chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_render_sidebar);
-                chat_manager.bus.on('update_dm_presence', self, self.throttled_render_sidebar);
+                chat_manager.bus.on('update_needaction', self, self.throttled_renderSidebar);
+                chat_manager.bus.on('update_starred', self, self.throttled_renderSidebar);
+                chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_renderSidebar);
+                chat_manager.bus.on('update_dm_presence', self, self.throttled_renderSidebar);
                 self.thread.$el.on("scroll", null, _.debounce(function () {
                     if (self.thread.is_at_bottom()) {
                         chat_manager.mark_channel_as_seen(self.channel);
@@ -297,9 +300,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.selected_message = null;
     },
 
-    render_sidebar: function () {
+    renderSidebar: function () {
         var self = this;
-        var $sidebar = this._render_sidebar({
+        var $sidebar = this._renderSidebar({
             active_channel_id: this.channel ? this.channel.id: undefined,
             channels: chat_manager.get_channels(),
             needaction_counter: chat_manager.get_needaction_counter(),
@@ -363,7 +366,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
     },
 
-    _render_sidebar: function (options) {
+    _renderSidebar: function (options) {
         return $(QWeb.render("mail.chat.Sidebar", options));
     },
 
@@ -380,18 +383,22 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     do_search_channel: function(search_val){
-        var Channel = new Model("mail.channel");
-        return Channel.call('channel_search_to_join', [search_val]).then(function(result){
-            var values = [];
-            _.each(result, function(channel){
-                var escaped_name = _.escape(channel.name);
-                values.push(_.extend(channel, {
-                    'value': escaped_name,
-                    'label': escaped_name,
-                }));
+        return this._rpc({
+                model: 'mail.channel',
+                method: 'channel_search_to_join',
+                args: [search_val]
+            })
+            .then(function(result){
+                var values = [];
+                _.each(result, function(channel){
+                    var escaped_name = _.escape(channel.name);
+                    values.push(_.extend(channel, {
+                        'value': escaped_name,
+                        'label': escaped_name,
+                    }));
+                });
+                return values;
             });
-            return values;
-        });
     },
 
     set_channel: function (channel) {
@@ -516,7 +523,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var self = this;
         var oldest_msg_id = this.$('.o_thread_message').first().data('messageId');
         var oldest_msg_selector = '.o_thread_message[data-message-id="' + oldest_msg_id + '"]';
-        var offset = -framework.getPosition(document.querySelector(oldest_msg_selector)).top;
+        var offset = -dom.getPosition(document.querySelector(oldest_msg_selector)).top;
         return chat_manager
             .get_messages({channel_id: this.channel.id, domain: this.domain, load_more: true})
             .then(function(result) {
@@ -524,7 +531,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                     self.messages_separator_position = undefined; // reset value to re-compute separator position
                 }
                 self.thread.render(result, self.get_thread_rendering_options(result));
-                offset += framework.getPosition(document.querySelector(oldest_msg_selector)).top;
+                offset += dom.getPosition(document.querySelector(oldest_msg_selector)).top;
                 self.thread.scroll_to({offset: offset});
             });
     },
@@ -551,8 +558,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_search: function (domains) {
-        var result = pyeval.sync_eval_domains_and_contexts({
-            domains: domains
+        var session = this.getSession();
+        var result = pyeval.eval_domains_and_contexts({
+            domains: domains,
+            contexts: [session.user_context],
         });
 
         this.domain = result.domain;
@@ -600,7 +609,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             });
         }
         // Re-render sidebar to indicate that there is a new message in the corresponding channels
-        this.render_sidebar();
+        this.renderSidebar();
         // Dump scroll position of channels in which the new message arrived
         this.channels_scrolltop = _.omit(this.channels_scrolltop, message.channel_ids);
     },
@@ -620,7 +629,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         }
     },
     on_new_channel: function (channel) {
-        this.render_sidebar();
+        this.renderSidebar();
         if (channel.autoswitch) {
             this.set_channel(channel);
         }
@@ -629,7 +638,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         if (this.channel.id === channel_id) {
             this.set_channel(chat_manager.get_channel("channel_inbox"));
         }
-        this.render_sidebar();
+        this.renderSidebar();
         delete this.channels_scrolltop[channel_id];
     },
     on_composer_input_focused: function () {

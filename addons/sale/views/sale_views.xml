@@ -35,7 +35,7 @@
             <field name="name">sale.order.calendar</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <calendar string="Sales Orders" color="state" date_start="date_order">
+                <calendar string="Sales Orders" date_start="date_order" color="state">
                     <field name="partner_id"/>
                     <field name="amount_total" widget="monetary"/>
                 </calendar>
@@ -91,7 +91,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right text-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default',
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default',
                                             'done': 'success'}}"/>
                                         </span>
                                     </div>

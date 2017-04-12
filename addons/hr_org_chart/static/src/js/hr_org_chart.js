@@ -1,76 +1,93 @@
 odoo.define('web.OrgChart', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
+var AbstractField = require('web.AbstractField');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
-var form_common = require('web.form_common');
+var field_registry = require('web.field_registry');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
-var FieldOrgChart = form_common.AbstractField.extend({
+var FieldOrgChart = AbstractField.extend({
 
     events: {
-        "click .o_employee_redirect": "on_employee_redirect",
-        "click .o_employee_sub_redirect": "on_employee_sub_redirect",
+        "click .o_employee_redirect": "_onEmployeeRedirect",
     },
-
+    /**
+     * @constructor
+     * @override
+     */
     init: function () {
         this._super.apply(this, arguments);
+        this.dm = new concurrency.DropMisordered();
     },
 
-    start: function () {
-        this.reinit();
-        return this._super();
-    },
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-    reinit: function () {
-        this.emp_data = {
-            managers: [],
-            children: [],
-        };
+    /**
+     * Get the chart data through a rpc call.
+     *
+     * @private
+     * @param {integer} employee_id
+     * @returns {Deferred}
+     */
+    _getOrgData: function (employee_id) {
+        var self = this;
+        return this.dm.add(this._rpc({
+            route: '/hr/get_org_chart',
+            params: {
+                employee_id: employee_id,
+            },
+        })).then(function (data) {
+            self.orgData = data;
+        });
     },
-
-    set_value: function (_value) {
-        this.reinit();
-        this._super(_value);
-    },
-
-    render_value: function () {
-        if (! this.view.datarecord.id) {
-            return this.$el.html(QWeb.render("hr_org_chart", {widget: this}));
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        if (!this.recordData.id) {
+            return this.$el.html(QWeb.render("hr_org_chart", {
+                managers: [],
+                children: [],
+            }));
         }
 
         var self = this;
-        this.get_org_chart_data(this.view.datarecord.id).then(function () {
-            self.$el.html(QWeb.render("hr_org_chart", {widget: self}));
-        }).then(function () {
-            self.$el.find('[data-toggle="popover"]').each(function () {
+        return this._getOrgData(this.recordData.id).then(function () {
+            self.$el.html(QWeb.render("hr_org_chart", self.orgData));
+            self.$('[data-toggle="popover"]').each(function () {
                 $(this).popover({
                     html: true,
-                    title: function() {
-                        var $title = $(QWeb.render('hr_orgchart_emp_popover_title', {employee: {
-                            name: $(this).data('emp-name'),
-                            id: $(this).data('emp-id'),
-                        }}));
-                        $title.on('click', '.o_employee_redirect', function(event) {
-                            self.on_employee_redirect(event);
-                        });
+                    title: function () {
+                        var $title = $(QWeb.render('hr_orgchart_emp_popover_title', {
+                            employee: {
+                                name: $(this).data('emp-name'),
+                                id: $(this).data('emp-id'),
+                            },
+                        }));
+                        $title.on('click',
+                            '.o_employee_redirect', _.bind(self._onEmployeeRedirect, self));
                         return $title;
                     },
                     container: 'body',
                     placement: 'left',
                     trigger: 'focus',
-                    content: function() {
-                        var $content = $(QWeb.render('hr_orgchart_emp_popover_content', {employee: {
-                            id: $(this).data('emp-id'),
-                            name: $(this).data('emp-name'),
-                            direct_sub_count: parseInt($(this).data('emp-dir-subs')),
-                            indirect_sub_count: parseInt($(this).data('emp-ind-subs')),
-                        }}));
-                        $content.on('click', '.o_employee_sub_redirect', function(event) {
-                            self.on_employee_sub_redirect(event);
-                        });
+                    content: function () {
+                        var $content = $(QWeb.render('hr_orgchart_emp_popover_content', {
+                            employee: {
+                                id: $(this).data('emp-id'),
+                                name: $(this).data('emp-name'),
+                                direct_sub_count: parseInt($(this).data('emp-dir-subs')),
+                                indirect_sub_count: parseInt($(this).data('emp-ind-subs')),
+                            },
+                        }));
+                        $content.on('click',
+                            '.o_employee_sub_redirect', _.bind(self._onEmployeeSubRedirect, self));
                         return $content;
                     },
                     template: $(QWeb.render('hr_orgchart_emp_popover', {})),
@@ -79,16 +96,18 @@ var FieldOrgChart = form_common.AbstractField.extend({
         });
     },
 
-    get_org_chart_data: function (employee_id) {
-        var self = this;
-        return ajax.jsonRpc('/hr/get_org_chart', 'call', {
-            employee_id: employee_id,
-        }).then(function (data) {
-            self.emp_data = data;
-        });
-    },
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
-    on_employee_redirect: function (event) {
+    /**
+     * Redirect to the employee form view.
+     *
+     * @private
+     * @param {MouseEvent} event
+     * @returns {Deferred} action loaded
+     */
+    _onEmployeeRedirect: function (event) {
         event.preventDefault();
         var employee_id = parseInt($(event.currentTarget).data('employee-id'));
         return this.do_action({
@@ -101,8 +120,14 @@ var FieldOrgChart = form_common.AbstractField.extend({
             res_id: employee_id,
         });
     },
-
-    on_employee_sub_redirect: function (event) {
+    /**
+     * Redirect to the sub employee form view.
+     *
+     * @private
+     * @param {MouseEvent} event
+     * @returns {Deferred} action loaded
+     */
+    _onEmployeeSubRedirect: function (event) {
         event.preventDefault();
         var employee_id = parseInt($(event.currentTarget).data('employee-id'));
         var employee_name = $(event.currentTarget).data('employee-name');
@@ -112,29 +137,30 @@ var FieldOrgChart = form_common.AbstractField.extend({
         if (type === 'total') {
             domain = ['&', ['parent_id', 'child_of', employee_id], ['id', '!=', employee_id]];
             name = _.str.sprintf(_t("Subordinates of %s"), employee_name);
-        }
-        else if (type === 'indirect') {
-            domain = ['&', '&', ['parent_id', 'child_of', employee_id], ['parent_id', '!=', employee_id], ['id', '!=', employee_id]];
+        } else if (type === 'indirect') {
+            domain = ['&', '&',
+                ['parent_id', 'child_of', employee_id],
+                ['parent_id', '!=', employee_id],
+                ['id', '!=', employee_id]
+            ];
             name = _.str.sprintf(_t("Indirect Subordinates of %s"), employee_name);
         }
         if (employee_id) {
             return this.do_action({
                 name: name,
                 type: 'ir.actions.act_window',
-                view_type: 'tree',
-                view_mode: 'kanban,tree,form',
-                views: [[false, 'kanban'], [false, 'tree'], [false, 'form']],
+                view_mode: 'kanban,list,form',
+                views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
                 target: 'current',
                 res_model: 'hr.employee',
                 domain: domain,
             });
         }
     },
-
 });
 
-core.form_widget_registry.add('hr_org_chart', FieldOrgChart);
-
+field_registry.add('hr_org_chart', FieldOrgChart);
 
 return FieldOrgChart;
+
 });

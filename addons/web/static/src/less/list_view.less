@@ -78,6 +78,8 @@
 
     // Grouped list views
     tbody > tr.o_group_header {
+        height: 31px;
+
         .o-vertical-gradient(#fcfcfc, #dedede);
 
         .o_group_name {
@@ -87,6 +89,8 @@
             cursor: text;
             .user-select(none);
             text-align: right;
+            padding-top: 0;
+            padding-bottom: 0;
             .o_pager_previous, .o_pager_next {
                 background-color: @odoo-list-group-header-color;
                 &:hover {

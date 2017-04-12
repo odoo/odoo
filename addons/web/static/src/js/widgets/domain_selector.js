@@ -3,8 +3,8 @@ odoo.define("web.DomainSelector", function (require) {
 
 var core = require("web.core");
 var datepicker = require("web.datepicker");
-var domainUtils = require("web.domainUtils");
-var formats = require ("web.formats");
+var Domain = require("web.Domain");
+var field_utils = require ("web.field_utils");
 var ModelFieldSelector = require("web.ModelFieldSelector");
 var Widget = require("web.Widget");
 
@@ -14,12 +14,12 @@ var _lt = core._lt;
 // "child_of", "parent_of", "like", "not like", "=like", "=ilike"
 // are only used if user entered them manually or if got from demo data
 var operator_mapping = {
-    "=": _lt("is equal to"),
-    "!=": _lt("is not equal to"),
-    ">": _lt("greater than"),
-    "<": _lt("less than"),
-    ">=": _lt("greater than or equal to"),
-    "<=": _lt("less than or equal to"),
+    "=": "=",
+    "!=": _lt("not"),
+    ">": ">",
+    "<": "<",
+    ">=": ">=",
+    "<=": "<=",
     "ilike": _lt("contains"),
     "not ilike": _lt("not contains"),
     "in": _lt("in"),
@@ -37,30 +37,35 @@ var operator_mapping = {
     "not set": _lt("is not set"),
 };
 
-/// The DomainNode Widget is an abstraction for widgets which can represent and allow
-/// edition of a domain (part).
+/**
+ * Abstraction for widgets which can represent and allow edition of a domain.
+ */
 var DomainNode = Widget.extend({
     events: {
-        /// If click on the node add or delete button, notify the parent and let it handle the addition/removal
-        "click .o_domain_delete_node_button": function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.trigger_up("delete_node_clicked", {child: this});
-        },
-        "click .o_domain_add_node_button": function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.trigger_up("add_node_clicked", {newBranch: !!$(e.currentTarget).data("branch"), child: this});
-        },
+        // If click on the node add or delete button, notify the parent and let
+        // it handle the addition/removal
+        "click .o_domain_add_node_button": "_onAddButtonClick",
+        "click .o_domain_delete_node_button": "_onDeleteButtonClick",
+        // Handle visual feedback and animation
+        "mouseenter button": "_onButtonEntered",
+        "mouseleave button": "_onButtonLeft",
     },
-    /// A DomainNode needs a model and domain to work. It can also receives a set of options
-    /// @param model - a string with the model name
-    /// @param domain - an array of the prefix representation of the domain (or a string which represents it)
-    /// @param options - an object with possible values:
-    ///                    - readonly, a boolean to indicate if the widget is readonly or not (default to true)
-    ///                    - operators, a list of available operators (default to null, which indicates all of supported ones)
-    ///                    - debugMode, a boolean which is true if the widget should be in debug mode (default to false)
-    ///                    - @see ModelFieldSelector for other options
+    /**
+     * @constructor
+     * A DomainNode needs a model and domain to work. It can also receive a set
+     * of options.
+     *
+     * @param {Object} parent
+     * @param {string} model - the model name
+     * @param {Array|string} domain - the prefix representation of the domain
+     * @param {Object} [options] - an object with possible values:
+     * @param {boolean} [options.readonly=true] - true if is readonly
+     * @param {string[]} [options.operators=null]
+     *        a list of available operators (null = all of supported ones)
+     * @param {boolean} [options.debugMode=false] - true if should be in debug
+     *
+     * @see ModelFieldSelector for other options
+     */
     init: function (parent, model, domain, options) {
         this._super.apply(this, arguments);
 
@@ -74,54 +79,232 @@ var DomainNode = Widget.extend({
         this.readonly = this.options.readonly;
         this.debug = this.options.debugMode;
     },
-    /// The getDomain method is an abstract method which should returns the prefix domain
-    /// the widget is currently representing (an array).
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Should return if the node is representing a well-formed domain, whose
+     * field chains properly belong to the associated model.
+     *
+     * @abstract
+     * @returns {boolean}
+     */
+    isValid: function () {},
+    /**
+     * Should return the prefix domain the widget is currently representing
+     * (an array).
+     *
+     * @abstract
+     * @returns {Array}
+     */
     getDomain: function () {},
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the add button is clicked -> trigger_up an event to ask
+     * creation of a new child in its parent.
+     *
+     * @param {Event} e
+     */
+    _onAddButtonClick: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.trigger_up("add_node_clicked", {newBranch: !!$(e.currentTarget).data("branch"), child: this});
+    },
+    /**
+     * Called when the delete button is clicked -> trigger_up an event to ask
+     * deletion of this node from its parent.
+     *
+     * @param {Event} e
+     */
+    _onDeleteButtonClick: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.trigger_up("delete_node_clicked", {child: this});
+    },
+    /**
+     * Called when a "controlpanel" button is hovered -> add classes to the
+     * domain node to add animation effects.
+     *
+     * @param {Event} e
+     */
+    _onButtonEntered: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $target = $(e.currentTarget);
+        this.$el.toggleClass("o_hover_btns", $target.hasClass("o_domain_delete_node_button"));
+        this.$el.toggleClass("o_hover_add_node", $target.hasClass("o_domain_add_node_button"));
+        this.$el.toggleClass("o_hover_add_inset_node", !!$target.data("branch"));
+    },
+    /**
+     * Called when a "controlpanel" button is not hovered anymore -> remove
+     * classes from the domain node to stop animation effects.
+     *
+     * @param {Event} e
+     */
+    _onButtonLeft: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.$el.removeClass("o_hover_btns o_hover_add_node o_hover_add_inset_node");
+    },
 });
-/// The DomainTree is a DomainNode which can handle subdomains (a domain which is composed
-/// of multiple parts). It thus will be composed of other DomainTree instances and/or leaf parts
-/// of a domain (@see DomainLeaf).
+
+/**
+ * DomainNode which can handle subdomains (a domain which is composed of
+ * multiple parts). It thus will be composed of other DomainTree instances
+ * and/or leaf parts of a domain (@see DomainLeaf).
+ */
 var DomainTree = DomainNode.extend({
     template: "DomainTree",
     events: _.extend({}, DomainNode.prototype.events, {
-        "click .o_domain_tree_operator_selector > ul > li > a": function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.changeOperator($(e.target).data("operator"));
-        },
+        "click .o_domain_tree_operator_selector > ul > li > a": "_onOperatorChange",
     }),
     custom_events: {
-        /// If a domain child sends a request to add a child or remove one, call the appropriate methods.
-        /// Propagates the event until success.
-        "delete_node_clicked": function (e) {
-            e.stopped = this.removeChild(e.data.child);
-        },
-        "add_node_clicked": function (e) {
-            var domain = [["id", "=", 1]];
-            if (e.data.newBranch) {
-                domain = [this.operator === "&" ? "|" : "&"].concat(domain).concat(domain);
-            }
-            e.stopped = this.addChild(domain, e.data.child);
-        },
+        // If a domain child sends a request to add a child or remove one, call
+        // the appropriate methods. Propagates the event until success.
+        "add_node_clicked": "_onNodeAdditionAsk",
+        "delete_node_clicked": "_onNodeDeletionAsk",
     },
-    /// @see DomainNode.init
-    /// The initialization of a DomainTree creates a "children" array attribute which will contain the
-    /// the DomainNode children. It also deduces the operator from the domain (default to "&").
-    /// @see DomainTree._addFlattenedChildren
+    /**
+     * @constructor
+     * @see DomainNode.init
+     * The initialization of a DomainTree creates a "children" array attribute
+     * which will contain the the DomainNode children. It also deduces the
+     * operator from the domain.
+     * @see DomainTree._addFlattenedChildren
+     */
     init: function (parent, model, domain, options) {
         this._super.apply(this, arguments);
-        this._initialize(domainUtils.stringToDomain(domain));
+        this._initialize(Domain.prototype.stringToArray(domain));
     },
-    /// @see DomainTree.init
+    /**
+     * @see DomainNode.start
+     * @returns {Deferred}
+     */
+    start: function () {
+        this._postRender();
+        return $.when(this._super.apply(this, arguments), this._renderChildrenTo(this.$childrenContainer));
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see DomainNode.isValid
+     * @returns {boolean}
+     */
+    isValid: function () {
+        for (var i = 0 ; i < this.children.length ; i++) {
+            var cValid = this.children[i].isValid();
+            if (!cValid) {
+                return cValid;
+            }
+        }
+        return this._isValid;
+    },
+    /**
+     * @see DomainNode.getDomain
+     * @returns {Array}
+     */
+    getDomain: function () {
+        var childDomains = [];
+        var nbChildren = 0;
+        _.each(this.children, function (child) {
+            var childDomain = child.getDomain();
+            if (childDomain.length) {
+                nbChildren++;
+                childDomains = childDomains.concat(child.getDomain());
+            }
+        });
+        var nbChildRequired = this.operator === "!" ? 1 : 2;
+        var operators = _.times(nbChildren - nbChildRequired + 1, _.constant(this.operator));
+        return operators.concat(childDomains);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds a domain part to the widget.
+     * -> trigger_up "domain_changed" if the child is added
+     *
+     * @private
+     * @param {Array} domain - the prefix-like domain to build and add to the
+     *                       widget
+     * @param {DomainNode} afterNode - the node after which the new domain part
+     *                               must be added (at the end if not given)
+     * @returns {boolean} true if the part was added
+     *                   false otherwise (the afterNode was not found)
+     */
+    _addChild: function (domain, afterNode) {
+        var i = afterNode ? _.indexOf(this.children, afterNode) : this.children.length;
+        if (i < 0) return false;
+
+        this.children.splice(i+1, 0, instantiateNode(this, this.model, domain, this.options));
+        this.trigger_up("domain_changed", {child: this});
+        return true;
+    },
+    /**
+     * Adds a child which represents the given domain. If the child has children
+     * and that the child main domain operator is the same as the current widget
+     * one, the 2-children prefix hierarchy is then simplified by making the
+     * child's children the widget's own children.
+     *
+     * @private
+     * @param {Array|string} domain - the domain of the child to add
+     */
+    _addFlattenedChildren: function (domain) {
+        var node = instantiateNode(this, this.model, domain, this.options);
+        if (node === null) {
+            return;
+        }
+        if (!node.children || node.operator !== this.operator) {
+            this.children.push(node);
+            return;
+        }
+        _.each(node.children, (function (child) {
+            child.setParent(this);
+            this.children.push(child);
+        }).bind(this));
+        node.destroy();
+    },
+    /**
+     * Changes the operator of the domain tree and notifies the parent if
+     * necessary (not silent).
+     *
+     * @private
+     * @param {string} operator - the new operator
+     * @param {boolean} silent - true if the parents should not be notified of
+     *                         the change
+     */
+    _changeOperator: function (operator, silent) {
+        this.operator = operator;
+        if (!silent) this.trigger_up("domain_changed", {child: this});
+    },
+    /**
+     * @see DomainTree.init
+     * @private
+     */
     _initialize: function (domain) {
+        this._isValid = true;
         this.operator = domain[0];
         this.children = [];
+        if (domain.length <= 1) {
+            return;
+        }
 
-        // Add flattened children by search the appropriate number of children in the rest
-        // of the domain (after the operator)
+        // Add flattened children by search the appropriate number of children
+        // in the rest of the domain (after the operator)
         var nbLeafsToFind = 1;
         for (var i = 1 ; i < domain.length ; i++) {
-            if (_.contains(["&", "|"], domain[i])) {
+            if (domain[i] === "&" || domain[i] === "|") {
                 nbLeafsToFind++;
             } else if (domain[i] !== "!") {
                 nbLeafsToFind--;
@@ -139,65 +322,32 @@ var DomainTree = DomainNode.extend({
                 break;
             }
         }
+        this._isValid = (nbLeafsToFind === 0);
 
-        // Mark "!" tree children so that they do not allow to add other children around them
+        // Mark "!" tree children so that they do not allow to add other
+        // children around them
         if (this.operator === "!") {
             this.children[0].noControlPanel = true;
         }
     },
-    start: function () {
-        this._postRender();
-        return $.when(this._super.apply(this, arguments), this._renderChildrenTo(this.$childrenContainer));
-    },
+    /**
+     * @see DomainTree.start
+     * Initializes variables which depend on the rendered widget.
+     * @private
+     */
     _postRender: function () {
         this.$childrenContainer = this.$("> .o_domain_node_children_container");
     },
-    _renderChildrenTo: function ($to) {
-        var $div = $("<div/>");
-        return $.when.apply($, _.map(this.children, (function (child) {
-            return child.appendTo($div);
-        }).bind(this))).then((function () {
-            _.each(this.children, function (child) {
-                child.$el.appendTo($to); // Forced to do it this way so that the children are not misordered
-            });
-        }).bind(this));
-    },
-    getDomain: function () {
-        var childDomains = [];
-        var nbChildren = 0;
-        _.each(this.children, function (child) {
-            var childDomain = child.getDomain();
-            if (childDomain.length) {
-                nbChildren++;
-                childDomains = childDomains.concat(child.getDomain());
-            }
-        });
-        var nbChildRequired = this.operator === "!" ? 1 : 2;
-        var operators = _.times(nbChildren - nbChildRequired + 1, _.constant(this.operator));
-        return operators.concat(childDomains);
-    },
-    changeOperator: function (operator) {
-        this.operator = operator;
-        this.trigger_up("domain_changed", {child: this});
-    },
-    /// The addChild method adds a domain part to the widget.
-    /// @param domain - an array of the prefix-like domain to build and add to the widget
-    /// @param afterNode - the node after which the new domain part must be added (at the end if not given)
-    /// @trigger_up domain_changed if the child is added
-    /// @return true if the part was added, false otherwise (the afterNode was not found)
-    addChild: function (domain, afterNode) {
-        var i = afterNode ? _.indexOf(this.children, afterNode) : this.children.length;
-        if (i < 0) return false;
-
-        this.children.splice(i+1, 0, instantiateNode(this, this.model, domain, this.options));
-        this.trigger_up("domain_changed", {child: this});
-        return true;
-    },
-    /// The removeChild method removes a given child from the widget.
-    /// @param oldChild - the child instance to remove
-    /// @trigger_up domain_changed if the child is removed
-    /// @return true if the child was removed, false otherwise (the widget does not own the child)
-    removeChild: function (oldChild) {
+    /**
+     * Removes a given child from the widget.
+     * -> trigger_up domain_changed if the child is removed
+     *
+     * @private
+     * @param {DomainNode} oldChild - the child instance to remove
+     * @returns {boolean} true if the child was removed, false otherwise (the
+     *                   widget does not own the child)
+     */
+    _removeChild: function (oldChild) {
         var i = _.indexOf(this.children, oldChild);
         if (i < 0) return false;
 
@@ -206,28 +356,159 @@ var DomainTree = DomainNode.extend({
         this.trigger_up("domain_changed", {child: this});
         return true;
     },
-    /// The private _addFlattenedChildren method adds a child which represents the given
-    /// domain. If the child has children and that the child main domain operator is the
-    /// same as the current widget one, the 2-children prefix hierarchy is then simplified
-    /// by making the child children the widget own children.
-    /// @param domain - the domain of the child to add and simplify
-    _addFlattenedChildren: function (domain) {
-        var node = instantiateNode(this, this.model, domain, this.options);
-        if (node === null) {
-            return;
-        }
-        if (!node.children || node.operator !== this.operator) {
-            this.children.push(node);
-            return;
-        }
-        _.each(node.children, (function (child) {
-            child.setParent(this);
-            this.children.push(child);
+    /**
+     * @see DomainTree.start
+     * Appends the children domain node to the given node. This is used to
+     * render the children widget in a dummy element before adding them in the
+     * DOM, otherwhise they could be misordered as they rendering is not
+     * synchronous.
+     *
+     * @private
+     * @param {jQuery} $to - the jQuery node to which the children must be added
+     * @returns {Deferred}
+     */
+    _renderChildrenTo: function ($to) {
+        var $div = $("<div/>");
+        return $.when.apply($, _.map(this.children, (function (child) {
+            return child.appendTo($div);
+        }).bind(this))).then((function () {
+            _.each(this.children, function (child) {
+                child.$el.appendTo($to); // Forced to do it this way so that the
+                                         // children are not misordered
+            });
         }).bind(this));
-        node.destroy();
     },
-    /// This method is ugly but achieves the right behavior without flickering.
-    /// It will be refactored alongside the new views/widget API.
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the operator select value is changed -> change the internal
+     * operator state
+     *
+     * @param {Event} e
+     */
+    _onOperatorChange: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this._changeOperator($(e.target).data("operator"));
+    },
+    /**
+     * Called when a node addition was asked -> add the new domain part if on
+     * the right node or let the propagation continue.
+     *
+     * @param {OdooEvent} e
+     */
+    _onNodeAdditionAsk: function (e) {
+        var domain = [["id", "=", 1]];
+        if (e.data.newBranch) {
+            domain = [this.operator === "&" ? "|" : "&"].concat(domain).concat(domain);
+        }
+        if (this._addChild(domain, e.data.child)) {
+            e.stopPropagation();
+        }
+    },
+    /**
+     * Called when a node deletion was asked -> remove the domain part if on
+     * the right node or let the propagation continue.
+     *
+     * @param {OdooEvent} e
+     */
+    _onNodeDeletionAsk: function (e) {
+        if (this._removeChild(e.data.child)) {
+            e.stopPropagation();
+        }
+    },
+});
+
+/**
+ * The DomainSelector widget can be used to build prefix char domain. It is the
+ * DomainTree specialization to use to have a fully working widget.
+ *
+ * Known limitations:
+ *     - Some operators like "child_of", "parent_of", "like", "not like",
+ *       "=like", "=ilike" will come only if you use them from demo data or
+ *       debug input.
+ *     - Some kind of domain can not be build right now
+ *       e.g ("country_id", "in", [1,2,3]) but you can insert from debug input.
+ */
+var DomainSelector = DomainTree.extend({
+    template: "DomainSelector",
+    events: _.extend({}, DomainTree.prototype.events, {
+        "click .o_domain_add_first_node_button": "_onAddFirstButtonClick",
+        "change .o_domain_debug_input": "_onDebugInputChange",
+    }),
+    custom_events: _.extend({}, DomainTree.prototype.custom_events, {
+        domain_changed: "_onDomainChange",
+    }),
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Changes the internal domain value and forces a reparsing and rerendering.
+     * If the internal domain value was already equal to the given one, this
+     * does nothing.
+     *
+     * @param {Array|string} domain
+     * @returns {Deferred} resolved when the rerendering is finished
+     */
+    setDomain: function (domain) {
+        if (Domain.prototype.arrayToString(domain) === Domain.prototype.arrayToString(this.getDomain())) {
+            return $.when();
+        }
+        return this._redraw(domain);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see DomainTree._initialize
+     */
+    _initialize: function (domain) {
+        // Check if the domain starts with implicit "&" operators and make them
+        // explicit. As the DomainSelector is a specialization of a DomainTree,
+        // it is waiting for a tree and not a leaf. So [] and [A] will be made
+        // explicit with ["&"], ["&", A] so that tree parsing is made correctly.
+        // Note: the domain is considered to be a valid one
+        if (domain.length > 1) {
+            Domain.prototype.normalizeArray(domain);
+        } else {
+            domain = ["&"].concat(domain);
+        }
+        return this._super(domain);
+    },
+    /**
+     * @see DomainTree._postRender
+     * Warns the user if the domain is not valid after rendering.
+     */
+    _postRender: function () {
+        this._super.apply(this, arguments);
+
+        // Display technical domain if in debug mode
+        this.$debugInput = this.$(".o_domain_debug_input");
+        if (this.$debugInput.length) {
+            this.$debugInput.val(Domain.prototype.arrayToString(this.getDomain()));
+        }
+
+        // Warn the user if the domain is not valid after rendering
+        if (!this._isValid) {
+            this.do_warn(
+                _t("Domain error"),
+                _t("The domain you entered is not properly formed")
+            );
+        }
+    },
+    /**
+     * This method is ugly but achieves the right behavior without flickering.
+     *
+     * @param {Array|string} domain
+     * @returns {Deferred}
+     */
     _redraw: function (domain) {
         var oldChildren = this.children.slice();
         this._initialize(domain || this.getDomain());
@@ -238,91 +519,63 @@ var DomainTree = DomainNode.extend({
             _.each(oldChildren, function (child) { child.destroy(); });
         }).bind(this));
     },
-});
-/// The DomainSelector widget can be used to build prefix char domain. It is the DomainTree
-/// specialization to use to have a fully working widget.
-///
-/// Known limitations:
-///     - Some operators like "child_of", "parent_of", "like", "not like", "=like", "=ilike"
-///       will come only if you use them from demo data or debug input.
-///     - Some kind of domain can not be build right now e.g ("country_id", "in", [1,2,3,4])
-///       but you can insert from debug input.
-var DomainSelector = DomainTree.extend({
-    template: "DomainSelector",
-    events: _.extend({}, DomainTree.prototype.events, {
-        "click .o_domain_add_first_node_button": function (e) {
-            this.addChild([["id", "=", 1]]);
-        },
-        /// When the debug input changes, the string prefix domain is read. If it is syntax-valid
-        /// the widget is re-rendered and notifies the parents. If not, a warning is shown to the
-        /// user and the input is ignored.
-        "change .o_domain_debug_input": function (e) {
-            var domain;
-            try {
-                domain = domainUtils.stringToDomain($(e.currentTarget).val());
-            } catch (err) {
-                this.do_warn(_t("Syntax error"), _t("The domain you entered is not properly formed"));
-                return;
-            }
-            this._redraw(domain).then((function () {
-                this.trigger_up("domain_changed", {child: this, alreadyRedrawn: true});
-            }).bind(this));
-        },
-    }),
-    custom_events: _.extend({}, DomainTree.prototype.custom_events, {
-        /// If a subdomain notifies that it underwent some modifications, the DomainSelector
-        /// catches the message and performs a full re-rendering.
-        "domain_changed": function (e) {
-            e.stopped = false;
-            if (!e.data.alreadyRedrawn) {
-                this._redraw();
-            }
-        },
-    }),
-    _initialize: function (domain) {
-        // Check if the domain starts with implicit "&" operators and make them
-        // explicit. As the DomainSelector is a specialization of a DomainTree,
-        // it is waiting for a tree and not a leaf. So [] and [A] will be made
-        // explicit with ["&"], ["&", A] so that tree parsing is made correctly.
-        // Note: the domain is considered to be a valid one
-        if (domain.length <= 1) {
-            return this._super(["&"].concat(domain));
-        }
-        var expected = 1;
-        _.each(domain, function (item) {
-            if (item === "&" || item === "|") {
-                expected++;
-            } else if (item !== "!") {
-                expected--;
-            }
-        });
-        if (expected < 0) {
-            domain =  _.times(Math.abs(expected), _.constant("&")).concat(domain);
-        }
-        return this._super(domain);
-    },
-    _postRender: function () {
-        this._super.apply(this, arguments);
 
-        // Display technical domain if in debug mode
-        this.$debugInput = this.$(".o_domain_debug_input");
-        if (this.$debugInput.length) {
-            this.$debugInput.val(domainUtils.domainToString(this.getDomain()));
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the "add a filter" button is clicked -> adds a first domain
+     * node
+     */
+    _onAddFirstButtonClick: function () {
+        this._addChild([["id", "=", 1]]);
+    },
+    /**
+     * Called when the debug input value is changed -> constructs the tree
+     * representation if valid or warn the user if invalid.
+     *
+     * @param {Event} e
+     */
+    _onDebugInputChange: function (e) {
+        // When the debug input changes, the string prefix domain is read. If it
+        // is syntax-valid the widget is re-rendered and notifies the parents.
+        // If not, a warning is shown to the user and the input is ignored.
+        var domain;
+        try {
+            domain = Domain.prototype.stringToArray($(e.currentTarget).val());
+        } catch (err) { // If there is a syntax error, just ignore the change
+            this.do_warn(_t("Syntax error"), _t("The domain you entered is not properly formed"));
+            return;
+        }
+        this._redraw(domain).then((function () {
+            this.trigger_up("domain_changed", {child: this, alreadyRedrawn: true});
+        }).bind(this));
+    },
+    /**
+     * Called when a (child's) domain has changed -> redraw the entire tree
+     * representation if necessary
+     *
+     * @param {OdooEvent} e
+     */
+    _onDomainChange: function (e) {
+        // If a subdomain notifies that it underwent some modifications, the
+        // DomainSelector catches the message and performs a full re-rendering.
+        if (!e.data.alreadyRedrawn) {
+            this._redraw();
         }
     },
 });
-/// The DomainLeaf widget is a DomainNode which handles a domain which cannot be split in
-/// another subdomains, i.e. composed of a field chain, an operator and a value.
+
+/**
+ * DomainNode which handles a domain which cannot be split in another
+ * subdomains, i.e. composed of a field chain, an operator and a value.
+ */
 var DomainLeaf = DomainNode.extend({
     template: "DomainLeaf",
     events: _.extend({}, DomainNode.prototype.events, {
-        "change .o_domain_leaf_operator_select": function (e) {
-            this.onOperatorChange($(e.currentTarget).val());
-        },
-        "change .o_domain_leaf_value_input": function (e) {
-            if (e.currentTarget !== e.target) return;
-            this.onValueChange($(e.currentTarget).val());
-        },
+        "change .o_domain_leaf_operator_select": "_onOperatorSelectChange",
+        "change .o_domain_leaf_value_input": "_onValueInputChange",
 
         // Handle the tags widget part (TODO should be an independant widget)
         "click .o_domain_leaf_value_add_tag_button": "on_add_tag",
@@ -330,118 +583,172 @@ var DomainLeaf = DomainNode.extend({
         "click .o_domain_leaf_value_remove_tag_button": "on_remove_tag",
     }),
     custom_events: {
-        "field_chain_changed": function (e) {
-            this.onChainChange(e.data.chain);
-        },
+        "field_chain_changed": "_onFieldChainChange",
     },
-    /// @see DomainNode.init
+    /**
+     * @see DomainNode.init
+     */
     init: function (parent, model, domain, options) {
         this._super.apply(this, arguments);
 
-        domain = domainUtils.stringToDomain(domain);
-        this.chain = domain[0][0];
-        this.operator = domain[0][1];
-        this.value = domain[0][2];
+        var currentDomain = Domain.prototype.stringToArray(domain);
+        this.chain = currentDomain[0][0];
+        this.operator = currentDomain[0][1];
+        this.value = currentDomain[0][2];
 
         this.operator_mapping = operator_mapping;
     },
+    /**
+     * Prepares the information the rendering of the widget will need by
+     * pre-instantiating its internal field selector widget.
+     *
+     * @returns {Deferred}
+     */
     willStart: function () {
         var defs = [this._super.apply(this, arguments)];
 
-        if (!this.readonly) {
-            // In edit mode, instantiate a field selector. This is done here in willStart and prepared by
-            // appending it to a dummy element because the DomainLeaf rendering need some information which
-            // cannot be computed before the ModelFieldSelector is fully rendered (TODO).
-            this.fieldSelector = new ModelFieldSelector(this, this.model, this.chain, this.options);
-            defs.push(this.fieldSelector.appendTo($("<div/>")).then((function () {
-                var wDefs = [];
+        // In edit mode, instantiate a field selector. This is done here in
+        // willStart and prepared by appending it to a dummy element because the
+        // DomainLeaf rendering need some information which cannot be computed
+        // before the ModelFieldSelector is fully rendered (TODO).
+        this.fieldSelector = new ModelFieldSelector(
+            this,
+            this.model,
+            this.chain ? this.chain.split(".") : [],
+            this.options
+        );
+        defs.push(this.fieldSelector.appendTo($("<div/>")).then((function () {
+            var wDefs = [];
 
+            if (!this.readonly) {
                 // Set list of operators according to field type
-                this.operators = this._getOperatorsFromType(this.fieldSelector.selectedField.type);
+                var selectedField = this.fieldSelector.getSelectedField() || {};
+                this.operators = this._getOperatorsFromType(selectedField.type);
                 if (_.contains(["child_of", "parent_of", "like", "not like", "=like", "=ilike"], this.operator)) {
                     // In case user entered manually or from demo data
                     this.operators[this.operator] = operator_mapping[this.operator];
                 } else if (!this.operators[this.operator]) {
-                    this.operators[this.operator] = "?"; // In case the domain uses an unsupported operator for the field type
+                    // In case the domain uses an unsupported operator for the
+                    // field type
+                    this.operators[this.operator] = "?";
                 }
 
                 // Set list of values according to field type
                 this.selectionChoices = null;
-                if (this.fieldSelector.selectedField.type === "boolean") {
+                if (selectedField.type === "boolean") {
                     this.selectionChoices = [["1", "set (true)"], ["0", "not set (false)"]];
-                } else if (this.fieldSelector.selectedField.type === "selection") {
-                    this.selectionChoices = this.fieldSelector.selectedField.selection;
+                } else if (selectedField.type === "selection") {
+                    this.selectionChoices = selectedField.selection;
                 }
 
                 // Adapt display value and operator for rendering
                 this.displayValue = this.value;
                 try {
-                    var f = this.fieldSelector.selectedField;
-                    if (!f.relation) { // TODO in this case, the value should be m2o input, etc...
-                        this.displayValue = formats.format_value(this.value, this.fieldSelector.selectedField);
+                    if (selectedField && !selectedField.relation && !_.isArray(this.value)) {
+                        this.displayValue = field_utils.format[selectedField.type](this.value, selectedField);
                     }
                 } catch (err) {/**/}
                 this.displayOperator = this.operator;
-                if (this.fieldSelector.selectedField.type === "boolean") {
+                if (selectedField.type === "boolean") {
                     this.displayValue = this.value ? "1" : "0";
                 } else if ((this.operator === "!=" || this.operator === "=") && this.value === false) {
                     this.displayOperator = this.operator === "!=" ? "set" : "not set";
                 }
 
                 // TODO the value could be a m2o input, etc...
-                if (_.contains(["date", "datetime"], this.fieldSelector.selectedField.type)) {
-                    this.valueWidget = new (this.fieldSelector.selectedField.type === "datetime" ? datepicker.DateTimeWidget : datepicker.DateWidget)(this);
+                if (_.contains(["date", "datetime"], selectedField.type)) {
+                    this.valueWidget = new (selectedField.type === "datetime" ? datepicker.DateTimeWidget : datepicker.DateWidget)(this);
                     wDefs.push(this.valueWidget.appendTo("<div/>").then((function () {
                         this.valueWidget.$el.addClass("o_domain_leaf_value_input");
-                        this.valueWidget.set_value(this.value);
+                        this.valueWidget.set_value(moment(this.value));
                         this.valueWidget.on("datetime_changed", this, function () {
-                            this.onValueChange(this.valueWidget.get_value());
+                            this._changeValue(this.valueWidget.get_value());
                         });
                     }).bind(this)));
                 }
 
                 return $.when.apply($, wDefs);
-            }).bind(this)));
-        }
+            }
+        }).bind(this)));
 
         return $.when.apply($, defs);
     },
+    /**
+     * @see DomainNode.start
+     * Appends the prepared field selector and value widget.
+     *
+     * @returns {Deferred}
+     */
     start: function () {
-        if (!this.readonly) { // In edit mode ...
-            this.fieldSelector.$el.prependTo(this.$("> .o_domain_leaf_edition")); // ... place the field selector
-            if (this.valueWidget) { // ... and place the value widget if any
-                this.$(".o_domain_leaf_value_input").replaceWith(this.valueWidget.$el);
-            }
+        this.fieldSelector.$el.prependTo(this.$("> .o_domain_leaf_info, > .o_domain_leaf_edition")); // place the field selector
+        if (!this.readonly && this.valueWidget) { // In edit mode, place the value widget if any
+            this.$(".o_domain_leaf_value_input").replaceWith(this.valueWidget.$el);
         }
         return this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see DomainNode.isValid
+     * @returns {boolean}
+     */
+    isValid: function () {
+        return this.fieldSelector && this.fieldSelector.isValid();
+    },
+    /**
+     * @see DomainNode.getDomain
+     * @returns {Array}
+     */
     getDomain: function () {
         return [[this.chain, this.operator, this.value]];
     },
-    /// The onChainChange method handles a field chain change in the domain. In that case, the operator
-    /// should be adapted to a valid one for the new field and the value should also be adapted to the
-    /// new field and/or operator.
-    /// @param chain - the new field chain (string)
-    /// @param silent - true if the method call should not trigger_up a domain_changed event
-    /// @trigger_up domain_changed event to ask for a re-rendering
-    onChainChange: function (chain, silent) {
-        this.chain = chain;
 
-        var operators = this._getOperatorsFromType(this.fieldSelector.selectedField.type);
-        if (operators[this.operator] === undefined) {
-            this.onOperatorChange("=", true);
-        }
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-        this.onValueChange(this.value, true);
+    /**
+     * Handles a field chain change in the domain. In that case, the operator
+     * should be adapted to a valid one for the new field and the value should
+     * also be adapted to the new field and/or operator.
+     *
+     * -> trigger_up domain_changed event to ask for a re-rendering (if not
+     * silent)
+     *
+     * @param {string[]} chain - the new field chain
+     * @param {boolean} silent - true if the method call should not trigger_up a
+     *                         domain_changed event
+     */
+    _changeFieldChain: function (chain, silent) {
+        this.chain = chain.join(".");
+        this.fieldSelector.setChain(chain).then((function () {
+            if (!this.fieldSelector.isValid()) return;
 
-        if (!silent) this.trigger_up("domain_changed", {child: this});
+            var selectedField = this.fieldSelector.getSelectedField() || {};
+            var operators = this._getOperatorsFromType(selectedField.type);
+            if (operators[this.operator] === undefined) {
+                this._changeOperator("=", true);
+            }
+            this._changeValue(this.value, true);
+
+            if (!silent) this.trigger_up("domain_changed", {child: this});
+        }).bind(this));
     },
-    /// The onOperatorChange method handles an operator change in the domain. In that case, the value
-    /// should be adapted to a valid one for the new operator.
-    /// @param operator - the new operator
-    /// @param silent - true if the method call should not trigger_up a domain_changed event
-    /// @trigger_up domain_changed event to ask for a re-rendering
-    onOperatorChange: function (operator, silent) {
+    /**
+     * Handles an operator change in the domain. In that case, the value should
+     * be adapted to a valid one for the new operator.
+     *
+     * -> trigger_up domain_changed event to ask for a re-rendering
+     * (if not silent)
+     *
+     * @param {string} operator - the new operator
+     * @param {boolean} silent - true if the method call should not trigger_up a
+     *                         domain_changed event
+     */
+    _changeOperator: function (operator, silent) {
         this.operator = operator;
 
         if (_.contains(["set", "not set"], this.operator)) {
@@ -453,47 +760,65 @@ var DomainLeaf = DomainNode.extend({
             if (_.isArray(this.value)) {
                 this.value = this.value.join(",");
             }
-            this.onValueChange(this.value, true);
+            this._changeValue(this.value, true);
         }
 
         if (!silent) this.trigger_up("domain_changed", {child: this});
     },
-    /// The onValueChange method handles a formatted value change in the domain. In that case, the value
-    /// should be adapted to a valid technical one.
-    /// @param value - the new formatted value
-    /// @param silent - true if the method call should not trigger_up a domain_changed event
-    /// @trigger_up domain_changed event to ask for a re-rendering
-    onValueChange: function (value, silent) {
+    /**
+     * Handles a formatted value change in the domain. In that case, the value
+     * should be adapted to a valid technical one.
+     *
+     * -> trigger_up "domain_changed" event to ask for a re-rendering (if not
+     * silent)
+     *
+     * @param {*} value - the new formatted value
+     * @param {boolean} silent - true if the method call should not trigger_up a
+     *                         domain_changed event
+     */
+    _changeValue: function (value, silent) {
         var couldNotParse = false;
+        var selectedField = this.fieldSelector.getSelectedField() || {};
         try {
-            this.value = formats.parse_value(value, this.fieldSelector.selectedField);
+            this.value = field_utils.parse[selectedField.type](value, selectedField);
         } catch (err) {
             this.value = value;
             couldNotParse = true;
         }
 
-        if (this.fieldSelector.selectedField.type === "boolean") {
+        if (selectedField.type === "boolean") {
             if (!_.isBoolean(this.value)) { // Convert boolean-like value to boolean
                 this.value = !!parseFloat(this.value);
             }
-        } else if (this.fieldSelector.selectedField.type === "selection") {
-            if (!_.some(this.fieldSelector.selectedField.selection, (function (option) { return option[0] === this.value; }).bind(this))) {
-                this.value = this.fieldSelector.selectedField.selection[0][0];
+        } else if (selectedField.type === "selection") {
+            if (!_.some(selectedField.selection, (function (option) { return option[0] === this.value; }).bind(this))) {
+                this.value = selectedField.selection[0][0];
             }
-        } else if (_.contains(["date", "datetime"], this.fieldSelector.selectedField.type)) {
+        } else if (_.contains(["date", "datetime"], selectedField.type)) {
             if (couldNotParse || _.isBoolean(this.value)) {
-                this.value = formats.parse_value(formats.format_value(Date.now(), this.fieldSelector.selectedField), this.fieldSelector.selectedField);
+                this.value = field_utils.parse[selectedField.type](field_utils.format[selectedField.type](moment())).toJSON(); // toJSON to get date with server format
+            } else {
+                this.value = this.value.toJSON(); // toJSON to get date with server format
             }
         } else {
-            if (_.isBoolean(this.value)) { // Never display "true" or "false" strings from boolean value
+            // Never display "true" or "false" strings from boolean value
+            if (_.isBoolean(this.value)) {
                 this.value = "";
+            } else if (_.isObject(this.value) && !_.isArray(this.value)) { // Can be object if parsed to x2x representation
+                this.value = this.value.id || "";
             }
         }
 
         if (!silent) this.trigger_up("domain_changed", {child: this});
     },
-    /// The private _getOperatorsFromType returns the mapping of "technical operator" to "display operator value"
-    /// of the operators which are available for the given field type.
+    /**
+     * Returns the mapping of "technical operator" to "display operator value"
+     * of the operators which are available for the given field type.
+     *
+     * @private
+     * @param {string} type - the field type
+     * @returns {Object} a map of all associated operators and their label
+     */
     _getOperatorsFromType: function (type) {
         var operators = {};
 
@@ -544,6 +869,40 @@ var DomainLeaf = DomainNode.extend({
         return operators;
     },
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the operator select value is change -> change the operator
+     * internal state and adapt
+     *
+     * @param {Event} e
+     */
+    _onOperatorSelectChange: function (e) {
+        this._changeOperator($(e.currentTarget).val());
+    },
+    /**
+     * Called when the value input value is changed -> change the internal value
+     * state and adapt
+     *
+     * @param {Event} e
+     */
+    _onValueInputChange: function (e) {
+        if (e.currentTarget !== e.target) return;
+        this._changeValue($(e.currentTarget).val());
+    },
+    /**
+     * Called when the field selector value is changed -> change the internal
+     * chain state and adapt
+     *
+     * @param {OdooEvent} e
+     */
+    _onFieldChainChange: function (e) {
+        this._changeFieldChain(e.data.chain);
+    },
+
+    // TODO The two following functions should be in an independant widget
     on_add_tag: function (e) {
         if (e.type === "keyup" && e.which !== $.ui.keyCode.ENTER) return;
         if (!_.contains(["not in", "in"], this.operator)) return;
@@ -554,7 +913,7 @@ var DomainLeaf = DomainNode.extend({
         var val = $input.val().trim();
         if (val && values.indexOf(val) < 0) {
             values.push(val);
-            _.defer(this.onValueChange.bind(this, values));
+            _.defer(this._changeValue.bind(this, values));
             $input.focus();
         }
     },
@@ -565,13 +924,21 @@ var DomainLeaf = DomainNode.extend({
         var index = values.indexOf(val);
         if (index >= 0) {
             values.splice(index, 1);
-            _.defer(this.onValueChange.bind(this, values));
+            _.defer(this._changeValue.bind(this, values));
         }
     },
 });
 
-/// The instantiateNode function instantiates a DomainTree if the given domain contains
-/// several parts and a DomainLeaf if it only contains one part. Returns null otherwise.
+/**
+ * Instantiates a DomainTree if the given domain contains several parts and a
+ * DomainLeaf if it only contains one part. Returns null otherwise.
+ *
+ * @param {Object} parent
+ * @param {string} model - the model name
+ * @param {Array|string} domain - the prefix representation of the domain
+ * @param {Object} options - @see DomainNode.init.options
+ * @returns {DomainTree|DomainLeaf|null}
+ */
 function instantiateNode(parent, model, domain, options) {
     if (domain.length > 1) {
         return new DomainTree(parent, model, domain, options);

@@ -2,7 +2,7 @@ odoo.define('barcodes.BarcodeEvents', function(require) {
 "use strict";
 
 var core = require('web.core');
-var mixins = core.mixins;
+var mixins = require('web.mixins');
 
 
 // For IE >= 9, use this, new CustomEvent(), instead of new Event()
@@ -154,7 +154,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         // have no way of redispatching 'genuine' key events. Resent events
         // don't trigger native event handlers of elements. So this means that
         // our fake events will not appear in eg. an <input> element.
-        if (this.element_is_editable(e.target) && e.target.getAttribute("barcode_events") !== "true")
+        if ((this.element_is_editable(e.target) && !$(e.target).data('enableBarcode')) && e.target.getAttribute("barcode_events") !== "true")
             return;
 
         // Catch and buffer the event

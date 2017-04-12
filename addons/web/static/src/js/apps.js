@@ -3,15 +3,12 @@ odoo.define('web.Apps', function (require) {
 
 var core = require('web.core');
 var framework = require('web.framework');
-var Model = require('web.DataModel');
 var session = require('web.session');
-var web_client = require('web.web_client');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 
 var apps_client = null;
-var qweb = core.qweb;
 
 var Apps = Widget.extend({
     template: 'EmptyComponent',
@@ -25,7 +22,8 @@ var Apps = Widget.extend({
     },
 
     get_client: function() {
-        // return the client via a deferred, resolved or rejected depending if the remote host is available or not.
+        // return the client via a deferred, resolved or rejected depending if
+        // the remote host is available or not.
         var check_client_available = function(client) {
             var d = $.Deferred();
             var i = new Image();
@@ -42,21 +40,21 @@ var Apps = Widget.extend({
         if (apps_client) {
             return check_client_available(apps_client);
         } else {
-            var Mod = new Model('ir.module.module');
-            return Mod.call('get_apps_server').then(function(u) {
-                var link = $(_.str.sprintf('<a href="%s"></a>', u))[0];
-                var host = _.str.sprintf('%s//%s', link.protocol, link.host);
-                var dbname = link.pathname;
-                if (dbname[0] === '/') {
-                    dbname = dbname.substr(1);
-                }
-                var client = {
-                    origin: host,
-                    dbname: dbname
-                };
-                apps_client = client;
-                return check_client_available(client);
-            });
+            return this._rpc({model: 'ir.module.module', method: 'get_apps_server'})
+                .then(function(u) {
+                    var link = $(_.str.sprintf('<a href="%s"></a>', u))[0];
+                    var host = _.str.sprintf('%s//%s', link.protocol, link.host);
+                    var dbname = link.pathname;
+                    if (dbname[0] === '/') {
+                        dbname = dbname.substr(1);
+                    }
+                    var client = {
+                        origin: host,
+                        dbname: dbname
+                    };
+                    apps_client = client;
+                    return check_client_available(client);
+                });
         }
     },
 
@@ -91,11 +89,11 @@ var Apps = Widget.extend({
                 });
             },
             'Model': function(m) {
-                var M = new Model(m.model);
-                M[m.method].apply(M, m.args).then(function(r) {
-                    var w = self.$ifr[0].contentWindow;
-                    w.postMessage({id: m.id, result: r}, client.origin);
-                });
+                return this._rpc({model: m.model, method: m.method, args: m.args})
+                    .then(function(r) {
+                        var w = self.$ifr[0].contentWindow;
+                        w.postMessage({id: m.id, result: r}, client.origin);
+                    });
             },
         };
         // console.log(e.data);

@@ -1,10 +1,10 @@
 odoo.define('website_links.charts', function (require) {
 'use strict';
 
+var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website = require('website.website');
-var Model = require('web.Model');
 
 var exports = {};
 
@@ -130,33 +130,52 @@ if(!$('.o_website_links_chart').length) {
         // Get the code of the link
         var link_id = $('#link_id').val();
 
-        var clicks = new Model('link.tracker.click');
         var links_domain = ['link_id', '=', parseInt(link_id)];
 
         var total_clicks = function() {
-            return clicks.call('search_count', [[links_domain]]);
+            return rpc.query({
+                    model: 'link.tracker.click',
+                    method: 'search_count',
+                    args: [[links_domain]],
+                });
         };
 
         var clicks_by_day = function() {
-            return clicks.call('read_group', [[links_domain], ['create_date']],
-                               {'groupby':'create_date:day'});
+            return rpc.query({
+                    model: 'link.tracker.click',
+                    method: 'read_group',
+                    args: [[links_domain], ['create_date']],
+                    kwargs: {groupby:'create_date:day'},
+                });
         };
 
         var clicks_by_country = function() {
-            return clicks.call('read_group',  [[links_domain], ['country_id']], 
-                               {'groupby':'country_id'});
+            return rpc.query({
+                    model: 'link.tracker.click',
+                    method: 'read_group',
+                    args: [[links_domain], ['country_id']],
+                    kwargs: {groupby:'country_id'},
+                });
         };
 
         var last_week_clicks_by_country = function() {
             var interval = moment().subtract(7, 'days').format("YYYY-MM-DD");
-            return clicks.call('read_group', [[links_domain, ['create_date', '>', interval]], ['country_id']],
-                               {'groupby':'country_id'});
+            return rpc.query({
+                    model: 'link.tracker.click',
+                    method: 'read_group',
+                    args: [[links_domain, ['create_date', '>', interval]], ['country_id']],
+                    kwargs: {groupby:'country_id'},
+                });
         };
 
         var last_month_clicks_by_country = function() {
             var interval = moment().subtract(30, 'days').format("YYYY-MM-DD");
-            return clicks.call('read_group', [[links_domain, ['create_date', '>', interval]], ['country_id']],
-                               {'groupby':'country_id'});
+            return rpc.query({
+                    model: 'link.tracker.click',
+                    method: 'read_group',
+                    args: [[links_domain, ['create_date', '>', interval]], ['country_id']],
+                    kwargs: {groupby: 'country_id'},
+                });
         };
 
         $.when(total_clicks(), 

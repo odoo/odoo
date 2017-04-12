@@ -1,44 +1,48 @@
 odoo.define('account.payment', function (require) {
 "use strict";
 
+var AbstractField = require('web.AbstractField');
 var core = require('web.core');
-var form_common = require('web.form_common');
-var formats = require('web.formats');
-var Model = require('web.Model');
+var field_registry = require('web.field_registry');
+var field_utils = require('web.field_utils');
 
 var QWeb = core.qweb;
 
-var ShowPaymentLineWidget = form_common.AbstractField.extend({
-    render_value: function() {
+
+var ShowPaymentLineWidget = AbstractField.extend({
+    render: function() {
         var self = this;
-        var info = JSON.parse(this.get('value'));
+        var info = JSON.parse(this.value);
         var invoice_id = info.invoice_id;
         if (info !== false) {
             _.each(info.content, function(k,v){
                 k.index = v;
-                k.amount = formats.format_value(k.amount, {type: "float", digits: k.digits});
+                k.amount = field_utils.format.float(k.amount, {digits: k.digits});
                 if (k.date){
-                    k.date = formats.format_value(k.date, {type: "date"});
+                    k.date = field_utils.format.date(k.date);
                 }
             });
             this.$el.html(QWeb.render('ShowPaymentInfo', {
-                'lines': info.content, 
-                'outstanding': info.outstanding, 
+                'lines': info.content,
+                'outstanding': info.outstanding,
                 'title': info.title
             }));
             this.$('.outstanding_credit_assign').click(function(){
                 var id = $(this).data('id') || false;
-                new Model("account.invoice")
-                    .call("assign_outstanding_credit", [invoice_id, id])
-                    .then(function (result) {
-                        self.view.reload();
-                    });
+                self.trigger_up('perform_model_rpc', {
+                    model: 'account.invoice',
+                    method: 'assign_outstanding_credit',
+                    args: [invoice_id, id],
+                    on_success: function () {
+                        self.trigger_up('reload');
+                    }
+                });
             });
             _.each(this.$('.js_payment_info'), function(k, v){
                 var options = {
                     'content': QWeb.render('PaymentPopOver', {
-                            'name': info.content[v].name, 
-                            'journal_name': info.content[v].journal_name, 
+                            'name': info.content[v].name,
+                            'journal_name': info.content[v].journal_name,
                             'date': info.content[v].date,
                             'amount': info.content[v].amount,
                             'currency': info.content[v].currency,
@@ -54,20 +58,23 @@ var ShowPaymentLineWidget = form_common.AbstractField.extend({
                     'delay': { "show": 0, "hide": 100 },
                 };
                 $(k).popover(options);
-                $(k).on('shown.bs.popover', function(event){
+                $(k).on('shown.bs.popover', function(){
                     $(this).parent().find('.js_unreconcile_payment').click(function(){
-                        var payment_id = parseInt($(this).attr('payment-id'))
-                        if (payment_id !== undefined && payment_id !== NaN){
-                            new Model("account.move.line")
-                                .call("remove_move_reconcile", [payment_id, {'invoice_id': self.view.datarecord.id}])
-                                .then(function (result) {
-                                    self.view.reload();
-                                });
+                        var payment_id = parseInt($(this).attr('payment-id'));
+                        if (payment_id !== undefined && !isNaN(payment_id)){
+                            self.trigger_up('perform_model_rpc', {
+                                model: 'account.move.line',
+                                method: 'remove_move_reconcile',
+                                args: [payment_id, {'invoice_id': self.res_id}],
+                                on_success: function () {
+                                    self.trigger_up('reload');
+                                }
+                            });
                         }
                     });
                     $(this).parent().find('.js_open_payment').click(function(){
-                        var move_id = parseInt($(this).attr('move-id'))
-                        if (move_id !== undefined && move_id !== NaN){
+                        var move_id = parseInt($(this).attr('move-id'));
+                        if (move_id !== undefined && !isNaN(move_id)){
                             //Open form view of account.move with id = move_id
                             self.do_action({
                                 type: 'ir.actions.act_window',
@@ -85,8 +92,11 @@ var ShowPaymentLineWidget = form_common.AbstractField.extend({
             this.$el.html('');
         }
     },
+    has_no_value: function() {
+        return false;
+    }
 });
 
-core.form_widget_registry.add('payment', ShowPaymentLineWidget);
+field_registry.add('payment', ShowPaymentLineWidget);
 
 });

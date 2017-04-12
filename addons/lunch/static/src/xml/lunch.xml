@@ -7,24 +7,20 @@
         <p class="text-muted">Don't forget the alerts displayed in the reddish area</p>
     </div>
     <t t-name="LunchPreviousOrdersWidgetList">
-        <div t-foreach="categories" t-as="supplier" class="col-md-4">
-            <h3><t t-esc="supplier"/></h3>
-            <div t-foreach='categories[supplier]' t-as='order' class="o_lunch_vignette">
-                <button type="button" class="pull-right o_add_button oe_edit_only oe_link" t-att-data-id="order.line_id">
+        <div t-foreach="categories" t-as="product_category" class="col-sm-4">
+            <h3><t t-esc="product_category"/></h3>
+            <div t-foreach='categories[product_category]' t-as='product' class="o_lunch_vignette">
+                <button type="button" class="pull-right o_add_button oe_edit_only oe_link" t-att-data-id="product.id">
                     <span class="fa fa-plus-square"></span>
                     <span>Add</span>
                 </button>
-                <div>
+                <div class="o_lunch_text">
                     <div class="badge pull-right">
-                        <t t-if="order.position === 'before'"><t t-esc="order.currency"/></t>
-                        <span class="o_lunch_price"><t t-esc="order.price_format"></t></span>
-                        <t t-if="order.position === 'after'"><t t-esc="order.currency"/></t>
+                        <t t-esc="widget.format_value(product.price)"/> <t t-esc="product.currency_id[1]"/>
                     </div>
-                    <t t-esc="order.product_name"/>
+                    <t t-esc="product.product_id[1]"/>
                 </div>
-                <div class="text-muted">
-                    <t t-if="order.note != false" t-esc="order.note"/>
-                </div>
+                <div class="text-muted"><t t-if="product.note != false" t-esc="product.note"/></div>
             </div>
         </div>
     </t>
