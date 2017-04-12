@@ -273,6 +273,14 @@ class IrModel(models.Model):
 
         return CustomModel
 
+    def _add_manual_models(self):
+        """ Add extra models to the registry. """
+        cr = self.env.cr
+        cr.execute('SELECT * FROM ir_model WHERE state=%s', ['manual'])
+        for model_data in cr.dictfetchall():
+            model_class = self._instanciate(model_data)
+            model_class._build_model(self.pool, cr)
+
 
 # retrieve field types defined by the framework only (not extensions)
 FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]
@@ -612,7 +620,7 @@ class IrModelFields(models.Model):
                 if not self.search([('model_id', '=', vals['relation']), ('name', '=', vals['relation_field']), ('ttype', '=', 'many2one')]):
                     raise UserError(_("Many2one %s on model %s does not exist!") % (vals['relation_field'], vals['relation']))
 
-            self.pool.clear_manual_fields()
+            self.clear_caches()
 
             if vals['model'] in self.pool:
                 # setup models; this re-initializes model in registry
@@ -672,7 +680,7 @@ class IrModelFields(models.Model):
 
         res = super(IrModelFields, self).write(vals)
 
-        self.pool.clear_manual_fields()
+        self.clear_caches()
 
         if column_rename:
             # rename column in database, and its corresponding index if present
@@ -779,6 +787,7 @@ class IrModelFields(models.Model):
 
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """
+        self.clear_caches()
         for field in model._fields.itervalues():
             self._reflect_field(field)
 
@@ -820,7 +829,7 @@ class IrModelFields(models.Model):
             if not self.pool.loaded and not (
                 field_data['relation'] in self.env and (
                     field_data['relation_field'] in self.env[field_data['relation']]._fields or
-                    field_data['relation_field'] in self.pool.get_manual_fields(self._cr, field_data['relation'])
+                    field_data['relation_field'] in self._existing_field_data(field_data['relation'])
             )):
                 return
             attrs['comodel_name'] = field_data['relation']
@@ -845,6 +854,15 @@ class IrModelFields(models.Model):
         attrs = self._instanciate_attrs(field_data)
         if attrs:
             return fields.Field.by_type[field_data['ttype']](**attrs)
+
+    def _add_manual_fields(self, model):
+        """ Add extra fields on model. """
+        fields_data = self._existing_field_data(model._name)
+        for name, field_data in fields_data.iteritems():
+            if name not in model._fields and field_data['state'] == 'manual':
+                field = self._instanciate(field_data)
+                if field:
+                    model._add_field(name, field)
 
 
 class IrModelConstraint(models.Model):

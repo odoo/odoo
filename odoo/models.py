@@ -536,18 +536,6 @@ class BaseModel(object):
             child_class = pool[child_name]
             child_class._build_model_attributes(pool)
 
-    @api.model
-    def _add_manual_fields(self):
-        if not self.pool._init_modules:
-            return
-        IrModelFields = self.env['ir.model.fields']
-        manual_fields = self.pool.get_manual_fields(self._cr, self._name)
-        for name, field_data in manual_fields.iteritems():
-            if name not in self._fields:
-                field = IrModelFields._instanciate(field_data)
-                if field:
-                    self._add_field(name, field)
-
     @classmethod
     def _init_constraints_onchanges(cls):
         # store sql constraint error messages
@@ -2317,8 +2305,9 @@ class BaseModel(object):
 
         cls.pool.model_cache[cls._model_cache_key] = cls
 
-        # 2. add custom fields
-        self._add_manual_fields()
+        # 2. add manual fields
+        if self.pool._init_modules:
+            self.env['ir.model.fields']._add_manual_fields(self)
 
         # 3. make sure that parent models determine their own fields, then add
         # inherited fields to cls
