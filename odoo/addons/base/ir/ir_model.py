@@ -457,6 +457,10 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
+        self = self.filtered(lambda record: record.state == 'manual')
+        if not self:
+            return
+
         for record in self:
             model = self.env[record.model]
             field = model._fields[record.name]
