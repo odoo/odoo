@@ -542,7 +542,7 @@ class IrTranslation(models.Model):
                 mname, fname = trans.name.split(',')
                 record = trans.env[mname].browse(trans.res_id)
                 field = record._fields[fname]
-                if callable(field.translate):
+                if callable(field.translate) and field.type != 'html':
                     # check whether applying (trans.src -> trans.value) then
                     # (trans.value -> trans.src) gives the original value back
                     value0 = field.translate(lambda term: None, record[fname])
