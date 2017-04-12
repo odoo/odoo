@@ -18,6 +18,7 @@ QUnit.module('Views', {
                     date: {string: "Date", type: "date", store: true},
                     product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
                     non_stored_m2o: {string: "Non Stored M2O", type: "many2one", relation: 'product'},
+                    customer: {string: "Customer", type: "many2one", relation: 'customer', store: true},
                 },
                 records: [
                     {
@@ -26,23 +27,27 @@ QUnit.module('Views', {
                         bar: true,
                         date: '2016-12-14',
                         product_id: 37,
+                        customer: 1,
                     }, {
                         id: 2,
                         foo: 1,
                         bar: true,
                         date: '2016-10-26',
                         product_id: 41,
+                        customer: 2,
                     }, {
                         id: 3,
                         foo: 17,
                         bar: true,
                         date: '2016-12-15',
                         product_id: 41,
+                        customer: 2,
                     }, {id: 4,
                         foo: 2,
                         bar: false,
                         date: '2016-04-11',
                         product_id: 41,
+                        customer: 1,
                     },
                 ]
             },
@@ -56,6 +61,18 @@ QUnit.module('Views', {
                 }, {
                     id: 41,
                     display_name: "xpad",
+                }]
+            },
+            customer: {
+                fields: {
+                    name: {string: "Customer Name", type: "char"}
+                },
+                records: [{
+                    id: 1,
+                    display_name: "First",
+                }, {
+                    id: 2,
+                    display_name: "Second",
                 }]
             },
         };
@@ -529,6 +546,47 @@ QUnit.module('Views', {
 
         assert.strictEqual($('td.o_pivot_cell_value').text(), "321220",
             "should have proper values in cells (total, result 1, result 2");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('can expand all rows', function (assert) {
+        // FIXME: This test depends on an incomplete behavior of the mock server
+        //        and will need to be updated when read_group can group on
+        //        multiple field levels.
+        assert.expect(4);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="foo" type="measure"/>' +
+                        '<field name="product_id" type="row"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('td.o_pivot_cell_value').text(), "321220",
+            "should have proper values in cells (total, result 1, result 2");
+
+        // expand on date:days, product
+        pivot.update({groupBy: ['date:days', 'product']});
+
+        assert.strictEqual(pivot.$('tbody tr').length, 7,
+            "should have 7 rows (total + 2 for each category)");
+
+        // collapse the last two rows
+        pivot.$('.o_pivot_header_cell_opened').last().click();
+        pivot.$('.o_pivot_header_cell_opened').last().click();
+
+        assert.strictEqual(pivot.$('tbody tr').length, 5,
+            "should have 5 rows now");
+
+        // expand all
+        $('.o_pivot_expand_button').click();
+
+        assert.strictEqual(pivot.$('tbody tr').length, 7,
+            "should have 7 rows again");
 
         pivot.destroy();
     });
