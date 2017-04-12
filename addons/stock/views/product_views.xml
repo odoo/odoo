@@ -131,13 +131,13 @@
                                 <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
                             </group>
                             <group name="group_lots_and_weight">
-                                <label for="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
-                                <div class="o_row" name="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                <label for="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
+                                <div class="o_row" name="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
                                     <field name="weight"/>
                                 </div>
                                 <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>
-                                <label for="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
-                                <div class="o_row" name="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                <label for="volume" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
+                                <div class="o_row" name="volume" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
                                     <field name="volume" string="Volume"/>
                                 </div>
                             </group>
