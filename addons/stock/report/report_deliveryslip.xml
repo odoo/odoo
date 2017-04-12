@@ -19,6 +19,9 @@
                                 <div t-field="o.partner_id"
                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True}'/>
                             </div>
+                            <div t-if="not (o.move_lines and o.move_lines[0].partner_id) and o.partner_id" name="partner_header">
+                                   t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                            </div>
                         </div>
                     </div>
                     <h2>
