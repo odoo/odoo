@@ -232,7 +232,7 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
     _create_new_widget: function (name) {
         this[name] = new (this._get_widget_class())(this);
         return this[name].appendTo(this.$el).then((function () {
-            this[name].set_value(new Date());
+            this[name].set_value(moment(new Date()));
         }).bind(this));
     },
     _get_widget_class: function () {
