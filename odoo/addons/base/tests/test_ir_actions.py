@@ -198,7 +198,7 @@ class TestCustomFields(common.TransactionCase):
             registry.leave_test_mode()
             # the tests may have modified the registry, reset it
             with registry.cursor() as cr:
-                registry.clear_manual_fields()
+                registry.clear_caches()
                 registry.setup_models(cr)
                 assert set(registry[self.MODEL]._fields) == fnames
 
