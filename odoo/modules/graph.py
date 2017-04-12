@@ -91,7 +91,7 @@ class Graph(dict):
             deps = info['depends']
 
             # if all dependencies of 'package' are already in the graph, add 'package' in the graph
-            if reduce(lambda x, y: x and y in self, deps, True):
+            if all(dep in self for dep in deps):
                 if not package in current:
                     packages.pop(0)
                     continue

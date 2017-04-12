@@ -458,6 +458,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 }
         """
         IrModule = self.env['ir.module.module']
+        Groups = self.env['res.groups']
         ref = self.env.ref
 
         defaults, groups, modules, others = [], [], [], []
@@ -467,7 +468,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             elif name.startswith('group_') and field.type in ('boolean', 'selection') and \
                     hasattr(field, 'implied_group'):
                 field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
-                field_groups = reduce(add, map(ref, field_group_xmlids))
+                field_groups = Groups.concat(*map(ref, field_group_xmlids))
                 groups.append((name, field_groups, ref(field.implied_group)))
             elif name.startswith('module_') and field.type in ('boolean', 'selection'):
                 module = IrModule.sudo().search([('name', '=', name[7:])], limit=1)

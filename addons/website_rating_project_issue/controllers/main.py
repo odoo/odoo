@@ -45,7 +45,7 @@ class WebsiteRatingProject(http.Controller):
             domdate = domain + [('create_date', '<=', yesterday), ('create_date', '>=', todate)]
             stats[x] = {1: 0, 5: 0, 10: 0}
             rating_stats = request.env['rating.rating'].read_group(domdate, [], ['rating'])
-            total = reduce(lambda x, y: y['rating_count'] + x, rating_stats, 0)
+            total = sum(st['rating_count'] for st in rating_stats)
             for rate in rating_stats:
                 stats[x][rate['rating']] = float("%.2f" % (rate['rating_count'] * 100.0 / total))
         return {'ratings': ratings, 'stats': stats}

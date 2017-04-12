@@ -99,6 +99,21 @@ Removed Operators
 These two operators were long recommended against/deprecated in Python 2,
 Python 3 removed them from the language.
 
+Removed/renamed builtins
+------------------------
+
+``reduce``
+##########
+
+In Python 3, ``reduce`` has been demoted from builtin to ``functools.reduce``.
+However this is because many (if not most) uses of ``reduce`` can be replaced
+by ``sum``, ``all``, ``any`` or a list comprehension for a more readable and
+faster result.
+
+It is easy enough to just add ``from functools import reduce`` to the file
+and compatible with Python 2.6 and later, but consider whether you get better
+code by replacing it with some other method altogether.
+
 Removed/renamed methods
 -----------------------
 

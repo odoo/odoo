@@ -599,7 +599,7 @@ class PoFile(object):
 
                           % { 'project': release.description,
                               'version': release.version,
-                              'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
+                              'modules': ''.join("#\t* %s\n" % m for m in modules),
                               'now': datetime.utcnow().strftime('%Y-%m-%d %H:%M')+"+0000",
                             }
                           )

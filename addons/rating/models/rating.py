@@ -217,8 +217,8 @@ class RatingMixin(models.AbstractModel):
             rating_number = sum(values.values())
             result = {
                 'repartition': values,
-                'avg': sum([float(key * values[key]) for key in values]) / rating_number if rating_number > 0 else 0,
-                'total': reduce(lambda x, y: y['rating_count'] + x, data, 0),
+                'avg': sum(float(key * values[key]) for key in values) / rating_number if rating_number > 0 else 0,
+                'total': sum(it['rating_count'] for it in data),
             }
             return result
         return values
