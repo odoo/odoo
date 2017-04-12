@@ -434,7 +434,8 @@ class Task(models.Model):
         default_partner = self.env['res.partner'].browse(default_partner_id) if default_partner_id else None
         if self.project_id:
             self.partner_id = self.project_id.partner_id or default_partner
-            self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+            if self.project_id not in self.stage_id.project_ids:
+                self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
             self.partner_id = default_partner
             self.stage_id = False
