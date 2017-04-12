@@ -876,8 +876,7 @@ class expression(object):
             # Making search easier when there is a left operand as one2many or many2many
             elif len(path) > 1 and field.store and field.type in ('many2many', 'one2many'):
                 right_ids = comodel.search([('.'.join(path[1:]), operator, right)]).ids
-                table_ids = model.with_context(active_test=False).search([(path[0], 'in', right_ids)]).ids
-                leaf.leaf = ('id', 'in', table_ids)
+                leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
             elif not field.store:
@@ -980,15 +979,16 @@ class expression(object):
                 rel_table, rel_id1, rel_id2 = field.relation, field.column1, field.column2
 
                 if operator in HIERARCHY_FUNCS:
-                    def _rec_convert(ids):
-                        if comodel == model:
-                            return ids
-                        return select_from_where(cr, rel_id1, rel_table, rel_id2, ids, operator)
-
                     ids2 = to_ids(right, comodel)
                     dom = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
                     ids2 = comodel.search(dom).ids
-                    push(create_substitution_leaf(leaf, ('id', 'in', _rec_convert(ids2)), model))
+                    if comodel == model:
+                        push(create_substitution_leaf(leaf, ('id', 'in', ids2), model))
+                    else:
+                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
+                        # avoid flattening of argument in to_sql()
+                        subquery = cr.mogrify(subquery, [tuple(ids2)])
+                        push(create_substitution_leaf(leaf, ('id', 'inselect', (subquery, [])), internal=True))
                 else:
                     call_null_m2m = True
                     if right is not False:
@@ -1014,8 +1014,11 @@ class expression(object):
                                 operator = 'in'  # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
-                            m2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            push(create_substitution_leaf(leaf, ('id', m2m_op, select_from_where(cr, rel_id1, rel_table, rel_id2, res_ids, operator) or [0]), model))
+                            subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
+                            subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
+                            # avoid flattening of argument in to_sql()
+                            subquery = cr.mogrify(subquery, [tuple(filter(None, res_ids))])
+                            push(create_substitution_leaf(leaf, ('id', subop, (subquery, [])), internal=True))
 
                     if call_null_m2m:
                         m2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
