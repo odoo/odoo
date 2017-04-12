@@ -53,6 +53,7 @@ var PivotView = View.extend({
         this.initial_col_groupby = [];
         this.initial_row_groupby = [];
 
+        this.disabled_fields = [];
         this.active_measures = [];
         this.headers = {};
         this.cells = {};
@@ -80,6 +81,10 @@ var PivotView = View.extend({
             if (field.attrs.interval) {
                 name += ':' + field.attrs.interval;
             }
+            if (field.attrs.disabled && JSON.parse(field.attrs.disabled)) {
+                self.disabled_fields.push(name);
+                return;
+            }
             //noinspection FallThroughInSwitchStatementJS
             switch (field.attrs.type) {
             case 'measure':
@@ -98,6 +103,7 @@ var PivotView = View.extend({
                 self.initial_row_groupby.push(name);
             }
         });
+
         if ((!this.active_measures.length) || this.fields_view.arch.attrs.display_quantity) {
             this.active_measures.push('__count__');
         }
@@ -184,7 +190,7 @@ var PivotView = View.extend({
                                'selection', 'date', 'datetime'];
         this.fields = fields;
         _.each(fields, function (field, name) {
-            if ((name !== 'id') && (field.store === true)) {
+            if ((name !== 'id') && (field.store === true) && !_.contains(self.disabled_fields, name)) {
                 if (field.type === 'integer' || field.type === 'float' || field.type === 'monetary') {
                     self.measures[name] = field;
                 }
@@ -196,13 +202,23 @@ var PivotView = View.extend({
         this.measures.__count__ = {string: _t("Count"), type: "integer"};
     },
     do_search: function (domain, context, group_by) {
-        if (!this.ready) {
-            this.initial_row_groupby = context.pivot_row_groupby || this.initial_row_groupby;
-            this.initial_col_groupby = context.pivot_col_groupby || this.initial_col_groupby;
+        var self = this;
+        var filter_disabled = function(fields) {
+            return _.filter(fields, function(field) {
+                return !_.contains(self.disabled_fields, field);
+            });
         }
-        this.main_row.groupbys = group_by.length ? group_by : (context.pivot_row_groupby || this.initial_row_groupby.slice(0));
-        this.main_col.groupbys = context.pivot_column_groupby || this.initial_col_groupby.slice(0);
-        this.active_measures = context.pivot_measures || this.active_measures;
+        var pivot_row_groupby = filter_disabled(context.pivot_row_groupby);
+        var pivot_col_groupby = filter_disabled(context.pivot_col_groupby);
+        var pivot_column_groupby = filter_disabled(context.pivot_column_groupby);
+        var pivot_measures = filter_disabled(context.pivot_measures);
+        if (!this.ready) {
+            this.initial_row_groupby = context.pivot_row_groupby ? pivot_row_groupby : this.initial_row_groupby;
+            this.initial_col_groupby = context.pivot_col_groupby ? pivot_col_groupby : this.initial_col_groupby;
+        }
+        this.main_row.groupbys = group_by.length ? group_by : (context.pivot_row_groupby ? pivot_row_groupby : this.initial_row_groupby.slice(0));
+        this.main_col.groupbys = context.pivot_column_groupby ? pivot_column_groupby : this.initial_col_groupby.slice(0);
+        this.active_measures = context.pivot_measures ? pivot_measures : this.active_measures;
 
         this.domain = domain;
         this.context = context;
@@ -634,7 +650,7 @@ var PivotView = View.extend({
                     $cell.addClass(cell.expanded ? 'o_pivot_header_cell_opened' : 'o_pivot_header_cell_closed');
                     $cell.data('id', cell.id);
                 }
-                if (cell.measure) {
+                if (cell.measure && this.measures[cell.measure]) {
                     $cell.addClass('o_pivot_measure_row text-muted')
                         .text(this.measures[cell.measure].string);
                     $cell.data('id', cell.id).data('measure', cell.measure);
@@ -663,7 +679,7 @@ var PivotView = View.extend({
             return self.fields[gb.split(':')[0]].string;
         });
         var measure_types = this.active_measures.map(function (name) {
-            return self.measures[name].type;
+            return self.measures[name] && self.measures[name].type;
         });
         var widgets = this.widgets;
         for (i = 0; i < rows.length; i++) {
