@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    barcode = fields.Char(string='Barcode', help="BarCode", oldname='ean13')
+    barcode = fields.Char(string='Barcode', oldname='ean13')
     pos_order_count = fields.Integer(
         compute='_compute_pos_order',
         help="The number of point of sales orders related to this customer",
