@@ -775,6 +775,13 @@ QUnit.module('Views', {
         this.params.res_id = undefined;
         this.params.type = 'record';
 
+        var o2mRecordParams = {
+            fields: this.data.product.fields,
+            fieldNames: ['name'],
+            modelName: 'product',
+            type: 'record',
+        };
+
         var model = createModel({
             Model: BasicModel,
             data: this.data,
@@ -788,18 +795,15 @@ QUnit.module('Views', {
         });
 
         model.load(this.params).then(function (resultID) {
-
             var record = model.get(resultID);
             assert.strictEqual(record.data.product_ids.data.length, 0,
                 "one2many should start with a list of length 0");
 
-            model.makeRecord('product', [{
-                    name: 'name',
-                    string: "Product Name",
-                    type: "char",
-                    value: "xpod"
-                }
-            ]).then(function (relatedRecordID) {
+            // make a default record for the related model
+            model.load(o2mRecordParams).then(function (relatedRecordID) {
+                // update the subrecord
+                model.notifyChanges(relatedRecordID, {name: 'xpod'});
+                // add the subrecord to the o2m of the main record
                 model.notifyChanges(resultID, {
                     product_ids: {operation: "ADD", id: relatedRecordID}
                 });
