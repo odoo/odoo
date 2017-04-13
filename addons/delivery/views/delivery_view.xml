@@ -162,8 +162,9 @@
                         <label for="variable" string="Condition"/>
                         <div class="o_row">
                             <field name="variable"/>
-                            <field name="operator"/>
-                            <field name="max_value"/>
+                            <field name="operator" attrs="{'readonly':[('variable', '=', 'category')]}"/>
+                            <field name="max_value" attrs="{'invisible':[('variable', '=', 'category')]}"/>
+                            <field name="category_id" attrs="{'invisible':[('variable','!=','category')]}"/>
                         </div>
                         <label for="list_base_price" string="Sale Price"/>
                         <div>

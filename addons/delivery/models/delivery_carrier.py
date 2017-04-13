@@ -276,16 +276,17 @@ class DeliveryCarrier(models.Model):
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
             quantity += qty
+            category = line.product_id.categ_id.id
         total = (order.amount_total or 0.0) - total_delivery
 
         total = order.currency_id.with_context(date=order.date_order).compute(total, order.company_id.currency_id)
 
-        return self.get_price_from_picking(total, weight, volume, quantity)
+        return self.get_price_from_picking(total, weight, volume, quantity, category)
 
-    def get_price_from_picking(self, total, weight, volume, quantity):
+    def get_price_from_picking(self, total, weight, volume, quantity, product_category):
         price = 0.0
         criteria_found = False
-        price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
+        price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity, 'category': product_category}
         for line in self.price_rule_ids:
             test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:
