@@ -2712,5 +2712,46 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_save').click();
         form.destroy();
     });
+
+    QUnit.test('many2manys inside one2manys are saved correctly', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="top">' +
+                                '<field name="timmy" widget="many2many_tags"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    var command = args.args[0].p;
+                    assert.deepEqual(command, [[0, false, {
+                        display_name: false,
+                        timmy: [[6, false, [12]]],
+                    }]], "the default partner_type_id should be equal to 12");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // add a o2m subrecord with a m2m tag
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        form.$('.o_many2many_tags_cell').click();
+        form.$('.o_form_field_many2one input').click();
+        var $dropdown = form.$('.o_form_field_many2one input').autocomplete('widget');
+        $dropdown.find('li:first()').click(); // select the first tag
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
 });
 });

@@ -1718,6 +1718,8 @@ var BasicModel = AbstractModel.extend({
             } else if (type === 'many2one' && fieldName in changes) {
                 var value = changes[fieldName];
                 changes[fieldName] = value ? this.localData[value].res_id : false;
+            } else if (changes[fieldName] === null) {
+                changes[fieldName] = false;
             }
         }
         return changes;
@@ -1797,13 +1799,13 @@ var BasicModel = AbstractModel.extend({
                     // the didChange variable keeps track of the fact that at
                     // least one id was updated
                     var didChange = false;
-                    var command, relRecord;
+                    var changes, command, relRecord;
                     for (var i = 0; i < relIds.length; i++) {
                         if (_.contains(keptIds, relIds[i])) {
                             // this is an id that already existed
                             relRecord = _.findWhere(relData, {res_id: relIds[i]});
                             if (!_.isEmpty(relRecord._changes)) {
-                                var changes = this._generateChanges(relRecord);
+                                changes = this._generateChanges(relRecord);
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
                                 didChange = true;
                             } else {
@@ -1813,8 +1815,8 @@ var BasicModel = AbstractModel.extend({
                         } else if (_.contains(addedIds, relIds[i])) {
                             // this is a new id
                             relRecord = _.findWhere(relData, {res_id: relIds[i]});
-                            relRecord = this.get(relRecord.id, {raw: true});
-                            commands[fieldName].push(x2ManyCommands.create(_.omit(relRecord.data, 'id')));
+                            changes = this._generateChanges(relRecord);
+                            commands[fieldName].push(x2ManyCommands.create(changes));
                         }
                     }
                     if (changesOnly && !didChange && addedIds.length === 0 && removedIds.length === 0) {
