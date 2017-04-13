@@ -719,7 +719,8 @@ class WebsiteSale(http.Controller):
                 shipping_partner_id = order.partner_invoice_id.id
 
         values = {
-            'website_sale_order': order
+            'website_sale_order': order,
+            'error': post.get("error", None)
         }
         values['errors'] = SaleOrder._get_errors(order)
         values.update(SaleOrder._get_website_data(order))
