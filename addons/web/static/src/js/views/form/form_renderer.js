@@ -252,6 +252,9 @@ return BasicRenderer.extend({
         if (node.attrs.class) {
             $el.addClass(node.attrs.class);
         }
+        if (node.attrs.style) {
+            $el.attr('style', node.attrs.style);
+        }
     },
     /**
      * @private

@@ -96,7 +96,7 @@ QUnit.module('Views', {
     QUnit.module('FormView');
 
     QUnit.test('simple form rendering', function (assert) {
-        assert.expect(10);
+        assert.expect(12);
 
         var form = createView({
             View: FormView,
@@ -106,8 +106,8 @@ QUnit.module('Views', {
                     '<div class="test" style="opacity: 0.5;">some html<span>aa</span></div>' +
                     '<sheet>' +
                         '<group>' +
-                            '<group>' +
-                                '<field name="foo"/>' +
+                            '<group style="background-color: red">' +
+                                '<field name="foo" style="color: blue"/>' +
                                 '<field name="bar"/>' +
                                 '<field name="int_field" string="f3_description"/>' +
                                 '<field name="qux"/>' +
@@ -138,6 +138,11 @@ QUnit.module('Views', {
                         "should contain label Foo");
         assert.strictEqual(form.$('span:contains(blip)').length, 1,
                         "should contain span with field value");
+
+        assert.strictEqual(form.$('.o_group .o_group:first').attr('style'), 'background-color: red',
+                        "should apply style attribute on groups");
+        assert.strictEqual(form.$('.o_form_field[name=foo]').attr('style'), 'color: blue',
+                        "should apply style attribute on fields");
 
         assert.strictEqual(form.$('label:contains(something_id)').length, 0,
                         "should not contain f3 string description");
