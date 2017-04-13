@@ -9,6 +9,11 @@ class AccountAnalyticTag(models.Model):
     _description = 'Analytic Tags'
     name = fields.Char(string='Analytic Tag', index=True, required=True)
     color = fields.Integer('Color Index', default=10)
+    # added this field to show related analytic tags while selecting analytic account on account.invoice.line
+    account_ids = fields.Many2many('account.analytic.account',
+        'account_analytic_account_tag_rel', 'tag_id',
+        'account_id', string='Accounts', copy=True
+    )
 
 
 class AccountAnalyticAccount(models.Model):

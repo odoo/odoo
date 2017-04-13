@@ -1239,11 +1239,6 @@ class AccountInvoiceLine(models.Model):
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True)
     company_currency_id = fields.Many2one('res.currency', related='invoice_id.company_currency_id', readonly=True)
 
-    @api.onchange('account_analytic_id')
-    def _onchange_account_analytic_id(self):
-        self.analytic_tag_ids = False
-        return {'domain': {'analytic_tag_ids': [('id', 'in', self.account_analytic_id.tag_ids.ids)]}}
-
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         res = super(AccountInvoiceLine, self).fields_view_get(
