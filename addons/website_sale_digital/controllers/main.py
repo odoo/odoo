@@ -60,7 +60,7 @@ class WebsiteSaleDigital(CustomerPortal):
         res_id = attachment['res_id']
         partner = request.env.user.partner_id
         purchased_products = request.env['sale.order'].sudo().search(
-            domain=[('partner_id', '=', partner.id), ('payment_state', '=', 'done')]).mapped('order_line').mapped('product_id')
+            [('partner_id', '=', partner.id), ('payment_state', '=', 'done')]).mapped('order_line').mapped('product_id')
         purchased_products += request.env['account.invoice'].sudo().search(
             [('state', '=', 'paid'), ('partner_id', '=', partner.id)]).mapped('invoice_line_ids').mapped('product_id')
 

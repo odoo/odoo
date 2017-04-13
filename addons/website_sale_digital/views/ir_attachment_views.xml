@@ -8,9 +8,10 @@
         <field name="arch" type="xml">
             <xpath expr="//templates" position="before">
                 <field name="download_count"/>
+                <field name="product_downloadable"/>
             </xpath>
             <xpath expr="//div[@class='oe_attachment']" position="before">
-                <span class="badge pull-right" t-if="record.product_downloadable.value" title="Number of downloads">
+                <span class="badge pull-right" t-if="record.product_downloadable.raw_value" title="Number of downloads">
                     <b> <i class="fa fa-download" aria-hidden="true"></i> <field name="download_count"/></b>
                 </span>
             </xpath>
