@@ -129,6 +129,7 @@ class LandedCost(models.Model):
                     if quant.location_id.usage != 'internal':
                         qty_out += quant.qty
                 line._create_accounting_entries(move, qty_out)
+            move.assert_balanced()
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
         return True
@@ -326,7 +327,7 @@ class AdjustmentLines(models.Model):
         Generate the account.move.line values to track the landed cost.
         Afterwards, for the goods that are already out of stock, we should create the out moves
         """
-        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
+        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False, recompute=False)
 
         base_line = {
             'name': self.name,
@@ -389,5 +390,4 @@ class AdjustmentLines(models.Model):
                 AccountMoveLine.create(debit_line)
                 AccountMoveLine.create(credit_line)
 
-        move.assert_balanced()
         return True

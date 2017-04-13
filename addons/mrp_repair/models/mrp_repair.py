@@ -490,7 +490,10 @@ class RepairLine(models.Model):
         if partner and self.product_id:
             self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
         if self.product_id:
-            self.name = self.product_id.display_name
+            if partner:
+                self.name = self.product_id.with_context(lang=partner.lang).display_name
+            else:
+                self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
 
         warning = False

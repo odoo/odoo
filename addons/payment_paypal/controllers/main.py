@@ -32,16 +32,22 @@ class PaypalController(http.Controller):
 
             :param response str: text response, structured in the following way:
                 STATUS\nkey1=value1\nkey2=value2...\n
+             or STATUS\nError message...\n
             :rtype tuple(str, dict)
             :return: tuple containing the STATUS str and the key/value pairs
                      parsed as a dict
         """
         lines = filter(None, response.split('\n'))
         status = lines.pop(0)
-        pdt_post = dict(line.split('=', 1) for line in lines)
-        # html unescape
-        for post in pdt_post:
-            pdt_post[post] = urllib.unquote_plus(pdt_post[post]).decode('utf8')
+
+        pdt_post = {}
+        for line in lines:
+            split = line.split('=', 1)
+            if len(split) == 2:
+                pdt_post[split[0]] = urllib.unquote_plus(split[1]).decode('utf8')
+            else:
+                _logger.warning('Paypal: error processing pdt response: %s', line)
+
         return status, pdt_post
 
     def paypal_validate_data(self, **post):

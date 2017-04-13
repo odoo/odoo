@@ -708,6 +708,7 @@ class Field(object):
                 model._field_triggers.add(field, (self, path_str))
             elif path:
                 self.recursive = True
+                model._field_triggers.add(field, (self, '.'.join(path)))
 
     ############################################################################
     #

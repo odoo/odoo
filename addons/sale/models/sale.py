@@ -61,7 +61,9 @@ class SaleOrder(models.Model):
                 for inv in invoice_ids:
                     refund_ids += refund_ids.search([('type', '=', 'out_refund'), ('origin', '=', inv.number), ('origin', '!=', False), ('journal_id', '=', inv.journal_id.id)])
 
-            line_invoice_status = [line.invoice_status for line in order.order_line]
+            # Ignore the status of the deposit product
+            deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
+            line_invoice_status = [line.invoice_status for line in order.order_line if line.product_id != deposit_product_id]
 
             if order.state not in ('sale', 'done'):
                 invoice_status = 'no'
@@ -507,11 +509,11 @@ class SaleOrder(models.Model):
                 group = tax.tax_group_id
                 res.setdefault(group, 0.0)
                 amount = tax.compute_all(line.price_reduce + base_tax, quantity=line.product_uom_qty,
-                                         product=line.product_id, partner=line.order_partner_id)['taxes'][0]['amount']
+                                         product=line.product_id, partner=self.partner_shipping_id)['taxes'][0]['amount']
                 res[group] += amount
                 if tax.include_base_amount:
                     base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1, product=line.product_id,
-                                                partner=line.order_partner_id)['taxes'][0]['amount']
+                                                partner=self.partner_shipping_id)['taxes'][0]['amount']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = map(lambda l: (l[0].name, l[1]), res)
         return res
@@ -558,7 +560,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_id)
+            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
             line.update({
                 'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
                 'price_total': taxes['total_included'],
@@ -624,7 +626,7 @@ class SaleOrderLine(models.Model):
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
             # If company_id is set, always filter taxes by the company
             taxes = line.product_id.taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
-            line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
+            line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id) if fpos else taxes
 
     @api.multi
     def _prepare_order_line_procurement(self, group_id=False):
@@ -688,16 +690,37 @@ class SaleOrderLine(models.Model):
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
             line._action_procurement_create()
+            msg = _("Extra line with %s ") % (line.product_id.display_name,)
+            line.order_id.message_post(body=msg)
 
         return line
 
     @api.multi
     def write(self, values):
         lines = False
+        changed_lines = False
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             lines = self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+            changed_lines = self.filtered(
+                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)
+            if changed_lines:
+                orders = self.mapped('order_id')
+                for order in orders:
+                    order_lines = changed_lines.filtered(lambda x: x.order_id == order)
+                    msg = ""
+                    if any([values['product_uom_qty'] < x.product_uom_qty for x in order_lines]):
+                        msg += "<b>" + _('The ordered quantity has been decreased. Do not forget to take it into account on your invoices and delivery orders.') + '</b>'
+                    msg += "<ul>"
+                    for line in order_lines:
+                        msg += "<li> %s:" % (line.product_id.display_name,)
+                        msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (line.product_uom_qty, float(values['product_uom_qty']),)
+                        if line.product_id.type in ('consu', 'product'):
+                            msg += _("Delivered Quantity") + ": %s <br/>" % (line.qty_delivered,)
+                        msg += _("Invoiced Quantity") + ": %s <br/>" % (line.qty_invoiced,)
+                    msg += "</ul>"
+                    order.message_post(body=msg)
         result = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_procurement_create()
@@ -821,10 +844,16 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _get_display_price(self, product):
         # TO DO: move me in master/saas-16 on sale.order
-        if self.order_id.pricelist_id.discount_policy == 'without_discount':
+        if self.order_id.pricelist_id.discount_policy == 'with_discount':
+            return product.with_context(pricelist=self.order_id.pricelist_id.id).price
+        price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
+        if (pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id.discount_policy == 'with_discount'):
+            price, rule_id = pricelist_item.base_pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+            return price
+        else:
             from_currency = self.order_id.company_id.currency_id
             return from_currency.compute(product.lst_price, self.order_id.pricelist_id.currency_id)
-        return product.with_context(pricelist=self.order_id.pricelist_id.id).price
 
     @api.multi
     @api.onchange('product_id')
@@ -964,7 +993,7 @@ class SaleOrderLine(models.Model):
         new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
         new_list_price = self.env['account.tax']._fix_tax_included_price(new_list_price, self.product_id.taxes_id, self.tax_id)
 
-        if price != 0 and new_list_price != 0:
+        if new_list_price != 0:
             if self.product_id.company_id and self.order_id.pricelist_id.currency_id != self.product_id.company_id.currency_id:
                 # new_list_price is in company's currency while price in pricelist currency
                 new_list_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(new_list_price, self.order_id.pricelist_id.currency_id)

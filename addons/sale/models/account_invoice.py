@@ -84,6 +84,10 @@ class AccountInvoice(models.Model):
 
         return report_pages
 
+    @api.multi
+    def get_delivery_partner_id(self):
+        self.ensure_one()
+        return self.partner_shipping_id.id or super(AccountInvoice, self).get_delivery_partner_id()
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'

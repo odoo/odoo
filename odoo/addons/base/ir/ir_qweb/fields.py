@@ -340,7 +340,7 @@ class MonetaryConverter(models.AbstractModel):
         if not options.get('display_currency') and field.type == 'monetary' and field.currency_field:
             options['display_currency'] = record[field.currency_field]
 
-        return self.value_to_html(record[field_name], options)
+        return super(MonetaryConverter, self).record_to_html(record, field_name, options)
 
 TIMEDELTA_UNITS = (
     ('year',   3600 * 24 * 365),
