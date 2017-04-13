@@ -2,6 +2,7 @@ odoo.define('web.CalendarRenderer', function (require) {
 "use strict";
 
 var AbstractRenderer = require('web.AbstractRenderer');
+var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
@@ -192,6 +193,9 @@ return AbstractRenderer.extend({
     start: function () {
         this._initSidebar();
         this._initCalendar();
+        if (config.device.isMobile) {
+            this._bindSwipe();
+        }
         return this._super();
     },
     /**
@@ -289,6 +293,27 @@ return AbstractRenderer.extend({
 
     /**
      * @private
+     * Bind handlers to enable swipe navigation
+     *
+     * @private
+     */
+    _bindSwipe: function () {
+        var self = this;
+        var touchStartX;
+        var touchEndX;
+        this.$calendar.on('touchstart', function (event) {
+            touchStartX = event.originalEvent.touches[0].pageX;
+        });
+        this.$calendar.on('touchend', function (event) {
+            touchEndX = event.originalEvent.changedTouches[0].pageX;
+            if (touchStartX - touchEndX > 100) {
+                self.trigger_up('next');
+            } else if (touchStartX - touchEndX < -100) {
+                self.trigger_up('prev');
+            }
+        });
+    },
+    /**
      * @param {any} event
      * @returns {string} the html for the rendered event
      */
@@ -297,6 +322,7 @@ return AbstractRenderer.extend({
             event: event,
             fields: this.state.fields,
             format: this._format.bind(this),
+            isMobile: config.device.isMobile,
             read_only_mode: this.read_only_mode,
             record: event.record,
             user_context: session.user_context,
@@ -376,11 +402,9 @@ return AbstractRenderer.extend({
             viewRender: function (view) {
                 // compute mode from view.name which is either 'month', 'agendaWeek' or 'agendaDay'
                 var mode = view.name === 'month' ? 'month' : (view.name === 'agendaWeek' ? 'week' : 'day');
-                // compute title: in week mode, display the week number
-                var title = mode === 'week' ? view.intervalStart.week() : view.title;
                 self.trigger_up('viewUpdated', {
                     mode: mode,
-                    title: title,
+                    title: view.title,
                 });
             },
             height: 'parent',

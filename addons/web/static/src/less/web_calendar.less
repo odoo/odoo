@@ -66,9 +66,6 @@
             }
             .fc-view {
                 overflow-x: auto;
-                > table {
-                    min-width: 600px;
-                }
             }
         }
 
@@ -202,12 +199,6 @@
     }
 }
 
-@media only screen and (max-width: 768px) {
-    .o_calendar_container {
-        padding: 0;
-    }
-}
-
 .modal {
     .o_attendee_head {
         width: 32px;
@@ -218,5 +209,33 @@
 .o_dashboard {
     .o_calendar_container .o_calendar_sidebar_container {
         display: none;
+    }
+}
+
+// Mobile rules
+@media only screen and (max-width: 768px) {
+    .o_calendar_container {
+        padding: 0;
+    }
+}
+@media (max-width: @screen-xs-max) {
+    .o_control_panel {
+        .o_cp_left {
+            width: 100%;
+            .o_cp_buttons {
+                width: 100%;
+                .o_calendar_button_today {
+                    float: right;
+                    > .o_calendar_text {
+                        margin-top: 3px;
+                    }
+                }
+            }
+        }
+    }
+    .o_calendar_view {
+        .fc-day-header {
+            word-spacing: 1000px; // force line break in week mode
+        }
     }
 }

@@ -234,7 +234,7 @@ QUnit.module('Views', {
 
         // displays month mode by default
         assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
-            'Meetings Test (Week 51)', "should display the current week");
+            'Meetings Test (Dec 11 – 17, 2016)', "should display the current week");
 
         // switch to day mode
         actionManager.controlPanel.$('.o_calendar_button_day').click();

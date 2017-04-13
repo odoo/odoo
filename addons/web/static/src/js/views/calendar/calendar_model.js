@@ -6,7 +6,6 @@ var Context = require('web.Context');
 var core = require('web.core');
 var fieldUtils = require('web.field_utils');
 var session = require('web.session');
-var time = require('web.time');
 
 var _t = core._t;
 
@@ -400,12 +399,6 @@ return AbstractModel.extend({
             weekNumbers: true,
             weekNumberTitle: _t("W"),
             allDayText: _t("All day"),
-            views: {
-                week: {
-                    columnFormat: 'ddd ' + time.getLangDateFormat(),
-                    titleFormat: time.getLangTimeFormat(),
-                }
-            },
             monthNames: moment.months(),
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
