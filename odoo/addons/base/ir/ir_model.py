@@ -9,6 +9,7 @@ from collections import defaultdict
 from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules.registry import Registry
+from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -351,6 +352,25 @@ class IrModelFields(models.Model):
             raise UserError(_("The Selection Options expression is not a valid Pythonic expression."
                               "Please provide an expression in the [('key','Label'), ...] format."))
 
+    @api.constrains('name', 'state')
+    def _check_name(self):
+        for field in self:
+            if field.state == 'manual' and not field.name.startswith('x_'):
+                raise ValidationError(_("Custom fields must have a name that starts with 'x_' !"))
+            try:
+                models.check_pg_name(field.name)
+            except ValidationError:
+                msg = _("Field names can only contain characters, digits and underscores (up to 63).")
+                raise ValidationError(msg)
+
+    @api.constrains('model', 'name')
+    def _unique_name(self):
+        # fix on stable branch (to be converted into an SQL constraint)
+        for field in self:
+            count = self.search_count([('model', '=', field.model), ('name', '=', field.name)])
+            if count > 1:
+                raise ValidationError(_("Field names must be unique per model."))
+
     _sql_constraints = [
         ('size_gt_zero', 'CHECK (size>=0)', 'Size of the field cannot be negative.'),
     ]
@@ -511,6 +531,10 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
+        self = self.filtered(lambda record: record.state == 'manual')
+        if not self:
+            return
+
         for record in self:
             model = self.env[record.model]
             field = model._fields[record.name]
@@ -523,6 +547,23 @@ class IrModelFields(models.Model):
                     continue
                 msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
                 raise UserError(msg % (field, model._field_inverses[field][0]))
+
+        # remove fields from registry, and check that views are not broken
+        fields = [self.env[record.model]._pop_field(record.name) for record in self]
+        domain = expression.OR([('arch_db', 'like', record.name)] for record in self)
+        views = self.env['ir.ui.view'].search(domain)
+        try:
+            for view in views:
+                view._check_xml()
+        except Exception:
+            raise UserError("\n".join([
+                _("Cannot rename/delete fields that are still present in views:"),
+                _("Fields:") + " " + ", ".join(map(str, fields)),
+                _("View:") + " " + view.name,
+            ]))
+        finally:
+            # the registry has been modified, restore it
+            self.pool.setup_models(self._cr)
 
     @api.multi
     def unlink(self):
@@ -566,9 +607,6 @@ class IrModelFields(models.Model):
         res = super(IrModelFields, self).create(vals)
 
         if vals.get('state', 'manual') == 'manual':
-            if not vals['name'].startswith('x_'):
-                raise UserError(_("Custom fields must have a name that starts with 'x_' !"))
-
             if vals.get('relation') and not self.env['ir.model'].search([('model', '=', vals['relation'])]):
                 raise UserError(_("Model %s does not exist!") % vals['relation'])
 
@@ -622,12 +660,6 @@ class IrModelFields(models.Model):
                     item._prepare_update()
                     if column_rename:
                         raise UserError(_('Can only rename one field at a time!'))
-                    if vals['name'] in obj._fields:
-                        raise UserError(_('Cannot rename field to %s, because that field already exists!') % vals['name'])
-                    if vals.get('state', 'manual') == 'manual' and not vals['name'].startswith('x_'):
-                        raise UserError(_('New field name must still start with x_ , because it is a custom field!'))
-                    if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
-                        raise ValueError('Invalid character in column name')
                     column_rename = (obj._table, item.name, vals['name'], item.index)
 
                 # We don't check the 'state', because it might come from the context

@@ -88,6 +88,14 @@ class SaleOrder(models.Model):
         super(SaleOrder, self).onchange_partner_id()
         self.note = self.template_id.note or self.note
 
+    @api.onchange('partner_id')
+    def onchange_update_description_lang(self):
+        if not self.template_id:
+            return
+        else:
+            template = self.template_id.with_context(lang=self.partner_id.lang)
+            self.website_description = template.website_description
+
     @api.onchange('template_id')
     def onchange_template_id(self):
         if not self.template_id:
