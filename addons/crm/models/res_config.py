@@ -15,6 +15,7 @@ class CRMSettings(models.TransientModel):
     default_generate_lead_from_alias = fields.Boolean('Manual Assignation of Emails')
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
     module_crm_voip = fields.Boolean("Asterisk (VoIP)")
+    module_crm_phone_valid = fields.Boolean("Phone Validation")
 
     def _find_default_lead_alias_id(self):
         alias = self.env.ref('crm.mail_alias_lead_info', False)
