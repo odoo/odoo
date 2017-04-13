@@ -102,7 +102,7 @@ var CalendarController = AbstractController.extend({
      * @param {integer} record.id
      */
     _updateRecord: function (record) {
-        this.model.updateRecord(record).reload.bind(this);
+        this.model.updateRecord(record).then(this.reload.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -156,7 +156,7 @@ var CalendarController = AbstractController.extend({
             }, function () {
                 // This will occurs if there are some more fields required
                 event.data.options.disable_quick_create = true;
-                event.data.options.on_save = this.destroy.bind(this);
+                event.data.data.on_save = self.quick.destroy.bind(self.quick);
                 self._onOpenCreate(event.data);
             });
     },
@@ -170,17 +170,17 @@ var CalendarController = AbstractController.extend({
         }
         var data = this.model.calendarEventToRecord(event.data);
 
-        var context = _.extend({}, this.context);
-        context.default_name = data.name;
-        context['default_' + this.mapping.date_start] = data.start;
+        var context = _.extend({}, this.context, event.options && event.options.context);
+        context.default_name = data.name || null;
+        context['default_' + this.mapping.date_start] = data.start || null;
         if (this.mapping.date_stop) {
-            context['default_' + this.mapping.date_stop] = data.stop;
+            context['default_' + this.mapping.date_stop] = data.stop || null;
         }
         if (this.mapping.date_delay) {
-            context['default_' + this.mapping.date_delay] = data.duration;
+            context['default_' + this.mapping.date_delay] = data.duration || null;
         }
         if (this.mapping.all_day) {
-            context['default_' + this.mapping.all_day] = data[this.mapping.all_day];
+            context['default_' + this.mapping.all_day] = data[this.mapping.all_day] || null;
         }
 
         for (var k in context) {
@@ -189,9 +189,9 @@ var CalendarController = AbstractController.extend({
             }
         }
 
-        var options = _.extend({}, this.options, {context: context});
+        var options = _.extend({}, this.options, event.options, {context: context});
 
-        if(!options.disable_quick_create && !event.data.disable_quick_create) {
+        if(!options.disable_quick_create && !event.data.disable_quick_create && this.quick_add_pop) {
             if (this.quick != null) {
                 this.quick.destroy();
                 this.quick = null;

@@ -42,7 +42,7 @@ return AbstractModel.extend({
             end = start.clone().add(1, 'h');
         }
 
-        if (event.allDay || end.diff(start) === 86400000) {
+        if (event.allDay || end.diff(start) % 86400000 === 0) {
             event.allDay = true;
 
             if (this.scale === 'month') {
@@ -62,7 +62,7 @@ return AbstractModel.extend({
                 }
             } else if (this.mapping.all_day) {
                 start.startOf('day');
-                end.startOf('day');
+                end.startOf('day').add(-1, 'days');
             } else {
                 // default hours in the user's timezone
                 start.hours(7).add(-this.getSession().tzOffset, 'minutes');
@@ -235,6 +235,9 @@ return AbstractModel.extend({
      * @returns {Deferred}
      */
     reload: function (_handle, params) {
+        if (params.domain) {
+            this.data.domain = params.domain;
+        }
         return this._loadCalendar();
     },
     /**
@@ -290,7 +293,6 @@ return AbstractModel.extend({
             model: this.modelName,
             method: 'write',
             args: [record.id, data],
-            context: _.pick(event.data.options, 'context'),
         });
     },
 
@@ -590,6 +592,10 @@ return AbstractModel.extend({
         date_start.add(this.getSession().tzOffset, 'minutes');
         date_stop.add(this.getSession().tzOffset, 'minutes');
 
+        if (this.mapping.all_day && evt[this.mapping.all_day]) {
+            date_stop.add(1, 'days');
+        }
+
         var r = {
             'record': evt,
             'start': date_start,
@@ -610,7 +616,7 @@ return AbstractModel.extend({
             r.reset_allday = r.allDay;
             r.allDay = true;
             r.start = date_start.format('YYYY-MM-DD');
-            r.end = date_stop.clone().add(1, 'day').startOf('day').format('YYYY-MM-DD');
+            r.end = date_stop.startOf('day').format('YYYY-MM-DD');
         }
 
         return r;

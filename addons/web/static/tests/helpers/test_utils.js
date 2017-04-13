@@ -396,8 +396,8 @@ function dragAndDrop($el, $to) {
 function triggerMouseEvent($el, type) {
     var pos = $el.offset();
     var e = new $.Event(type);
-    e.pageX = pos.left;
-    e.pageY = pos.top;
+    e.pageX = e.layerX = e.screenX = pos.left;
+    e.pageY = e.layerY = e.screenY =pos.top;
     e.which = 1;
     $el.trigger(e);
 }
