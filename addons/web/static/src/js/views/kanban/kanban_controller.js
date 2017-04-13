@@ -182,12 +182,7 @@ var KanbanController = BasicController.extend({
         var self = this;
         var active_value = !event.data.archive;
         var column = event.target;
-        var record_ids = [];
-        _.each(column.records, function (kanban_record) {
-            if (kanban_record.record.active.value !== active_value) {
-                record_ids.push(kanban_record.db_id);
-            }
-        });
+        var record_ids = _.pluck(column.records, 'db_id');
         if (record_ids.length) {
             this.model
                 .toggleActive(record_ids, active_value, column.db_id)
