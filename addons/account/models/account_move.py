@@ -854,7 +854,11 @@ class AccountMoveLine(models.Model):
         elif self._context.get('skip_full_reconcile_check') == 'amount_currency_only':
             currency = self._context.get('manual_full_reconcile_currency')
 
-        self.env['account.partial.reconcile'].create({
+        skip_full_reconcile_check = self._context.get('skip_full_reconcile_check')
+        if not sm_debit_move.currency_id and not sm_credit_move.currency_id:
+            skip_full_reconcile_check = True
+
+        self.env['account.partial.reconcile'].with_context(skip_full_reconcile_check=skip_full_reconcile_check).create({
             'debit_move_id': sm_debit_move.id,
             'credit_move_id': sm_credit_move.id,
             'amount': amount_reconcile,
@@ -889,6 +893,7 @@ class AccountMoveLine(models.Model):
 
         #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
+        self.compute_full_after_batch_reconcile()
 
         #if writeoff_acc_id specified, then create write-off move with value the remaining amount from move in self
         if writeoff_acc_id and writeoff_journal_id and remaining_moves:
@@ -901,7 +906,9 @@ class AccountMoveLine(models.Model):
                 writeoff_vals['amount_currency'] = False
             writeoff_to_reconcile = remaining_moves._create_writeoff(writeoff_vals)
             #add writeoff line to reconcile algo and finish the reconciliation
-            remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
+            to_reconcile = (remaining_moves + writeoff_to_reconcile)
+            remaining_moves = to_reconcile.auto_reconcile_lines()
+            to_reconcile.compute_full_after_batch_reconcile()
             return writeoff_to_reconcile
         return True
 
@@ -994,8 +1001,14 @@ class AccountMoveLine(models.Model):
         if currency and aml_to_balance_currency:
             aml = aml_to_balance_currency[0]
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
-            partial_rec = aml.credit and aml.matched_debit_ids[0] or aml.matched_credit_ids[0]
-            aml_id, partial_rec_id = partial_rec.with_context(skip_full_reconcile_check=True).create_exchange_rate_entry(aml_to_balance_currency, 0.0, total_amount_currency, currency, maxdate)
+            partial_rec = None
+            if aml.credit and aml.matched_debit_ids:
+                partial_rec = aml.matched_debit_ids[0]
+            elif aml.matched_credit_ids:
+                partial_rec = aml.matched_credit_ids[0]
+
+            if partial_rec:
+                aml_id, partial_rec_id = partial_rec.with_context(skip_full_reconcile_check=True).create_exchange_rate_entry(aml_to_balance_currency, 0.0, total_amount_currency, currency, maxdate)
         return aml_id, partial_rec_id
 
     @api.multi
