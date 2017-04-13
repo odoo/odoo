@@ -59,6 +59,15 @@ class StockMoveLots(models.Model):
         self.quantity_done = self.quantity_done - 1
         return self.move_id.split_move_lot()
 
+    @api.multi
+    def write(self, vals):
+        if 'lot_id' in vals:
+            for movelot in self:
+                movelot.move_id.production_id.move_raw_ids.mapped('move_lot_ids')\
+                    .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == movelot.lot_id)\
+                    .write({'lot_produced_id': vals['lot_id']})
+        return super(StockMoveLots, self).write(vals)
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
