@@ -39,9 +39,9 @@
     .o_calendar_view {
         .o-flex(1, 1, auto);
         min-width: 0;
-        height: 100%;
 
         .o_calendar_widget {
+            height: 100%;
             background-color: @odoo-view-background-color;
             * {
                 z-index: 0; // FIXME
@@ -69,6 +69,9 @@
             }
             .fc-view {
                 overflow-x: auto;
+                > table {
+                    min-width: 600px;
+                }
             }
         }
 
@@ -199,6 +202,12 @@
 
     .fc-time-grid-event.fc-short .fc-time:before {
         content: '';
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .o_calendar_container {
+        padding: 0;
     }
 }
 

@@ -324,7 +324,7 @@ return AbstractRenderer.extend({
                 }
                 element.find('.fc-content .fc-time').text(display_hour);
             },
-
+            height: 'auto',
             unselectAuto: false,
         });
 
