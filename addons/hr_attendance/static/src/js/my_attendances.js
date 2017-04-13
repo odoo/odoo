@@ -22,7 +22,7 @@ var MyAttendances = Widget.extend({
         this._rpc({
                 model: 'hr.employee',
                 method: 'search_read',
-                args: [[['user_id', '=', self.session.uid]], ['attendance_state', 'name']],
+                args: [[['user_id', '=', self.getSession().uid]], ['attendance_state', 'name']],
             })
             .then(function (res) {
                 if (_.isEmpty(res) ) {
