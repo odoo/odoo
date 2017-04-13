@@ -763,6 +763,54 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('create commands on a one2many', function (assert) {
+        assert.expect(3);
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                return this._super(route, args);
+            },
+        });
+
+        this.params.fieldsInfo = {
+            default: {
+                product_ids: {
+                    fieldsInfo: {
+                        default: {
+                            display_name: {type: 'string'},
+                        }
+                    },
+                    viewType: 'default',
+                }
+            }
+        };
+        this.params.res_id = undefined;
+        this.params.type = 'record';
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.product_ids.data.length, 0,
+                "one2many should start with a list of length 0");
+
+            model.notifyChanges(record.id, {
+                product_ids: {
+                    operation: "CREATE",
+                    data: {
+                        display_name: 'coucou',
+                    },
+                },
+            });
+            record = model.get(resultID);
+            assert.strictEqual(record.data.product_ids.data.length, 1,
+                "one2many should be a list of length 1");
+            assert.strictEqual(record.data.product_ids.data[0].data.display_name, "coucou",
+                "one2many should have correct data");
+        });
+        model.destroy();
+    });
+
     QUnit.test('onchange with a one2many on a new record', function (assert) {
         assert.expect(4);
 
