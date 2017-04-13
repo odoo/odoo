@@ -354,15 +354,15 @@ return AbstractModel.extend({
             navLinks: false,
             eventLimit: this.eventLimit, // allow "more" link when too many events
             snapMinutes: 15,
+            longPressDelay: 500,
             eventResizableFromStart: true,
-            weekNumberCalculation: function (date) {
-                return moment(date).week();
-            },
+            weekNumbers: true,
             weekNumberTitle: _t("W"),
             allDayText: _t("All day"),
             views: {
                 week: {
                     columnFormat: 'ddd ' + time.strftime_to_moment_format(_t.database.parameters.date_format),
+                    titleFormat: time.strftime_to_moment_format(_t.database.parameters.time_format),
                 }
             },
             monthNames: moment.months(),
