@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
 import odoo.tests.common as common
