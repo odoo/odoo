@@ -259,7 +259,7 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
-                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                        <button name="action_change_product_quantity" string="Update Qty On Hand" type="object" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                 </sheet>
@@ -274,8 +274,8 @@
                 <data>
                     <header position="inside">
                         <button string="Update Qty On Hand"
-                            type="action"
-                            name="%(action_view_change_product_quantity)d"
+                            type="object"
+                            name="action_change_product_quantity"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Procurement Request"
                             type="action"
@@ -343,7 +343,7 @@
             <field name="arch" type="xml">
                 <data>
                     <header position="inside" >
-                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                        <button name="action_change_product_quantity" string="Update Qty On Hand" type="object" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                     <button name="toggle_active" position="before">

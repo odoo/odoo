@@ -534,6 +534,12 @@ class ProductTemplate(models.Model):
         action['domain'] = [('product_id.product_tmpl_id', 'in', self.ids)]
         return action
 
+    @api.multi
+    def action_change_product_quantity(self):
+        if self.tracking != 'none':
+            raise UserError(_('Your product is tracked by lot or by serial numbers. You should use the Inventory Adjustment to correct your Stock'))
+        return self.env.ref('stock.action_view_change_product_quantity').read()[0]
+
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'
