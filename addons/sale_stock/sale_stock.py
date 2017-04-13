@@ -202,6 +202,13 @@ class SaleOrderLine(models.Model):
         return qty
 
     @api.multi
+    def _is_not_deliverable(self):
+        self.ensure_one()
+        if self.procurement_ids:
+            return False
+        return super(SaleOrderLine, self)._is_not_deliverable()
+
+    @api.multi
     def _check_package(self):
         default_uom = self.product_id.uom_id
         pack = self.product_packaging

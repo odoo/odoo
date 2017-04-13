@@ -48,7 +48,12 @@ class SaleOrderLine(models.Model):
             lines[line] += qty
 
         for line, qty in lines.items():
-            line.qty_delivered = qty
+            if line._is_not_deliverable():
+                line.qty_delivered = qty
+        return True
+
+    @api.multi
+    def _is_not_deliverable(self):
         return True
 
 
