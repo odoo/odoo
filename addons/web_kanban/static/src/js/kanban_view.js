@@ -303,7 +303,7 @@ var KanbanView = View.extend({
         return this._super(action);
     },
     has_active_field: function() {
-        return this.fields.active;
+        return this.fields_view.fields.active;
     },
     _is_quick_create_enabled: function() {
         if (!this.quick_creatable || !this.is_action_enabled('create'))
