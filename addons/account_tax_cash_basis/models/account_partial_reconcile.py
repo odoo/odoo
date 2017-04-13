@@ -3,6 +3,7 @@
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.tools import float_is_zero
 
 
 class AccountPartialReconcileCashBasis(models.Model):
@@ -24,7 +25,7 @@ class AccountPartialReconcileCashBasis(models.Model):
                 currency_id = line.currency_id or line.company_id.currency_id
                 matched_percentage = value_before_reconciliation[move.id]
                 amount = currency_id.round((line.credit_cash_basis - line.debit_cash_basis) - (line.credit - line.debit) * matched_percentage)
-                if not line.tax_exigible:
+                if not float_is_zero(amount, precision_rounding=currency_id.rounding) and not line.tax_exigible:
                     if line.tax_line_id and line.tax_line_id.use_cash_basis:
                         # group by line account
                         acc = line.account_id.id

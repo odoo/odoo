@@ -341,7 +341,12 @@ class PosOrder(models.Model):
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.user.company_id)
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
-    user_id = fields.Many2one('res.users', string='Salesman', help="Person who uses the cash register. It can be a reliever, a student or an interim employee.", default=lambda self: self.env.uid)
+    user_id = fields.Many2one(
+        comodel_name='res.users', string='Salesman',
+        help="Person who uses the cash register. It can be a reliever, a student or an interim employee.",
+        default=lambda self: self.env.uid,
+        states={'done': [('readonly', True)], 'invoiced': [('readonly', True)]},
+    )
     amount_tax = fields.Float(compute='_compute_amount_all', string='Taxes', digits=0)
     amount_total = fields.Float(compute='_compute_amount_all', string='Total', digits=0)
     amount_paid = fields.Float(compute='_compute_amount_all', string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits=0)
@@ -366,12 +371,22 @@ class PosOrder(models.Model):
     account_move = fields.Many2one('account.move', string='Journal Entry', readonly=True, copy=False)
     picking_id = fields.Many2one('stock.picking', string='Picking', readonly=True, copy=False)
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Picking Type")
-    location_id = fields.Many2one('stock.location', related='session_id.config_id.stock_location_id', string="Location", store=True)
+    location_id = fields.Many2one(
+        comodel_name='stock.location',
+        related='session_id.config_id.stock_location_id',
+        string="Location", store=True,
+        readonly=True,
+    )
     note = fields.Text(string='Internal Notes')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
     pos_reference = fields.Char(string='Receipt Ref', readonly=True, copy=False)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sale Journal', store=True, readonly=True)
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', default=lambda self: self._default_session().config_id.default_fiscal_position_id)
+    fiscal_position_id = fields.Many2one(
+        comodel_name='account.fiscal.position', string='Fiscal Position',
+        default=lambda self: self._default_session().config_id.default_fiscal_position_id,
+        readonly=True,
+        states={'draft': [('readonly', False)]},
+    )
 
     @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
     def _compute_amount_all(self):
@@ -581,7 +596,7 @@ class PosOrder(models.Model):
                     'location_id': location_id,
                     'location_dest_id': destination_id,
                 }
-                pos_qty = any([x.qty >= 0 for x in order.lines])
+                pos_qty = any([x.qty > 0 for x in order.lines])
                 if pos_qty:
                     order_picking = Picking.create(picking_vals.copy())
                     order_picking.message_post(body=message)
@@ -619,8 +634,8 @@ class PosOrder(models.Model):
 
             # when the pos.config has no picking_type_id set only the moves will be created
             if moves and not return_picking and not order_picking:
-                moves.action_confirm()
-                moves.force_assign()
+                moves.action_assign()
+                moves.filtered(lambda m: m.state in ['confirmed', 'waiting']).force_assign()
                 moves.filtered(lambda m: m.product_id.tracking == 'none').action_done()
 
         return True
@@ -628,7 +643,7 @@ class PosOrder(models.Model):
     def _force_picking_done(self, picking):
         """Force picking in order to be set as done."""
         self.ensure_one()
-        picking.action_confirm()
+        picking.action_assign()
         picking.force_assign()
         self.set_pack_operation_lot(picking)
         if not any([(x.product_id.tracking != 'none') for x in picking.pack_operation_ids]):
