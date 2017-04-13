@@ -121,7 +121,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         "click .o_mail_request_permission": function (event) {
             event.preventDefault();
             this.$(".o_mail_annoying_notification_bar").slideUp();
-            var def = window.Notification.requestPermission();
+            var def = window.Notification && window.Notification.requestPermission();
             if (def) {
                 def.then(function (value) {
                     if (value === 'denied') {
