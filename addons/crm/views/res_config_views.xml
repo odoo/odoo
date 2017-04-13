@@ -49,6 +49,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_crm_phone_validation"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="module_crm_phone_validation"/>
+                            <div class="text-muted">
+                                Validate and normalize phone numbers.
+                            </div>
+                            <div class="content-group">
+                                <div class="text-warning mt16" id="module_crm_phone_validation" attrs="{'invisible': [('module_crm_phone_validation','=',False)]}">
+                                    <p>
+                                        Save this page and come back here to set up the feature.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </xpath>
             <xpath expr="//h2[@id='integration_h2']" position="attributes">
