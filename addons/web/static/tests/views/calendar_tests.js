@@ -337,7 +337,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create event with timezone in week mode', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         this.data.event.records = [];
 
@@ -361,6 +361,17 @@ QUnit.module('Views', {
             },
             session: {
                 tzOffset: 120
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "write") {
+                    assert.deepEqual(args.args[1], {
+                          "allday": false,
+                          "start": "2016-12-12 06:00:00",
+                          "stop": "2016-12-12 10:00:00"
+                        },
+                    "should move the event");
+                }
+                return this._super(route, args);
             },
         });
 
@@ -433,8 +444,106 @@ QUnit.module('Views', {
             },
             "the new record should have the utc datetime (formViewDialog)");
 
+        testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        left = calendar.$('.fc-day:eq(1)').offset().left + 5;
+        testUtils.triggerPositionalMouseEvent(left, top, "mousemove");
+        testUtils.triggerPositionalMouseEvent(left, top, "mouseup");
+
         calendar.destroy();
         $view.remove();
+    });
+
+    QUnit.test('create all day event', function (assert) {
+        assert.expect(2);
+
+        this.data.event.records = [];
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'scale_zoom="week" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                tzOffset: 120
+            },
+        });
+
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body'); // => select with click position
+
+
+        var pos = calendar.$('.fc-bg td:eq(4)').offset();
+        testUtils.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mousedown");
+        pos = calendar.$('.fc-bg td:eq(5)').offset();
+        testUtils.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mousemove");
+        testUtils.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mouseup");
+
+        $('.modal input:first').val('new event').trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click');
+        var $newevent = calendar.$('.fc-event:contains(new event)');
+
+        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "newevent",
+            "should display the new event with time and title");
+
+        assert.deepEqual($newevent.data('fcSeg').event.record,
+            {
+                display_name: "new event",
+                start: "2016-12-14 00:00:00",
+                stop: "2016-12-15 00:00:00",
+                allday: true,
+                name: "new event",
+                id: 1
+            },
+            "the new record should have the utc datetime (quickCreate)");
+
+        calendar.destroy();
+        $view.remove();
+    });
+
+    QUnit.test('use mini calendar', function (assert) {
+        assert.expect(2);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'scale_zoom="week" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                tzOffset: 120
+            },
+        });
+
+        assert.strictEqual(calendar.$('.fc-event').length, 9, "should display 9 events on the week (4 event + 5 days event)");
+        $('.o_calendar_mini a:contains(19)').click();
+        assert.strictEqual(calendar.$('.fc-event').length, 4, "should display 4 events on the week (1 event + 3 days event)");
+
+        calendar.destroy();
     });
 
     QUnit.test('rendering, with many2many', function (assert) {

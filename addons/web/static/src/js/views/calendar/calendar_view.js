@@ -108,7 +108,7 @@ var CalendarView = AbstractView.extend({
         //if quick_add = False, we don't allow quick_add
         //if quick_add = not specified in view, we use the default widgets.QuickCreate
         //if quick_add = is NOT False and IS specified in view, we this one for widgets.QuickCreate'   
-        this.controllerParams.quick_add_pop = (attrs.quick_add || utils.toBoolElse(attrs.quick_add+'', true));
+        this.controllerParams.quick_add_pop = (!('quick_add' in attrs) || utils.toBoolElse(attrs.quick_add+'', true));
         this.controllerParams.disable_quick_create =  params.disable_quick_create || !this.controllerParams.quick_add_pop;
         this.controllerParams.confirm_on_delete = true;
         // If this field is set ot true, we don't open the event in form view, but in a popup with the view_id passed by this parameter

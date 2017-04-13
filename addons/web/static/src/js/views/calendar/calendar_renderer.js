@@ -314,10 +314,13 @@ return AbstractRenderer.extend({
                 event.title = $render.find('.o_field_type_char:first').text();
                 element.find('.fc-content').html($render.html());
                 element.addClass($render.attr('class'));
-                var display_hour = (event.start.format('HH:mm') === '00:00' ? event.r_start.format('HH:mm') : event.start.format('HH:mm')) + ' - ' +
-                    (event.end && event.end.format('HH:mm') !== '00:00' ? event.end.format('HH:mm') : event.r_end.format('HH:mm'));
-                if (display_hour === '00:00 - 00:00') {
-                    display_hour = _t('All the day');
+                var display_hour = '';
+                if (!event.allDay) {
+                    display_hour = (event.start.format('HH:mm') === '00:00' ? event.r_start.format('HH:mm') : event.start.format('HH:mm')) + ' - ' +
+                        (event.end && event.end.format('HH:mm') !== '00:00' ? event.end.format('HH:mm') : event.r_end.format('HH:mm'));
+                    if (display_hour === '00:00 - 00:00') {
+                        display_hour = _t('All the day');
+                    }
                 }
                 element.find('.fc-content .fc-time').text(display_hour);
             },
@@ -336,7 +339,7 @@ return AbstractRenderer.extend({
         this.$small_calendar.datepicker({
             'onSelect': function (datum, obj) {
                 self.trigger_up('changeDate', {
-                    date: new Date(+obj.currentYear , +obj.currentMonth, +obj.currentDay).toString()
+                    date: moment(new Date(+obj.currentYear , +obj.currentMonth, +obj.currentDay))
                 });
             },
             'dayNamesMin' : this.state.fc_options.dayNamesShort,
