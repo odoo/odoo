@@ -7,8 +7,7 @@ import werkzeug.urls
 
 from odoo import api, fields, models, tools
 
-
-URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
+from openerp.addons.link_tracker.models.link_tracker import URL_REGEX
 
 
 class MailMail(models.Model):

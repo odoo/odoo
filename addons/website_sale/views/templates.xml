@@ -582,7 +582,7 @@
             <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
                 <i class="fa fa-minus"></i>
             </a>
-            <input type="text" class="form-control" data-min="1" name="add_qty" value="1"/>
+            <input type="text" class="form-control quantity" data-min="1" name="add_qty" value="1"/>
             <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
                 <i class="fa fa-plus"></i>
             </a>
@@ -887,7 +887,7 @@
                                 <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs">
                                     <i class="fa fa-minus"></i>
                                 </a>
-                                <input type="text" class="js_quantity form-control" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
+                                <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
                                 <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs">
                                     <i class="fa fa-plus"></i>
                                 </a>
