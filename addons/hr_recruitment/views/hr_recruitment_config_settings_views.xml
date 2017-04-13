@@ -84,5 +84,33 @@
         <menuitem id="menu_hr_recruitment_global_settings" name="Settings"
             parent="menu_hr_recruitment_configuration" sequence="0" action="action_hr_recruitment_configuration"
             groups="base.group_system"/>
+
+        <menuitem
+            id="utm_menu_hr_recruitment"
+            name="UTMs"
+            parent="menu_hr_recruitment_configuration"
+            sequence="11"
+            groups="base.group_no_one"/>
+
+        <menuitem
+            id="utm_campaign_menu_hr_recruitment"
+            parent="utm_menu_hr_recruitment"
+            action="utm.utm_campaign_act"
+            sequence="2"
+            groups="base.group_no_one"/>
+        
+        <menuitem
+            id="utm_medium_menu_hr_recruitment"
+            parent="utm_menu_hr_recruitment"
+            action="utm.utm_medium_action"
+            sequence="3"
+            groups="base.group_no_one"/>
+
+        <menuitem
+            id="utm_source_menu_hr_recruitment"
+            parent="utm_menu_hr_recruitment"
+            action="utm.utm_source_action"
+            sequence="4"
+            groups="base.group_no_one"/>
     </data>
 </odoo>

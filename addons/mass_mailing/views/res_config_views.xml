@@ -81,6 +81,48 @@
 
         <menuitem id="menu_mass_mailing_configuration" name="Configuration" parent="mass_mailing_menu_root"
             sequence="100"/>
+
+        <menuitem id="link_tracker_menu_config_mass_mailing"
+            name="Link Tracker"
+            parent="menu_mass_mailing_configuration"
+            groups="base.group_no_one"/>
+
+        <menuitem
+            id="link_tracker_menu_mass_mailing"
+            name="Link Tracker"
+            parent="link_tracker_menu_config_mass_mailing"
+            action="link_tracker.action_link_tracker"
+            sequence="1"
+            groups="base.group_no_one"/>
+
+        <menuitem
+            id="utm_menu_mass_mailing"
+            name="UTMs"
+            parent="link_tracker_menu_config_mass_mailing"
+            sequence="2"
+            groups="base.group_no_one"/>
+
+        <menuitem
+            id="utm_campaign_menu_mass_mailing"
+            parent="utm_menu_mass_mailing"
+            action="utm.utm_campaign_act"
+            sequence="2"
+            groups="base.group_no_one"/>
+        
+        <menuitem
+            id="utm_medium_menu_mass_mailing"
+            parent="utm_menu_mass_mailing"
+            action="utm.utm_medium_action"
+            sequence="3"
+            groups="base.group_no_one"/>
+
+        <menuitem
+            id="utm_source_menu_mass_mailing"
+            parent="utm_menu_mass_mailing"
+            action="utm.utm_source_action"
+            sequence="4"
+            groups="base.group_no_one"/>
+
         <menuitem id="menu_mass_mailing_global_settings" name="Settings" 
             parent="menu_mass_mailing_configuration" sequence="0" action="action_mass_mailing_configuration" groups="base.group_system"/>
 </odoo>
