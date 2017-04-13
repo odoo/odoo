@@ -53,6 +53,23 @@ var FormRenderer = BasicRenderer.extend({
         return fieldNames;
     },
     /**
+     * @see BasicRenderer.confirmChange
+     *
+     * We need to reapply the idForLabel postprocessing since some widgets may
+     * have recomputed their dom entirely.
+     *
+     * @override
+     */
+    confirmChange: function (state, id, fields, e) {
+        var self = this;
+        return this._super.apply(this, arguments).then(function (resetWidgets) {
+            _.each(resetWidgets, function (widget) {
+                self._setIDForLabel(widget, self.idsForLabels[widget.name]);
+            });
+            return resetWidgets
+        });
+    },
+    /**
      * returns the active tab pages for each notebook
      *
      * @todo currently, this method is unused...
@@ -256,7 +273,7 @@ var FormRenderer = BasicRenderer.extend({
         }, modifiersOptions || {});
 
         var widget = this._super(node, record, options, modifiersOptions);
-        widget.getFocusableElement().attr('id', this._getIDForLabel(node.attrs.name));
+        this._setIDForLabel(widget, this._getIDForLabel(node.attrs.name));
 
         widget.$el.addClass(FIELD_CLASSES[record.fields[node.attrs.name].type]);
         this._addFieldClassNames(widget);
@@ -729,6 +746,16 @@ var FormRenderer = BasicRenderer.extend({
         if (focusWidget) {
             focusWidget.activate(true);
         }
+    },
+    /**
+     * Sets id attribute of given widget to idForLabel
+     *
+     * @private
+     * @param {AbstractField} widget
+     * @param {idForLabel} string
+     */
+    _setIDForLabel: function (widget, idForLabel) {
+        widget.getFocusableElement().attr('id', idForLabel);
     },
 
     //--------------------------------------------------------------------------

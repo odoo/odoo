@@ -120,13 +120,13 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldBoolean');
 
     QUnit.test('boolean field in form view', function (assert) {
-        assert.expect(7);
+        assert.expect(11);
 
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch: '<form><field name="bar"/></form>',
+            arch: '<form><label for="bar" string="Awesome checkbox"/><field name="bar"/></form>',
             res_id: 1,
         });
 
@@ -152,6 +152,27 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('.o_field_boolean input:checked').length, 0,
             "checkbox should still be unchecked");
+
+        // check the checkbox
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 1,
+            "checkbox should now be checked");
+
+        // uncheck it back
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 0,
+            "checkbox should now be unchecked");
+
+        // check the checkbox by clicking on label
+        form.$('label').click();
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 1,
+            "checkbox should now be checked");
+
+        // uncheck it back
+        form.$('label').click();
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 0,
+            "checkbox should now be unchecked");
+
         // check the checkbox by hitting the "enter" key after focusing it
         form.$('.o_field_boolean input')
             .trigger("focusin")
