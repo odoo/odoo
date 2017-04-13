@@ -550,13 +550,34 @@ class PurchaseOrderLine(models.Model):
         line = super(PurchaseOrderLine, self).create(values)
         if line.order_id.state == 'purchase':
             line.order_id._create_picking()
+            msg = _("Extra line with %s ") % (line.product_id.display_name,)
+            line.order_id.message_post(body=msg)
         return line
 
     @api.multi
     def write(self, values):
+        orders = False
+        if 'product_qty' in values:
+            changed_lines = self.filtered(lambda x: x.order_id.state == 'purchase')
+            if changed_lines:
+                orders = changed_lines.mapped('order_id')
+                for order in orders:
+                    order_lines = changed_lines.filtered(lambda x: x.order_id == order)
+                    msg = ""
+                    if any([values['product_qty'] < x.product_qty for x in order_lines]):
+                        msg += "<b>" + _('The ordered quantity has been decreased. Do not forget to take it into account on your bills and receipts.') + '</b><br/>'
+                    msg += "<ul>"
+                    for line in order_lines:
+                        msg += "<li> %s:" % (line.product_id.display_name,)
+                        msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (line.product_qty, float(values['product_qty']),)
+                        if line.product_id.type in ('product', 'consu'):
+                            msg += _("Received Quantity") + ": %s <br/>" % (line.qty_received,)
+                        msg += _("Billed Quantity") + ": %s <br/></li>" % (line.qty_invoiced,)
+                    msg += "</ul>"
+                    order.message_post(body=msg)
         result = super(PurchaseOrderLine, self).write(values)
-        orders = self.filtered(lambda x: x.order_id.state == 'purchase').mapped('order_id')
-        orders._create_picking()
+        if orders:
+            orders._create_picking()
         return result
 
     name = fields.Text(string='Description', required=True)
@@ -950,6 +971,12 @@ class ProcurementOrder(models.Model):
             'group_id': group
         }
 
+    def _make_po_select_supplier(self, suppliers):
+        """ Method intended to be overridden by customized modules to implement any logic in the
+            selection of supplier.
+        """
+        return suppliers[0]
+
     @api.multi
     def make_po(self):
         cache = {}
@@ -959,7 +986,7 @@ class ProcurementOrder(models.Model):
             if not suppliers:
                 procurement.message_post(body=_('No vendor associated to product %s. Please set one to fix this procurement.') % (procurement.product_id.name))
                 continue
-            supplier = suppliers[0]
+            supplier = procurement._make_po_select_supplier(suppliers)
             partner = supplier.name
 
             gpo = procurement.rule_id.group_propagation_option

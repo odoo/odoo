@@ -10,12 +10,16 @@ class TestPointOfSaleCommon(common.TransactionCase):
         self.AccountBankStatementLine = self.env['account.bank.statement.line']
         self.PosMakePayment = self.env['pos.make.payment']
         self.PosOrder = self.env['pos.order']
+        self.PosSession = self.env['pos.session']
         self.company_id = self.ref('base.main_company')
         self.product3 = self.env.ref('product.product_product_3')
         self.product4 = self.env.ref('product.product_product_4')
         self.partner1 = self.env.ref('base.res_partner_1')
         self.partner4 = self.env.ref('base.res_partner_4')
         self.pos_config = self.env.ref('point_of_sale.pos_config_main')
+        self.carotte = self.env.ref('point_of_sale.carotte')
+        self.courgette = self.env.ref('point_of_sale.courgette')
+        self.onions = self.env.ref('point_of_sale.Onions')
 
         # create a new session
         self.pos_order_session0 = self.env['pos.session'].create({

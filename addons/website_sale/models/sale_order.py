@@ -149,10 +149,19 @@ class SaleOrder(models.Model):
         else:
             # update line
             values = self._website_product_id_change(self.id, product_id, qty=quantity)
-
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
+                order = self.sudo().browse(self.id)
+                product_context = dict(self.env.context)
+                product_context.setdefault('lang', order.partner_id.lang)
+                product_context.update({
+                    'partner': order.partner_id.id,
+                    'quantity': quantity,
+                    'date': order.date_order,
+                    'pricelist': order.pricelist_id.id,
+                })
+                product = self.env['product.product'].with_context(product_context).browse(product_id)
                 values['price_unit'] = self.env['account.tax']._fix_tax_included_price(
-                    order_line._get_display_price(order_line.product_id),
+                    order_line._get_display_price(product),
                     order_line.product_id.taxes_id,
                     order_line.tax_id
                 )
