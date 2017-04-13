@@ -67,12 +67,11 @@ class SaleOrder(models.Model):
             'pricelist': order.pricelist_id.id,
         })
         product = self.env['product.product'].with_context(product_context).browse(product_id)
-
         pu = product.price
         if order.pricelist_id and order.partner_id:
             order_line = order._cart_find_product_line(product.id)
             if order_line:
-                pu = self.env['account.tax']._fix_tax_included_price(order_line._get_display_price(product), product.taxes_id, order_line.tax_id)
+                pu = self.env['account.tax']._fix_tax_included_price(pu, product.taxes_id, order_line.tax_id)
 
         return {
             'product_id': product_id,
