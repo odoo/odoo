@@ -10,6 +10,7 @@ odoo.define('web.CalendarController', function (require) {
  */
 
 var AbstractController = require('web.AbstractController');
+var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dialogs = require('web.view_dialogs');
@@ -23,8 +24,10 @@ var CalendarController = AbstractController.extend({
         changeDate: '_onChangeDate',
         changeFilter: '_onChangeFilter',
         dropRecord: '_onDropRecord',
+        next: '_onNext',
         openCreate: '_onOpenCreate',
         openEvent: '_onOpenEvent',
+        prev: '_onPrev',
         quickCreate: '_onQuickCreate',
         toggleFullWidth: '_onToggleFullWidth',
         updateRecord: '_onUpdateRecord',
@@ -73,15 +76,16 @@ var CalendarController = AbstractController.extend({
      */
     renderButtons: function ($node) {
         var self = this;
-        this.$buttons = $(QWeb.render("CalendarView.buttons", {'widget': this}));
+        this.$buttons = $(QWeb.render('CalendarView.buttons', {
+            isMobile: config.device.isMobile,
+        }));
         this.$buttons.on('click', 'button.o_calendar_button_new', function () {
             self.trigger_up('switch_view', {view_type: 'form'});
         });
 
         _.each(['prev', 'today', 'next'], function (action) {
             self.$buttons.on('click', '.o_calendar_button_' + action, function () {
-                self.model[action]();
-                self.reload();
+                self._move(action);
             });
         });
         _.each(['day', 'week', 'month'], function (scale) {
@@ -105,6 +109,18 @@ var CalendarController = AbstractController.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Move to the requested direction and reload the view
+     *
+     * @private
+     * @param {string} to either 'prev', 'next' or 'today'
+     * @returns {Deferred}
+     */
+    _move: function (to) {
+        this.model[to]();
+        return this.reload();
+    },
+    /**
+     * @private
      * @param {Object} record
      * @param {integer} record.id
      * @returns {Deferred}
@@ -155,6 +171,14 @@ var CalendarController = AbstractController.extend({
      */
     _onDropRecord: function (event) {
         this._updateRecord(event.data);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onNext: function (event) {
+        event.stopPropagation();
+        this._move('next');
     },
     /**
      * @private
@@ -306,6 +330,15 @@ var CalendarController = AbstractController.extend({
         open_dialog(true);
     },
     /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onPrev: function () {
+        event.stopPropagation();
+        this._move('prev');
+    },
+
+    /**
      * Handles saving data coming from quick create box
      *
      * @private
@@ -364,8 +397,7 @@ var CalendarController = AbstractController.extend({
             this.$buttons.find('.active').removeClass('active');
             this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
         }
-        var subtitle = (this.mode === 'week' ? _t('Week ') : '') + event.data.title;
-        this.set({title: this.displayName + ' (' + subtitle + ')'});
+        this.set({title: this.displayName + ' (' + event.data.title + ')'});
     },
 });
 
