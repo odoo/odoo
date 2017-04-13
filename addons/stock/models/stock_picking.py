@@ -897,11 +897,18 @@ class Picking(models.Model):
             picking._create_backorder()
         return True
 
+    def _prepare_lot_vals(self, pack_op_lot):
+        return {
+            'name': pack_op_lot.lot_name,
+            'product_id': pack_op_lot.operation_id.product_id.id
+        }
+
     def _create_lots_for_picking(self):
         Lot = self.env['stock.production.lot']
         for pack_op_lot in self.mapped('pack_operation_ids').mapped('pack_lot_ids'):
             if not pack_op_lot.lot_id:
-                lot = Lot.create({'name': pack_op_lot.lot_name, 'product_id': pack_op_lot.operation_id.product_id.id})
+                lot_values = self._prepare_lot_vals(pack_op_lot)
+                lot = Lot.create(lot_values)
                 pack_op_lot.write({'lot_id': lot.id})
         # TDE FIXME: this should not be done here
         self.mapped('pack_operation_ids').mapped('pack_lot_ids').filtered(lambda op_lot: op_lot.qty == 0.0).unlink()
