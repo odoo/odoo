@@ -66,9 +66,6 @@
             }
             .fc-view {
                 overflow-x: auto;
-                > table {
-                    min-width: 600px;
-                }
             }
         }
 
@@ -218,5 +215,28 @@
 .o_dashboard {
     .o_calendar_container .o_calendar_sidebar_container {
         display: none;
+    }
+}
+
+@media (max-width: @screen-xs-max) {
+    .o_control_panel {
+        .o_cp_buttons {
+            width: 100%;
+            .o_calendar_button_today {
+                float: right;
+                padding: 0px;
+                position: relative;
+                width: 35px;
+                > .calendar_text {
+                    margin-top: .3em;
+                }
+            }
+        }
+        > .o_cp_left {
+            width: 100%;
+        }
+        > .o_cp_right {
+            width: 100%;
+        }
     }
 }

@@ -11,6 +11,7 @@ var Widget = require('web.Widget');
 var utils = require('web.utils');
 var core = require('web.core');
 var QWeb = require('web.QWeb');
+var config = require('web.config');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -180,6 +181,9 @@ return AbstractRenderer.extend({
     start: function () {
         this._initSidebar();
         this._initCalendar();
+        if (config.device.isMobile) {
+            this._bindSwipe();
+        }
         return this._super();
     },
     /**
@@ -274,6 +278,28 @@ return AbstractRenderer.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+    * @private
+    * Bind Swipe function to handle view change on user swipe in mobile view
+    */
+    _bindSwipe: function () {
+         var self = this;
+         var $calendarView = this.$('.o_calendar_view');
+         var touchStartX;
+         var touchEndX;
+         $calendarView.on('touchstart', function (event) {
+            touchStartX = event.originalEvent.touches[0].pageX;
+         });
+         $calendarView.on('touchend', function (event) {
+            touchEndX = event.originalEvent.changedTouches[0].pageX;
+            if (touchStartX - touchEndX > 100) {
+                self.$calendar.fullCalendar('next');
+             } else if (touchStartX - touchEndX < -100) {
+                self.$calendar.fullCalendar('prev');
+             }
+         });
+     },
 
     /**
      * @param {any} event
