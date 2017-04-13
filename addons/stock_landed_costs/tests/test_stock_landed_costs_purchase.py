@@ -49,6 +49,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         generic_coa = self.env.ref('l10n_generic_coa.configurable_chart_template')
         if chart_of_accounts != generic_coa:
             raise unittest.SkipTest('Skip this test as it works only with %s (%s loaded)' % (generic_coa.name, chart_of_accounts.name))
+
         """ Test landed cost on incoming shipment """
         #
         # (A) Purchase product
@@ -68,13 +69,13 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         #         4.packaging         20        By Volume
 
         # Process incoming shipment
-        income_ship = self._process_incoming_shipment()
+        picking_in = self._process_incoming_shipment()
         # Create landed costs
         stock_landed_cost = self._create_landed_costs({
             'equal_price_unit': 10,
             'quantity_price_unit': 150,
             'weight_price_unit': 250,
-            'volume_price_unit': 20}, income_ship)
+            'volume_price_unit': 20}, picking_in)
         # Compute landed costs
         stock_landed_cost.compute_landed_cost()
 
