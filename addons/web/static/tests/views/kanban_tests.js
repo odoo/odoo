@@ -587,7 +587,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create a column in grouped on m2o', function (assert) {
-        assert.expect(10);
+        assert.expect(12);
 
         var nbRPCs = 0;
         var kanban = createView({
@@ -615,6 +615,15 @@ QUnit.module('Views', {
 
         kanban.$('.o_column_quick_create').click();
 
+        assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
+            "the input should be visible");
+
+        // discard the column creation and click it again
+        kanban.$('.o_column_quick_create .o_kanban_cancel').click();
+        assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
+            "the input should not be visible after discard");
+
+        kanban.$('.o_column_quick_create').click();
         assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
             "the input should be visible");
 
