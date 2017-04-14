@@ -159,6 +159,7 @@ class ProductProduct(models.Model):
     weight = fields.Float(
         'Weight', digits=dp.get_precision('Stock Weight'),
         help="The weight of the contents in Kg, not including any packaging, etc.")
+    show_measure_data = fields.Boolean('Show Weight', compute="_get_show_measure_data", help="Technical field for view", store=True)
 
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
@@ -566,6 +567,13 @@ class ProductProduct(models.Model):
         # sale_stock and sale_service need procurements
         return False
 
+    @api.depends('type')
+    def _get_show_measure_data(self):
+        for product in self:
+            if product.product.product_tmpl_id.type in ['product', 'consu']:
+                product.show_measure_data = True
+            else:
+                product.show_measure_data = False
 
 class ProductPackaging(models.Model):
     _name = "product.packaging"

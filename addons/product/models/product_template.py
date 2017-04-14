@@ -79,6 +79,7 @@ class ProductTemplate(models.Model):
         'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
         inverse='_set_weight', store=True,
         help="The weight of the contents in Kg, not including any packaging, etc.")
+    show_measure_data = fields.Boolean('Show Weight', compute="_get_show_measure_data", help="Technical field for view", store=True)
 
     warranty = fields.Float('Warranty')
     sale_ok = fields.Boolean(
@@ -227,6 +228,14 @@ class ProductTemplate(models.Model):
     def _set_weight(self):
         if len(self.product_variant_ids) == 1:
             self.product_variant_ids.weight = self.weight
+
+    @api.depends('product_variant_ids', 'type')
+    def _get_show_measure_data(self):
+        for product in self:
+            if product.type in ['product', 'consu'] and len(product.product_variant_ids) == 1:
+                product.show_measure_data = True
+            else:
+                product.show_measure_data = False
 
     @api.one
     @api.depends('product_variant_ids.product_tmpl_id')
