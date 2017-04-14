@@ -190,14 +190,13 @@ function formatMany2one(value) {
 }
 
 /**
- * Returns a string representing an many2one.  That is a string containing all
- * the display_name, concatenated.
+ * Returns a string indicating the number of records in the relation.
  *
  * @param {Object} value a valid element from a BasicModel, that represents a
  *   list of values
  * @returns {string}
  */
-function formatMany2Many(value) {
+function formatX2Many(value) {
     if (value.data.length === 0) {
         return _t('No records');
     } else if (value.data.length === 1) {
@@ -446,10 +445,10 @@ return {
         float_time: formatFloatTime,
         html: _.identity, // todo
         integer: formatInteger,
-        many2many: formatMany2Many,
+        many2many: formatX2Many,
         many2one: formatMany2one,
         monetary: formatMonetary,
-        one2many: _.identity, // todo
+        one2many: formatX2Many,
         reference: _.identity, // todo
         selection: formatSelection,
         text: formatChar,

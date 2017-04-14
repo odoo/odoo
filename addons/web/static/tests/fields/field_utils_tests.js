@@ -85,5 +85,12 @@ QUnit.test('format many2many', function(assert) {
     assert.strictEqual(fieldUtils.format.many2many({data: [1, 2]}), '2 records');
 });
 
+QUnit.test('format one2many', function(assert) {
+    assert.expect(3);
+
+    assert.strictEqual(fieldUtils.format.one2many({data: []}), 'No records');
+    assert.strictEqual(fieldUtils.format.one2many({data: [1]}), '1 record');
+    assert.strictEqual(fieldUtils.format.one2many({data: [1, 2]}), '2 records');
+});
 });
 });
