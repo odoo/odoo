@@ -268,7 +268,7 @@ var FieldDate = InputField.extend({
             this.datewidget = this._makeDatePicker();
             this.datewidget.on('datetime_changed', this, function () {
                 var value = this._getDateWidgetValue();
-                if (!value.isSame(this.value)) {
+                if ((!value && this.value) || (value && !value.isSame(this.value))) {
                     this._setValue(value);
                 }
             });
@@ -330,7 +330,8 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _getDateWidgetValue: function () {
-        return this.datewidget.get_value().add(-this.getSession().tzOffset, 'minutes');
+        var value = this.datewidget.get_value();
+        return value && value.add(-this.getSession().tzOffset, 'minutes');
     },
 
     /**
