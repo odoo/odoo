@@ -285,7 +285,7 @@ var Chatter = Widget.extend(chat_mixin, {
         this.trigger_up('reload', {fieldNames: fieldNames});
     },
     _onScheduleActivity: function () {
-        this.fields.activity.scheduleActivity();
+        this.fields.activity.scheduleActivity(false);
     },
 });
 

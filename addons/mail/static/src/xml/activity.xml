@@ -9,7 +9,7 @@
                 <div class="o_thread_message_sidebar">
                     <img t-attf-src="/web/image/res.users/#{activity.user_id[0]}/image_small"
                         class="o_thread_message_avatar mb8"/>
-                    <a href="#" class="o_activity_done o_activity_link" t-att-data-activity-id="activity.id" data-toggle="popover"><span class="fa fa-check-circle fa-2x" /></a>
+                    <a href="#" class="o_activity_done o_activity_link" t-att-data-activity-id="activity.id" t-att-data-previous-activity-type-id="activity.activity_type_id[0]" data-toggle="popover"><span class="fa fa-check-circle fa-2x" /></a>
                 </div>
                 <div class="o_thread_message_core o_mail_note">
                     <div class="o_mail_info">
@@ -45,7 +45,7 @@
         <div>
             <textarea class="form-control" rows="3" id="activity_feedback" placeholder="Write Feedback"/>
             <div class="mt8">
-                <button type="button" class="btn btn-xs btn-primary o_activity_popover_done_next">
+                <button type="button" class="btn btn-xs btn-primary o_activity_popover_done_next" t-att-data-previous-activity-type-id="previous_activity_type_id">
                     Done &amp; Schedule Next</button>
                 <button type="button" class="btn btn-xs btn-primary o_activity_popover_done">
                     Done</button>

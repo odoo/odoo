@@ -13,11 +13,12 @@
                     <group>
                         <group>
                             <field name="res_model_id" groups="base.group_no_one"/>
+                            <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="days"/>
                         </group>
                         <group>
-                            <field name="summary"/>
+                            <field name="next_type_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                 </sheet>
@@ -60,10 +61,23 @@
         <field name="arch" type="xml">
             <form string="Log an Activity" create="false">
                 <sheet string="Activity">
-                    <group>
+                    <group invisible="1">
                         <field name="res_model" invisible="1"/>
                         <field name="res_model_id" invisible="1"/>
                         <field name="res_id" invisible="1"/>
+                        <field name="previous_activity_type_id"/>
+                        <field name="has_recommended_activities"/>
+                    </group>
+                    <group attrs="{'invisible': [('has_recommended_activities','=',False)]}">
+                        <div>
+                            <p><strong>Recommended Activities</strong></p>
+                            <field name="recommended_activity_type_id" widget="radio"
+                                domain="[('previous_type_ids', '=', previous_activity_type_id)]"
+                                options="{'horizontal':true}"
+                                nolabel="1"/>
+                        </div>
+                    </group>
+                    <group>
                         <group>
                             <field name="activity_type_id" required="1" options="{'no_create': True, 'no_open': True}"/>
                             <field name="summary" placeholder="e.g. Discuss proposal"/>

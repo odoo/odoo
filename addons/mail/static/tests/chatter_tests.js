@@ -437,6 +437,78 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     form.destroy();
 });
 
+QUnit.test('form activity widget: schedule next activity', function (assert) {
+    assert.expect(4);
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (route === '/web/dataset/call_kw/mail.activity/action_done') {
+                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_done' for id 1");
+                assert.strictEqual(args.kwargs.feedback, 'everything is ok',
+                    "the feedback should be sent correctly");
+                return $.when();
+            }
+            return this._super.apply(this, arguments);
+        },
+        intercepts: {
+            get_messages: function (event) {
+                event.stopPropagation();
+                event.data.callback($.when([]));
+            },
+            get_bus: function (event) {
+                event.stopPropagation();
+                event.data.callback(new Bus());
+            },
+            do_action: function (event) {
+                assert.deepEqual(event.data.action, {
+                    context: {
+                        default_res_id: 2,
+                        default_res_model: "partner",
+                        default_previous_activity_type_id: 2,
+                    },
+                    res_id: false,
+                    res_model: 'mail.activity',
+                    type: 'ir.actions.act_window',
+                    target: "new",
+                    view_mode: "form",
+                    view_type: "form",
+                    views: [[false, "form"]],
+                }, "should do a do_action with correct parameters");
+            },
+        },
+    });
+    //Schedule next activity
+    form.$('.o_mail_activity .o_activity_done[data-activity-id=1]').click();
+    assert.strictEqual(form.$('.o_mail_activity_feedback.popover').length, 1,
+        "a feedback popover should be visible");
+    $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
+    form.$('.o_activity_popover_done_next').click(); // schedule next activity
+    form.destroy();
+});
+
 QUnit.test('form activity widget: mark as done and remove', function (assert) {
     assert.expect(14);
 
@@ -548,7 +620,6 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         "a chatter message should have been generated");
     form.destroy();
 });
-
 
 QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert) {
     assert.expect(24);
