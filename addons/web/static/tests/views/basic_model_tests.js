@@ -558,7 +558,7 @@ QUnit.module('Views', {
             assert.strictEqual(category_value.data.length, 1, "category field should contain one record");
             model.notifyChanges(resultID, {category: {
                 operation: 'REMOVE',
-                id: category_value.data[0].id
+                ids: [category_value.data[0].id],
             }});
             assert.ok(model.isDirty(resultID), "record should be considered dirty");
         });
