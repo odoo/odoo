@@ -2761,5 +2761,32 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('*_view_ref in context are passed correctly', function (assert) {
+        var done = assert.async();
+        assert.expect(1);
+
+        createAsyncView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p" context="{\'tree_view_ref\':\'module.tree_view_ref\'}"/>' +
+                    '</sheet>' +
+                '</form>',
+            intercepts: {
+                load_views: function (event) {
+                    assert.strictEqual(event.data.context.eval().tree_view_ref,
+                        'module.tree_view_ref',
+                        "context should contain tree_view_ref");
+                    event.data.on_success();
+                }
+            }
+        }).then(function (form) {
+            form.destroy();
+            done();
+        });
+    });
+
 });
 });
