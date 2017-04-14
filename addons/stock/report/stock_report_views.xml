@@ -10,7 +10,7 @@
             file="stock.report_picking_operations"
         />
         <record id="action_report_picking" model="ir.actions.report.xml">
-            <field name="print_report_name">'Picking Operations'+'-'+(object.partner_id.name)+'-'+(object.name)</field>
+            <field name="print_report_name">'Picking Operations'+'-'+(object.partner_id.name or '')+'-'+(object.name)</field>
         </record>
         <report
             string="Delivery Slip"
@@ -21,7 +21,7 @@
             file="stock.report_deliveryslip"
         />
         <record id="action_report_delivery" model="ir.actions.report.xml">
-            <field name="print_report_name">'Delivery Slip'+'-'+(object.partner_id.name)+'-'+(object.name)</field>
+            <field name="print_report_name">'Delivery Slip'+'-'+(object.partner_id.name or '')+'-'+(object.name)</field>
         </record>
         <report
             string="Inventory" 
