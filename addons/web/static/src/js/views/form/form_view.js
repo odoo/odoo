@@ -64,6 +64,11 @@ var FormView = BasicView.extend({
             attrs.limit = attrs.mode === "tree" ? 80 : 40;
 
             if (attrs.Widget.prototype.useSubview && !(attrs.invisible && JSON.parse(attrs.invisible)) && !attrs.views[attrs.mode]) {
+                var regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
+                var matches;
+                while (matches = regex.exec(attrs.context)) {
+                    self.loadParams.context[matches[1]] = matches[2];
+                }
                 defs.push(parent.loadViews(
                         field.relation,
                         new Context(self.loadParams.context),
