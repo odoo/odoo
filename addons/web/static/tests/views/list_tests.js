@@ -644,9 +644,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('can display a list with a many2many field', function (assert) {
-        assert.expect(2);
-
-        var rpcCount = 0;
+        assert.expect(3);
 
         var list = createView({
             View: ListView,
@@ -656,11 +654,11 @@ QUnit.module('Views', {
                     '<field name="m2m"/>' +
                 '</tree>',
             mockRPC: function (route, args) {
-                rpcCount++;
+                assert.step(route);
                 return this._super(route, args);
             },
         });
-        assert.strictEqual(rpcCount, 2, "should have done 2 rpcs: 1 searchread and 1 read for m2m");
+        assert.verifySteps(['/web/dataset/search_read'], "should have done 1 search_read");
         assert.ok(list.$('td:contains(3 records)').length,
             "should have a td with correct formatted value");
         list.destroy();

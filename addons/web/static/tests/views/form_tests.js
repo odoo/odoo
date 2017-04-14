@@ -3101,6 +3101,7 @@ QUnit.module('Views', {
             });
         }
     });
+
     QUnit.test('render stat button with string inline', function (assert) {
         assert.expect(1);
 
@@ -3143,6 +3144,66 @@ QUnit.module('Views', {
             form.destroy();
             done();
         });
+    });
+
+    QUnit.test('open one2many form containing one2many', function (assert) {
+        assert.expect(8);
+
+        this.data.partner.records[0].product_ids = [37];
+        this.data.product.fields.partner_type_ids = {
+            string: "one2many partner", type: "one2many", relation: "partner_type",
+        };
+        this.data.product.records[0].partner_type_ids = [12];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            res_id: 1,
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="product_ids">' +
+                                '<tree create="0">' +
+                                    '<field name="display_name"/>' +
+                                    '<field name="partner_type_ids"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form':
+                    '<form string="Products">' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="partner_type_ids">' +
+                                    '<tree create="0">' +
+                                        '<field name="display_name"/>' +
+                                        '<field name="color"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+        var row = form.$('.o_form_field_one2many .o_list_view .o_data_row');
+        assert.strictEqual(row.children()[1].textContent, '1 record',
+            "the cell should contains the number of record: 1");
+        row.click();
+        var modal_row = $('.modal-body .o_form_sheet .o_form_field_one2many .o_list_view .o_data_row');
+        assert.strictEqual(modal_row.children().length, 2,
+            "the row should contains the 2 fields defined in the form view");
+        assert.strictEqual($(modal_row).text(), "gold2",
+            "the value of the fields should be fetched and displayed");
+        assert.verifySteps(['read', 'read', 'read', 'read'],
+            "there should be 4 read rpcs");
+        form.destroy();
     });
 });
 });

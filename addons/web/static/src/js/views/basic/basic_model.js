@@ -1619,40 +1619,50 @@ var BasicModel = AbstractModel.extend({
         if (!ids.length || fieldInfo.__no_fetch) {
             return $.when();
         }
-
+        var def;
+        var fieldNames = _.keys(fieldInfo.relatedFields);
         // step 2: fetch data from server
-        return this._rpc({
+        // if we want specific fields
+        // if not we return an array of objects with the id
+        // to avoid fetching all the relation fields and an useless rpc
+        if (fieldNames.length) {
+            def = this._rpc({
                 model: field.relation,
                 method: 'read',
-                args: [ids, _.keys(fieldInfo.relatedFields)],
+                args: [ids, fieldNames],
                 context: {}, // FIXME
-            })
-            .then(function (results) {
-                // step 3: assign values to correct datapoints
-                var dataPoints = _.map(results, function (result) {
-                    return self._makeDataPoint({
-                        modelName: field.relation,
-                        data: result,
-                        fields: fields,
-                        fieldsInfo: fieldsInfo,
-                        viewType: viewType,
-                    });
-                });
-
-                _.each(list.data, function (dataPoint) {
-                    var record = self.localData[dataPoint];
-                    var m2mList = self.localData[record.data[fieldName]];
-
-                    m2mList.data = [];
-                    _.each(m2mList.res_ids, function (res_id) {
-                        var dataPoint = _.find(dataPoints, function (d) {
-                            return d.res_id === res_id;
-                        });
-                        m2mList.data.push(dataPoint.id);
-                        m2mList.count++;
-                    });
+            });
+        } else {
+            def = $.when(_.map(ids, function (id) {
+                return {id:id};
+            }));
+        }
+        return def.then(function (results) {
+            // step 3: assign values to correct datapoints
+            var dataPoints = _.map(results, function (result) {
+                return self._makeDataPoint({
+                    modelName: field.relation,
+                    data: result,
+                    fields: fields,
+                    fieldsInfo: fieldsInfo,
+                    viewType: viewType,
                 });
             });
+
+            _.each(list.data, function (dataPoint) {
+                var record = self.localData[dataPoint];
+                var m2mList = self.localData[record.data[fieldName]];
+
+                m2mList.data = [];
+                _.each(m2mList.res_ids, function (res_id) {
+                    var dataPoint = _.find(dataPoints, function (d) {
+                        return d.res_id === res_id;
+                    });
+                    m2mList.data.push(dataPoint.id);
+                    m2mList.count++;
+                });
+            });
+        });
     },
     /**
      * batch request for x2ms for datapoint of type list
@@ -2444,12 +2454,18 @@ var BasicModel = AbstractModel.extend({
             }
         }
         if (missingIds.length) {
-            def = this._rpc({
-                model: list.model,
-                method: 'read',
-                args: [missingIds, fieldNames],
-                context: {} // FIXME
-            });
+            if (fieldNames.length) {
+                def = this._rpc({
+                    model: list.model,
+                    method: 'read',
+                    args: [missingIds, fieldNames],
+                    context: {} // FIXME
+                });
+            } else {
+                def = $.when(_.map(missingIds, function (id) {
+                    return {id:id};
+                }));
+            }
         } else {
             def = $.when();
         }
