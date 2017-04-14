@@ -1619,6 +1619,9 @@ var BasicModel = AbstractModel.extend({
         var field = list.fields[fieldName];
         var fieldInfo = list.fieldsInfo[list.viewType][fieldName];
         var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
+        var fieldsInfo = view ? view.fieldsInfo : fieldInfo.fieldsInfo;
+        var fields = view ? view.fields : fieldInfo.relatedFields;
+        var viewType = view ? view.type : fieldInfo.viewType;
 
         // step 1: collect ids
         var ids = [];
@@ -1626,12 +1629,13 @@ var BasicModel = AbstractModel.extend({
             var record = self.localData[dataPoint];
             ids = _.unique(ids.concat(record.data[fieldName] || []));
             var m2mList = self._makeDataPoint({
-                fieldsInfo: fieldInfo.fieldsInfo || view && view.fieldsInfo,
-                fields: fieldInfo.relatedFields || view && view.fields,
+                fieldsInfo: fieldsInfo,
+                fields: fields,
                 modelName: field.relation,
                 res_ids: record.data[fieldName],
                 static: true,
                 type: 'list',
+                viewType: viewType,
             });
             record.data[fieldName] = m2mList.id;
         });
@@ -1653,8 +1657,9 @@ var BasicModel = AbstractModel.extend({
                     return self._makeDataPoint({
                         modelName: field.relation,
                         data: result,
-                        fieldsInfo: fieldInfo.fieldsInfo || view && view.fieldsInfo,
-                        fields: fieldInfo.relatedFields || view && view.fields,
+                        fields: fields,
+                        fieldsInfo: fieldsInfo,
+                        viewType: viewType,
                     });
                 });
 
