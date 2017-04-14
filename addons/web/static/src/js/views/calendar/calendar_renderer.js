@@ -283,7 +283,11 @@ return AbstractRenderer.extend({
      */
     _format: function (record, fieldName) {
         var field = this.state.fields[fieldName];
-        return field_utils.format[field.type](record[fieldName], field);
+        if (field.type === "one2many" || field.type === "many2many") {
+            return field_utils.format[field.type]({data: record[fieldName]}, field);
+        } else {
+            return field_utils.format[field.type](record[fieldName], field);
+        }
     },
     /**
      * Initialize the main calendar
