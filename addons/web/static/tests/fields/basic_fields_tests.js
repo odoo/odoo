@@ -1082,6 +1082,41 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('date field remove value', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    assert.strictEqual(args.args[1].date, false, 'the correct value should be saved');
+                }
+                return this._super.apply(this, arguments);
+            },
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+        });
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '02/03/2017',
+            'the date should be correct in edit mode');
+
+        $('.o_datepicker_input').val('').trigger('input').trigger('change');
+        assert.ok(!form.$('.o_datepicker_input').val());
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_form_field_date').text(), '',
+            'the selected date should be displayed after saving');
+        form.destroy();
+    });
+
 
     QUnit.module('FieldDatetime');
 
@@ -1204,6 +1239,45 @@ QUnit.module('basic_fields', {
             'the selected datetime should be displayed after saving');
 
         list.destroy();
+    });
+
+    QUnit.test('datetime field remove value', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime"/></form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    assert.strictEqual(args.args[1].datetime, false, 'the correct value should be saved');
+                }
+                return this._super.apply(this, arguments);
+            },
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            session: {
+                tzOffset: 120
+            },
+        });
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '02/08/2017 12:00:00',
+            'the date time should be correct in edit mode');
+
+        $('.o_datepicker_input').val('').trigger('input').trigger('change');
+        assert.ok(!form.$('.o_datepicker_input').val());
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_form_field_date').text(), '',
+            'the selected date should be displayed after saving');
+        form.destroy();
     });
 
 

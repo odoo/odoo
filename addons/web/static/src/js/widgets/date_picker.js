@@ -60,7 +60,7 @@ var DateWidget = Widget.extend({
         }
     },
     get_value: function() {
-        return this.get('value').clone();
+        return this.get('value') && this.get('value').clone();
     },
     set_value_from_ui: function() {
         var value = this.$input.val() || false;
