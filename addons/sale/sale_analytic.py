@@ -150,7 +150,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def unlink(self):
-        so_lines = self.mapped('so_line')
+        so_lines = self.sudo().mapped('so_line')
         res = super(AccountAnalyticLine, self).unlink()
-        so_lines.with_context(force_so_lines=so_lines).sudo()._compute_analytic()
+        so_lines.with_context(force_so_lines=so_lines)._compute_analytic()
         return res
