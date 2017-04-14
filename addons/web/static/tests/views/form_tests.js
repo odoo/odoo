@@ -2023,14 +2023,103 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('properly apply onchange on one2many fields', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].p = [4];
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.p = [
+                    [5],
+                    [1, 4, {display_name: "updated record"}],
+                    [0, null, {display_name: "created record"}],
+                ];
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="foo"/></group>' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_form_field_one2many .o_data_row').length, 1,
+            "there should be one one2many record linked at first");
+        assert.strictEqual(form.$('.o_form_field_one2many .o_data_row td:first').text(), 'aaa',
+            "the 'display_name' of the one2many record should be correct");
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_input').val('let us trigger an onchange').trigger('input');
+        var $o2m = form.$('.o_form_field_one2many');
+        assert.strictEqual($o2m.find('.o_data_row').length, 2,
+            "there should be two linked record");
+        assert.strictEqual($o2m.find('.o_data_row:first td:first').text(), 'updated record',
+            "the 'display_name' of the first one2many record should have been updated");
+        assert.strictEqual($o2m.find('.o_data_row:nth(1) td:first').text(), 'created record',
+            "the 'display_name' of the second one2many record should be correct");
+
+        form.destroy();
+    });
+
+    QUnit.test('update many2many value in one2many after onchange', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[1].p = [4];
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.p = [
+                    [5],
+                    [1, 4, {
+                        display_name: "gold",
+                        timmy: [5]
+                    }],
+                ];
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="foo"/>' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="display_name" attrs="{\'readonly\': [(\'timmy\', \'=\', false)]}"/>' +
+                            '<field name="timmy"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 2,
+        });
+        assert.strictEqual($('div[name="p"] .o_data_row td').text().trim(), "aaaNo records",
+            "should have proper initial content");
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('input').val("tralala").trigger('input');
+
+        assert.strictEqual($('div[name="p"] .o_data_row td').text().trim(), "goldNo records",
+            "should have proper initial content");
+        form.destroy();
+    });
+
     QUnit.test('properly apply onchange on many2many fields', function (assert) {
-        assert.expect(3);
+        assert.expect(14);
 
         this.data.partner.onchanges = {
             foo: function (obj) {
                 obj.timmy = [
                     [5],
-                    [1, 12, {display_name: "gold"}],
+                    [4, 12],
+                    [4, 14],
                 ];
             },
         };
@@ -2046,6 +2135,19 @@ QUnit.module('Views', {
                         '</tree>' +
                     '</field>' +
                 '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'read' && args.model === 'partner_type') {
+                    assert.deepEqual(args.args[0], [12, 14],
+                        "should read both m2m with one RPC");
+                }
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].timmy, [[6, false, [12, 14]]],
+                        "should correctly save the changed m2m values");
+
+                }
+                return this._super.apply(this, arguments);
+            },
             res_id: 2,
         });
 
@@ -2055,10 +2157,17 @@ QUnit.module('Views', {
         // switch to edit mode
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o_form_input').val('let us trigger an onchange').trigger('input');
-        assert.strictEqual(form.$('.o_form_field_many2many .o_data_row').length, 1,
-            "there should be one linked record");
-        assert.strictEqual(form.$('.o_form_field_many2many .o_data_row td:first').text(), 'gold',
-            "the 'display_name' of the many2many record should be correctly displayed");
+        var $m2m = form.$('.o_form_field_many2many');
+        assert.strictEqual($m2m.find('.o_data_row').length, 2,
+            "there should be two linked records");
+        assert.strictEqual($m2m.find('.o_data_row:first td:first').text(), 'gold',
+            "the 'display_name' of the first m2m record should be correctly displayed");
+        assert.strictEqual($m2m.find('.o_data_row:nth(1) td:first').text(), 'silver',
+            "the 'display_name' of the second m2m record should be correctly displayed");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.verifySteps(['read', 'onchange', 'read', 'write', 'read', 'read']);
 
         form.destroy();
     });
