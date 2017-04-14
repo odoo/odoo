@@ -268,7 +268,8 @@ var ListController = BasicController.extend({
      * Opens the Export Dialog
      */
     _onExportData: function () {
-        new DataExport(this, this.dataset).open();
+        var record = this.model.get(this.handle);
+        new DataExport(this, record).open();
     },
     /**
      * changes of the list editable are automatically saved when unselecting the
