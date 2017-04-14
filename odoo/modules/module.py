@@ -302,7 +302,7 @@ def load_information_from_description_file(module, mod_path=None):
     :param mod_path: Physical path of module, if not providedThe name of the module (sale, purchase, ...)
     """
     if not mod_path:
-        mod_path = get_module_path(module)
+        mod_path = get_module_path(module, downloaded=True)
     manifest_file = module_manifest(mod_path)
     if manifest_file:
         # default values for descriptor

@@ -349,3 +349,19 @@ class CompanyDependentAttribute(models.Model):
     def _compute_bar(self):
         for record in self:
             record.bar = (record.company.foo or '') * record.quantity
+
+
+class ComputeRecursive(models.Model):
+    _name = 'test_new_api.recursive'
+
+    name = fields.Char(required=True)
+    parent = fields.Many2one('test_new_api.recursive')
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('name', 'parent.display_name')
+    def _compute_display_name(self):
+        for rec in self:
+            if rec.parent:
+                rec.display_name = rec.parent.display_name + " / " + rec.name
+            else:
+                rec.display_name = rec.name

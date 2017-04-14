@@ -25,6 +25,13 @@ var KanbanView = BasicView.extend({
         this._super.apply(this, arguments);
 
         var arch = viewInfo.arch;
+
+        this.loadParams.limit = this.loadParams.limit || 40;
+        this.loadParams.openGroupByDefault = true;
+        this.loadParams.type = 'list';
+
+        this.loadParams.groupBy = arch.attrs.default_group_by ? [arch.attrs.default_group_by] : (params.groupBy || []);
+
         var activeActions = this.controllerParams.activeActions;
         activeActions = _.extend(activeActions, {
             group_edit: arch.attrs.group_edit ? JSON.parse(arch.attrs.group_edit) : true,
@@ -35,7 +42,7 @@ var KanbanView = BasicView.extend({
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
             group_creatable: true,
-            quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(arch),
+            quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(viewInfo),
         };
         this.rendererParams.record_options = {
             editable: activeActions.edit,
@@ -47,19 +54,17 @@ var KanbanView = BasicView.extend({
 
         this.controllerParams.readOnlyMode = false;
         this.controllerParams.hasButtons = true;
-
-        this.loadParams.limit = this.loadParams.limit || 40;
-        this.loadParams.openGroupByDefault = true;
-        this.loadParams.type = 'list';
-
-        this.loadParams.groupBy = arch.attrs.default_group_by ? [arch.attrs.default_group_by] : (params.groupBy || []);
     },
-    _isQuickCreateEnabled: function (arch) {
+    _isQuickCreateEnabled: function (viewInfo) {
+        var groupBy = this.loadParams.groupBy[0];
+        if(groupBy !== undefined && !_.contains(['char', 'boolean', 'many2one'], viewInfo.fields[groupBy].type)) {
+            return false;
+        }
         if (!this.controllerParams.activeActions.create) {
             return false;
         }
-        if (arch.attrs.quick_create !== undefined) {
-            return JSON.parse(arch.attrs.quick_create);
+        if (viewInfo.arch.attrs.quick_create !== undefined) {
+            return JSON.parse(viewInfo.arch.attrs.quick_create);
         }
         return true;
     }

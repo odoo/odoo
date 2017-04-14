@@ -339,6 +339,7 @@ var MenuEntryDialog = widget.LinkDialog.extend({
 
 return {
     'TopBar': TopBarContent,
+    'EditMenuDialog': EditMenuDialog,
 };
 
 });

@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    paperformat_id = fields.Many2one('report.paperformat', 'Paper format')
+    paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('report.paperformat_euro', raise_if_not_found=False))
     external_report_layout = fields.Selection([
         ('background', 'Background'),
         ('boxed', 'Boxed'),

@@ -8,13 +8,13 @@
         </xpath>
     </template>
 
-    <template id="add_to_compare" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Comparison List">
+    <template id="add_to_compare" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Comparison List" priority="22">
         <xpath expr="//div[@class='product_price']" position="inside">
             <a class="hidden-xs btn btn-default btn-xs o_add_compare" title="Compare" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_comparelist"><span class="fa fa-exchange"></span></a>
         </xpath>
     </template>
 
-    <template id="product_add_to_compare" name='Add to comparison in product page' inherit_id="website_sale.product">
+    <template id="product_add_to_compare" name='Add to comparison in product page' inherit_id="website_sale.product" priority="8">
         <xpath expr="//a[@id='add_to_cart']" position="after">
             <t t-if="product.env.ref('website_sale_comparison.add_to_compare').active">
                 <a class="hidden-xs btn btn-default btn-lg mt8 o_add_compare_dyn" title="Compare" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_comparelist"><span class="fa fa-exchange"></span></a>

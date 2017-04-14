@@ -58,7 +58,6 @@ class AccountInvoiceRefund(models.TransientModel):
                 date = form.date or False
                 description = form.description or inv.name
                 refund = inv.refund(form.date_invoice, date, description, inv.journal_id.id)
-                refund.compute_taxes()
 
                 created_inv.append(refund.id)
                 if mode in ('cancel', 'modify'):

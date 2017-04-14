@@ -83,7 +83,8 @@
                                             <span t-if="not track.website_published" class="label label-warning">unpublished</span>
                                         </a>
                                         <div class="text-muted">
-                                            <small t-esc="track.partner_id.sudo().name"/>
+                                            <small t-if="track.partner_id" t-esc="track.partner_id.sudo().name"/>
+                                            <small t-if="not track.partner_id" t-esc="track.partner_name"/>
                                         </div>
                                     </t>
                                 </td>
@@ -98,7 +99,8 @@
                             <span t-esc="track.name"/>
                         </a>
                         <div class="text-muted">
-                            <small t-esc="track.partner_id.sudo()"/>
+                            <small t-if="track.partner_id" t-esc="track.partner_id.sudo().name"/>
+                            <small t-if="not track.partner_id" t-esc="track.partner_name"/>
                         </div>
                     </td>
                 </t>
@@ -213,7 +215,10 @@
                             <div class="row">
                                 <div class="col-md-12 text-center">
                                     <h2 t-field="track.name"/>
-                                    <small>Proposed by <span t-field="track.partner_name"/></small>
+                                    <small>Proposed by
+                                        <span t-if="track.partner_id" t-field="track.partner_id.sudo().name"/>
+                                        <span t-if="not track.partner_id" t-field="track.partner_name"/>
+                                    </small>
                                 </div>
                                 <div class="col-md-12">
                                     <p t-field="track.description"/>

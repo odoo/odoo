@@ -74,6 +74,7 @@ odoo.define('website_sale.website_sale', function (require) {
     var ajax = require('web.ajax');
     var utils = require('web.utils');
     var core = require('web.core');
+    var config = require('web.config');
     var _t = core._t;
 
     if(!$('.oe_website_sale').length) {
@@ -295,8 +296,10 @@ odoo.define('website_sale.website_sale', function (require) {
             var $ul = $(ev.target).closest('.js_add_cart_variants');
             var $parent = $ul.closest('.js_product');
             var $product_id = $parent.find('input.product_id').first();
-            var $price = $parent.find(".oe_price:first .oe_currency_value");
-            var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
+            var $price = $parent.find(".oe_price:first .oe_currency_value")
+                .add($('#product_confirmation').find(".oe_price"));
+            var $default_price = $parent.find(".oe_default_price:first .oe_currency_value")
+                .add($('#product_confirmation').find(".oe_default_price:first .oe_currency_value"));
             var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
             var variant_ids = $ul.data("attribute_value_ids");
             var values = [];
@@ -454,5 +457,8 @@ odoo.define('website_sale.website_sale', function (require) {
         $("select[name='country_id']").change();
     });
 
-    $('.ecom-zoomable img[data-zoom]').zoomOdoo({ attach: '#o-carousel-product'});
+    // Deactivate image zoom for mobile devices, since it might prevent users to scroll
+    if (config.device.size_class > config.device.SIZES.XS) {
+        $('.ecom-zoomable img[data-zoom]').zoomOdoo({ attach: '#o-carousel-product'});
+    }
 });

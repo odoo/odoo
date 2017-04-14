@@ -99,7 +99,7 @@
                 <t t-set="title" t-value="main_object.website_meta_title"/>
             </t>
             <t t-else="">
-                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-esc="(website or res_company).name"/></t>
+                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="(website or res_company).name"/></t>
             </t>
         </t>
         <t t-set="x_icon" t-value="'/web/image/website/%s/favicon/' % website.id"/>

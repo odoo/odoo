@@ -188,7 +188,7 @@ class StockMove(models.Model):
         tmpl_dict = defaultdict(lambda: 0.0)
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
-        for move in self.filtered(lambda move: move.location_id.usage == 'supplier' and move.product_id.cost_method == 'average'):
+        for move in self.filtered(lambda move: move.location_id.usage in ('supplier', 'production') and move.product_id.cost_method == 'average'):
             product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
 
             # if the incoming move is for a purchase order with foreign currency, need to call this to get the same value that the quant will use.
