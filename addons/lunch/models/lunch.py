@@ -99,9 +99,7 @@ class LunchOrder(models.Model):
                     'supplier': line.supplier.name,
                     'note': line.note,
                     'price': line.price,
-                    'currency': line.currency_id.symbol,
-                    'digits': [69, line.currency_id.decimal_places],
-                    'position': line.currency_id.position,
+                    'currency_id': line.currency_id.id,
                 }
             self.previous_order_widget = json.dumps(lunch_data)
 
