@@ -195,7 +195,7 @@ var DataExport = Dialog.extend({
             });
         },
     },
-    init: function(parent, dataset) {
+    init: function(parent, record) {
         var options = {
             title: _t("Export Data"),
             buttons: [
@@ -205,8 +205,8 @@ var DataExport = Dialog.extend({
         };
         this._super(parent, options);
         this.records = {};
-        this.dataset = dataset;
-        this.exports = new data.DataSetSearch(this, 'ir.exports', this.dataset.get_context());
+        this.record = record;
+        this.exports = new data.DataSetSearch(this, 'ir.exports', this.record.getContext());
 
         this.row_index = 0;
         this.row_index_level = 0;
@@ -233,12 +233,12 @@ var DataExport = Dialog.extend({
             self._rpc({
                     route: '/web/export/get_fields',
                     params: {
-                        model: self.dataset.model,
+                        model: self.record.model,
                         import_compat: !!$(e.target).val(),
                     },
                 })
                 .done(function (records) {
-                    var compatible_fields = _.map(records, function (record) {return record.id});
+                    var compatible_fields = _.map(records, function (record) {return record.id; });
                     self.$fields_list
                         .find('option')
                         .filter(function () {
@@ -257,7 +257,7 @@ var DataExport = Dialog.extend({
         waitFor.push(this.getParent().getActiveDomain().then(function (domain) {
             if (domain === undefined) {
                 self.ids_to_export = self.getParent().getSelectedIds();
-                self.domain = self.dataset.domain;
+                self.domain = self.record.domain;
             } else {
                 self.ids_to_export = false;
                 self.domain = domain;
@@ -296,7 +296,7 @@ var DataExport = Dialog.extend({
 
         var self = this;
         return this.exports.read_slice(['name'], {
-            domain: [['resource', '=', this.dataset.model]]
+            domain: [['resource', '=', this.record.model]]
         }).then(function (export_list) {
             if (!export_list.length) {
                 return;
@@ -309,7 +309,7 @@ var DataExport = Dialog.extend({
                     self._rpc({
                             route: '/web/export/namelist',
                             params: {
-                                model: self.dataset.model,
+                                model: self.record.model,
                                 export_id: parseInt(export_id, 10),
                             },
                         })
@@ -380,18 +380,17 @@ var DataExport = Dialog.extend({
     },
     on_show_data: function(records, expansion) {
         var self = this;
-
         if(expansion) {
             this.$('.o_export_tree_item[data-id="' + expansion + '"]')
                 .addClass('open')
                 .find('.o_expand_parent')
                 .toggleClass('fa-plus fa-minus')
                 .next()
-                .after(QWeb.render('Export.TreeItems', {'fields': records, 'debug': this.session.debug}));
+                .after(QWeb.render('Export.TreeItems', {'fields': records, 'debug': this.getSession().debug}));
         } else {
             this.$('.o_left_field_panel').empty().append(
                 $("<div/>").addClass('o_field_tree_structure')
-                           .append(QWeb.render('Export.TreeItems', {'fields': records, 'debug': this.session.debug}))
+                           .append(QWeb.render('Export.TreeItems', {'fields': records, 'debug': this.getSession().debug}))
             );
         }
 
@@ -458,14 +457,14 @@ var DataExport = Dialog.extend({
         var export_format = this.$export_format_inputs.filter(':checked').val();
 
         framework.blockUI();
-        this.session.get_file({
+        this.getSession().get_file({
             url: '/web/export/' + export_format,
             data: {data: JSON.stringify({
-                model: this.dataset.model,
+                model: this.record.model,
                 fields: exported_fields,
                 ids: this.ids_to_export,
                 domain: this.domain,
-                context: pyeval.eval('contexts', [this.dataset._model.context()]),
+                context: pyeval.eval('contexts', [this.record.getContext()]),
                 import_compat: !!this.$import_compat_radios.filter(':checked').val(),
             })},
             complete: framework.unblockUI,
