@@ -527,6 +527,39 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('archiving one record', function (assert) {
+        assert.expect(9);
+
+        // add active field on foo model and make all records active
+        this.data.foo.fields.active = {string: 'Active', type: 'boolean', default: true};
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {sidebar: true},
+            arch: '<tree><field name="foo"/></tree>',
+            mockRPC: function (route) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be invisible');
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 4, "should have 4 records");
+
+        list.$('tbody td.o_list_record_selector:first input').click();
+
+        assert.ok(!list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be visible');
+
+        assert.verifySteps(['/web/dataset/search_read']);
+        list.sidebar.$('a:contains(Archive)').click();
+
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3, "should have 3 records");
+        assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/foo/write', '/web/dataset/search_read']);
+        list.destroy();
+    });
+
     QUnit.test('pager (ungrouped and grouped mode), default limit', function (assert) {
         assert.expect(4);
 

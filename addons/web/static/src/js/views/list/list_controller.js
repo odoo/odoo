@@ -155,7 +155,7 @@ var ListController = BasicController.extend({
         }
         return this.model
             .toggleActive(ids, !archive, this.handle)
-            .then(this.update_state.bind(this));
+            .then(this.update.bind(this, {}, {reload: false}));
     },
     /**
      * This function is the hook called by the field manager mixin to confirm
