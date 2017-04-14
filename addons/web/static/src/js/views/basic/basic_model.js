@@ -834,7 +834,7 @@ var BasicModel = AbstractModel.extend({
         return $.when.apply($, defs).then(function () {
             var onchangeDef;
             if (onChangeFields.length) {
-                onchangeDef = self._applyOnChange(record, onChangeFields).then(function (result) {
+                onchangeDef = self._performOnChange(record, onChangeFields).then(function (result) {
                     delete record._warning;
                     return _.keys(changes).concat(Object.keys(result && result.value || {}));
                 });
@@ -899,133 +899,104 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
-     * This method is quite important: it is supposed to perform the /onchange
-     * rpc and apply the result.
+     * Applies the result on an onchange RPC on a record.
      *
+     * @private
+     * @param {Object} values the result of the onchange RPC (a mapping of
+     *   fieldnames to their value)
      * @param {Object} record
-     * @param {string[]} fields changed fields
-     * @returns {Deferred} The returned deferred can fail, in which case the
-     *   fail value will be the warning message received from the server
+     * @returns {Deferred}
      */
-    _applyOnChange: function (record, fields) {
+    _applyOnChange: function (values, record) {
         var self = this;
-        var onchange_spec = this._buildOnchangeSpecs(record);
-        var idList = record.data.id ? [record.data.id] : [];
-        var options = {};
-        if (fields.length === 1) {
-            fields = fields[0];
-            // if only one field changed, add its context to the RPC context
-            options.fieldName = fields;
-        }
-        var context = this._getContext(record, options);
-        var currentData = this._generateOnChangeData(record);
+        var defs = [];
+        var rec;
+        record._changes = record._changes || {};
+        _.each(values, function (val, name) {
+            var field = record.fields[name];
+            if (!field) {
+                return; // ignore changes of unknown fields
+            }
 
-        return self._rpc({
-                model: record.model,
-                method: 'onchange',
-                args: [idList, currentData, fields, onchange_spec, context],
-            })
-            .then(function (result) {
-                if (!record._changes) {
-                    // if the _changes key does not exist anymore, it means that
-                    // it was removed by discarding the changes after the rpc
-                    // to onchange. So, in that case, the proper response is to
-                    // ignore the onchange.
-                    return;
-                }
-                if (result.warning) {
-                    self.trigger_up('warning', {
-                        message: result.warning.message,
-                        title: result.warning.title,
-                        type: 'dialog',
+            if (field.type === 'many2one' ) {
+                var id = false;
+                // in some case, the value returned by the onchange can
+                // be false (no value), so we need to avoid creating a
+                // local record for that.
+                if (val) {
+                    // when the value isn't false, it can be either
+                    // an array [id, display_name] or just an id.
+                    var data = _.isArray(val) ?
+                        {id: val[0], display_name: val[1]} :
+                        {id: val};
+                    rec = self._makeDataPoint({
+                        context: record.context,
+                        data: data,
+                        modelName: field.relation,
                     });
-                    record._warning = true;
+                    id = rec.id;
                 }
-                var defs = [];
-                _.each(result.value, function (val, name) {
-                    var field = record.fields[name];
-                    if (!field) { return; } // ignore changes of unknown fields
-
-                    var rec;
-                    if (field.type === 'many2one' ) {
-                        // in some case, the value returned by the onchange can
-                        // be false (no value), so we need to avoid creating a
-                        // local record for that.
-                        // FIXME: shouldn't we erase the value in that case?
-                        if (val) {
-                            // when the value isn't false, it can be either
-                            // an array [id, display_name] or just an id.
-                            var data = _.isArray(val) ?
-                                {id: val[0], display_name: val[1]} :
-                                {id: val};
-                            rec = self._makeDataPoint({
-                                context: context,
-                                data: data,
-                                modelName: field.relation,
-                            });
-                            record._changes[name] = rec.id;
+                record._changes[name] = id;
+            } else if (field.type === 'one2many' || field.type === 'many2many') {
+                var listId = record._changes[name] || record.data[name];
+                var list;
+                if (listId) {
+                    list = self.localData[listId];
+                } else {
+                    var fieldInfo = record.fieldsInfo[record.viewType][name];
+                    list = self._makeDataPoint({
+                        fieldsInfo: fieldInfo.fieldsInfo,
+                        modelName: field.relation,
+                        type: 'list',
+                        viewtype: fieldInfo.viewType,
+                    });
+                }
+                record._changes[name] = list.id;
+                var shouldLoad = false;
+                _.each(val, function (command) {
+                    if (command[0] === 0 || command[0] === 1) {
+                        // CREATE or UPDATE
+                        var params = {
+                            context: list.context,
+                            fields: list.fields,
+                            fieldsInfo: list.fieldsInfo,
+                            modelName: list.model,
+                            parentID: list.id,
+                            viewType: list.viewType,
+                        };
+                        if (command[0] === 1) {
+                            params.res_id = command[1];
                         }
-                    } else if (field.type === 'one2many' || field.type === 'many2many') {
-                        record._changes = record._changes || {};
-                        var listId = record._changes[name] || record.data[name];
-                        var list = self.localData[listId];
-                        _.each(val, function (command) {
-                            if (command[0] === 0 || command[0] === 1) {
-                                // CREATE or UPDATE
-                                var params = {
-                                    context: context,
-                                    fields: list.fields,
-                                    fieldsInfo: list.fieldsInfo,
-                                    modelName: list.model,
-                                    parentID: list.id,
-                                    viewType: list.viewType,
-                                };
-                                if (command[0] === 1) {
-                                    params.res_id = command[1];
-                                }
-                                rec = self._makeDataPoint(params);
-                                var data = {};
-                                _.each(Object.keys(command[2]), function (name) {
-                                    var field = rec.fields[name];
-                                    if (!field) {
-                                        // ignore if this field is unknown as we don't
-                                        // know if it requires a special handling
-                                        return;
-                                    }
-                                    data[name] = command[2][name];
-                                    if (field.type === 'many2one') {
-                                        var r = self._makeDataPoint({
-                                            modelName: field.relation,
-                                            data: {
-                                                id: data[name][0],
-                                                display_name: data[name][1],
-                                            },
-                                        });
-                                        data[name] = r.id;
-                                    }
-                                });
-                                rec._changes = data;
-                                list._changes.push(rec.id);
-                            }
-                            if (command[0] === 5) {
-                                // DELETE ALL
-                                list._changes = [];
-                            }
-                        });
-                    } else if (field.type === 'date') {
-                        // process data: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.date(val, field, {isUTC: true});
-                    } else if (field.type === 'datetime') {
-                        // process datetime: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.datetime(val, field, {isUTC: true});
-                    } else {
-                        record._changes[name] = val;
+                        rec = self._makeDataPoint(params);
+                        list._changes.push(rec.id);
+                        defs.push(self._applyOnChange(command[2], rec));
+                    } else if (command[0] === 4) {
+                        // LINK TO
+                        list.res_ids.push(command[1]);
+                        list.count++;
+                        shouldLoad = true;
+                    } else if (command[0] === 5) {
+                        // DELETE ALL
+                        list._changes = [];
                     }
                 });
-                return $.when.apply($, defs).then(function () {
-                    return result;
-                });
-            });
+                if (shouldLoad) {
+                    var def = self._readUngroupedList(list).then(function () {
+                        list._changes = list.data;
+                    });
+                    defs.push(def);
+                }
+            } else if (field.type === 'date') {
+                // process data: convert into a moment instance
+                record._changes[name] = fieldUtils.parse.date(val);
+            } else if (field.type === 'datetime') {
+                // process datetime: convert into a moment instance
+                record._changes[name] = fieldUtils.parse.datetime(val);
+            } else {
+                record._changes[name] = val;
+            }
+        });
+        return $.when.apply($, defs);
     },
     /**
      * When an operation is applied to a x2many field, the field widgets
@@ -1161,7 +1132,7 @@ var BasicModel = AbstractModel.extend({
      * An onchange spec is necessary as an argument to the /onchange route. It
      * looks like this: { field: "1", anotherField: "", relation.subField: "1"}
      *
-     * @see _applyOnChange
+     * @see _performOnChange
      *
      * @param {Object} record resource object of type 'record'
      * @returns {Object} an onchange spec
@@ -2215,7 +2186,7 @@ var BasicModel = AbstractModel.extend({
                             }
                         }
                         if (shouldApplyOnchange) {
-                            return self._applyOnChange(record, fields_key).then(function () {
+                            return self._performOnChange(record, fields_key).then(function () {
                                 if (record._warning) {
                                     return $.Deferred().reject();
                                 }
@@ -2275,6 +2246,54 @@ var BasicModel = AbstractModel.extend({
                 record[fieldName] = fieldUtils.parse.datetime(val, field, {isUTC: true});
             }
         });
+    },
+    /**
+     * This method is quite important: it is supposed to perform the /onchange
+     * rpc and apply the result.
+     *
+     * @param {Object} record
+     * @param {string[]} fields changed fields
+     * @returns {Deferred} The returned deferred can fail, in which case the
+     *   fail value will be the warning message received from the server
+     */
+    _performOnChange: function (record, fields) {
+        var self = this;
+        var onchange_spec = this._buildOnchangeSpecs(record);
+        var idList = record.data.id ? [record.data.id] : [];
+        var options = {};
+        if (fields.length === 1) {
+            fields = fields[0];
+            // if only one field changed, add its context to the RPC context
+            options.fieldName = fields;
+        }
+        var context = this._getContext(record, options);
+        var currentData = this._generateOnChangeData(record);
+
+        return self._rpc({
+                model: record.model,
+                method: 'onchange',
+                args: [idList, currentData, fields, onchange_spec, context],
+            })
+            .then(function (result) {
+                if (!record._changes) {
+                    // if the _changes key does not exist anymore, it means that
+                    // it was removed by discarding the changes after the rpc
+                    // to onchange. So, in that case, the proper response is to
+                    // ignore the onchange.
+                    return;
+                }
+                if (result.warning) {
+                    self.trigger_up('warning', {
+                        message: result.warning.message,
+                        title: result.warning.title,
+                        type: 'dialog',
+                    });
+                    record._warning = true;
+                }
+                return self._applyOnChange(result.value, record).then(function () {
+                    return result;
+                });
+            });
     },
     /**
      * Once a record is created and some data has been fetched, we need to do
