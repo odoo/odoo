@@ -123,8 +123,9 @@ class Registry(Mapping):
         # special cursor for test mode; None means "normal" mode
         self.test_cr = None
 
-        # Indicates that the registry is 
-        self.ready = False
+        # Indicates that the registry is
+        self.loaded = False             # whether all modules are loaded
+        self.ready = False              # whether everything is set up
 
         # Inter-process signaling (used only when odoo.multi_process is True):
         # The `base_registry_signaling` sequence indicates the whole registry
@@ -264,11 +265,9 @@ class Registry(Mapping):
 
         return self.descendants(model_names, '_inherit', '_inherits')
 
-    def setup_models(self, cr, partial=False):
+    def setup_models(self, cr):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
-
-            :param partial: ``True`` if all models have not been loaded yet.
         """
         lazy_property.reset_all(self)
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
@@ -289,10 +288,10 @@ class Registry(Mapping):
         # do the actual setup from a clean state
         self._m2m = {}
         for model in models:
-            model._setup_base(partial)
+            model._setup_base()
 
         for model in models:
-            model._setup_fields(partial)
+            model._setup_fields()
 
         for model in models:
             model._setup_complete()

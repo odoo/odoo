@@ -41,8 +41,8 @@ class IrModelFields(models.Model):
 
         return params
 
-    def _instanciate_attrs(self, field_data, partial):
-        attrs = super(IrModelFields, self)._instanciate_attrs(field_data, partial)
+    def _instanciate_attrs(self, field_data):
+        attrs = super(IrModelFields, self)._instanciate_attrs(field_data)
         if field_data.get('serialization_field_id'):
             serialization_record = self.browse(field_data['serialization_field_id'])
             attrs['sparse'] = serialization_record.name

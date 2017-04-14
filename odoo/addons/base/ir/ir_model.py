@@ -208,7 +208,7 @@ class IrModel(models.Model):
         res = super(IrModel, self).create(vals)
         if vals.get('state', 'manual') == 'manual':
             # setup models; this automatically adds model in registry
-            self.pool.setup_models(self._cr, partial=(not self.pool.ready))
+            self.pool.setup_models(self._cr)
             # update database schema
             self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
             self.pool.signal_registry_change()
@@ -616,7 +616,7 @@ class IrModelFields(models.Model):
 
             if vals['model'] in self.pool:
                 # setup models; this re-initializes model in registry
-                self.pool.setup_models(self._cr, partial=(not self.pool.ready))
+                self.pool.setup_models(self._cr)
                 # update database schema of model and its descendant models
                 models = self.pool.descendants([vals['model']], '_inherits')
                 self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
@@ -683,7 +683,7 @@ class IrModelFields(models.Model):
 
         if column_rename or patched_models:
             # setup models, this will reload all manual fields in registry
-            self.pool.setup_models(self._cr, partial=(not self.pool.ready))
+            self.pool.setup_models(self._cr)
 
         if patched_models:
             # update the database schema of the models to patch
@@ -792,7 +792,7 @@ class IrModelFields(models.Model):
                 records = self.browse([fields_data.pop(name)['id'] for name in extra_names])
                 records.with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
 
-    def _instanciate_attrs(self, field_data, partial):
+    def _instanciate_attrs(self, field_data):
         """ Return the parameters for a field instance for ``field_data``. """
         attrs = {
             'manual': True,
@@ -811,13 +811,13 @@ class IrModelFields(models.Model):
         elif field_data['ttype'] in ('selection', 'reference'):
             attrs['selection'] = safe_eval(field_data['selection'])
         elif field_data['ttype'] == 'many2one':
-            if partial and field_data['relation'] not in self.env:
+            if not self.pool.loaded and field_data['relation'] not in self.env:
                 return
             attrs['comodel_name'] = field_data['relation']
             attrs['ondelete'] = field_data['on_delete']
             attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
         elif field_data['ttype'] == 'one2many':
-            if partial and not (
+            if not self.pool.loaded and not (
                 field_data['relation'] in self.env and (
                     field_data['relation_field'] in self.env[field_data['relation']]._fields or
                     field_data['relation_field'] in self.pool.get_manual_fields(self._cr, field_data['relation'])
@@ -827,7 +827,7 @@ class IrModelFields(models.Model):
             attrs['inverse_name'] = field_data['relation_field']
             attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
         elif field_data['ttype'] == 'many2many':
-            if partial and field_data['relation'] not in self.env:
+            if not self.pool.loaded and field_data['relation'] not in self.env:
                 return
             attrs['comodel_name'] = field_data['relation']
             rel, col1, col2 = self._custom_many2many_names(field_data['model'], field_data['relation'])
@@ -840,13 +840,11 @@ class IrModelFields(models.Model):
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
         return attrs
 
-    def _instanciate(self, field_data, partial):
+    def _instanciate(self, field_data):
         """ Return a field instance corresponding to parameters ``field_data``. """
-        attrs = self._instanciate_attrs(field_data, partial)
-        if partial and not attrs:
-            # field not instanciable yet, ignore.
-            return None
-        return fields.Field.by_type[field_data['ttype']](**attrs)
+        attrs = self._instanciate_attrs(field_data)
+        if attrs:
+            return fields.Field.by_type[field_data['ttype']](**attrs)
 
 
 class IrModelConstraint(models.Model):
