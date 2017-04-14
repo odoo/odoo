@@ -30,7 +30,7 @@ class EventType(models.Model):
             'interval_unit': 'days',
             'interval_type': 'before_event',
             'template_id': self.env.ref('event.event_reminder')
-        })]
+        })] if self.user_has_groups('event.group_email_scheduling') else []
 
     name = fields.Char('Event Category', required=True, translate=True)
     # registration
@@ -239,7 +239,7 @@ class EventEvent(models.Model):
             if self.event_type_id.use_reply_to:
                 self.reply_to = self.event_type_id.default_reply_to
 
-            if self.event_type_id.use_reply_to:
+            if self.event_type_id.use_hashtag:
                 self.twitter_hashtag = self.event_type_id.default_hashtag
 
             if self.event_type_id.use_timezone:

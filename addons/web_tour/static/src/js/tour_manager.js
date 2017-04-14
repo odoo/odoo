@@ -300,7 +300,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 this.update();
             }).bind(this));
 
-            window.location.href = session.debug ? $.param.querystring(tour.url, {debug: session.debug}) : tour.url;
+            var url = session.debug ? $.param.querystring(tour.url, {debug: session.debug}) : tour.url;
+            window.location.href = window.location.origin + url;
         } else {
             this.update();
         }

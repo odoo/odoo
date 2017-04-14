@@ -172,6 +172,10 @@
             <field name="name">Attendees</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_expected': True}</field>
+            <field name="help" type="html">
+<p class="oe_view_nocontent_create">
+    Click to add a new attendee.
+</p></field>
         </record>
 
         <!-- EVENT.EVENT VIEWS -->
@@ -231,7 +235,11 @@
                             <group>
                                 <field name="event_type_id" options="{'no_create':True}"/>
                                 <field name="reply_to" string="Contact Email"/>
-                                <field name="twitter_hashtag"/>
+                                <label for="twitter_hashtag"/>
+                                <div>
+                                    <span class="oe_inline"># </span>
+                                    <field name="twitter_hashtag" nolabel="1" class="oe_inline"/>
+                                </div>
                                 <field name="auto_confirm" groups="base.group_no_one"/>
                             </group>
                             <group>
@@ -589,7 +597,7 @@
                                 <field name="scheduled_date"/>
                             </group>
                         </group>
-                        <notebook>
+                        <notebook groups="base.group_no_one">
                             <page string="Registration Mails">
                                 <field name="mail_registration_ids">
                                     <tree string="Registration mail" editable="bottom">

@@ -582,7 +582,7 @@
             <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
                 <i class="fa fa-minus"></i>
             </a>
-            <input type="text" class="form-control" data-min="1" name="add_qty" value="1"/>
+            <input type="text" class="form-control quantity" data-min="1" name="add_qty" value="1"/>
             <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
                 <i class="fa fa-plus"></i>
             </a>
@@ -613,10 +613,7 @@
 
     <template id="product_variants" inherit_id="website_sale.product" active="False" customize_show="True" name="List View of Variants">
       <xpath expr="//t[@t-placeholder='select']" position="replace">
-        <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_id.id"/>
-        <t t-call="website_sale.variants">
-          <t t-set="ul_class" t-value="'nav-stacked'"/>
-        </t>
+        <input type="hidden" t-if="len(product.product_variant_ids) == 1" class="product_id" name="product_id" t-att-value="product.product_variant_id.id"/>
         <t t-if="len(product.product_variant_ids) &gt; 1">
           <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
             <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
@@ -890,7 +887,7 @@
                                 <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs">
                                     <i class="fa fa-minus"></i>
                                 </a>
-                                <input type="text" class="js_quantity form-control" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
+                                <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
                                 <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs">
                                     <i class="fa fa-plus"></i>
                                 </a>

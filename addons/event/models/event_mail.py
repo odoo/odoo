@@ -77,7 +77,7 @@ class EventMailScheduler(models.Model):
         if self.interval_type in ['before_event', 'after_event']:
             self.done = self.mail_sent
         else:
-            self.done = len(self.mail_registration_ids) == len(self.event_id.registration_ids) and all(filter(lambda line: line.mail_sent, self.mail_registration_ids))
+            self.done = len(self.mail_registration_ids) == len(self.event_id.registration_ids) and all(mail.mail_sent for mail in self.mail_registration_ids)
 
     @api.one
     @api.depends('event_id.state', 'event_id.date_begin', 'interval_type', 'interval_unit', 'interval_nbr')

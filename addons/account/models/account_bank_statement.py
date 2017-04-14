@@ -795,7 +795,7 @@ class AccountBankStatementLine(models.Model):
                 or self.statement_id.journal_id.default_debit_account_id.id,
             'credit': amount < 0 and -amount or 0.0,
             'debit': amount > 0 and amount or 0.0,
-            'statement_id': self.statement_id.id,
+            'statement_line_id': self.id,
             'currency_id': statement_currency != company_currency and statement_currency.id or (st_line_currency != company_currency and st_line_currency.id or False),
             'amount_currency': amount_currency,
         }

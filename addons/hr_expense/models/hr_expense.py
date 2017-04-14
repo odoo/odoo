@@ -172,19 +172,24 @@ class HrExpense(models.Model):
         '''
         main function that is called when trying to create the accounting entries related to an expense
         '''
+        move_group_by_sheet = {}
         for expense in self:
             journal = expense.sheet_id.bank_journal_id if expense.payment_mode == 'company_account' else expense.sheet_id.journal_id
             #create the move that will contain the accounting entries
             acc_date = expense.sheet_id.accounting_date or expense.date
-            move = self.env['account.move'].create({
-                'journal_id': journal.id,
-                'company_id': self.env.user.company_id.id,
-                'date': acc_date,
-                'ref': expense.sheet_id.name,
-                # force the name to the default value, to avoid an eventual 'default_name' in the context
-                # to set it to '' which cause no number to be given to the account.move when posted.
-                'name': '/',
-            })
+            if not expense.sheet_id.id in move_group_by_sheet:
+                move = self.env['account.move'].create({
+                    'journal_id': journal.id,
+                    'company_id': self.env.user.company_id.id,
+                    'date': acc_date,
+                    'ref': expense.sheet_id.name,
+                    # force the name to the default value, to avoid an eventual 'default_name' in the context
+                    # to set it to '' which cause no number to be given to the account.move when posted.
+                    'name': '/',
+                })
+                move_group_by_sheet[expense.sheet_id.id] = move
+            else:
+                move = move_group_by_sheet[expense.sheet_id.id]
             company_currency = expense.company_id.currency_id
             diff_currency_p = expense.currency_id != company_currency
             #one account.move.line per expense (+taxes..)
@@ -235,38 +240,46 @@ class HrExpense(models.Model):
             lines = map(lambda x: (0, 0, expense._prepare_move_line(x)), move_lines)
             move.with_context(dont_create_taxes=True).write({'line_ids': lines})
             expense.sheet_id.write({'account_move_id': move.id})
-            move.post()
             if expense.payment_mode == 'company_account':
                 expense.sheet_id.paid_expense_sheets()
+        for move in move_group_by_sheet.values():
+            move.post()
         return True
+
+    @api.multi
+    def _prepare_move_line_value(self):
+        self.ensure_one()
+        if self.account_id:
+            account = self.account_id
+        elif self.product_id:
+            account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+            if not account:
+                raise UserError(
+                    _("No Expense account found for the product %s (or for its category), please configure one.") % (self.product_id.name))
+        else:
+            account = self.env['ir.property'].with_context(force_company=self.company_id.id).get('property_account_expense_categ_id', 'product.category')
+            if not account:
+                raise UserError(
+                    _('Please configure Default Expense account for Product expense: `property_account_expense_categ_id`.'))
+        aml_name = self.employee_id.name + ': ' + self.name.split('\n')[0][:64]
+        move_line = {
+            'type': 'src',
+            'name': aml_name,
+            'price_unit': self.unit_amount,
+            'quantity': self.quantity,
+            'price': self.total_amount,
+            'account_id': account.id,
+            'product_id': self.product_id.id,
+            'uom_id': self.product_uom_id.id,
+            'analytic_account_id': self.analytic_account_id.id,
+        }
+        return move_line
 
     @api.multi
     def _move_line_get(self):
         account_move = []
         for expense in self:
-            if expense.account_id:
-                account = expense.account_id
-            elif expense.product_id:
-                account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
-                if not account:
-                    raise UserError(_("No Expense account found for the product %s (or for its category), please configure one.") % (expense.product_id.name))
-            else:
-                account = self.env['ir.property'].with_context(force_company=expense.company_id.id).get('property_account_expense_categ_id', 'product.category')
-                if not account:
-                    raise UserError(_('Please configure Default Expense account for Product expense: `property_account_expense_categ_id`.'))
-
-            aml_name = expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64]
-            move_line = {
-                    'type': 'src',
-                    'name': aml_name,
-                    'price_unit': expense.unit_amount,
-                    'quantity': expense.quantity,
-                    'price': expense.total_amount,
-                    'account_id': account.id,
-                    'product_id': expense.product_id.id,
-                    'uom_id': expense.product_uom_id.id,
-                    'analytic_account_id': expense.analytic_account_id.id,
-            }
+            move_line = expense._prepare_move_line_value()
             account_move.append(move_line)
 
             # Calculate tax lines and adjust base line

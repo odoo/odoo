@@ -292,7 +292,15 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
         $imagePopover.find('.o_image_alt').text( (alt || "").replace(/&quot;/g, '"') ).parent().toggle(oStyle.image.tagName === "IMG");
         $imagePopover.show();
 
-        range.createFromNode(dom.firstChild(oStyle.image)).select();
+        // for video tag (non-void) we select the range over the tag,
+        // for other media types we get the first descendant leaf element
+        var target_node = oStyle.image;
+        if (!oStyle.image.className.match(/(^|\s)media_iframe_video(\s|$)/i)) {
+            target_node = dom.firstChild(target_node);
+        }
+        range.createFromNode(target_node).select();
+        // save range on the editor so it is not lost if restored
+        eventHandler.modules.editor.saveRange(dom.makeLayoutInfo(target_node).editable());
     } else {
         $(".note-control-selection").hide();
     }
