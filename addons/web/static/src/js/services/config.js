@@ -37,6 +37,8 @@ function set_size_class() {
     }
 }
 
+config.is_mobile = config.device.size_class <= config.device.SIZES.XS;
+
 return config;
 
 });
