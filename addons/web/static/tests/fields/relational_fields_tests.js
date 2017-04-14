@@ -2737,6 +2737,40 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('x2many fields use their "mode" attribute', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field mode="kanban" name="turtles">' +
+                            '<tree>' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                            '<kanban>' +
+                                '<templates>' +
+                                    '<t t-name="kanban-box">' +
+                                        '<div>' +
+                                            '<field name="turtle_int"/>' +
+                                        '</div>' +
+                                    '</t>' +
+                                '</templates>' +
+                            '</kanban>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_form_field_one2many .o_kanban_view').length, 1,
+            "should have rendered a kanban view");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {

@@ -532,7 +532,7 @@ var FieldX2Many = AbstractField.extend({
         this._super.apply(this, arguments);
         this.operations = [];
         this.isReadonly = this.mode === 'readonly';
-        this.view = this.attrs.views.list || this.attrs.views.kanban;
+        this.view = this.attrs.views[this.attrs.mode];
         this.activeActions = {};
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
         var arch = this.view && this.view.arch;
