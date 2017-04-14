@@ -570,7 +570,7 @@ class ProductProduct(models.Model):
     @api.depends('type')
     def _get_show_measure_data(self):
         for product in self:
-            if product.product.product_tmpl_id.type in ['product', 'consu']:
+            if product.product_tmpl_id.type in ['product', 'consu']:
                 product.show_measure_data = True
             else:
                 product.show_measure_data = False
