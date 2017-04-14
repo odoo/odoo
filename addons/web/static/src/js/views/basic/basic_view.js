@@ -66,6 +66,29 @@ var BasicView = AbstractView.extend({
             var viewType = this.viewType;
             var viewFields = Object.keys(record.fieldsInfo[viewType]);
             var fieldNames = _.difference(viewFields, Object.keys(record.data));
+            // Suppose that in a form view, there is an x2many list view with
+            // an x2many field F of the related record, and that F is also
+            // displayed in the x2many form view (e.g. as a list or a kanban).
+            // In this case, F is represented in record.data
+            // (as it is known by the x2many list view), but its related fields
+            // (those displayed in the list or kanban) still need to be fetched.
+            // So when this happens, F is added to the list of fieldNames to fetch.
+            _.each(viewFields, function (name) {
+                if (!_.contains(fieldNames, name)) {
+                    var fieldType = record.fields[name].type;
+                    if ((fieldType === 'one2many' || fieldType === 'many2many')) {
+                        if (!('fieldsInfo' in record.data[name])) {
+                            fieldNames.push(name);
+                        } else {
+                            var recordViewTypes = Object.keys(record.data[name].fieldsInfo);
+                            var fieldViewTypes = Object.keys(record.fieldsInfo[viewType][name].views);
+                            if (_.difference(fieldViewTypes, recordViewTypes).length) {
+                                fieldNames.push(name);
+                            }
+                        }
+                    }
+                }
+            });
             if (fieldNames.length && !this.model.isNew(record.id)) {
                 return this.model.reload(this.recordID, {
                     fieldNames: fieldNames,

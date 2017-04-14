@@ -431,7 +431,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('fetch x2manys in list, with not too many rpcs', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.partner.records[0].category = [12, 15];
         this.data.partner.records[1].category = [12, 14];
@@ -441,12 +441,11 @@ QUnit.module('Views', {
         this.params.groupedBy = [];
         this.params.res_id = undefined;
 
-        var rpcCount = 0;
         var model = createModel({
             Model: BasicModel,
             data: this.data,
             mockRPC: function (route, args) {
-                rpcCount++;
+                assert.step(route);
                 return this._super(route, args);
             },
         });
@@ -456,7 +455,8 @@ QUnit.module('Views', {
 
             assert.strictEqual(record.data[0].data.category.data.length, 2,
                 "first record should have 2 categories loaded");
-            assert.strictEqual(rpcCount, 2, "should have done 2 rpc (searchread and read category)");
+            assert.verifySteps(["/web/dataset/search_read"],
+                "should have done 2 rpc (searchread and read category)");
         });
         model.destroy();
     });
@@ -1280,4 +1280,24 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('load model with many2many field properly fetched', function (assert) {
+        assert.expect(2);
+
+        this.params.fieldNames = ['category'];
+        this.params.res_id = 1;
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function(route, args) {
+                assert.step(args.method);
+                return this._super(route, args);
+            },
+        });
+
+        model.load(this.params);
+        assert.verifySteps(['read'],
+            "there should be only one read");
+        model.destroy();
+    });
 });});

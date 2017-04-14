@@ -420,13 +420,12 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('many2manytags are correctly fetched and displayed', function (assert) {
-        assert.expect(3);
+    QUnit.test('many2many_tags are correctly fetched and displayed', function (assert) {
+        assert.expect(5);
 
         this.data.partner.records[0].category_ids = [6, 7];
         this.data.partner.records[1].category_ids = [7];
 
-        var count = 0;
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -439,8 +438,8 @@ QUnit.module('Views', {
                             '</div>' +
                         '</t></templates>' +
                     '</kanban>',
-            mockRPC: function () {
-                count++;
+            mockRPC: function (route) {
+                assert.step(route);
                 return this._super.apply(this, arguments);
             },
         });
@@ -450,7 +449,7 @@ QUnit.module('Views', {
             'first record should contain 2 tags');
         assert.ok($first_record.find('.o_tag:first()').hasClass('o_tag_color_2'),
             'first tag should have color 2');
-        assert.strictEqual(count, 2,
+        assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/category/read'],
             'two RPC should have been done(one search read and one read for the m2m');
         kanban.destroy();
     });

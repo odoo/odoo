@@ -1179,7 +1179,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     },
 });
 
-var KanbanFieldMany2ManyTags = FieldMany2Many.extend({
+var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
     _render: function () {
         var self = this;
         this.$el.addClass('o_form_field_many2manytags o_kanban_tags');
