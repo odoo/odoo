@@ -2788,5 +2788,49 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('readonly fields with modifiers may be saved', function (assert) {
+        // the readonly property on the field description only applies on view,
+        // this is not a DB constraint. It should be seen as a default value,
+        // that may be overriden in views, for example with modifiers. So
+        // basically, a field defined as readonly may be edited.
+        assert.expect(3);
+
+        this.data.partner.fields.foo.readonly = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="foo" attrs="{\'readonly\': [(\'bar\',\'=\',False)]}"/>' +
+                        '<field name="bar"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], {foo: 'New foo value'},
+                        "the new value should be saved");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // bar being set to true, foo shouldn't be readonly and thus its value
+        // could be saved, even if in its field description it is readonly
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_form_input').length, 1,
+            "foo field should be editable");
+        form.$('.o_form_input').val('New foo value').trigger('input');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_form_field[name=foo]').text(), 'New foo value',
+            "new value for foo field should have been saved");
+
+        form.destroy();
+    });
+
 });
 });

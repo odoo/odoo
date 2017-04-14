@@ -668,15 +668,6 @@ var BasicModel = AbstractModel.extend({
             // make sure we don't write an undefined id
             delete changes.id;
 
-            // remove readonly fields from the list of changes
-            if (method === 'write') {
-                for (var fieldName in changes) {
-                    if (record.fields[fieldName].readonly) {
-                        delete changes[fieldName];
-                    }
-                }
-            }
-
             // in the case of a write, only perform the RPC if there are changes to save
             if (method === 'create' || Object.keys(changes).length) {
                 var args = method === 'write' ? [[record.data.id], changes] : [changes];
