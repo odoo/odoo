@@ -705,7 +705,7 @@ var FieldX2Many = AbstractField.extend({
         event.stopPropagation();
         this._setValue({
             operation: 'REMOVE',
-            id: event.data.id
+            ids: [event.data.id],
         });
     },
     /**
@@ -999,7 +999,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         var record = _.findWhere(this.value.data, {res_id: id});
         this._setValue({
             operation: 'REMOVE',
-            id: record.id
+            ids: [record.id],
         });
     },
     /**
@@ -1207,7 +1207,7 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     _render: function () {
         var self = this;
         this._super.apply(this, arguments);
-        _.each(this.value, function (id) {
+        _.each(this.value.res_ids, function (id) {
             self.$('input[data-record-id="' + id + '"]').prop('checked', true);
         });
     },

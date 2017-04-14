@@ -1092,18 +1092,19 @@ var BasicModel = AbstractModel.extend({
                 // this could be optimized by registering the fetched records in the list's _cache
                 // so that if a record is removed and then re-added, it won't be fetched twice
                 var fieldNames = list.getFieldNames();
-                var def = this._rpc({
+                if (fieldNames.length) {
+                    var def = this._rpc({
                         model: list.model,
                         method: 'read',
                         args: [_.pluck(data, 'id'), fieldNames]
-                    })
-                    .then(function (records) {
+                    }).then(function (records) {
                         _.each(records, function (record) {
                             list_records[record.id].data = record;
                             self._parseServerData(fieldNames, list.fields, record);
                         });
                     });
-                defs.push(def);
+                    defs.push(def);
+                }
                 break;
             case 'CREATE':
                 if (command.data) {
@@ -1118,31 +1119,34 @@ var BasicModel = AbstractModel.extend({
                 defs.push(this._applyChange(command.id, command.data));
                 break;
             case 'REMOVE':
-                list._changes = _.without(list._changes, command.id);
+                list._changes = _.difference(list._changes, command.ids);
                 break;
             case 'REPLACE_WITH':
-                // this is certainly not optimal... and not sure that it is
+                // this is certainFly not optimal... and not sure that it is
                 // correct if some ids are added and some other are removed
-                var currentIds = _.map(list._changes, function (localId) {
-                    return self.localData[localId].res_id;
+                var currentData = _.map(list._changes, function (localId) {
+                    return self.localData[localId];
                 });
+                var currentIds = _.pluck(currentData, 'res_id');
                 var newIds = _.difference(command.ids, currentIds);
                 var removedIds = _.difference(currentIds, command.ids);
-                var addDef, removedDef;
+                var addDef, removedDef, values;
                 if (newIds.length) {
-                    var values = _.map(newIds, function (id) {
+                    values = _.map(newIds, function (id) {
                         return {id: id};
                     });
-
                     addDef = this._applyX2ManyChange(record, fieldName, {
                         operation: 'ADD_M2M',
                         ids: values
                     });
                 }
                 if (removedIds.length) {
+                    values = _.filter(currentData, function (dataPoint) {
+                        return _.contains(removedIds, dataPoint.res_id);
+                    });
                     removedDef = this._applyX2ManyChange(record, fieldName, {
                         operation: 'REMOVE',
-                        ids: removedIds
+                        ids: _.pluck(values, 'id'),
                     });
                 }
                 return $.when(addDef, removedDef);
@@ -1939,7 +1943,8 @@ var BasicModel = AbstractModel.extend({
      * @returns {string[]} the list of field names
      */
     _getFieldNames: function (element) {
-       return Object.keys(element.fieldsInfo[element.viewType] || {});
+        var fieldsInfo = element.fieldsInfo;
+        return Object.keys(fieldsInfo && fieldsInfo[element.viewType] || {});
     },
     /**
      * Helper method for the load entry point.
