@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2017-04-04 16:07+0000\n"
+"PO-Revision-Date: 2017-04-09 14:32+0000\n"
 "Last-Translator: amos lin <seeing@edirect168.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -877,13 +877,13 @@ msgstr "延期交貨單"
 #: code:addons/stock/wizard/stock_backorder_confirmation.py:33
 #, python-format
 msgid "Back order <em>%s</em> <b>cancelled</b>."
-msgstr ""
+msgstr "延期交貨單 <em>%s</em> <b>已取消</b>。"
 
 #. module: stock
 #: code:addons/stock/stock.py:1104
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
-msgstr "欠單 <em>%s</em> <b>已建立</b>。"
+msgstr "延期交貨單 <em>%s</em> <b>已建立</b>。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
@@ -899,13 +899,13 @@ msgstr ""
 #: code:addons/stock/stock.py:4732
 #, python-format
 msgid "Backorder exists"
-msgstr "欠單已存在"
+msgstr "延期交貨單已存在"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr "欠單"
+msgstr "延期交貨單"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_barcode
@@ -930,7 +930,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_barcode
 msgid "Barcode scanner support"
-msgstr "條碼掃描支援"
+msgstr "條碼機支援"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -942,7 +942,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
 msgid "Big Vendors"
-msgstr ""
+msgstr "超級供應商"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
@@ -958,12 +958,12 @@ msgstr "包含內容"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Lots"
-msgstr ""
+msgstr "按批次"
 
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Unique Serial Number"
-msgstr ""
+msgstr "按唯一序號"
 
 #. module: stock
 #: code:addons/stock/stock.py:2162
@@ -978,7 +978,7 @@ msgstr "通過改變這裡的數量，您確認新的完成數量: Odoo不會自
 msgid ""
 "By default, Odoo measures products by 'units', which are generic and "
 "represent just about anything"
-msgstr ""
+msgstr "預設情況下，產品的通用單位是 '件'，所有的產品都可以用它來表示"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_procure_method
@@ -6683,7 +6683,7 @@ msgstr "You can not change the unit of measure of a product that has already bee
 #: code:addons/stock/stock.py:4432
 #, python-format
 msgid "You can not delete pack operations of a done picking"
-msgstr ""
+msgstr "已經完成的揀貨不能被刪除"
 
 #. module: stock
 #: code:addons/stock/stock.py:384
@@ -6700,7 +6700,7 @@ msgstr "只能刪除調動草案。"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "You can review and edit the predefined units via the"
-msgstr ""
+msgstr "你可以查看並且編輯之前定義的單位藉由"
 
 #. module: stock
 #: code:addons/stock/stock.py:2435
@@ -6739,7 +6739,7 @@ msgstr "您無法分割一個已完成的移動"
 msgid ""
 "You do not have any products reserved for this picking.  Please click the 'Reserve' button\n"
 "                                to check if products are available."
-msgstr ""
+msgstr "你沒有為這次揀貨保留任何產品。你需要點擊 '保留' 按鈕檢查產品是否可用。"
 
 #. module: stock
 #: code:addons/stock/stock.py:2595
@@ -6747,17 +6747,17 @@ msgstr ""
 msgid ""
 "You have a difference between the quantity on the operation and the "
 "quantities specified for the lots. "
-msgstr ""
+msgstr "一般要出貨的產品數量和批次中數量會有不同。"
 
 #. module: stock
 #: sql_constraint:stock.pack.operation.lot:0
 msgid "You have already mentioned this lot in another line"
-msgstr ""
+msgstr "你應該已經注意到在別的明細中這個批次"
 
 #. module: stock
 #: sql_constraint:stock.pack.operation.lot:0
 msgid "You have already mentioned this lot name in another line"
-msgstr ""
+msgstr "你應該已經注意到在別的明細中這個批次名稱"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:129
@@ -6768,7 +6768,7 @@ msgstr "您有手動建立產品細項，請先刪除以繼續處理。"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
-msgstr ""
+msgstr "你已經處理了初始需求的部分產品。"
 
 #. module: stock
 #: code:addons/stock/product.py:339
@@ -6776,7 +6776,7 @@ msgstr ""
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
 "numbers by doing an inventory.  "
-msgstr ""
+msgstr "庫存中有的產品沒有批號，你可以通過盤點賦予這些產品序號。"
 
 #. module: stock
 #: constraint:stock.warehouse.orderpoint:0
@@ -6790,7 +6790,7 @@ msgstr "你必須選擇產品預設計量單位的類型一樣的計量單位。
 msgid ""
 "You haven't set processed quantities. If you click <i>apply</i>,\n"
 "                        Odoo will process all quantities to do."
-msgstr ""
+msgstr "你還沒有設置操作的數量。如果你點擊<i>套用</i>，\nOdoo 將會完成所有的數量的操作。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:48
@@ -6808,19 +6808,19 @@ msgstr "您可能只返回已完成的分揀！"
 #: code:addons/stock/stock.py:2320 code:addons/stock/stock.py:4443
 #, python-format
 msgid "You need to provide a Lot/Serial Number for product %s"
-msgstr ""
+msgstr "你需要提供產品 %s 的批次/序號"
 
 #. module: stock
 #: code:addons/stock/stock.py:568
 #, python-format
 msgid "You should only receive by the piece with the same serial number"
-msgstr ""
+msgstr "你應該只收到具有相同序號"
 
 #. module: stock
 #: code:addons/stock/stock.py:4447
 #, python-format
 msgid "You should provide a different serial number for each piece"
-msgstr ""
+msgstr "你應該為每個提供不同的序號"
 
 #. module: stock
 #: constraint:stock.move:0
@@ -6832,22 +6832,22 @@ msgstr "你嘗試遷移的產品使用的計量單位與已遷移產品的計量
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Products"
-msgstr ""
+msgstr "你的產品"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Situation"
-msgstr ""
+msgstr "你的狀況"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Vendors"
-msgstr ""
+msgstr "你的供應商"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Warehouse"
-msgstr ""
+msgstr "你的倉庫"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -6865,22 +6865,22 @@ msgstr "取消(_C)"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "a stockable Product"
-msgstr ""
+msgstr "可庫存產品"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "and simply enter a minimum and maximum quantity."
-msgstr ""
+msgstr "簡要的輸入最小和最大數量。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
 msgid "barcode.rule"
-msgstr ""
+msgstr "barcode.rule"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "configuration menu"
-msgstr ""
+msgstr "設定選單"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -6909,7 +6909,7 @@ msgstr "例如：PO0032"
 msgid ""
 "either by manually updating the Done quantity on the product lines, or let "
 "Odoo do it automatically while validating"
-msgstr ""
+msgstr "在產品細項上手動更新完成數量，或當驗證後讓 Odoo 自動更新"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6917,36 +6917,36 @@ msgid ""
 "either by manually updating the Done quantity on the product lines, or scan "
 "them with the Odoo Barcode app, or let Odoo do it automatically while "
 "validating"
-msgstr ""
+msgstr "在產品細項上手動更新完成數量，或者通過條碼機掃描，或者 Odoo 在確認的時候自動更新"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "feedback@mail.odoo.com"
-msgstr ""
+msgstr "feedback@mail.odoo.com"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "for a customer and add products"
-msgstr ""
+msgstr "選一個客戶並且新增產品"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "for more\n"
 "                        information."
-msgstr ""
+msgstr "為了更多的\n訊息。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "from your vendor with the products and the requested quantities"
-msgstr ""
+msgstr "從供應商那裡獲得產品和所需數量"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "is displayed on the transfer if your products supply chain is properly "
 "configured. Otherwise, <strong>Check the availability</strong> manually"
-msgstr ""
+msgstr "如果產品的供應鏈正確的設置，將會顯示在調撥單上。否則，手動<strong>檢查可用</strong>"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
@@ -6968,37 +6968,37 @@ msgstr "在"
 msgid ""
 "on the purchase order form or click on <i>Receive Products</i> to see the "
 "Transfer Order"
-msgstr ""
+msgstr "在產品表單上或者點擊<i>接收貨物</i>來查看調撥單"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "on the sale order form to see Transfer Order"
-msgstr ""
+msgstr "在銷售訂單上查看調撥單"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
 msgid "preferred Packaging"
-msgstr ""
+msgstr "首選的包裝形式"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_forecast
 msgid "report.stock.forecast"
-msgstr ""
+msgstr "report.stock.forecast"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_config_settings
 msgid "stock.config.settings"
-msgstr ""
+msgstr "stock.config.settings"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fixed_putaway_strat
 msgid "stock.fixed.putaway.strat"
-msgstr ""
+msgstr "stock.fixed.putaway.strat"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
 msgid "stock.return.picking.line"
-msgstr ""
+msgstr "stock.return.picking.line"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7013,7 +7013,7 @@ msgstr "供應商列表"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "to mark the products as transferred to your stock location"
-msgstr ""
+msgstr "標識產品已經調撥到你的庫存中"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty
@@ -7045,22 +7045,22 @@ msgstr "不詳"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "via the"
-msgstr ""
+msgstr "藉由"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "when you receive the ordered products"
-msgstr ""
+msgstr "當你收到訂單中的產品"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "with the <i>Validate</i> button"
-msgstr ""
+msgstr "帶有<i>確認</i> 按鈕"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "↳Put in Pack"
-msgstr ""
+msgstr "↳放入包裹中"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
