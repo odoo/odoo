@@ -1072,7 +1072,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'category',
             data: this.data,
-            debug: true,
             arch: '<kanban>' +
                     '<field name="color"/>' +
                     '<templates>' +
