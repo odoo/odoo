@@ -73,9 +73,9 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     production_id = fields.Many2one(
-        'mrp.production', 'Production Order for finished products')
+        'mrp.production', 'Production Order for finished products', copy=False)
     raw_material_production_id = fields.Many2one(
-        'mrp.production', 'Production Order for raw materials')
+        'mrp.production', 'Production Order for raw materials', copy=False)
     unbuild_id = fields.Many2one(
         'mrp.unbuild', 'Unbuild Order')
     consume_unbuild_id = fields.Many2one(
