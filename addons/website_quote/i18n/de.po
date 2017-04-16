@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Rudolf Schnapka <rs@techno-flex.de>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-03-25 13:43+0000\n"
-"PO-Revision-Date: 2016-06-02 08:33+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-04-10 21:52+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,7 +96,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>Hallo ${object.partner_id.name},</p>\n\n    <p>Anbei finden Sie Ihr${object.state in ('draft', 'sent') and ' Angebot' or 'e Auftragsbestätigung'} von ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENZEN</strong><br />\n       &nbsp;&nbsp;Auftragsnummer: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Auftragsbetrag: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Auftragsdatum: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Auftragsbezug: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Ihr Bezug: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Ihr Ansprechpartner: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n    <p>\n        Sie können Ihr Angebot online betrachten:\n    </p>\n    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n        href=\"/quote/${object.id}/${object.access_token}\"> ${object.state in ('draft', 'sent') and 'Angebot' or 'Auftrag'} ansehen</a>\n\n    % if object.paypal_url:\n    <br/>\n    <p>Es ist Ihnen auch möglich per Paypal zu zahlen:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>Sollten Sie Fragen haben, zögern Sie bitte nicht und sprechen uns an.</p>\n    <p>Vielen Dank für Ihr Vertrauen in ${object.company_id.name or 'uns'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel.:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web.:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        % endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -443,7 +444,7 @@ msgid ""
 "                    </div>\n"
 "                </section>\n"
 "            "
-msgstr ""
+msgstr "<section data-snippet-id=\"title\">\n                    <h1>Fortgeschrittene CRM Funktionen</h1>\n                </section>\n                <section data-snippet-id=\"text-image\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n                                <h2>Absicht</h2>\n                            </div>\n                            <div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n                                <p><span style=\"text-align: -webkit-center; \">Nach Abschluss der Schulung, wird der Teilnehmer folgendes können:</span></p>\n                                <ul class=\"list-group\">\n                                    <li class=\"list-group-item\"> Odoo installieren und administrieren.</li>\n                                    <li class=\"list-group-item\"> Ein Odoo-Berater werden.</li>\n                                    <li class=\"list-group-item\"> Eine GAP-Analysis zu jeden Geschäftsprozess erstellen.</li>\n                                    <li class=\"list-group-item\"> Das funktionale Konzept der Geschäftsprozesse in Odoo verstehen.</li>\n                                    <li class=\"list-group-item\"> Auf regelmäßiger Basis Odoo betreiben und damit arbeiten können.</li>\n                                    <li class=\"list-group-item\"> Odoo an Hand der Standardmodule konfigurieren.</li>\n                                    <li class=\"list-group-item\"> Das Look & Feel des Frontend (GUI) anpassen.</li>\n                                </ul>\n\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n                                <h2>Was Sie lernen?</h2>\n                            </div>\n                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n                                <div class=\"panel panel-info\">\n                                    <div class=\"panel-heading text-center\">\n                                        <h3 style=\"margin: 0\">Day 1</h3>\n                                    </div>\n                                    <ul class=\"list-group\">\n                                        <li class=\"list-group-item\">Einleitung</li>\n                                        <li class=\"list-group-item\">Installation und Konfiguration</li>\n                                        <li class=\"list-group-item\">Datenbankverwaltung</li>\n                                        <li class=\"list-group-item\">Modul-Installation</li>\n                                        <li class=\"list-group-item\">Unternehmenseinstellungen und Verwaltung mehrerer Unternehmen</li>\n                                        <li class=\"list-group-item\">Mehrsprachigkeit</li>\n                                        <li class=\"list-group-item\">Fetchmail-Einstellung</li>\n                                    </ul>\n                                </div>\n                            </div>\n                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n                                <div class=\"panel panel-info\">\n                                    <div class=\"panel-heading text-center\">\n                                        <h3 style=\"margin: 0\">Day 2</h3>\n                                    </div>\n                                    <ul class=\"list-group\">\n                                        <li class=\"list-group-item\">Produkt Kategorie &amp; Produkt-Einstellungen mit Bestellpunkten</li>\n                                        <li class=\"list-group-item\">Kunden/Lieferanten</li>\n                                        <li class=\"list-group-item\">Preislisten und Auto-Segmentierung</li>\n                                        <li class=\"list-group-item\">Leads zu Gelegenheiten umwandeln &amp; Kundenpflege</li>\n                                        <li class=\"list-group-item\">Anrufe und Meetings verwalten</li>\n                                        <li class=\"list-group-item\">Verhandlungen und Angebotsrevisionen</li>\n                                        <li class=\"list-group-item\">Verkaufsaufträge erstellen &amp; direkte Mail an den Kunden</li>\n                                    </ul>\n                                </div>\n                            </div>\n                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n                                <div class=\"panel panel-info\">\n                                    <div class=\"panel-heading text-center\">\n                                        <h3 style=\"margin: 0\">Day 3</h3>\n                                    </div>\n                                    <ul class=\"list-group\">\n                                        <li class=\"list-group-item\">Einführung in die Lagerverwaltung</li>\n                                        <li class=\"list-group-item\">Laden, Lagerplatz &amp; Lagerorte-Einstellungen</li>\n                                        <li class=\"list-group-item\">Bestanderöffnung und Inventur</li>\n                                        <li class=\"list-group-item\">Bestellanforderung und Bestellwesen</li>\n                                        <li class=\"list-group-item\">Teilweise und vollstände An- und Auslieferung</li>\n                                        <li class=\"list-group-item\">Produkthaltbarkeit und Gewährleistung</li>\n                                        <li class=\"list-group-item\">After Sales Service (Helpdesk)</li>\n                                    </ul>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n                                <h2>Anforderungen</h2>\n\n                                <ul><li>Bringen Sie Ihren eigenen Laptop.</li>\n                                    <li>Teilnehmer sollten grundlegende Kenntnisse der Programmierung mitbringen. Basiswissen in der Programmiersprache Python ist empfehlenswert.</li>\n                                    <li>Teilnehmer haben idealerweise ein funktionales Grundverständnis unserer Software (siehe Funktionale Schulung).</li>\n                                </ul><p></p>\n\n                                <p>Erhalten Sie mehr Information, besuchen Sie <a href=\"http://openerp.com/\">Offizielle Webseite von Odoo</a>.</p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n            "
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
@@ -1088,7 +1089,7 @@ msgstr "Dieses Angebot läuft ab in"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This order has already been"
-msgstr ""
+msgstr "Dieser Auftrag wurde bereits"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1153,7 +1154,7 @@ msgstr "Webseite Beschreibung"
 #: code:addons/website_quote/controllers/main.py:148
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "Sie dürfen zu einem bereits bestätigten Auftrag keine Optionen ergänzen."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1203,7 +1204,7 @@ msgstr "und"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "cancelled"
-msgstr ""
+msgstr "storniert"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1259,7 +1260,7 @@ msgstr "unbekannt"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "validated"
-msgstr ""
+msgstr "freigegeben"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
