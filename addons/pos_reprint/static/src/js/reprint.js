@@ -17,16 +17,8 @@ devices.ProxyDevice.include({
 });
 
 screens.ReceiptScreenWidget.include({
-    render_receipt: function() {
-        var order = this.pos.get_order();
-        var receipt = QWeb.render('PosTicket',{
-            widget:this,
-            order: order,
-            receipt: order.export_for_printing(),
-            orderlines: order.get_orderlines(),
-            paymentlines: order.get_paymentlines(),
-        });
-        this.$('.pos-receipt-container').html(receipt);
+    show_receipt: function(receipt) {
+        this._super(receipt);
         this.pos.old_receipt_html = receipt || this.pos.old_receipt_html;
     },
 })
@@ -166,5 +158,9 @@ screens.define_action_button({
         return this.pos.config.iface_reprint;
     },
 });
+
+return {
+    ReceiptReprintScreenWidget: ReceiptReprintScreenWidget,
+};
 
 });

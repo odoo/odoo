@@ -1520,13 +1520,17 @@ var ReceiptScreenWidget = ScreenWidget.extend({
     },
     render_receipt: function() {
         var order = this.pos.get_order();
-        this.$('.pos-receipt-container').html(QWeb.render('PosTicket',{
-                widget:this,
-                order: order,
-                receipt: order.export_for_printing(),
-                orderlines: order.get_orderlines(),
-                paymentlines: order.get_paymentlines(),
-            }));
+        var receipt = QWeb.render('PosTicket',{
+            widget:this,
+            order: order,
+            receipt: order.export_for_printing(),
+            orderlines: order.get_orderlines(),
+            paymentlines: order.get_paymentlines(),
+        });
+        this.show_receipt(receipt);
+    },
+    show_receipt: function(receipt){
+        this.$('.pos-receipt-container').html(receipt);
     },
 });
 gui.define_screen({name:'receipt', widget: ReceiptScreenWidget});
