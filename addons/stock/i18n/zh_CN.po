@@ -26,8 +26,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2017-03-30 06:35+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2017-04-12 23:54+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1845,7 +1845,7 @@ msgstr "入向"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_receipt_picking_move
 msgid "Incoming  Products"
-msgstr "入向产品"
+msgstr "进货"
 
 #. module: stock
 #: field:stock.quant,in_date:0
@@ -2591,7 +2591,7 @@ msgstr "补货引起(创建)的库存移动"
 #: view:stock.move:stock.view_move_form
 #: view:stock.move:stock.view_move_picking_form field:stock.move,quant_ids:0
 msgid "Moved Quants"
-msgstr "已移动的份"
+msgstr "已移动的源"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -2961,7 +2961,7 @@ msgstr "如果不是内部位置，则填写位置所有者"
 #: help:stock.pack.operation,owner_id:0
 #: help:stock.transfer_details_items,owner_id:0
 msgid "Owner of the quants"
-msgstr "份的所有者"
+msgstr "源的所有者"
 
 #. module: stock
 #: code:addons/stock/product.py:270
@@ -3739,7 +3739,7 @@ msgstr "已为这次移动保留的数量"
 #: view:stock.quant:stock.view_stock_quant_tree
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "Quants"
-msgstr "份"
+msgstr "源"
 
 #. module: stock
 #. openerp-web
@@ -3955,7 +3955,7 @@ msgstr "保留的份"
 #: view:stock.move:stock.view_move_form
 #: view:stock.move:stock.view_move_picking_form
 msgid "Reserved Quants"
-msgstr "保留的份"
+msgstr "保留的源"
 
 #. module: stock
 #: field:stock.quant,reservation_id:0
@@ -3965,7 +3965,7 @@ msgstr "保留给移动"
 #. module: stock
 #: field:stock.move,reserved_quant_ids:0
 msgid "Reserved quants"
-msgstr "保留的份"
+msgstr "保留的源"
 
 #. module: stock
 #: field:stock.warehouse,resupply_from_wh:0
@@ -4593,14 +4593,14 @@ msgstr "本技术字段用于对属于此公司之间的仓库进行补给的路
 msgid ""
 "Technical field used to depict a restriction on the lot of quants to "
 "consider when marking this move as 'done'"
-msgstr "该技术字段用来描述当多份移动标记为’完成‘时的限制"
+msgstr "该技术字段用来描述当多个源移动标记为’完成‘时的限制"
 
 #. module: stock
 #: help:stock.move,restrict_partner_id:0
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr "该技术字段用来描述当所有者的份移动标记为’完成‘时的限制"
+msgstr "该技术字段用来描述当所有者的源移动标记为’完成‘时的限制"
 
 #. module: stock
 #: help:stock.picking,picking_type_code:0
@@ -4672,7 +4672,7 @@ msgstr "序列号和内部参考组合必须是唯一的!"
 #. module: stock
 #: help:stock.quant,company_id:0
 msgid "The company to which the quants belong"
-msgstr "份所属于的公司"
+msgstr "公司所属的源"
 
 #. module: stock
 #: help:stock.inventory,date:0
@@ -5058,7 +5058,7 @@ msgstr "中转位置"
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr "如果保留的份变化了，则为True，这意味着我们需要重新计算包裹作业"
+msgstr "如果保留的源变化了，则为True，这意味着我们需要重新计算包裹作业"
 
 #. module: stock
 #: field:stock.picking.type,code:0

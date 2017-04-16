@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Rudolf Schnapka <rs@techno-flex.de>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2017-03-26 21:39+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-04-10 20:59+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +65,7 @@ msgid ""
 "same product(%s), same location(%s), same package, same owner and same lot. "
 "Please first validate the first inventory adjustement with this product "
 "before creating another one."
-msgstr ""
+msgstr "Sie dürfen keine zwei Bestandskorrekturen im Status 'In Bearbeitung' desselben Produkts (%s), am selben Lager (%s), der gleichen Packung, dem gleichen Besitzer und gleichem Los haben. Bitte zunächst die erste Bestandsanpassung abschliessen, bevor Sie eine neue anlegen."
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -236,7 +237,7 @@ msgid ""
 "                you select a lot, you can get the traceability of the products contained in lot.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klicken, um eine neue Seriennummer hinzuzufügen.\n              </p><p>\n                Dieses ist die Liste der von Ihnen aufgezeichneten Fertigungslose.\n                Wenn Sie ein Los auswählen, können Sie die Verfolgbarkeit der \n                Produkte aus diesem Loses erreichen.\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -478,7 +479,7 @@ msgstr "Es ist möglich verschiedene Mengeneinheiten in Auftrag und Rechnung anz
 msgid ""
 "Allows you to store units of a product, but sell and invoice based on a different unit of measure.\n"
 "For instance, you can store pieces of meat that you sell and invoice based on their weight."
-msgstr ""
+msgstr "Ermöglicht Ihnen den Lagerbestand in einer, den Verkauf und die Abrechnung jedoch in einer andren Mengeneinheit zu verwalten.\nSie können zum Beispiel Fleischstückchen lagern, die Sie verkaufen, aber nach Ihrem Gewicht abrechnen. "
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
@@ -1801,7 +1802,7 @@ msgid ""
 "  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
 "the system won't propose anything.  You can also let the system propose for "
 "a single product / lot /... "
-msgstr ""
+msgstr "Wenn Sie eine vollständige Inventur durchführen, können Sie 'Alle Produkte' wählen. Die Inventur wird dann mit aktuellem Bestand vorgetragen. Wenn Sie nur vereizelte Produkte (z.B. zyklusweise Zählung), dann können Sie 'Manuelle Produktauswahl' auswählen und das System schlägt gar nichts vor.Sie können das System aber auch Vorträge für einzelne Produkte / Lose / ... erstellen lassen."
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -2455,7 +2456,7 @@ msgstr "Manuelle Durchführung"
 #: code:addons/stock/stock.py:2640
 #, python-format
 msgid "Manual Selection of Products"
-msgstr ""
+msgstr "Manuelle Produktauswahl"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -3868,7 +3869,7 @@ msgstr "Restmenge"
 msgid ""
 "Remaining Quantity in default UoM according to operations matched with this "
 "move"
-msgstr ""
+msgstr "Verbleibende Menge in Standard-ME passend zu Vorgängen dieser Lagerumbuchung"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -3880,7 +3881,7 @@ msgstr "Restmengen von Teillieferungen"
 msgid ""
 "Remaining quantity in default UoM according to moves matched with this "
 "operation. "
-msgstr ""
+msgstr "Verbleibende Menge in Standard-ME passend zu Lagerumbuchungen dieses Vorgangs. "
 
 #. module: stock
 #: view:product.removal:stock.view_removal
@@ -4483,7 +4484,7 @@ msgstr "Lagerort"
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Store products in a different unit of measure than the sales order"
-msgstr ""
+msgstr "Lagerung der Produkte in anderer Mengeneinheit als im Verkauf"
 
 #. module: stock
 #: field:stock.picking,message_summary:0
@@ -4677,7 +4678,7 @@ msgstr "Das Standard Lager zur Wiederbeschaffung sollte sich generell vom Lager 
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "Das Ziellager muss für alle Kommissionierungen das Gleiche sein."
 
 #. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
@@ -4755,7 +4756,7 @@ msgid ""
 "The roundings of your Unit of Measures %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
-msgstr ""
+msgstr "Die Rundungsregeln der Mengeneinheiten %s der Lagerumbuchung vs. der %s des Produkts erlauben diesen Vorgang nicht oder Sie übertragen die Kommissionierung nicht in Einem."
 
 #. module: stock
 #: code:addons/stock/stock.py:3867
@@ -4768,13 +4769,13 @@ msgstr "Die ausgewählte Mengeneinheit für das Produkt %s ist nicht kompatibel 
 #. module: stock
 #: constraint:stock.inventory:0
 msgid "The selected inventory options are not coherent."
-msgstr ""
+msgstr "Die ausgewählten Inventuroptionen passen nicht zueinander."
 
 #. module: stock
 #: code:addons/stock/stock.py:1070
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "Das Herkunftslager muss für alle Kommissionierungen das Gleiche sein."
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -5395,7 +5396,7 @@ msgstr "Wenn der verfügbare Bestand geringer ist als der hier definierte Mindes
 msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
-msgstr ""
+msgstr "Wenn Sie eine Seriennummer (Los) auswählen, wird die Menge an diese Seriennummer (dieses Los) angepasst und nicht an der Gesamtproduktmenge festgemacht."
 
 #. module: stock
 #: field:stock.return.picking.line,wizard_id:0
@@ -5488,7 +5489,7 @@ msgstr "Sie sollten eine Mengeneinheit für ein Produkt immer aus der gleichen K
 #: code:addons/stock/wizard/stock_return_picking.py:62
 #, python-format
 msgid "You may only return one picking at a time!"
-msgstr ""
+msgstr "Sie dürfen zu gegebener Zeit nur eine Kommissionierung zurückgeben."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:72
@@ -5570,7 +5571,7 @@ msgstr "Umgekehrt"
 #: help:stock.inventory,move_ids_exist:0
 #: help:stock.picking,pack_operation_exist:0
 msgid "technical field for attrs in view"
-msgstr ""
+msgstr "Technisches Feld für Eigenschaften in Sicht"
 
 #. module: stock
 #: help:stock.picking,quant_reserved_exist:0
