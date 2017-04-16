@@ -7240,7 +7240,7 @@ msgstr "La configuration ne peut pas être dupliquée!"
 #: code:addons/base/ir/ir_model.py:549
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
-msgstr ""
+msgstr "Impossible de renommer/supprimer les champs utilisés dans les vues"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:219
@@ -9808,12 +9808,14 @@ msgstr "Le champ `%(field_name)s` n'existe pas"
 msgid ""
 "Field names can only contain characters, digits and underscores (up to 63)."
 msgstr ""
+"Le nom du champ ne peut contenir que des caractères en minuscules, des "
+"chiffres et des blancs soulignés (_), et ne peut dépasser 63 caractères."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:307
 #, python-format
 msgid "Field names must be unique per model."
-msgstr ""
+msgstr "Les noms de champs doivent être uniques par modèle."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -13494,6 +13496,8 @@ msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
 "`address fields`"
 msgstr ""
+"Les champs One2Many ne peuvent être synchronisés comme éléments de "
+"`commercial fields` ou `address fields`"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -15303,7 +15307,7 @@ msgstr "Options de sélection"
 #: model:ir.model.fields,field_description:base.field_res_partner_self
 #: model:ir.model.fields,field_description:base.field_res_users_self
 msgid "Self"
-msgstr ""
+msgstr "Self"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_sale
@@ -15476,7 +15480,7 @@ msgstr "Groupe de partage"
 #: model:ir.model.fields,field_description:base.field_res_partner_partner_share
 #: model:ir.model.fields,field_description:base.field_res_users_partner_share
 msgid "Share Partner"
-msgstr ""
+msgstr "Share Partner"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_share
@@ -18565,7 +18569,7 @@ msgstr "Code postal"
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "[('blue', 'Blue'),('yellow', 'Yellow')]"
-msgstr ""
+msgstr "[('bleu', 'Bleu'),('jaune', 'Jaune')]"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_import_language

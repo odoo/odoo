@@ -15,13 +15,14 @@
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
+# David Arnold <blaggacao@users.noreply.github.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
+"Last-Translator: David Arnold <blaggacao@users.noreply.github.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -259,6 +260,8 @@ msgstr "Correo electrónico:"
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr ""
+"Error! No puede seleccionar un formato de papel y especificar ancho y alto "
+"de la página al mismo tiempo."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -392,7 +395,7 @@ msgstr "Formato de papel"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
 msgid "Paper format *"
-msgstr ""
+msgstr "Formato de papel *"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
@@ -437,12 +440,12 @@ msgstr "Imprimir"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr ""
+msgstr "Nombre del reporte impreso"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
 msgid "QWeb views"
-msgstr ""
+msgstr "Vistas QWeb"
 
 #. module: report
 #. openerp-web
@@ -503,6 +506,9 @@ msgid ""
 "change the report filename. You can use a python expression with the object "
 "and time variables."
 msgstr ""
+"Esto es el nombre del archivo cuando el reporte se descarga. Mantenlo vacío "
+"para no cambiar el nombre del archivo. Puede usar expresiones python con "
+"variables de objetos y tiempos."
 
 #. module: report
 #: code:addons/report/models/report.py:273
@@ -534,6 +540,8 @@ msgstr ""
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
+"No se ha podido encontrar Wkhtmltopdf en el sistema. El PDF no se puede "
+"crear."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -553,6 +561,8 @@ msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
 "number of subprocess reached. Message : %s"
 msgstr ""
+"Wkhtmltopdf falló (código de error: %s). Límite de memoria demasiado bajo o "
+"alcanzado el límite de archivos máximos del subproceso. Mensaje : %s"
 
 #. module: report
 #. openerp-web
@@ -595,8 +605,10 @@ msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The \n"
 "report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
+"Su instalación de Wkhtmltopdf parece ser dañada. El\n"
+"reporte será mostrado en html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
-msgstr ""
+msgstr "ir.qweb.field.barcode"

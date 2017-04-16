@@ -3,43 +3,15 @@
 # * point_of_sale
 # 
 # Translators:
+# Mohammed SK <medkamar@blutec.ma>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Fabrice Henrion <fhe@odoo.com>, 2016
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Clo <clo@odoo.com>, 2016
-# lucasdeliege <deliegelucas@gmail.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
-# Simon CARRIER <carrier.sim@gmail.com>, 2016
-# Hubert TETARD <htetard@apik-conseils.com>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# zoe <yann.hoareau@migs.re>, 2016
-# Shark McGnark <peculiarcheese@gmail.com>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # matthieu gaillet <matthieu.gaillet@lebrass.be>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Quentin THEURET <quentin@theuret.net>, 2016
-# Frédéric Clementi <frederic.clementi@camptocamp.com>, 2016
+# zoe <yann.hoareau@migs.re>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
-# user 2 odoo <user2odoo@gmail.com>, 2016
-# Richard Mathot <rim@odoo.com>, 2016
-# Alexis de Lattre <alexis@via.ecp.fr>, 2016
-# Nancy Bolognesi <nb@microcom.ca>, 2016
-# Nicolas JEUDY <nicolas@sudokeys.com>, 2016
-# invitu <contact@invitu.com>, 2016
-# Sylvain LE GAL <sylvain.legal@grap.coop>, 2016
-# Loic <loic.richard2@gmail.com>, 2016
-# Ludovic CHEVALIER <ludovic.chevalier@heureux-cyclage.org>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
 # Fabri Yohann <psn@fabri.pw>, 2016
-# ShevAbam <shevabam@gmail.com>, 2016
-# Hamid Darabi <hamid.darabi@gmail.com>, 2016
-# Lionel Sausin <ls@numerigraphe.com>, 2016
-# Agathe Mollé <molleagathe@gmail.com>, 2016
-# Nissar Chababy <funilrys@outlook.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Clo <clo@odoo.com>, 2016
 # Félix Desjardins <felixinx@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -1916,7 +1888,7 @@ msgstr "Ok"
 #: code:addons/point_of_sale/static/src/js/screens.js:421
 #, python-format
 msgid "One or more product(s) required serial/lot number."
-msgstr ""
+msgstr "Un ou plusieurs produits ont besoin d'un numéro de série ou de lot."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.Onions
@@ -2132,7 +2104,7 @@ msgstr "Relevé POS"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_paid
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Paid"
-msgstr "Payé"
+msgstr "Payée"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_parent_id
@@ -2269,7 +2241,7 @@ msgstr "Opération de manutention"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Picking Errors"
-msgstr ""
+msgstr "Erreurs de préparation"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_picking_type_id
@@ -2280,7 +2252,7 @@ msgstr "Type de préparation"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_picking_count
 msgid "Picking count"
-msgstr ""
+msgstr "Nombre des préparations"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2476,7 +2448,7 @@ msgstr "Prix Unitaire"
 #: code:addons/point_of_sale/models/barcode_rule.py:13
 #, python-format
 msgid "Priced Product"
-msgstr ""
+msgstr "Coûteux Produit"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
@@ -2829,7 +2801,7 @@ msgstr "Numéro de séquence"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1055
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "Numéro de série / lot"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2941,6 +2913,7 @@ msgstr "Certaines commandes n'ont pas pu être soumisses à"
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
 msgstr ""
+"Spécifiez le lot de produit / numéro de série dans la ligne de commande PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_start_categ_id
@@ -3433,6 +3406,8 @@ msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Cette facture a été créée à partir de la session de point de vente: <a "
+"href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_restaurant
@@ -3493,6 +3468,8 @@ msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Ce transfert a été créé à partir de la session de point de vente: <a href=# "
+"data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_template_pos_categ_id
@@ -3670,7 +3647,7 @@ msgstr "Utilisateurs"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_uuid
 msgid "Uuid"
-msgstr ""
+msgstr "UUID"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3712,7 +3689,7 @@ msgstr "Entrepôt"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1320
 #, python-format
 msgid "Weighing"
-msgstr ""
+msgstr "Pesage"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:12
@@ -3745,6 +3722,8 @@ msgid ""
 "You can define another list of available currencies on the\n"
 "                                <i>Cash Registers</i> tab of the"
 msgstr ""
+"Vous pouvez définir une autre liste de monnaies disponibles sur le\n"
+"                                 <I> Caisse enregistreuse </ i> onglet de la"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:390
@@ -4011,7 +3990,7 @@ msgstr "commandes payées"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "payment method."
-msgstr "."
+msgstr "moyen de paiement"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config
@@ -4036,7 +4015,7 @@ msgstr "report.point_of_sale.report_invoice"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
 msgid "report.point_of_sale.report_saledetails"
-msgstr ""
+msgstr "report.point_of_sale.report_saledetails"
 
 #. module: point_of_sale
 #. openerp-web
