@@ -4009,7 +4009,11 @@ instance.web.form.AddAnItemList = instance.web.ListView.List.extend({
                     });
                 }));
 
-        var $padding = this.$current.find('tr:not([data-id]):first');
+        if (self.view.editable() === 'top') {
+                var $padding = this.$current.find('tr:first');
+        } else {
+                var $padding = this.$current.find('tr:not([data-id]):first');
+        }
         var $newrow = $('<tr>').append($cell);
         if ($padding.length) {
             $padding.before($newrow);

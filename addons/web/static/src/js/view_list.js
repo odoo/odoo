@@ -987,7 +987,14 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 if (id) { self.dataset.add_ids([id], index); }
 
                 if (index === 0) {
-                    $new_row.prependTo(self.$current);
+                    if (records.length !== 0) {
+                            var first_record = records.at(1),
+                                $first_sibling = self.$current.children(
+                                        '[data-id=' + first_record.get('id') + ']');
+                            $new_row.insertBefore($first_sibling);
+                    } else {
+                            $new_row.prependTo(self.$current);
+                    }
                 } else {
                     var previous_record = records.at(index-1),
                         $previous_sibling = self.$current.children(
