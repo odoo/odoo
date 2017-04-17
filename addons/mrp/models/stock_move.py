@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+from dateutil import relativedelta
+
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons import decimal_precision as dp
 
 
@@ -73,7 +76,7 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     production_id = fields.Many2one(
-        'mrp.production', 'Production Order for finished products', copy=False)
+        'mrp.production', 'Production Order for finished products')
     raw_material_production_id = fields.Many2one(
         'mrp.production', 'Production Order for raw materials')
     unbuild_id = fields.Many2one(
@@ -386,3 +389,37 @@ class StockMove(models.Model):
                 'split_from': self.id,  # Needed in order to keep sale connection, but will be removed by unlink
             })
         return self.env['stock.move']
+
+
+class PushedFlow(models.Model):
+    _inherit = "stock.location.path"
+
+    def _apply(self, move):
+        new_date = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=self.delay)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        if self.auto == 'transparent':
+            move.write({
+                'date': new_date,
+                'date_expected': new_date,
+                'location_dest_id': self.location_dest_id.id})
+            # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
+            if self.location_dest_id != move.location_dest_id:
+                # TDE FIXME: should probably be done in the move model IMO
+                move._push_apply()
+        else:
+            new_move = move.copy({
+                'origin': move.origin or move.picking_id.name or "/",
+                'location_id': move.location_dest_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'date': new_date,
+                'date_expected': new_date,
+                'company_id': self.company_id.id,
+                'picking_id': False,
+                'picking_type_id': self.picking_type_id.id,
+                'propagate': self.propagate,
+                'push_rule_id': self.id,
+                'warehouse_id': self.warehouse_id.id,
+                'procurement_id': False,
+                'production_id': False,
+            })
+            move.write({'move_dest_id': new_move.id})
+            new_move.action_confirm()
