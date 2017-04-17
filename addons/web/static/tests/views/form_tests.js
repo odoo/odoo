@@ -2941,5 +2941,38 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('check if active_id is defined', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p" context="{\'default_trululu\':active_id}">' +
+                            '<tree>' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                "partner,false,form": '<form><field name="trululu"/></form>'
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get' && args.args[0][0] === 'trululu') {
+                    assert.strictEqual(args.kwargs.context.default_trululu, false,
+                        "default_trululu should be false");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        form.destroy();
+    });
+
 });
 });
