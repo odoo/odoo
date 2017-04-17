@@ -1898,10 +1898,8 @@ var BasicModel = AbstractModel.extend({
     _getEvalContext: function (element) {
         var evalContext = this.get(element.id, {raw: true, noUnsetNumeric: true}).data;
         evalContext.active_model = element.model;
-        if (evalContext.id) {
-            evalContext.active_id = evalContext.id;
-            evalContext.active_ids = [evalContext.id];
-        }
+        evalContext.active_id = evalContext.id || false;
+        evalContext.active_ids = evalContext.id ? [evalContext.id] : [];
         if (element.parentID) {
             var parent = this.get(element.parentID, {raw: true});
             if (parent.type === 'list' && this.localData[element.parentID].parentID) {
