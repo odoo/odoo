@@ -497,6 +497,13 @@ class SaleOrder(models.Model):
         }
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
+    def message_post(self, **kwargs):
+        if self.env.context.get('mark_so_as_sent'):
+            self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
+        return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
+
+    @api.multi
     def force_quotation_send(self):
         for order in self:
             email_act = order.action_quotation_send()
