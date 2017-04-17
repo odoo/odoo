@@ -497,17 +497,21 @@ exports.PosModel = Backbone.Model.extend({
                 progress += progress_step;
 
                 if( model.model ){
-                    var method = model.ids ? 'read' : 'search_read';
-                    var args = model.ids ? [ids, fields] : [domain, fields];
                     var params = {
                         model: model.model,
-                        method: method,
-                        args: args,
                         context: context,
                     };
-                    if (method === 'search_read') {
+
+                    if (model.ids) {
+                        params.method = 'read';
+                        params.args = [ids, fields];
+                    } else {
+                        params.method = 'search_read';
+                        params.domain = domain;
+                        params.fields = fields;
                         params.orderBy = order;
                     }
+
                     rpc.query(params).then(function(result){
                         try{    // catching exceptions in model.loaded(...)
                             $.when(model.loaded(self,result,tmp))
