@@ -59,6 +59,12 @@ var PivotView = AbstractView.extend({
 
         arch.children.forEach(function (field) {
             var name = field.attrs.name;
+            // remove the disabled fields from measures and groupable fields
+            if (field.attrs.disabled) {
+                delete measures[name];
+                delete groupableFields[name];
+                return;
+            }
             if (field.attrs.interval) {
                 name += ':' + field.attrs.interval;
             }
