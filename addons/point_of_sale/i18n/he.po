@@ -6,13 +6,14 @@
 # ExcaliberX <excaliberx@gmail.com>, 2017
 # Leonid Froenchenko <lfroen@gmail.com>, 2017
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-13 09:53+0000\n"
 "PO-Revision-Date: 2017-02-13 09:53+0000\n"
-"Last-Translator: Leandro Noijovich <eliel.sorcerer@gmail.com>, 2017\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -663,6 +664,7 @@ msgid ""
 "Check this if you want to group the Journal Items by Product while closing a"
 " Session"
 msgstr ""
+"סמן כאן במידה והינך רוצה לשלב פרטי יומן על ידי מוצרים בזמן סגירת יומן מכירות"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1275,7 +1277,7 @@ msgstr "ידע כללי"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "נותן את סדר הרצף בעת הצגת רשימה של קטגוריות מוצר."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_golden_perlim
@@ -1661,6 +1663,8 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"תמונה בגודל בינוני עבור קטגוריה זו. התמונות יוקטנו אוטומטית לגודל 128X128 "
+"פיקסל, תוך כדי שמירה על יחס התמונה."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1941,7 +1945,7 @@ msgstr "תאריך הזמנה"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_sequence_id
 msgid "Order IDs Sequence"
-msgstr ""
+msgstr "רצף מספרי הזמנות"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_lines
@@ -2839,6 +2843,8 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"תמונה קטנה לקטגוריה. מותאמות אוטומית ל 64*64 פיקסל תוך שמירה על יחס גובה "
+"רוחב. היעזרו בשדה זה היכן שנדרשת תמונה קטנה"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3026,7 +3032,7 @@ msgstr "הוגש"
 #: code:addons/point_of_sale/models/pos_order.py:254
 #, python-format
 msgid "The POS order must have lines when calling this method"
-msgstr ""
+msgstr "צו קופה חייב להכיל שורות זמן קריא לפעולה זו"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3231,7 +3237,7 @@ msgstr "אין מזומן בקופה בשביל סשן זה"
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
-msgstr ""
+msgstr "לא נמצא חשבון אשר יכול לקבל כספים עבור שותף : \"%s\" (id:%d)."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:642
@@ -3269,6 +3275,7 @@ msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
 msgstr ""
+"בשדה זה נמצאת תמונה של קטגוריה, מוגבל לגודל מקסימאלי 1024X1024 פיקסלים."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_manager_id
@@ -3443,7 +3450,7 @@ msgstr ""
 msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
 "of sale."
-msgstr ""
+msgstr "לא ניתן לפתוח יומן מכירות. הינך חייב לקשר יומן לקופה."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_unit
@@ -3587,7 +3594,7 @@ msgstr ""
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
 "already been issued."
-msgstr ""
+msgstr "אינך יכול לשנות שותף\\ספק עבור ההמנה לאחר שנסגרה או סופקה."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:25
@@ -3646,6 +3653,10 @@ msgid ""
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
 msgstr ""
+"הינך חייב לבחור בצורת תשלום שתהיה זמינה בקופה על ידי שימוש בחשבון בנק קיים "
+"דרך : \"חשבונות\\ הגדרות\\ יומנים\\ יומים\". בחר יומן זמין וסמן בשורת \"צורת"
+" תשלום עבור קופה רושמת\". אתה יכול ליצור צורת תשלום חדשה ישירות מתוך התפריט "
+": \"הגדרות\\ צורות תשלום\"."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:658

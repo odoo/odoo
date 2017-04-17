@@ -294,8 +294,10 @@ odoo.define('website_sale.website_sale', function (require) {
             var $ul = $(ev.target).closest('.js_add_cart_variants');
             var $parent = $ul.closest('.js_product');
             var $product_id = $parent.find('input.product_id').first();
-            var $price = $parent.find(".oe_price:first .oe_currency_value");
-            var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
+            var $price = $parent.find(".oe_price:first .oe_currency_value")
+                .add($('#product_confirmation').find(".oe_price"));
+            var $default_price = $parent.find(".oe_default_price:first .oe_currency_value")
+                .add($('#product_confirmation').find(".oe_default_price:first .oe_currency_value"));
             var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
             var variant_ids = $ul.data("attribute_value_ids");
             var values = [];

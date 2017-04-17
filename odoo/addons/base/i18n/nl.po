@@ -7378,8 +7378,10 @@ msgstr "Het is niet mogelijk de instellingen te dupliceren!"
 #. module: base
 #: code:addons/base/ir/ir_model.py:549
 #, python-format
-msgid "Cannot rename field to %s, because that field already exists!"
-msgstr "Kan veldnaam niet wijzigen naar %s want het veld bestaat al!"
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+"Het is niet mogelijk om velden te hernoemen of te verwijderen als deze nog "
+"gebruikt worden in weergave:"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:219
@@ -9942,6 +9944,21 @@ msgid "Field `%(field_name)s` does not exist"
 msgstr "Veld '%(field_name)s' bestaat niet"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:298
+#, python-format
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+"Veldnamen mogen alleen bestaan uit karakters, getallen en underscores (max. "
+"63)."
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:307
+#, python-format
+msgid "Field names must be unique per model."
+msgstr "Veldnamen moeten uniek zijn per model."
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: model:ir.model,name:base.model_ir_model_fields
 #: model:ir.model.fields,field_description:base.field_ir_model_field_id
@@ -12388,7 +12405,7 @@ msgstr "Code landinstellingen"
 #: model:ir.module.category,name:base.module_category_localization
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Localization"
-msgstr "Positie in magazijn"
+msgstr "Lokalisatie"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_form_view

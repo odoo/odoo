@@ -67,12 +67,11 @@ class SaleOrder(models.Model):
             'pricelist': order.pricelist_id.id,
         })
         product = self.env['product.product'].with_context(product_context).browse(product_id)
-
         pu = product.price
         if order.pricelist_id and order.partner_id:
             order_line = order._cart_find_product_line(product.id)
             if order_line:
-                pu = self.env['account.tax']._fix_tax_included_price(order_line._get_display_price(product), product.taxes_id, order_line.tax_id)
+                pu = self.env['account.tax']._fix_tax_included_price(pu, product.taxes_id, order_line.tax_id)
 
         return {
             'product_id': product_id,
@@ -149,10 +148,19 @@ class SaleOrder(models.Model):
         else:
             # update line
             values = self._website_product_id_change(self.id, product_id, qty=quantity)
-
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
+                order = self.sudo().browse(self.id)
+                product_context = dict(self.env.context)
+                product_context.setdefault('lang', order.partner_id.lang)
+                product_context.update({
+                    'partner': order.partner_id.id,
+                    'quantity': quantity,
+                    'date': order.date_order,
+                    'pricelist': order.pricelist_id.id,
+                })
+                product = self.env['product.product'].with_context(product_context).browse(product_id)
                 values['price_unit'] = self.env['account.tax']._fix_tax_included_price(
-                    order_line._get_display_price(order_line.product_id),
+                    order_line._get_display_price(product),
                     order_line.product_id.taxes_id,
                     order_line.tax_id
                 )
@@ -455,7 +463,15 @@ class Website(models.Model):
         tx_id = request.session.get('sale_transaction_id')
         if tx_id:
             transaction = self.env['payment.transaction'].sudo().browse(tx_id)
-            if transaction.state != 'cancel':
+            # Ugly hack for SIPS: SIPS does not allow to reuse a payment reference, even if the
+            # payment was not not proceeded. For example:
+            # - Select SIPS for payment
+            # - Be redirected to SIPS website
+            # - Go back to eCommerce without paying
+            # - Be redirected to SIPS website again => error
+            # Since there is no link module between 'website_sale' and 'payment_sips', we prevent
+            # here to reuse any previous transaction for SIPS.
+            if transaction.state != 'cancel' and transaction.acquirer_id.provider != 'sips':
                 return transaction
             else:
                 request.session['sale_transaction_id'] = False

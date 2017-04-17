@@ -390,7 +390,7 @@ msgstr "Format du papier"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
 msgid "Paper format *"
-msgstr ""
+msgstr "Format de papier *"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
@@ -542,6 +542,14 @@ msgstr "Site Web :"
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf a échoué (code d'erreur : %s). Message : %s"
+
+#. module: report
+#: code:addons/report/models/report.py:450
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
 
 #. module: report
 #. openerp-web

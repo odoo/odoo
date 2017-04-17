@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2015-11-21 09:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_issue
@@ -37,7 +39,7 @@ msgstr "Асуудлын #"
 #: code:addons/project_issue/models/project_issue.py:156
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (copy)"
+msgstr "%s (хуулбар)"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
@@ -74,25 +76,22 @@ msgstr "Дотоод тэмдэглэл нэмэх..."
 msgid ""
 "An Issue's kanban state indicates special situations affecting it:\n"
 "\n"
-"                                           * Normal is the default "
-"situation\n"
+"                                           * Normal is the default situation\n"
 "\n"
-"                                           * Blocked indicates something is "
-"preventing the progress of this issue\n"
+"                                           * Blocked indicates something is preventing the progress of this issue\n"
 "\n"
-"                                           * Ready for next stage indicates "
-"the issue is ready to be pulled to the next stage"
+"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Шинжилгээний Данс"
+msgstr "Шинжилгээний данс"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Archived"
-msgstr ""
+msgstr "Архивласан"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
@@ -181,7 +180,7 @@ msgstr "Харилцах суваг."
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Company"
-msgstr "Компани"
+msgstr "Байгууллага"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
@@ -194,7 +193,7 @@ msgstr "Харилцагч"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Create Date"
-msgstr "Үүсгэх огноо"
+msgstr "Үүүсгэсэн Огноо"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -210,7 +209,7 @@ msgstr "Үүсгэгч"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
@@ -349,10 +348,11 @@ msgstr "Бүлэглэх"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
 msgid "Helpdesk & Support"
-msgstr ""
+msgstr "Тусламын төв & Дэмжлэг"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "High"
 msgstr "Өндөр"
 
@@ -421,6 +421,11 @@ msgstr "Асуудал хоригдсон"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue opened"
+msgstr ""
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_ready
+msgid "Issue ready for next stage"
 msgstr ""
 
 #. module: project_issue
@@ -495,10 +500,11 @@ msgstr "Сүүлийн засвар хийсэн"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "Бага"
 
@@ -600,8 +606,8 @@ msgstr "Харилцагч"
 #: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want "
-"to delete."
+"Please remove existing issues in the project linked to the accounts you want"
+" to delete."
 msgstr ""
 
 #. module: project_issue
@@ -647,6 +653,8 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
 msgstr ""
+"Төсөлд асуудал/алдааны менежментэд цагийн хуудсыг дэмжих боломжийг олгоно.\n"
+"-Энэ нь project_issue_sheet модулийг суулгадаг."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
@@ -699,13 +707,17 @@ msgid "Task"
 msgstr "Даалгавар"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_task_type
+msgid "Task Stage"
+msgstr "Даалгаврын үе"
+
+#. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid ""
 "The Odoo issues tracker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, "
-"customer\n"
+"                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
@@ -713,8 +725,7 @@ msgstr ""
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
 msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
-"        and outbound emails for this record before being sent. Separate "
-"multiple email addresses with a comma"
+"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
 
 #. module: project_issue
@@ -744,7 +755,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
 msgid "Timesheets"
-msgstr ""
+msgstr "Цагийн Хуваарь"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
@@ -815,7 +826,7 @@ msgstr "асуудлууд"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "project.config.settings"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report

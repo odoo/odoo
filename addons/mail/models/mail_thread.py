@@ -1694,9 +1694,10 @@ class MailThread(models.AbstractModel):
         return self._message_post_process_attachments(attachments, attachment_ids, {'model': attach_model, 'res_id': attach_res_id})
 
     def _message_post_process_attachments(self, attachments, attachment_ids, message_data):
-        IrAttachment, parameter_attachments = self.env['ir.attachment'], self.env['ir.attachment']
+        IrAttachment = self.env['ir.attachment']
         m2m_attachment_ids = []
         cid_mapping = {}
+        fname_mapping = {}
         if attachment_ids:
             filtered_attachment_ids = self.env['ir.attachment'].sudo().search([
                 ('res_model', '=', 'mail.compose.message'),
@@ -1712,9 +1713,7 @@ class MailThread(models.AbstractModel):
                 name, content = attachment
             elif len(attachment) == 3:
                 name, content, info = attachment
-                if info and info.get('cid'):
-                    cid = info['cid']
-                    cid_mapping[cid] = name
+                cid = info and info.get('cid')
             else:
                 continue
             if isinstance(content, unicode):
@@ -1722,13 +1721,16 @@ class MailThread(models.AbstractModel):
             data_attach = {
                 'name': name,
                 'datas': base64.b64encode(str(content)),
-                'datas_fname': cid or name,
+                'datas_fname': name,
                 'description': name,
                 'res_model': message_data['model'],
                 'res_id': message_data['res_id'],
             }
-            parameter_attachments |= IrAttachment.create(data_attach)
-        m2m_attachment_ids += [(4, attach.id) for attach in parameter_attachments]
+            new_attachment = IrAttachment.create(data_attach)
+            m2m_attachment_ids.append((4, new_attachment.id))
+            if cid:
+                cid_mapping[cid] = new_attachment
+            fname_mapping[name] = new_attachment
 
         if cid_mapping and message_data.get('body'):
             root = lxml.html.fromstring(tools.ustr(message_data['body']))
@@ -1736,12 +1738,11 @@ class MailThread(models.AbstractModel):
             for node in root.iter('img'):
                 if node.get('src', '').startswith('cid:'):
                     cid = node.get('src').split('cid:')[1]
-                    fname = cid_mapping.get(cid, node.get('data-filename', ''))
-                    attachment = parameter_attachments.filtered(lambda attachment: attachment.datas_fname == cid)
+                    attachment = cid_mapping.get(cid)
                     if not attachment:
-                        attachment = parameter_attachments.filtered(lambda attachment: attachment.datas_fname == fname)
+                        attachment = fname_mapping.get(node.get('data-filename'), '')
                     if attachment:
-                        node.set('src', '/web/image/%s' % attachment.ids[0])
+                        node.set('src', '/web/image/%s' % attachment.id)
                         postprocessed = True
             if postprocessed:
                 body = lxml.html.tostring(root, pretty_print=False, encoding='UTF-8')
