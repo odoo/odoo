@@ -7,7 +7,7 @@ var web_client = require('web.web_client');
 
 
 function send_notification(title, content) {
-    if (Notification && Notification.permission === "granted") {
+    if (window.Notification && Notification.permission === "granted") {
         if (bus.is_master) {
             _send_native_notification(title, content);
         }

@@ -18,7 +18,7 @@
                 <group name="account_property" position="before">
                     <group>
                         <group string="Inventory Valuation">
-                            <field name="property_cost_method" groups="stock_account.group_inventory_valuation"/>
+                            <field name="property_cost_method"/>
                             <field name="property_valuation"/>
                         </group>
                     </group>
@@ -35,7 +35,7 @@
                     <field name="list_price" position="after">
                         <field name="valuation" invisible="1" readonly="1"/>
                         <field name="cost_method" invisible="1" readonly="1"/>
-                        <field name="property_cost_method" groups="stock_account.group_inventory_valuation" invisible="1"/>
+                        <field name="property_cost_method" invisible="1"/>
                     </field>
                     <field name="standard_price" position="replace">
                         <field name="standard_price"
@@ -46,18 +46,16 @@
                         <button string="Set standard cost" type="action"
                             name="%(action_view_change_standard_price)d"
                             attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard']), ('product_variant_count', '>', 1)]}"
-                            class="oe_link oe_read_only" colspan="2"
-                            groups="stock_account.group_inventory_valuation"/>
+                            class="oe_link oe_read_only" colspan="2"/>
                     </div>
                     <div name="standard_price_uom" position="after">
                         <button string="Set standard cost" type="action"
                             name="%(action_view_change_standard_price)d"
                             attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average']), ('product_variant_count', '>', 1)]}"
-                            class="oe_link oe_read_only" colspan="2"
-                            groups="stock_account.group_inventory_valuation"/>
+                            class="oe_link oe_read_only" colspan="2"/>
                     </div>
                     <group name="accounting" position="inside">
-                        <group name="property_inventory_valuation" groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}">
+                        <group name="property_inventory_valuation" attrs="{'invisible': [('type','=','service')]}">
                             <field name="property_valuation" invisible="1"/>
                             <field name="property_stock_account_input"
                                 attrs="{'invisible':[ ('valuation', '!=', 'real_time')]}"
@@ -85,15 +83,13 @@
                         <button string="Set standard cost" type="action"
                             name="%(action_view_change_standard_price)d"
                             attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard'])]}"
-                            class="oe_link oe_read_only" colspan="2"
-                            groups="stock_account.group_inventory_valuation"/>
+                            class="oe_link oe_read_only" colspan="2"/>
                     </field>
                     <field name="standard_price" position="after">
                         <button string="Set standard cost" type="action"
                             name="%(action_view_change_standard_price)d"
                             attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average'])]}"
-                            class="oe_link oe_read_only" colspan="2"
-                            groups="stock_account.group_inventory_valuation"/>
+                            class="oe_link oe_read_only" colspan="2"/>
                     </field>
                 </data>
             </field>
