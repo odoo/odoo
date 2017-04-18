@@ -27,7 +27,14 @@ class PosSession(models.Model):
             orders.with_context(force_company=company_id)._create_account_move_line(session, move)
             for order in session.order_ids.filtered(lambda o: o.state not in ['done', 'invoiced']):
                 if order.state not in ('paid'):
-                    raise UserError(_("You cannot confirm all orders of this session, because they don't have the 'paid' status"))
+                    raise UserError(
+                        _("You cannot confirm all orders of this session, because they have not the 'paid' status.\n"
+                          "{reference} is in state {state}, total amount: {total}, paid: {paid}").format(
+                            reference=order.pos_reference or order.name,
+                            state=order.state,
+                            total=order.amount_total,
+                            paid=order.amount_paid,
+                        ))
                 order.action_pos_order_done()
             orders = session.order_ids.filtered(lambda order: order.state == 'done')
             orders._reconcile_payments()
