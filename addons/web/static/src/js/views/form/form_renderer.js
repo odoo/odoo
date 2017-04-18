@@ -462,6 +462,11 @@ var FormRenderer = BasicRenderer.extend({
                 .addClass(node.attrs.icon)
                 .appendTo($button);
         }
+        if (node.attrs.string) {
+            $('<span>')
+                .text(node.attrs.string)
+                .appendTo($button);
+        }
         $button.append(_.map(node.children, this._renderNode.bind(this)));
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);

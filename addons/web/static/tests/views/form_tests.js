@@ -3089,5 +3089,26 @@ QUnit.module('Views', {
             });
         }
     });
+    QUnit.test('render stat button with string inline', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            res_id: 1,
+            data: this.data,
+            arch: '<form string="Manufacturing Orders">' +
+                    '<sheet>' +
+                        '<div class="oe_button_box" name="button_box">' +
+                            '<button string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v"/>' +
+                        '</div>' +
+                    '</sheet>' +
+                '</form>',
+        });
+        var $button = form.$('.o_form_view .o_form_sheet .oe_button_box .oe_stat_button span');
+        assert.strictEqual($button.text(), "Inventory Moves",
+            "the stat button should contain a span with the string attribute value");
+        form.destroy();
+    });
 });
 });
