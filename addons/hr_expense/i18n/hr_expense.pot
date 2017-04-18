@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -189,7 +189,7 @@ msgid "<strong>Validated By:</strong>"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:79
+#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:83
 #, python-format
 msgid "A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related to your expense %s has been made."
 msgstr ""
@@ -258,8 +258,8 @@ msgid "Analytic Account"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
-msgid "Apply"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_group_analytic_accounting
+msgid "Analytic Accounting"
 msgstr ""
 
 #. module: hr_expense
@@ -299,6 +299,11 @@ msgid "Bill Reference"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Billing"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Business trip"
 msgstr ""
@@ -309,9 +314,9 @@ msgid "Can be Expensed"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Cancel"
 msgstr ""
 
@@ -337,7 +342,7 @@ msgid "Click here to create new expenses."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:305
+#: code:addons/hr_expense/models/hr_expense.py:318
 #, python-format
 msgid "Click to add a new expense,"
 msgstr ""
@@ -431,6 +436,11 @@ msgid "Currency"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_module_sale
+msgid "Customer Billing"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Date"
@@ -483,6 +493,16 @@ msgid "Draft Payment"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Email Alias"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Emails"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_employee_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_employee_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -520,11 +540,6 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_name
 msgid "Expense Description"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
-msgid "Expense Email Alias"
 msgstr ""
 
 #. module: hr_expense
@@ -645,7 +660,6 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 #: model:product.category,name:hr_expense.cat_expense
@@ -697,19 +711,19 @@ msgid "Expenses follow this flow:"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:400
+#: code:addons/hr_expense/models/hr_expense.py:413
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:512
+#: code:addons/hr_expense/models/hr_expense.py:525
 #, python-format
 msgid "Expenses must have an expense journal specified to generate accounting entries."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:404
+#: code:addons/hr_expense/models/hr_expense.py:417
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
 msgstr ""
@@ -813,7 +827,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_9286
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_9374
 msgid "ID"
 msgstr ""
 
@@ -880,6 +894,12 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_default_alias_email
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Let your employees record expenses by email"
+msgstr ""
+
+#. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_manager
 msgid "Manager"
 msgstr ""
@@ -940,19 +960,19 @@ msgid "New Mail"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:252
+#: code:addons/hr_expense/models/hr_expense.py:258
 #, python-format
-msgid "No Expense account found for the product %s (or for it's category), please configure one."
+msgid "No Expense account found for the product %s (or for its category), please configure one."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:219
+#: code:addons/hr_expense/models/hr_expense.py:224
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:198
+#: code:addons/hr_expense/models/hr_expense.py:203
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -1071,7 +1091,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:256
+#: code:addons/hr_expense/models/hr_expense.py:263
 #, python-format
 msgid "Please configure Default Expense account for Product expense: `property_account_expense_categ_id`."
 msgstr ""
@@ -1114,6 +1134,11 @@ msgid "Product Template"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_module_project
+msgid "Project"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Provide your customer with detailed reports (along with copies of receipts)"
 msgstr ""
@@ -1144,8 +1169,18 @@ msgid "Reason to refuse expense."
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Recommended Apps"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Record a first expense"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Recording"
 msgstr ""
 
 #. module: hr_expense
@@ -1238,10 +1273,20 @@ msgid "Review expenses to approve"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Save"
+msgstr ""
+
+#. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:25
 #, python-format
 msgid "Save the report, your manager will receive a notification by email to approve it."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Schedule the tasks of your employees"
 msgstr ""
 
 #. module: hr_expense
@@ -1258,6 +1303,11 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:88
 #, python-format
 msgid "Selected Unit of Measure does not belong to the same category as the product Unit of Measure"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Sell services and invoice expenses to customer"
 msgstr ""
 
 #. module: hr_expense
@@ -1291,12 +1341,17 @@ msgid "Set invoicing method on expense products"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Set units of measure on expense types (unit, distance, etc.)"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_global_settings
 msgid "Settings"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
 msgid "Setup your domain alias"
 msgstr ""
 
@@ -1404,6 +1459,11 @@ msgid "This guide helps you start with Odoo Expenses."
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "This installs the Sales Management app.                             Expenses can be invoiced to customers from sales orders."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_to_approve
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Approve"
@@ -1444,6 +1504,11 @@ msgid "Total Amount"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Track costs &amp; revenues by project, department, etc."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_unit_amount
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Unit Price"
@@ -1452,6 +1517,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_uom_id
 msgid "Unit of Measure"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_group_uom
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "Units of Measure"
 msgstr ""
 
 #. module: hr_expense
@@ -1517,23 +1588,18 @@ msgid "When you charge"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:509
+#: code:addons/hr_expense/models/hr_expense.py:522
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
-msgid "You can setup a generic email alias to create\n"
-"                                    incoming expenses easily. Write an email with the receipt\n"
-"                                    in attachment to create an expense line in one click. If the mail\n"
-"                                    subject contains the product's internal reference between brackets,\n"
-"                                    the product will be set automatically. Type the expense amount\n"
-"                                    in the mail subject to set it on the expense too."
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
+msgid "You can setup a generic email alias to create incoming expenses easily. Write an email with the receipt in attachment to create an expense line in one click. If the mail subject contains the product's internal reference between brackets, the product will be set automatically. Type the expense amount in the mail subject to set it on the expense too."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:426
+#: code:addons/hr_expense/models/hr_expense.py:439
 #, python-format
 msgid "You cannot delete a posted expense."
 msgstr ""
@@ -1562,7 +1628,7 @@ msgid "You record expenses,"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:491
+#: code:addons/hr_expense/models/hr_expense.py:504
 #, python-format
 msgid "Your Expense %s has been refused.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>"
 msgstr ""
@@ -1613,7 +1679,7 @@ msgid "hr.expense.config.settings"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:306
+#: code:addons/hr_expense/models/hr_expense.py:319
 #, python-format
 msgid "or send receipts by email to %s."
 msgstr ""

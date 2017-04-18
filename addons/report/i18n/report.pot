@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,9 +33,9 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.view_company_report_form
 msgid "<strong>No logo found!</strong>\n"
-"                        To get a beautiful report, you might review your\n"
+"                        To get a beautiful document, you should review your\n"
 "                        company data: upload a logo, set\n"
-"                        bank accounts, phone numbers, etc."
+"                        your address, etc."
 msgstr ""
 
 #. module: report
@@ -181,19 +181,19 @@ msgstr ""
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Change Report Template"
+msgid "Change Document Template"
 msgstr ""
 
 #. module: report
 #: code:addons/report/models/base_config_settings.py:30
 #: code:addons/report/models/report.py:278
 #, python-format
-msgid "Choose Your Report Layout"
+msgid "Choose Your Document Layout"
 msgstr ""
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Choose your reports's header and footer layout."
+msgid "Choose your document's header and footer layout"
 msgstr ""
 
 #. module: report
@@ -266,6 +266,14 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
+msgstr ""
+
+#. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:report.field_hr_timesheet_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:report.field_res_company_external_report_layout
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Document Template"
 msgstr ""
 
 #. module: report
@@ -437,6 +445,7 @@ msgstr ""
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
+#: model:ir.model.fields,field_description:report.field_hr_timesheet_config_settings_paperformat_id
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:report.field_res_company_paperformat_id
 msgid "Paper format"
@@ -479,6 +488,11 @@ msgid "Preview Clean Template"
 msgstr ""
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Preview Document"
+msgstr ""
+
+#. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
 msgid "Preview External Report"
 msgstr ""
@@ -491,11 +505,6 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.view_company_report_form
 msgid "Preview Minimalist Template"
-msgstr ""
-
-#. module: report
-#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Preview Report"
 msgstr ""
 
 #. module: report
@@ -521,13 +530,6 @@ msgstr ""
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
-msgstr ""
-
-#. module: report
-#: model:ir.model.fields,field_description:report.field_base_config_settings_external_report_layout
-#: model:ir.model.fields,field_description:report.field_res_company_external_report_layout
-#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Report Template"
 msgstr ""
 
 #. module: report
@@ -639,7 +641,13 @@ msgid "Web:"
 msgstr ""
 
 #. module: report
-#: code:addons/report/models/report.py:464
+#: code:addons/report/models/report.py:485
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s"
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:487
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr ""
