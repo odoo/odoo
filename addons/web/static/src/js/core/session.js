@@ -285,7 +285,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var result = _.extend({}, window.odoo.session_info);
         delete result.session_id;
         _.extend(this, result);
-        if (!this.tzOffset) {
+        if (this.tzOffset === false) {
             // send by server to have the user timezone and not the browser timezone
             this.tzOffset = -new Date().getTimezoneOffset();
         }
