@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -127,7 +127,15 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
+#: model:ir.model.fields,help:sale_stock.field_stock_config_settings_default_new_security_lead
+#: model:ir.model.fields,help:sale_stock.field_stock_config_settings_security_lead
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid "Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "Move forward expected delivery dates by"
 msgstr ""
 
 #. module: sale_stock
@@ -173,8 +181,8 @@ msgid "Product"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
-msgid "Product Template"
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "Reserving products manually in delivery orders or by running the scheduler is advised to better manage priorities in case of long customer lead times or/and frequent stock-outs. By default, the scheduler runs automatically every 24 hours."
 msgstr ""
 
 #. module: sale_stock
@@ -220,12 +228,23 @@ msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_security_lead
 msgid "Sales Safety Days"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "Schedule deliveries earlier to avoid delays"
 msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
 msgid "Security Lead Time"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_new_security_lead
+msgid "Security Lead Time for Sales"
 msgstr ""
 
 #. module: sale_stock
@@ -239,8 +258,23 @@ msgid "Set a delivery date on orders"
 msgstr ""
 
 #. module: sale_stock
+#: selection:stock.config.settings,default_picking_policy:0
+msgid "Ship all products at once"
+msgstr ""
+
+#. module: sale_stock
+#: selection:stock.config.settings,default_picking_policy:0
+msgid "Ship products as soon as available, with back orders"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_picking_policy
+msgid "Shipping Management"
 msgstr ""
 
 #. module: sale_stock
@@ -259,7 +293,7 @@ msgid "This allows to apply a special route on sales order lines (e.g. dropshipp
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:202
+#: code:addons/sale_stock/models/sale_order.py:203
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr ""
@@ -292,9 +326,19 @@ msgid "Warehouse"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:201
+#: code:addons/sale_stock/models/sale_order.py:202
 #, python-format
 msgid "Warning"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "When to reserve sold products"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "When to start shipping"
 msgstr ""
 
 #. module: sale_stock
@@ -311,8 +355,18 @@ msgid "You plan to sell %s %s but you only have %s %s available!\n"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "days"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_config_settings
+msgid "stock.config.settings"
 msgstr ""
 
 #. module: sale_stock

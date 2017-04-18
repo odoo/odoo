@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,10 +16,10 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:353
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:357
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:374
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:378
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:354
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:358
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:375
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:379
 #, python-format
 msgid " already out"
 msgstr ""
@@ -228,6 +228,11 @@ msgid "Landed Cost Type"
 msgstr ""
 
 #. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_config_settings_inherit_landed_cost
+msgid "Landed Cost Types"
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
@@ -298,7 +303,7 @@ msgid "Pickings"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:320
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:321
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr ""
@@ -372,7 +377,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:172
 #, python-format
 msgid "The selected picking does not contain any move that would be impacted by landed costs. Landed costs are only possible for products configured in real time valuation with real price costing method. Please make sure it is the case, or you selected the correct picking"
 msgstr ""
