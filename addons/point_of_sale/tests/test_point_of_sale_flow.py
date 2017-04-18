@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
-import datetime
 import time
-import os
 
 import odoo
-from odoo import fields, tools, report as odoo_report
-from odoo.tools import float_compare, mute_logger, test_reports
-
+from odoo import fields
+from odoo.tools import float_compare, mute_logger
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
-
 
 @odoo.tests.common.at_install(False)
 @odoo.tests.common.post_install(True)
@@ -416,17 +412,28 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         """
         Simulation of sales coming from the interface, even after closing the session
         """
+        FROMPRODUCT = object()
+
+        def compute_tax(product, price, taxes=FROMPRODUCT, qty=1):
+            if taxes is FROMPRODUCT:
+                taxes = product.taxes_id
+            currency = self.pos_config.pricelist_id.currency_id
+            taxes = taxes.compute_all(price, currency, qty, product=product)['taxes']
+            untax = price * qty
+            return untax, sum(tax.get('amount', 0.0) for tax in taxes)
+
         # I click on create a new session button
         self.pos_config.open_session_cb()
 
         current_session = self.pos_config.current_session_id
         num_starting_orders = len(current_session.order_ids)
 
+        untax, atax = compute_tax(self.carotte, 0.9)
         carrot_order = {'data':
-          {'amount_paid': 0.9,
+          {'amount_paid': untax + atax,
            'amount_return': 0,
-           'amount_tax': 0,
-           'amount_total': 0.9,
+           'amount_tax': atax,
+           'amount_total': untax + atax,
            'creation_date': fields.Datetime.now(),
            'fiscal_position_id': False,
            'lines': [[0,
@@ -437,7 +444,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
               'price_unit': 0.9,
               'product_id': self.carotte.id,
               'qty': 1,
-              'tax_ids': []}]],
+              'tax_ids': [(6, 0, self.carotte.taxes_id.ids)]}]],
            'name': 'Order 00042-003-0014',
            'partner_id': False,
            'pos_session_id': current_session.id,
@@ -445,7 +452,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'statement_ids': [[0,
              0,
              {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
-              'amount': 0.9,
+              'amount': untax + atax,
               'journal_id': self.pos_config.journal_ids[0].id,
               'name': fields.Datetime.now(),
               'statement_id': current_session.statement_ids[0].id}]],
@@ -454,11 +461,12 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
           'id': '00042-003-0014',
           'to_invoice': False}
 
+        untax, atax = compute_tax(self.courgette, 1.2)
         zucchini_order = {'data':
-          {'amount_paid': 1.2,
+          {'amount_paid': untax + atax,
            'amount_return': 0,
-           'amount_tax': 0,
-           'amount_total': 1.1,
+           'amount_tax': atax,
+           'amount_total': untax + atax,
            'creation_date': fields.Datetime.now(),
            'fiscal_position_id': False,
            'lines': [[0,
@@ -469,7 +477,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
               'price_unit': 1.2,
               'product_id': self.courgette.id,
               'qty': 1,
-              'tax_ids': []}]],
+              'tax_ids': [(6, 0, self.courgette.taxes_id.ids)]}]],
            'name': 'Order 00043-003-0014',
            'partner_id': False,
            'pos_session_id': current_session.id,
@@ -477,7 +485,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'statement_ids': [[0,
              0,
              {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
-              'amount': 1.2,
+              'amount': untax + atax,
               'journal_id': self.pos_config.journal_ids[0].id,
               'name': fields.Datetime.now(),
               'statement_id': current_session.statement_ids[0].id}]],
@@ -486,11 +494,12 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
           'id': '00043-003-0014',
           'to_invoice': False}
 
+        untax, atax = compute_tax(self.onions, 1.28)
         onions_order = {'data':
-          {'amount_paid': 1.28,
+          {'amount_paid': untax + atax,
            'amount_return': 0,
-           'amount_tax': 0,
-           'amount_total': 1.28,
+           'amount_tax': atax,
+           'amount_total': untax + atax,
            'creation_date': fields.Datetime.now(),
            'fiscal_position_id': False,
            'lines': [[0,
@@ -509,7 +518,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'statement_ids': [[0,
              0,
              {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
-              'amount': 1.28,
+              'amount': untax + atax,
               'journal_id': self.pos_config.journal_ids[0].id,
               'name': fields.Datetime.now(),
               'statement_id': current_session.statement_ids[0].id}]],
@@ -517,7 +526,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'user_id': self.env.uid},
           'id': '00044-003-0014',
           'to_invoice': False}
-
 
         # I create an order on an open session
         self.PosOrder.create_from_ui([carrot_order])
