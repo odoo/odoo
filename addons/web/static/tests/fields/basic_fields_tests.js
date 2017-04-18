@@ -182,17 +182,17 @@ QUnit.module('basic_fields', {
         // Edit a line
         var $cell = list.$('tr.o_data_row:has(.o_checkbox input:checked) td:not(.o_list_record_selector)').first();
         assert.ok($cell.find('.o_checkbox input:checked').prop('disabled'),
-            "input should be disabled in readonly mode")
+            "input should be disabled in readonly mode");
         $cell.click();
         assert.ok(!$cell.find('.o_checkbox input:checked').prop('disabled'),
-            "input should not have the disabled property in edit mode")
+            "input should not have the disabled property in edit mode");
         $cell.find('.o_checkbox input:checked').click();
 
         // save
         list.$buttons.find('.o_list_button_save').click();
         $cell = list.$('tr.o_data_row:has(.o_checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
         assert.ok($cell.find('.o_checkbox input:not(:checked)').prop('disabled'),
-            "input should be disabled again")
+            "input should be disabled again");
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input').length, 5,
             "should still have 5 checkboxes");
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 3,
@@ -200,9 +200,8 @@ QUnit.module('basic_fields', {
 
         // Re-Edit the line and fake-check the checkbox
         $cell.click();
-        var $checkbox = $cell.find('.o_checkbox input:not(:checked)');
-        $checkbox.click();  // Change the checkbox
-        $checkbox.click();  // Undo the change
+        $cell.find('.o_checkbox input').click(); // Change the checkbox
+        $cell.find('.o_checkbox input').click(); // Undo the change
 
         // Save
         list.$buttons.find('.o_list_button_save').click();
@@ -304,7 +303,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('float field in form view', function(assert) {
+    QUnit.test('float field in form view', function (assert) {
         assert.expect(5);
 
         var form = createView({
@@ -322,20 +321,20 @@ QUnit.module('basic_fields', {
         assert.ok(!form.$('.o_form_field').hasClass('o_form_field_empty'),
             'Float field should be considered set for value 0.');
         assert.strictEqual(form.$('.o_form_field.o_form_field_number').first().text(), '0.000',
-            'The value should be displayed properly.')
+            'The value should be displayed properly.');
 
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('input.o_form_input').val(), '0.000',
-            'The value should be rendered with correct precision.')
+            'The value should be rendered with correct precision.');
 
         form.$('input.o_form_input').val('108.2458938598598').trigger('input');
         assert.strictEqual(form.$('input.o_form_input').val(), '108.2458938598598',
-            'The value should not be formated yet.')
+            'The value should not be formated yet.');
 
         form.$('input.o_form_input').val('18.8958938598598').trigger('input');
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('.o_form_field.o_form_field_number').first().text(), '18.896',
-            'The new value should be rounded properly.')
+            'The new value should be rounded properly.');
 
         form.destroy();
     });
@@ -352,7 +351,7 @@ QUnit.module('basic_fields', {
                   '</tree>',
         });
 
-        var zeroValues = list.$('td').filter(function() {return $(this).text() === '0.000'});
+        var zeroValues = list.$('td').filter(function () {return $(this).text() === '0.000';});
         assert.strictEqual(zeroValues.length, 2,
             'Unset float values should be rendered as zeros.');
 
@@ -361,16 +360,16 @@ QUnit.module('basic_fields', {
         $cell.click();
 
         assert.strictEqual(list.$('input.o_form_input').length, 1,
-            'The view should have 1 input for editable float.')
+            'The view should have 1 input for editable float.');
 
         list.$('input.o_form_input').val('108.2458938598598').trigger('input');
         assert.strictEqual(list.$('input.o_form_input').val(), '108.2458938598598',
-            'The value should not be formated yet.')
+            'The value should not be formated yet.');
 
         list.$('input.o_form_input').val('18.8958938598598').trigger('input');
         list.$buttons.find('.o_list_button_save').click();
         assert.strictEqual(list.$('.o_form_field.o_form_field_number').first().text(), '18.896',
-            'The new value should be rounded properly.')
+            'The new value should be rounded properly.');
 
         list.destroy();
     });
@@ -424,7 +423,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('email field in editable list view', function(assert) {
+    QUnit.test('email field in editable list view', function (assert) {
         assert.expect(10);
 
         var list = createView({
@@ -448,15 +447,15 @@ QUnit.module('basic_fields', {
         // Edit a line and check the result
         var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         $cell.click();
-        assert.ok($cell.hasClass('o_edit_mode'), 'should be set as edit mode');
+        assert.ok($cell.parent().hasClass('o_selected_row'), 'should be set as edit mode');
         assert.strictEqual($cell.find('input').val(), 'yop',
             'should have the corect value in internal input');
-        $cell.find('input').val('new').trigger('input');;
+        $cell.find('input').val('new').trigger('input');
 
         // save
         list.$buttons.find('.o_list_button_save').click();
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
-        assert.ok(!$cell.hasClass('o_edit_mode'), 'should not be in edit mode anymore');
+        assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
             "value should be properly updated");
         $mailtoLink = list.$('a.o_form_uri.o_field_widget.o_text_overflow');
@@ -485,7 +484,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        var charField = form.renderer.widgets[0];
+        var charField = _.find(form.renderer.allFieldWidgets)[0];
         assert.strictEqual(charField.isValid(), true);
         form.destroy();
     });
@@ -527,7 +526,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('char field in editable list view', function(assert) {
+    QUnit.test('char field in editable list view', function (assert) {
         assert.expect(6);
 
         var list = createView({
@@ -545,15 +544,15 @@ QUnit.module('basic_fields', {
         // Edit a line and check the result
         var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         $cell.click();
-        assert.ok($cell.hasClass('o_edit_mode'), 'should be set as edit mode');
+        assert.ok($cell.parent().hasClass('o_selected_row'), 'should be set as edit mode');
         assert.strictEqual($cell.find('input').val(), 'yop',
             'should have the corect value in internal input');
-        $cell.find('input').val('brolo').trigger('input');;
+        $cell.find('input').val('brolo').trigger('input');
 
         // save
         list.$buttons.find('.o_list_button_save').click();
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
-        assert.ok(!$cell.hasClass('o_edit_mode'), 'should not be in edit mode anymore');
+        assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'brolo',
             "value should be properly updated");
         list.destroy();
@@ -608,7 +607,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('char field in editable list view', function(assert) {
+    QUnit.test('char field in editable list view', function (assert) {
         assert.expect(10);
 
         var list = createView({
@@ -630,15 +629,15 @@ QUnit.module('basic_fields', {
         // Edit a line and check the result
         var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         $cell.click();
-        assert.ok($cell.hasClass('o_edit_mode'), 'should be set as edit mode');
+        assert.ok($cell.parent().hasClass('o_selected_row'), 'should be set as edit mode');
         assert.strictEqual($cell.find('input').val(), 'yop',
             'should have the corect value in internal input');
-        $cell.find('input').val('brolo').trigger('input');;
+        $cell.find('input').val('brolo').trigger('input');
 
         // save
         list.$buttons.find('.o_list_button_save').click();
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
-        assert.ok(!$cell.hasClass('o_edit_mode'), 'should not be in edit mode anymore');
+        assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
         assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').length, 5,
             "should still have 5 anchors with correct classes");
         assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first().attr('href'), 'brolo',
@@ -921,7 +920,7 @@ QUnit.module('basic_fields', {
     QUnit.module('HandleWidget');
 
     QUnit.test('handle widget', function (assert) {
-        assert.expect(7);
+        assert.expect(6);
 
         this.data.partner.records[0].p = [2, 4];
         var form = createView({
@@ -948,9 +947,6 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('span.o_row_handle').length, 2, "should have 2 handles");
 
         form.$buttons.find('.o_form_button_edit').click();
-
-        assert.ok(form.$('td:first').hasClass('o_readonly'),
-            "column should be displayed as readonly");
 
         assert.ok(form.$('td:first').hasClass('o_handle_cell'),
             "column widget should be displayed in css class");
@@ -1677,7 +1673,7 @@ QUnit.module('basic_fields', {
         // Edit a line and check the result
         var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         $cell.click();
-        assert.ok($cell.hasClass('o_edit_mode'), 'should be set as edit mode');
+        assert.ok($cell.parent().hasClass('o_selected_row'), 'should be set as edit mode');
         assert.strictEqual($cell.find('input').val(), 'yop',
             'should have the corect value in internal input');
         $cell.find('input').val('new').trigger('input');
@@ -1685,7 +1681,7 @@ QUnit.module('basic_fields', {
         // save
         list.$buttons.find('.o_list_button_save').click();
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
-        assert.ok(!$cell.hasClass('o_edit_mode'), 'should not be in edit mode anymore');
+        assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'n\u00ADew',
             "value should be properly updated");
         $phoneLink = list.$('a.o_form_uri.o_field_widget.o_text_overflow');
@@ -1787,15 +1783,15 @@ QUnit.module('basic_fields', {
         // Edit a line and check the result
         var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         $cell.click();
-        assert.ok($cell.hasClass('o_edit_mode'), 'should be set as edit mode');
+        assert.ok($cell.parent().hasClass('o_selected_row'), 'should be set as edit mode');
         assert.strictEqual($cell.find('input').val(), 'yop',
             'should have the corect value in internal input');
-        $cell.find('input').val('new').trigger('input');;
+        $cell.find('input').val('new').trigger('input');
 
         // save
         list.$buttons.find('.o_list_button_save').click();
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
-        assert.ok(!$cell.hasClass('o_edit_mode'), 'should not be in edit mode anymore');
+        assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
             "value should be properly updated");
         assert.strictEqual(list.$('span.o_field_widget.o_text_overflow:not(.o_form_uri)').length, 5,
@@ -2100,8 +2096,8 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('state_selection widget in editable list view', function(assert) {
-        assert.expect(34);
+    QUnit.test('state_selection widget in editable list view', function (assert) {
+        assert.expect(32);
 
         var list = createView({
             View: ListView,
@@ -2125,10 +2121,8 @@ QUnit.module('basic_fields', {
         // Click on the status button to make the dropdown appear
         var $cell = list.$('tbody td.o_state_selection_cell').first();
         list.$('.o_state_selection_cell .o_selection > a span.o_status').first().click();
-        assert.ok(!$cell.hasClass('o_edit_mode'),
-            'should not be in edit mode since we clicked on the widget and not the cell itself');
-        assert.ok(!$cell.siblings().hasClass('o_edit_mode'),
-            'siblings should not be in edit mode since we clicked on the widget and not the cell itself');
+        assert.ok(!$cell.parent().hasClass('o_selected_row'),
+            'should not be in edit mode since we clicked on the state selection widget');
         assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 1,
             "there should be a dropdown");
         assert.strictEqual(list.$('ul.dropdown-menu.state:visible li').length, 2,
@@ -2148,10 +2142,8 @@ QUnit.module('basic_fields', {
         // switch to edit mode and check the result
         $cell = list.$('tbody td.o_state_selection_cell').first();
         $cell.click();
-        assert.ok(!$cell.hasClass('o_edit_mode'),
-            'should still not be in edit mode since widget is readonly');
-        assert.ok($cell.siblings().hasClass('o_edit_mode'),
-            'siblings should be in edit mode since we clicked on the cell and not the widget itself');
+        assert.ok($cell.parent().hasClass('o_selected_row'),
+            'should now be in edit mode');
         assert.strictEqual(list.$('.o_state_selection_cell .o_selection > a span.o_status').length, 5,
             "should still have five status selection widgets");
         assert.strictEqual(list.$('.o_state_selection_cell .o_selection > a span.o_status.o_status_red').length, 0,
@@ -2174,9 +2166,9 @@ QUnit.module('basic_fields', {
         $lastCell.click();
         assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown anymore");
-        assert.ok(!$firstCell.siblings().hasClass('o_edit_mode'),
+        assert.ok(!$firstCell.parent().hasClass('o_selected_row'),
             'first row should not be in edit mode anymore');
-        assert.ok($lastCell.siblings().hasClass('o_edit_mode'),
+        assert.ok($lastCell.parent().hasClass('o_selected_row'),
             'last row should be in edit mode');
 
         // Click on the last status button to make the dropdown appear

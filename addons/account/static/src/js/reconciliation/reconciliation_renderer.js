@@ -52,9 +52,11 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
                 self.handleNameRecord = recordID;
                 self.name = new basic_fields.FieldChar(self,
                     'name', self.model.get(self.handleNameRecord),
-                    {mode: 'edit', required: true});
+                    {mode: 'edit'});
 
-                self.name.appendTo(self.$('.statement_name_edition'));
+                self.name.appendTo(self.$('.statement_name_edition')).then(function () {
+                    self.name.$el.addClass('o_form_required');
+                });
                 self.$('.statement_name').text(self._initialState.bank_statement_id.display_name);
             });
             defs.push(def);
@@ -422,7 +424,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             var record = self.model.get(self.handleCreateRecord);
 
             self.fields.account_id = new relational_fields.FieldMany2One(self,
-                'account_id', record, {mode: 'edit', required: true});
+                'account_id', record, {mode: 'edit'});
 
             self.fields.journal_id = new relational_fields.FieldMany2One(self,
                 'journal_id', record, {mode: 'edit'});
@@ -434,19 +436,26 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 'analytic_account_id', record, {mode: 'edit'});
 
             self.fields.label = new basic_fields.FieldChar(self,
-                'label', record, {mode: 'edit', required: true});
+                'label', record, {mode: 'edit'});
 
             self.fields.amount = new basic_fields.FieldFloat(self,
-                'amount', record, {mode: 'edit', required: true});
+                'amount', record, {mode: 'edit'});
 
             var $create = $(qweb.render("reconciliation.line.create", {'state': state}));
-            self.fields.account_id.appendTo($create.find('.create_account_id .o_td_field'));
+            self.fields.account_id.appendTo($create.find('.create_account_id .o_td_field'))
+                .then(addRequiredStyle.bind(self, self.fields.account_id));
             self.fields.journal_id.appendTo($create.find('.create_journal_id .o_td_field'));
             self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
             self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
-            self.fields.label.appendTo($create.find('.create_label .o_td_field'));
-            self.fields.amount.appendTo($create.find('.create_amount .o_td_field'));
+            self.fields.label.appendTo($create.find('.create_label .o_td_field'))
+                .then(addRequiredStyle.bind(self, self.fields.label));
+            self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))
+                .then(addRequiredStyle.bind(self, self.fields.amount));
             self.$('.create').append($create);
+
+            function addRequiredStyle(widget) {
+                widget.$el.addClass('o_form_required');
+            }
         });
     },
 

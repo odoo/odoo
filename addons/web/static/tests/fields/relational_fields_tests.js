@@ -835,15 +835,15 @@ QUnit.module('relational_fields', {
             "display name of first record in o2m list should be 'relational record 1'");
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o_field_one2many tbody td').first().click();
-        assert.ok(form.$('.o_field_one2many tbody td').first().hasClass('o_edit_mode'),
+        assert.ok(form.$('.o_field_one2many tbody td').first().parent().hasClass('o_selected_row'),
             "first row of o2m should be in edition");
         form.$('.o_field_one2many tbody td').first().find('input').val("new value").trigger('input');
-        assert.ok(form.$('.o_field_one2many tbody td').first().hasClass('o_edit_mode'),
+        assert.ok(form.$('.o_field_one2many tbody td').first().parent().hasClass('o_selected_row'),
             "first row of o2m should still be in edition");
 
         // // leave o2m edition
         form.$el.click();
-        assert.ok(!form.$('.o_field_one2many tbody td').first().hasClass('o_edit_mode'),
+        assert.ok(!form.$('.o_field_one2many tbody td').first().parent().hasClass('o_selected_row'),
             "first row of o2m should be readonly again");
 
         // discard changes
@@ -1224,18 +1224,18 @@ QUnit.module('relational_fields', {
         // edit mode, then click on Add an item and enter a value
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o_form_field_x2many_list_row_add a').click();
-        form.$('td.o_edit_mode input').val('kartoffel').trigger('input');
+        form.$('.o_selected_row > td input').val('kartoffel').trigger('input');
 
         // click again on Add an item
         form.$('.o_form_field_x2many_list_row_add a').click();
         assert.strictEqual(form.$('td:contains(kartoffel)').length, 1,
             "should have one td with the new value");
-        assert.strictEqual(form.$('td.o_edit_mode input').length, 1,
+        assert.strictEqual(form.$('.o_selected_row > td input').length, 1,
             "should have one other new td");
         assert.strictEqual(form.$('tr.o_data_row').length, 2, "should have 2 data rows");
 
         // enter another value and save
-        form.$('td.o_edit_mode input').val('gemuse').trigger('input');
+        form.$('.o_selected_row > td input').val('gemuse').trigger('input');
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('tr.o_data_row').length, 2, "should have 2 data rows");
         assert.strictEqual(form.$('td:contains(kartoffel)').length, 1,
@@ -2682,7 +2682,7 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').length, 2,
             "should have 2 data rows");
-        assert.ok(form.$('tr.o_data_row:first:contains(My little Foo Value)').length, 1,
+        assert.strictEqual(form.$('tr.o_data_row:first input').val(), 'My little Foo Value',
             "first row should be the new value");
         assert.ok(form.$('tr.o_data_row:first').hasClass('o_selected_row'),
             "first row should be selected");
@@ -2728,7 +2728,7 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').length, 2,
             "should have 2 data rows");
-        assert.ok(form.$('tr.o_data_row:eq(1):contains(My little Foo Value)').length, 1,
+        assert.strictEqual(form.$('tr.o_data_row:eq(1) input').val(), 'My little Foo Value',
             "second row should be the new value");
         assert.ok(form.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
             "second row should be selected");
@@ -3190,13 +3190,15 @@ QUnit.module('relational_fields', {
             res_id: 1,
         });
 
-        assert.ok(form.$('.o_statusbar_status button[data-value="4"]').hasClass('btn-primary disabled'),
+        var $selectedStatus = form.$('.o_statusbar_status button[data-value="4"]');
+        assert.ok($selectedStatus.hasClass('btn-primary') && $selectedStatus.hasClass('disabled'),
             "selected status should be btn-primary and disabled");
         var $clickable = form.$('.o_statusbar_status button.btn-default:not(.dropdown-toggle):not(:disabled)');
         assert.strictEqual($clickable.length, 2,
             "other status should be btn-default and not disabled");
         $clickable.last().click(); // (last is visually the first here (css))
-        assert.ok(form.$('.o_statusbar_status button[data-value="1"]').hasClass("btn-primary disabled"),
+        var $status = form.$('.o_statusbar_status button[data-value="1"]');
+        assert.ok($status.hasClass("btn-primary") && $status.hasClass("disabled"),
             "value should have been updated");
 
         form.destroy();

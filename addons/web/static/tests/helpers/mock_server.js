@@ -154,7 +154,7 @@ var MockServer = Class.extend({
     },
     /**
      * helper: read a string describing an arch, and returns a simulated
-     * 'field_view_get' call to the server.
+     * 'fields_view_get' call to the server.
      *
      * @private
      * @param {string|Object} arch a string OR a parsed xml document
@@ -165,6 +165,7 @@ var MockServer = Class.extend({
      */
     _fieldsViewGet: function (arch, model, fields) {
         var self = this;
+        var modifiersNames = ['invisible', 'readonly', 'required'];
         var onchanges = this.data[model].onchanges || {};
         var fieldNodes = {};
 
@@ -173,11 +174,45 @@ var MockServer = Class.extend({
             arch = utils.xml_to_json(doc, true);
         }
 
+        var inTreeView = (arch.tag === 'tree');
+
         this._traverse(arch, function (node) {
             if (typeof node === "string") {
                 return false;
             }
             var modifiers = {};
+
+            var isField = (node.tag === 'field');
+
+            if (isField) {
+                fieldNodes[node.attrs.name] = node;
+
+                // 'transfer_field_to_modifiers' simulation
+                var field = fields[node.attrs.name];
+
+                var defaultValues = {};
+                var stateExceptions = {};
+                _.each(modifiersNames, function (attr) {
+                    stateExceptions[attr] = [];
+                    defaultValues[attr] = !!field[attr];
+                });
+                _.each(field['states'] || {}, function (modifs, state) {
+                    _.each(modifs, function (modif) {
+                        if (defaultValues[modif[0]] !== modif[1]) {
+                            stateExceptions[modif[0]].append(state);
+                        }
+                    });
+                });
+                _.each(defaultValues, function (defaultValue, attr) {
+                    if (stateExceptions[attr].length) {
+                        modifiers[attr] = [("state", defaultValue ? "not in" : "in", stateExceptions[attr])];
+                    } else {
+                        modifiers[attr] = defaultValue;
+                    }
+                });
+            }
+
+            // 'transfer_node_to_modifiers' simulation
             if (node.attrs.attrs) {
                 var attrs = pyeval.py_eval(node.attrs.attrs);
                 _.extend(modifiers, attrs);
@@ -189,20 +224,26 @@ var MockServer = Class.extend({
                 }
                 modifiers.invisible.push(["state", "not in", node.attrs.states.split(",")]);
             }
-            _.each(["invisible", "readonly", "required"], function (a) {
+            _.each(modifiersNames, function (a) {
                 if (node.attrs[a]) {
                     var v = pyeval.py_eval(node.attrs[a]);
-                    if (v || modifiers[a] === undefined) {
+                    if (inTreeView && a === 'invisible') {
+                        modifiers['tree_invisible'] = v;
+                    } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
                         modifiers[a] = v;
                     }
                 }
             });
+
+            // 'transfer_modifiers_to_node' simulation
+            _.each(modifiersNames, function (a) {
+                if (a in modifiers && (!!modifiers[a] === false || (_.isArray(modifiers[a]) && !modifiers[a].length))) {
+                    delete modifiers[a];
+                }
+            });
             node.attrs.modifiers = JSON.stringify(modifiers);
-            if (node.tag === 'field') {
-                fieldNodes[node.attrs.name] = node;
-                return false;
-            }
-            return true;
+
+            return !isField;
         });
 
         var relModel, relFields;

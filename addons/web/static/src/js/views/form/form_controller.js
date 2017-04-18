@@ -295,17 +295,6 @@ var FormController = BasicController.extend({
         return this.alive(def);
     },
     /**
-     * @override method from FieldManagerMixin
-     * @private
-     * @param {string} id it is ignored, because we already know it.
-     * @param {string[]} fields
-     * @param {OdooEvent} event the event that triggered the change
-     */
-    _confirmChange: function (id, fields, event) {
-        var record = this.model.get(this.handle);
-        this.renderer.updateWidgets(fields, record, event);
-    },
-    /**
      * When a save operation has been confirmed from the model, this method is
      * called.
      *
@@ -326,7 +315,7 @@ var FormController = BasicController.extend({
                 return _.isObject(d) &&
                     (d.id === id || _.findWhere(d.data, {id: id}));
             });
-            this.renderer.updateWidgets([fieldsChanged], record);
+            this.renderer.confirmChange(record, record.id, [fieldsChanged]);
         }
     },
     /**
@@ -588,7 +577,7 @@ var FormController = BasicController.extend({
         this.model.setSort(event.data.id, event.data.name);
         var field = event.data.field;
         var state = this.model.get(this.handle);
-        this.renderer.updateWidgets([field], state);
+        this.renderer.confirmChange(state, state.id, [field]);
     },
 
 });

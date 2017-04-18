@@ -27,7 +27,7 @@ FormRenderer.include({
      *
      * @override
      */
-    updateWidgets: function (fields, state) {
+    confirmChange: function (state, id, fields) {
         if (this.chatter) {
             var updatedMailFields = _.intersection(fields, _.values(this.mailFields));
             if (updatedMailFields.length) {

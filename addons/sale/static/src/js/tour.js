@@ -39,7 +39,7 @@ tour.register('sale_tour', {
     content: _t("Click here to add some lines to your quotations."),
     position: "bottom",
 }, {
-    trigger: ".modal-body .o_form_required input, .o_list_view .o_required_field input",
+    trigger: ".modal-body .o_form_required input, .o_list_view .o_form_required input",
     extra_trigger: ".o_sale_order",
     content: _t("Select a product, or create a new one on the fly. The product will define the default sales price (that you can change), taxes and description automatically."),
     position: "right",

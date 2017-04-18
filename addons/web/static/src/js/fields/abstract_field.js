@@ -32,7 +32,6 @@ odoo.define('web.AbstractField', function (require) {
 
 var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
-var Domain = require('web.Domain');
 
 var AbstractField = Widget.extend({
     className: 'o_field_widget',
@@ -40,21 +39,11 @@ var AbstractField = Widget.extend({
         'keydown': '_onKeydown',
     },
     /**
-     * if this flag is set to true, the rest of the web client will assume that
-     * it is not editable.  For example, the list view in editable mode will
-     * skip the widget when pressing tab
-     */
-    readonly: false,
-    /**
      * If this flag is set to true, the field widget will be reset on every
      * change which is made in the view (if the view supports it). This is
      * currently a form view feature.
      */
     resetOnAnyFieldChange: false,
-    /**
-     * if true, the widget will replace a cell in an editable list view
-     */
-    replace_element: false,
     /**
      * If this flag is given a string, the related BasicModel will be used to
      * initialize specialData the field might need. This data will be available
@@ -77,8 +66,6 @@ var AbstractField = Widget.extend({
      * @param {Object} record A record object (result of the get method of a basic model)
      * @param {Object} [options]
      * @param {string} [options.mode=readonly] should be 'readonly' or 'edit'
-     * @param {string} [options.required=false]
-     * @param {string} [options.idForLabel]
      */
     init: function (parent, name, record, options) {
         this._super(parent);
@@ -102,9 +89,6 @@ var AbstractField = Widget.extend({
         // the inner views...
         var fieldsInfo = record.fieldsInfo[this.viewType];
         this.attrs = fieldsInfo && fieldsInfo[name] || {};
-
-        // modifiers
-        this.modifiers =  JSON.parse(this.attrs.modifiers || "{}");
 
         // this property tracks the current (parsed if needed) value of the field.
         // Note that we don't use an event system anymore, using this.get('value')
@@ -153,15 +137,6 @@ var AbstractField = Widget.extend({
         // a string.
         this._isValid = true;
 
-        // the 'required' flag is basically only needed to determine if the widget
-        // is in a valid state (not valid if empty and required)
-        this.required = options.required || this.field.required;
-
-        // the 'idForLabel' is the (html) id that should be set to the relevent
-        // dom entity.  If done correctly, clicking on the corresponding label
-        // (in form view) will focus and select the value.
-        this.idForLabel = options.idForLabel;
-
         // this is the last value that was set by the user, unparsed.  This is
         // used to avoid setting the value twice in a row with the exact value.
         this.lastSetValue = undefined;
@@ -175,8 +150,8 @@ var AbstractField = Widget.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            self._render();
             self.$el.attr('name', self.name);
+            return self._render();
         });
     },
 
@@ -185,11 +160,22 @@ var AbstractField = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Right now, this function is only used in editable list view when the user
-     * select a cell.  The corresponding widget will be activated, which in general
-     * means that the input text will be focused and selected
+     * Activates the field widget. By default, activation means focusing and
+     * selecting the associated focusable element.
+     *
+     * @returns {boolean} true if the widget was activated, false if the
+     *                    focusable element was not found or invisible
      */
     activate: function () {
+        var $focusable = this.getFocusableElement();
+        if ($focusable.length && $focusable.is(':visible')) {
+            $focusable.focus();
+            if ($focusable.is('input[type="text"], textarea')) {
+                setTimeout($focusable.select.bind($focusable), 0);
+            }
+            return true;
+        }
+        return false;
     },
     /**
      * This function should be implemented by widgets that are not able to
@@ -202,6 +188,15 @@ var AbstractField = Widget.extend({
     commitChanges: function () {
     },
     /**
+     * Returns the main field's DOM element (jQuery form) which can be focused
+     * by the browser.
+     *
+     * @returns {jQuery} main focusable element inside the widget
+     */
+    getFocusableElement: function () {
+        return $();
+    },
+    /**
      * this method is used to determine if the field value is set to a meaningful
      * value.  This is useful to determine if a field should be displayed as empty
      *
@@ -211,23 +206,23 @@ var AbstractField = Widget.extend({
         return !!this.value;
     },
     /**
-     * a field widget is valid if its value is valid and if there is a value when
-     * it is required.  This is checked before saving a record, by the form view.
+     * A field widget is valid if it was checked as valid the last time its
+     * value was changed by the user. This is checked before saving a record, by
+     * the view.
      *
-     * Note: the return value may be a boolean.  It is necessary for some fields
-     * (x2many) to sometimes ask confirmation to the user if the current dirty
-     * invalid line can be discarded.  This is an asynchronous operation, so we
-     * need the expressivity of something like a deferred.
+     * Note: the return value may not be a boolean. It is necessary for some
+     * fields (x2many) to sometimes ask confirmation to the user if the current
+     * dirty invalid line can be discarded. This is an asynchronous operation,
+     * so we need the expressivity of something like a deferred.
+     *
+     * Note2: this is the responsability of the view to check that required
+     * fields have a set value.
      *
      * @returns {boolean|Deferred} true/false if the widget is valid, or a
      *   deferred which resolves to true/false if the widget is valid or not
      */
     isValid: function () {
-        var is_required = this.required;
-        if ('required' in this.modifiers) {
-            is_required = new Domain(this.modifiers.required).compute(this.recordData);
-        }
-        return this._isValid && !(is_required && !this.isSet());
+        return this._isValid;
     },
     /**
      * this method is supposed to be called from the outside of field widgets.
@@ -285,12 +280,6 @@ var AbstractField = Widget.extend({
      * @returns {Deferred}
      */
     _render: function () {
-        var is_required = this.required;
-        if ('required' in this.modifiers) {
-            is_required = new Domain(this.modifiers.required).compute(this.recordData);
-        }
-        this.$el.toggleClass('o_form_required', is_required);
-
         if (this.mode === 'edit') {
             return this._renderEdit();
         } else if (this.mode === 'readonly') {
@@ -347,7 +336,7 @@ var AbstractField = Widget.extend({
         try {
             value = this._parseValue(value);
             this._isValid = true;
-        } catch(e) {
+        } catch (e) {
             this._isValid = false;
         }
         var changes = {};

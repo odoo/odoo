@@ -19,6 +19,7 @@ var BasicView = AbstractView.extend({
         Model: BasicModel,
         Controller: BasicController,
     }),
+    viewType: undefined,
     /**
      * process the fields_view to find all fields appearing in the views.
      * list those fields' name in this.fields_name, which will be the list
@@ -33,6 +34,8 @@ var BasicView = AbstractView.extend({
      */
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
+
+        this.rendererParams.viewType = this.viewType;
 
         this.controllerParams.confirmOnDelete = true;
         this.controllerParams.archiveEnabled = 'active' in viewInfo.fields;
