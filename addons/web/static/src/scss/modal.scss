@@ -83,6 +83,32 @@
             }
         }
     }
+
+    @include media-breakpoint-down(xs) {
+        &.o_modal_full {
+            .modal-dialog {
+                margin: 0px;
+                height: 100%;
+
+                .modal-content {
+                    height: 100%;
+                    border: none;
+
+                    .modal-header {
+                        background: $o-brand-odoo;
+                        .modal-title, .o_subtitle, button.close {
+                            color: white;
+                        }
+                    }
+
+                    .modal-body {
+                        height: 100%;
+                        overflow-y: auto;
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Temporary fix for modals which are not instantiated thanks to the Dialog
