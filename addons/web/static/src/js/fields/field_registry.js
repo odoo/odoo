@@ -39,6 +39,7 @@ registry
     .add('attachment_image', basic_fields.AttachmentImage)
     .add('label_selection', basic_fields.LabelSelection)
     .add('state_selection', basic_fields.StateSelectionWidget)
+    .add('kanban_state_selection', basic_fields.StateSelectionWidget)
     .add('boolean_button', basic_fields.FieldBooleanButton)
     .add('statinfo', basic_fields.StatInfo)
     .add('percentpie', basic_fields.FieldPercentPie)
