@@ -74,4 +74,17 @@
     </div>
 </t>
 
+<t t-name="GraphCustomTooltip">
+    <table>
+        <tbody>
+            <tr>
+                <td class="legend-color-guide">
+                    <div t-attf-style="background-color: #{color};"></div>
+                </td>
+                <td class="key"><t t-esc="key" /></td>
+                <td class="value"><t t-esc="value" /></td>
+            </tr>
+        </tbody>
+    </table>
+</t>
 </template>
