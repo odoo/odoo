@@ -1181,6 +1181,8 @@ class product_product(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         ctx = dict(context or {}, create_product_product=True)
+        if 'product_tmpl_id' not in vals and context.get('default_product_tmpl_id'):
+            vals['product_tmpl_id'] = context['default_product_tmpl_id']
         product_id = super(product_product, self).create(cr, uid, vals, context=ctx)
         self._set_standard_price(cr, uid, product_id, vals.get('standard_price', 0.0), context=context)
         return product_id
