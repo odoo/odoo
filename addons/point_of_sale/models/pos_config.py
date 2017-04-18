@@ -234,6 +234,8 @@ class PosConfig(models.Model):
     @api.multi
     def open_ui(self):
         assert len(self.ids) == 1, "you can open only one session at a time"
+        if self.company_id != self.env.user.company_id:
+            raise UserError(_("Error: The Point of Sale User must belong to the same company as the Point of Sale. You are probably trying to load the point of sale as an administrator in a multi-company setup, with the administrator account set to the wrong company."))
         return {
             'type': 'ir.actions.act_url',
             'url':   '/pos/web/',
