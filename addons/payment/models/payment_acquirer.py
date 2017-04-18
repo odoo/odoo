@@ -531,7 +531,7 @@ class PaymentTransaction(models.Model):
         ref_suffix = 1
         init_ref = reference
         while self.env['payment.transaction'].sudo().search_count([('reference', '=', reference)]):
-            reference = init_ref + '-' + str(ref_suffix)
+            reference = init_ref + 'x' + str(ref_suffix)
             ref_suffix += 1
         return reference
 
