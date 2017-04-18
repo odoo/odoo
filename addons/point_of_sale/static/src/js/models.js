@@ -1566,7 +1566,7 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_unit_price: function(){
         var digits = this.pos.dp['Product Price'];
-        // round and truncate to mimic _sybmbol_set behavior
+        // round and truncate to mimic _symbol_set behavior
         return parseFloat(round_di(this.price || 0, digits).toFixed(digits));
     },
     get_unit_display_price: function(){
