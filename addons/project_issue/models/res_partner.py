@@ -12,4 +12,4 @@ class ResPartner(models.Model):
     def _compute_issue_count(self):
         Issue = self.env['project.issue']
         for partner in self:
-            partner.issue_count = Issue.search_count([('partner_id', 'child_of', partner.commercial_partner_id.id)])
+            partner.issue_count = Issue.search_count([('partner_id', '=', partner.id)])
