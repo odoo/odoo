@@ -1041,7 +1041,10 @@ QUnit.module('basic_fields', {
                   '</tree>',
             translateParameters: {  // Avoid issues due to localization formats
                 date_format: '%m/%d/%Y',
-            }
+            },
+            session: {
+                tzOffset: 0
+            },
         });
 
         var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector)').first();

@@ -283,6 +283,14 @@ var FieldDate = InputField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     * @private
+     */
+    _doDebouncedAction: function () {
+        this.datewidget.change_datetime();
+    },
+
+    /**
      * return the datepicker value
      *
      * @private
@@ -311,6 +319,16 @@ var FieldDate = InputField.extend({
         this.$input = this.datewidget.$input;
     },
 
+    /**
+     * FieldDateTime overrides _formatValue to use the session timezone
+     *
+     * @override
+     * @private
+     * @param {Moment} value
+     */
+    _formatValue: function (value) {
+        return field_utils.format.date(value, {timezone: true});
+    },
 });
 
 var FieldDateTime = FieldDate.extend({

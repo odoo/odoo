@@ -33,8 +33,10 @@ QUnit.module('Views', {
                     user_id: {string: "user", type: "many2one", relation: 'user'},
                     parnter_id: {string: "user", type: "many2one", relation: 'partner', related: 'user_id.parnter_id'},
                     name: {string: "name", type: "char"},
-                    start: {string: "start", type: "datetime"},
-                    stop: {string: "stop", type: "datetime"},
+                    start_date: {string: "start date", type: "date"},
+                    stop_date: {string: "stop date", type: "date"},
+                    start: {string: "start datetime", type: "datetime"},
+                    stop: {string: "stop datetime", type: "datetime"},
                     allday: {string: "allday", type: "boolean"},
                     partner_ids: {string: "attendees", type: "one2many", relation: 'partner'},
                     type: {string: "type", type: "integer"},
@@ -95,32 +97,19 @@ QUnit.module('Views', {
     QUnit.module('CalendarView');
 
     var archs = {
-        "event,false,form": {
-            attrs: {},
-            children: [
-                {
-                    attrs: {name: "name"},
-                    children: [],
-                    tag: 'field'
-                },
-                {
-                    attrs: {name: "allday"},
-                    children: [],
-                    tag: 'field'
-                },
-                {
-                    attrs: {name: "start"},
-                    children: [],
-                    tag: 'field'
-                },
-                {
-                    attrs: {name: "stop"},
-                    children: [],
-                    tag: 'field'
-                }
-            ],
-            tag: "form"
-        },
+        "event,false,form":
+            '<form>'+
+                '<field name="name"/>'+
+                '<field name="allday"/>'+
+                '<group attrs=\'{"invisible": [["allday","=",True]]}\' >'+
+                    '<field name="start"/>'+
+                    '<field name="stop"/>'+
+                '</group>'+
+                '<group attrs=\'{"invisible": [["allday","=",False]]}\' >'+
+                    '<field name="start_date"/>'+
+                    '<field name="stop_date"/>'+
+                '</group>'+
+            '</form>',
         "event,1,form": {
             attrs: {},
             children: [
@@ -337,9 +326,91 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create event with timezone in week mode', function (assert) {
-        assert.expect(8);
+        assert.expect(4);
 
         this.data.event.records = [];
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'scale_zoom="week" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                tzOffset: 120
+            },
+        });
+
+
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body'); // => select with click position
+
+        var top = calendar.$('.fc-axis:contains(8am)').offset().top + 5;
+        var left = calendar.$('.fc-day:eq(2)').offset().left + 5;
+
+        testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        testUtils.triggerPositionalMouseEvent(left, top + 60, "mousemove");
+
+        assert.strictEqual(calendar.$('.fc-content .fc-time').text(), "08:00 - 10:00",
+            "should display the time in the calendar sticker");
+
+        testUtils.triggerPositionalMouseEvent(left, top + 60, "mouseup");
+        $('.modal input:first').val('new event').trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click');
+        var $newevent = calendar.$('.fc-event:contains(new event)');
+
+        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-10:00newevent",
+            "should display the new event with time and title");
+
+        assert.deepEqual($newevent.data('fcSeg').event.record,
+            {
+                display_name: "new event",
+                start: "2016-12-13 06:00:00",
+                stop: "2016-12-13 08:00:00",
+                allday: false,
+                name: "new event",
+                id: 1
+            },
+            "the new record should have the utc datetime (quickCreate)");
+
+        // delete record
+
+        $newevent.trigger('click');
+        $('.modal button.btn-default:contains(Delete)').trigger('click');
+        $('.modal button.btn-primary:contains(Ok)').trigger('click');
+        assert.strictEqual(calendar.$('.fc-content').length, 0, "should delete the record");
+
+        calendar.destroy();
+        $view.remove();
+    });
+
+    QUnit.test('create event with timezone in week mode with formViewDialog', function (assert) {
+        assert.expect(6);
+
+        this.data.event.records = [];
+        this.data.event.onchanges = {
+            allday: function (obj) {
+                if (obj.allday) {
+                    obj.start_date = obj.start && obj.start.split(' ')[0] || obj.start_date;
+                    obj.stop_date = obj.stop && obj.stop.split(' ')[0] || obj.stop_date || obj.start_date;
+                } else {
+                    obj.start = obj.start_date && (obj.start_date + ' 00:00:00') || obj.start;
+                    obj.stop = obj.stop_date && (obj.stop_date + ' 00:00:00') || obj.stop || obj.start;
+                }
+            }
+        };
 
         var calendar = createView({
             View: CalendarView,
@@ -367,7 +438,7 @@ QUnit.module('Views', {
                     assert.deepEqual(args.args[1], {
                           "allday": false,
                           "start": "2016-12-12 06:00:00",
-                          "stop": "2016-12-12 10:00:00"
+                          "stop": "2016-12-12 08:00:00"
                         },
                     "should move the event");
                 }
@@ -375,74 +446,65 @@ QUnit.module('Views', {
             },
         });
 
-
         var $view = $('#qunit-fixture').contents();
         $view.prependTo('body'); // => select with click position
 
         var top = calendar.$('.fc-axis:contains(8am)').offset().top + 5;
         var left = calendar.$('.fc-day:eq(2)').offset().left + 5;
 
-
         testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
-        testUtils.triggerPositionalMouseEvent(left, top + 140, "mousemove");
-
-        assert.strictEqual(calendar.$('.fc-content .fc-time').text(), "08:00 - 12:00",
-            "should display the time in the calendar sticker");
-
-        testUtils.triggerPositionalMouseEvent(left, top + 140, "mouseup");
-        $('.modal input:first').val('new event').trigger('input');
-        $('.modal button.btn:contains(Create)').trigger('click');
-        var $newevent = calendar.$('.fc-event:contains(new event)');
-
-        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-12:00newevent",
-            "should display the new event with time and title");
-
-        assert.deepEqual($newevent.data('fcSeg').event.record,
-            {
-                display_name: "new event",
-                start: "2016-12-13 06:00:00",
-                stop: "2016-12-13 10:00:00",
-                allday: false,
-                name: "new event",
-                id: 1
-            },
-            "the new record should have the utc datetime (quickCreate)");
-
-        // delete record
-
-        $newevent.trigger('click');
-        $('.modal button.btn-default:contains(Delete)').trigger('click');
-        $('.modal button.btn-primary:contains(Ok)').trigger('click');
-        assert.strictEqual(calendar.$('.fc-content').length, 0, "should delete the record");
-
-
-        // create again
-
-        testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
-        testUtils.triggerPositionalMouseEvent(left, top + 140, "mousemove");
-        testUtils.triggerPositionalMouseEvent(left, top + 140, "mouseup");
+        testUtils.triggerPositionalMouseEvent(left, top + 60, "mousemove");
+        testUtils.triggerPositionalMouseEvent(left, top + 60, "mouseup");
         $('.modal input:first').val('new event').trigger('input');
         $('.modal button.btn:contains(Edit)').trigger('click');
 
         assert.strictEqual($('.o_form_field[name="start"] input').val(), "12/13/2016 08:00:00",
             "should display the datetime");
 
-        $('.modal-lg button.btn:contains(Save)').trigger('click');
-        $newevent = calendar.$('.fc-event:contains(new event)');
+        $('.modal-lg .o_field_boolean[name="allday"] input').trigger('click');
 
-        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-12:00newevent",
+        assert.strictEqual($('.o_form_field[name="start_date"] input').val(), "12/13/2016",
+            "should display the date");
+
+        $('.modal-lg .o_field_boolean[name="allday"] input').trigger('click');
+
+        assert.strictEqual($('.o_form_field[name="start"] input').val(), "12/13/2016 02:00:00",
+            "should display the datetime from the date with the timezone");
+
+        // use datepicker to enter a date: 12/13/2016 08:00:00
+        $('.o_form_field[name="start"] input').trigger('click');
+        $('.bootstrap-datetimepicker-widget .picker-switch a[data-action="togglePicker"]').trigger('click');
+        $('.bootstrap-datetimepicker-widget .timepicker .timepicker-hour').trigger('click');
+        $('.bootstrap-datetimepicker-widget .timepicker-hours td.hour:contains(08)').trigger('click');
+        $('.bootstrap-datetimepicker-widget .picker-switch a[data-action="close"]').trigger('click');
+
+        // use datepicker to enter a date: 12/13/2016 10:00:00
+        $('.o_form_field[name="stop"] input').trigger('click');
+        $('.bootstrap-datetimepicker-widget .picker-switch a[data-action="togglePicker"]').trigger('click');
+        $('.bootstrap-datetimepicker-widget .timepicker .timepicker-hour').trigger('click');
+        $('.bootstrap-datetimepicker-widget .timepicker-hours td.hour:contains(10)').trigger('click');
+        $('.bootstrap-datetimepicker-widget .picker-switch a[data-action="close"]').trigger('click');
+
+        $('.modal-lg button.btn:contains(Save)').trigger('click');
+        var $newevent = calendar.$('.fc-event:contains(new event)');
+
+        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-10:00newevent",
             "should display the new event with time and title");
 
         assert.deepEqual($newevent.data('fcSeg').event.record,
             {
                 display_name: "new event",
                 start: "2016-12-13 06:00:00",
-                stop: "2016-12-13 10:00:00",
+                stop: "2016-12-13 08:00:00",
                 allday: false,
                 name: "new event",
                 id: 1
             },
             "the new record should have the utc datetime (formViewDialog)");
+
+        var pos = calendar.$('.fc-content').offset();
+        left = pos.left + 5;
+        top = pos.top + 5;
 
         testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
         left = calendar.$('.fc-day:eq(1)').offset().left + 5;
