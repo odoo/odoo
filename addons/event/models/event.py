@@ -447,6 +447,20 @@ class EventRegistration(models.Model):
             pass
         return recipients
 
+    def _message_post_after_hook(self, message):
+        if self.email and not self.partner_id:
+            # we consider that posting a message with a specified recipient (not a follower, a specific one)
+            # on a document without customer means that it was created through the chatter using
+            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
+            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email)
+            if new_partner:
+                self.search([
+                    ('partner_id', '=', False),
+                    ('email', '=', new_partner.email),
+                    ('state', 'not in', ['cancel']),
+                ]).write({'partner_id': new_partner.id})
+        return super(EventRegistration, self)._message_post_after_hook(message)
+
     @api.multi
     def action_send_badge_email(self):
         """ Open a window to compose an email, with the template - 'event_badge'
