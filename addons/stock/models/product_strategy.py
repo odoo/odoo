@@ -30,7 +30,7 @@ class PutAwayStrategy(models.Model):
             categ = product.categ_id
             while categ:
                 if strat.category_id.id == categ.id:
-                    return strat.fixed_location_id.id
+                    return strat.fixed_location_id
                 categ = categ.parent_id
         return self.env['stock.location']
 
