@@ -454,22 +454,7 @@ class Holidays(models.Model):
             else:
                 holiday.write({'first_approver_id': current_employee.id})
             if holiday.holiday_type == 'employee' and holiday.type == 'remove':
-                meeting_values = {
-                    'name': holiday.display_name,
-                    'categ_ids': [(6, 0, [holiday.holiday_status_id.categ_id.id])] if holiday.holiday_status_id.categ_id else [],
-                    'duration': holiday.number_of_days_temp * HOURS_PER_DAY,
-                    'description': holiday.notes,
-                    'user_id': holiday.user_id.id,
-                    'start': holiday.date_from,
-                    'stop': holiday.date_to,
-                    'allday': False,
-                    'state': 'open',            # to block that meeting date in the calendar
-                    'privacy': 'confidential'
-                }
-                #Add the partner_id (if exist) as an attendee
-                if holiday.user_id and holiday.user_id.partner_id:
-                    meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
-
+                meeting_values = holiday._prepare_holidays_meeting_values()
                 meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
                 holiday._create_resource_leave()
                 holiday.write({'meeting_id': meeting.id})
@@ -494,6 +479,28 @@ class Holidays(models.Model):
                 if leaves and leaves[0].double_validation:
                     leaves.action_validate()
         return True
+
+    @api.multi
+    def _prepare_holidays_meeting_values(self):
+        self.ensure_one()
+        meeting_values = {
+            'name': self.display_name,
+            'categ_ids': [(6, 0, [
+                self.holiday_status_id.categ_id.id])] if self.holiday_status_id.categ_id else [],
+            'duration': self.number_of_days_temp * HOURS_PER_DAY,
+            'description': self.notes,
+            'user_id': self.user_id.id,
+            'start': self.date_from,
+            'stop': self.date_to,
+            'allday': False,
+            'state': 'open',  # to block that meeting date in the calendar
+            'privacy': 'confidential'
+        }
+        # Add the partner_id (if exist) as an attendee
+        if self.user_id and self.user_id.partner_id:
+            meeting_values['partner_ids'] = [
+                (4, self.user_id.partner_id.id)]
+        return meeting_values
 
     @api.multi
     def action_refuse(self):
