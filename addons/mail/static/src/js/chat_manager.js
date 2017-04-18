@@ -730,6 +730,12 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         }
     },
 
+    open_expanded_window: function(options){
+        web_client.do_action('mail.mail_channel_action_client_chat', options).then(function () {
+            core.bus.trigger('change_menu_section', chat_manager.get_discuss_menu_id());
+        });
+    },
+
     post_message: function (data, options) {
         var self = this;
         options = options || {};

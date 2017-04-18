@@ -51,9 +51,7 @@ return ChatWindow.extend({
     on_click_expand: _.debounce(function (event) {
         event.preventDefault();
         var options = {clear_breadcrumbs: true, active_id: this.channel_id};
-        this.do_action('mail.mail_channel_action_client_chat', options).then(function () {
-            core.bus.trigger('change_menu_section', chat_manager.get_discuss_menu_id());
-        });
+        chat_manager.open_expanded_window(options);
     }, 1000, true),
 });
 

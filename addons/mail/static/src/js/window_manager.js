@@ -153,13 +153,11 @@ function open_chat_without_session () {
                     def.resolve(dm.id);
                 }
                 def.then(function(channel_id){
-                    var data = { active_id: channel_id };
+                    var options = { active_id: channel_id };
                     if (web_client.action_manager.action_stack.length && _.last(web_client.action_manager.action_stack).action_descr.res_model == 'mail.channel'){
-                        data.clear_breadcrumbs = true;
+                        options.clear_breadcrumbs = true;
                     }
-                    web_client.do_action('mail.mail_channel_action_client_chat', data).then(function() {
-                        core.bus.trigger('change_menu_section', chat_manager.get_discuss_menu_id());
-                    });
+                    chat_manager.open_expanded_window(options);
                 })
                 this.trigger("close_chat_session");
             } else {
