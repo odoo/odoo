@@ -1449,7 +1449,7 @@ var StatInfo = AbstractField.extend({
         var options = {
             value: this.value || 0,
         };
-        if (! this.nodeOptions.nolabel) {
+        if (! this.attrs.nolabel) {
             if (this.nodeOptions.label_field && this.recordData[this.nodeOptions.label_field]) {
                 options.text = this.recordData[this.nodeOptions.label_field];
             } else {
