@@ -93,4 +93,3 @@ return Widget.extend({
 });
 
 });
-

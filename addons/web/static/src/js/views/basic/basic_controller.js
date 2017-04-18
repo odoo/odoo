@@ -88,6 +88,21 @@ return AbstractController.extend(FieldManagerMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * Called by the field manager mixin to confirm that a change just occured
+     * (after that potential onchanges have been applied).
+     *
+     * Basically, this only relays the notification to the renderer with the
+     * new state.
+     *
+     * @param {string} id - the id of one of the view's records
+     * @param {string[]} fields - the changed fields
+     * @param {OdooEvent} e - the event that triggered the change
+     */
+    _confirmChange: function (id, fields, e) {
+        var state = this.model.get(this.handle);
+        this.renderer.confirmChange(state, id, fields, e);
+    },
+    /**
      * Delete records (and ask for confirmation if necessary)
      *
      * @param {string[]} ids list of local record ids

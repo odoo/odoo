@@ -116,18 +116,16 @@ var FieldMany2One = AbstractField.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    activate: function () {
-        this.$input.focus();
-        setTimeout(this.$input.select.bind(this.$input), 0);
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        return this.$input || $();
     },
     /**
-     * Focuses the input.
+     * TODO
      */
-    focus: function () {
-        if (this.mode === "edit") {
-            this.$input.focus();
-        }
-    },
     reinitialize: function (value) {
         this.floating = false;
         this._setValue(value);
@@ -366,7 +364,7 @@ var FieldMany2One = AbstractField.extend({
             disable_multiple_selection: true,
             on_selected: function (element_ids) {
                 self.reinitialize({id: element_ids[0]});
-                self.focus();
+                self.activate();
             }
         })).open();
     },
@@ -409,7 +407,7 @@ var FieldMany2One = AbstractField.extend({
      */
     _onExternalButtonClick: function () {
         if (!this.value) {
-            this.focus();
+            this.activate();
             return;
         }
         var self = this;
@@ -578,8 +576,7 @@ var FieldX2Many = AbstractField.extend({
         }
         var def = $.Deferred();
         this.renderer.canBeSaved()
-            .then(def.resolve.bind(def, true))
-            .fail(def.resolve.bind(def, false));
+            .then(def.resolve.bind(def, true), def.resolve.bind(def, false));
         return def;
     },
 
@@ -610,6 +607,7 @@ var FieldX2Many = AbstractField.extend({
                 mode: this.mode,
                 addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly,
+                viewType: 'list',
             });
         }
         if (arch.tag === 'kanban') {
@@ -620,7 +618,8 @@ var FieldX2Many = AbstractField.extend({
             };
             this.renderer = new KanbanRenderer(this, this.value, {
                 arch: arch,
-                record_options: record_options
+                record_options: record_options,
+                viewType: 'kanban',
             });
         }
         return this.renderer ? this.renderer.appendTo(this.$el) : this._super();
@@ -940,7 +939,6 @@ var FieldMany2Many = FieldX2Many.extend({
 var FieldMany2ManyTags = AbstractField.extend({
     tag_template: "FieldMany2ManyTag",
     className: "o_form_field o_form_field_many2manytags",
-    replace_element: true,
     supportedFieldTypes: ['many2many'],
     custom_events: {
         field_changed: '_onFieldChanged',
@@ -957,9 +955,23 @@ var FieldMany2ManyTags = AbstractField.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
     activate: function () {
-        this.many2one.focus();
+        return this.many2one ? this.many2one.activate() : false;
     },
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        return this.many2one ? this.many2one.getFocusableElement() : $();
+    },
+    /**
+     * @override
+     * @returns {boolean}
+     */
     isSet: function () {
         return !!this.value && this.value.count;
     },
@@ -1012,7 +1024,6 @@ var FieldMany2ManyTags = AbstractField.extend({
             this.many2one.destroy();
         }
         this.many2one = new FieldMany2One(this, this.name, this.record, {
-            idForLabel: this.idForLabel,
             mode: 'edit',
             viewType: this.viewType,
         });
@@ -1343,7 +1354,6 @@ var FieldSelection = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'change': '_onChange',
     }),
-    replace_element: true,
     /**
      * @override
      */
@@ -1357,6 +1367,18 @@ var FieldSelection = AbstractField.extend({
             });
         }
         this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        return this.$el.is('select') ? this.$el : $();
     },
 
     //--------------------------------------------------------------------------

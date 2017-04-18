@@ -12,6 +12,7 @@ var BasicModel = require('web.BasicModel');
 
 var FieldManagerMixin = {
     custom_events: {
+        discard_changes: '_onDiscardChanges',
         discard_line: '_onDiscardLine',
         field_changed: '_onFieldChanged',
         load: '_onLoad',
@@ -59,6 +60,20 @@ var FieldManagerMixin = {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Controlled elements might want to ask for a discard of the changes made
+     * to a whole record (see editable list view). In that case, this handler
+     * is called and call the appropriate @see BasicModel.discardChanges
+     * function. The result is then notified thanks to a call to
+     * @see _confirmChange.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onDiscardChanges: function (ev) {
+        this.model.discardChanges(ev.data.id);
+        this._confirmChange(ev.data.id, [], ev); // TODO get real list of changes ?
+    },
     /**
      * In some case, we may need to remove an element from a list, without going
      * through the notifyChanges machinery.  The motivation for this is when the

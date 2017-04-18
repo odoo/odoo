@@ -205,7 +205,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('invisible fields are not rendered', function (assert) {
+    QUnit.test('invisible fields are properly hidden', function (assert) {
         assert.expect(3);
 
         var form = createView({
@@ -248,16 +248,13 @@ QUnit.module('Views', {
                             '</group>' +
                         '</group>' +
                         '<notebook>' +
-                            '<page string="visible">' +
-                            '</page>' +
-                            '<page string="invisible" invisible="1">' +
-                            '</page>' +
+                            '<page string="visible"/>' +
+                            '<page string="invisible" invisible="1"/>' +
                         '</notebook>' +
                     '</sheet>' +
                 '</form>',
             res_id: 1,
         });
-
         assert.strictEqual(form.$('.o_notebook li.o_form_invisible a:contains(invisible)').length, 1,
                         "should not display tab invisible");
         assert.strictEqual(form.$('table.o_inner_group.o_form_invisible td:contains(invgroup)').length, 1,
@@ -265,7 +262,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('invisible attrs are re-evaluated on field changed', function (assert) {
+    QUnit.test('invisible attrs on fields are re-evaluated on field change', function (assert) {
         assert.expect(3);
 
         // we set the value bar to simulate a falsy boolean value.
@@ -277,7 +274,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<sheet><group>' +
-                        '<field name="product_id" invisible="1"/>' +
+                        '<field name="product_id"/>' +
                         '<field name="timmy" invisible="1"/>' +
                         '<field name="foo" class="foo_field" attrs=\'{"invisible": [["product_id", "=", false]]}\'/>' +
                         '<field name="bar" class="bar_field" attrs=\'{"invisible":[("bar","=",False),("timmy","=",[])]}\'/>' +
@@ -295,7 +292,7 @@ QUnit.module('Views', {
         var $dropdown = form.$('.o_form_field_many2one input').autocomplete('widget');
         form.$('.o_form_field_many2one input').click();
         $dropdown.find('li:first()').click();
-        assert.ok(!form.$('.foo_field').hasClass('o_form_invisible'), 'should not display foo field');
+        assert.ok(!form.$('.foo_field').hasClass('o_form_invisible'), 'should display foo field');
         form.destroy();
     });
 
@@ -343,7 +340,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('invisible attrs on group', function (assert) {
+    QUnit.test('invisible attrs on group are re-evaluated on field change', function (assert) {
         assert.expect(2);
 
         var form = createView({
@@ -434,7 +431,6 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-
     QUnit.test('label uses the string attribute', function (assert) {
         assert.expect(1);
 
@@ -458,15 +454,50 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('readonly attrs on fields are re-evaluated on field change', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" attrs="{\'readonly\': [[\'bar\', \'=\', True]]}"/>' +
+                            '<field name="bar"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('span[name="foo"]').length, 1,
+            "the foo field widget should be readonly");
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('input[name="foo"]').length, 1,
+            "the foo field widget should have been rerendered to now be editable");
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('span[name="foo"]').length, 1,
+            "the foo field widget should have been rerendered to now be readonly again");
+
+        form.destroy();
+    });
 
     QUnit.test('empty fields have o_form_empty class in readonly mode', function (assert) {
-        assert.expect(4);
+        assert.expect(8);
 
         this.data.partner.fields.foo.default = false; // no default value for this test
         this.data.partner.records[1].foo = false;  // 1 is record with id=2
         this.data.partner.records[1].trululu = false;  // 1 is record with id=2
-        this.data.partner.fields.trululu.readonly = true;
         this.data.partner.fields.int_field.readonly = true;
+        this.data.partner.onchanges.foo = function (obj) {
+            if (obj.foo === "hello") {
+                obj.int_field = false;
+            }
+        };
+
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -475,7 +506,7 @@ QUnit.module('Views', {
                     '<sheet>' +
                         '<group>' +
                             '<field name="foo"/>' +
-                            '<field name="trululu"/>' +
+                            '<field name="trululu" attrs="{\'readonly\': [[\'foo\', \'=\', False]]}"/>' +
                             '<field name="int_field"/>' +
                         '</group>' +
                     '</sheet>' +
@@ -484,16 +515,31 @@ QUnit.module('Views', {
         });
 
         assert.strictEqual(form.$('.o_form_field.o_form_field_empty').length, 2,
-                            "should have 2 empty fields with correct class");
+            "should have 2 empty fields with correct class");
         assert.strictEqual(form.$('.o_form_label_empty').length, 2,
-                "should have 2 muted labels (for the empty fieds) in readonly");
+            "should have 2 muted labels (for the empty fieds) in readonly");
 
         form.$buttons.find('.o_form_button_edit').click();
 
         assert.strictEqual(form.$('.o_form_field_empty').length, 1,
-                "in edit mode, only readonly fields should have .o_form_field_empty class");
+            "in edit mode, only empty readonly fields should have the o_form_field_empty class");
         assert.strictEqual(form.$('.o_form_label_empty').length, 1,
-                "in edit mode, only readonly fields should have .o_form_label_empty class");
+            "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class");
+
+        form.$('input[name="foo"]').val("test").trigger("input");
+
+        assert.strictEqual(form.$('.o_form_field_empty').length, 0,
+            "after readonly modifier change, the o_form_field_empty class should have been removed");
+        assert.strictEqual(form.$('.o_form_label_empty').length, 0,
+            "after readonly modifier change, the o_form_label_empty class should have been removed");
+
+        form.$('input[name="foo"]').val("hello").trigger("input");
+
+        assert.strictEqual(form.$('.o_form_field_empty').length, 1,
+            "after value changed to false for a readonly field, the o_form_field_empty class should have been added");
+        assert.strictEqual(form.$('.o_form_label_empty').length, 1,
+            "after value changed to false for a readonly field, the o_form_label_empty class should have been added");
+
         form.destroy();
     });
 
@@ -556,6 +602,37 @@ QUnit.module('Views', {
             'readonly buttons should not be visible');
         assert.ok(form.$buttons.find('.o_form_buttons_edit').is(':visible'),
             'edit buttons should be visible');
+        form.destroy();
+    });
+
+    QUnit.test('required attrs on fields are re-evaluated on field change', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" attrs="{\'required\': [[\'bar\', \'=\', True]]}"/>' +
+                            '<field name="bar"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('input[name="foo"].o_form_required').length, 1,
+            "the foo field widget should be required");
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('input[name="foo"]:not(.o_form_required)').length, 1,
+            "the foo field widget should now have been marked as non-required");
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('input[name="foo"].o_form_required').length, 1,
+            "the foo field widget should now have been marked as required again");
+
         form.destroy();
     });
 
@@ -947,7 +1024,6 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-
     QUnit.test('make default record with non empty one2many', function (assert) {
         assert.expect(4);
 
@@ -1066,7 +1142,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('buttons in footer are moved to $buttons if required', function (assert) {
+    QUnit.test('buttons in footer are moved to $buttons if necessary', function (assert) {
         // not sure about this test...
         assert.expect(2);
 
@@ -1138,7 +1214,6 @@ QUnit.module('Views', {
         assert.verifySteps(['read', 'write']);
         form.destroy();
     });
-
 
     QUnit.test('buttons with attr "special" do not trigger a save', function (assert) {
         assert.expect(4);
@@ -1532,7 +1607,6 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-
     QUnit.test('restore local state when switching to another record', function (assert) {
         assert.expect(4);
 
@@ -1702,7 +1776,6 @@ QUnit.module('Views', {
             'readonly field should be visible on a new record');
         form.destroy();
     });
-
 
     QUnit.test('all group children have correct layout classname', function (assert) {
         assert.expect(2);

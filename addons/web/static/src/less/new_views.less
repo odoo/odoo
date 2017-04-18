@@ -5,63 +5,44 @@
 .o_list_view {
     tr.o_selected_row {
         outline: 1px solid lightgray;
-    }
 
-    td.o_edit_mode {
-        position: relative;
-        outline: 1px solid gray;
-        &.o_required_field {
-            outline-width: 2px;
-            z-index: 1;
-        }
-        background-color: white;
+        > td:not(.o_readonly):not(.o_list_button) {
+            position: relative;
+            background-color: white;
 
-        .o_form_input {
-            border: none;
-            padding: 0 5px;
-        }
-
-        > .o_field_widget, > .o_form_field_many2one {
-            .o-position-absolute(0, 0, 0, 0);
-        }
-
-        .o_form_field_many2one .o_form_input_dropdown {
-            .o-flex(1, 1, auto);
-
-            .o_form_input {
-                height: 100%;
+            > .o_field_widget, > .o_form_field_many2one {
+                .o-position-absolute(0, 0, 0, 0);
             }
 
-            .o_dropdown_button {
-                display: none;
-            }
-        }
+            .o_form_field_many2one .o_form_input_dropdown {
+                .o-flex(1, 1, auto);
 
-        .o_form_field_many2manytags {
-            .o_form_field_many2one {
-                height: 100%;
-                display: inline-block;
-            }
-        }
+                .o_form_input {
+                    height: 100%;
+                }
 
-        .o_field_boolean {
-            .o-flex-display();
-            .o-align-items(center);
+                .o_dropdown_button {
+                    display: none;
+                }
+            }
+
+            .o_form_field_many2manytags {
+                .o_form_field_many2one {
+                    height: 100%;
+                    display: inline-block;
+                }
+            }
+
+            .o_field_boolean {
+                .o-flex-display();
+                .o-align-items(center);
+            }
         }
     }
 
     td.o_field_dirty {
         outline: 1px solid orange;
     }
-        //
-        // &.o_readonly {
-        //     outline: 2px solid lightgray;
-        // }
-        // div.o_field_dirty {
-        //     outline: 1px solid orange;
-        // }
-    // }
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////

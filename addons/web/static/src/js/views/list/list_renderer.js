@@ -4,7 +4,6 @@ odoo.define('web.ListRenderer', function (require) {
 var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
-var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
 var session = require('web.session');
@@ -51,19 +50,11 @@ var ListRenderer = BasicRenderer.extend({
         this._super.apply(this, arguments);
         var self = this;
         this.hasHandle = false;
-        this._processModifiers();
         this.columns = _.reject(this.arch.children, function (c) {
-            if (c.attrs.invisible === '1') {
-                return true;
-            }
-            if (c.modifiers.tree_invisible) {
-                return true;
-            }
             if (c.attrs.widget === 'handle') {
                 self.hasHandle = true;
             }
-            c.name = c.attrs.name;
-            return false;
+            return !!JSON.parse(c.attrs.modifiers || "{}").tree_invisible;
         });
         this.rowDecorations = _.chain(this.arch.attrs)
             .pick(function (value, key) {
@@ -213,22 +204,6 @@ var ListRenderer = BasicRenderer.extend({
         return this.hasSelectors ? n+1 : n;
     },
     /**
-     * Determine if a given cell is invisible.  A cell is considered invisible
-     * if there is an 'invisible' attr, with a matching domain.
-     *
-     * @private
-     * @param {Object} record a basic model record
-     * @param {Object} node a node object (from the arch)
-     * @returns {boolean}
-     */
-    _isInvisible: function (record, node) {
-        if ('invisible' in node.modifiers) {
-            var fieldValues = record.getEvalContext();
-            return new Domain(node.modifiers.invisible).compute(fieldValues);
-        }
-        return false;
-    },
-    /**
      * Render a list of <td>, with aggregates if available.  It can be displayed
      * in the footer, or for each open groups.
      *
@@ -267,56 +242,88 @@ var ListRenderer = BasicRenderer.extend({
         return $('<tbody>').append($rows);
     },
     /**
-     * Render a cell for the table.  For most cells, we only want to display the
-     * formatted value, with some appropriate css class.  However, when the
+     * Render a cell for the table. For most cells, we only want to display the
+     * formatted value, with some appropriate css class. However, when the
      * node was explicitely defined with a 'widget' attribute, then we
      * instantiate the corresponding widget.
      *
      * @private
      * @param {Object} record
      * @param {Object} node
+     * @param {integer} colIndex
+     * @param {Object} [options]
+     * @param {Object} [options.mode]
+     * @param {Object} [options.renderInvisible=false]
+     *        force the rendering of invisible cell content
+     * @param {Object} [options.renderWidgets=false]
+     *        force the rendering of the cell value thanks to a widget
      * @returns {jQueryElement} a <td> element
      */
-    _renderBodyCell: function (record, node) {
-        var self = this;
-        var $td = $('<td>');
-        if (this._isInvisible(record, node)) {
+    _renderBodyCell: function (record, node, colIndex, options) {
+        var tdClassName;
+        if (node.tag === 'button') {
+            tdClassName = 'o_list_button';
+        } else if (node.attrs.widget){
+            tdClassName = ('o_' + node.attrs.widget + '_cell');
+        } else {
+            tdClassName = FIELD_CLASSES[this.state.fields[node.attrs.name].type];
+        }
+        var $td = $('<td>', { class: tdClassName });
+
+        // We register modifiers on the <td> element so that it gets the correct
+        // modifiers classes (for styling)
+        var modifiers = this._registerModifiers(node, record, $td);
+        // If the invisible modifiers is true, the <td> element is left empty.
+        // Indeed, if the modifiers was to change the whole cell would be
+        // rerendered anyway.
+        if (modifiers.invisible && !(options && options.renderInvisible)) {
             return $td;
+        }
+
+        if (node.tag === 'button') {
+            return $td.append(this._renderButton(record, node));
+        }
+        if (node.attrs.widget || (options && options.renderWidgets)) {
+            this.defs = []; // TODO maybe wait for those somewhere ?
+            var widget = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
+            delete this.defs;
+            return $td.append(widget.$el);
         }
         var name = node.attrs.name;
-        if (node.attrs.widget) {
-            var Widget = this.state.fieldsInfo.list[name].Widget;
-            var widget = new Widget(this, name, record, {
-                mode: 'readonly',
-                viewType: 'list',
-            });
-            widget.appendTo($td);
-            $td.addClass('o_' + node.attrs.widget + '_cell');
-            return $td;
-        }
-        if (node.tag === 'button') {
-            var $button = $('<button type="button">').addClass('o_icon_button');
-            $button.append($('<i>').addClass('fa').addClass(node.attrs.icon))
-                .prop('title', node.attrs.string)
-                .click(function (e) {
-                    e.stopPropagation();
-                    self.trigger_up('button_clicked', {
-                        attrs: node.attrs,
-                        record: record,
-                    });
-                });
-            $td.append($button);
-            $td.addClass('o_list_button').click(function (e) {
-                // prevent opening or editing the record on cell click
-                e.stopPropagation();
-            });
-            return $td;
-        }
         var field = this.state.fields[name];
         var value = record.data[name];
-        $td.addClass(FIELD_CLASSES[field.type]);
-        var formatted_value = field_utils.format[field.type](value, field, { data: record.data });
-        return $td.html(formatted_value);
+        var formattedValue = field_utils.format[field.type](value, field, { data: record.data });
+        return $td.html(formattedValue);
+    },
+    /**
+     * Renders the button element associated to the given node and record.
+     *
+     * @private
+     * @param {Object} record
+     * @param {Object} node
+     * @returns {jQuery} a <button> element
+     */
+    _renderButton: function (record, node) {
+        var $button = $('<button>', {
+            type: 'button',
+            class: 'o_icon_button',
+            title: node.attrs.string,
+        });
+        $button.append($('<i>', {class: 'fa ' + node.attrs.icon}));
+
+        this._registerModifiers(node, record, $button);
+
+        // TODO this should be moved to a handler
+        var self = this;
+        $button.on("click", function (e) {
+            e.stopPropagation();
+            self.trigger_up('button_clicked', {
+                attrs: node.attrs,
+                record: record,
+            });
+        });
+
+        return $button;
     },
     /**
      * Render a complete empty row.  This is used to fill in the blanks when we
@@ -544,7 +551,10 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderRow: function (record) {
         var decorations = this._computeDecorationClassNames(record);
-        var $cells = _.map(this.columns, this._renderBodyCell.bind(this, record));
+        var self = this;
+        var $cells = _.map(this.columns, function (node, index) {
+            return self._renderBodyCell(record, node, index, {mode: 'readonly'});
+        });
         var $tr = $('<tr class="o_data_row">')
                     .data('id', record.id)
                     .addClass(decorations.length && decorations.join(' '))
@@ -621,17 +631,6 @@ var ListRenderer = BasicRenderer.extend({
             $checked_rows.find('.o_list_record_selector input').prop('checked', true);
         }
         return this._super();
-    },
-    /**
-     * Process the modifiers by setting their parsed version on the
-     * corresponding nodes.
-     *
-     * @private
-     */
-    _processModifiers: function () {
-        _.each(this.arch.children, function (c) {
-            c.modifiers = JSON.parse(c.attrs.modifiers || '{}');
-        });
     },
     /**
      * Whenever we change the state of the selected rows, we need to call this
@@ -713,5 +712,4 @@ var ListRenderer = BasicRenderer.extend({
 });
 
 return ListRenderer;
-
 });

@@ -89,6 +89,7 @@ var KanbanRenderer = BasicRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
 
+        this.widgets = [];
         this.qweb = new QWeb(session.debug, {_s: session.origin});
         var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
         transformQwebTemplate(templates, state.fields);

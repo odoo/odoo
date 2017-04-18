@@ -122,13 +122,12 @@ var InputField = DebouncedField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Automatically selects the content of the field.
+     * Returns the associated <input/> element.
      *
      * @override
      */
-    activate: function () {
-        this.$input.focus();
-        setTimeout(this.$input.select.bind(this.$input), 0);
+    getFocusableElement: function () {
+        return this.$input || $();
     },
     /**
      * Do not re-render this field if it was the origin of the onchange call.
@@ -171,7 +170,6 @@ var InputField = DebouncedField.extend({
         this.$input.addClass('o_form_input');
         this.$input.attr({
             type: 'text',
-            id: this.idForLabel,
             placeholder: this.attrs.placeholder || "",
         });
         // Save cursor position to restore it after updating value
@@ -253,7 +251,6 @@ var FieldChar = InputField.extend({
 var FieldDate = InputField.extend({
     className: "o_form_field_date",
     tagName: "span",
-    replace_element: true,
     supportedFieldTypes: ['date'],
 
     /**
@@ -274,8 +271,7 @@ var FieldDate = InputField.extend({
             });
             def = this.datewidget.appendTo('<div>').done(function () {
                 self.datewidget.$el.addClass(self.$el.attr('class'));
-                self.datewidget.$input.addClass('o_form_input');
-                self.datewidget.$input.attr('id', self.idForLabel);
+                self._prepareInput(self.datewidget.$input);
                 self.replaceElement(self.datewidget.$el);
             });
         }
@@ -371,7 +367,6 @@ var FieldDateTime = FieldDate.extend({
 
 var FieldMonetary = InputField.extend({
     className: 'o_form_field_monetary o_list_number',
-    replace_element: true,
     supportedFieldTypes: ['float', 'monetary'],
     resetOnAnyFieldChange: true, // Have to listen to currency changes
 
@@ -484,7 +479,6 @@ var FieldBoolean = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         change: '_onChange',
     }),
-    replace_element: true,
     supportedFieldTypes: ['boolean'],
 
     //--------------------------------------------------------------------------
@@ -492,15 +486,12 @@ var FieldBoolean = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Automatically selects the field.
-     *
      * @override
+     * @returns {jQuery} the focusable checkbox input
      */
-    activate: function () {
-        this.$input.focus();
-        setTimeout(this.$input.select.bind(this.$input), 0);
+    getFocusableElement: function () {
+        return this.$input || $();
     },
-
     /**
      * A boolean field is always set since false is a valid value.
      *
@@ -686,7 +677,6 @@ var FieldText = DebouncedField.extend({
      */
     start: function () {
         this.$el.addClass('o_list_text o_form_textarea');
-        this.$el.attr('id', this.idForLabel);
 
         if (this.mode === 'edit') {
             this.$textarea = $('<textarea>').appendTo(this.$el);
@@ -704,14 +694,12 @@ var FieldText = DebouncedField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Automatically selects the content of the field.
+     * Returns the associated <textarea/> element.
      *
      * @override
      */
-    activate: function () {
-        var $textarea = this.$('textarea');
-        $textarea.focus();
-        setTimeout($textarea.select.bind($textarea), 0);
+    getFocusableElement: function () {
+        return this.$textarea || $();
     },
 
     //--------------------------------------------------------------------------
@@ -753,8 +741,6 @@ var HandleWidget = AbstractField.extend({
     tagName: 'span',
     className: 'o_row_handle fa fa-arrows ui-sortable-handle',
     description: "",
-    readonly: true,
-    replace_element: true,
     supportedFieldTypes: ['integer'],
 });
 
@@ -1093,7 +1079,6 @@ var PriorityWidget = AbstractField.extend({
         'mouseout > a': '_onMouseOut',
         'click > a': '_onClick',
     },
-    readonly: true,
     supportedFieldTypes: ['selection'],
 
     //--------------------------------------------------------------------------
@@ -1195,7 +1180,6 @@ var PriorityWidget = AbstractField.extend({
         this.$('.o_priority_star').removeClass('fa-star-o').addClass('fa-star');
         $(event.currentTarget).nextAll().removeClass('fa-star').addClass('fa-star-o');
     },
-
 });
 
 var AttachmentImage =  AbstractField.extend({
@@ -1210,7 +1194,6 @@ var StateSelectionWidget = AbstractField.extend({
         },
         'click li': '_setSelection'
     },
-    readonly: true,
     supportedFieldTypes: ['selection'],
 
     //--------------------------------------------------------------------------
@@ -1300,7 +1283,6 @@ var StateSelectionWidget = AbstractField.extend({
 });
 
 var LabelSelection = AbstractField.extend({
-    readonly: true,
     supportedFieldTypes: ['selection'],
 
     //--------------------------------------------------------------------------
