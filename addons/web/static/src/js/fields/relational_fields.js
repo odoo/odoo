@@ -465,6 +465,13 @@ var FieldMany2One = AbstractField.extend({
      * @private
      * @param {OdooEvent} event
      */
+    _onQuickCreate: function (event) {
+        this._quickCreate(event.data.value);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
     _onSearchCreatePopup: function (event) {
         var data = event.data;
         this._searchCreatePopup(data.view_type, false, this._createContext(data.value));

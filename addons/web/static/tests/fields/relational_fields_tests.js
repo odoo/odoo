@@ -528,6 +528,35 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('quick create on a many2one', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<sheet>' +
+                            '<field name="product_id"/>' +
+                        '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/product/name_create') {
+                    assert.strictEqual(args.args[0], 'new partner',
+                        "should name create a new product");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_form_field_many2one input').focus();
+        form.$('.o_form_field_many2one input').val('new partner').trigger('keyup').trigger('focusout');
+
+        $('.modal .modal-footer .btn-primary').first().click();
+
+        form.destroy();
+    });
+
     QUnit.module('FieldOne2Many');
 
     QUnit.test('one2many basic properties', function (assert) {
