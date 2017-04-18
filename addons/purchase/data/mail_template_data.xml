@@ -17,11 +17,7 @@
 <p>Dear
     <t t-esc="record.partner_id.child_ids[0].name if (record and record.partner_id.is_company and record.partner_id.child_ids) else record.partner_id.name"/>
 ,</p><p>
-<<<<<<< HEAD
-Here is, in attachment, a <t t-esc="record.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'"> <strong t-esc="object.name"/>
-=======
-Here is a <t t-esc="record.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'"/> <strong t-esc="record.name"/>
->>>>>>> 1f4b3f6... [FIX] minor fixes
+Here is, in attachment, a <t t-esc="record.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'"/> <strong t-esc="record.name"/>
 <t t-if="record.partner_ref">
     with reference: <t t-esc="record.partner_ref"/>
 </t>
@@ -35,9 +31,7 @@ from <t t-esc="record.company_id.name"/>.
 <p>Do not hesitate to contact us, further you have any question.</p>
 <p>Best regards,</p>
 <p style="color:#888888;">
-<t t-if="record.user_id and record.user_id.signature">
-    <t-esc="record.user_id.signature or safe"/>
-</t>
+<t t-if="record.user_id and record.user_id.signature" t-raw="record.user_id.signature"/>
 </p>
 ]]></field>
         </record>
@@ -55,13 +49,12 @@ from <t t-esc="record.company_id.name"/>.
             <field name="report_name">PO_${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
-<p>Dear
-    <t t-esc="record.partner_id.name"/>
+<p>Dear <t t-esc="record.partner_id.name"/>
     <t t-if="record.partner_id.parent_id">
         (<i t-esc="record.partner_id.parent_id.name"/>)
     </t>
 ,</p><p>
-Please find in attachment a <strong> <t t-esc="record.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'"/> <t t-esc="record.name"/></strong>
+Please find in attachment a <strong t-esc="'%s %s' % (record.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation', record.name)"/>
 <t t-if="record.partner_ref">
     with reference: <t t-esc="record.partner_ref"/>
 </t>
@@ -96,12 +89,10 @@ from <t t-esc="record.company_id.name"/>.
                           <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px;">
                             <tr>
                               <td valign="middle">
-                                  <span style="font-size:20px; color:white; font-weight: bold;">
-                                      ${object.record_name}
-                                  </span>
+                                  <span style="font-size:20px; color:white; font-weight: bold;" t-esc="record.record_name"/>
                               </td>
                               <td valign="middle" align="right">
-                                  <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                                  <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
                               </td>
                             </tr>
                           </table>
@@ -114,7 +105,7 @@ from <t t-esc="record.company_id.name"/>.
                           <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;">
                             <tbody>
                               <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
-                                ${object.body | safe}
+                                <t t-raw="record.body or safe"/>
                               </td>
                             </tbody>
                           </table>
@@ -127,18 +118,12 @@ from <t t-esc="record.company_id.name"/>.
                           <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px;">
                             <tr>
                               <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                                ${user.company_id.name}<br/>
-                                ${user.company_id.phone or ''}
+                                <t t-esc="user.company_id.name"/><br/>
+                                <t t-esc="user.company_id.phone or ''"/>
                               </td>
                               <td valign="middle" align="right" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                                % if user.company_id.email:
-                                <a href="mailto:${user.company_id.email}" style="text-decoration:none; color: white;">${user.company_id.email}</a><br/>
-                                % endif
-                                % if user.company_id.website:
-                                    <a href="${user.company_id.website}" style="text-decoration:none; color: white;">
-                                        ${user.company_id.website}
-                                    </a>
-                                % endif
+                                <a t-if="user.company_id.email" t-attf-href="mailto:#{user.company_id.email}" style="text-decoration:none; color: white;" t-esc="user.company_id.email"/><br/>
+                                <a t-if="user.company_id.website" t-att-href="user.company_id.website" style="text-decoration:none; color: white;" t-esc="user.company_id.website"/>
                               </td>
                             </tr>
                           </table>

@@ -123,9 +123,7 @@
             <td style="padding:0px 10px 5px 5px;font-size: 14px;">
                 <p>Dear <t t-esc="record.partner_id.name"/>,</p><br/>
                 <p>Your order <a t-attf-href="/quote/#{record.id}/#{record.access_token}" t-esc="record.name"/> has been validated!</p><br/>
-                <t t-if="record.partner_id.user_ids">
-                <p>You can view your quotes, sales orders and invoices online by going to our <a style="text-decoration:none; color: #875A7B;" href="/my/home">Online Portal</a>.</p><br/>
-                </t>
+                <p t-if="record.partner_id.user_ids">You can view your quotes, sales orders and invoices online by going to our <a style="text-decoration:none; color: #875A7B;" href="/my/home">Online Portal</a>.</p><br/>
                 <p>If you have any question, do not hesitate to contact us.</p><br/>
                 <p>Thank you for choosing <t t-raw="record.company_id.name or &quot;us&quot;"/>!</p>
             </td>

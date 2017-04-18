@@ -95,7 +95,7 @@
         <tbody>
             <tr><td style="padding-top:10px;color:#afafaf;">
                 <p t-if="record.project_id.rating_status == 'stage'">This customer survey has been sent because your task has been moved to the stage <b><t t-esc="record.stage_id.name"/></b></p>
-                <p t-if="record.project_id.rating_status == 'periodic'">This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b><t t-esc="record.stage_id.name"/></b> stage.</p>
+                <p t-if="record.project_id.rating_status == 'periodic'">This customer survey is sent <b><t t-esc="record.project_id.rating_status_period"/></b> as long as the task is in the <b><t t-esc="record.stage_id.name"/></b> stage.</p>
                 <p>Email automatically sent by <a target="_blank" href="https://www.odoo.com/page/project-management" style="color:#875A7B;text-decoration:none;">Odoo Project</a> for <a t-att-href="record.project_id.company_id.website" style="color:#875A7B;text-decoration:none;"><t t-esc="record.project_id.company_id.name"/></a></p>
             </td></tr>
         </tbody>

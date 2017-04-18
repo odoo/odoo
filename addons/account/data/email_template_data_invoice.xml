@@ -20,6 +20,7 @@
 <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
 <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
 <t t-set="access_url" t-value="is_online and '/mail/view?model=account.invoice&res_id=%d' % (record.id) or '/report/pdf/account.report_invoice/' + str(record.id)"/>
+
 <t t-if="record.partner_id.parent_id">
     (<i t-esc="record.partner_id.parent_id.name"/>)
 </t>
@@ -43,12 +44,10 @@ from <t t-esc="record.company_id.name"/>.
     <br/><br/>
 
 <p t-if="record.state == 'paid'">This invoice is already paid.</p>
-<p t-if="not record.state == 'paid'">Please remit payment at your earliest convenience.</p>
+<p t-else="">Please remit payment at your earliest convenience.</p>
 <p>Thank you,</p>
 <p style="color:#888888">
-<t t-if="record.user_id and record.user_id.signature">
-    ${object.user_id.signature | safe}
-</t>
+<t t-if="record.user_id and record.user_id.signature" t-raw="record.user_id.signature"/>
 </p>
 ]]></field>
         </record>
@@ -61,8 +60,7 @@ from <t t-esc="record.company_id.name"/>.
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[<html>
                 <head></head>
-                <t t-set="record" t-value="ctx.get('record')"/>
-                <t t-set="company" t-value="record and record.company_id or user.company_id"/>
+                <t t-set="company" t-value="ctx.get('record') and ctx.get('record').company_id or user.company_id"/>
                 <body style="margin: 0; padding: 0;">
                 <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed" summary="o_mail_notification">
                     <tbody>
@@ -78,7 +76,7 @@ from <t t-esc="record.company_id.name"/>.
                                   </span>
                               </td>
                               <td valign="middle" align="right">
-                                  <img t-att-src="/logo.png?company=%s" % (company)" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
+                                  <img t-attf-src="/logo.png?company=#{company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="company.name">
                               </td>
                             </tr>
                           </table>
@@ -90,7 +88,7 @@ from <t t-esc="record.company_id.name"/>.
                         <td align="center" style="min-width: 590px;">
                           <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;">
                             <tbody>
-                              <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" t-raw="record.body or safe"/>
+                              <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" t-raw="record.body"/>
                             </tbody>
                           </table>
                         </td>

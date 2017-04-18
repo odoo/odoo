@@ -31,12 +31,12 @@ Here is
 in attachment, your pro-forma
 </t>
 <t t-else="">
-the <t t-esc="doc_name"/> <strong><t t-esc="record.name"/></strong>
+the <t t-esc="doc_name"/> <strong t-esc="record.name"/>
 </t>
 <t t-if="record.origin">
 (with reference: <t t-esc="record.origin"/> )
 </t>
-amounting in <strong><t t-esc="record.amount_total"/><t t-esc="record.pricelist_id.currency_id.name"/></strong>
+amounting in<strong t-esc="'%s %s' % (record.amount_total, record.pricelist_id.currency_id.name)"/>
 from <t t-esc="record.company_id.name"/>.
 </p>
 
@@ -54,9 +54,7 @@ from <t t-esc="record.company_id.name"/>.
 <p>Thank you,</p>
 
 <p style="color:#888888;">
-<t t-if=record.user_id and record.user_id.signature">
-    <t t-raw="record.user_id.signature"/>
-</t>
+<t t-if="record.user_id and record.user_id.signature" t-raw="record.user_id.signature"/>
 </p>
 ]]></field>
         </record>
@@ -69,8 +67,7 @@ from <t t-esc="record.company_id.name"/>.
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[<html>
                 <head></head>
-                <t t-set="record" t-value="ctx.get('record')"/>
-                <t t-set="company" t-value="record and record.company_id or user.company_id"/>
+                <t t-set="company" t-value="ctx.get('record') and ctx.get('record').company_id or user.company_id"/>
                 <body style="margin: 0; padding: 0;">
                 <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed" summary="o_mail_notification">
                     <tbody>
@@ -81,10 +78,12 @@ from <t t-esc="record.company_id.name"/>.
                           <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px;">
                             <tr>
                               <td valign="middle">
-                                  <span style="font-size:20px; color:white; font-weight: bold;" t-esc="record.record_name"/>
+                                  <span style="font-size:20px; color:white; font-weight: bold;">
+                                      <t t-esc="record.record_name"/>
+                                  </span>
                               </td>
                               <td valign="middle" align="right">
-                                  <img t-attf-src="/logo.png?company=#{company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="company.name">
+                                  <img t-attf-src="/logo.png?company=#{company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="company.name"/>
                               </td>
                             </tr>
                           </table>
@@ -96,7 +95,9 @@ from <t t-esc="record.company_id.name"/>.
                         <td align="center" style="min-width: 590px;">
                           <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;">
                             <tbody>
-                              <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" t-raw="record.body"/>
+                              <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
+                                  <t t-raw="record.body"/>
+                              </td>
                             </tbody>
                           </table>
                         </td>

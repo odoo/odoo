@@ -49,7 +49,7 @@
             <field name="body_html" type="xml">
 <div>
     <p>Congratulations <t t-esc="record.user_id.name"/> !</p>
-    <p>You just received badge <strong><t t-esc="record.badge_id.name"/></strong> !</p>
+    <p>You just received badge <strong t-esc="record.badge_id.name"/> !</p>
 </div>
 <div>
 <table t-if="record.badge_id.description" cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
@@ -58,7 +58,7 @@
         <img t-attf-src="/web/image/gamification.badge/#{record.badge_id.id}/image/80x80" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
     </td>
     <td valign="center">
-        <cite><t t-esc="record.badge_id.description"/></cite>
+        <cite t-esc="record.badge_id.description"/>
     </td>
 </tr></tbody>
 </table>
@@ -66,12 +66,12 @@
 <div>
     <p>
 <t t-if="record.sender_id">
-        This badge was granted by <strong><t t-esc="record.sender_id.name"/></strong>.
+        This badge was granted by <strong t-esc="record.sender_id.name"/>.
 </t>
     </p>
     <p>
 <t t-if="record.comment">
-        <em><t t-esc="record.comment"/></em>
+        <em t-esc="record.comment"/>
 </t>
     </p>
 </div>

@@ -26,7 +26,7 @@
 </p>
 <p class="oe_grey">The following message contains the current progress for the challenge <t t-esc="record.name"/></p>
 
-<t t-if="record.visibility_mode == 'personal' and ctx.get('challange_lines')">
+<t t-if="record.visibility_mode == 'personal'">
     <table width="100%" border="1">
     <tr>
         <th>Goal</th>
@@ -46,7 +46,7 @@
     </tr>
     </table>
 </t>
-<t t-if="record.visibility_mode != 'personal' and ctx.get('challange_lines')">
+<t t-else="">
     <t t-foreach="ctx['challenge_lines']" t-as="line">
         <table width="100%" border="1">
             <tr>
@@ -71,6 +71,7 @@
         <br/><br/>
 
     </t>
+</t>
             ]]></field>
         </record>
 

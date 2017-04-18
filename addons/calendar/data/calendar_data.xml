@@ -114,7 +114,7 @@
                 <p style="font-size: 20px; text-align: center;">Invitation to <strong t-esc="record.event_id.name"/></p>
                 <p>
                     <strong>Dear <t t-esc="record.common_name"/></strong>,<br />
-                    <t t-esc="record.event_id.user_id.partner_id.name"/> invited you for the <t t-esc="record.event_id.name"/> meeting of <t t-esc="record.event_id.user_id.company_id.name"/>.</p> 
+                    <t t-esc="record.event_id.user_id.partner_id.name"/> invited you for the <t t-esc="record.event_id.name"/> meeting of <t t-esc="record.event_id.user_id.company_id.name"/>.</p>
                 <table style="margin-top: 20px;"><tr>
                     <td>
                         <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;" t-esc="record.event_id.get_interval('dayname', tz=record.partner_id.tz if not record.event_id.allday else None)"/>
@@ -126,7 +126,7 @@
                     <td>
                         <p>Details of the event</p>
                         <ul>
-                            <li t-if="record.event_id.location">Location: <t t-esc="record.event_id.location"
+                            <li t-if="record.event_id.location">Location: <t t-esc="record.event_id.location"/>
                             (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&q=#{record.event_id.location}">View Map</a>)
                             </li>
                             <li t-if="record.event_id.description">Description: <t t-esc="record.event_id.description"/></li>
@@ -282,7 +282,7 @@
                     <td>
                         <p>Details of the event</p>
                         <ul>
-                            <li t-if="record.event_id.location">Location: <t t-esc="record.event_id.location"
+                            <li t-if="record.event_id.location">Location: <t t-esc="record.event_id.location"/>
                             (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&q=#{record.event_id.location}">View Map</a>)
                             </li>
                             <li t-if="record.event_id.description">Description: <t t-esc="record.event_id.description"/></li>
