@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -41,9 +41,24 @@ msgid "<strong>Reported by</strong>"
 msgstr ""
 
 #. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:38
+#: code:addons/website_project_issue/controllers/main.py:39
 #, python-format
 msgid "All"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+msgid "Attachment"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.model.fields,help:website_project_issue.field_project_issue_attachment_ids
+msgid "Attachment that don't come from message."
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+msgid "Attachments"
 msgstr ""
 
 #. module: website_project_issue
@@ -54,11 +69,6 @@ msgstr ""
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Current stage of this issue"
-msgstr ""
-
-#. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.my_issues
-msgid "Description"
 msgstr ""
 
 #. module: website_project_issue
@@ -78,9 +88,14 @@ msgid "Issues"
 msgstr ""
 
 #. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:35
+#: code:addons/website_project_issue/controllers/main.py:36
 #, python-format
 msgid "Last Stage Update"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.model.fields,field_description:website_project_issue.field_project_issue_attachment_ids
+msgid "Main Attachments"
 msgstr ""
 
 #. module: website_project_issue
@@ -91,12 +106,6 @@ msgstr ""
 #. module: website_project_issue
 #: code:addons/website_project_issue/controllers/main.py:33
 #, python-format
-msgid "Name"
-msgstr ""
-
-#. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:32
-#, python-format
 msgid "Newest"
 msgstr ""
 
@@ -106,10 +115,39 @@ msgid "Project Issue"
 msgstr ""
 
 #. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:34
+#: code:addons/website_project_issue/controllers/main.py:42
+#, python-format
+msgid "Search <span class=\"nolabel\"> (in Content)</span>"
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:45
+#, python-format
+msgid "Search in All"
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:44
+#, python-format
+msgid "Search in Customer"
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:43
+#, python-format
+msgid "Search in Messages"
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:35
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues
 #, python-format
 msgid "Stage"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.model.fields,help:website_project_issue.field_project_issue_website_url
+msgid "The full URL to access the document through the website."
 msgstr ""
 
 #. module: website_project_issue
@@ -120,6 +158,18 @@ msgstr ""
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues
 msgid "There are no issues."
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:34
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#, python-format
+msgid "Title"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.model.fields,field_description:website_project_issue.field_project_issue_website_url
+msgid "Website URL"
 msgstr ""
 
 #. module: website_project_issue

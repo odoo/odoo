@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -402,6 +402,11 @@ msgid "Consumable"
 msgstr ""
 
 #. module: product
+#: model:ir.model,name:product.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
 msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
 msgstr ""
@@ -508,6 +513,12 @@ msgid "Day(s)"
 msgstr ""
 
 #. module: product
+#: code:addons/product/models/res_company.py:58
+#, python-format
+msgid "Default %(currency)s pricelist for %(company)s"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_id
 #: model:ir.model.fields,help:product.field_product_template_uom_id
 msgid "Default Unit of Measure used for all stock operation."
@@ -602,7 +613,7 @@ msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:306
+#: code:addons/product/models/product.py:308
 #, python-format
 msgid "Error! It is not allowed to choose more than one value for a given attribute."
 msgstr ""
@@ -763,7 +774,6 @@ msgid "Internal Category"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_code
 #: model:ir.model.fields,field_description:product.field_product_product_default_code
 #: model:ir.model.fields,field_description:product.field_product_template_default_code
 msgid "Internal Reference"
@@ -984,11 +994,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_id
 msgid "Parent Category"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_res_partner
-msgid "Partner"
 msgstr ""
 
 #. module: product
@@ -1267,7 +1272,7 @@ msgid "Products Price Search"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:469
+#: code:addons/product/models/product.py:471
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -1328,6 +1333,11 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor
 msgid "Ratio"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_code
+msgid "Reference"
 msgstr ""
 
 #. module: product
@@ -1422,11 +1432,13 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
+#: model:ir.model.fields,field_description:product.field_hr_timesheet_config_settings_company_share_product
 msgid "Share product to all companies"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
+#: model:ir.model.fields,help:product.field_hr_timesheet_config_settings_company_share_product
 msgid "Share your product to all companies defined in your instance.\n"
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."

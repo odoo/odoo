@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -190,6 +190,11 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Amount</strong>"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
 msgstr ""
 
@@ -202,11 +207,6 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
-msgstr ""
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong>Net Price</strong>"
 msgstr ""
 
 #. module: purchase
@@ -233,12 +233,12 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong>Taxes</strong>"
+msgid "<strong>Subtotal</strong>"
 msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong>Total Without Taxes</strong>"
+msgid "<strong>Taxes</strong>"
 msgstr ""
 
 #. module: purchase
@@ -253,12 +253,17 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong>Your Order Reference</strong>"
+msgid "<strong>Your Order Reference:</strong>"
 msgstr ""
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.stock_config_settings_view_form_inherit_purchase
+msgid "Adapt reordering scheduling with vendor's open days calendar"
 msgstr ""
 
 #. module: purchase
@@ -358,6 +363,12 @@ msgid "Billed Qty"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:578
+#, python-format
+msgid "Billed Quantity"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
 msgid "Billing Status"
 msgstr ""
@@ -380,7 +391,7 @@ msgid "Blocking Message"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:797
+#: code:addons/purchase/models/purchase.py:835
 #: code:addons/purchase/models/stock.py:81
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
@@ -403,17 +414,12 @@ msgid "Calendar View"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_module_purchase_requisition
-msgid "Calls for Tenders"
-msgstr ""
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
 msgid "Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products. You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:813
+#: code:addons/purchase/models/purchase.py:851
 #, python-format
 msgid "Can not cancel a procurement related to a purchase order. Please cancel the purchase order first."
 msgstr ""
@@ -437,7 +443,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:663
+#: code:addons/purchase/models/purchase.py:701
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -493,7 +499,7 @@ msgid "Company"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:295
+#: code:addons/purchase/models/purchase.py:297
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -522,6 +528,11 @@ msgstr ""
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Confirmed purchase orders are not editable"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_partner
+msgid "Contact"
 msgstr ""
 
 #. module: purchase
@@ -671,6 +682,12 @@ msgid "Extended Filters"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:556
+#, python-format
+msgid "Extra line with %s "
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_fiscal_position_id
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -680,11 +697,6 @@ msgstr ""
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr ""
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
-msgid "Get the best offer from several vendors"
 msgstr ""
 
 #. module: purchase
@@ -728,7 +740,7 @@ msgid "Import vendor pricelists"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:197
+#: code:addons/purchase/models/purchase.py:199
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr ""
@@ -841,6 +853,11 @@ msgid "Manage Vendor Price"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Manage your purchase agreements (call for tenders, blanket orders)"
+msgstr ""
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
 msgid "Manager"
 msgstr ""
@@ -861,14 +878,15 @@ msgid "Manufacturing"
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
-msgid "Margin of error for vendor lead times"
+#: model:ir.model.fields,help:purchase.field_res_company_po_lead
+#: model:ir.model.fields,help:purchase.field_stock_config_settings_po_lead
+msgid "Margin of error for vendor lead times. When the system generates Purchase Orders for procuring products, they will be scheduled that many days earlier to cope with unexpected vendor delays."
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_lead
-#: model:ir.model.fields,help:purchase.field_res_company_po_lead
-msgid "Margin of error for vendor lead times. When the system generates Purchase Orders for procuring products, they will be scheduled that many days earlier to cope with unexpected vendor delays."
+#: model:ir.model.fields,help:purchase.field_stock_config_settings_default_new_po_lead
+#: model:ir.ui.view,arch_db:purchase.stock_config_settings_view_form_inherit_purchase
+msgid "Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays."
 msgstr ""
 
 #. module: purchase
@@ -905,6 +923,11 @@ msgid "Most propositions of purchase orders are created automatically\n"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.stock_config_settings_view_form_inherit_purchase
+msgid "Move forward expected delivery dates by"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "My Activities"
 msgstr ""
@@ -926,7 +949,7 @@ msgid "No longer edit orders once confirmed"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:946
+#: code:addons/purchase/models/purchase.py:996
 #, python-format
 msgid "No vendor associated to product %s. Please set one to fix this procurement."
 msgstr ""
@@ -999,12 +1022,18 @@ msgid "Order of Day"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:575
+#, python-format
+msgid "Ordered Quantity"
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.config.settings,default_purchase_method:0
 msgid "Ordered quantities"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:770
+#: code:addons/purchase/models/purchase.py:808
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr ""
@@ -1026,7 +1055,6 @@ msgid "PO_${(object.name or '').replace('/','_')}"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_res_partner
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_partner_id
 msgid "Partner"
 msgstr ""
@@ -1152,6 +1180,11 @@ msgid "Purchase"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_module_purchase_requisition
+msgid "Purchase Agreements"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 msgid "Purchase Analysis"
 msgstr ""
@@ -1167,8 +1200,8 @@ msgid "Purchase Analytics"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
+#: model:ir.model.fields,field_description:purchase.field_stock_config_settings_po_lead
 msgid "Purchase Lead Time"
 msgstr ""
 
@@ -1249,7 +1282,7 @@ msgid "Purchase Orders Statistics"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:665
+#: code:addons/purchase/models/purchase.py:703
 #, python-format
 msgid "Purchase order line deleted."
 msgstr ""
@@ -1361,6 +1394,12 @@ msgid "Received Qty"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:577
+#, python-format
+msgid "Received Quantity"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
@@ -1449,15 +1488,30 @@ msgid "Save this page and come back here to set up the feature."
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.stock_config_settings_view_form_inherit_purchase
+msgid "Schedule receivings earlier to avoid delays"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_planned
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_date_planned
 msgid "Scheduled Date"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.stock_config_settings_view_form_inherit_purchase
+msgid "Scheduled dates of requests for quotation generated from reordering rules are based on vendor lead times (defined on products).  By default, such a scheduling is made on calendar days. This option allow to adapt the scheduling with vendor calendars to set on reordering rules."
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Search Purchase Order"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_stock_config_settings_default_new_po_lead
+msgid "Security Lead Time for Purchase"
 msgstr ""
 
 #. module: purchase
@@ -1583,6 +1637,12 @@ msgid "Terms and Conditions"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:571
+#, python-format
+msgid "The ordered quantity has been decreased. Do not forget to take it into account on your bills and receipts."
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
 msgid "The product form contains detailed information to improve the\n"
 "                purchase process: prices, procurement logistics, accounting data,\n"
@@ -1648,25 +1708,25 @@ msgid "This note will be displayed for vendors."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:974
+#: code:addons/purchase/models/purchase.py:1024
 #, python-format
 msgid "This purchase order has been created from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:987
+#: code:addons/purchase/models/purchase.py:1037
 #, python-format
 msgid "This purchase order has been modified from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:190
+#: code:addons/purchase/models/account_invoice.py:197
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:204
+#: code:addons/purchase/models/account_invoice.py:211
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr ""
@@ -1678,7 +1738,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
-msgid "This will determine picking type of incoming shipment"
+msgid "This will determine operation type of incoming shipment"
 msgstr ""
 
 #. module: purchase
@@ -1720,13 +1780,13 @@ msgid "Transfer"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:344
+#: code:addons/purchase/models/purchase.py:346
 #, python-format
 msgid "Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:347
+#: code:addons/purchase/models/purchase.py:349
 #, python-format
 msgid "Unable to cancel this purchase order. You must first cancel related vendor bills."
 msgstr ""
@@ -1874,8 +1934,8 @@ msgid "Warning"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:251
-#: code:addons/purchase/models/purchase.py:731
+#: code:addons/purchase/models/purchase.py:253
+#: code:addons/purchase/models/purchase.py:769
 #, python-format
 msgid "Warning for %s"
 msgstr ""
@@ -1901,7 +1961,7 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:771
+#: code:addons/purchase/models/purchase.py:809
 #, python-format
 msgid "You are decreasing the ordered quantity!\n"
 "You must update the quantities on the reception and/or bills."
@@ -1928,7 +1988,7 @@ msgid "You must define a product for everything you purchase, whether\n"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:384
+#: code:addons/purchase/models/purchase.py:386
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr ""
@@ -1939,7 +1999,17 @@ msgid "account.config.settings"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.stock_config_settings_view_form_inherit_purchase
+msgid "days"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_config_settings
+msgid "stock.config.settings"
 msgstr ""
 

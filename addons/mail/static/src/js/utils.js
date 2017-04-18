@@ -5,7 +5,7 @@ var bus = require('bus.bus').bus;
 
 
 function send_notification(widget, title, content) {
-    if (Notification && Notification.permission === "granted") {
+    if (window.Notification && Notification.permission === "granted") {
         if (bus.is_master) {
             _send_native_notification(title, content);
         }

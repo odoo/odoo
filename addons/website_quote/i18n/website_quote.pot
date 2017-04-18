@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -230,13 +230,13 @@ msgid "Add to order lines"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
-msgid "Amount Before Discount"
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Amount"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
-msgid "An administrator can set up default Terms and conditions in your Company settings."
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
+msgid "Amount Before Discount"
 msgstr ""
 
 #. module: website_quote
@@ -409,8 +409,8 @@ msgid "If edit a quotation from the 'Preview' of a quotation, you will\n"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:211
+#: code:addons/website_quote/controllers/main.py:77
+#: code:addons/website_quote/controllers/main.py:216
 #, python-format
 msgid "If we store your payment information on our server, subscription payments will be made automatically."
 msgstr ""
@@ -512,13 +512,13 @@ msgid "Optional Products Lines"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/models/sale_order.py:169
+#: code:addons/website_quote/models/sale_order.py:188
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:90
+#: code:addons/website_quote/controllers/main.py:93
 #, python-format
 msgid "Order signed by %s"
 msgstr ""
@@ -544,8 +544,8 @@ msgid "Our Service"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:65
-#: code:addons/website_quote/controllers/main.py:204
+#: code:addons/website_quote/controllers/main.py:66
+#: code:addons/website_quote/controllers/main.py:209
 #, python-format
 msgid "Pay & Confirm"
 msgstr ""
@@ -562,8 +562,14 @@ msgid "Payment Method:"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.menu,name:website_quote.payment_acquirer_menu_sale
 #: model:ir.ui.view,arch_db:website_quote.sale_config_settings_view_form_inherit_website_quote
 msgid "Payment Methods"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
+msgid "Payment Terms:"
 msgstr ""
 
 #. module: website_quote
@@ -573,7 +579,6 @@ msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
-#: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Price"
 msgstr ""
@@ -674,7 +679,7 @@ msgid "Quotation Viewed"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:26
+#: code:addons/website_quote/controllers/main.py:27
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr ""
@@ -795,6 +800,11 @@ msgid "Terms and conditions"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
+msgid "These Terms & Conditions will replace the default ones set in the Configuration menu."
+msgstr ""
+
+#. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_mail_template_id
 msgid "This e-mail template will be sent on confirmation. Leave empty to send nothing."
 msgstr ""
@@ -890,7 +900,7 @@ msgid "You can <strong>set a description per product</strong>. Odoo will\n"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:134
+#: code:addons/website_quote/controllers/main.py:137
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr ""
