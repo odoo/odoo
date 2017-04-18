@@ -60,11 +60,19 @@ function formatChar(value) {
  * an empty string. Note that this is dependant on the localization settings
  *
  * @param {Moment|false}
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.timezone=true] use the user timezone when formating the
+ *        date
  * @returns {string}
  */
-function formatDate(value) {
+function formatDate(value, field, options) {
     if (!value) {
         return "";
+    }
+    if (!options || !('timezone' in options) || options.timezone) {
+        value = value.clone().add(session.tzOffset < 0 ? -1 : 0, 'days');
     }
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
@@ -77,9 +85,14 @@ function formatDate(value) {
  * settings
  *
  * @params {Moment|false}
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.timezone=true] use the user timezone when formating the
+ *        date
  * @returns {string}
  */
-function formatDateTime(value, options) {
+function formatDateTime(value, field, options) {
     if (!value) {
         return "";
     }
@@ -264,23 +277,32 @@ function formatSelection(value, field) {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * create an Date object
+ * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
- * @params {string}
+ * @param {string}
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.isUTC] the formatted date is utc
+ * @param {boolean} [options.timezone=false] format the date after apply the timezone
+ *        offset
  * @returns {Moment|false} Moment date object
  */
 function parseDate(value, field, options) {
     if (!value) {
         return false;
     }
-    var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
-    var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D');
+    var datePattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
+    var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D');
     var date;
     if (options && options.isUTC) {
         date = moment.utc(value);
     } else {
-        date = moment.utc(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601], true);
+        date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601], true);
+        if (options && options.timezone) {
+            date.add(session.tzOffset > 0 ? -1 : 0, 'days');
+        }
     }
     if (date.isValid() && date.year() >= 1900) {
         if (date.year() === 0) {
@@ -297,22 +319,28 @@ function parseDate(value, field, options) {
 }
 
 /**
- * create an Date object
+ * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
- * @params {string}
+ * @param {string}
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.isUTC] the formatted date is utc
+ * @param {boolean} [options.timezone=false] format the date after apply the timezone
+ *        offset
  * @returns {Moment|false} Moment date object
  */
 function parseDateTime(value, field, options) {
     if (!value) {
         return false;
     }
-    var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format),
-        time_pattern = time.strftime_to_moment_format(core._t.database.parameters.time_format);
-    var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D'),
-        time_pattern_wo_zero = time_pattern.replace('HH','H').replace('mm','m').replace('ss','s');
-    var pattern1 = date_pattern + ' ' + time_pattern;
-    var pattern2 = date_pattern_wo_zero + ' ' + time_pattern_wo_zero;
+    var datePattern = time.strftime_to_moment_format(core._t.database.parameters.date_format),
+        timePattern = time.strftime_to_moment_format(core._t.database.parameters.time_format);
+    var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D'),
+        timePatternWoZero = timePattern.replace('HH','H').replace('mm','m').replace('ss','s');
+    var pattern1 = datePattern + ' ' + timePattern;
+    var pattern2 = datePatternWoZero + ' ' + timePatternWoZero;
     var datetime;
     if (options && options.isUTC) {
         // phatomjs crash if we don't use this format 
