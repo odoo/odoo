@@ -505,7 +505,7 @@ class Picking(models.Model):
 
         all_products = valid_quants.mapped('product_id') | self.env['product.product'].browse(p.id for p in forced_qties.keys()) | self.move_lines.mapped('product_id')
         computed_putaway_locations = dict(
-            (product, self.location_dest_id.get_putaway_strategy(product) or self.location_dest_id.id) for product in all_products)
+            (product, self.location_dest_id.get_putaway_strategy(product).id or self.location_dest_id.id) for product in all_products)
 
         product_to_uom = dict((product.id, product.uom_id) for product in all_products)
         picking_moves = self.move_lines.filtered(lambda move: move.state not in ('done', 'cancel'))
