@@ -4,6 +4,7 @@ odoo.define('web.relational_fields_tests', function (require) {
 var AbstractField = require('web.AbstractField');
 var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
@@ -4656,9 +4657,9 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('one2many list: unlink one record', function (assert) {
-        assert.expect(6);
-        this.data.partner.records[0].p = [2, 4];
+    QUnit.test('one2many list: unlink two records', function (assert) {
+        assert.expect(9);
+        this.data.partner.records[0].p = [1, 2, 4];
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -4674,37 +4675,51 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/partner/write') {
                     var commands = args.args[1].p;
-                    assert.strictEqual(commands.length, 2,
-                        'should have generated two commands');
+                    assert.strictEqual(commands.length, 3,
+                        'should have generated three commands');
                     assert.ok(commands[0][0] === 4 && commands[0][1] === 4,
                         'should have generated the command 4 (LINK_TO) with id 4');
-                    assert.ok(commands[1][0] === 3 && commands[1][1] === 2,
+                    assert.ok(commands[1][0] === 3 && commands[1][1] === 1,
+                        'should have generated the command 3 (UNLINK) with id 1');
+                    assert.ok(commands[2][0] === 3 && commands[2][1] === 2,
                         'should have generated the command 3 (UNLINK) with id 2');
                 }
                 return this._super.apply(this, arguments);
             },
+            archs: {
+                'partner,false,form':
+                    '<form string="Partner"><field name="display_name"/></form>',
+            },
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
-            "should have 2 remove buttons");
+        assert.strictEqual(form.$('td.o_list_record_remove button').length, 3,
+            "should have 3 remove buttons");
 
         assert.ok(form.$('td.o_list_record_remove button').first().hasClass('fa fa-times'),
             "should have X icons to remove (unlink) records");
 
         form.$('td.o_list_record_remove button').first().click();
 
+        assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
+            "should have 2 remove buttons (a record is supposed to have been unlinked)");
+
+        form.$('tr.o_data_row').first().click();
+        assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
+            'there should be a modal having Remove Button');
+        $('.modal .modal-footer .o_btn_remove').click();
+
         assert.strictEqual(form.$('td.o_list_record_remove button').length, 1,
-            "should have 1 remove button (a record is supposed to have been unlinked)");
+            "should have 1 delete button (another record is supposed to have been unlinked)");
 
         // save and check that the correct command has been generated
         form.$buttons.find('.o_form_button_save').click();
         form.destroy();
     });
 
-    QUnit.test('one2many list: deleting one record', function (assert) {
-        assert.expect(6);
-        this.data.partner.records[0].p = [2, 4];
+    QUnit.test('one2many list: deleting two records', function (assert) {
+        assert.expect(9);
+        this.data.partner.records[0].p = [1, 2, 4];
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -4720,28 +4735,42 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/partner/write') {
                     var commands = args.args[1].p;
-                    assert.strictEqual(commands.length, 2,
-                        'should have generated two commands');
+                    assert.strictEqual(commands.length, 3,
+                        'should have generated three commands');
                     assert.ok(commands[0][0] === 4 && commands[0][1] === 4,
                         'should have generated the command 4 (LINK_TO) with id 4');
-                    assert.ok(commands[1][0] === 2 && commands[1][1] === 2,
+                    assert.ok(commands[1][0] === 2 && commands[1][1] === 1,
+                        'should have generated the command 2 (DELETE) with id 1');
+                    assert.ok(commands[2][0] === 2 && commands[2][1] === 2,
                         'should have generated the command 2 (DELETE) with id 2');
                 }
                 return this._super.apply(this, arguments);
             },
+            archs: {
+                'partner,false,form':
+                    '<form string="Partner"><field name="display_name"/></form>',
+            },
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
-            "should have 2 remove buttons");
+        assert.strictEqual(form.$('td.o_list_record_remove button').length, 3,
+            "should have 3 remove buttons");
 
         assert.ok(form.$('td.o_list_record_remove button').first().hasClass('fa fa-trash-o'),
             "should have trash bin icons to remove (delete) records");
 
         form.$('td.o_list_record_remove button').first().click();
 
+        assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
+            "should have 2 remove buttons (a record is supposed to have been deleted)");
+
+        form.$('tr.o_data_row').first().click();
+        assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
+            'there should be a modal having Remove Button');
+        $('.modal .modal-footer .o_btn_remove').click();
+
         assert.strictEqual(form.$('td.o_list_record_remove button').length, 1,
-            "should have 1 remove button (a record is supposed to have been deleted)");
+            "should have 1 remove button (another record is supposed to have been deleted)");
 
         // save and check that the correct command has been generated
         form.$buttons.find('.o_form_button_save').click();
@@ -4753,7 +4782,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many kanban: edition', function (assert) {
-        assert.expect(16);
+        assert.expect(17);
 
         this.data.partner.records[0].p = [2];
         var form = createView({
@@ -4835,7 +4864,10 @@ QUnit.module('relational_fields', {
             'should contain 4 records');
 
         // delete subrecords
-        form.$('.o_kanban_view .delete_icon:first()').click();
+        form.$('.oe_kanban_global_click').first().click();
+        assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
+            'There should be a modal having Remove Button');
+        $('.modal .modal-footer .o_btn_remove').click(); // Click Remove Button of Formview Dialog
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 3,
             'should contain 3 records');
         form.$('.o_kanban_view .delete_icon:first()').click();
@@ -4847,7 +4879,7 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('one2many kabnan(editable): properly handle create_text node option', function (assert) {
+    QUnit.test('one2many kanban (editable): properly handle create_text node option', function (assert) {
         assert.expect(1);
 
         var form = createView({
@@ -4874,6 +4906,74 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o-kanban-button-new').text().trim(),
             "Add turtle", "In O2M Kanban, Add button should have 'Add turtle' label");
 
+        form.destroy();
+    });
+
+    QUnit.test('one2many kanban: deletion in mobile', function (assert) {
+        assert.expect(9);
+
+        this.data.partner.records[0].p = [1, 2];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<kanban>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div class="oe_kanban_global_click">' +
+                                        '<field name="display_name"/>' +
+                                    '</div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
+                        '<form string="Partners">' +
+                            '<field name="display_name"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    var commands = args.args[1].p;
+                    assert.strictEqual(commands.length, 2,
+                        'should have generated two commands');
+                    assert.ok(commands[0][0] === 4 && commands[0][1] === 2,
+                        'should have generated the command 2 (DELETE) with id 1');
+                    assert.ok(commands[1][0] === 2 && commands[1][1] === 1,
+                        'should have generated the command 2 (DELETE) with id 2');
+                }
+                return this._super.apply(this, arguments);
+            },
+            config: {
+                device: {
+                    size_class: config.device.SIZES.XS,
+                },
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_one2many .o-kanban-button-new').length, 0,
+            '"Create" button should not be visible in readonly');
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_field_one2many .o-kanban-button-new').length, 1,
+            '"Create" button should be visible in edit');
+        assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 2,
+            "should have 2 records");
+
+        // open and delete record
+        form.$('.oe_kanban_global_click').first().click();
+        assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
+            'there should be a Remove button in the modal footer');
+        $('.modal .modal-footer .o_btn_remove').click();
+        assert.strictEqual($('.o_modal').length, 0, "there shoul be no more modal");
+        assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
+            'should contain 1 records');
+
+        // save and check that the correct command has been generated
+        form.$buttons.find('.o_form_button_save').click();
         form.destroy();
     });
 
@@ -10139,7 +10239,7 @@ QUnit.module('relational_fields', {
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
-        assert.expect(29);
+        assert.expect(32);
 
         this.data.partner.records[0].timmy = [12, 14];
         this.data.partner_type.records.push({id: 15, display_name: "red", color: 6});
@@ -10191,7 +10291,7 @@ QUnit.module('relational_fields', {
                     var createdType = _.findWhere(this.data.partner_type.records, {
                         display_name: "A new type"
                     });
-                    var ids = _.sortBy([12, 15, 18, 21].concat(createdType.id), _.identity.bind(_));
+                    var ids = _.sortBy([12, 15, 18].concat(createdType.id), _.identity.bind(_));
                     assert.ok(_.isEqual(_.sortBy(commands[0][2], _.identity.bind(_)), ids),
                         "new value should be " + ids);
                 }
@@ -10269,10 +10369,19 @@ QUnit.module('relational_fields', {
             'the newly created type should be in the kanban');
 
         // delete subrecords
-        form.$('.o_kanban_record:contains(silver) .delete_icon').click();
+        form.$('.o_kanban_record:contains(silver)').click();
+        assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
+            'There should be a modal having Remove Button');
+        $('.modal .modal-footer .o_btn_remove').click(); // Click Remove Button of Formview Dialog
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 5,
             'should contain 5 records');
         assert.ok(!form.$('.o_kanban_record:contains(silver)').length,
+            'the removed record should not be in kanban anymore');
+
+        form.$('.o_kanban_record:contains(blue) .delete_icon').click();
+        assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 4,
+            'should contain 4 records');
+        assert.ok(!form.$('.o_kanban_record:contains(blue)').length,
             'the removed record should not be in kanban anymore');
 
         // save the record
