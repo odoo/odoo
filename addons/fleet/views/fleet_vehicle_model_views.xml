@@ -19,13 +19,12 @@
                     </div>
                     <notebook>
                         <page string="Vendors" name="vendors">
-                            <field name="vendors" widget="many2many_kanban">
+                            <field name="vendors">
                                 <kanban quick_create="false" create="true">
                                     <field name="name"/>
                                     <templates>
                                         <t t-name="kanban-box">
-                                            <div style="position: relative">
-                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block" aria-label="Delete" title="Delete"><i class="fa fa-times text-danger"/></a>
+                                            <div style="position: relative" class="oe_kanban_global_click">
                                                 <div class="oe_module_vignette">
                                                     <div class="oe_module_desc o_kanban_record_title">
                                                         <field name="name"/>

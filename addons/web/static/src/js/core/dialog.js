@@ -31,6 +31,8 @@ var Dialog = Widget.extend({
      * @param {string} [options.title=Odoo]
      * @param {string} [options.subtitle]
      * @param {string} [options.size=large] - 'large', 'medium' or 'small'
+     * @param {boolean} [options.fullscreen=false] - whether or not the dialog
+     *        should be open in fullscreen mode (the main usecase is mobile)
      * @param {string} [options.dialogClass] - class to add to the modal-body
      * @param {jQuery} [options.$content]
      *        Element which will be the $el, replace the .modal-body and get the
@@ -56,6 +58,7 @@ var Dialog = Widget.extend({
         options = _.defaults(options || {}, {
             title: _t('Odoo'), subtitle: '',
             size: 'large',
+            fullscreen: true,
             dialogClass: '',
             $content: false,
             buttons: [{text: _t("Ok"), close: true}],
@@ -65,6 +68,7 @@ var Dialog = Widget.extend({
         this.$content = options.$content;
         this.title = options.title;
         this.subtitle = options.subtitle;
+        this.fullscreen = options.fullscreen;
         this.dialogClass = options.dialogClass;
         this.size = options.size;
         this.buttons = options.buttons;
@@ -81,6 +85,7 @@ var Dialog = Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             // Render modal once xml dependencies are loaded
             self.$modal = $(QWeb.render('Dialog', {
+                fullscreen: self.fullscreen,
                 title: self.title,
                 subtitle: self.subtitle,
                 technical: self.technical,
