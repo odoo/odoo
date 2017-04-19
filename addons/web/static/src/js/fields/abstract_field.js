@@ -277,7 +277,7 @@ var AbstractField = Widget.extend({
      * synchronous.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Deferred|undefined}
      */
     _render: function () {
         if (this.mode === 'edit') {
@@ -291,7 +291,7 @@ var AbstractField = Widget.extend({
      * concrete widget.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Deferred|undefined}
      */
     _renderEdit: function () {
     },
@@ -300,7 +300,7 @@ var AbstractField = Widget.extend({
      * the concrete widget.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Deferred|undefined}
      */
     _renderReadonly: function () {
     },

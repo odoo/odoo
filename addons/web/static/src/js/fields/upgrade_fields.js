@@ -180,7 +180,6 @@ var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
     },
 });
 
-
 field_registry
     .add('upgrade_boolean', UpgradeBoolean)
     .add('upgrade_radio', UpgradeRadio);
