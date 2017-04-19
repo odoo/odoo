@@ -658,12 +658,16 @@
             <form string="Maintenance Team">
                 <sheet>
                 <div class="oe_title">
-                    <label for="name" class="oe_edit_only" string="Category Name"/>
+                    <label for="name" class="oe_edit_only" string="Team Name"/>
                     <h1>
                         <field name="name"/>
                     </h1>
                 </div>
-                <field name="partner_id"/>
+                <group>
+                    <group>
+                        <field name="member_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
                 </sheet>
             </form>
         </field>
@@ -673,7 +677,7 @@
         <field name="name">maintenance.team.tree</field>
         <field name="model">maintenance.team</field>
         <field name="arch" type="xml">
-            <tree string="Maintenance Team" editable="top">
+            <tree string="Maintenance Team">
                 <field name="name"/>
             </tree>
         </field>
@@ -800,9 +804,8 @@
     <record id="maintenance_team_action_settings" model="ir.actions.act_window">
         <field name="name">Teams</field>
         <field name="res_model">maintenance.team</field>
-        <field name="view_mode">tree</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="maintenance_team_view_tree"/>
+        <field name="view_mode">tree,form</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a team in the maintenance request.
