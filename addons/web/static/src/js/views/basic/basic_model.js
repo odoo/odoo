@@ -946,6 +946,9 @@ var BasicModel = AbstractModel.extend({
                     list = self.localData[listId];
                 } else {
                     var fieldInfo = record.fieldsInfo[record.viewType][name];
+                    if (!fieldInfo) {
+                        return; //ignore changes of x2many not in view
+                    }
                     list = self._makeDataPoint({
                         fieldsInfo: fieldInfo.fieldsInfo,
                         modelName: field.relation,
