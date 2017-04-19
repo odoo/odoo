@@ -316,12 +316,16 @@ class Department(models.Model):
                 # subscribe the manager user
                 if manager.user_id:
                     self.message_subscribe_users(user_ids=manager.user_id.ids)
-            employees = self.env['hr.employee']
-            for department in self:
-                employees = employees | self.env['hr.employee'].search([
-                    ('id', '!=', manager_id),
-                    ('department_id', '=', department.id),
-                    ('parent_id', '=', department.manager_id.id)
-                ])
-            employees.write({'parent_id': manager_id})
+            # set the employees's parent to the new manager
+            self._update_employee_manager(manager_id)
         return super(Department, self).write(vals)
+
+    def _update_employee_manager(self, manager_id):
+        employees = self.env['hr.employee']
+        for department in self:
+            employees = employees | self.env['hr.employee'].search([
+                ('id', '!=', manager_id),
+                ('department_id', '=', department.id),
+                ('parent_id', '=', department.manager_id.id)
+            ])
+        employees.write({'parent_id': manager_id})
