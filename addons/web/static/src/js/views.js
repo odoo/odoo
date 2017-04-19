@@ -1489,7 +1489,7 @@ instance.web.View = instance.web.Widget.extend({
             }
             args.push(context);
             return dataset.call_button(action_data.name, args).then(handler).then(function () {
-                if (instance.webclient) {
+                if (instance.webclient && instance.webclient.menu) {
                     instance.webclient.menu.do_reload_needaction();
                 }
             });
