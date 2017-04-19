@@ -553,9 +553,12 @@ class MergePartnerAutomatic(osv.TransientModel):
                 'min_id': min_id,
                 'aggr_ids': aggr_ids,
             }
-
-            proxy.create(cr, uid, values, context=context)
-            counter += 1
+            # To ensure that the used partners are accessible by the user
+            partner_ids = self.pool['res.partner'].search(cr, uid, [('id', 'in', aggr_ids)], context=context)
+            if len(partner_ids) >= 2:
+                values['aggr_ids'] = partner_ids
+                proxy.create(cr, uid, values, context=context)
+                counter += 1
 
         values = {
             'state': 'selection',
