@@ -3014,8 +3014,8 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('check if active_id is defined', function (assert) {
-        assert.expect(1);
+    QUnit.test('check if id and active_id are defined', function (assert) {
+        assert.expect(2);
 
         var form = createView({
             View: FormView,
@@ -3023,7 +3023,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<sheet>' +
-                        '<field name="p" context="{\'default_trululu\':active_id}">' +
+                        '<field name="p" context="{\'default_trululu\':active_id, \'current_id\':id}">' +
                             '<tree>' +
                                 '<field name="trululu"/>' +
                             '</tree>' +
@@ -3035,6 +3035,8 @@ QUnit.module('Views', {
             },
             mockRPC: function (route, args) {
                 if (args.method === 'default_get' && args.args[0][0] === 'trululu') {
+                  assert.strictEqual(args.kwargs.context.current_id, false,
+                      "current_id should be false");
                     assert.strictEqual(args.kwargs.context.default_trululu, false,
                         "default_trululu should be false");
                 }
