@@ -537,7 +537,7 @@ class Quant(models.Model):
                 if any(quant not in self for quant in package.get_content()):
                     all_in = False
                 if all_in:
-                    destinations = [product_to_location[product] for product in package.get_content().mapped('product_id')]
+                    destinations = set([product_to_location[product] for product in package.get_content().mapped('product_id')])
                     if len(destinations) > 1:
                         all_in = False
                 if all_in:
