@@ -943,8 +943,9 @@ QUnit.module('basic_fields', {
 
     QUnit.test('graph dashboard widget is rendered correctly', function (assert) {
         var done = assert.async();
-        assert.expect(3);
+        assert.expect(4);
 
+        var graph_key = "";
         _.extend(this.data.partner.fields, {
             graph_data: { string: "Graph Data", type: "text" },
             graph_type: {
@@ -967,6 +968,7 @@ QUnit.module('basic_fields', {
             key: 'A key',
             area: true,
         }]);
+        graph_key = JSON.parse(this.data.partner.records[0].graph_data)[0].key
         this.data.partner.records[1].graph_data = JSON.stringify([{
             color: 'blue',
             title: 'Partner 1',
@@ -1001,6 +1003,13 @@ QUnit.module('basic_fields', {
                 "graph of first record should be a barchart");
             assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_graph_linechart').length, 1,
                 "graph of second record should be a linechart");
+            
+            var evt = document.createEvent("MouseEvents"); //taken ref from https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
+            evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
+            $('.discreteBar')[0].dispatchEvent(evt)
+            var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText;
+            assert.equal(tooltip,graph_key, "graph tooltip should be generated ")
+            $('.nvtooltip').remove();
 
             // force a re-rendering of the first record (to check if the
             // previous rendered graph is correctly removed from the DOM)
