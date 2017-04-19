@@ -293,7 +293,7 @@
                             name="%(stock.action_stock_level_forecast_report_product)d"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-building-o">
-                            <div class="o_form_field o_stat_info">
+                            <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="virtual_available" widget="statinfo" nolabel="1"/>
                                     <span attrs="{'invisible':[('outgoing_qty', '=', 0),('incoming_qty','=',0)]}">
                                         (-<field name="outgoing_qty" widget="statinfo" nolabel="1"/>
@@ -318,11 +318,11 @@
                         <button name="%(product_open_orderpoint)d" type="action"
                             attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
                             class="oe_stat_button" icon="fa-refresh">
-                            <div class="o_form_field o_stat_info mr4">
+                            <div class="o_field_widget o_stat_info mr4">
                                 <span class="o_stat_text">Min :</span>
                                 <span class="o_stat_text">Max:</span>
                             </div>
-                            <div class="o_form_field o_stat_info">
+                            <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="reordering_min_qty"/></span>
                                 <span class="o_stat_value"><field name="reordering_max_qty"/></span>
                             </div>
@@ -357,7 +357,7 @@
                             name="%(stock.action_stock_level_forecast_report_template)d"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-building-o">
-                            <div class="o_form_field o_stat_info">
+                            <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="virtual_available" widget="integer"/>
                                     <span attrs="{'invisible':[('outgoing_qty', '=', 0),('incoming_qty','=',0)]}" groups="base.group_no_one">
                                         (-<field name="outgoing_qty" widget="integer"/>+<field name="incoming_qty" widget="integer"/>)
@@ -382,11 +382,11 @@
                             name="action_view_orderpoints"
                             attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '!=', 1)]}"
                             class="oe_stat_button" icon="fa-refresh">
-                            <div class="o_form_field o_stat_info mr4">
+                            <div class="o_field_widget o_stat_info mr4">
                                 <span class="o_stat_text">Min:</span>
                                 <span class="o_stat_text">Max:</span>
                             </div>
-                            <div class="o_form_field o_stat_info">
+                            <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="reordering_min_qty"/></span>
                                 <span class="o_stat_value"><field name="reordering_max_qty"/></span>
                             </div>

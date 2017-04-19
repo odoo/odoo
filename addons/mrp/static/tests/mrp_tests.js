@@ -43,10 +43,10 @@ QUnit.module('mrp', {
                 '</form>',
         });
 
-        assert.ok(form.$('.o_form_field').hasClass('o_form_field_pdfviewer'));
+        assert.ok(form.$('.o_field_widget').hasClass('o_field_pdfviewer'));
         assert.strictEqual(form.$('.o_select_file_button:not(.o_hidden)').length, 1,
             "there should be a visible 'Upload' button");
-        assert.ok(form.$('.o_form_field iframe.o_pdfview_iframe').hasClass('o_hidden'),
+        assert.ok(form.$('.o_field_widget iframe.o_pdfview_iframe').hasClass('o_hidden'),
             "there should be an invisible iframe");
 
         form.destroy();
@@ -72,12 +72,12 @@ QUnit.module('mrp', {
             }
         });
 
-        assert.ok(form.$('.o_form_field').hasClass('o_form_field_pdfviewer'));
+        assert.ok(form.$('.o_field_widget').hasClass('o_field_pdfviewer'));
         assert.strictEqual(form.$('.o_select_file_button:not(.o_hidden)').length, 0,
             "there should not be a any visible 'Upload' button");
-        assert.notOk(form.$('.o_form_field iframe.o_pdfview_iframe').hasClass('o_hidden'),
+        assert.notOk(form.$('.o_field_widget iframe.o_pdfview_iframe').hasClass('o_hidden'),
             "there should be an visible iframe");
-        assert.strictEqual(form.$('.o_form_field iframe.o_pdfview_iframe').attr('src'),
+        assert.strictEqual(form.$('.o_field_widget iframe.o_pdfview_iframe').attr('src'),
             '#test:/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1',
             "the src attribute should be correctly set on the iframe");
 
@@ -98,9 +98,9 @@ QUnit.module('mrp', {
                 '</form>',
         });
 
-        assert.strictEqual(form.$('.o_form_field').text(), "Waiting Materials",
+        assert.strictEqual(form.$('.o_field_widget').text(), "Waiting Materials",
             "the widget should be correctly named");
-        assert.strictEqual(form.$('.o_form_field .label-danger').length, 1,
+        assert.strictEqual(form.$('.o_field_widget .label-danger').length, 1,
             "the label should be danger");
 
         form.destroy();
@@ -133,7 +133,7 @@ QUnit.module('mrp', {
             },
         });
 
-        assert.strictEqual(form.$('.o_form_field[name="duration"]').text(), "02:30:00",
+        assert.strictEqual(form.$('.o_field_widget[name="duration"]').text(), "02:30:00",
             "the timer should be correctly set");
 
         form.destroy();

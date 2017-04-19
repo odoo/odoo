@@ -196,7 +196,7 @@ QUnit.test('chatter is not rendered in mode === create', function (assert) {
     assert.strictEqual(form.$('.o_chatter').length, 0,
         "chatter should not be displayed");
 
-    form.$('.o_form_input').val('coucou').trigger('input');
+    form.$('.o_field_char').val('coucou').trigger('input');
     form.$buttons.find('.o_form_button_save').click();
 
     assert.strictEqual(form.$('.o_chatter').length, 1,

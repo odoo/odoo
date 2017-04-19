@@ -351,7 +351,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
     events: {
         "keydown .o_composer_input textarea": "on_keydown",
         "keyup .o_composer_input": "on_keyup",
-        "change input.o_form_input_file": "on_attachment_change",
+        "change input.o_input_file": "on_attachment_change",
         "click .o_composer_button_send": "send_message",
         "click .o_composer_button_add_attachment": "on_click_add_attachment",
         "click .o_attachment_delete": "on_attachment_delete",
@@ -508,7 +508,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
 
     // Events
     on_click_add_attachment: function () {
-        this.$('input.o_form_input_file').click();
+        this.$('input.o_input_file').click();
         this.$input.focus();
     },
 

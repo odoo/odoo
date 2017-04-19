@@ -34,7 +34,7 @@
                     <button class="oe_stat_button" type="action" attrs="{'invisible': [('sale_amount_total', '=', 0)]}"
                             name="%(sale_action_quotations)d" icon="fa-usd"
                             context="{'search_default_partner_id': partner_id, 'default_partner_id': partner_id, 'search_default_sales': 1}">
-                        <div class="o_form_field o_stat_info">
+                        <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="sale_amount_total" widget="monetary" options="{'currency_field': 'company_currency'}"/></span>
                             <span class="o_stat_text"> Orders</span>
                         </div>

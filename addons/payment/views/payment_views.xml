@@ -31,13 +31,13 @@
                         <field name="module_state" invisible="1"/>
                         <div class="oe_button_box" name="button_box" attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
                             <button attrs="{'invisible': [('environment', '=', 'test')]}" class="oe_stat_button" name="toggle_enviroment_value" type="object" icon="fa-play">
-                                <div class="o_stat_info o_form_field">
+                                <div class="o_stat_info o_field_widget">
                                     <span  class="text-success">Production</span>
                                     <span class="o_stat_text">Environment</span>
                                 </div>
                             </button>
                             <button attrs="{'invisible': [('environment', '=', 'prod')]}" class="oe_stat_button" name="toggle_enviroment_value" type="object" icon="fa-stop">
-                                <div class="o_stat_info o_form_field">
+                                <div class="o_stat_info o_field_widget">
                                     <span class="o_warning_text">Test</span>
                                     <span class="o_stat_text">Environment</span>
                                 </div>

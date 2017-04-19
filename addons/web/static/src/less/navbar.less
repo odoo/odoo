@@ -1,10 +1,10 @@
 
 .o_main_navbar {
+    position: relative;
     height: @odoo-navbar-height;
     border: 1px solid @odoo-navbar-inverse-link-hover-bg;
     background-color: @odoo-brand-primary;
     color: white;
-    .box-shadow(0px 0px 8px @odoo-main-text-color);
 
     > a, > button {
         float: left;
@@ -26,6 +26,24 @@
         }
         &:focus, &:active, &:focus:active {
             outline: none;
+        }
+    }
+
+    > .o_menu_brand {
+        display: block;
+        float: left;
+        margin-right: 35px;
+        .user-select(none);
+        color: white;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: @odoo-navbar-height - 2;
+
+        @media (max-width: @screen-xs-max) {
+            float: none;
+            margin: 0;
+            border-bottom: 1px solid @odoo-navbar-inverse-link-hover-bg;
+            color: transparent;
         }
     }
 
@@ -60,6 +78,37 @@
                     outline: none;
                 }
             }
+
+            &.o_extra_menu_items {
+                > a {
+                    width: @odoo-navbar-height - 2;
+                    text-align: center;
+                }
+                &.open > ul {
+                    padding: 0;
+
+                    > li {
+                        > a {
+                            background-color: @odoo-brand-primary;
+                            color: white;
+                            border-bottom: 1px solid @odoo-brand-lightsecondary;
+
+                            &.dropdown-toggle {
+                                background-color: lighten(@odoo-brand-primary, 15%);
+                                pointer-events: none; // hack to prevent clicking on it because dropdown always opened
+                            }
+                        }
+                        > ul { // remove dropdown-menu default style as it is nested in another one
+                            position: static;
+                            float: none;
+                            display: block;
+                            border: none;
+                            box-shadow: none;
+                            max-height: none;
+                        }
+                    }
+                }
+            }
         }
 
         &.o_menu_systray {
@@ -69,10 +118,6 @@
                 right: 0;
             }
         }
-    }
-
-    .o_menu_brand {
-        display: none;
     }
 
     .open .dropdown-menu {
@@ -87,6 +132,10 @@
             .o-menu-indentation(@index + 1);
         }
         .o-menu-indentation(3);
+    }
+
+    .oe_topbar_avatar {
+        height: 15px;
     }
 
     @media (max-width: @screen-xs-max) {

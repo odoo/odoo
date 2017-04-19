@@ -81,9 +81,9 @@ var FieldMany2One = AbstractField.extend({
         'search_create_popup': '_onSearchCreatePopup',
     },
     events: _.extend({}, AbstractField.prototype.events, {
-        'click .o_form_input': '_onInputClick',
-        'focusout .o_form_input': '_onInputFocusout',
-        'keyup .o_form_input': '_onInputKeyup',
+        'click input': '_onInputClick',
+        'focusout input': '_onInputFocusout',
+        'keyup input': '_onInputKeyup',
         'click .o_external_button': '_onExternalButtonClick',
         'click': '_onClick',
     }),
@@ -106,7 +106,7 @@ var FieldMany2One = AbstractField.extend({
         // what is 'this.floating' for? add a comment!
         this.floating = false;
 
-        this.$input = this.$('.o_form_input');
+        this.$input = this.$('input');
         this.$external_button = this.$('.o_external_button');
         return this._super.apply(this, arguments);
     },
@@ -713,7 +713,7 @@ var FieldX2Many = AbstractField.extend({
                     onFailure: def.reject.bind(def),
                 });
             } else {
-                self.renderer.setRowMode(recordID, 'readonly', true);
+                self.renderer.setRowMode(recordID, 'readonly');
                 def.resolve();
             }
         });
@@ -819,7 +819,7 @@ var FieldX2Many = AbstractField.extend({
 });
 
 var FieldOne2Many = FieldX2Many.extend({
-    className: 'o_form_field_one2many',
+    className: 'o_field_one2many',
     supportedFieldTypes: ['one2many'],
 
     //--------------------------------------------------------------------------
@@ -937,7 +937,7 @@ var FieldOne2Many = FieldX2Many.extend({
 });
 
 var FieldMany2Many = FieldX2Many.extend({
-    className: 'o_form_field_many2many',
+    className: 'o_field_many2many',
     supportedFieldTypes: ['many2many'],
 
     /**
@@ -1019,7 +1019,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
     events: {
         'click .o_attach': '_onAttach',
         'click .oe_delete': '_onDelete',
-        'change .o_form_input_file': '_onFileChanged',
+        'change .o_input_file': '_onFileChanged',
     },
     /**
      * @constructor
@@ -1102,7 +1102,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
     _onAttach: function () {
         // This widget uses a hidden form to upload files. Clicking on 'Attach'
         // will simulate a click on the related input.
-        this.$('.o_form_input_file').click();
+        this.$('.o_input_file').click();
     },
     /**
      * @private
@@ -1196,7 +1196,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
 
 var FieldMany2ManyTags = AbstractField.extend({
     tag_template: "FieldMany2ManyTag",
-    className: "o_form_field o_form_field_many2manytags",
+    className: "o_field_many2manytags",
     supportedFieldTypes: ['many2many'],
     custom_events: {
         field_changed: '_onFieldChanged',
@@ -1204,11 +1204,22 @@ var FieldMany2ManyTags = AbstractField.extend({
     },
     events: _.extend({}, AbstractField.prototype.events, {
         'click .o_delete': '_onDeleteTag',
-        'keydown .o_form_field_many2one input': '_onKeyDown',
+        'keydown .o_field_many2one input': '_onKeyDown',
     }),
     fieldsToFetch: {
         color: {type: 'integer'},
         display_name: {type: 'char'},
+    },
+
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        if (this.mode === 'edit') {
+            this.className += ' o_input';
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1310,7 +1321,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         this.many2one._getSearchBlacklist = function () {
             return self.value.res_ids;
         };
-        this.many2one.appendTo(this.$el);
+        return this.many2one.appendTo(this.$el);
     },
     /**
      * @private
@@ -1445,7 +1456,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
     _render: function () {
         var self = this;
-        this.$el.addClass('o_form_field_many2manytags o_kanban_tags');
+        this.$el.addClass('o_field_many2manytags o_kanban_tags');
         _.each(this.value.data, function (m2m) {
             // 10th color is invisible
             if ('color' in m2m.data && m2m.data.color !== 10) {

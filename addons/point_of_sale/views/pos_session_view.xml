@@ -35,7 +35,7 @@
                         <button class="oe_stat_button" name="%(action_pos_box_in)d"
                             type="action" icon="fa-level-down"
                             attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', 'not in', ['opened', 'closing_control'])]}">
-                            <div class="o_form_field o_stat_info">
+                            <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Put</span>
                                 <span class="o_stat_text">Money In</span>
                             </div>
@@ -43,7 +43,7 @@
                         <button class="oe_stat_button" name="%(action_pos_box_out)d"
                             type="action" icon="fa-level-up"
                             attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', 'not in', ['opened', 'closing_control'])]}">
-                            <div class="o_form_field o_stat_info">
+                            <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Take</span>
                                 <span class="o_stat_text">Money Out</span>
                             </div>

@@ -52,7 +52,7 @@ var BasicRenderer = AbstractRenderer.extend({
             if (!canBeSaved) {
                 invalidFields.push(widget.name);
             }
-            widget.$el.toggleClass('o_form_invalid', !canBeSaved);
+            widget.$el.toggleClass('o_field_invalid', !canBeSaved);
         });
         return invalidFields;
     },
@@ -249,9 +249,9 @@ var BasicRenderer = AbstractRenderer.extend({
             }
 
             // Toggle modifiers CSS classes if necessary
-            element.$el.toggleClass("o_form_invisible", !!modifiers.invisible);
-            element.$el.toggleClass("o_readonly", !!modifiers.readonly);
-            element.$el.toggleClass("o_form_required", !!modifiers.required);
+            element.$el.toggleClass("o_invisible_modifier", !!modifiers.invisible);
+            element.$el.toggleClass("o_readonly_modifier", !!modifiers.readonly);
+            element.$el.toggleClass("o_required_modifier", !!modifiers.required);
 
             // Call associated callback
             if (element.callback) {
@@ -495,7 +495,15 @@ var BasicRenderer = AbstractRenderer.extend({
         // Update the modifiers registration by associating the widget and by
         // giving the modifiers options now (as the potential callback is
         // associated to new widget)
-        this._registerModifiers(node, record, widget, modifiersOptions);
+        this._registerModifiers(node, record, widget, _.extend({
+            callback: (function (element, modifiers, record) {
+                element.$el.toggleClass('o_field_empty', !!(
+                    record.data.id
+                    && (modifiers.readonly || this.mode === 'readonly')
+                    && !element.widget.isSet()
+                ));
+            }).bind(this),
+        }, modifiersOptions || {}));
 
         return widget;
     },

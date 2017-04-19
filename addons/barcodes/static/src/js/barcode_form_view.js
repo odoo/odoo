@@ -312,7 +312,7 @@ FormRenderer.include({
         var commands = {};
         commands.barcode = function () {return $.when();};
         commands['O-BTN.' + node.attrs.barcode_trigger] = function () {
-            if (!$button.hasClass('o_form_invisible')) {
+            if (!$button.hasClass('o_invisible_modifier')) {
                 $button.click();
             }
             return $.when();

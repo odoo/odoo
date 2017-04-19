@@ -184,7 +184,7 @@ var InputField = DebouncedField.extend({
      */
     _prepareInput: function ($input) {
         this.$input = $input || $("<input/>");
-        this.$input.addClass('o_form_input');
+        this.$input.addClass('o_input');
         this.$input.attr({
             type: 'text',
             placeholder: this.attrs.placeholder || "",
@@ -261,12 +261,13 @@ var InputField = DebouncedField.extend({
 });
 
 var FieldChar = InputField.extend({
-    supportedFieldTypes: ['char'],
+    className: 'o_field_char',
     tagName: 'span',
+    supportedFieldTypes: ['char'],
 });
 
 var FieldDate = InputField.extend({
-    className: "o_form_field_date",
+    className: "o_field_date",
     tagName: "span",
     supportedFieldTypes: ['date'],
 
@@ -411,7 +412,8 @@ var FieldDateTime = FieldDate.extend({
 });
 
 var FieldMonetary = InputField.extend({
-    className: 'o_form_field_monetary o_list_number',
+    className: 'o_field_monetary o_field_number',
+    tagName: 'span',
     supportedFieldTypes: ['float', 'monetary'],
     resetOnAnyFieldChange: true, // Have to listen to currency changes
 
@@ -436,6 +438,7 @@ var FieldMonetary = InputField.extend({
 
         if (this.mode === 'edit' && this.currency) {
             this.tagName = 'div';
+            this.className += ' o_input';
         }
     },
 
@@ -554,28 +557,18 @@ var FieldBoolean = AbstractField.extend({
     /**
      * The actual checkbox is designed in css to have full control over its
      * appearance, as opposed to letting the browser and the os decide how
-     * a checkbox should look. The actual input is disabled and hidden.
+     * a checkbox should look. The actual input is disabled and hidden. In
+     * readonly mode, the checkbox is disabled.
      *
      * @override
      * @private
      */
-    _renderReadonly: function () {
+    _render: function () {
         var $checkbox = this._formatValue(this.value);
         this.$input = $checkbox.find('input');
-        this.$el.empty().append($checkbox);
-    },
-
-    /**
-     * The actual checkbox is designed in css to have full control over its
-     * appearance, as opposed to letting the browser and the os decide how
-     * a checkbox should look. The actual input is hidden.
-     *
-     * @override
-     * @private
-     */
-    _renderEdit: function () {
-        this._renderReadonly();
-        this.$input.prop('disabled', false);
+        this.$input.prop('disabled', this.mode === 'readonly');
+        this.$el.addClass($checkbox.attr('class'));
+        this.$el.empty().append($checkbox.contents());
     },
 
     //--------------------------------------------------------------------------
@@ -591,7 +584,6 @@ var FieldBoolean = AbstractField.extend({
     _onChange: function () {
         this._setValue(this.$input[0].checked);
     },
-
     /**
      * Implement keyboard movements.  Mostly useful for its environment, such
      * as a list view.
@@ -624,6 +616,8 @@ var FieldBoolean = AbstractField.extend({
 });
 
 var FieldInteger = InputField.extend({
+    className: 'o_field_integer o_field_number',
+    tagName: 'span',
     supportedFieldTypes: ['integer'],
 
     //--------------------------------------------------------------------------
@@ -669,6 +663,8 @@ var FieldInteger = InputField.extend({
 });
 
 var FieldFloat = InputField.extend({
+    className: 'o_field_float o_field_number',
+    tagName: 'span',
     supportedFieldTypes: ['float'],
 
     /**
@@ -695,22 +691,6 @@ var FieldFloat = InputField.extend({
      */
     isSet: function () {
         return this.value === 0 || this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Format value according to precision parameter.
-     *
-     * @override
-     * @private
-     */
-    _renderReadonly: function () {
-        var value = this._formatValue(this.value);
-        var $span = $('<span>').addClass('o_form_field o_form_field_number').text(value);
-        this.$el.html($span);
     },
 });
 
@@ -743,21 +723,28 @@ var FieldFloatTime = FieldFloat.extend({
 });
 
 var FieldText = DebouncedField.extend({
+    className: 'o_field_text',
     supportedFieldTypes: ['text'],
 
     /**
-     * In edit mode, the text widget contains a textarea. We append it in
-     * start() instead of _renderEdit() to keep the same textarea even
-     * if several _renderEdit are done. This allows to keep the cursor
-     * position and to autoresize only once.
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        if (this.mode === 'edit') {
+            this.tagName = 'textarea';
+            this.className += ' o_input';
+        }
+    },
+    /**
+     * As it it done in the start function, the autoresize is done only once.
      *
      * @override
      */
     start: function () {
-        this.$el.addClass('o_list_text o_form_textarea');
-
         if (this.mode === 'edit') {
-            this.$textarea = $('<textarea>').appendTo(this.$el);
+            this.$textarea = this.$el;
             if (this.attrs.placeholder) {
                 this.$textarea.attr('placeholder', this.attrs.placeholder);
             }
@@ -816,13 +803,14 @@ var FieldText = DebouncedField.extend({
  * Displays a handle to modify the sequence.
  */
 var HandleWidget = AbstractField.extend({
-    tagName: 'span',
     className: 'o_row_handle fa fa-arrows ui-sortable-handle',
+    tagName: 'span',
     description: "",
     supportedFieldTypes: ['integer'],
 });
 
-var EmailWidget = InputField.extend({
+var FieldEmail = InputField.extend({
+    className: 'o_field_email',
     prefix: 'mailto',
     supportedFieldTypes: ['char'],
 
@@ -853,7 +841,8 @@ var EmailWidget = InputField.extend({
     }
 });
 
-var FieldPhone = EmailWidget.extend({
+var FieldPhone = FieldEmail.extend({
+    className: 'o_field_phone',
     prefix: 'tel',
 
     /**
@@ -907,6 +896,7 @@ var FieldPhone = EmailWidget.extend({
 });
 
 var UrlWidget = InputField.extend({
+    className: 'o_field_url',
     supportedFieldTypes: ['char'],
 
     /**
@@ -939,9 +929,9 @@ var UrlWidget = InputField.extend({
 
 var AbstractFieldBinary = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
-        'change .o_form_input_file': 'on_file_change',
+        'change .o_input_file': 'on_file_change',
         'click .o_select_file_button': function () {
-            this.$('.o_form_input_file').click();
+            this.$('.o_input_file').click();
         },
         'click .o_clear_file_button': 'on_clear',
     }),
@@ -1084,8 +1074,8 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                 this.on_save_as(event);
             }
         },
-        'click .o_form_input': function () { // eq[0]
-            this.$('.o_form_input_file').click();
+        'click .o_input': function () { // eq[0]
+            this.$('.o_input_file').click();
         },
     }),
     supportedFieldTypes: ['binary'],
@@ -1106,7 +1096,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         if (this.value) {
             this.$el.children().removeClass('o_hidden');
             this.$('.o_select_file_button').first().addClass('o_hidden');
-            this.$('.o_form_input').eq(0).val(this.filename_value || this.value);
+            this.$('.o_input').eq(0).val(this.filename_value || this.value);
         } else {
             this.$el.children().addClass('o_hidden');
             this.$('.o_select_file_button').first().removeClass('o_hidden');
@@ -1727,8 +1717,8 @@ var FieldToggleBoolean = AbstractField.extend({
      * @private
      */
     _render: function () {
-        var class_name = this.value ? 'o_toggle_button_success' : 'text-muted';
-        this.$('i').attr('class', ('fa fa-circle ' + class_name));
+        var className = this.value ? 'o_toggle_button_success' : 'text-muted';
+        this.$('i').addClass('fa fa-circle ' + className);
         var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
         this.$el.attr('title', title);
     },
@@ -1747,7 +1737,6 @@ var FieldToggleBoolean = AbstractField.extend({
         event.stopPropagation();
         this._setValue(!this.value);
     },
-
 });
 
 var JournalDashboardGraph = AbstractField.extend({
@@ -1891,7 +1880,7 @@ var FieldDomain = AbstractField.extend({
 
     events: _.extend({}, AbstractField.prototype.events, {
         "click .o_domain_show_selection_button": "_onShowSelectionButtonClick",
-        "click .o_form_field_domain_dialog_button": "_onDialogEditButtonClick",
+        "click .o_field_domain_dialog_button": "_onDialogEditButtonClick",
     }),
     custom_events: {
         "domain_changed": "_onDomainSelectorValueChange",
@@ -1907,7 +1896,7 @@ var FieldDomain = AbstractField.extend({
         this.inDialog = !!this.nodeOptions.in_dialog;
         this.fsFilters = this.nodeOptions.fs_filters || {};
 
-        this.className = "o_form_field_domain";
+        this.className = "o_field_domain";
         if (this.mode === "edit") {
             this.className += " o_edit_mode";
         }
@@ -2190,7 +2179,7 @@ var AceEditor = DebouncedField.extend({
 
 return {
     DebouncedField: DebouncedField,
-    EmailWidget: EmailWidget,
+    FieldEmail: FieldEmail,
     FieldBinaryFile: FieldBinaryFile,
     FieldBinaryImage: FieldBinaryImage,
     FieldBoolean: FieldBoolean,

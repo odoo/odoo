@@ -55,7 +55,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
                     {mode: 'edit'});
 
                 self.name.appendTo(self.$('.statement_name_edition')).then(function () {
-                    self.name.$el.addClass('o_form_required');
+                    self.name.$el.addClass('o_required_modifier');
                 });
                 self.$('.statement_name').text(self._initialState.bank_statement_id.display_name);
             });
@@ -458,7 +458,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.$('.create').append($create);
 
             function addRequiredStyle(widget) {
-                widget.$el.addClass('o_form_required');
+                widget.$el.addClass('o_required_modifier');
             }
         });
     },

@@ -56,7 +56,12 @@ return {
         if ($textarea.data("auto_resize")) {
             return;
         }
-        function resize () {
+
+        var $fixedTextarea;
+        var minHeight;
+
+        function resize() {
+            $fixedTextarea.insertAfter($textarea);
             var heightOffset;
             var style = window.getComputedStyle($textarea[0], null);
             if (style.boxSizing === 'content-box') {
@@ -64,28 +69,25 @@ return {
             } else {
                 heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
             }
-            $fixed_text_area.width($textarea.width());
-            $fixed_text_area.val($textarea.val());
-            var height = $fixed_text_area[0].scrollHeight;
-            $textarea.css({height: Math.max(height + heightOffset, min_height)});
+            $fixedTextarea.width($textarea.width());
+            $fixedTextarea.val($textarea.val());
+            var height = $fixedTextarea[0].scrollHeight;
+            $textarea.css({height: Math.max(height + heightOffset, minHeight)});
         }
 
         options = options || {};
+        minHeight = (options && options.min_height) || 50;
 
-        var $fixed_text_area;
-        var min_height = (options && options.min_height) || 50;
-        if (!$fixed_text_area) {
-            $fixed_text_area = $('<textarea disabled>').css({
-                position: 'absolute',
-                opacity: 0,
-                height: 10,
-                top: -10000,
-                left: -10000,
-            });
-            $fixed_text_area.addClass($textarea[0].className);
-            $fixed_text_area.insertAfter($textarea);
-            $fixed_text_area.data("auto_resize", true);
-        }
+        $fixedTextarea = $('<textarea disabled>', {
+            class: $textarea[0].className,
+        }).css({
+            position: 'absolute',
+            opacity: 0,
+            height: 10,
+            top: -10000,
+            left: -10000,
+        });
+        $fixedTextarea.data("auto_resize", true);
 
         var style = window.getComputedStyle($textarea[0], null);
         if (style.resize === 'vertical') {
@@ -101,7 +103,6 @@ return {
             core.bus.on('DOM_updated', options.parent, resize);
             core.bus.on('view_shown', options.parent, resize);
         }
-
     },
     /**
      * Detaches widgets from the DOM and performs their on_detach_callback()

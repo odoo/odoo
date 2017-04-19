@@ -1,10 +1,7 @@
 .o_form_view {
     background-color: @odoo-view-background-color;
 
-    // Utility classes (+ oe_edit_only, oe_read_only, o_label_nowrap, o_text_overflow)
-    .o_form_invisible, .o_form_field_empty {
-        display: none!important;
-    }
+    // Utility classes
     .oe_form_box_info {
         .bg-info;
         .o-webclient-padding(@top: 5px, @bottom: 5px);
@@ -21,11 +18,72 @@
     .oe_grey {
         opacity: 0.5;
     }
+    .oe_inline {
+        width: auto!important;
+        @media (min-width: @screen-xs-min) {
+            &.o_inner_group {
+                width: 1px!important;
+            }
+        }
+    }
+    .oe_left {
+        .oe_inline;
+        float: left!important;
+    }
+    .oe_right {
+        .oe_inline;
+        float: right!important;
+    }
+
+    @media (min-width: @screen-xs-min) {
+        .o_row {
+            &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
+                .o-flex-display();
+                width: auto!important;
+            }
+
+            .o-align-items(baseline);
+            min-width: 50px;
+            margin: 0 -@odoo-form-spacing-unit/2;
+
+            > div, > span, > button, > label, > a, > input { // > * did not add a level of priority to the rule
+                .o-flex(0, 0, auto);
+                width: auto!important;
+                margin-right: @odoo-form-spacing-unit/2;
+                margin-left: @odoo-form-spacing-unit/2;
+            }
+
+            > .o_row {
+                margin: 0;
+            }
+            > .btn {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            > .o_field_boolean {
+                .o-align-self(center);
+            }
+        }
+
+        .o_row .o_field_many2one, .o_field_many2one.oe_inline {
+            &.o_with_button:not(:last-child) { // If invisible element as last child, this line has no effect but that's not very important
+                margin-right: (35px + (@odoo-form-spacing-unit/2));
+            }
+        }
+    }
+
+    .o_row > div > .o_field_widget {
+        width: 100%;
+    }
 
     // Readonly specific rules
     &.o_form_readonly {
         .oe_edit_only {
-            .o_form_invisible;
+            display: none!important;
+        }
+
+        .o_row, .o_row > div {
+            display: inline-block;
         }
 
         .o_form_uri { // FIXME maybe global?
@@ -47,42 +105,63 @@
     // Editable specific rules
     &.o_form_editable {
         .oe_read_only {
-            .o_form_invisible;
+            display: none!important;
         }
 
-        .o_form_field_many2manytags {
-            .o-input();
+        .oe_title {
+            max-width: @container-sm - (2 * @odoo-horizontal-padding);
+        }
 
-            > .o_form_field {
-                .o-flex(1, 0, 100px);
-                position: initial;
-                max-width: 100%;
+        @media (min-width: @screen-xs-min) {
+            .o_row {
+                > .o_field_widget, > div {
+                    .o-flex(1, 1, auto);
+                    width: 0!important; // 3rd flex argument does not work with input (must be auto and real width 0)
 
-                > .o_form_input_dropdown > .o_form_input {
-                    border-style: none!important;
+                    &.o_field_boolean, &.o_priority {
+                        .o-flex(0, 0, auto);
+                        width: auto!important;
+                    }
                 }
-            }
-        }
-
-        .o_form_field_monetary {
-            .o-input();
-            .o-align-items(baseline);
-
-            > .o_form_input {
-                border-style: none!important;
-                width: 100px;
-                .o-flex(1, 0, auto);
             }
         }
     }
 
-    // Header containing status/workflow buttons
+    // Statusbar
     .o_form_statusbar {
-        background-color: @odoo-view-background-color;
+        .o-flex(0, 0, auto);
         position: relative; // Needed for the "More" dropdown
+        .o-flex-display();
+        .o-justify-content(space-between);
+        padding-left: @odoo-horizontal-padding;
         border-bottom: 1px solid @odoo-brand-secondary;
+        background-color: @odoo-view-background-color;
+
+        > .o_statusbar_buttons, > .o_statusbar_status {
+            .o-flex-display();
+            .o-align-items(center);
+            .o-align-content(space-around);
+        }
+
+        > .o_field_widget {
+            .o-align-self(center);
+            margin-bottom: 0px;
+        }
+
+        > .o_statusbar_buttons {
+            .o-flex-flow(row, wrap);
+
+            > .btn {
+                margin: 2px 3px 2px 0;
+            }
+        }
 
         > .o_statusbar_status {
+            .o-flex-flow(row-reverse, wrap-reverse);
+            .o-align-self(stretch);
+            .o-align-items(stretch);
+            overflow-x: hidden; // to prevent horizontal scroll due to last arrow
+
             > .o_arrow_button {
                 min-height: @odoo-statusbar-height;
                 font-size: 11px;
@@ -152,12 +231,33 @@
                     }
                 }
             }
+
             .o-status-more {
                 .o-position-absolute(100%, 0);
                 min-width: 100px;
                 > li > button {
                     width: 100%;
                     text-align: left;
+                }
+            }
+        }
+
+        // Touch device mode
+        > .o_statusbar_buttons > .btn-group {
+            > .dropdown-toggle {
+                &:after {
+                    .o-caret-down();
+                    margin-left: @odoo-form-spacing-unit;
+                }
+            }
+
+            > .dropdown-menu {
+                padding: 5px 0 2px 0;
+                min-width: 100px;
+
+                > li > .btn {
+                    min-width: 100%;
+                    margin-bottom: 3px;
                 }
             }
         }
@@ -177,6 +277,12 @@
 
     // Title
     .oe_title {
+        > h1, > h2, > h3 {
+            width: 100%; // Needed because inline-block when is a hx.o_row
+            margin-top: 0;
+            margin-bottom: 0;
+            line-height: inherit;
+        }
         .o_priority > .o_priority_star {
             font-size: inherit;
         }
@@ -184,23 +290,60 @@
 
     // Groups
     .o_group {
-        &.o_label_nowrap {
-            .o_form_label {
-                white-space: nowrap;
+        display: inline-block;
+        width: 100%;
+        margin: 10px 0;
+
+        // o_group contains nested groups
+        .o-generate-groups(@odoo-form-group-cols);
+        .o-generate-groups(@n, @i: 1) when (@i =< @n) {
+            .o_group_col_@{i} {
+                display: inline-block;
+                width: floor(100% / 12 * @i);
+                vertical-align: top;
+            }
+            .o-generate-groups(@n, @i + 1);
+        }
+
+        &.o_inner_group {
+            display: inline-table;
+
+            > tbody > tr > td {
+                &.o_td_label {
+                    width: 0%;
+                    padding: 0 15px 0 0;
+                    min-width: 150px;
+                }
+                vertical-align: top;
+
+                span, .o_field_boolean, .oe_avatar, .o_form_uri {
+                    &.o_field_widget {
+                        width: auto;
+                    }
+                }
             }
         }
 
         .o_form_label {
             font-weight: normal;
         }
+
+        .o_field_widget {
+            width: 100%;
+
+            > .btn {
+                .o-flex(0, 0, auto);
+                padding: 0 10px;
+            }
+        }
+
+        &.o_label_nowrap .o_form_label {
+            white-space: nowrap;
+        }
+
         .o_td_label .o_form_label {
             font-weight: bold;
             margin-right: 0px;
-        }
-    }
-    &.oe_form_configuration {
-        .o_group .o_form_label {
-            white-space: nowrap;
         }
     }
 
@@ -213,78 +356,33 @@
         }
     }
 
+    // Notebooks
+    .o_notebook {
+        clear: both; // For the notebook not to have alongside floating elements
+        margin-top: @odoo-form-spacing-unit * 2;
+
+        .nav-tabs > .tab-pane {
+            min-height: 100px;
+        }
+    }
+
     // Labels
     .o_form_label {
+        margin: 0 @odoo-form-spacing-unit 0 0;
         font-size: @font-size-base; // The label muse have the same size whatever their position
         line-height: @line-height-base;
-        margin-right: @odoo-form-spacing-unit;
-        &.o_form_invalid {
-            color: @brand-danger;
+    }
+
+    // Form fields
+    .o_field_widget {
+        margin-bottom: @odoo-form-spacing-unit;
+    }
+    .o_field_widget, .btn {
+        .o_field_widget {
+            margin-bottom: 0px;
         }
     }
 
-    // ace editor RO
-    .oe_form_field_text .oe_form_text_content {
-        white-space: pre-wrap;
-    }
-
-    // Tags
-    .o_form_field_many2manytags {
-        .badge {
-            cursor: pointer;
-            color: white;
-            font-size: 12px;
-            border: 0;
-
-            > ul {
-                @colored-tag-width: 45px;
-                width: 5*@colored-tag-width + 3px;
-                > li {
-                    float: left;
-                    color: black;
-                    > span {
-                        border-radius: 6px;
-                        width: @colored-tag-width;
-                        height: 30px;
-                        display: inline-block;
-                        border: 2px solid white;
-                        cursor: pointer;
-                        padding: 0;
-
-                        &:hover {
-                            opacity: 0.8;
-                        }
-                    }
-                }
-                > li:last-child {
-                    margin-top: 7px;
-                    cursor: auto;
-                }
-            }
-        }
-    }
-
-    .o_form_invalid {
-        &.o_form_input, .o_form_input, &.o_form_textarea, .o_form_textarea {
-            border-color: @brand-danger!important; // enterprise o_form_required rule overrides this without !important
-        }
-    }
-
-    // Boolean
-    .o_form_field_boolean {
-        margin: 0 @odoo-form-spacing-unit 0 0;
-    }
-
-    // Numbers
-    .o_form_field_number {
-        white-space: nowrap;
-    }
-
-    // Radio buttons
-    .o_form_field_radio .o_form_radio {
-        outline: none;
-    }
-    
     // Translate icon
     .o_field_translate {
         padding: 0;
@@ -299,160 +397,32 @@
             display: inline-block;
         }
     }
-    .o_form_field.o_form_invisible + .o_field_translate {
+    .o_field_widget.o_invisible_modifier + .o_field_translate {
         display: none;
     }
 
-    // Dropdowns input (many2one, ...)
-    .o_form_input_dropdown {
-        .o-flex(1, 0, auto);
-        position: relative;
-
-        > input {
-            padding-right: 15px;
-            cursor: pointer;
-        }
-
-        .o_dropdown_button {
-            pointer-events: none;
-            &:after {
-                .o-caret-down;
-            }
+    // Text field with oe_inline class
+    .o_field_text.oe_inline {
+        width: 100%!important;
+        @media (min-width: @screen-xs-min) {
+            width: 45%!important;
         }
     }
 
-    // Many2many tags
-    .badge .o_delete {
-        cursor: pointer;
-    }
-
-    // Image
-    .o_form_field_image {
-        position: relative;
-
-        .o_form_image_controls {
-            .o-position-absolute(0, 0);
+    // One2Many, Many2Many outside of group
+    .o_field_widget {
+        &.o_view_manager_content, &.o_field_one2many, &.o_field_many2many {
             width: 100%;
-
-            color: white;
-            background-color: @odoo-brand-optional;
-            opacity: 0;
-            transition: opacity ease 400ms;
-
-            > .fa {
-                margin: 5px;
-                cursor: pointer;
-            }
-        }
-        @media (max-width: @screen-xs-min) {
-            .o_form_image_controls{
-                position: initial;
-                opacity: 1;
-                > .fa{
-                    width: 50%;
-                    padding: 6px;
-                    margin: 0px;
-                    text-align: center;
-                    &.o_select_file_button{
-                        background: @odoo-brand-optional;
-                    }
-                    &.o_clear_file_button{
-                        background: @brand-danger;
-                    }
-                }
-            }
-        }
-
-        &:hover .o_form_image_controls {
-            opacity: 0.8;
-        }
-    }
-
-    // Input loading/file
-    .o_form_binary_progress, .o_hidden_input_file .o_form_input_file {
-        display: none;
-    }
-
-    // Timezone widget warning
-    .o_tz_warning {
-        color: @brand-danger;
-        cursor: help;
-        position: absolute;
-        margin-left: -40px;
-        margin-top: 5px;
-    }
-
-    // One2Many Kanban views
-    .o_form_field .o_kanban_view.o_kanban_ungrouped {
-        padding: 0;
-        .o_kanban_record {
-            box-shadow: none;
-        }
-    }
-
-    // One2Many List views
-    .o_form_field .o_list_view {
-        margin-bottom: 10px;
-
-        > tfoot > tr > td {
-            padding: 3px;
-            color: @odoo-main-text-color;
-        }
-    }
-    &.o_form_readonly .o_form_field .o_list_view .o_row_handle {
-        display: none;  // Hide the handler in non-edit mode
-    }
-
-    // Percent pie field
-    .o_form_field_percent_pie {
-        .o_pie {
-            position: relative;
-            border-radius: 100%;
-            overflow: hidden;
-            background-color: @odoo-brand-optional;
-
-            &:after { // Outside pie border to go over border-radius irregularities
-                content: " ";
-                .o-position-absolute(0, 0);
+            > div {
                 width: 100%;
-                height: 100%;
-                border-radius: 100%;
-            }
-
-            .o_mask {
-                .o-position-absolute(0, 0);
-                .o-transform-origin(0);
-                width: 50%;
-                height: 100%;
-                background-color: @odoo-view-background-color;
-                &.o_full {
-                    background-color: inherit;
-                }
-            }
-
-            .o_pie_value {
-                .o-flex-display();
-                .o-justify-content(center);
-                .o-align-items(center);
-
-                border-radius: 100%;
-
-                font-weight: 700;
-                color: @odoo-brand-primary;
             }
         }
-    }
-
-    // Attachments
-    .oe_attachment {
-        display: inline-block;
-        border: 1px solid @odoo-brand-lightsecondary;
-        margin: 0 @odoo-form-spacing-unit @odoo-form-spacing-unit 0;
-        padding: @odoo-form-spacing-unit;
     }
 
     // Specific style classes
     .o_group.o_inner_group.oe_subtotal_footer {
+        .oe_right;
+
         > tbody > tr > td {
             padding: 0;
 
@@ -470,7 +440,7 @@
                 }
             }
 
-            .o_form_field {
+            .o_field_widget {
                 text-align: right;
                 width: 100%;
             }
@@ -518,7 +488,7 @@
                 margin-right: 0;
             }
         }
-        > span.o_form_field {
+        > span.o_field_widget {
             width: auto;
         }
     }
@@ -556,12 +526,55 @@
         }
     }
 
-    // Notebooks
-    .o_notebook {
-        .nav-tabs {
-            > .tab-pane {
-                min-height: 100px;
-            }
+    // Boolean
+    .o_field_boolean {
+        margin: 0 @odoo-form-spacing-unit 0 0;
+    }
+
+    // Timezone widget warning
+    .o_tz_warning {
+        color: @brand-danger;
+        cursor: help;
+        position: absolute;
+        margin-left: -40px;
+        margin-top: 5px;
+    }
+
+    // One2Many Kanban views
+    .o_field_widget .o_kanban_view.o_kanban_ungrouped {
+        padding: 0;
+        .o_kanban_record {
+            box-shadow: none;
+        }
+    }
+
+    // One2Many List views
+    .o_field_widget .o_list_view {
+        margin-bottom: 10px;
+
+        > tfoot > tr > td {
+            padding: 3px;
+            color: @odoo-main-text-color;
+        }
+    }
+    &.o_form_readonly .o_field_widget .o_list_view .o_row_handle {
+        display: none;  // Hide the handler in non-edit mode
+    }
+
+    // Attachments
+    .oe_attachment {
+        display: inline-block;
+        border: 1px solid @odoo-brand-lightsecondary;
+        margin: 0 @odoo-form-spacing-unit @odoo-form-spacing-unit 0;
+        padding: @odoo-form-spacing-unit;
+    }
+
+    &.oe_form_configuration {
+        .o_group .o_form_label {
+            white-space: nowrap;
+        }
+        h2 {
+            margin-top: 32px !important;
         }
     }
 }
@@ -569,16 +582,30 @@
 // Overriden style when form view in modal
 .modal .modal-dialog {
     .o_form_view {
-        .o_form_sheet {
-            box-shadow: none;
-            width: 100%;
-            margin: 0 auto;
-            max-width: none;
+        .o_form_sheet_bg {
+            padding: 0;
+
+            > .o_form_sheet {
+                box-shadow: none;
+                width: 100%;
+                margin: 0 auto;
+                max-width: none;
+            }
+        }
+        .oe_chatter {
+            display: none;
         }
     }
+    &:not(.modal-lg) .o_form_view {
+        .o_group {
+            width: 100%;
+        }
+    }
+}
 
-    .o_form_invisible {
-        display: none!important;
+@media print {
+    .oe_button_box, .o_form_statusbar {
+        display: none !important;
     }
 }
 
@@ -619,10 +646,10 @@ label.o_light_label, .o_light_label label {
             margin-left: 30px;
             border-left: 1px solid #bbbbbb;
             padding-left: 10px;
-            .o_form_input_dropdown > .o_form_input {
+            .o_input_dropdown > .o_input {
                 width: 100%;
             }
-            .o_form_field {
+            .o_field_widget {
                 width: 50%;
             }
             button.btn-link {
@@ -630,8 +657,4 @@ label.o_light_label, .o_light_label label {
             }
         }
     }
-}
-
-.oe_form_configuration h2 {
-    margin-top: 32px !important;
 }
