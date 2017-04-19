@@ -13,6 +13,7 @@ var AbstractField = require('web.AbstractField');
 var basic_fields = require('web.basic_fields');
 var relational_fields = require('web.relational_fields');
 var registry = require('web.field_registry');
+var special_fields = require('web.special_fields');
 
 
 // Basic fields
@@ -62,5 +63,9 @@ registry
     .add('one2many', relational_fields.FieldOne2Many)
     .add('statusbar', relational_fields.FieldStatus)
     .add('one2many_list', relational_fields.FieldOne2Many);
+
+// Special fields
+registry
+    .add('timezone_mismatch', special_fields.FieldTimezoneMismatch);
 
 });
