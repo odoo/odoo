@@ -473,16 +473,18 @@ class MergePartnerAutomatic(osv.TransientModel):
     def _next_screen(self, cr, uid, this, context=None):
         this.refresh()
         values = {}
-        if this.line_ids:
-            # in this case, we try to find the next record.
-            current_line = this.line_ids[0]
-            current_partner_ids = literal_eval(current_line.aggr_ids)
-            values.update({
-                'current_line_id': current_line.id,
-                'partner_ids': [(6, 0, current_partner_ids)],
-                'dst_partner_id': self._get_ordered_partner(cr, uid, current_partner_ids, context)[-1].id,
-                'state': 'selection',
-            })
+        # in this case, we try to find the next record.
+        for current_line in this.line_ids:
+            ids = literal_eval(current_line.aggr_ids) or []
+            current_partner_ids = self.pool['res.partner'].search(cr, uid, [('id', 'in', ids)], context=context)
+            if len(current_partner_ids) >= 2:
+                values.update({
+                    'current_line_id': current_line.id,
+                    'partner_ids': [(6, 0, current_partner_ids)],
+                    'dst_partner_id': self._get_ordered_partner(cr, uid, current_partner_ids, context)[-1].id,
+                    'state': 'selection',
+                })
+                break
         else:
             values.update({
                 'current_line_id': False,
@@ -589,10 +591,12 @@ class MergePartnerAutomatic(osv.TransientModel):
         this.refresh()
 
         for line in this.line_ids:
-            partner_ids = literal_eval(line.aggr_ids)
-            self._merge(cr, uid, partner_ids, context=context)
-            line.unlink()
-            cr.commit()
+            ids = literal_eval(line.aggr_ids) or []
+            partner_ids = self.pool['res.partner'].search(cr, uid, [('id', 'in', ids)], context=context)
+            if len(partner_ids) >= 2:
+                self._merge(cr, uid, partner_ids, context=context)
+                line.unlink()
+                cr.commit()
 
         this.write({'state': 'finished'})
         return {
