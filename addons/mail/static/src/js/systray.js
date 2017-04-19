@@ -6,6 +6,8 @@ var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 
 var chat_manager = require('mail.chat_manager');
+var config = require('web.config');
+var web_client = require('web.web_client');
 
 var QWeb = core.qweb;
 
@@ -136,11 +138,20 @@ var MessagingMenu = Widget.extend({
     on_click_new_message: function () {
         chat_manager.bus.trigger('open_chat');
     },
+
     on_click_channel: function (event) {
         var channel_id = $(event.currentTarget).data('channel_id');
         var channel = chat_manager.get_channel(channel_id);
         if (channel) {
-            chat_manager.open_channel(channel);
+            if (config.device.size_class <= config.device.SIZES.SM) {
+                var options = { active_id : channel_id};
+                if(web_client.action_manager.action_stack.length &&_.last(web_client.action_manager.action_stack).action_descr.res_model == 'mail.channel'){
+                    options.clear_breadcrumbs = true;
+                }
+                chat_manager.open_expanded_window(options);
+            } else {
+                chat_manager.open_channel(channel);
+            }
         }
     },
 });

@@ -142,16 +142,36 @@ function open_chat_without_session () {
         new_chat_session.window.on('open_dm_session', null, function (partner_id) {
             new_chat_session.partner_id = partner_id;
             var dm = chat_manager.get_dm_from_partner_id(partner_id);
-            if (!dm) {
-                chat_manager.open_and_detach_dm(partner_id);
-            } else {
-                var dm_session = _.findWhere(chat_sessions, {id: dm.id});
-                if (!dm_session) {
-                    chat_manager.detach_channel(dm);
+            //  To open the discuss chat window in mobile view inplace of simple chat window
+            if (config.device.size_class <= config.device.SIZES.SM) {
+                var def = $.Deferred();
+                if (!dm) {
+                    chat_manager.create_channel(partner_id, "dm").then(function(res) {
+                        def.resolve(res.id);
+                    });
                 } else {
-                    close_chat(dm_session);
-                    dm.is_folded = false;
-                    open_chat(dm);
+                    def.resolve(dm.id);
+                }
+                def.then(function(channel_id){
+                    var options = { active_id: channel_id };
+                    if (web_client.action_manager.action_stack.length && _.last(web_client.action_manager.action_stack).action_descr.res_model == 'mail.channel'){
+                        options.clear_breadcrumbs = true;
+                    }
+                    chat_manager.open_expanded_window(options);
+                })
+                this.trigger("close_chat_session");
+            } else {
+                if (!dm) {
+                    chat_manager.open_and_detach_dm(partner_id);
+                } else {
+                    var dm_session = _.findWhere(chat_sessions, { id: dm.id });
+                    if (!dm_session) {
+                        chat_manager.detach_channel(dm);
+                    } else {
+                        close_chat(dm_session);
+                        dm.is_folded = false;
+                        open_chat(dm);
+                    }
                 }
             }
         });
