@@ -29,7 +29,7 @@ registry
     .add('float', basic_fields.FieldFloat)
     .add('char', basic_fields.FieldChar)
     .add('handle', basic_fields.HandleWidget)
-    .add('email', basic_fields.EmailWidget)
+    .add('email', basic_fields.FieldEmail)
     .add('phone', basic_fields.FieldPhone)
     .add('url', basic_fields.UrlWidget)
     .add('image', basic_fields.FieldBinaryImage)

@@ -29,7 +29,7 @@ ListRenderer.include({
         'click tbody tr:not(.o_data_row)': '_onEmptyRowClick',
         'click tfoot': '_onFooterClick',
         'click tr .o_list_record_delete': '_onTrashIconClick',
-        'click .o_form_field_x2many_list_row_add a': '_onAddRecord',
+        'click .o_field_x2many_list_row_add a': '_onAddRecord',
     }),
     /**
      * @override
@@ -90,31 +90,6 @@ ListRenderer.include({
         return this._super(recordID);
     },
     /**
-     * @see BasicRenderer.confirmChange
-     *
-     * We also react to changes by adding the 'o_field_dirty' css class,
-     * which changes its style to a visible orange outline. It allows the user
-     * to have a visual feedback on which fields changed, and on which fields
-     * have been saved.
-     *
-     * @todo maybe should be a basic behavior
-     *
-     * @override
-     * @param {Object} state - a record resource (the new full state)
-     * @param {string} id - the local id for the changed record
-     * @param {string[]} fields - list of modified fields
-     * @param {OdooEvent} e - the event that triggered the change
-     * @returns {Deferred}
-     */
-    confirmChange: function (state, id, fields, e) {
-        return this._super.apply(this, arguments).then(function (resetWidgets) {
-            _.each(resetWidgets, function (widget) {
-                var $td = widget.$el.parent();
-                $td.addClass('o_field_dirty');
-            });
-        });
-    },
-    /**
      * This method is called by the controller when the user has clicked 'save',
      * and the model as actually saved the current changes.  We then need to
      * set the correct values for each cell. The difference with confirmChange
@@ -172,9 +147,8 @@ ListRenderer.include({
      *
      * @param {string} recordID
      * @param {string} mode
-     * @param {boolean} [keepDirtyFlag=false]
      */
-    setRowMode: function (recordID, mode, keepDirtyFlag) {
+    setRowMode: function (recordID, mode) {
         var self = this;
         var rowIndex = _.findIndex(this.state.data, {id: recordID});
         if (rowIndex < 0) {
@@ -185,12 +159,18 @@ ListRenderer.include({
 
         this.currentRow = editMode ? rowIndex : null;
         var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
-        $row.toggleClass('o_selected_row', editMode);
 
         if (editMode) {
             // Instantiate column widgets and destroy potential readonly ones
             var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
             var $tds = $row.children('.o_data_cell');
+            // Force the size of each cell to its current value so that it
+            // won't change if its content changes, to prevent the view from
+            // flickering
+            $tds.each(function () {
+                var $td = $(this);
+                $td.css({width: $td.outerWidth()});
+            });
             _.each(this.columns, function (node, colIndex) {
                 var $td = $tds.eq(colIndex);
                 var $newTd = self._renderBodyCell(record, node, colIndex, {
@@ -203,18 +183,16 @@ ListRenderer.include({
                     self._unregisterModifiersElement(node, record, $td.children());
                 }
 
-                // Force the width of each cell to its current value so that it
-                // won't change if its content changes, to prevent the view from
-                // flickering
-                $td.width($td.width());
                 $td.empty().append($newTd.contents());
             });
             _.each(oldWidgets, this._destroyFieldWidget.bind(this, record));
         } else {
             for (var colIndex = 0; colIndex < this.columns.length; colIndex++) {
-                this._setCellValue(rowIndex, colIndex, keepDirtyFlag || false);
+                this._setCellValue(rowIndex, colIndex);
             }
         }
+
+        $row.toggleClass('o_selected_row', editMode); // Toggle here so that style is applied at the end
     },
 
     //--------------------------------------------------------------------------
@@ -310,7 +288,7 @@ ListRenderer.include({
             var $a = $('<a href="#">').text(_t("Add an item"));
             var $td = $('<td>')
                         .attr('colspan', this._getNumberOfCols())
-                        .addClass('o_form_field_x2many_list_row_add')
+                        .addClass('o_field_x2many_list_row_add')
                         .append($a);
             var $tr = $('<tr>').append($td);
             $rows.push($tr);
@@ -398,17 +376,13 @@ ListRenderer.include({
      *
      * @param {integer} rowIndex
      * @param {integer} colIndex
-     * @param {boolean} keepDirtyFlag
      */
-    _setCellValue: function (rowIndex, colIndex, keepDirtyFlag) {
+    _setCellValue: function (rowIndex, colIndex) {
         var record = this.state.data[rowIndex];
         var node = this.columns[colIndex];
 
         var $oldTd = this.$('.o_data_row:nth(' + rowIndex + ') > .o_data_cell:nth(' + colIndex + ')');
         var $newTd = this._renderBodyCell(record, node, colIndex, {mode: 'readonly'});
-        if (keepDirtyFlag && $oldTd.hasClass('o_field_dirty')) {
-            $newTd.addClass('o_field_dirty');
-        }
         this._unregisterModifiersElement(node, record, $oldTd);
         $oldTd.replaceWith($newTd);
 

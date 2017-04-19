@@ -74,7 +74,7 @@ QUnit.module('lunch', {
             },
         });
 
-        var widgetText = form.$('.o_form_field[name="previous_order_widget"]').text();
+        var widgetText = form.$('.o_field_widget[name="previous_order_widget"]').text();
         assert.ok(widgetText.indexOf('This is the first time you order a meal') !== -1,
             "the widget should display its no content text");
         assert.strictEqual(form.$('.o_lunch_vignette').length, 0,

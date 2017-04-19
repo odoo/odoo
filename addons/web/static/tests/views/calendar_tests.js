@@ -198,15 +198,15 @@ QUnit.module('Views', {
         var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(attendees))');
         assert.ok($attendeesFilter.length, "should display 'attendees' filter");
         assert.strictEqual($attendeesFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'attendees' who use write_model (2 saved + Everything)");
-        assert.ok($attendeesFilter.find('.o_form_field_many2one').length, "should display one2many search bar for 'attendees' filter");
+        assert.ok($attendeesFilter.find('.o_field_many2one').length, "should display one2many search bar for 'attendees' filter");
 
         // test search bar in filter
 
-        $sidebar.find('input.o_form_input').trigger('click');
+        $sidebar.find('input[type="text"]').trigger('click');
         assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').length, 2, "should display 2 choices in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
         $('ul.ui-autocomplete li:first').trigger('click');
         assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 4, "should display 4 filter items for 'attendees'");
-        $sidebar.find('input.o_form_input').trigger('click');
+        $sidebar.find('input[type="text"]').trigger('click');
         assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').text(), "partner 4", "should display the last choice in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
         $sidebar.find('.o_calendar_filter_item[data-id="1"] .o_remove').trigger('click');
         assert.ok($('.modal button.btn:contains(Ok)').length, "should display the confirm message");
@@ -503,28 +503,28 @@ QUnit.module('Views', {
         $('.modal input:first').val('new event').trigger('input');
         $('.modal button.btn:contains(Edit)').trigger('click');
 
-        assert.strictEqual($('.o_form_field[name="start"] input').val(), "12/13/2016 08:00:00",
+        assert.strictEqual($('.o_field_widget[name="start"] input').val(), "12/13/2016 08:00:00",
             "should display the datetime");
 
         $('.modal-lg .o_field_boolean[name="allday"] input').trigger('click');
 
-        assert.strictEqual($('.o_form_field[name="start_date"] input').val(), "12/13/2016",
+        assert.strictEqual($('.o_field_widget[name="start_date"] input').val(), "12/13/2016",
             "should display the date");
 
         $('.modal-lg .o_field_boolean[name="allday"] input').trigger('click');
 
-        assert.strictEqual($('.o_form_field[name="start"] input').val(), "12/13/2016 02:00:00",
+        assert.strictEqual($('.o_field_widget[name="start"] input').val(), "12/13/2016 02:00:00",
             "should display the datetime from the date with the timezone");
 
         // use datepicker to enter a date: 12/13/2016 08:00:00
-        $('.o_form_field[name="start"] input').trigger('click');
+        $('.o_field_widget[name="start"] input').trigger('click');
         $('.bootstrap-datetimepicker-widget .picker-switch a[data-action="togglePicker"]').trigger('click');
         $('.bootstrap-datetimepicker-widget .timepicker .timepicker-hour').trigger('click');
         $('.bootstrap-datetimepicker-widget .timepicker-hours td.hour:contains(08)').trigger('click');
         $('.bootstrap-datetimepicker-widget .picker-switch a[data-action="close"]').trigger('click');
 
         // use datepicker to enter a date: 12/13/2016 10:00:00
-        $('.o_form_field[name="stop"] input').trigger('click');
+        $('.o_field_widget[name="stop"] input').trigger('click');
         $('.bootstrap-datetimepicker-widget .picker-switch a[data-action="togglePicker"]').trigger('click');
         $('.bootstrap-datetimepicker-widget .timepicker .timepicker-hour').trigger('click');
         $('.bootstrap-datetimepicker-widget .timepicker-hours td.hour:contains(10)').trigger('click');

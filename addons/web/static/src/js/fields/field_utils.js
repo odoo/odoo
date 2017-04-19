@@ -35,13 +35,16 @@ var _t = core._t;
  * @returns {jQueryElement}
  */
 function formatBoolean(value) {
-    var $input = $('<input type="checkbox">')
-                .prop('checked', value)
-                .prop('disabled', true);
-    return $('<div>')
-                .addClass('o_checkbox')
-                .append($input)
-                .append($('<span>'));
+    var $input = $('<input/>', {
+        type: 'checkbox',
+    }).prop({
+        checked: value,
+        disabled: true,
+    });
+    var $div = $('<div/>', {
+        class: 'o_checkbox',
+    });
+    return $div.append($input, '<span/>');
 }
 
 /**
@@ -342,7 +345,7 @@ function parseDateTime(value, field, options) {
     var pattern2 = datePatternWoZero + ' ' + timePatternWoZero;
     var datetime;
     if (options && options.isUTC) {
-        // phatomjs crash if we don't use this format 
+        // phatomjs crash if we don't use this format
         datetime = moment.utc(value.replace(' ', 'T') + 'Z');
     } else {
         datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601], true);

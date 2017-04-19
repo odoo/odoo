@@ -403,11 +403,11 @@ QUnit.module('Views', {
 
         assert.strictEqual($('.modal .o_form_view.o_form_editable').length, 1,
             "a form view dialog should have been opened (in edit)");
-        assert.strictEqual($('.modal .o_form_field_many2one input').val(), 'hello',
+        assert.strictEqual($('.modal .o_field_many2one input').val(), 'hello',
             "the correct product_id should already be set");
 
         // specify a name and save
-        $('.modal .o_form_input[name=foo]').val('test').trigger('input');
+        $('.modal input[name=foo]').val('test').trigger('input');
         $('.modal-footer .btn-primary').click();
 
         assert.strictEqual($('.modal').length, 0, "the modal should be closed");
@@ -445,7 +445,7 @@ QUnit.module('Views', {
         });
 
         var $first_record = kanban.$('.o_kanban_record:first()');
-        assert.strictEqual($first_record.find('.o_form_field_many2manytags .o_tag').length, 2,
+        assert.strictEqual($first_record.find('.o_field_many2manytags .o_tag').length, 2,
             'first record should contain 2 tags');
         assert.ok($first_record.find('.o_tag:first()').hasClass('o_tag_color_2'),
             'first tag should have color 2');
@@ -751,9 +751,9 @@ QUnit.module('Views', {
         // edit the title of column [5, 'xmo'] and close without saving
         kanban.$('.o_kanban_group[data-id=5] .o_column_edit').click(); // click on 'Edit'
         assert.ok($('.modal .o_form_editable').length, 'a form view should be open in a modal');
-        assert.strictEqual($('.modal .o_form_editable .o_form_input').val(), 'xmo',
+        assert.strictEqual($('.modal .o_form_editable input').val(), 'xmo',
             'the name should be "xmo"');
-        $('.modal .o_form_editable .o_form_input').val('ged').trigger('input'); // change the value
+        $('.modal .o_form_editable input').val('ged').trigger('input'); // change the value
         nbRPCs = 0;
         $('.modal .modal-header .close').click(); // click on the cross to close the modal
         assert.ok(!$('.modal').length, 'the modal should be closed');
@@ -763,7 +763,7 @@ QUnit.module('Views', {
 
         // edit the title of column [5, 'xmo'] and discard
         kanban.$('.o_kanban_group[data-id=5] .o_column_edit').click(); // click on 'Edit'
-        $('.modal .o_form_editable .o_form_input').val('ged').trigger('input'); // change the value
+        $('.modal .o_form_editable input').val('ged').trigger('input'); // change the value
         nbRPCs = 0;
         $('.modal .modal-footer .btn-default').click(); // click on discard
         assert.ok(!$('.modal').length, 'the modal should be closed');
@@ -773,7 +773,7 @@ QUnit.module('Views', {
 
         // edit the title of column [5, 'xmo'] and save
         kanban.$('.o_kanban_group[data-id=5] .o_column_edit').click(); // click on 'Edit'
-        $('.modal .o_form_editable .o_form_input').val('ged').trigger('input'); // change the value
+        $('.modal .o_form_editable input').val('ged').trigger('input'); // change the value
         nbRPCs = 0;
         $('.modal .modal-footer .btn-primary').click(); // click on save
         assert.ok(!$('.modal').length, 'the modal should be closed');

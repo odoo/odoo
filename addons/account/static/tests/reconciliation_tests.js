@@ -512,7 +512,7 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.create').length, 1, "should have 'create' panel");
 
         assert.strictEqual(widget.$('thead').text().replace(/[\n\r\s]+/g, ' '), " 101401 2017-01-01 SAJ/2014/002 and SAJ/2014/003 $ 1,175.00 ", "should display the line information");
-        assert.ok(widget.$('caption .o_form_field.o_form_field_many2one').length, "should display the many2one with to select a partner");
+        assert.ok(widget.$('caption .o_field_many2one').length, "should display the many2one with to select a partner");
 
         assert.strictEqual(clientAction.$('[data-mode="inactive"]').length, 3, "should be as 'inactive' mode by default");
         assert.strictEqual(widget.$el.data('mode'), 'match', "the first one should automatically switch to match mode");
@@ -540,12 +540,12 @@ QUnit.module('account', {
 
         var widget = clientAction.widgets[0];
 
-        assert.strictEqual(widget.$('.o_form_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
-        assert.strictEqual(clientAction.widgets[2].$('.o_form_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
+        assert.strictEqual(clientAction.widgets[2].$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
         widget.$('.accounting_view tfoot td:first').trigger('click');
-        assert.strictEqual(widget.$('.create .o_form_input').length, 6,
+        assert.strictEqual(widget.$('.create .o_input').length, 6,
             "create panel should display 5 fields (account_id, tax_id, analytic_account_id, label, amount)");
-        assert.strictEqual(widget.$('.create .create_account_id .o_form_required, .create .create_label .o_form_required, .create .create_amount .o_form_required').length, 3,
+        assert.strictEqual(widget.$('.create .create_account_id .o_required_modifier, .create .create_label .o_required_modifier, .create .create_amount .o_required_modifier').length, 3,
             "account_id, label and amount should be required fields");
         assert.strictEqual(widget.$('.create .create_label input').val(), 'SAJ/2014/002 and SAJ/2014/003',
             "should use the name of the reconciliation line for the default label value");

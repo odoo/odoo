@@ -255,25 +255,25 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="%(mrp_workcenter_productivity_report_oee)d" type="action" class="oe_stat_button" icon="fa-pie-chart">
-                                <div class="o_form_field o_stat_info">
+                                <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value"><field name="oee" widget="statinfo" nolabel="1"/>%</span>
                                     <span class="o_stat_text">OEE</span>
                                 </div>
                             </button>
                             <button name="%(mrp_workcenter_productivity_report_blocked)d" type="action" class="oe_stat_button" icon="fa-bar-chart">
-                                <div class="o_form_field o_stat_info">
+                                <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value"><field name="blocked_time" widget="statinfo" nolabel="1"/> hour(s)</span>
                                     <span class="o_stat_text">Lost</span>
                                 </div>
                             </button>
                             <button name="%(action_mrp_workcenter_load_report_graph)d" type="action" class="oe_stat_button" icon="fa-bar-chart" context="{'search_default_workcenter_id': active_id}">
-                                <div class="o_form_field o_stat_info">
+                                <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value"><field name="workcenter_load" widget="statinfo" nolabel="1"/> minute(s)</span>
                                     <span class="o_stat_text">Work Center Load</span>
                                 </div>
                             </button>
                             <button name="%(mrp_workorder_report)d" type="action" class="oe_stat_button" icon="fa-bar-chart" context="{'search_default_workcenter_id': active_id, 'search_default_thisyear': True}">
-                                <div class="o_form_field o_stat_info">
+                                <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value"><field name="performance" widget="statinfo" nolabel="1"/>%</span>
                                     <span class="o_stat_text">Performance</span>
                                 </div>

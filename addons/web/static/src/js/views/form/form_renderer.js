@@ -8,10 +8,6 @@ var core = require('web.core');
 var _t = core._t;
 var qweb = core.qweb;
 
-var FIELD_CLASSES = {
-    'one2many': 'o_field_one2many',
-};
-
 var FormRenderer = BasicRenderer.extend({
     className: "o_form_view",
     /**
@@ -27,7 +23,7 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Extend the method so that labels also receive the 'o_form_invalid' class
+     * Extend the method so that labels also receive the 'o_field_invalid' class
      * if necessary.
      *
      * @override
@@ -40,14 +36,14 @@ var FormRenderer = BasicRenderer.extend({
         var fieldNames = this._super.apply(this, arguments);
 
         var $labels = this.$('label');
-        $labels.removeClass('o_form_invalid');
+        $labels.removeClass('o_field_invalid');
 
         _.each(fieldNames, function (fieldName) {
             var idForLabel = self.idsForLabels[fieldName];
             if (idForLabel) {
                 $labels
                     .filter('[for=' + idForLabel + ']')
-                    .addClass('o_form_invalid');
+                    .addClass('o_field_invalid');
             }
         });
         return fieldNames;
@@ -66,7 +62,7 @@ var FormRenderer = BasicRenderer.extend({
             _.each(resetWidgets, function (widget) {
                 self._setIDForLabel(widget, self.idsForLabels[widget.name]);
             });
-            return resetWidgets
+            return resetWidgets;
         });
     },
     /**
@@ -105,7 +101,7 @@ var FormRenderer = BasicRenderer.extend({
             var name = $notebook.data('name');
             if (name in state) {
                 var $page = $notebook.find('> ul > li').eq(state[name]);
-                if (!$page.hasClass('o_form_invisible')) {
+                if (!$page.hasClass('o_invisible_modifier')) {
                     $page.find('a[data-toggle="tab"]').click();
                 }
             }
@@ -137,15 +133,6 @@ var FormRenderer = BasicRenderer.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Adds the adequate classnames to a field widget's $el.
-     *
-     * @private
-     * @param {Object} widget a field widget
-     */
-    _addFieldClassNames: function (widget) {
-        widget.$el.addClass('o_form_field'); // TODO will be removed in the CSS update
-    },
     /**
      * @private
      * @param {jQueryElement} $el
@@ -207,7 +194,7 @@ var FormRenderer = BasicRenderer.extend({
             }
         });
         var buttons_partition = _.partition(buttons, function ($button) {
-            return $button.is('.o_form_invisible');
+            return $button.is('.o_invisible_modifier');
         });
         var invisible_buttons = buttons_partition[0];
         var visible_buttons = buttons_partition[1];
@@ -261,22 +248,8 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {AbstractField}
      */
     _renderFieldWidget: function (node, record, options, modifiersOptions) {
-        var self = this;
-        modifiersOptions = _.extend({
-            callback: function (element, modifiers, record) {
-                element.$el.toggleClass('o_form_field_empty', !!( // FIXME condition is evaluated twice (label AND widget...)
-                    record.data.id
-                    && (modifiers.readonly || self.mode === 'readonly')
-                    && !element.widget.isSet()
-                ));
-            },
-        }, modifiersOptions || {});
-
-        var widget = this._super(node, record, options, modifiersOptions);
+        var widget = this._super.apply(this, arguments);
         this._setIDForLabel(widget, this._getIDForLabel(node.attrs.name));
-
-        widget.$el.addClass(FIELD_CLASSES[record.fields[node.attrs.name].type]);
-        this._addFieldClassNames(widget);
         this._handleAttributes(widget.$el, node);
         if (JSON.parse(node.attrs.default_focus || "0")) {
             this.defaultFocusField = widget;
@@ -344,7 +317,7 @@ var FormRenderer = BasicRenderer.extend({
             });
             this._registerModifiers(node, this.state, $label, {
                 callback: function (element, modifiers, record) {
-                    element.$el.toggleClass('o_form_label_empty', !!(
+                    element.$el.toggleClass('o_form_label_empty', !!( // FIXME condition is evaluated twice (label AND widget...)
                         record.data.id
                         && (modifiers.readonly || self.mode === 'readonly')
                         && !widget.isSet() // getting like this because it could have been re-rendered...
@@ -656,7 +629,7 @@ var FormRenderer = BasicRenderer.extend({
                     if (modifiers.invisible && element.$el.hasClass('active')) {
                         element.$el.removeClass('active');
                         tab.$page.removeClass('active');
-                        var $firstVisibleTab = $headers.find('li:not(.o_form_invisible):first()');
+                        var $firstVisibleTab = $headers.find('li:not(.o_invisible_modifier):first()');
                         $firstVisibleTab.addClass('active');
                         $pages.find($firstVisibleTab.find('a').attr('href')).addClass('active');
                     }

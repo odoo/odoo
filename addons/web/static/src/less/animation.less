@@ -1,4 +1,4 @@
-/************** DEFINITION of ANIMATIONS *************/
+/************** DEFINITION of ANIMATIONS **************/
 // 'marked' effects
 @keyframes markAnim {
     0% {
@@ -145,51 +145,32 @@
   }
 }
 
-/************** MIXINS for ANIMATIONS *************/
+/************** MIXINS for ANIMATIONS **************/
 .o-display-marked(@content, @top, @left, @color) {
-    position: absolute;
-    top: @top;
-    left: @left;
+    .o-position-absolute(@top: @top, @left: @left);
     font-size: 300px;
     font-family: "FontAwesome";
     content: @content;
     color: @color;
-    animation: markAnim ease-in-out 1s;
-    animation-iteration-count: 1;
-    transform-origin: 50% 50%;
-    animation-fill-mode:forwards; /*when the spec is finished*/
-    -webkit-animation: markAnim ease-in-out 1s;
-    -webkit-animation-iteration-count: 1;
-    -webkit-transform-origin: 50% 50%;
-    -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/
-    -moz-animation: markAnim ease-in-out 1s;
-    -moz-animation-iteration-count: 1;
-    -moz-transform-origin: 50% 50%;
-    -moz-animation-fill-mode:forwards; /*FF 5+*/
-    -o-animation: markAnim ease-in-out 1s;
-    -o-animation-iteration-count: 1;
-    -o-transform-origin: 50% 50%;
-    -o-animation-fill-mode:forwards; /*Not implemented yet*/
-    -ms-animation: markAnim ease-in-out 1s;
-    -ms-animation-iteration-count: 1;
-    -ms-transform-origin: 50% 50%;
-    -ms-animation-fill-mode:forwards; /*IE 10+*/
+    .o-transform-origin();
+    .o-animation(markAnim, 1s, ease-in-out, 0s, 1, normal, forwards);
 
-    @media (max-width: 992px) {
+    @media (max-width: @screen-sm-max) {
         left: 40%;
         font-size: 30vw;
     }
 }
 
-
-/************** USAGE of ANIMATIONS *************/
+/************** USAGE of ANIMATIONS **************/
 // Animation on wow button
+// TODO the only difference here is the "content" property, just make an
+// 'o_wow' class for the other properties to avoid generating useless CSS
 .o_wow_thumbs:after {
-    .o-display-marked("\f164", 20%, 40%, #21b799);
+    .o-display-marked("\f164", 20%, 40%, @odoo-brand-optional);
 }
 .o_wow_peace:after {
-    .o-display-marked("\f118", 20%, 40%, #21b799);
+    .o-display-marked("\f118", 20%, 40%, @odoo-brand-optional);
 }
 .o_wow_heart:after {
-    .o-display-marked("\f004", 20%, 40%, #21b799);
+    .o-display-marked("\f004", 20%, 40%, @odoo-brand-optional);
 }

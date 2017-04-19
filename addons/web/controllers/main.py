@@ -946,12 +946,6 @@ class View(http.Controller):
         })
         return {'result': True}
 
-class TreeView(View):
-
-    @http.route('/web/treeview/action', type='json', auth="user")
-    def action(self, model, id):
-        return load_actions_from_ir_values('tree_but_open', model, id)
-
 class Binary(http.Controller):
 
     def placeholder(self, image='placeholder.png'):

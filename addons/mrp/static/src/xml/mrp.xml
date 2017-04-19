@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="FieldPdfViewer">
-        <div class="o_form_field_pdfviewer">
+        <div class="o_field_pdfviewer">
             <div t-if="widget.mode !== 'readonly'" class="o_form_pdf_controls mt8">
                 <span class="o_form_binary_progress">Uploading...</span>
                 <button type="button" class="btn btn-sm btn-primary o_select_file_button" title="Select">Upload your file</button>
                 <button class="btn btn-sm btn-default fa fa-pencil o_select_file_button" title="Select" type="button"></button>
                 <button class="btn btn-sm btn-default fa fa-trash-o o_clear_file_button" title="Clear" type="button"></button>
             </div>
-            <iframe class="o_pdfview_iframe o_form_field_pdfviewer"/>
+            <iframe class="o_pdfview_iframe o_field_pdfviewer"/>
             <t t-call="HiddenInputPDFFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                 <t t-set="fileupload_style" t-translation="off">overflow-x: hidden</t>
@@ -17,7 +17,7 @@
     </t>
     <t t-extend="HiddenInputFile" t-name="HiddenInputPDFFile">
         <t t-jquery="input[type='file']:first" t-operation="replace">
-            <input type="file" class="o_form_input_file" name="ufile" accept="application/pdf" />
+            <input type="file" class="o_input_file" name="ufile" accept="application/pdf" />
         </t>
     </t>
 </templates>

@@ -24,7 +24,7 @@ tour.register('sale_tour', {
     content: _t("Let's create a new quotation.<br/><i>Note that colored buttons usually point to the next logical actions.</i>"),
     position: "right",
 }, {
-    trigger: ".o_form_required input",
+    trigger: ".o_required_modifier input",
     extra_trigger: ".o_sale_order",
     content: _t("Write the name of your customer to create one on the fly, or select an existing one."),
     position: "top",
@@ -34,12 +34,12 @@ tour.register('sale_tour', {
     auto: true,
     in_modal: false,
 }, {
-    trigger: ".o_form_field_x2many_list_row_add > a",
+    trigger: ".o_field_x2many_list_row_add > a",
     extra_trigger: ".o_sale_order",
     content: _t("Click here to add some lines to your quotations."),
     position: "bottom",
 }, {
-    trigger: ".modal-body .o_form_required input, .o_list_view .o_form_required input",
+    trigger: ".modal-body .o_required_modifier input, .o_list_view .o_required_modifier input",
     extra_trigger: ".o_sale_order",
     content: _t("Select a product, or create a new one on the fly. The product will define the default sales price (that you can change), taxes and description automatically."),
     position: "right",

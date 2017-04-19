@@ -216,7 +216,7 @@ var FieldTextHtml = AbstractField.extend({
         // init resize
         this.resize = function resize() {
             if (self.mode === 'edit') {
-                if ($("body").hasClass("o_form_FieldTextHtml_fullscreen")) {
+                if ($("body").hasClass("o_field_widgetTextHtml_fullscreen")) {
                     self.$iframe.css('height', (document.body.clientHeight - self.$iframe.offset().top) + 'px');
                 } else {
                     self.$iframe.css("height", (self.$body.find("#oe_snippets").length ? 500 : 300) + "px");
@@ -348,8 +348,8 @@ var FieldTextHtml = AbstractField.extend({
         $(QWeb.render('web_editor.FieldTextHtml.fullscreen'))
             .appendTo($to)
             .on('click', '.o_fullscreen', function () {
-                $("body").toggleClass("o_form_FieldTextHtml_fullscreen");
-                var full = $("body").hasClass("o_form_FieldTextHtml_fullscreen");
+                $("body").toggleClass("o_field_widgetTextHtml_fullscreen");
+                var full = $("body").hasClass("o_field_widgetTextHtml_fullscreen");
                 self.$iframe.parents().toggleClass('o_form_fullscreen_ancestor', full);
                 $(window).trigger("resize"); // induce a resize() call and let other backend elements know (the navbar extra items management relies on this)
             });

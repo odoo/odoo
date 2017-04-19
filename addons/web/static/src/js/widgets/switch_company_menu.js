@@ -34,9 +34,9 @@ var SwitchCompanyMenu = Widget.extend({
         _.each(session.user_companies.allowed_companies, function(company) {
             var a = '';
             if (company[0] === session.user_companies.current_company[0]) {
-                a = '<i class="fa fa-check o_current_company"></i>';
+                a = '<i class="fa fa-check mr8"></i>';
             } else {
-                a = '<span class="o_company"/>';
+                a = '<span class="mr24"/>';
             }
             companies_list += '<li><a href="#" data-menu="company" data-company-id="' + company[0] + '">' + a + company[1] + '</a></li>';
         });

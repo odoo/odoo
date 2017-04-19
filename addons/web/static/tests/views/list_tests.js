@@ -302,17 +302,17 @@ QUnit.module('Views', {
         $td.click();
         assert.ok($td.parent().hasClass('o_selected_row'),
             "row should be in edit mode");
-        assert.ok($td.hasClass('o_readonly'),
+        assert.ok($td.hasClass('o_readonly_modifier'),
             "foo cell should be readonly in edit mode");
-        assert.ok(!$second_td.hasClass('o_readonly'),
+        assert.ok(!$second_td.hasClass('o_readonly_modifier'),
             "bar cell should be editable");
-        assert.ok($third_td.hasClass('o_readonly'),
+        assert.ok($third_td.hasClass('o_readonly_modifier'),
             "int_field cell should be readonly in edit mode");
         list.destroy();
     });
 
     QUnit.test('basic operations for editable list renderer', function (assert) {
-        assert.expect(4);
+        assert.expect(2);
 
         var list = createView({
             View: ListView,
@@ -325,9 +325,6 @@ QUnit.module('Views', {
         assert.ok(!$td.parent().hasClass('o_selected_row'), "td should not be in edit mode");
         $td.click();
         assert.ok($td.parent().hasClass('o_selected_row'), "td should be in edit mode");
-        assert.ok(!$td.hasClass('o_field_dirty'), "td should not be dirty");
-        $td.find('input').val('abc').trigger('input');
-        assert.ok($td.hasClass('o_field_dirty'), "td should be dirty");
         list.destroy();
     });
 
@@ -1085,9 +1082,9 @@ QUnit.module('Views', {
 
         // edit first row
         list.$('tbody tr:nth(0) td:nth(2)').click(); // click on first row to edit it
-        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(4) input.o_form_invisible').length, 1,
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(4) input.o_invisible_modifier').length, 1,
             "td that contains an invisible field should not be empty in edition");
-        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > button.o_form_invisible').length, 1,
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > button.o_invisible_modifier').length, 1,
             "td that contains an invisible button should not be empty in edition");
         list.$buttons.find('.o_list_button_discard').click(); // leave edition
 
@@ -1161,16 +1158,16 @@ QUnit.module('Views', {
             arch: '<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>',
         });
 
-        assert.ok(list.$('.o_data_row:first td:nth(1)').hasClass('o_readonly'),
-            "foo field cells should have class 'o_readonly'");
+        assert.ok(list.$('.o_data_row:first td:nth(1)').hasClass('o_readonly_modifier'),
+            "foo field cells should have class 'o_readonly_modifier'");
 
         // edit the first row
         list.$('.o_data_row:first td:nth(1)').click();
         assert.ok(list.$('.o_data_row:first').hasClass('o_selected_row'),
             "first row should be selected");
         var $cell = list.$('.o_data_row:first td:nth(1)');
-        assert.ok($cell.hasClass('o_readonly') && $cell.parent().hasClass('o_selected_row'),
-            "foo field cells should have class 'o_readonly' and the row should be in edition");
+        assert.ok($cell.hasClass('o_readonly_modifier') && $cell.parent().hasClass('o_selected_row'),
+            "foo field cells should have class 'o_readonly_modifier' and the row should be in edition");
         assert.strictEqual(list.$('.o_data_row:first td:nth(1) span').text(), 'yop',
             "a widget should have been rendered for readonly fields");
         assert.ok(list.$('.o_data_row:first td:nth(2)').parent().hasClass('o_selected_row'),
@@ -1415,32 +1412,32 @@ QUnit.module('Views', {
                 '</tree>',
         });
 
-        assert.strictEqual(list.$('tbody td.o_form_invisible').length, 3,
+        assert.strictEqual(list.$('tbody td.o_invisible_modifier').length, 3,
             "there should be 3 invisible foo cells in readonly mode");
 
         // Make first line editable
         list.$('tbody tr:nth(0) td:nth(1)').click();
 
-        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"].o_form_invisible').length, 1,
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"].o_invisible_modifier').length, 1,
             "the foo field widget should have been rendered as invisible");
 
         list.$('tbody tr:nth(0) td:nth(2) input').click();
-        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"]:not(.o_form_invisible)').length, 1,
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"]:not(.o_invisible_modifier)').length, 1,
             "the foo field widget should have been marked as non-invisible");
-        assert.strictEqual(list.$('tbody td.o_form_invisible').length, 2,
+        assert.strictEqual(list.$('tbody td.o_invisible_modifier').length, 2,
             "the foo field widget parent cell should not be invisible anymore");
 
         list.$('tbody tr:nth(0) td:nth(2) input').click();
-        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"].o_form_invisible').length, 1,
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"].o_invisible_modifier').length, 1,
             "the foo field widget should have been marked as invisible again");
-        assert.strictEqual(list.$('tbody td.o_form_invisible').length, 3,
+        assert.strictEqual(list.$('tbody td.o_invisible_modifier').length, 3,
             "the foo field widget parent cell should now be invisible again");
 
         // Reswitch the cell to editable and save the row
         list.$('tbody tr:nth(0) td:nth(2) input').click();
         list.$('thead').click();
 
-        assert.strictEqual(list.$('tbody td.o_form_invisible').length, 2,
+        assert.strictEqual(list.$('tbody td.o_invisible_modifier').length, 2,
             "there should be 2 invisible foo cells in readonly mode");
 
         list.destroy();
@@ -1460,7 +1457,7 @@ QUnit.module('Views', {
                 '</tree>',
         });
 
-        assert.strictEqual(list.$('tbody td.o_readonly').length, 3,
+        assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 3,
             "there should be 3 readonly foo cells in readonly mode");
 
         // Make first line editable
@@ -1472,20 +1469,20 @@ QUnit.module('Views', {
         list.$('tbody tr:nth(0) td:nth(2) input').click();
         assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"]').length, 1,
             "the foo field widget should have been rerendered as editable");
-        assert.strictEqual(list.$('tbody td.o_readonly').length, 2,
+        assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 2,
             "the foo field widget parent cell should not be readonly anymore");
 
         list.$('tbody tr:nth(0) td:nth(2) input').click();
         assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > span[name="foo"]').length, 1,
             "the foo field widget should have been rerendered as readonly");
-        assert.strictEqual(list.$('tbody td.o_readonly').length, 3,
+        assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 3,
             "the foo field widget parent cell should now be readonly again");
 
         // Reswitch the cell to editable and save the row
         list.$('tbody tr:nth(0) td:nth(2) input').click();
         list.$('thead').click();
 
-        assert.strictEqual(list.$('tbody td.o_readonly').length, 2,
+        assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 2,
             "there should be 2 readonly foo cells in readonly mode");
 
         list.destroy();
@@ -1505,32 +1502,32 @@ QUnit.module('Views', {
                 '</tree>',
         });
 
-        assert.strictEqual(list.$('tbody td.o_form_required').length, 3,
+        assert.strictEqual(list.$('tbody td.o_required_modifier').length, 3,
             "there should be 3 required foo cells in readonly mode");
 
         // Make first line editable
         list.$('tbody tr:nth(0) td:nth(1)').click();
 
-        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"].o_form_required').length, 1,
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"].o_required_modifier').length, 1,
             "the foo field widget should have been rendered as required");
 
         list.$('tbody tr:nth(0) td:nth(2) input').click();
-        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"]:not(.o_form_required)').length, 1,
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"]:not(.o_required_modifier)').length, 1,
             "the foo field widget should have been marked as non-required");
-        assert.strictEqual(list.$('tbody td.o_form_required').length, 2,
+        assert.strictEqual(list.$('tbody td.o_required_modifier').length, 2,
             "the foo field widget parent cell should not be required anymore");
 
         list.$('tbody tr:nth(0) td:nth(2) input').click();
-        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"].o_form_required').length, 1,
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"].o_required_modifier').length, 1,
             "the foo field widget should have been marked as required again");
-        assert.strictEqual(list.$('tbody td.o_form_required').length, 3,
+        assert.strictEqual(list.$('tbody td.o_required_modifier').length, 3,
             "the foo field widget parent cell should now be required again");
 
         // Reswitch the cell to editable and save the row
         list.$('tbody tr:nth(0) td:nth(2) input').click();
         list.$('thead').click();
 
-        assert.strictEqual(list.$('tbody td.o_form_required').length, 2,
+        assert.strictEqual(list.$('tbody td.o_required_modifier').length, 2,
             "there should be 2 required foo cells in readonly mode");
 
         list.destroy();
@@ -1571,7 +1568,7 @@ QUnit.module('Views', {
             "first line should still be in edition as invalid");
         assert.strictEqual(list.$('tbody tr.o_selected_row').length, 1,
             "no other line should be in edition");
-        assert.strictEqual($firstFooTd.find('input.o_form_invalid').length, 1,
+        assert.strictEqual($firstFooTd.find('input.o_field_invalid').length, 1,
             "the required field should be marked as invalid");
         assert.strictEqual(warnings, 1,
             "a warning should have been displayed");

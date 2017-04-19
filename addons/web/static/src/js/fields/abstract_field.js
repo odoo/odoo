@@ -34,7 +34,6 @@ var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
 
 var AbstractField = Widget.extend({
-    className: 'o_field_widget',
     events: {
         'keydown': '_onKeydown',
     },
@@ -151,6 +150,7 @@ var AbstractField = Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.$el.attr('name', self.name);
+            self.$el.addClass('o_field_widget');
             return self._render();
         });
     },

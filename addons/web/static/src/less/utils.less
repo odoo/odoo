@@ -209,9 +209,9 @@
 // ------------------------------------------------------------------
 // Text overflow
 // ------------------------------------------------------------------
-.o-text-overflow(@display: inline-block) {
+.o-text-overflow(@display: inline-block, @max-width: 100%) {
     display: @display;
-    max-width: 100%;
+    max-width: @max-width;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
