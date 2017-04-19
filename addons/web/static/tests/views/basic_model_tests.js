@@ -1242,4 +1242,38 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('check id, active_id, active_ids, active_model values in record\'s context', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.product_id.context = "{'id': id, 'active_id': active_id, 'active_ids': active_ids, 'active_model': active_model}";
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        this.params.fieldNames = ['product_id'];
+
+        model.load(this.params).then(function (resultID) {
+            var recordPartner = model.get(resultID);
+            assert.deepEqual(
+                recordPartner.getContext({fieldName: "product_id"}),
+                {id: 2, active_id: 2, active_ids: [2], active_model: "partner"},
+                "wrong values for id, active_id, active_ids or active_model");
+        });
+
+        // Try again without record
+        this.params.res_id = undefined;
+
+        model.load(this.params).then(function (resultID) {
+            var recordPartner = model.get(resultID);
+            assert.deepEqual(
+                recordPartner.getContext({fieldName: "product_id"}),
+                {id: false, active_id: false, active_ids: [], active_model: "partner"},
+                "wrong values for id, active_id, active_ids or active_model. Have to be defined even if there is no record.");
+        });
+
+        model.destroy();
+    });
+
 });});

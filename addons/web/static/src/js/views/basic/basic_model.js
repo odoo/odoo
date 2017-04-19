@@ -1903,7 +1903,8 @@ var BasicModel = AbstractModel.extend({
     _getEvalContext: function (element) {
         var evalContext = this.get(element.id, {raw: true, noUnsetNumeric: true}).data;
         evalContext.active_model = element.model;
-        evalContext.active_id = evalContext.id || false;
+        evalContext.id = evalContext.id || false;
+        evalContext.active_id = evalContext.id;
         evalContext.active_ids = evalContext.id ? [evalContext.id] : [];
         if (element.parentID) {
             var parent = this.get(element.parentID, {raw: true});
