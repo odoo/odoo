@@ -371,6 +371,7 @@ class MaintenanceTeam(models.Model):
     todo_request_count_date = fields.Integer(compute='_compute_todo_requests')
     todo_request_count_high_priority = fields.Integer(compute='_compute_todo_requests')
     todo_request_count_block = fields.Integer(compute='_compute_todo_requests')
+    todo_request_count_unscheduled = fields.Integer(compute='_compute_todo_requests')
 
     @api.one
     @api.depends('request_ids.stage_id.done')
@@ -380,6 +381,7 @@ class MaintenanceTeam(models.Model):
         self.todo_request_count_date = len(self.todo_request_ids.filtered(lambda e: e.schedule_date != False))
         self.todo_request_count_high_priority = len(self.todo_request_ids.filtered(lambda e: e.priority == '3'))
         self.todo_request_count_block = len(self.todo_request_ids.filtered(lambda e: e.kanban_state == 'blocked'))
+        self.todo_request_count_unscheduled = len(self.todo_request_ids.filtered(lambda e: not e.schedule_date))
 
     @api.one
     @api.depends('equipment_ids')

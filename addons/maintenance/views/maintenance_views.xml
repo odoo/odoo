@@ -691,6 +691,7 @@
                 <field name="todo_request_count_date"/>
                 <field name="todo_request_count_high_priority"/>
                 <field name="todo_request_count_block"/>
+                <field name="todo_request_count_unscheduled"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div>
@@ -734,6 +735,14 @@
                                             </div>
                                             <div class="col-xs-3">
                                                 <t t-esc="record.todo_request_count_block.value"/>
+                                            </div>
+                                            <div class="col-xs-9">
+                                                <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_unscheduled': 1}">
+                                                    Unscheduled
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <t t-esc="record.todo_request_count_unscheduled.value"/>
                                             </div>
                                         </div>
                                     </div>
