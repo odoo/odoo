@@ -100,7 +100,7 @@ return Widget.extend({
                 // HORRIBLE HACK. PLEASE SAVE ME FROM MYSELF (BUT IN A PAINLESS WAY IF POSSIBLE)
                 return 'active_view' in a;
             });
-        var view_context = view_manager ? view_manager.active_view.controller.get_context() : {};
+        var view_context = view_manager ? view_manager.active_view.controller.getContext() : {};
         var results = pyeval.eval_domains_and_contexts({
                 domains: search.domains,
                 contexts: [user_context].concat(search.contexts.concat(view_context || [])),
