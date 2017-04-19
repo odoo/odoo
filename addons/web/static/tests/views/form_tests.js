@@ -3047,5 +3047,47 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('modifiers are considered on multiple <footer/> tags', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="bar"/>' +
+                    '<footer attrs="{\'invisible\': [(\'bar\',\'=\',False)]}">' +
+                        '<button>Hello</button>' +
+                        '<button>World</button>' +
+                    '</footer>' +
+                    '<footer attrs="{\'invisible\': [(\'bar\',\'!=\',False)]}">' +
+                        '<button>Foo</button>' +
+                    '</footer>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                footer_to_buttons: true,
+                mode: 'edit',
+            },
+        });
+
+        assert.deepEqual(getVisibleButtonTexts(), ["Hello", "World"],
+            "only the first button section should be visible");
+
+        form.$(".o_field_boolean input").click();
+
+        assert.deepEqual(getVisibleButtonTexts(), ["Foo"],
+            "only the second button section should be visible");
+
+        form.destroy();
+
+        function getVisibleButtonTexts() {
+            var $visibleButtons = form.$buttons.find('button').not('.o_form_invisible *');
+            return _.map($visibleButtons, function (el) {
+                return el.innerHTML.trim();
+            });
+        }
+    });
 });
 });

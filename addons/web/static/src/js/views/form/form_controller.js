@@ -133,13 +133,14 @@ var FormController = BasicController.extend({
      * @param {jQueryElement} $node
      */
     renderButtons: function ($node) {
-        var $footer = this.$('footer');
-        if (!this.defaultButtons && (!this.footerToButtons || !$footer.length)) {
+        var $footer = this.footerToButtons ? this.$('footer') : null;
+        var mustRenderFooterButtons = $footer && $footer.length;
+        if (!this.defaultButtons && !mustRenderFooterButtons) {
             return;
         }
         this.$buttons = $('<div/>');
-        if (this.footerToButtons && $footer.length) {
-            this.$buttons.append($footer.detach().contents());
+        if (mustRenderFooterButtons) {
+            this.$buttons.append($footer);
         } else {
             this.$buttons.append(qweb.render("FormView.buttons", {widget: this}));
             this.$buttons.on('click', '.o_form_button_edit', this._toEditMode.bind(this));
