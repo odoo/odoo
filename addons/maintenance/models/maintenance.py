@@ -322,8 +322,8 @@ class MaintenanceRequest(models.Model):
         # context: no_log, because subtype already handle this
         self = self.with_context(mail_create_nolog=True)
         request = super(MaintenanceRequest, self).create(vals)
-        if request.owner_user_id:
-            request.message_subscribe_users(user_ids=[request.owner_user_id.id])
+        if request.owner_user_id or request.technician_user_id:
+            request._add_followers()
         if request.equipment_id and not request.maintenance_team_id:
             request.maintenance_team_id = request.equipment_id.maintenance_team_id
         return request
@@ -334,12 +334,17 @@ class MaintenanceRequest(models.Model):
         # the stage (stage_id) of the Maintenance Request changes.
         if vals and 'kanban_state' not in vals and 'stage_id' in vals:
             vals['kanban_state'] = 'normal'
-        if vals.get('owner_user_id'):
-            self.message_subscribe_users(user_ids=[vals['owner_user_id']])
         res = super(MaintenanceRequest, self).write(vals)
+        if vals.get('owner_user_id') or vals.get('technician_user_id'):
+            self._add_followers()
         if self.stage_id.done and 'stage_id' in vals:
             self.write({'close_date': fields.Date.today()})
         return res
+
+    def _add_followers(self):
+        for request in self:
+            user_ids = (request.owner_user_id + request.technician_user_id).ids
+            request.message_subscribe_users(user_ids=user_ids)
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
