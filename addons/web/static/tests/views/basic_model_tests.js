@@ -221,6 +221,38 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('onchange on a one2many not in view (fieldNames)', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.onchanges.foo = function (obj) {
+            obj.bar = obj.foo.length;
+            obj.product_ids = [];
+        };
+
+        this.params.fieldNames = ['foo'];
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.foo, 'gnap', "foo field is properly initialized");
+            assert.strictEqual(record.data.bar, undefined, "bar field is not loaded");
+            assert.strictEqual(record.data.product_ids, undefined, "product_ids field is not loaded");
+
+            model.notifyChanges(resultID, {foo: 'mary poppins'});
+
+            record = model.get(resultID);
+            assert.strictEqual(record.data.foo, 'mary poppins', "onchange has been applied");
+            assert.strictEqual(record.data.bar, 12, "onchange has been applied");
+            assert.strictEqual(record.data.product_ids, undefined,
+                "onchange on product_ids (one2many) has not been applied");
+        });
+        model.destroy();
+    });
+
     QUnit.test('notifyChange on a many2one, without display_name', function (assert) {
         assert.expect(3);
 
