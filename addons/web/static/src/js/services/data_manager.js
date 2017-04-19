@@ -5,7 +5,7 @@ var config = require('web.config');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 var pyeval = require('web.pyeval');
-var session = require('web.session');
+var rpc = require('web.rpc');
 var utils = require('web.utils');
 
 return core.Class.extend({
@@ -42,9 +42,12 @@ return core.Class.extend({
         var key = this._gen_key(action_id, additional_context || {});
 
         if (!this._cache.actions[key]) {
-            this._cache.actions[key] = session.rpc("/web/action/load", {
-                action_id: action_id,
-                additional_context : additional_context,
+            this._cache.actions[key] = rpc.query({
+                route: "/web/action/load",
+                params: {
+                    action_id: action_id,
+                    additional_context : additional_context,
+                },
             }).then(function (action) {
                 self._cache.actions[key] = action.no_cache ? null : self._cache.actions[key];
                 return action;
@@ -84,7 +87,7 @@ return core.Class.extend({
                 options.load_filters = !this._cache.filters[filters_key];
             }
 
-            this._cache.views[key] = session.rpc('/web/dataset/call_kw/' + model + '/load_views', {
+            this._cache.views[key] = rpc.query({
                 args: [],
                 kwargs: {
                     views: views_descr,
@@ -125,7 +128,7 @@ return core.Class.extend({
     load_filters: function (dataset, action_id) {
         var key = this._gen_key(dataset.model, action_id);
         if (!this._cache.filters[key]) {
-            this._cache.filters[key] = session.rpc('/web/dataset/call_kw/ir.filters/get_filters', {
+            this._cache.filters[key] = rpc.query({
                 args: [dataset.model, action_id],
                 kwargs: {
                     context: dataset.get_context(),
@@ -145,7 +148,7 @@ return core.Class.extend({
      */
     create_filter: function (filter) {
         var self = this;
-        return session.rpc('/web/dataset/call_kw/ir.filters/create_or_replace', {
+        return rpc.query({
                 args: [filter],
                 model: 'ir.filters',
                 method: 'create_or_replace',
@@ -168,7 +171,7 @@ return core.Class.extend({
      */
     delete_filter: function (filter) {
         var self = this;
-        return session.rpc('/web/dataset/call_kw/ir.filters/unlink', {
+        return rpc.query({
                 args: [filter.id],
                 model: 'ir.filters',
                 method: 'unlink',
