@@ -203,8 +203,8 @@ class LunchOrderLine(models.Model):
                     'state': 'order',
                     'date': self.date,
                 }
-            self.env['lunch.cashmove'].create(values)
-            self.state = 'confirmed'
+                self.env['lunch.cashmove'].create(values)
+                self.state = 'confirmed'
         else:
             raise AccessError(_("Only your lunch manager sets the orders as received."))
 
