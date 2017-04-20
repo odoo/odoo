@@ -41,7 +41,8 @@ class PosOrder(models.Model):
             'pos_reference': ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
             'date_order':   ui_order['creation_date'],
-            'fiscal_position_id': ui_order['fiscal_position_id']
+            'fiscal_position_id': ui_order['fiscal_position_id'],
+            'pricelist_id': ui_order['pricelist_id'],
         }
 
     def _payment_fields(self, ui_paymentline):

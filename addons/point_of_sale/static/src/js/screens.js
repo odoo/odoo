@@ -816,6 +816,14 @@ var ProductListWidget = PosBaseWidget.extend({
 
         this.product_list = options.product_list || [];
         this.product_cache = new DomCache();
+
+        this.pos.get('orders').bind('add remove change', function () {
+            self.renderElement();
+        }, this);
+
+        this.pos.bind('change:selectedOrder', function () {
+            this.renderElement();
+        }, this);
     },
     set_product_list: function(product_list){
         this.product_list = product_list;
@@ -829,20 +837,35 @@ var ProductListWidget = PosBaseWidget.extend({
         var target = $target[0];
         target.parentNode.replaceChild(this.el,target);
     },
+    calculate_cache_key: function(product, pricelist){
+        return product.id + ',' + pricelist.id;
+    },
+    _get_active_pricelist: function(){
+        var current_order = this.pos.get_order();
+        var current_pricelist = this.pos.default_pricelist;
 
+        if (current_order) {
+            current_pricelist = current_order.pricelist;
+        }
+
+        return current_pricelist;
+    },
     render_product: function(product){
-        var cached = this.product_cache.get_node(product.id);
+        var current_pricelist = this._get_active_pricelist();
+        var cache_key = this.calculate_cache_key(product, current_pricelist);
+        var cached = this.product_cache.get_node(cache_key);
         if(!cached){
             var image_url = this.get_product_image_url(product);
             var product_html = QWeb.render('Product',{ 
                     widget:  this, 
-                    product: product, 
+                    product: product,
+                    pricelist: current_pricelist,
                     image_url: this.get_product_image_url(product),
                 });
             var product_node = document.createElement('div');
             product_node.innerHTML = product_html;
             product_node = product_node.childNodes[1];
-            this.product_cache.cache_node(product.id,product_node);
+            this.product_cache.cache_node(cache_key,product_node);
             return product_node;
         }
         return cached;
@@ -1121,15 +1144,14 @@ var ClientListScreenWidget = ScreenWidget.extend({
         }
     },
     save_changes: function(){
-        var self = this;
         var order = this.pos.get_order();
         if( this.has_client_changed() ){
             if ( this.new_client ) {
-                order.fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
-                    return fp.id === self.new_client.property_account_position_id[0];
-                });
+                order.fiscal_position = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
+                order.set_pricelist(_.findWhere(this.pos.pricelists, {'id': this.new_client.property_product_pricelist[0]}) || this.pos.default_pricelist);
             } else {
                 order.fiscal_position = undefined;
+                order.set_pricelist(this.pos.default_pricelist);
             }
 
             order.set_client(this.new_client);
@@ -2071,6 +2093,64 @@ define_action_button({
     },
 });
 
+var set_pricelist_button = ActionButtonWidget.extend({
+    template: 'SetPricelistButton',
+    init: function (parent, options) {
+        this._super(parent, options);
+
+        this.pos.get('orders').bind('add remove change', function () {
+            this.renderElement();
+        }, this);
+
+        this.pos.bind('change:selectedOrder', function () {
+            this.renderElement();
+        }, this);
+    },
+    button_click: function () {
+        var self = this;
+
+        var pricelists = _.map(self.pos.pricelists, function (pricelist) {
+            return {
+                label: pricelist.name,
+                item: pricelist
+            };
+        });
+
+        self.gui.show_popup('selection',{
+            title: _t('Select pricelist'),
+            list: pricelists,
+            confirm: function (pricelist) {
+                var order = self.pos.get_order();
+                order.set_pricelist(pricelist);
+            },
+            is_selected: function (pricelist) {
+                return pricelist.id === self.pos.get_order().pricelist.id;
+            }
+        });
+    },
+    get_current_pricelist_name: function () {
+        var name = _t('Pricelist');
+        var order = this.pos.get_order();
+
+        if (order) {
+            var pricelist = order.pricelist;
+
+            if (pricelist) {
+                name = pricelist.display_name;
+            }
+        }
+         return name;
+    },
+});
+
+define_action_button({
+    'name': 'set_pricelist',
+    'widget': set_pricelist_button,
+    'condition': function(){
+        return this.pos.pricelists.length > 1;
+    },
+});
+
 return {
     ReceiptScreenWidget: ReceiptScreenWidget,
     ActionButtonWidget: ActionButtonWidget,
@@ -2087,6 +2167,7 @@ return {
     ProductCategoriesWidget: ProductCategoriesWidget,
     ScaleScreenWidget: ScaleScreenWidget,
     set_fiscal_position_button: set_fiscal_position_button,
+    set_pricelist_button: set_pricelist_button,
 };
 
 });

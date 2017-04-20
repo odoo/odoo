@@ -249,8 +249,13 @@
                                     Set shop-specific prices, seasonal discounts, etc.
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('use_pricelist','=',False)], 'required' : [('use_pricelist', '=', True)]}">
-                                    <div class="mt16">
-                                        <field name="pricelist_id"/>
+                                    <div class="row mt16">
+                                        <label string="Available Pricelists" for="available_pricelist_ids" class="col-md-3 o_light_label"/>
+                                        <field name="available_pricelist_ids" widget="many2many_tags"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Default Pricelist" for="pricelist_id" class="col-md-3 o_light_label"/>
+                                        <field name="pricelist_id" domain="[('id', 'in', available_pricelist_ids)]" options="{'no_create': True}"/>
                                     </div>
                                     <div>
                                         <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" class="btn-link"/>

@@ -129,6 +129,12 @@
         </div>
     </t>
 
+    <t t-name="SetPricelistButton">
+        <div class='control-button o_pricelist_button'>
+            <i class='fa fa-th-list' /> <t t-esc='widget.get_current_pricelist_name()'/>
+        </div>
+    </t>
+
     <t t-name="ActionpadWidget">
         <div class="actionpad">
             <button t-attf-class='button set-customer #{ ( widget.pos.get_client() and widget.pos.get_client().name.length > 10) ? "decentered" : "" }' >
@@ -438,6 +444,15 @@
                         </t>
                         <t t-if='!partner.vat'>
                             <span class='detail vat empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Pricelist</span>
+                        <t t-if='partner.property_product_pricelist'>
+                            <span class='detail property_product_pricelist'><t t-esc='partner.property_product_pricelist[1]'/></span>
+                        </t>
+                        <t t-if='!partner.property_product_pricelist'>
+                            <span class='detail property_product_pricelist empty'>N/A</span>
                         </t>
                     </div>
                 </div>
@@ -1221,12 +1236,12 @@
                 <img t-att-src='image_url' /> 
                 <t t-if="!product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price,'Product Price')"/>
+                        <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')"/>
                     </span>
                 </t>
                 <t t-if="product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price,'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
+                        <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
                     </span>
                 </t>
             </div>
