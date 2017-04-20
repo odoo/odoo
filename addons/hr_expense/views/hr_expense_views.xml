@@ -422,13 +422,6 @@
                             type="object">
                             <field name="attachment_number" widget="statinfo" string="Documents"/>
                         </button>
-                        <button name="action_open_journal_entries"
-                            class="oe_stat_button"
-                            icon="fa-book"
-                            string="Accounting Entries"
-                            attrs="{'invisible': [('account_move_id', '=', False)]}"
-                            type="object">
-                        </button>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -447,13 +440,9 @@
                             <field name="department_id" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group>
-                            <field name="journal_id" domain="[('type', '=', 'purchase')]" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}"/>
-                            <field name="bank_journal_id" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]"/>
-                            <field name="accounting_date" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
-                            <field name="account_move_id" invisible="1"/>
-                        </group>
                     </group>
+                     <notebook>
+                        <page string="Expense Lines">
                         <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'not_delete': True}">
                             <tree>
                                 <field name="date"/>
@@ -465,9 +454,23 @@
                                 <field name="attachment_number" string=" "/>
                                 <button name="action_get_attachment_view" string="View Attachments" type="object" icon="fa-paperclip"/>
                                 <field name="tax_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <field name="total_amount" sum="Total Amount" widget="monetary"/>
+                                <field name="total_amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                            </tree>
                         </field>
+                        </page>
+                        <page string="Other Info" attrs="{'invisible': [('payment_mode', '=', False)]}">
+                            <group>
+                                <group>
+                                    <field name="journal_id" domain="[('type', '=', 'purchase')]" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}"/>
+                                    <field name="bank_journal_id" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]"/>
+                                    <field name="accounting_date" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
+                                </group>
+                                <group>
+                                    <field name="account_move_id" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" readonly="1"/>
+                                </group>
+                        </group>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
