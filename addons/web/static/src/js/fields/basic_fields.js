@@ -1987,15 +1987,16 @@ var AceEditor = DebouncedField.extend({
      * @returns {Deferred}
      */
     willStart: function () {
-        if (!window.ace && !this.loadJS_def) {
-            this.loadJS_def = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
+        var loadJSDef;
+        if (!window.ace) {
+            loadJSDef = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
                 return $.when(
                     ajax.loadJS('/web/static/lib/ace/mode-python.js'),
                     ajax.loadJS('/web/static/lib/ace/mode-xml.js')
                 );
             });
         }
-        return $.when(this._super.apply(this, arguments), this.loadJS_def);
+        return $.when(this._super.apply(this, arguments), loadJSDef);
     },
     /**
      * @override start from AbstractField (Widget)

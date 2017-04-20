@@ -894,10 +894,9 @@ QUnit.module('basic_fields', {
     QUnit.module('AceEditor');
 
     QUnit.test('ace widget on text fields works', function (assert) {
-        assert.expect(3);
+        assert.expect(2);
         var done = assert.async();
 
-        assert.notOk('ace' in window, "the ace library should not be loaded");
         this.data.partner.fields.foo.type = 'text';
         testUtils.createAsyncView({
             View: FormView,
@@ -908,10 +907,8 @@ QUnit.module('basic_fields', {
                 '</form>',
             res_id: 1,
         }).then(function (form) {
-            assert.ok('ace' in window, "the ace library should now be loaded");
+            assert.ok('ace' in window, "the ace library should be loaded");
             assert.ok(form.$('div.ace_content').length, "should have rendered something with ace editor");
-            delete window.require;
-            delete window.ace;
             form.destroy();
             done();
         });
