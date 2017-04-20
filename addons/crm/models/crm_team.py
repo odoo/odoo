@@ -42,7 +42,7 @@ class Team(models.Model):
     @api.multi
     def write(self, vals):
         result = super(Team, self).write(vals)
-        if vals.get('use_leads') or vals.get('alias_defaults'):
+        if 'use_leads' in vals or 'alias_defaults' in vals:
             for team in self:
                 team.alias_id.write(team.get_alias_values())
         return result
