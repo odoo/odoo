@@ -338,6 +338,7 @@ var AbstractField = Widget.extend({
             this._isValid = true;
         } catch (e) {
             this._isValid = false;
+            return;
         }
         var changes = {};
         changes[this.name] = value;

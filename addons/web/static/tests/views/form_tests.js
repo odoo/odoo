@@ -2371,6 +2371,50 @@ QUnit.module('Views', {
         }
     });
 
+    QUnit.test('onchanges are not sent for invalid values', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.onchanges = {
+            int_field: function (obj) {
+                obj.foo = String(obj.int_field);
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group><field name="foo"/><field name="int_field"/></group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // edit int_field, and check that an onchange has been applied
+        form.$('input[name="int_field"]').val("123").trigger('input');
+        assert.strictEqual(form.$('input[name="foo"]').val(), "123",
+            "the onchange has been applied");
+
+        // enter an invalid value in a float, and check that no onchange has
+        // been applied
+        form.$('input[name="int_field"]').val("123a").trigger('input');
+        assert.strictEqual(form.$('input[name="foo"]').val(), "123",
+            "the onchange has not been applied");
+
+        // save, and check that the int_field input is marked as invalid
+        form.$buttons.find('.o_form_button_save').click();
+        assert.ok(form.$('input[name="int_field"]').hasClass('o_form_invalid'),
+            "input int_field is marked as invalid");
+
+        assert.verifySteps(['read', 'onchange']);
+        form.destroy();
+    });
+
     QUnit.test('rpc complete after destroying parent', function (assert) {
         // We just test that there is no crash in this situation
         assert.expect(0);
