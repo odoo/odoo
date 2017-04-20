@@ -160,28 +160,6 @@ class Currency(models.Model):
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
-    @api.model
-    def get_format_currencies_js_function(self):
-        """ Returns a string that can be used to instanciate a javascript function that formats numbers as currencies.
-            That function expects the number as first parameter and the currency id as second parameter.
-            If the currency id parameter is false or undefined, the company currency is used.
-        """
-        company_currency = self.env.user.with_env(self.env).company_id.currency_id
-        function = ""
-        for currency in self.search([]):
-            symbol = currency.symbol or currency.name
-            # FIXME: since the removal of compatibility.js, the next instruction crashes
-            format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69,%s]}, 0.00)" % currency.decimal_places
-            if currency.position == 'after':
-                return_str = "return %s + '\\xA0' + %s;" % (format_number_str, json.dumps(symbol))
-            else:
-                return_str = "return %s + '\\xA0' + %s;" % (json.dumps(symbol), format_number_str)
-            function += "if (arguments[1] === %s) { %s }" % (currency.id, return_str)
-            if (currency == company_currency):
-                company_currency_format = return_str
-                function = "if (arguments[1] === false || arguments[1] === undefined) {" + company_currency_format + " }" + function
-        return function
-
     def _select_companies_rates(self):
         return """
             SELECT
