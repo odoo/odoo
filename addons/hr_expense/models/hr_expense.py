@@ -548,14 +548,6 @@ class HrExpenseSheet(models.Model):
         res['context'] = {'default_res_model': 'hr.expense.sheet', 'default_res_id': self.id}
         return res
 
-    @api.multi
-    def action_open_journal_entries(self):
-        res = self.env['ir.actions.act_window'].for_xml_id('account', 'action_move_journal_line')
-        res['domain'] = [('id', 'in', self.mapped('account_move_id').ids)]
-        res['context'] = {}
-        return res
-
-
     @api.one
     @api.constrains('expense_line_ids')
     def _check_employee(self):
