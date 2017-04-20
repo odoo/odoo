@@ -691,6 +691,7 @@
                             <field name="name" string="Campaign Name"/>
                             <field name="user_id"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                            <field name="unique_ab_testing" groups="base.group_no_one"/>
                         </group>
                         <notebook>
                             <page string="Tracking">
