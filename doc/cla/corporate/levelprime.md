@@ -14,3 +14,4 @@ Roberto Fichera roberto.fichera@levelprime.com https://github.com/robyf70
 List of contributors:
 
 Roberto Fichera roberto.fichera@levelprime.com https://github.com/robyf70
+Roberto Fichera robyf@tekno-soft.it https://github.com/robyf70
