@@ -716,11 +716,12 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create record, then save', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         this.params.fieldNames = ['product_ids'];
         this.params.res_id = undefined;
         this.params.type = 'record';
+        this.params.context = {active_field: 2};
 
         var id;
         var model = createModel({
@@ -731,6 +732,9 @@ QUnit.module('Views', {
                     // has to be done before the call to _super
                     assert.notOk('product_ids' in args.args[0], "should not have any value");
                     assert.notOk('category' in args.args[0], "should not have other fields");
+
+                    assert.strictEqual(args.kwargs.context.active_field, 2,
+                        "record's context should be correctly passed");
                 }
                 var result = this._super(route, args);
                 if (args.method === 'create') {
