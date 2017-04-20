@@ -27,54 +27,30 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * This method has two responsabilities: find every invalid fields in the
-     * current form, and making sure that they are displayed as invalid, by
-     * toggling the o_form_invalid css class.  It has to be done both on the
-     * widget, and on the label, if there is a label.
+     * Extend the method so that labels also receive the 'o_form_invalid' class
+     * if necessary.
      *
-     * @returns {Deferred}
-     *   if it fails, it gives the list of invalid field names
+     * @override
+     * @see BasicRenderer.canBeSaved
+     * @param {string} recordID
+     * @returns {string[]}
      */
-    canBeSaved: function () {
+    canBeSaved: function (recordID) {
         var self = this;
-        var invalidFields = [];
-        var defs = [];
+        var fieldNames = this._super.apply(this, arguments);
 
-        function markWidget(widget, isValid) {
-            if (!isValid) {
-                invalidFields.push(widget.name);
-            }
-            widget.$el.toggleClass('o_form_invalid', !isValid);
-            var idForLabel = self.idsForLabels[widget.name];
-            var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
-            $label.toggleClass('o_form_invalid', !isValid);
-        }
+        var $labels = this.$('label');
+        $labels.removeClass('o_form_invalid');
 
-        _.each(this.allFieldWidgets[this.state.id], function (widget) {
-            var isValid = self._canWidgetBeSaved(widget);
-            if (isValid instanceof $.Deferred) {
-                defs.push(isValid.then(function (isValid) {
-                    markWidget(widget, isValid);
-                }));
-            } else {
-                markWidget(widget, isValid);
+        _.each(fieldNames, function (fieldName) {
+            var idForLabel = self.idsForLabels[fieldName];
+            if (idForLabel) {
+                $labels
+                    .filter('[for=' + idForLabel + ']')
+                    .addClass('o_form_invalid');
             }
         });
-        return $.when.apply($, defs).then(function () {
-            if (invalidFields.length) {
-                return $.Deferred().reject(invalidFields);
-            }
-        });
-    },
-    /**
-     * Calls 'commitChanges' on all field widgets, so that they can notify the
-     * environment with their current value (useful for widgets that can't
-     * detect when their value changes, e.g. field 'html').
-     */
-    commitChanges: function () { // TODO add a test
-        _.each(this.allFieldWidgets, function (recordWidgets) {
-            _.invoke(recordWidgets, 'commitChanges');
-        });
+        return fieldNames;
     },
     /**
      * returns the active tab pages for each notebook

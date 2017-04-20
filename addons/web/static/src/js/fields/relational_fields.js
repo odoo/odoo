@@ -517,11 +517,13 @@ var KanbanFieldMany2One = AbstractField.extend({
 var FieldX2Many = AbstractField.extend({
     tagName: 'div',
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
+        add_record: '_onAddRecord',
+        edit_line: '_onEditLine',
         field_changed: '_onFieldChanged',
         kanban_record_delete: '_onDeleteRecord',
         list_record_delete: '_onDeleteRecord',
-        add_record: '_onAddRecord',
         open_record: '_onOpenRecord',
+        save_line: '_onSaveLine',
         toggle_column_order: '_onToggleColumnOrder',
     }),
 
@@ -563,31 +565,29 @@ var FieldX2Many = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * A x2m field can only be saved if it finished the edition of all its rows.
+     * On parent view saving, we have to ask the x2m fields to commit their
+     * changes, that is confirming the save of the in-edition row or asking the
+     * user if he wants to discard it if necessary.
+     *
+     * @override
+     * @returns {Deferred}
+     */
+    commitChanges: function () {
+        var inEditionRecordID =
+            this.renderer
+            && this.renderer.viewType === "list"
+            && this.renderer.getEditableRecordID();
+        if (inEditionRecordID) {
+            return this._saveLine(inEditionRecordID);
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
      * @override
      */
     isSet: function () {
         return true;
-    },
-    /**
-     * This is a tricky override.  For relational fields, we don't just need to
-     * know if the field is valid.  We also need to discard some invalid lines,
-     * if the user is ok with it (or automatically if the invalid line is not
-     * dirty). This is the reason why we need to change the signature of the
-     * AbstractField isValid method to optionally return a deferred.
-     *
-     * @override
-     * @returns {boolean|Deferred} if there is a renderer (sub list or kanban
-     *   view), we may need to ask the user => it will return a deferred.
-     *   Otherwise, it returns a boolean
-     */
-    isValid: function () {
-        if (!this.renderer) {
-            return this._super.apply(this, arguments);
-        }
-        var def = $.Deferred();
-        this.renderer.canBeSaved()
-            .then(def.resolve.bind(def, true), def.resolve.bind(def, false));
-        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -687,6 +687,39 @@ var FieldX2Many = AbstractField.extend({
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onAddRecord.bind(this));
         }
     },
+    /**
+     * Saves the line associated to the given recordID. If the line is valid,
+     * it only has to be switched to readonly mode as all the line changes have
+     * already been notified to the model so that they can be saved in db if the
+     * parent view is actually saved. If the line is not valid, the line is to
+     * be discarded if the user agrees (this behavior is not a list editable
+     * one but a x2m one as it is made to replace the "discard" button which
+     * exists for list editable views).
+     *
+     * @private
+     * @param {string} recordID
+     * @returns {Deferred} resolved if the line was properly saved or discarded.
+     *                     rejected if the line could not be saved and the user
+     *                     did not agree to discard.
+     */
+    _saveLine: function (recordID) {
+        var self = this;
+        var def = $.Deferred();
+        this.renderer.commitChanges(recordID).then(function () { // TODO wrong as no mutex protection
+            var fieldNames = self.renderer.canBeSaved(recordID);
+            if (fieldNames.length) {
+                self.trigger_up('discard_x2m_changes', {
+                    recordID: recordID,
+                    onSuccess: def.resolve.bind(def),
+                    onFailure: def.reject.bind(def),
+                });
+            } else {
+                self.renderer.setRowMode(recordID, 'readonly', true);
+                def.resolve();
+            }
+        });
+        return def;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -708,33 +741,44 @@ var FieldX2Many = AbstractField.extend({
      * by the parent controller.
      *
      * @private
-     * @param   {OdooEvent}
+     * @param {OdooEvent} ev
      */
-    _onDeleteRecord: function (event) {
-        event.stopPropagation();
+    _onDeleteRecord: function (ev) {
+        ev.stopPropagation();
         this._setValue({
             operation: 'REMOVE',
-            ids: [event.data.id],
+            ids: [ev.data.id],
         });
+    },
+    /**
+     * Called when the renderer asks to edit a line, in that case simply tells
+     * him back to toggle the mode of this row.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onEditLine: function (ev) {
+        ev.stopPropagation();
+        this.renderer.setRowMode(ev.data.recordID, 'edit');
     },
     /**
      * Updates the given record with the changes.
      *
      * @private
-     * @param   {OdooEvent}
+     * @param {OdooEvent} ev
      */
-    _onFieldChanged: function (event) {
-        if (event.target === this) {
+    _onFieldChanged: function (ev) {
+        if (ev.target === this) {
             return;
         }
-        event.stopPropagation();
+        ev.stopPropagation();
         // changes occured in an editable list
-        var changes = event.data.changes;
+        var changes = ev.data.changes;
         if (Object.keys(changes).length) {
             this._setValue({
                 operation: 'UPDATE',
-                id: event.data.dataPointID,
-                data: changes
+                id: ev.data.dataPointID,
+                data: changes,
             });
         }
     },
@@ -748,14 +792,30 @@ var FieldX2Many = AbstractField.extend({
         // to implement
     },
     /**
+     * Called when the renderer ask to save a line (the user tries to leave it)
+     * -> Nothing is to "save" here, the model was already notified of the line
+     * changes; if the row could be saved, we make the row readonly. Otherwise,
+     * we trigger a new event for the view to tell it to discard the changes
+     * made to that row.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSaveLine: function (ev) {
+        ev.stopPropagation();
+        this._saveLine(ev.data.recordID)
+            .done(ev.data.onSuccess)
+            .fail(ev.data.onFailure);
+    },
+    /**
      * Adds field name information to the event, so that the view upstream is
      * aware of which widgets it has to redraw.
      *
      * @private
-     * @param   {OdooEvent}
+     * @param {OdooEvent} ev
      */
-    _onToggleColumnOrder: function (event) {
-        event.data.field = this.name;
+    _onToggleColumnOrder: function (ev) {
+        ev.data.field = this.name;
     },
 });
 
@@ -769,13 +829,13 @@ var FieldOne2Many = FieldX2Many.extend({
     /**
      * @override
      * @param {Object} record
-     * @param {OdooEvent} [event] an event that triggered the reset action
+     * @param {OdooEvent} [ev] an event that triggered the reset action
      * @returns {Deferred}
      */
-    reset: function (record, event) {
+    reset: function (record, ev) {
         var self = this;
-        if (event && event.target === this && self.view.arch.tag === 'tree' && this.editable) {
-            var command = event.data.changes[this.name];
+        if (ev && ev.target === this && ev.data.changes && self.view.arch.tag === 'tree' && this.editable) {
+            var command = ev.data.changes[this.name];
             if (command.operation === 'UPDATE') {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
@@ -784,8 +844,8 @@ var FieldOne2Many = FieldX2Many.extend({
             }
         }
         return this._super.apply(this, arguments).then(function () {
-            if (event && event.target === self && self.view.arch.tag === 'tree') {
-                if (event.data.changes[self.name].operation === 'CREATE') {
+            if (ev && ev.target === self && ev.data.changes && self.view.arch.tag === 'tree') {
+                if (ev.data.changes[self.name].operation === 'CREATE') {
                     var index = self.editable === 'top' ? 0 : self.value.data.length - 1;
                     var newID = self.value.data[index].id;
                     self.renderer.editRecord(newID);
@@ -833,13 +893,13 @@ var FieldOne2Many = FieldX2Many.extend({
      *
      * @override
      * @private
-     * @param {OdooEvent|MouseEvent} event this event comes either from the 'Add
+     * @param {OdooEvent|MouseEvent} ev this event comes either from the 'Add
      *   record' link in the list editable renderer, or from the 'Create' button
      *   in the kanban view
      */
-    _onAddRecord: function (event) {
+    _onAddRecord: function (ev) {
         // we don't want interference with the components upstream.
-        event.stopPropagation();
+        ev.stopPropagation();
 
         if (this.editable) {
             this._setValue({
@@ -863,14 +923,14 @@ var FieldOne2Many = FieldX2Many.extend({
      * form view.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onOpenRecord: function (event) {
+    _onOpenRecord: function (ev) {
         // we don't want interference with the components upstream.
-        event.stopPropagation();
+        ev.stopPropagation();
 
         this._openFormDialog({
-            id: event.data.id,
+            id: ev.data.id,
             on_saved: this._setValue.bind(this, { operation: 'NOOP' }),
             readonly: this.mode === 'readonly',
         });
@@ -932,14 +992,14 @@ var FieldMany2Many = FieldX2Many.extend({
      * to the form view.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onOpenRecord: function (event) {
-        _.extend(event.data, {
+    _onOpenRecord: function (ev) {
+        _.extend(ev.data, {
             context: this.record.getContext(this.recordParams),
             domain: this.record.getDomain(this.recordParams),
             fields_view: this.attrs.views && this.attrs.views.form,
-            on_saved: this.trigger_up.bind(this, 'reload', {db_id: event.data.id}),
+            on_saved: this.trigger_up.bind(this, 'reload', {db_id: ev.data.id}),
             readonly: this.mode === 'readonly',
             string: this.string,
         });
@@ -1297,9 +1357,9 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @param {KeyboardEvent} event
      */
     _onKeyDown: function (event) {
-        if($(event.target).val() === "" && event.which === $.ui.keyCode.BACKSPACE) {
+        if ($(event.target).val() === "" && event.which === $.ui.keyCode.BACKSPACE) {
             var $badges = this.$('.badge');
-            if($badges.length) {
+            if ($badges.length) {
                 this._removeTag($badges.last().data('id'));
             }
         }

@@ -12,7 +12,6 @@ odoo.define('web.EditableListRenderer', function (require) {
  * view. It uses the same widgets, but the code is totally stand alone.
  */
 var core = require('web.core');
-var Dialog = require('web.Dialog');
 var ListRenderer = require('web.ListRenderer');
 
 var _t = core._t;
@@ -53,10 +52,6 @@ ListRenderer.include({
 
         this.currentRow = null;
         this.currentCol = null;
-
-        // the dirtyRows object is there to keep track of lines that have been
-        // modified by the user
-        this.dirtyRows = {};
     },
     /**
      * @override
@@ -75,37 +70,24 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Deferred}
+     * If the given recordID is the list main one (or that no recordID is
+     * given), then the whole view can be saved if one of the two following
+     * conditions is true:
+     * - There is no line in edition (all lines are saved so they are all valid)
+     * - The line in edition can be saved
+     *
+     * @override
+     * @param {string} [recordID]
+     * @returns {string[]}
      */
-    canBeSaved: function () {
-        var self = this;
-        var invalidDirtyWidgets = [];
-        var invalidCleanWidgets = [];
-        _.each(this.allFieldWidgets, function (recordWidgets, recordID) {
-            _.each(recordWidgets, function (widget) {
-                // Note: the _canWidgetBeSaved method may return a deferred in
-                // general, but not in this case. Here, this method is called by
-                // a fieldone2many when it needs to make sure the state is
-                // valid. So, the widgets that we consider here are widgets that
-                // can be in a one2many, and we don't support a list inside a
-                // list (for now at least).
-                if (!self._canWidgetBeSaved(widget)) {
-                    if (self.dirtyRows[recordID]) {
-                        invalidDirtyWidgets.push(widget);
-                    } else {
-                        invalidCleanWidgets.push(widget);
-                    }
-                }
-            });
-        });
-        if (invalidDirtyWidgets.length) {
-            // TODO: ask for confirmation, open dialog, and depending on user
-            // input, resolve and reject deferred
+    canBeSaved: function (recordID) {
+        if ((recordID || this.state.id) === this.state.id) {
+            recordID = this.getEditableRecordID();
+            if (recordID === null) {
+                return [];
+            }
         }
-        if (invalidCleanWidgets.length) {
-            this._unselectRow();
-        }
-        return $.when();
+        return this._super(recordID);
     },
     /**
      * @see BasicRenderer.confirmChange
@@ -115,6 +97,8 @@ ListRenderer.include({
      * to have a visual feedback on which fields changed, and on which fields
      * have been saved.
      *
+     * @todo maybe should be a basic behavior
+     *
      * @override
      * @param {Object} state - a record resource (the new full state)
      * @param {string} id - the local id for the changed record
@@ -123,8 +107,6 @@ ListRenderer.include({
      * @returns {Deferred}
      */
     confirmChange: function (state, id, fields, e) {
-        this.dirtyRows[id] = true;
-
         return this._super.apply(this, arguments).then(function (resetWidgets) {
             _.each(resetWidgets, function (widget) {
                 var $td = widget.$el.parent();
@@ -144,10 +126,7 @@ ListRenderer.include({
      */
     confirmSave: function (state, savedRecordID) {
         this.state = state;
-        var index = _.findIndex(this.state.data, {id: savedRecordID});
-        for (var j = 0; j < this.columns.length; j++) {
-            this._setCellValue(index, j, false);
-        }
+        this.setRowMode(savedRecordID, 'readonly');
     },
     /**
      * Edit a given record in the list
@@ -155,10 +134,86 @@ ListRenderer.include({
      * @param {string} recordID
      */
     editRecord: function (recordID) {
-        var index = _.findIndex(this.state.data, function (record) {
-            return record.id === recordID;
-        });
-        this._selectCell(index, 0);
+        var rowIndex = _.findIndex(this.state.data, {id: recordID});
+        this._selectCell(rowIndex, 0);
+    },
+    /**
+     * Returns the recordID associated to the line which is currently in edition
+     * or null if there is no line in edition.
+     *
+     * @returns {string|null}
+     */
+    getEditableRecordID: function () {
+        if (this.currentRow !== null) {
+            return this.state.data[this.currentRow].id;
+        }
+        return null;
+    },
+    /**
+     * Removes the line associated to the given recordID (the index of the row
+     * is found thanks to the old state), then updates the state.
+     *
+     * @param {Object} state
+     * @param {string} recordID
+     */
+    removeLine: function (state, recordID) {
+        var rowIndex = _.findIndex(this.state.data, {id: recordID});
+        if (rowIndex === this.currentRow) {
+            this.currentRow = null;
+        }
+        var $row = this.$('tbody > tr:nth(' + rowIndex + ')');
+        $row.remove(); // FIXME row indexes are not updated... let's remove data('index') and check index dynamically ?
+
+        this.state = state;
+    },
+    /**
+     * Updates the already rendered row associated to the given recordID so that
+     * it fits the given mode.
+     *
+     * @param {string} recordID
+     * @param {string} mode
+     * @param {boolean} [keepDirtyFlag=false]
+     */
+    setRowMode: function (recordID, mode, keepDirtyFlag) {
+        var self = this;
+        var rowIndex = _.findIndex(this.state.data, {id: recordID});
+        if (rowIndex < 0) {
+            return;
+        }
+        var editMode = (mode === 'edit');
+        var record = this.state.data[rowIndex];
+
+        this.currentRow = editMode ? rowIndex : null;
+        var $row = this.$('tbody > tr:nth(' + rowIndex + ')');
+        $row.toggleClass('o_selected_row', editMode);
+
+        if (editMode) {
+            // Instantiate column widgets and destroy potential readonly ones
+            var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
+            _.each(this.columns, function (node, colIndex) {
+                var $td = self._findTd($row, colIndex);
+                var $newTd = self._renderBodyCell(record, node, colIndex, {
+                    renderInvisible: true,
+                    renderWidgets: true,
+                });
+
+                // TODO this is ugly...
+                if ($td.hasClass('o_list_button')) {
+                    self._unregisterModifiersElement(node, record, $td.children());
+                }
+
+                // Force the width of each cell to its current value so that it
+                // won't change if its content changes, to prevent the view from
+                // flickering
+                $td.width($td.width());
+                $td.empty().append($newTd.contents());
+            });
+            _.each(oldWidgets, this._destroyFieldWidget.bind(this, record));
+        } else {
+            for (var colIndex = 0; colIndex < this.columns.length; colIndex++) {
+                this._setCellValue(rowIndex, colIndex, keepDirtyFlag || false);
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -190,6 +245,15 @@ ListRenderer.include({
             n++;
         }
         return n;
+    },
+    /**
+     * @override
+     * @returns {Deferred}
+     */
+    _render: function () {
+        this.currentRow = null;
+        this.currentCol = null;
+        return this._super.apply(this, arguments);
     },
     /**
      * The renderer needs to support reordering lines.  This is only active in
@@ -296,20 +360,13 @@ ListRenderer.include({
             return;
         }
 
-        var record = this.state.data[rowIndex];
-
-        // If this is a different row, then we need to prepare for it by
-        // unselecting the current row and selecting the new one.
-        var def = $.when();
-        if (rowIndex !== this.currentRow) {
-            def = this._unselectRow(); // This will trigger the save
-            def.then(this._selectRow.bind(this, rowIndex));
-        }
-
-        // In all cases (new row or not), activate the proper column widget
+        // Select the row then activate the widget in the correct cell
         var self = this;
-        def.then(function () {
+        this._selectRow(rowIndex).then(function () {
+            var record = self.state.data[rowIndex];
             var fieldIndex = self._activateFieldWidget(record, colIndex - getNbButtonBefore(colIndex));
+
+            // If no widget to activate in the row, unselect the row
             if (fieldIndex < 0) {
                 return self._unselectRow();
             }
@@ -333,36 +390,20 @@ ListRenderer.include({
      * @param {integer} rowIndex
      */
     _selectRow: function (rowIndex) {
-        this.currentRow = rowIndex;
+        // Do nothing if already selected
+        if (rowIndex === this.currentRow) {
+            return $.when();
+        }
 
+        // To select a row, the currently selected one must be unselected first
         var self = this;
-        var record = this.state.data[rowIndex];
-
-        // Force the width of each cell to its current value so that it won't
-        // change if its content changes, to prevent the view from flickering
-        var $row = this.$('tbody > tr:nth(' + rowIndex + ')');
-        $row.addClass('o_selected_row');
-        $row.children().each(function () {
-            var $td = $(this);
-            $td.width($td.width());
-        });
-
-        // Instantiate column widgets and destroy potential readonly ones
-        var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
-        _.each(this.columns, function (node, index) {
-            var $newTd = self._renderBodyCell(record, node, index, {
-                renderInvisible: true,
-                renderWidgets: true,
+        return this._unselectRow().then(function () {
+            // Notify the controller we want to make a record editable
+            var record = self.state.data[rowIndex];
+            self.trigger_up('edit_line', {
+                recordID: record.id,
             });
-            var $td = self._findTd($row, index);
-            if ($td.hasClass('o_list_button')) {
-                self._unregisterModifiersElement(node, record, $td.children()); // FIXME this is ugly...
-            }
-            $td.empty().append($newTd.contents());
         });
-        _.each(oldWidgets, this._destroyFieldWidget.bind(this, record));
-
-        this.trigger_up('change_mode', {mode: 'edit'});
     },
     /**
      * Set the value of a cell.  This method can be called when the value of a
@@ -375,6 +416,7 @@ ListRenderer.include({
     _setCellValue: function (rowIndex, colIndex, keepDirtyFlag) {
         var record = this.state.data[rowIndex];
         var node = this.columns[colIndex];
+
         var $oldTd = this._findTd(this.$('tbody > tr:nth(' + rowIndex + ')'), colIndex);
         var $newTd = this._renderBodyCell(record, node, colIndex, {mode: 'readonly'});
         if (keepDirtyFlag && $oldTd.hasClass('o_field_dirty')) {
@@ -382,17 +424,24 @@ ListRenderer.include({
         }
         this._unregisterModifiersElement(node, record, $oldTd);
         $oldTd.replaceWith($newTd);
+
+        // Destroy old cell field widget if any
+        // TODO this is very inefficient O(n^3) instead of O(n) on row update
+        // because this method is called for each cell (O(n)), each time we have
+        // to find the associated record widget (O(n)) and once found, the
+        // search is performed again by the _destroyFieldWidget function
+        if (node.tag === 'field') {
+            var recordWidgets = this.allFieldWidgets[record.id];
+            var w = _.findWhere(recordWidgets, {name: node.attrs.name}); //
+            if (w) {
+                this._destroyFieldWidget(record, w);
+            }
+        }
     },
     /**
      * This method is called whenever we click/move outside of a row that was
      * in edit mode. This is the moment we save all accumulated changes on that
-     * row, if needed.
-     *
-     * If the current row is valid, then it can be unselected. If it is not
-     * valid, we need to check if it is dirty. If it is not dirty, it can be
-     * unselected (and will be removed). If it is dirty, we need to ask the user
-     * for confirmation. If the user agrees, the row will be removed, otherwise
-     * nothing happens (it is still selected)
+     * row, if needed (@see BasicController.saveRecord).
      *
      * @returns {Deferred} The deferred resolves if the row was unselected (and
      *   possibly removed). If may be rejected, when the row is dirty and the
@@ -404,64 +453,14 @@ ListRenderer.include({
             return $.when();
         }
 
-        var self = this;
         var record = this.state.data[this.currentRow];
-        var rowWidgets = _.clone(this.allFieldWidgets[record.id]);
-        var isRowValid = _.every(rowWidgets, this._canWidgetBeSaved.bind(this));
-        var $row = this.$('tbody > tr.o_selected_row');
-
-        // If the row is not valid and is dirty, we have to ask the user
-        // confirmation before going further
-        var def = $.when();
-        if (!isRowValid && this.dirtyRows[record.id]) {
-            def = $.Deferred();
-            var message = _t("The line has been modified, your changes will be discarded. Are you sure you want to discard the changes ?");
-            var dialog = Dialog.confirm(this, message, {
-                title: _t("Warning"),
-                confirm_callback: def.resolve.bind(def),
-                cancel_callback: def.reject.bind(def),
-            });
-            dialog.$modal.on('hidden.bs.modal', def.reject.bind(def));
-        }
-
-        return def.then(function finalizeUnselect() {
-            var rowRemoved = false;
-            var keepDirtyFlag = true;
-            if (isRowValid) {
-                // Trigger the save (if the record isn't dirty, the datamodel
-                // won't save anything)
-                self.trigger_up('field_changed', {
-                    dataPointID: record.id,
-                    changes: {},
-                    force_save: true,
-                });
-            } else if (record.res_id) {
-                // Not a creation, tell the model to discard the changes
-                self.trigger_up('discard_changes', {id: record.id});
-                keepDirtyFlag = false;
-            } else {
-                // Creation, tell the model to discard the row and remove the
-                // associated row DOM element
-                self.trigger_up('discard_line', {id: record.id});
-                $row.remove(); // FIXME row indexes are not updated... let's remove data('index') and check index dynamically ?
-                rowRemoved = true;
-            }
-
-            // Update row if it was not removed
-            if (!rowRemoved) {
-                $row.removeClass('o_selected_row');
-                _.each(self.columns, function (col, colIndex) {
-                    self._setCellValue(self.currentRow, colIndex, keepDirtyFlag);
-                });
-            }
-
-            // Destroy the edition widgets
-            _.each(rowWidgets, self._destroyFieldWidget.bind(self, record));
-
-            delete self.dirtyRows[record.id];
-            self.currentRow = null;
-            self.trigger_up('change_mode', {mode: 'readonly'});
+        var def = $.Deferred();
+        this.trigger_up('save_line', {
+            recordID: record.id,
+            onSuccess: def.resolve.bind(def),
+            onFailure: def.reject.bind(def),
         });
+        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -483,9 +482,10 @@ ListRenderer.include({
         event.stopPropagation();
 
         // but we do want to unselect current row
-        this._unselectRow();
-
-        this.trigger_up('add_record');
+        var self = this;
+        this._unselectRow().then(function () {
+            self.trigger_up('add_record'); // TODO write a test, the deferred was not considered
+        });
     },
     /**
      * When the user clicks on a cell, we simply select it.
@@ -640,7 +640,7 @@ ListRenderer.include({
             return;
         }
 
-        // there is currenctly no selected row
+        // there is currently no selected row
         if (this.currentRow === null) {
             return;
         }
@@ -652,10 +652,10 @@ ListRenderer.include({
 
         // ignore clicks in modals, except if the list is in a modal, and the
         // click is performed in that modal
-        var $listModal = this.$el.closest('.modal');
-        if ($listModal.length) {
-            var $click_modal = $(event.target).parents('.modal');
-            if ($click_modal.prop('id') === $listModal.prop('id')) {
+        var $clickModal = $(event.target).closest('.modal');
+        if ($clickModal.length) {
+            var $listModal = this.$el.closest('.modal');
+            if ($clickModal.prop('id') !== $listModal.prop('id')) {
                 return;
             }
         }

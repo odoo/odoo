@@ -258,7 +258,7 @@ QUnit.module('relational_fields', {
             event.data.callback({user_context: {}});
         });
 
-        form._toEditMode();
+        form.$buttons.find('.o_form_button_edit').click();
         var $dropdown = form.$('.o_form_field_many2one input').autocomplete('widget');
 
         form.$('.o_form_field_many2one input').click();
