@@ -113,12 +113,6 @@ var KanbanRenderer = BasicRenderer.extend({
         this.widgets[0].addQuickCreate();
     },
     /**
-     * @returns {Deferred}
-     */
-    canBeSaved: function () {
-        return $.when();
-    },
-    /**
      * Removes a widget (record if ungrouped, column if grouped) from the view.
      *
      * @param {Widget} widget the instance of the widget to remove

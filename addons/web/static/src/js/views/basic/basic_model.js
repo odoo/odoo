@@ -219,7 +219,8 @@ var BasicModel = AbstractModel.extend({
     discardChanges: function (id, options) {
         options = options || {};
         var element = this.localData[id];
-        var rollback = options.rollback || this.isNew(id);
+        var isNew = this.isNew(id);
+        var rollback = options.rollback || isNew;
         this._visitChildren(element, function (elem) {
             if (rollback && elem._savePoint) {
                 if (elem._savePoint instanceof Array) {
@@ -227,8 +228,10 @@ var BasicModel = AbstractModel.extend({
                 } else {
                     elem._changes = _.extend({}, elem._savePoint);
                 }
+                elem._isDirty = !isNew;
             } else {
                 elem._changes = null;
+                elem._isDirty = false;
             }
         });
     },
@@ -383,26 +386,26 @@ var BasicModel = AbstractModel.extend({
         return element;
     },
     /**
-     * return true if a record is dirty. A record is considered dirty if it has
-     * some unsaved changes. A list is considered dirty if its _changes key is
-     * set to an array of its new datapoints (possibly empty)
+     * Returns true if a record is dirty. A record is considered dirty if it has
+     * some unsaved changes, marked by the _isDirty property on the record or
+     * one of its subrecords.
      *
-     * @param {string} id id for a local resource
+     * @param {string} id - the local resource id
      * @returns {boolean}
      */
     isDirty: function (id) {
         var isDirty = false;
-        var record = this.localData[id];
-        this._visitChildren(record, function (r) {
-            if (r.type === "record" ? !_.isEmpty(r._changes) : r._changes) {
+        this._visitChildren(this.localData[id], function (r) {
+            if (r._isDirty) {
                 isDirty = true;
             }
         });
         return isDirty;
     },
     /**
-     * Check if a record is new, meaning if it is in the process of being created
-     * and no actual record exists in db.
+     * Check if a localData is new, meaning if it is in the process of being
+     * created and no actual record exists in db. Note: if the localData is not
+     * of the "record" type, then it is always considered as not new.
      *
      * Note: A virtual id is a character string composed of an integer and has
      * a dash and other information.
@@ -413,7 +416,11 @@ var BasicModel = AbstractModel.extend({
      * @returns {boolean}
      */
     isNew: function (id) {
-        var res_id = this.localData[id].res_id;
+        var data = this.localData[id];
+        if (data.type !== "record") {
+            return false;
+        }
+        var res_id = data.res_id;
         if (typeof res_id === 'number') {
             return false;
         } else if (typeof res_id === 'string' && /^[0-9]+-/.test(res_id)) {
@@ -707,15 +714,20 @@ var BasicModel = AbstractModel.extend({
                             record.res_ids.push(id);
                             record.count++;
                         }
+
+                        // Update the data directly or reload them
+                        var def;
                         if (shouldReload) {
-                            // erase changes as they have been applied
-                            record._changes = {};
-                            return self._fetchRecord(record);
+                            def = self._fetchRecord(record);
                         } else {
                             _.extend(record.data, record._changes);
-                            record._changes = {};
-                            return false;
                         }
+
+                        // Erase changes as they have been applied
+                        record._changes = {};
+                        record._isDirty = false;
+
+                        return def;
                     });
             } else {
                 return $.when(record_id);
@@ -837,6 +849,7 @@ var BasicModel = AbstractModel.extend({
         var field;
         var defs = [];
         record._changes = record._changes || {};
+        record._isDirty = true;
 
         // apply changes to local data
         for (var fieldName in changes) {
@@ -874,6 +887,7 @@ var BasicModel = AbstractModel.extend({
                 _.each(fieldNames, function (name) {
                     if (record._changes && record._changes[name] === record.data[name]) {
                         delete record._changes[name];
+                        record._isDirty = !_.isEmpty(record._changes);
                     }
                 });
                 return self._fetchSpecialData(record).then(function (fieldNames2) {

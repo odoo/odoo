@@ -36,6 +36,41 @@ var BasicRenderer = AbstractRenderer.extend({
         this.mode = params.mode || 'readonly';
     },
     /**
+     * This method has two responsabilities: find every invalid fields in the
+     * current view, and making sure that they are displayed as invalid, by
+     * toggling the o_form_invalid css class. It has to be done both on the
+     * widget, and on the label, if any.
+     *
+     * @param {string} recordID
+     * @returns {string[]} the list of invalid field names
+     */
+    canBeSaved: function (recordID) {
+        var self = this;
+        var invalidFields = [];
+        _.each(this.allFieldWidgets[recordID], function (widget) {
+            var canBeSaved = self._canWidgetBeSaved(widget);
+            if (!canBeSaved) {
+                invalidFields.push(widget.name);
+            }
+            widget.$el.toggleClass('o_form_invalid', !canBeSaved);
+        });
+        return invalidFields;
+    },
+    /**
+     * Calls 'commitChanges' on all field widgets, so that they can notify the
+     * environment with their current value (useful for widgets that can't
+     * detect when their value changes, e.g. field 'html').
+     *
+     * @param {string} recordID
+     * @return {Deferred}
+     */
+    commitChanges: function (recordID) {
+        var defs = _.map(this.allFieldWidgets[recordID], function (widget) {
+            return widget.commitChanges();
+        });
+        return $.when.apply($, defs);
+    },
+    /**
      * Updates the internal state of the renderer to the new state. By default,
      * this also implements the recomputation of the modifiers and their
      * application to the DOM and the reset of the field widgets if needed.
@@ -222,14 +257,7 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     _canWidgetBeSaved: function (widget) {
         var modifiers = this._getEvaluatedModifiers(widget.__node, widget.record);
-        var isSetOrNotRequired = (widget.isSet() || !modifiers.required);
-        var isValid = widget.isValid();
-        if (isValid instanceof $.Deferred) {
-            return isValid.then(function (isValid) {
-                return isValid && isSetOrNotRequired;
-            });
-        }
-        return isValid && isSetOrNotRequired;
+        return widget.isValid() && (widget.isSet() || !modifiers.required);
     },
     /**
      * Updates the modifiers evaluation associated to a given modifiers data and

@@ -67,19 +67,20 @@ var AbstractController = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Determines if we can discard the current state.  For example, when the
-     * user open the 'home' screen, the view manager will call this method on
-     * the active view to make sure it is ok to open the home screen (and
-     * potentially loose all current state).
+     * Discards the changes made on the record associated to the given ID, or
+     * all changes made by the current controller if no recordID is given. For
+     * example, when the user open the 'home' screen, the view manager will call
+     * this method on the active view to make sure it is ok to open the home
+     * screen (and lose all current state).
      *
      * Note that it returns a deferred, because the view could choose to ask the
      * user if he agrees to discard.
      *
-     * @override
-     * @returns {Deferred} If the deferred is resolved, we assume the changes
-     *   can be discarded.  If it is rejected, then we cannot discard.
+     * @param {string} [recordID]
+     *        if not given, we consider all the changes made by the controller
+     * @returns {Deferred} resolved if properly discarded, rejected otherwise
      */
-    canBeDiscarded: function () {
+    discardChanges: function (recordID) {
         return $.when();
     },
     /**
@@ -296,4 +297,3 @@ var AbstractController = Widget.extend({
 return AbstractController;
 
 });
-

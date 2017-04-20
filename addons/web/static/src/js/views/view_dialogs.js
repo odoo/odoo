@@ -212,7 +212,7 @@ var FormViewDialog = ViewDialog.extend({
             }
             def = this.options.on_save(this.form_view.model.get(this.form_view.handle));
         } else {
-            def = this.form_view.saveRecord({
+            def = this.form_view.saveRecord(this.form_view.handle, {
                 stayInEdit: true,
                 reload: false,
                 savePoint: this.shouldSaveLocally,

@@ -192,7 +192,7 @@ var AbstractField = Widget.extend({
      *
      * @abstract
      */
-    commitChanges: function () {
+    commitChanges: function () { // TODO maybe should be done for all fields (keyboard save)
     },
     /**
      * Returns the main field's DOM element (jQuery form) which can be focused
@@ -217,16 +217,10 @@ var AbstractField = Widget.extend({
      * value was changed by the user. This is checked before saving a record, by
      * the view.
      *
-     * Note: the return value may not be a boolean. It is necessary for some
-     * fields (x2many) to sometimes ask confirmation to the user if the current
-     * dirty invalid line can be discarded. This is an asynchronous operation,
-     * so we need the expressivity of something like a deferred.
-     *
-     * Note2: this is the responsability of the view to check that required
+     * Note: this is the responsability of the view to check that required
      * fields have a set value.
      *
-     * @returns {boolean|Deferred} true/false if the widget is valid, or a
-     *   deferred which resolves to true/false if the widget is valid or not
+     * @returns {boolean} true/false if the widget is valid
      */
     isValid: function () {
         return this._isValid;

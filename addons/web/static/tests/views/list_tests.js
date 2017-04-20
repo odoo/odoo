@@ -1483,9 +1483,10 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('discarding (or not) changes after row edition', function (assert) {
-        assert.expect(8);
+    QUnit.test('leaving unvalid rows in edition', function (assert) {
+        assert.expect(4);
 
+        var warnings = 0;
         var list = createView({
             View: ListView,
             model: 'foo',
@@ -1495,6 +1496,11 @@ QUnit.module('Views', {
                     '<field name="foo" required="1"/>' +
                     '<field name="bar"/>' +
                 '</tree>',
+            intercepts: {
+                warning: function (ev) {
+                    warnings++;
+                },
+            },
         });
 
         // Start first line edition
@@ -1509,33 +1515,13 @@ QUnit.module('Views', {
         $secondFooTd.click();
 
         assert.strictEqual($firstFooTd.parent('.o_selected_row').length, 1,
-            "first line should still be in edition as cannot be auto discarded");
+            "first line should still be in edition as invalid");
         assert.strictEqual(list.$('tbody tr.o_selected_row').length, 1,
             "no other line should be in edition");
-
-        // Prevent discard of first line
-        $('.modal-footer:visible > .btn-default').click();
-
-        assert.strictEqual($firstFooTd.parent('.o_selected_row').length, 1,
-            "first line should still be in edition as not discarded");
-        assert.strictEqual(list.$('tbody tr.o_selected_row').length, 1,
-            "no other line should be in edition");
-
-        // Retry starting other line edition
-        $secondFooTd.click();
-
-        assert.strictEqual($firstFooTd.parent('.o_selected_row').length, 1,
-            "first line should still be in edition as cannot be auto discarded");
-        assert.strictEqual(list.$('tbody tr.o_selected_row').length, 1,
-            "no other line should be in edition");
-
-        // Discard first line
-        $('.modal-footer:visible > .btn-primary').click();
-
-        assert.strictEqual($secondFooTd.parent('.o_selected_row').length, 1,
-            "second line should now be in edition");
-        assert.strictEqual(list.$('tbody tr.o_selected_row').length, 1,
-            "no other line should be in edition");
+        assert.strictEqual($firstFooTd.find('input.o_form_invalid').length, 1,
+            "the required field should be marked as invalid");
+        assert.strictEqual(warnings, 1,
+            "a warning should have been displayed");
 
         list.destroy();
     });

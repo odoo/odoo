@@ -20,7 +20,8 @@ var ListController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         add_record: '_onAddRecord',
         button_clicked: '_onButtonClicked',
-        change_mode: '_onChangeMode',
+        edit_line: '_onEditLine',
+        save_line: '_onSaveLine',
         selection_changed: '_onSelectionChanged',
         toggle_column_order: '_onToggleColumnOrder',
         toggle_group: '_onToggleGroup',
@@ -48,6 +49,24 @@ var ListController = BasicController.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * To improve performance, list view must not be rerendered if it is asked
+     * to discard all its changes. Indeed, only the in-edition row needs to be
+     * discarded in that case.
+     *
+     * @override
+     * @param {string} [recordID] - default to main recordID
+     * @returns {Deferred}
+     */
+    discardChanges: function (recordID) {
+        if ((recordID || this.handle) === this.handle) {
+            recordID = this.renderer.getEditableRecordID();
+            if (recordID === null) {
+                return $.when();
+            }
+        }
+        return this._super(recordID);
+    },
     /**
      * Calculate the active domain of the list view. This should be done only
      * if the header checkbox has been checked. This is done by evaluating the
@@ -93,14 +112,17 @@ var ListController = BasicController.extend({
     /**
      * Display and bind all buttons in the control panel
      *
+     * Note: clicking on the "Save" button does nothing special. Indeed, all
+     * editable rows are saved once left and clicking on the "Save" button does
+     * induce the leaving of the current row.
+     *
      * @override
-     * @param {jQuery Node} $node
+     * @param {jQuery} $node
      */
     renderButtons: function ($node) {
         if (!this.noLeaf && this.hasButtons) {
             this.$buttons = $(qweb.render('ListView.buttons', {widget: this}));
             this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
-            this.$buttons.on('click', '.o_list_button_save', this._onSave.bind(this));
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
             this.$buttons.appendTo($node);
         }
@@ -151,8 +173,25 @@ var ListController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @see BasicController._abandonRecord
+     * If the given abandoned record is not the main one, notifies the renderer
+     * to remove the appropriate subrecord (line).
+     *
+     * @override
+     * @private
+     * @param {string} [recordID] - default to the main recordID
+     */
+    _abandonRecord: function (recordID) {
+        this._super.apply(this, arguments);
+        if ((recordID || this.handle) !== this.handle) {
+            var state = this.model.get(this.handle);
+            this.renderer.removeLine(state, recordID);
+        }
+    },
+    /**
      * Add a record to the list
      *
+     * @todo make record creation a basic controller feature
      * @private
      */
     _addRecord: function () {
@@ -192,6 +231,21 @@ var ListController = BasicController.extend({
     _confirmSave: function (id) {
         var state = this.model.get(this.handle);
         return this.renderer.confirmSave(state, id);
+    },
+    /**
+     * Allows to change the mode of a single row.
+     *
+     * @override
+     * @private
+     * @param {string} mode
+     * @param {string} [recordID] - default to main recordID
+     */
+    _setMode: function (mode, recordID) {
+        this._super.apply(this, arguments);
+        if ((recordID || this.handle) !== this.handle) {
+            this.renderer.setRowMode(recordID, mode);
+            this._updateButtons(mode);
+        }
     },
     /**
      * Display the sidebar (the 'action' menu in the control panel) if we have
@@ -249,17 +303,6 @@ var ListController = BasicController.extend({
         this._callButtonAction(event.data.attrs, event.data.record);
     },
     /**
-     * This event is triggered when a list renderer goes from mode = readonly to
-     * edit, and vice versa. In that case, we need to make sure that the buttons
-     * displayed in the control panel are correct.
-     *
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onChangeMode: function (event) {
-        this._updateButtons(event.data.mode);
-    },
-    /**
      * When the user clicks on the 'create' button, two things can happen. We
      * can switch to the form view with no active res_id, so it is in 'create'
      * mode, or we can edit inline.
@@ -290,14 +333,20 @@ var ListController = BasicController.extend({
     /**
      * Handler called when the user clicked on the 'Discard' button.
      *
-     * @private
-     * @param {MouseEvent} event
+     * @param {Event} ev
      */
-    _onDiscard: function (event) {
-        event.stopPropagation();
-        this.model.discardChanges(this.handle);
-        this._updateButtons('readonly');
-        this.update(this.handle, {reload: false});
+    _onDiscard: function (ev) {
+        ev.stopPropagation(); // So that it is not considered as a row leaving
+        this.discardChanges();
+    },
+    /**
+     * Called when the user asks to edit a row -> Updates the controller buttons
+     *
+     * @param {OdooEvent} ev
+     */
+    _onEditLine: function (ev) {
+        ev.stopPropagation();
+        this._setMode('edit', ev.data.recordID);
     },
     /**
      * Opens the Export Dialog
@@ -309,34 +358,16 @@ var ListController = BasicController.extend({
         new DataExport(this, record).open();
     },
     /**
-     * This method comes from the field manager mixin.
-     * @todo: there is a very similar method in kanban and form controllers.
-     * This should be moved in basic controller, and shared between basic views.
+     * Called when the renderer displays an editable row and the user tries to
+     * leave it -> Saves the record associated to that line.
      *
-     * @override
-     * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onFieldChanged: function (event) {
-        if (this.renderer.mode === 'readonly') {
-            event.data.force_save = true;
-        }
-        this._super.apply(this, arguments);
-    },
-    /**
-     * changes of the list editable are automatically saved when unselecting the
-     * row, which is done when clicking on 'Save' (anywhere outside the row
-     * actually), so this function should only switch back to readonly mode
-     *
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onSave: function (event) {
-        // we prevent the event propagation because we don't want this event to
-        // trigger a click on the main bus, which would be then caught by the
-        // list editable renderer and would unselect the newly created row
-        // event.stopPropagation();
-        this._updateButtons('readonly');
+    _onSaveLine: function (ev) {
+        var recordID = ev.data.recordID;
+        this.saveRecord(recordID)
+            .done(ev.data.onSuccess)
+            .fail(ev.data.onFailure);
     },
     /**
      * When the current selection changes (by clicking on the checkboxes on the
@@ -373,7 +404,7 @@ var ListController = BasicController.extend({
             this.pager.updateState({current_min: 1});
         }
         this.model.setSort(data.id, event.data.name);
-        this.update();
+        this.update({});
     },
     /**
      * In a grouped list view, each group can be clicked on to open/close them.

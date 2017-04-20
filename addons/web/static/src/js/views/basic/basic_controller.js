@@ -16,7 +16,7 @@ var Pager = require('web.Pager');
 
 var _t = core._t;
 
-return AbstractController.extend(FieldManagerMixin, {
+var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         reload: '_onReload',
     }),
@@ -34,7 +34,7 @@ return AbstractController.extend(FieldManagerMixin, {
         this.hasButtons = params.hasButtons;
         FieldManagerMixin.init.call(this, this.model);
         this.handle = params.initialState.id;
-        this.isDirty = false;
+        this.mode = params.mode || 'readonly';
         this.mutex = new concurrency.Mutex();
     },
     /**
@@ -50,6 +50,82 @@ return AbstractController.extend(FieldManagerMixin, {
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Determines if we can discard the current changes. If the model is not
+     * dirty, that is not a problem. However, if it is dirty, we have to ask
+     * the user for confirmation.
+     *
+     * @override
+     * @param {string} [recordID] - default to main recordID
+     * @returns {Deferred<boolean>}
+     *          resolved if can be discarded, a boolean value is given to tells
+     *          if there is something to discard or not
+     *          rejected otherwise
+     */
+    canBeDiscarded: function (recordID) {
+        if (!this.model.isDirty(recordID || this.handle)) {
+            return $.when(false);
+        }
+
+        var message = _t("The record has been modified, your changes will be discarded. Are you sure you want to ?");
+        var def = $.Deferred();
+        var dialog = Dialog.confirm(this, message, {
+            title: _t("Warning"),
+            confirm_callback: def.resolve.bind(def, true),
+            cancel_callback: def.reject.bind(def),
+        });
+        dialog.on('closed', def, def.reject);
+        return def;
+    },
+    /**
+     * Ask the renderer if all associated field widget are in a valid state for
+     * saving (valid value and non-empty value for required fields). If this is
+     * not the case, this notifies the user with a warning containing the names
+     * of the invalid fields.
+     *
+     * Note: changing the style of invalid fields is the renderer's job.
+     *
+     * @param {string} [recordID] - default to main recordID
+     * @return {boolean}
+     */
+    canBeSaved: function (recordID) {
+        var fieldNames = this.renderer.canBeSaved(recordID || this.handle);
+        if (fieldNames.length) {
+            this._notifyInvalidFields(fieldNames);
+            return false;
+        }
+        return true;
+    },
+    /**
+     * Discards the changes made to the record whose ID is given, if necessary.
+     * Automatically leaves to default mode for the given record.
+     *
+     * @param {string} [recordID] - default to main recordID
+     * @param {Object} [options]
+     * @param {boolean} [options.readonlyIfRealDiscard=false]
+     *        After discarding record changes, the usual option is to make the
+     *        record readonly. However, the view manager calls this function
+     *        at inappropriate times in the current code and in that case, we
+     *        don't want to go back to readonly if there is nothing to discard
+     *        (e.g. when switching record in edit mode in form view, we expect
+     *        the new record to be in edit mode too, but the view manager calls
+     *        this function as the URL changes...) @todo get rid of this when
+     *        the view manager is improved.
+     * @returns {Deferred}
+     */
+    discardChanges: function (recordID, options) {
+        var self = this;
+        recordID = recordID || this.handle;
+        return this.canBeDiscarded(recordID).then(function (needDiscard) {
+            if (needDiscard) { // Just some optimization
+                self.model.discardChanges(recordID);
+            }
+            if (options && options.readonlyIfRealDiscard && !needDiscard) {
+                return;
+            }
+            self._setMode('readonly', recordID);
+        });
+    },
     /**
      * @override
      */
@@ -74,11 +150,32 @@ return AbstractController.extend(FieldManagerMixin, {
         this._updatePager();  // to force proper visibility
     },
     /**
+     * Saves the record whose ID is given if necessary (@see _saveRecord).
+     *
+     * @param {string} [recordID] - default to main recordID
+     * @param {Object} [options]
+     * @returns {Deferred}
+     */
+    saveRecord: function (recordID, options) {
+        // Some field widgets (e.g. 'html') can't detect (all) their changes, so
+        // we ask them to commit their current value before saving. This has to
+        // be done outside of the mutex protection of saving because
+        // commitChanges will trigger changes and these are also protected. So
+        // the actual saving has to be done after these changes. Also the
+        // commitChanges operation might not be synchronous for other reason
+        // (e.g. the x2m fields will ask the user if some discarding has to be
+        // made). This operation must also be mutex-protected as commitChanges
+        // function of x2m has to be aware of all final changes made to a row.
+        this.mutex.exec(this.renderer.commitChanges.bind(this.renderer, recordID || this.handle)); // TODO write a test for this
+        return this.mutex.exec(this._saveRecord.bind(this, recordID, options));
+    },
+    /**
      * @override
      * @returns {Deferred}
      */
     update: function (params, options) {
         var self = this;
+        this.mode = params.mode || this.mode;
         return this._super(params, options).then(function () {
             self._updateEnv();
             self._updatePager();
@@ -89,6 +186,24 @@ return AbstractController.extend(FieldManagerMixin, {
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Does the necessary action when trying to "abandon" a given record (e.g.
+     * when trying to make a new record readonly without having saved it). By
+     * default, if the abandoned record is the main view one, the only possible
+     * action is to leave the current view. Otherwise, it is a x2m line, ask the
+     * model to remove it.
+     *
+     * @private
+     * @param {string} [recordID] - default to main recordID
+     */
+    _abandonRecord: function (recordID) {
+        recordID = recordID || this.handle;
+        if (recordID === this.handle) {
+            this.trigger_up('switch_to_previous_view');
+        } else {
+            this.model.removeLine(recordID);
+        }
+    },
     /**
      * We override applyChanges (from the field manager mixin) to protect it
      * with a mutex.
@@ -184,6 +299,24 @@ return AbstractController.extend(FieldManagerMixin, {
         return state.count !== 0;
     },
     /**
+     * Helper function to display a warning that some fields have an invalid
+     * value. This is used when a save operation cannot be completed.
+     *
+     * @private
+     * @param {string[]} invalidFields - list of field names
+     */
+    _notifyInvalidFields: function (invalidFields) {
+        var record = this.model.get(this.handle, {raw: true});
+        var fields = record.fields;
+        var warnings = invalidFields.map(function (fieldName) {
+            var fieldStr = fields[fieldName].string;
+            return _.str.sprintf('<li>%s</li>', _.escape(fieldStr));
+        });
+        warnings.unshift('<ul>');
+        warnings.push('</ul>');
+        this.do_warn(_t("The following fields are invalid:"), warnings.join(''));
+    },
+    /**
      * Hook method, called when record(s) has been deleted.
      *
      * @see _deleteRecord
@@ -191,6 +324,67 @@ return AbstractController.extend(FieldManagerMixin, {
      */
     _onDeletedRecords: function (ids) {
         this.update({});
+    },
+    /**
+     * Saves the record whose ID is given, if necessary. Automatically leaves
+     * edit mode for the given record, unless told otherwise.
+     *
+     * @param {string} [recordID] - default to main recordID
+     * @param {Object} [options]
+     * @param {boolean} [options.stayInEdit=false]
+     *        if true, leave the record in edit mode after save
+     * @param {boolean} [options.reload=true]
+     *        if true, reload the record after (real) save
+     * @param {boolean} [options.savePoint=false]
+     *        if true, the record will only be 'locally' saved: its changes
+     *        will move from the _changes key to the data key
+     * @returns {Deferred}
+     */
+    _saveRecord: function (recordID, options) {
+        recordID = recordID || this.handle;
+        options = _.defaults(options || {}, {
+            stayInEdit: false,
+            reload: true,
+            savePoint: false,
+        });
+
+        var def = $.Deferred();
+        // Check if the view is in a valid state for saving
+        // Note: it is the model's job to do nothing if there is nothing to save
+        if (this.canBeSaved(recordID)) {
+            def = this.model.save(recordID, { // Save then leave edit mode
+                reload: options.reload,
+                savePoint: options.savePoint,
+            });
+        } else {
+            def.reject(); // Cannot be saved, do nothing at all
+        }
+
+        if (options.stayInEdit) {
+            return def;
+        } else {
+            return def.then(this._setMode.bind(this, 'readonly', recordID));
+        }
+    },
+    /**
+     * Change the mode for the record associated to the given ID.
+     * If the given recordID is the view's main one, then the whole view mode is
+     * changed (@see BasicController.update).
+     *
+     * @private
+     * @param {string} mode - 'readonly' or 'edit'
+     * @param {string} [recordID]
+     */
+    _setMode: function (mode, recordID) {
+        recordID = recordID || this.handle;
+        // If trying to make a temporary record readonly, discard the record
+        if (mode === 'readonly' && this.model.isNew(recordID)) {
+            this._abandonRecord(recordID);
+            return;
+        }
+        if (recordID === this.handle) {
+            this.update({mode: mode}, {reload: false});
+        }
     },
     /**
      * Helper method, to get the current environment variables from the model
@@ -226,15 +420,17 @@ return AbstractController.extend(FieldManagerMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * We need to keep manually track of the isDirty property.  Note that it is
-     * not the same as the one from the basic model.  A new record from the
-     * basic model is considered dirty, but from the controller point of view,
-     * there was no user interaction and should not be dirty.
+     * Forces to save directly the changes if the controller is in readonly,
+     * because in that case the changes come from widgets that are editable even
+     * in readonly (e.g. Priority).
      *
      * @private
+     * @param {OdooEvent}
      */
-    _onFieldChanged: function () {
-        this.isDirty = true;
+    _onFieldChanged: function (ev) {
+        if (this.mode === 'readonly') {
+            ev.data.force_save = true;
+        }
         FieldManagerMixin._onFieldChanged.apply(this, arguments);
     },
     /**
@@ -261,7 +457,7 @@ return AbstractController.extend(FieldManagerMixin, {
             this.reload({fieldNames: data.fieldNames});
         }
     },
-
 });
 
+return BasicController;
 });

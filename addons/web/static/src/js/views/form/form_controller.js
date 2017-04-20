@@ -15,6 +15,7 @@ var FormController = BasicController.extend({
         open_one2many_record: '_onOpenOne2ManyRecord',
         bounce_edit: '_onBounceEdit',
         button_clicked: '_onButtonClicked',
+        discard_x2m_changes: '_onDiscardX2MChanges',
         open_record: '_onOpenRecord',
         toggle_column_order: '_onToggleColumnOrder',
     }),
@@ -29,7 +30,6 @@ var FormController = BasicController.extend({
         this.defaultButtons = params.defaultButtons;
         this.hasSidebar = params.hasSidebar;
         this.toolbar = params.toolbar;
-        this.mode = params.mode;
     },
 
     //--------------------------------------------------------------------------
@@ -45,45 +45,9 @@ var FormController = BasicController.extend({
     autofocus: function () {
     },
     /**
-     * Determines if we can discard the current change.  If the model is not
-     * dirty, that is not a problem.  However, if it is dirty, we have to ask
-     * the user for confirmation.
-     *
-     * @override
-     * @returns {Deferred} If the deferred is resolved, we assume the changes
-     *   can be discarded.  If it is rejected, then we cannot discard.
-     */
-    canBeDiscarded: function () {
-        var self = this;
-        if (!this.isDirty) {
-            return $.when();
-        }
-        var message = _t("The record has been modified, your changes will be discarded. Are you sure you want to leave this page ?");
-        var def = $.Deferred();
-        var options = {
-            title: _t("Warning"),
-            confirm_callback: function () {
-                this.on('closed', null, function () {
-                    self.isDirty = false;
-                    def.resolve();
-                });
-            },
-            cancel_callback: def.reject.bind(def)
-        };
-        var dialog = Dialog.confirm(this, message, options);
-        dialog.$modal.on('hidden.bs.modal', def.reject.bind(def));
-        return def;
-    },
-    /**
-     * @returns {Deferred}
-     */
-    canBeSaved: function () {
-        return this.renderer.canBeSaved()
-            .fail(this._notifyInvalidFields.bind(this));
-    },
-    /**
      * This method switches the form view in edit mode, with a new record.
      *
+     * @todo make record creation a basic controller feature
      * @returns {Deferred}
      */
     createRecord: function () {
@@ -100,7 +64,7 @@ var FormController = BasicController.extend({
         }).then(function (handle) {
             self.handle = handle;
             self._updateEnv();
-            self._toEditMode();
+            self._setMode('edit');
         });
     },
     /**
@@ -143,10 +107,10 @@ var FormController = BasicController.extend({
             this.$buttons.append($footer);
         } else {
             this.$buttons.append(qweb.render("FormView.buttons", {widget: this}));
-            this.$buttons.on('click', '.o_form_button_edit', this._toEditMode.bind(this));
-            this.$buttons.on('click', '.o_form_button_save', this.saveRecord.bind(this));
-            this.$buttons.on('click', '.o_form_button_cancel', this._onDiscardChange.bind(this));
-            this.$buttons.on('click', '.o_form_button_create', this.createRecord.bind(this));
+            this.$buttons.on('click', '.o_form_button_edit', this._onEdit.bind(this));
+            this.$buttons.on('click', '.o_form_button_create', this._onCreate.bind(this));
+            this.$buttons.on('click', '.o_form_button_save', this._onSave.bind(this));
+            this.$buttons.on('click', '.o_form_button_cancel', this._onDiscard.bind(this));
 
             this._updateButtons();
         }
@@ -199,27 +163,6 @@ var FormController = BasicController.extend({
             this._updateSidebar();
         }
     },
-    /**
-     * Save the current record (@see _saveRecord)
-     *
-     * @param {Object} options
-     * @returns {Deferred}
-     */
-    saveRecord: function (options) {
-        return this.mutex.exec(this._saveRecord.bind(this, options));
-    },
-    /**
-     * We need to check for all 'mode' change, because the information is not
-     * available from the model.
-     *
-     * @override
-     * @param {Object} params
-     * @returns {Deferred}
-     */
-    update: function (params) {
-        this.mode = params.mode || this.mode;
-        return this._super.apply(this, arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -234,7 +177,6 @@ var FormController = BasicController.extend({
      * @param {string} id
      */
     _confirmSave: function (id) {
-        this.isDirty = false;
         if (id === this.handle) {
             return this.reload();
         } else {
@@ -248,24 +190,6 @@ var FormController = BasicController.extend({
             });
             return this.renderer.confirmChange(record, record.id, [fieldsChanged]);
         }
-    },
-    /**
-     * Helper function to display a warning that some field have an invalid
-     * value.  This is used when a save operation cannot be completed.
-     *
-     * @private
-     * @param {string[]} invalidFields list of field names
-     */
-    _notifyInvalidFields: function (invalidFields) {
-        var record = this.model.get(this.handle, {raw: true});
-        var fields = record.fields;
-        var warnings = invalidFields.map(function (field_name) {
-            var fieldStr = fields[field_name].string;
-            return _.str.sprintf('<li>%s</li>', _.escape(fieldStr));
-        });
-        warnings.unshift('<ul>');
-        warnings.push('</ul>');
-        this.do_warn(_t("The following fields are invalid:"), warnings.join(''));
     },
     /**
      * Hook method, called when record(s) has been deleted.
@@ -293,71 +217,6 @@ var FormController = BasicController.extend({
         var env = this.model.get(this.handle, {env: true});
         state.id = env.currentId;
         this._super(state);
-    },
-    /**
-     * Save the record
-     *
-     * @param {Object} options
-     * @param {boolean} [options.stayInEdit=false] if true, don't switch to
-     *   readonly mode after saving the record
-     * @param {boolean} [options.reload=true] if true, reload the record after
-     *   saving
-     * @param {boolean} [options.savePoint=false] if true, the record will only
-     *   be 'locally' saved: its changes will move from the _changes key to the
-     *   data key
-     * @returns {Deferred}
-     */
-    _saveRecord: function (options) {
-        var self = this;
-        options = options || {};
-
-        // some field widgets (e.g. 'html') can't detect (all) their changes, so
-        // we ask them to commit their current value before saving
-        this.renderer.commitChanges();
-
-        var stayInEdit = 'stayInEdit' in options ? options.stayInEdit : false;
-        var shouldReload = 'reload' in options ? options.reload : true;
-        if (!this.model.isDirty(this.handle) && !this.model.isNew(this.handle)) {
-            if (!stayInEdit) {
-                this._toReadOnlyMode();
-            }
-            return $.Deferred().resolve();
-        } else {
-            return self.canBeSaved().then(function () {
-                return self.model.save(self.handle, {
-                    reload: shouldReload,
-                    savePoint: options.savePoint
-                })
-                .then(function () {
-                    if (!stayInEdit) {
-                        self._toReadOnlyMode();
-                    }
-                    self.isDirty = false;
-                });
-            });
-        }
-    },
-    /**
-     * Change the view mode to 'edit'
-     *
-     * @see _toReadOnlyMode
-     * @private
-     */
-    _toEditMode: function () {
-        this.$el.addClass('o_form_editable');
-        this.update({mode: "edit"}, {reload: false});
-    },
-    /**
-     * Change the view mode to 'readonly'
-     *
-     * @see _toEditMode
-     * @private
-     */
-    _toReadOnlyMode: function () {
-        if (this.mode !== 'readonly') {
-            this.$el.removeClass('o_form_editable');
-            this.update({mode: "readonly"}, {reload: false});
-        }
     },
     /**
      * Updates the controller's title according to the new state
@@ -434,7 +293,10 @@ var FormController = BasicController.extend({
             def = this._callButtonAction(attrs, event.data.record);
         } else {
             // save the record but don't switch to readonly mode
-            def = this.saveRecord({stayInEdit: true, reload: false}).then(function () {
+            def = this.saveRecord(this.handle, {
+                stayInEdit: true,
+                reload: false,
+            }).then(function () {
                 // we need to reget the record to make sure we have changes made
                 // by the basic model, such as the new res_id, if the record is
                 // new.
@@ -453,22 +315,47 @@ var FormController = BasicController.extend({
         }
     },
     /**
-     * If the user clicks on 'Discard', we have to check if the changes can be
-     * discarded, then actually do it.
+     * Called when the user wants to create a new record -> @see createRecord
      *
      * @private
      */
-    _onDiscardChange: function () {
+    _onCreate: function () {
+        this.createRecord();
+    },
+    /**
+     * Called when the user wants to discard the changes made to the current
+     * record -> @see discardChanges
+     *
+     * @private
+     */
+    _onDiscard: function () {
+        this.discardChanges();
+    },
+    /**
+     * Called when a x2m asks to discard the changes made to one of its row.
+     *
+     * @todo find a better way to handle this... this could also be used outside
+     * of form views
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onDiscardX2MChanges: function (ev) {
         var self = this;
-        this.canBeDiscarded().then(function () {
-            self.model.discardChanges(self.handle);
-            self.isDirty = false;
-            if (!self.model.isNew(self.handle)) {
-                self._toReadOnlyMode();
-            } else {
-                self.trigger_up('switch_to_previous_view');
-            }
-        });
+        ev.stopPropagation();
+        var recordID = ev.data.recordID;
+        this.discardChanges(recordID)
+            .done(function () {
+                if (self.model.isNew(recordID)) {
+                    self._abandonRecord(recordID);
+                }
+                // TODO this will tell the renderer to rerender the widget that
+                // asked for the discard but will unfortunately lose the click
+                // made on another row if any
+                self._confirmChange(self.handle, [ev.target.name], ev)
+                    .always(ev.data.onSuccess);
+            })
+            .fail(ev.data.onFailure);
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the sidebar
@@ -479,26 +366,18 @@ var FormController = BasicController.extend({
         var self = this;
         this.model.duplicateRecord(this.handle)
             .then(function (handle) {
-                self.isDirty = false;
                 self.handle = handle;
                 self._updateEnv();
-                self._toEditMode();
+                self._setMode('edit');
             });
     },
     /**
-     * This method comes from the field manager mixin. We force to save directly
-     * the changes if the form is in readonly, because in that case the changes
-     * come from widgets that are editable even in readonly (e.g. Priority).
+     * Called when the user wants to edit the current record -> @see _setMode
      *
-     * @override
      * @private
-     * @param {OdooEvent} event
      */
-    _onFieldChanged: function (event) {
-        if (this.mode === 'readonly') {
-            event.data.force_save = true;
-        }
-        this._super.apply(this, arguments);
+    _onEdit: function () {
+        this._setMode('edit');
     },
     /**
      * Opens a one2many record (potentially new) in a dialog. This handler is
@@ -555,6 +434,16 @@ var FormController = BasicController.extend({
         }).open();
     },
     /**
+     * Called when the user wants to save the current record -> @see saveRecord
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onSave: function (ev) {
+        ev.stopPropagation(); // Prevent x2m lines to be auto-saved
+        this.saveRecord();
+    },
+    /**
      * This method is called when someone tries to sort a column, most likely
      * in a x2many list view
      *
@@ -567,7 +456,6 @@ var FormController = BasicController.extend({
         var state = this.model.get(this.handle);
         this.renderer.confirmChange(state, state.id, [field]);
     },
-
 });
 
 return FormController;

@@ -1022,7 +1022,7 @@ QUnit.module('basic_fields', {
 
     QUnit.module('HandleWidget');
 
-    QUnit.test('handle widget', function (assert) {
+    QUnit.test('handle widget in x2m', function (assert) {
         assert.expect(6);
 
         this.data.partner.records[0].p = [2, 4];

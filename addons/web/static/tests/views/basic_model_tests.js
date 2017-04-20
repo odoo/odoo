@@ -1156,32 +1156,6 @@ QUnit.module('Views', {
         model.destroy();
     });
 
-    QUnit.test('get method works on unset x2many, after save without reload', function (assert) {
-        assert.expect(3);
-
-        var model = createModel({
-            Model: BasicModel,
-            data: this.data,
-        });
-
-        var params = {
-            fieldNames: ['product_ids'],
-            fields: this.data.partner.fields,
-            modelName: 'partner',
-            type: 'record',
-        };
-
-        model.load(params).then(function (resultID) {
-            assert.ok(model.isDirty(resultID), "datapoint should be dirty");
-            model.save(resultID, {reload: false});
-            var record = model.get(resultID, {raw: true});
-            assert.deepEqual(record.data.product_ids, [],
-                "should have correct value for product_ids field");
-            assert.notOk(model.isDirty(resultID), "datapoint should not be dirty");
-        });
-        model.destroy();
-    });
-
     QUnit.test('call makeRecord with a pre-fetched many2one field', function (assert) {
         assert.expect(3);
         var rpcCount = 0;
@@ -1346,7 +1320,7 @@ QUnit.module('Views', {
         var model = createModel({
             Model: BasicModel,
             data: this.data,
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 assert.step(args.method);
                 return this._super(route, args);
             },

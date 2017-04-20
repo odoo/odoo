@@ -620,17 +620,17 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.mode, 'readonly', 'form view should be in readonly mode');
         assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'),
-                    'form view should have .o_form_readonly');
+            'form view should be .o_form_readonly');
         assert.ok(form.$buttons.find('.o_form_buttons_view').is(':visible'),
             'readonly buttons should be visible');
         assert.ok(!form.$buttons.find('.o_form_buttons_edit').is(':visible'),
             'edit buttons should not be visible');
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.mode, 'edit', 'form view should be in edit mode');
-        assert.ok(form.$el.hasClass('o_form_editable'),
-                    'form view should have .o_form_editable');
-        assert.ok(!form.$el.hasClass('o_form_readonly'),
-                    'form view should not have .o_form_readonly');
+        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'),
+            'form view should be .o_form_editable');
+        assert.ok(!form.$('.o_form_view').hasClass('o_form_readonly'),
+            'form view should not be .o_form_readonly');
         assert.ok(!form.$buttons.find('.o_form_buttons_view').is(':visible'),
             'readonly buttons should not be visible');
         assert.ok(form.$buttons.find('.o_form_buttons_edit').is(':visible'),
@@ -1456,7 +1456,7 @@ QUnit.module('Views', {
 
         // click on discard
         form.$buttons.find('.o_form_button_cancel').click();
-        assert.ok(!$('.modal').length, 'no confirm modal should be displayed');
+        assert.ok(!$('.modal:visible').length, 'no confirm modal should be displayed');
         assert.strictEqual(form.$('.o_form_field').text(), 'yop', 'field in readonly should display yop');
 
         assert.strictEqual(nbWrite, 0, 'no write RPC should have been done');
@@ -1768,7 +1768,7 @@ QUnit.module('Views', {
 
         // click on the pager to switch to the next record and cancel the confirm request
         form.pager.$('.o_pager_next').click(); // click on next
-        assert.strictEqual($('.modal').length, 0, 'no confirm modal should be displayed');
+        assert.strictEqual($('.modal:visible').length, 0, 'no confirm modal should be displayed');
         assert.strictEqual(form.pager.$('.o_pager_value').text(), "2", 'pager value should be 2');
 
         assert.strictEqual(form.$('.o_priority .fa-star-o').length, 2,
@@ -1780,7 +1780,7 @@ QUnit.module('Views', {
             'priority widget should have been updated');
 
         form.pager.$('.o_pager_next').click(); // click on next
-        assert.strictEqual($('.modal').length, 0, 'no confirm modal should be displayed');
+        assert.strictEqual($('.modal:visible').length, 0, 'no confirm modal should be displayed');
         assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should be 1');
 
         // switch to edit mode
@@ -1795,38 +1795,6 @@ QUnit.module('Views', {
         $('.modal .modal-footer .btn-primary').click(); // click on confirm
         form.pager.$('.o_pager_next').click(); // click on next
         assert.strictEqual(form.pager.$('.o_pager_value').text(), "2", 'pager value should be 2');
-        form.destroy();
-    });
-
-    QUnit.test('handling dirty state: canBeDiscarded should be idempotent', function (assert) {
-        assert.expect(3);
-
-        var form = createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form string="Partners">' +
-                    '<field name="foo"></field>' +
-                '</form>',
-            res_id: 1,
-        });
-
-        // switch to edit mode
-        form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('.o_form_input').val(), 'yop', 'input should contain yop');
-
-        // edit the foo field to make it dirty
-        form.$('.o_form_input').val('new value').trigger('input');
-
-        // discard changes once
-        form.canBeDiscarded();
-        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
-        $('.modal .modal-footer .btn-primary').click(); // click on confirm
-
-        // discard changes a second time
-        form.canBeDiscarded();
-        assert.strictEqual($('.modal').length, 0, 'no confirm modal should be displayed');
-
         form.destroy();
     });
 
@@ -2047,7 +2015,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.pager.$('.o_pager_limit').text(), "3", 'pager limit should be 3');
         assert.strictEqual(form.$('span:contains(yop)').length, 1,
             'should have a field with foo value for record 1');
-        assert.ok(!$('.modal').length, 'no confirm modal should be displayed');
+        assert.ok(!$('.modal:visible').length, 'no confirm modal should be displayed');
 
         // open sidebar
         form.sidebar.$('button.o_dropdown_toggler_btn').click();
@@ -2347,7 +2315,8 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('.oe_stat_button').length, 1,
             "button box should be displayed in edit on an existing record");
 
-        // create mode
+        // create mode (leave edition first!)
+        form.$buttons.find('.o_form_button_cancel').click();
         form.$buttons.find('.o_form_button_create').click();
         assert.strictEqual(form.$('.oe_stat_button').length, 0,
             "button box should not be displayed when creating a new record");
