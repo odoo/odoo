@@ -46,6 +46,9 @@
         <record id="product.product_product_4_product_template" model="product.template">
             <field name="optional_product_ids" eval="[(6,0,[ref('product_product_1_product_template')])]"/>
         </record>
+        <record id="product.product_product_7_product_template" model="product.template">
+            <field name="optional_product_ids" eval="[(6,0,[ref('product_product_1_product_template')])]"/>
+        </record>
         <record id="product_attribute_price_1" model="product.attribute.price">
             <field name="product_tmpl_id" ref="product_product_1_product_template"/>
             <field name="value_id" ref="product_attribute_value_2"/>

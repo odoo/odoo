@@ -27,6 +27,26 @@ tour.register('shop_customize', {
             trigger: '#customize-menu > a',
         },
         {
+            content: "click on Add to cart",
+            trigger: "#customize-menu a:contains(Add to Cart)",
+        },
+        {
+            content: "Add to card single product on shop page",
+            trigger: 'a[data-has_optional=0]:eq(0)',
+        },
+        {
+            content: "Add to card optional product on shop page",
+            trigger: 'a[data-has_optional=1]:eq(0)',
+        },
+        {
+            content: "Back to shopping page",
+            trigger: ".modal-footer a:contains(Continue Shopping)",
+        },
+        {
+            content: "open customize menu",
+            trigger: '#customize-menu-button',
+        },
+        {
             content: "click on 'Product Attribute's Filters'",
             trigger: "#customize-menu a:contains(Product Attribute's Filters)",
         },
@@ -153,7 +173,7 @@ tour.register('shop_customize', {
         },
         {
             content: "check quantity",
-            trigger: '.my_cart_quantity:containsExact(2),.o_extra_menu_items .fa-plus',
+            trigger: '.my_cart_quantity:containsExact(4),.o_extra_menu_items .fa-plus',
             run: function () {}, // it's a check
         },
         {
@@ -162,8 +182,19 @@ tour.register('shop_customize', {
             run: function () {}, // it's a check
         },
         {
-            content: "remove iPad from cart",
+            content: "remove apple wireless keyboard",
+            extra_trigger: '#cart_products input.js_quantity:propValue(1)',
             trigger: '#cart_products a.js_add_cart_json:first',
+        },
+        {
+            content: "remove apple in-ear headphones",
+            extra_trigger: '#cart_products input.js_quantity:propValue(1)',
+            trigger: '#cart_products a.js_add_cart_json:first',
+        },
+        {
+            content: "remove iPad from cart",
+            extra_trigger: '#cart_products input.js_quantity:propValue(1)',
+            trigger: '#cart_products tr:contains("iPad Retina Display (16 GB, White)") a.js_add_cart_json:first',
         },
         {
             content: "check optional product is removed",
