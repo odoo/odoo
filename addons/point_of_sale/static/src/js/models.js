@@ -62,7 +62,7 @@ exports.PosModel = Backbone.Model.extend({
         this.config = null;
         this.units = [];
         this.units_by_id = {};
-        this.pricelist = null;
+        this.default_pricelist = null;
         this.order_sequence = 1;
         window.posmodel = this;
 
@@ -184,7 +184,9 @@ exports.PosModel = Backbone.Model.extend({
         }
     },{
         model:  'res.partner',
-        fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','barcode','write_date','property_account_position_id'],
+        fields: ['name','street','city','state_id','country_id','vat',
+                 'phone','zip','mobile','email','barcode','write_date',
+                 'property_account_position_id','property_product_pricelist'],
         domain: [['customer','=',true]], 
         loaded: function(self,partners){
             self.partners = partners;
@@ -285,13 +287,46 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self, locations){ self.shop = locations[0]; },
     },{
         model:  'product.pricelist',
-        fields: ['currency_id'],
-        ids:    function(self){ return [self.config.pricelist_id[0]]; },
-        loaded: function(self, pricelists){ self.pricelist = pricelists[0]; },
+        fields: ['name'],
+        domain: function(self) { return [['id', 'in', self.config.available_pricelist_ids]]; },
+        loaded: function(self, pricelists){
+            _.map(pricelists, function (pricelist) { pricelist.items = []; });
+            self.default_pricelist = _.findWhere(pricelists, {id: self.config.pricelist_id[0]});
+            self.pricelists = pricelists;
+        },
+    },{
+        model:  'product.pricelist.item',
+        domain: function(self) { return [['pricelist_id', 'in', _.pluck(self.pricelists, 'id')]]; },
+        loaded: function(self, pricelist_items){
+            var pricelist_by_id = {};
+            _.each(self.pricelists, function (pricelist) {
+                pricelist_by_id[pricelist.id] = pricelist;
+            });
+
+            _.each(pricelist_items, function (item) {
+                var pricelist = pricelist_by_id[item.pricelist_id[0]];
+                pricelist.items.push(item);
+                item.base_pricelist = pricelist_by_id[item.base_pricelist_id[0]];
+            });
+        },
+    },{
+        model:  'product.category',
+        fields: ['name', 'parent_id'],
+        loaded: function(self, product_categories){
+            var category_by_id = {};
+            _.each(product_categories, function (category) {
+                category_by_id[category.id] = category;
+            });
+            _.each(product_categories, function (category) {
+                category.parent = category_by_id[category.parent_id[0]];
+            });
+
+            self.product_categories = product_categories;
+        },
     },{
         model: 'res.currency',
         fields: ['name','symbol','position','rounding'],
-        ids:    function(self){ return [self.pricelist.currency_id[0]]; },
+        ids:    function(self){ return [self.config.currency_id[0]]; },
         loaded: function(self, currencies){
             self.currency = currencies[0];
             if (self.currency.rounding > 0) {
@@ -310,14 +345,17 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'product.product',
-        fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'barcode', 'default_code', 
-                 'to_weight', 'uom_id', 'description_sale', 'description',
+        fields: ['display_name', 'list_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
+                 'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
                  'product_tmpl_id','tracking'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: [['sale_ok','=',true],['available_in_pos','=',true]],
-        context: function(self){ return { pricelist: self.pricelist.id, display_default_code: false }; },
+        context: function(self){ return { display_default_code: false }; },
         loaded: function(self, products){
-            self.db.add_products(products);
+            self.db.add_products(_.map(products, function (product) {
+                product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});
+                return new exports.Product({}, product);
+            }));
         },
     },{
         model:  'account.bank.statement',
@@ -1160,6 +1198,87 @@ exports.load_models = function(models,options) {
     pmodels.splice.apply(pmodels,[index,0].concat(models));
 };
 
+exports.Product = Backbone.Model.extend({
+    initialize: function(attr, options){
+        _.extend(this, options);
+    },
+
+    // Port of get_product_price on product.pricelist.
+    //
+    // Anything related to UOM can be ignored, the POS will always use
+    // the default UOM set on the product and the user cannot change
+    // it.
+    //
+    // Pricelist items do not have to be sorted. All
+    // product.pricelist.item records are loaded with a search_read
+    // and were automatically sorted based on their _order by the
+    // ORM. After that they are added in this order to the pricelists.
+    get_price: function(pricelist, quantity){
+        var self = this;
+        var date = moment().startOf('day');
+
+        var category_ids = [];
+        var category = this.categ;
+        while (category) {
+            category_ids.push(category.id);
+            category = category.parent;
+        }
+
+        var pricelist_items = _.filter(pricelist.items, function (item) {
+            return (! item.product_tmpl_id || item.product_tmpl_id[0] === self.product_tmpl_id) &&
+                   (! item.product_id || item.product_id[0] === self.id) &&
+                   (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
+                   (! item.date_start || moment(item.date_start).isSameOrBefore(date)) &&
+                   (! item.date_end || moment(item.date_end).isSameOrAfter(date));
+        });
+
+        var price = self.list_price;
+        _.find(pricelist_items, function (rule) {
+            if (rule.min_quantity && quantity < rule.min_quantity) {
+                return false;
+            }
+
+            if (rule.base === 'pricelist') {
+                price = self.get_price(rule.base_pricelist, quantity);
+            } else if (rule.base === 'standard_price') {
+                price = self.standard_price;
+            }
+
+            if (rule.compute_price === 'fixed') {
+                price = rule.fixed_price;
+                return true;
+            } else if (rule.compute_price === 'percentage') {
+                price = price - (price * (rule.percent_price / 100));
+                return true;
+            } else {
+                var price_limit = price;
+                price = price - (price * (rule.price_discount / 100));
+                if (rule.price_round) {
+                    price = round_pr(price, rule.price_round);
+                }
+                if (rule.price_surcharge) {
+                    price += rule.price_surcharge;
+                }
+                if (rule.price_min_margin) {
+                    price = Math.max(price, price_limit + rule.price_min_margin);
+                }
+                if (rule.price_max_margin) {
+                    price = Math.min(price, price_limit + rule.price_max_margin);
+                }
+                return true;
+            }
+
+            return false;
+        });
+
+        // This return value has to be rounded with round_di before
+        // being used further. Note that this cannot happen here,
+        // because it would cause inconsistencies with the backend for
+        // pricelist that have base == 'pricelist'.
+        return price;
+    },
+});
+
 var orderline_id = 1;
 
 // An orderline represent one element of the content of a client's shopping cart.
@@ -1174,14 +1293,19 @@ exports.Orderline = Backbone.Model.extend({
             return;
         }
         this.product = options.product;
-        this.price   = options.product.price;
         this.set_product_lot(this.product);
         this.set_quantity(1);
         this.discount = 0;
         this.discountStr = '0';
         this.type = 'unit';
         this.selected = false;
-        this.id       = orderline_id++; 
+        this.id = orderline_id++;
+
+        if (options.price) {
+            this.set_unit_price(options.price);
+        } else {
+            this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
+        }
     },
     init_from_JSON: function(json) {
         this.product = this.pos.db.get_product_by_id(json.product_id);
@@ -1192,7 +1316,7 @@ exports.Orderline = Backbone.Model.extend({
         this.set_product_lot(this.product);
         this.price = json.price_unit;
         this.set_discount(json.discount);
-        this.set_quantity(json.qty);
+        this.set_quantity(json.qty, 'do not recompute unit price');
         this.id    = json.id;
         orderline_id = Math.max(this.id+1,orderline_id);
         var pack_lot_lines = json.pack_lot_ids;
@@ -1242,7 +1366,7 @@ exports.Orderline = Backbone.Model.extend({
     // sets the quantity of the product. The quantity will be rounded according to the 
     // product's unity of measure properties. Quantities greater than zero will not get 
     // rounded to zero
-    set_quantity: function(quantity){
+    set_quantity: function(quantity, keep_price){
         this.order.assert_editable();
         if(quantity === 'remove'){
             this.order.remove_orderline(this);
@@ -1264,7 +1388,11 @@ exports.Orderline = Backbone.Model.extend({
                 this.quantityStr = '' + this.quantity;
             }
         }
-        this.trigger('change',this);
+
+        // just like in sale.order changing the quantity will recompute the unit price
+        if(! keep_price){
+            this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
+        }
     },
     // return the quantity of product
     get_quantity: function(){
@@ -1354,7 +1482,7 @@ exports.Orderline = Backbone.Model.extend({
             return false;
         }else if(this.get_discount() > 0){             // we don't merge discounted orderlines
             return false;
-        }else if(this.price !== orderline.price){
+        }else if(this.price !== orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity())){
             return false;
         }else if(this.product.tracking == 'lot') {
             return false;
@@ -1778,6 +1906,7 @@ exports.Order = Backbone.Model.extend({
         this.paymentlines   = new PaymentlineCollection(); 
         this.pos_session_id = this.pos.pos_session.id;
         this.finalized      = false; // if true, cannot be modified.
+        this.set_pricelist(this.pos.default_pricelist);
 
         this.set({ client: null });
 
@@ -1824,7 +1953,7 @@ exports.Order = Backbone.Model.extend({
         var client;
         this.sequence_number = json.sequence_number;
         this.pos.pos_session.sequence_number = Math.max(this.sequence_number+1,this.pos.pos_session.sequence_number);
-        this.session_id    = json.pos_session_id;
+        this.session_id = json.pos_session_id;
         this.uid = json.uid;
         this.name = _t("Order ") + this.uid;
         this.validation_date = json.creation_date;
@@ -1839,6 +1968,14 @@ exports.Order = Backbone.Model.extend({
             } else {
                 console.error('ERROR: trying to load a fiscal position not available in the pos');
             }
+        }
+
+        if (json.pricelist_id) {
+            this.pricelist = _.find(this.pos.pricelists, function (pricelist) {
+                return pricelist.id === json.pricelist_id;
+            });
+        } else {
+            this.pricelist = this.pos.default_pricelist;
         }
 
         if (json.partner_id) {
@@ -1890,6 +2027,7 @@ exports.Order = Backbone.Model.extend({
             lines: orderLines,
             statement_ids: paymentLines,
             pos_session_id: this.pos_session_id,
+            pricelist_id: this.pricelist ? this.pricelist.id : false,
             partner_id: this.get_client() ? this.get_client().id : false,
             user_id: this.pos.get_cashier().id,
             uid: this.uid,
@@ -2079,6 +2217,14 @@ exports.Order = Backbone.Model.extend({
             }
             this.add_product(tip_product, {quantity: 1, price: tip });
         }
+    },
+    set_pricelist: function (pricelist) {
+        var self = this;
+        this.pricelist = pricelist;
+        _.each(this.get_orderlines(), function (line) {
+            line.set_unit_price(line.product.get_price(self.pricelist, line.get_quantity()));
+        });
+        this.trigger('change');
     },
     remove_orderline: function( line ){
         this.assert_editable();

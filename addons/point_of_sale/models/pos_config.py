@@ -127,7 +127,10 @@ class PosConfig(models.Model):
     pos_session_state = fields.Char(compute='_compute_current_session_user')
     group_by = fields.Boolean(string='Group Journal Items', default=True,
         help="Check this if you want to group the Journal Items by Product while closing a Session.")
-    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, default=_default_pricelist)
+    pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', required=True, default=_default_pricelist,
+        help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
+    available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
+        help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
         help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.')
@@ -143,6 +146,12 @@ class PosConfig(models.Model):
     default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
     customer_facing_display_html = fields.Html(string='Customer facing display content', translate=True, default=_compute_default_customer_html)
     use_pricelist = fields.Boolean("Use a pricelist.")
+    group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
+                                          implied_group='product.group_sale_pricelist',
+                                          help="""Allows to manage different prices based on rules per category of customers.
+                    Example: 10% for retailers, promotion of 5 EUR on this product, etc.""")
+    group_pricelist_item = fields.Boolean("Show pricelists to customers",
+                                          implied_group='product.group_pricelist_item')
     tax_regime = fields.Boolean("Tax Regime")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
     barcode_scanner = fields.Boolean("Barcode Scanner")
@@ -220,6 +229,19 @@ class PosConfig(models.Model):
         if self.env['account.journal'].search_count([('id', 'in', self.journal_ids.ids), ('company_id', '!=', self.company_id.id)]):
             raise ValidationError(_("The company of a payment method is different than the one of point of sale"))
 
+    @api.constrains('pricelist_id', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'journal_ids')
+    def _check_currencies(self):
+        if self.pricelist_id not in self.available_pricelist_ids:
+            raise ValidationError(_("The default pricelist must be included in the available pricelists."))
+        if any(self.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != self.currency_id)):
+            raise ValidationError(_("All available pricelists must be in the same currency as the company or"
+                                    " as the Sales Journal set on this point of sale if you use"
+                                    " the Accounting application."))
+        if self.invoice_journal_id.currency_id and self.invoice_journal_id.currency_id != self.currency_id:
+            raise ValidationError(_("The invoice journal must be in the same currency as the Sales Journal or the company currency if that is not set."))
+        if any(self.journal_ids.mapped(lambda journal: journal.currency_id and journal.currency_id != self.currency_id)):
+            raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
+
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
         self.iface_print_auto = self.iface_print_via_proxy
@@ -237,6 +259,16 @@ class PosConfig(models.Model):
         """
         if not self.use_pricelist:
             self.pricelist_id = self._default_pricelist()
+        else:
+            self.update({
+                'group_sale_pricelist': True,
+                'group_pricelist_item': True,
+            })
+
+    @api.onchange('available_pricelist_ids')
+    def _onchange_available_pricelist_ids(self):
+        if self.pricelist_id not in self.available_pricelist_ids:
+            self.pricelist_id = False
 
     @api.onchange('iface_scan_via_proxy')
     def _onchange_iface_scan_via_proxy(self):
@@ -310,6 +342,7 @@ class PosConfig(models.Model):
         values['sequence_line_id'] = IrSequence.create(val).id
         pos_config = super(PosConfig, self).create(values)
         pos_config.sudo()._check_modules_to_install()
+        pos_config.sudo()._check_groups_implied()
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_config
 
@@ -318,6 +351,7 @@ class PosConfig(models.Model):
         result = super(PosConfig, self).write(vals)
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
+        self.sudo()._check_groups_implied()
         return result
 
     @api.multi
@@ -345,6 +379,16 @@ class PosConfig(models.Model):
                     module_installed = True
         # just in case we want to do something if we install a module. (like a refresh ...)
         return module_installed
+
+    def _check_groups_implied(self):
+        for pos_config in self:
+            for field_name in [f for f in pos_config.fields_get_keys() if f.startswith('group_')]:
+                field = pos_config._fields[field_name]
+                if field.type in ('boolean', 'selection') and hasattr(field, 'implied_group'):
+                    field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
+                    field_groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in field_group_xmlids))
+                    field_groups.write({'implied_ids': [(4, self.env.ref(field.implied_group).id)]})
+
 
     def execute(self):
         return {
