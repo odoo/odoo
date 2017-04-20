@@ -1253,6 +1253,7 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
+                context: record.context,
                 // context: {bin_size: true} // FIXME: when editing a subrecord in the partner form view, it tries to write the bin_size on the image field
             })
             .then(function (result) {
@@ -2566,6 +2567,7 @@ var BasicModel = AbstractModel.extend({
             route: '/web/dataset/search_read',
             model: list.model,
             fields: fieldNames,
+            context: list.context,
             domain: list.domain || [],
             limit: list.limit,
             offset: list.offset,
