@@ -1701,6 +1701,7 @@ var JournalDashboardGraph = AbstractField.extend({
         // note: the rendering of this widget is aynchronous as nvd3 does a
         // setTimeout(0) before executing the callback given to addGraph
         var self = this;
+        this.$el.empty();
         this.chart = null;
         nv.addGraph(function () {
             self.$svg = self.$el.append('<svg>');

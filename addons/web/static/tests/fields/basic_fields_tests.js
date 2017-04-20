@@ -826,7 +826,8 @@ QUnit.module('basic_fields', {
     QUnit.module('JournalDashboardGraph');
 
     QUnit.test('graph dashboard widget is rendered correctly', function (assert) {
-        assert.expect(2);
+        var done = assert.async();
+        assert.expect(3);
 
         _.extend(this.data.partner.fields, {
             graph_data: { string: "Graph Data", type: "text" },
@@ -877,14 +878,24 @@ QUnit.module('basic_fields', {
         // for that reason, we need to do two setTimeout(0) as well here to ensure
         // that both graphs are rendered before starting to check if the rendering
         // is correct.
-        var done = assert.async();
-        return concurrency.delay(0).then(function () {
+        concurrency.delay(0).then(function () {
             return concurrency.delay(0);
         }).then(function () {
-            assert.ok(kanban.$('.o_kanban_record:first() .o_graph_barchart').length,
+            assert.strictEqual(kanban.$('.o_kanban_record:first() .o_graph_barchart').length, 1,
                 "graph of first record should be a barchart");
-            assert.ok(kanban.$('.o_kanban_record:nth(1) .o_graph_linechart').length,
+            assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_graph_linechart').length, 1,
                 "graph of second record should be a linechart");
+
+            // force a re-rendering of the first record (to check if the
+            // previous rendered graph is correctly removed from the DOM)
+            var firstRecordState = kanban.model.get(kanban.handle).data[0];
+            return kanban.renderer.updateRecord(firstRecordState);
+        }).then(function () {
+            return concurrency.delay(0); // one graph is re-rendered
+        }).then(function () {
+            assert.strictEqual(kanban.$('.o_kanban_record:first() svg').length, 1,
+                "there should be only one rendered graph by record");
+
             kanban.destroy();
             done();
         });
