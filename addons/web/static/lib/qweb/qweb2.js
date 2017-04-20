@@ -120,12 +120,15 @@ var QWeb2 = {
                 }
                 return r.join('');
             } else {
+                // avoid XMLSerializer with text node for IE
+                if (node.nodeType == 3) {
+                    return node.data;
+                }
                 if (typeof XMLSerializer !== 'undefined') {
                     return (new XMLSerializer()).serializeToString(node);
                 } else {
                     switch(node.nodeType) {
                     case 1: return node.outerHTML;
-                    case 3: return node.data;
                     case 4: return '<![CDATA[' + node.data + ']]>';
                     case 8: return '<!-- ' + node.data + '-->';
                     }
