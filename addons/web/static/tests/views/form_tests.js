@@ -947,7 +947,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('can create a record with default values', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var form = createView({
             View: FormView,
@@ -962,6 +962,16 @@ QUnit.module('Views', {
                     '</sheet>' +
                 '</form>',
             res_id: 1,
+            viewOptions: {
+                context: {active_field: 2},
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.strictEqual(args.kwargs.context.active_field, 2,
+                        "should have send the correct context");
+                }
+                return this._super.apply(this, arguments);
+            },
         });
         var n = this.data.partner.records.length;
 
