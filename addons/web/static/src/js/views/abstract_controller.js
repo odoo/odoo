@@ -19,6 +19,9 @@ var AbstractController = Widget.extend({
     custom_events: {
         open_record: '_onOpenRecord',
     },
+    events: {
+        'click a[type="action"]': '_onActionClicked',
+    },
 
     /**
      * @constructor
@@ -290,6 +293,17 @@ var AbstractController = Widget.extend({
             mode: event.data.mode || 'readonly',
             model: this.modelName,
         });
+    },
+    /**
+     * When a user clicks on an <a> link with type="action", we need to actually
+     * do the action. This kind of links is used a lot in no-content helpers.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onActionClicked: function (event) {
+        event.preventDefault();
+        this.do_action(event.target.name);
     },
 
 });

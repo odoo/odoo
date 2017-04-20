@@ -3795,5 +3795,29 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('support anchor tags with action type', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                            '<a type="action" name="42"><i class="fa fa-arrow-right"/> Click me !</a>' +
+                  '</form>',
+            res_id: 1,
+            intercepts: {
+                do_action: function (event) {
+                    assert.strictEqual(event.data.action, "42",
+                        "should trigger do_action with correct action parameter");
+                }
+            }
+        });
+        form.$('a[type="action"]').click();
+
+        form.destroy();
+    });
+
 });
 });
