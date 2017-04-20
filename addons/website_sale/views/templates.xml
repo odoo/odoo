@@ -477,8 +477,9 @@
                                 </div>
                             </form>
                             <hr t-if="product.description_sale" />
-                            <div class="o_not_editable">
-                                <p t-field="product.description_sale" class="text-muted" />
+                            <hr t-if="not product.description_sale" class="css_non_editable_mode_hidden"/>
+                            <div>
+                                <p t-field="product.description_sale" class="text-muted" placeholder="Product Description"/>
                             </div>
                             <hr />
                             <p class="text-muted">

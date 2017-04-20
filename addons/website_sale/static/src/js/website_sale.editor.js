@@ -4,7 +4,6 @@ odoo.define('website_sale.add_product', function (require) {
 var core = require('web.core');
 var wUtils = require('website.utils');
 var WebsiteNewMenu = require('website.newMenu');
-var var rte = require('web_editor.rte');
 
 var _t = core._t;
 
@@ -54,6 +53,7 @@ odoo.define('website_sale.editor', function (require) {
 
 require('web.dom_ready');
 var options = require('web_editor.snippets.options');
+var rte = require('web_editor.rte');
 
 if (!$('.js_sale').length) {
     return $.Deferred().reject("DOM doesn't contain '.js_sale'");
@@ -171,11 +171,11 @@ options.registry.website_sale = options.Class.extend({
         var self = this;
         var $product_grid = this.$target.closest("#products_grid");
         this._rpc({
-            route: '/shop/change_sequence' + this.product_tmpl_id,
+            route: '/shop/change_sequence/' + this.product_tmpl_id,
             params: {
                 sequence: value,
             },
-        }).then(function() {
+        }).then(function(result) {
             $product_grid.find('#product_table').replaceWith(result.template);
             $('.oe_overlay').detach();
             self.rebind_event();
@@ -212,12 +212,20 @@ options.registry.website_sale = options.Class.extend({
                 direction = (starty > stopy && startx > stopx) ? "up" : "down";
                 if (is_dragged) {
                     is_dragged = false;
-                    ajax.jsonRpc('/shop/drag_drop_change_sequence/' + self.product_tmpl_id, 'call', {'sequence': target_product_sequence, 'direction': direction, 'dragged_product_sequence': dragged_product_sequence, 'target_product_id': target_product_id})
-                        .done(function(result) {
-                            $product_grid.find("#product_table").replaceWith(result.template);
-                            $('.oe_overlay').detach();
-                            self.rebind_event();
-                        });
+                    self._rpc({
+                        route: '/shop/drag_drop_change_sequence/' + self.product_tmpl_id,
+                        params: {
+                            sequence: target_product_sequence,
+                            direction: direction,
+                            dragged_product_sequence: dragged_product_sequence,
+                            target_product_id: target_product_id
+                        }
+                    })
+                    .then(function(result) {
+                        $product_grid.find("#product_table").replaceWith(result.template);
+                        $('.oe_overlay').detach();
+                        self.rebind_event();
+                    });
                 }
             }
         });
@@ -246,12 +254,15 @@ options.registry.website_sale = options.Class.extend({
                 var colspan = Math.floor(ui.helper[0].clientWidth/Math.floor(width));
                 var rowspan = Math.floor(ui.helper[0].clientHeight/Math.floor(height));
                 if (colspan !== self.$target.prop("colspan") || rowspan !== self.$target.prop("rowspan")) {
-                    ajax.jsonRpc('/shop/drag_and_drop_resize/' + self.product_tmpl_id, 'call', {'x': colspan, 'y': rowspan})
-                        .done(function(result) {
-                            $product_grid.find('#product_table').replaceWith(result.template);
-                            $('.oe_overlay').detach();
-                            self.rebind_event();
-                        });
+                    self._rpc({
+                        route: '/shop/drag_and_drop_resize/' + self.product_tmpl_id,
+                        params: {x: colspan, y: rowspan}
+                    })
+                    .then(function(result) {
+                        $product_grid.find('#product_table').replaceWith(result.template);
+                        $('.oe_overlay').detach();
+                        self.rebind_event();
+                    });
                 } else {
                     $(this).prop("style", ""); // Bad fix to revert resize, there should be some methodo to revert resize
                 }
