@@ -292,7 +292,7 @@ return AbstractModel.extend({
         return this._rpc({
             model: this.modelName,
             method: 'write',
-            args: [record.id, data],
+            args: [[record.id], data],
         });
     },
 

@@ -482,6 +482,7 @@ var FieldMonetary = InputField.extend({
      * @override
      * @private
      * @param {float} value
+     * @returns {string}
      */
     _formatValue: function (value) {
         var format = field_utils.format[this.mode === 'edit' ? "float" : "monetary"];
@@ -598,6 +599,10 @@ var FieldBoolean = AbstractField.extend({
 var FieldInteger = InputField.extend({
     supportedFieldTypes: ['integer'],
 
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
      * For integer fields, 0 is a valid value.
      *
@@ -605,6 +610,34 @@ var FieldInteger = InputField.extend({
      */
     isSet: function () {
         return this.value === 0 || this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Format integer value
+     *
+     * Note: We have to overwrite this method to allow virtual ids. A virtual id
+     * is a character string composed of an integer and has a dash and other
+     * information.
+     * E.g: in calendar, the recursive event have virtual id linked to a real id
+     * virtual event id "23-20170418020000" is linked to the event id 23
+     *
+     * @override
+     * @private
+     * @param {integer|string} value
+     * @returns {string}
+     */
+    _formatValue: function (value) {
+        if (typeof value === 'string') {
+            if (!/^[0-9]+-/.test(value)) {
+                throw new Error('"' + value + '" is not an integer or a virtual id');
+            }
+            return value;
+        }
+        return field_utils.format.integer(value, this.field);
     },
 });
 
