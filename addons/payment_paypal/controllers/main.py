@@ -23,7 +23,7 @@ class PaypalController(http.Controller):
         """ Extract the return URL from the data coming from paypal. """
         return_url = post.pop('return_url', '')
         if not return_url:
-            custom = json.loads(post.pop('custom', False) or post.pop('cm', False) or '{}')
+            custom = json.loads(urllib.unquote_plus(post.pop('custom', False) or post.pop('cm', False) or '{}'))
             return_url = custom.get('return_url', '/')
         return return_url
 
