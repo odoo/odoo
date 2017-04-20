@@ -90,7 +90,7 @@ var FormController = BasicController.extend({
         var self = this;
         var record = this.model.get(this.handle, {raw: true});
         return this.model.load({
-            context: this.context,
+            context: record.getContext(),
             fields: record.fields,
             fieldsInfo: record.fieldsInfo,
             modelName: this.modelName,
