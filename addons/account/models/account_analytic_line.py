@@ -24,6 +24,7 @@ class AccountAnalyticLine(models.Model):
     analytic_amount_currency = fields.Monetary(string='Amount Currency', compute="_get_analytic_amount_currency", help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
     partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True, readonly=True)
 
+    @api.one
     def _get_analytic_amount_currency(self):
         for line in self:
             line.analytic_amount_currency = abs(line.amount_currency) * copysign(1, line.amount)
