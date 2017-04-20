@@ -3473,7 +3473,8 @@ instance.web.form.CompletionFieldMixin = {
                 title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
                 initial_ids: ids ? _.map(ids, function(x) {return x[0];}) : undefined,
                 initial_view: view,
-                disable_multiple_selection: true
+                disable_multiple_selection: true,
+                no_create: self.options.no_create,
             },
             self.build_domain(),
             new instance.web.CompoundContext(self.build_context(), context || {})
