@@ -54,6 +54,20 @@
     </record>
 
     <!-- equiment : views -->
+    <record id="maintenance_equipment_view_search_inherit_hr" model='ir.ui.view'>
+      <field name="name">maintenance.equipment.view.search.inherit.hr</field>
+      <field name="model">maintenance.equipment</field>
+      <field name="inherit_id" ref="maintenance.hr_equipment_view_search"/>
+      <field name="arch" type="xml">
+        <filter name="assigned" position="attributes">
+          <attribute name="domain">['|', ('employee_id', '!=', False), ('department_id', '!=', False)]</attribute>
+        </filter>
+        <filter name="available" position="attributes">
+          <attribute name="domain">[('employee_id', '=', False), ('department_id', '=', False)]</attribute>
+        </filter>
+      </field>
+    </record>
+
     <record id="maintenance_equipment_view_form_inherit_hr" model="ir.ui.view">
         <field name="name">maintenance.equipment.view.form.inherit.hr</field>
         <field name="model">maintenance.equipment</field>
@@ -99,4 +113,4 @@
             </xpath>
         </field>
     </record>
-</odoo> 
+</odoo>
