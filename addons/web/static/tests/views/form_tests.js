@@ -3112,5 +3112,27 @@ QUnit.module('Views', {
             "the stat button should contain a span with the string attribute value");
         form.destroy();
     });
+
+    QUnit.test('renderer waits for asynchronous fields rendering', function (assert) {
+        assert.expect(1);
+        var done = assert.async();
+
+        testUtils.createAsyncView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="bar"/>' +
+                    '<field name="foo" widget="ace"/>' +
+                    '<field name="int_field"/>' +
+                '</form>',
+            res_id: 1,
+        }).then(function (form) {
+            assert.strictEqual(form.$('.ace_editor').length, 1,
+                "should have waited for ace to load its dependencies");
+            form.destroy();
+            done();
+        });
+    });
 });
 });

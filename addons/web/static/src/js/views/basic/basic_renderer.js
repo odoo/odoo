@@ -176,23 +176,17 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} modifiersData
      * @param {Object} record
      * @param {Object} [element] - do the update only on this element if given
-     * @returns {Deferred} resolved once finished
      */
     _applyModifiers: function (modifiersData, record, element) {
         var self = this;
-        var defs = [];
         var modifiers = modifiersData.evaluatedModifiers[record.id] || {};
 
-        this.defs = defs; // Potentially filled by widget rerendering
         if (element) {
             _apply(element);
         } else {
             // Clone is necessary as the list might change during _.each
             _.each(_.clone(modifiersData.elementsByRecord[record.id]), _apply);
         }
-        delete this.defs;
-
-        return $.when.apply($, defs);
 
         function _apply(element) {
             // If the view is in edit mode and that a widget have to switch
@@ -540,10 +534,13 @@ var BasicRenderer = AbstractRenderer.extend({
     _updateAllModifiers: function (record) {
         var self = this;
 
-        var defs = _.flatten(_.map(this.allModifiersData, function (modifiersData) {
+        var defs = [];
+        this.defs = defs; // Potentially filled by widget rerendering
+        _.each(this.allModifiersData, function (modifiersData) {
             self._computeModifiers(modifiersData, record);
-            return self._applyModifiers(modifiersData, record);
-        }));
+            self._applyModifiers(modifiersData, record);
+        });
+        delete this.defs;
 
         return $.when.apply($, defs);
     },
