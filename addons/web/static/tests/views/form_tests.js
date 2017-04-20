@@ -3378,5 +3378,29 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('create with false values', function (assert) {
+        assert.expect(1);
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="bar"/></group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.strictEqual(args.args[0].bar, false,
+                        "the false value should be given as parameter");
+                }
+                return this._super(route, args);
+            },
+            debug: true,
+        });
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
 });
 });

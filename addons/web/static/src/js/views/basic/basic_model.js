@@ -671,7 +671,6 @@ var BasicModel = AbstractModel.extend({
             if (method === 'create') {
                 var fieldNames = record.getFieldNames();
                 _.each(fieldNames, function (name) {
-                    changes[name] = changes[name] || record.data[name];
                     if (changes[name] === null) {
                         delete changes[name];
                     }
