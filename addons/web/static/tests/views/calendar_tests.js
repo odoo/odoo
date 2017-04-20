@@ -326,7 +326,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create event with timezone in week mode', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         this.data.event.records = [];
 
@@ -350,6 +350,18 @@ QUnit.module('Views', {
             },
             session: {
                 tzOffset: 120
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.deepEqual(args.kwargs.context, {
+                        "default_name": null,
+                        "default_start": "2016-12-13 06:00:00",
+                        "default_stop": "2016-12-13 08:00:00",
+                        "default_allday": null
+                    },
+                    "should send the context to create events");
+                }
+                return this._super(route, args);
             },
         });
 
@@ -397,7 +409,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create event with timezone in week mode with formViewDialog', function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         this.data.event.records = [];
         this.data.event.onchanges = {
@@ -434,6 +446,15 @@ QUnit.module('Views', {
                 tzOffset: 120
             },
             mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.deepEqual(args.kwargs.context, {
+                        "default_name": "new event",
+                        "default_start": "2016-12-13 06:00:00",
+                        "default_stop": "2016-12-13 08:00:00",
+                        "default_allday": null
+                    },
+                    "should send the context to create events");
+                }
                 if (args.method === "write") {
                     assert.deepEqual(args.args[1], {
                           "allday": false,

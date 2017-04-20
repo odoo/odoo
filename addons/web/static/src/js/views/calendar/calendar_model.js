@@ -136,7 +136,7 @@ return AbstractModel.extend({
                 model: this.modelName,
                 method: 'create',
                 args: [data],
-                context: _.pick(event.data.options, 'context'),
+                context: event.data.options.context,
             });
     },
     /**
@@ -293,6 +293,7 @@ return AbstractModel.extend({
             model: this.modelName,
             method: 'write',
             args: [[record.id], data],
+            context: this.data.context
         });
     },
 
