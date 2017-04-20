@@ -190,7 +190,7 @@ class CrmTeam(models.Model):
             y_field = 'value'
 
         # generate all required x_fields and update the y_values where we have data for them
-        locale = self._context.get('lang', 'en_US')
+        locale = self._context.get('lang') or 'en_US'
         if self.dashboard_graph_group == 'day':
             for day in range(0, (end_date - start_date).days + 1):
                 short_name = format_date(start_date + relativedelta(days=day), 'd MMM', locale=locale)
