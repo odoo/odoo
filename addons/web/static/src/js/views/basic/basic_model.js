@@ -51,9 +51,10 @@ odoo.define('web.BasicModel', function (require) {
  *
  * Notes:
  * - id: is totally unrelated to res_id.  id is a web client local concept
- * - res_id: if set to a number, it is an actual id for a record in the server
- *     database. If set to 'virtual_' + number, it is a record not yet saved (so,
- *     in create mode).
+ * - res_id: if set to a number or a virtual id (a virtual id is a character
+ *     string composed of an integer and has a dash and other information), it
+ *     is an actual id for a record in the server database. If set to
+ *    'virtual_' + number, it is a record not yet saved (so, in create mode).
  * - res_ids: if set, it represent the context in which the data point is actually
  *     used.  For example, a given record in a form view (opened from a list view)
  *     might have a res_id = 2 and res_ids = [1,2,3]
@@ -397,14 +398,25 @@ var BasicModel = AbstractModel.extend({
         return isDirty;
     },
     /**
-     * Check if a record is new, meaning if it is in the process of being
-     * created and no actual record exists in db.
+     * Check if a record is new, meaning if it is in the process of being created
+     * and no actual record exists in db.
+     *
+     * Note: A virtual id is a character string composed of an integer and has
+     * a dash and other information.
+     * E.g: in calendar, the recursive event have virtual id linked to a real id
+     * virtual event id "23-20170418020000" is linked to the event id 23
      *
      * @param {string} id id for a local resource
      * @returns {boolean}
      */
     isNew: function (id) {
-        return typeof this.localData[id].res_id !== 'number';
+        var res_id = this.localData[id].res_id;
+        if (typeof res_id === 'number') {
+            return false;
+        } else if (typeof res_id === 'string' && /^[0-9]+-/.test(res_id)) {
+            return false;
+        }
+        return true;
     },
     /**
      * Main entry point, the goal of this method is to fetch and process all

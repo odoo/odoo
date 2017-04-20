@@ -67,7 +67,16 @@ QUnit.module('Views', {
                     {id: 1, display_name: "USD", symbol: '$', position: 'before'},
                     {id: 2, display_name: "EUR", symbol: '€', position: 'after'},
                 ],
-            }
+            },
+            event: {
+                fields: {
+                    id: {string: "ID", type: "integer"},
+                    name: {string: "name", type: "char"},
+                },
+                records: [
+                    {id: "2-20170808020000", name: "virtual"},
+                ]
+            },
         };
     }
 }, function () {
@@ -1487,6 +1496,31 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('open a virtual id', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'event',
+            data: this.data,
+            arch: '<tree><field name="name"/></tree>',
+        });
+
+        testUtils.intercept(list, "switch_view", function (event) {
+            assert.deepEqual(event.data, {
+                    'model': 'event',
+                    'res_id': '2-20170808020000',
+                    'view_type': 'form',
+                    'mode': 'readonly'
+                },
+                "should trigger switch to the form view for the record virtual id");
+        });
+        list.$('td:contains(virtual)').click();
+
+        list.destroy();
+    });
+
 });
 
 });
