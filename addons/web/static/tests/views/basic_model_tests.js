@@ -61,14 +61,20 @@ QUnit.module('Views', {
 }, function () {
     QUnit.module('BasicModel');
 
-    QUnit.test('simple functionality', function (assert) {
-        assert.expect(6);
+    QUnit.test('can load a record', function (assert) {
+        assert.expect(7);
 
         this.params.fieldNames = ['foo'];
+        this.params.context = {active_field: 2};
 
         var model = createModel({
             Model: BasicModel,
             data: this.data,
+            mockRPC: function (route, args) {
+                assert.strictEqual(args.kwargs.context.active_field, 2,
+                    "should have sent the correct context");
+                return this._super.apply(this, arguments);
+            }
         });
 
         assert.strictEqual(model.get(1), null, "should return null for non existing key");
@@ -408,13 +414,15 @@ QUnit.module('Views', {
         this.params.domain = [];
         this.params.groupedBy = [];
         this.params.res_id = undefined;
+        this.params.context = {active_field: 2};
 
         var rpcCount = 0;
         var model = createModel({
             Model: BasicModel,
             data: this.data,
             mockRPC: function (route, args) {
-                rpcCount++;
+                assert.strictEqual(args.context.active_field, 2,
+                    "should have sent the correct context");
                 return this._super(route, args);
             },
         });
@@ -425,7 +433,6 @@ QUnit.module('Views', {
             assert.strictEqual(record.type, 'list', "record fetched should be a list");
             assert.strictEqual(record.data.length, 2, "should have fetched 2 records");
             assert.strictEqual(record.data[0].data.foo, 'blip', "first record should have 'blip' in foo field");
-            assert.strictEqual(rpcCount, 1, "should have done 1 rpc (searchread)");
         });
         model.destroy();
     });
