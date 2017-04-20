@@ -721,11 +721,22 @@ class pos_order(osv.osv):
     def _get_valid_session(self, cr, uid, order, context=None):
         session = self.pool.get('pos.session')
         closed_session = session.browse(cr, uid, order['pos_session_id'], context=context)
+        
         _logger.warning('session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
                         closed_session.name,
                         closed_session.id,
                         order['name'],
                         order['amount_total'])
+
+        rescue_session = session.search_read(cr, uid, [
+            ('name', 'like', '(RESCUE FOR %(session)s)' % {'session': closed_session.name}),
+            ('state', 'not in', ('closed', 'closing_control')),
+            ('rescue', '=', True),
+        ], ['name'], limit=1, context=context)
+        if rescue_session:
+            _logger.warning('reusing recovery session %s for saving order %s', rescue_session[0]['name'], order['name'])
+            return rescue_session[0]['id']
+        
         _logger.warning('attempting to create recovery session for saving order %s', order['name'])
         new_session_id = session.create(cr, uid, {
             'config_id': closed_session.config_id.id,
