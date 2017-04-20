@@ -677,7 +677,7 @@ var BasicModel = AbstractModel.extend({
                         model: record.model,
                         method: method,
                         args: args,
-                        context: session.user_context // todo: combine with view context
+                        context: record.getContext(),
                     }).then(function (id) {
                         if (method === 'create') {
                             record.res_id = id;  // create returns an id, write returns a boolean
