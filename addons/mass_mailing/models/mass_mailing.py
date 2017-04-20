@@ -153,10 +153,10 @@ class MassMailingCampaign(models.Model):
     mass_mailing_ids = fields.One2many(
         'mail.mass_mailing', 'mass_mailing_campaign_id',
         string='Mass Mailings')
-    unique_ab_testing = fields.Boolean(string='AB Testing',
-        help='If checked, recipients will be mailed only once, allowing to send '
-             'various mailings in a single campaign to test the effectiveness '
-             'of the mailings.')
+    unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=True,
+        help='If checked, recipients will be mailed only once for the whole campaign. '
+             'This lets you send different mailings to randomly selected recipients and test '
+             'the effectiveness of the mailings, without causing duplicate messages.')
     color = fields.Integer(string='Color Index')
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of clicks")
     # stat fields
