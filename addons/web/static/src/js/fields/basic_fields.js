@@ -305,8 +305,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _makeDatePicker: function () {
-        var options = _.defaults(this.options || {}, {defaultDate: this.value});
-        return new datepicker.DateWidget(this, options);
+        return new datepicker.DateWidget(this, {defaultDate: this.value});
     },
 
     /**
@@ -357,8 +356,7 @@ var FieldDateTime = FieldDate.extend({
      */
     _makeDatePicker: function () {
         var value = this.value && this.value.clone().add(this.getSession().tzOffset, 'minutes');
-        var options = _.defaults(this.options || {}, {defaultDate: value});
-        return new datepicker.DateTimeWidget(this, options);
+        return new datepicker.DateTimeWidget(this, {defaultDate: value});
     },
 
     /**
