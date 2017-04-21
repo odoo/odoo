@@ -4,6 +4,8 @@ odoo.define('web_editor.backend', function (require) {
 var AbstractField = require('web.AbstractField');
 var basic_fields = require('web.basic_fields');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
+var Widget = require('web.Widget');
 var session = require('web.session');
 var field_registry = require('web.field_registry');
 
@@ -11,6 +13,7 @@ var transcoder = require('web_editor.transcoder');
 
 var DebouncedField = basic_fields.DebouncedField;
 var QWeb = core.qweb;
+var _t = core._t;
 
 
 /**
@@ -117,6 +120,7 @@ var FieldTextHtmlSimple = DebouncedField.extend({
         this.$textarea.summernote(this._getSummernoteConfig());
         this.$content = this.$('.note-editable:first');
         this.$content.html(this._textToHtml(this.value));
+        this.tansform_t_tag({readonly:false});
         // trigger a mouseup to refresh the editor toolbar
         this.$content.trigger('mouseup');
         if (this.nodeOptions['style-inline']) {
@@ -141,12 +145,14 @@ var FieldTextHtmlSimple = DebouncedField.extend({
             $iframe.on('load', function () {
                 self.$content = $($iframe.contents()[0]).find("body");
                 self.$content.html(self._textToHtml(self.value));
+                self.tansform_t_tag({readonly:true});
                 self._resize();
             });
             $iframe.appendTo(this.$el);
         } else {
             this.$content = $('<div class="o_readonly"/>');
             this.$content.html(this._textToHtml(this.value));
+            this.tansform_t_tag({readonly:true});
             this.$content.appendTo(this.$el);
         }
     },
@@ -158,6 +164,14 @@ var FieldTextHtmlSimple = DebouncedField.extend({
     _resize: function () {
         var height = this.$content[0] ? this.$content[0].scrollHeight : 0;
         this.$('iframe').css('height', Math.max(30, Math.min(height, 500)) + 'px');
+    },
+    tansform_t_tag: function(options){
+        var self = this;
+        var t_tags = this.$content.find('t');
+        _.each(t_tags, function(tag){
+            var exp_editor = new ExpEditor(options);
+            exp_editor.attachTo($(tag));
+        });
     },
     /**
      * @private
@@ -183,6 +197,50 @@ var FieldTextHtmlSimple = DebouncedField.extend({
         return value;
     },
 });
+
+var ExpEditor = Widget.extend({
+    events: {'click .o_t_expression': 'edit_expression'},
+    init: function(options){
+        this.readonly = options.readonly;
+        this._super.apply(this, arguments);
+    },
+    start: function(){
+        var exp_text = this.$el.attr('t-esc') || this.$el.attr('t-raw') ||  this.$el.attr('t-set') || '?';
+        $('<code/>', {
+            'contenteditable': false,
+            'class': 'o_t_expression'
+        }).text(exp_text).appendTo(this.$el);
+    },
+    edit_expression: function(){
+        if (this.readonly){
+            return;
+        }
+        var self = this;
+        var $t_clone = this.$el.clone().empty();
+        var dialog = new Dialog(this, {
+            title: _t("Change Expression"),
+            $content: $('<div>', {
+                'html': $('<textarea class="t-tag"/>').val($t_clone.get(0).outerHTML)
+            }),
+            buttons: [
+                {text: _t("Ok"), classes: "btn-primary", close: true, click: function(){
+                        self.save(this.$content);
+                    }},
+                {text: _t("Discard"), close: true},
+            ],
+        }).open();
+     },
+    save: function($content){
+        var t_tag_text = $content.find('.t-tag').val();
+        var $t_tag = $(t_tag_text);
+        if($t_tag.length){
+            this.$el.replaceWith($t_tag); //for DOM
+            this.$el = $t_tag ;  // for widget
+            this.attachTo(this.$el);
+        }
+    },
+});
+
 
 var FieldTextHtml = AbstractField.extend({
     template: 'web_editor.FieldTextHtml',
