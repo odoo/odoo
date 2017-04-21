@@ -3402,5 +3402,53 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('open one2many form containing many2many_tags', function (assert) {
+            assert.expect(4);
+
+            this.data.partner.records[0].product_ids = [37];
+            this.data.product.fields.partner_type_ids = {
+                string: "many2many partner_type", type: "many2many", relation: "partner_type",
+            };
+            this.data.product.records[0].partner_type_ids = [12, 14];
+
+            var form = createView({
+                View: FormView,
+                model: 'partner',
+                res_id: 1,
+                data: this.data,
+                arch: '<form string="Partners">' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="product_ids">' +
+                                    '<tree create="0">' +
+                                        '<field name="display_name"/>' +
+                                        '<field name="partner_type_ids" widget="many2many_tags"/>' +
+                                    '</tree>' +
+                                    '<form string="Products">' +
+                                        '<sheet>' +
+                                            '<group>' +
+                                                '<label for="partner_type_ids"/>' +
+                                                '<div>' +
+                                                    '<field name="partner_type_ids" widget="many2many_tags"/>' +
+                                                '</div>' +
+                                            '</group>' +
+                                        '</sheet>' +
+                                    '</form>' +
+                                '</field>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+                mockRPC: function (route, args) {
+                    assert.step(args.method);
+                    return this._super.apply(this, arguments);
+                },
+            });
+            var row = form.$('.o_form_field_one2many .o_list_view .o_data_row');
+            row.click();
+            assert.verifySteps(['read', 'read', 'read'],
+                "there should be 3 read rpcs");
+            form.destroy();
+        });
+
 });
 });
