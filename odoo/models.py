@@ -368,6 +368,15 @@ class BaseModel(object):
                 field_id = cr.fetchone()[0]
                 self._context['todo'].append((20, Fields.browse(field_id).modified, [names]))
 
+        if not self.pool._init:
+            # remove ir.model.fields that are not in self._fields
+            fields = Fields.browse([col['id']
+                                    for name, col in cols.iteritems()
+                                    if name not in self._fields])
+            # add key '_force_unlink' in context to (1) force the removal of the
+            # fields and (2) not reload the registry
+            fields.with_context(_force_unlink=True).unlink()
+
         self.invalidate_cache()
 
     @api.model
