@@ -155,7 +155,7 @@ QUnit.test('basic rendering', function (assert) {
 });
 
 QUnit.test('chatter is not rendered in mode === create', function (assert) {
-    assert.expect(2);
+    assert.expect(4);
 
     var form = createView({
         View: FormView,
@@ -171,11 +171,8 @@ QUnit.test('chatter is not rendered in mode === create', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === '/mail/read_followers') {
-                return $.when({
-                    followers: [],
-                    subtypes: [],
-                });
+            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+                return $.when({2: []});
             }
             return this._super(route, args);
         },
@@ -191,9 +188,25 @@ QUnit.test('chatter is not rendered in mode === create', function (assert) {
         },
     });
 
-    assert.ok(form.$('.o_chatter').length, "there should be a chatter widget");
+    assert.strictEqual(form.$('.o_chatter').length, 1,
+        "chatter should be displayed");
+
     form.$buttons.find('.o_form_button_create').click();
-    assert.ok(!form.$('.o_chatter').length, "there should not be a chatter widget");
+
+    assert.strictEqual(form.$('.o_chatter').length, 0,
+        "chatter should not be displayed");
+
+    form.$('.o_form_input').val('coucou').trigger('input');
+    form.$buttons.find('.o_form_button_save').click();
+
+    assert.strictEqual(form.$('.o_chatter').length, 1,
+        "chatter should be displayed");
+
+    // check if chatter buttons still work
+    form.$('.o_chatter_button_new_message').click();
+    assert.strictEqual(form.$('.o_chat_composer:visible').length, 1,
+        "chatter should be opened");
+
     form.destroy();
 });
 
