@@ -943,6 +943,195 @@ var FieldMany2Many = FieldX2Many.extend({
     },
 });
 
+/**
+ * Widget to upload or delete one or more files at the same time.
+ */
+var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
+    template: "FieldBinaryFileUploader",
+    supportedFieldTypes: ['many2many'],
+    fieldsToFetch: {
+        name: {type: 'char'},
+        datas_fname: {type: 'char'},
+        mimetype: {type: 'char'},
+    },
+    events: {
+        'click .o_attach': '_onAttach',
+        'click .oe_delete': '_onDelete',
+        'change .o_form_input_file': '_onFileChanged',
+    },
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        if (this.field.type !== 'many2many' || this.field.relation !== 'ir.attachment') {
+            var msg = _t("The type of the field '%s' must be a many2many field with a relation to 'ir.attachment' model.");
+            throw _.str.sprintf(msg, this.field.string);
+        }
+
+        this.uploadingFiles = [];
+        this.fileupload_id = _.uniqueId('oe_fileupload_temp');
+        $(window).on(this.fileupload_id, this._onFileLoaded.bind(this));
+
+        this.metadata = {};
+        this._generatedMetadata();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Compute the URL of an attachment.
+     *
+     * @private
+     * @param {Object} attachment
+     * @returns {string} URL of the attachment
+     */
+    _getFileUrl: function (attachment) {
+        return '/web/content/' + attachment.id + '?download=true';
+    },
+    /**
+     * Process the field data to add some information (url, etc.).
+     *
+     * @private
+     */
+    _generatedMetadata: function () {
+        var self = this;
+        _.each(this.value.data, function (record) {
+            // attachments are tagged `allowUnlink` because only new attachments
+            // will be unlinked after deletion
+            self.metadata[record.id] = {
+                allowUnlink: false,
+                url: self._getFileUrl(record.data),
+            };
+        });
+    },
+    /**
+     * @private
+     * @override
+     */
+    _render: function () {
+        // render the attachments ; as the attachments will changes after each
+        // _setValue, we put the rendering here to ensure they will be updated
+        this.$('.oe_placeholder_files, .oe_attachments')
+            .replaceWith($(qweb.render('FieldBinaryFileUploader.files', {
+                widget: this,
+            })));
+        this.$('.oe_fileupload').show();
+
+        // display image thumbnail
+        this.$('.o_image[data-mimetype^="image"]').each(function () {
+            var $img = $(this);
+            if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+                $img.css('background-image', "url('" + $img.data('src') + "')");
+            }
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onAttach: function () {
+        // This widget uses a hidden form to upload files. Clicking on 'Attach'
+        // will simulate a click on the related input.
+        this.$('.o_form_input_file').click();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onDelete: function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        var fileID = $(ev.currentTarget).data('id');
+        var record = _.findWhere(this.value.data, {res_id: fileID});
+        if (record) {
+            this._setValue({
+                operation: 'REMOVE',
+                ids: [record.id],
+            });
+            var metadata = this.metadata[record.id];
+            if (!metadata || metadata.allowUnlink) {
+                this._rpc({
+                    model: 'ir.attachment',
+                    method: 'unlink',
+                    args: [record.res_id],
+                });
+            }
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFileChanged: function (ev) {
+        var self = this;
+        ev.stopPropagation();
+
+        var files = ev.target.files;
+        var attachment_ids = this.value.res_ids;
+
+        _.each(files, function (file) {
+            var record = _.find(self.value.data, function (attachment) {
+                return attachment.data.name === file.name;
+            });
+            if (record) {
+                var metadata = self.metadata[record.id];
+                if (!metadata || metadata.allowUnlink) {
+                    // there is a existing attachment with the same name so we
+                    // replace it
+                    attachment_ids = _.without(attachment_ids, record.res_id);
+                    self._rpc({
+                        model: 'ir.attachment',
+                        method: 'unlink',
+                        args: [record.res_id],
+                    });
+                }
+            }
+            self.uploadingFiles.push(file);
+        });
+
+        this._setValue({
+            operation: 'REPLACE_WITH',
+            ids: attachment_ids,
+        });
+
+        this.$('form.o_form_binary_form').submit();
+        this.$('.oe_fileupload').hide();
+    },
+    /**
+     * @private
+     */
+    _onFileLoaded: function () {
+        var self = this;
+        // the first argument isn't a file but the jQuery.Event
+        var files = Array.prototype.slice.call(arguments, 1);
+        // files has been uploaded, clear uploading
+        this.uploadingFiles = [];
+
+        var attachment_ids = this.value.res_ids;
+        _.each(files, function (file) {
+            if (file.error) {
+                self.do_warn(_t('Uploading Error'), file.error);
+            } else {
+                attachment_ids.push(file.id);
+            }
+        });
+
+        this._setValue({
+            operation: 'REPLACE_WITH',
+            ids: attachment_ids,
+        });
+    },
+});
+
 var FieldMany2ManyTags = AbstractField.extend({
     tag_template: "FieldMany2ManyTag",
     className: "o_form_field o_form_field_many2manytags",
@@ -1526,6 +1715,7 @@ return {
     FieldOne2Many: FieldOne2Many,
 
     FieldMany2Many: FieldMany2Many,
+    FieldMany2ManyBinaryMultiFiles: FieldMany2ManyBinaryMultiFiles,
     FieldMany2ManyCheckBoxes: FieldMany2ManyCheckBoxes,
     FieldMany2ManyTags: FieldMany2ManyTags,
     FormFieldMany2ManyTags: FormFieldMany2ManyTags,
