@@ -8,18 +8,10 @@ from odoo.exceptions import UserError
 class Project(models.Model):
     _inherit = "project.project"
 
-    subtask_project_id = fields.Many2one(
-        'project.project', string='Sub-task Project', ondelete="restrict",
-        help="Choosing a sub-tasks project will both enable sub-tasks and set their default project (possibly the project itself)")
     allow_timesheets = fields.Boolean("Allow timesheets", default=True)
 
 class Task(models.Model):
     _inherit = "project.task"
-
-    @api.multi
-    def _get_subtask_count(self):
-        for task in self:
-            task.subtask_count = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id)])
 
     @api.depends('stage_id', 'timesheet_ids.unit_amount', 'planned_hours', 'child_ids.stage_id',
                  'child_ids.planned_hours', 'child_ids.effective_hours', 'child_ids.children_hours', 'child_ids.timesheet_ids.unit_amount')
@@ -55,15 +47,4 @@ class Task(models.Model):
     children_hours = fields.Float(compute='_hours_get', store=True, string='Sub-tasks Hours', help="Sum of the planned hours of all sub-tasks (when a sub-task is closed or its spent hours exceed its planned hours, spent hours are counted instead)")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
 
-    parent_id = fields.Many2one('project.task', string='Parent Task')
-    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
-    subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
-    subtask_count = fields.Integer(compute='_get_subtask_count', type='integer', string="Sub-task count")
-
     _constraints = [(models.BaseModel._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
-
-    @api.constrains('parent_id')
-    def _check_subtask_project(self):
-        for task in self:
-            if task.parent_id and task.parent_id.project_id and task.project_id and task.project_id != task.parent_id.project_id.subtask_project_id:
-                raise UserError(_("You can't define a parent task if its project is not correctly configured. The sub-task's project of the parent task's project should be this task's project"))

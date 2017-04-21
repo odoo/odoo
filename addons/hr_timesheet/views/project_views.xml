@@ -45,9 +45,6 @@
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
                 </button>
-                <field name="user_id" position="after">
-                    <field name="subtask_project_id" groups="base.group_no_one" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
-                </field>
                 <xpath expr="//div[@name='options_active']" position="inside">
                     <div>
                         <field name="allow_timesheets" class="oe_inline" string="Allow timesheets"/>
@@ -57,45 +54,17 @@
             </field>
         </record>
 
-        <record id="act_project_task_sub_task" model="ir.actions.act_window">
-            <field name="name">Sub-tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
-            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
-            <field name="context">
-            {
-                'default_parent_id' : active_id,
-                'default_project_id' : project_id,
-                'default_name' : name + ':',
-                'default_partner_id' : partner_id,
-            }
-            </field>
-            <field name="search_view_id" ref="project.view_task_search_form"/>
-        </record>
-
         <record model="ir.ui.view" id="view_task_form2_inherited">
             <field name="name">project.task.form.inherited</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2" />
             <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
-                    <button name="%(act_project_task_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
-                            attrs="{'invisible' : [('subtask_project_id', '=', False)]}"
-                            context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" >
-                        <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
-                    </button>
-                </button>
                 <field name="tag_ids" position="after">
                     <field name="progress" widget="progressbar"/>
                 </field>
                 <field name="user_id" position="after">
                     <field name="planned_hours" widget="float_time"/>
-                </field>
-                <field name="partner_id" position="after">
-                    <field name="parent_id" groups="base.group_no_one"/>
-                    <field name="child_ids" invisible="1" />
-                    <field name="subtask_project_id" invisible="1" />
                 </field>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
                     <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
