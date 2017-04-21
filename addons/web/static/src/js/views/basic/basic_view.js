@@ -81,8 +81,10 @@ var BasicView = AbstractView.extend({
                         if (!('fieldsInfo' in record.data[name])) {
                             fieldNames.push(name);
                         } else {
+                            var fieldInfo = record.fieldsInfo[viewType][name];
+                            var fieldViews = fieldInfo.views || fieldInfo.fieldsInfo || {};
+                            var fieldViewTypes = Object.keys(fieldViews);
                             var recordViewTypes = Object.keys(record.data[name].fieldsInfo);
-                            var fieldViewTypes = Object.keys(record.fieldsInfo[viewType][name].views);
                             if (_.difference(fieldViewTypes, recordViewTypes).length) {
                                 fieldNames.push(name);
                             }
