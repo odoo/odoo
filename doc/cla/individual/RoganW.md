@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Rogan <quangenw@gmail.com> https://github.com/RoganW
+Rogan Wang quangenw@gmail.com https://github.com/RoganW
