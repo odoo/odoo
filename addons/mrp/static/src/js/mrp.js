@@ -25,7 +25,7 @@ var SetBulletStatus = AbstractField.extend({
         }
     }
 });
-
+console.log('flag');
 var TimeCounter = AbstractField.extend({
     start_time_counter: function(){
         var self = this;
