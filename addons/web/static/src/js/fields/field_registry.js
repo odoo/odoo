@@ -57,6 +57,7 @@ registry
     .add('list.many2one', relational_fields.ListFieldMany2One)
     .add('kanban.many2one', relational_fields.KanbanFieldMany2One)
     .add('many2many', relational_fields.FieldMany2Many)
+    .add('many2many_binary', relational_fields.FieldMany2ManyBinaryMultiFiles)
     .add('many2many_tags', relational_fields.FieldMany2ManyTags)
     .add('form.many2many_tags', relational_fields.FormFieldMany2ManyTags)
     .add('kanban.many2many_tags', relational_fields.KanbanFieldMany2ManyTags)

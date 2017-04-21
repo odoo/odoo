@@ -984,6 +984,7 @@
 
                 <span class="o_form_binary_progress">Uploading...</span>
                 <t t-call="HiddenInputFile">
+                    <t t-set="image_only" t-value="true"/>
                     <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                 </t>
             </div>
@@ -1031,49 +1032,47 @@
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
             <input type="hidden" name="session_id" value="" t-if="widget.getSession().override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
-            <input t-if="widget.widget!='image'" type="file" class="o_form_input_file" name="ufile" t-att="{'multiple': multi_upload ? 'multiple' : null}"/>
-            <input t-if="widget.widget=='image'" type="file" class="o_form_input_file" name="ufile" accept="image/*"/>
+            <input t-if="widget.image_only" type="file" class="o_form_input_file" name="ufile" accept="image/*"/>
+            <input t-else="1" type="file" class="o_form_input_file" name="ufile" t-att="{'multiple': multi_upload ? 'multiple' : null}"/>
             <t t-raw="0"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
     </div>
 </t>
-<div t-name="FieldBinaryFileUploader" t-attf-class="oe_fileupload #{widget.node.attrs.class ? widget.node.attrs.class :''}">
+<div t-name="FieldBinaryFileUploader" t-attf-class="oe_fileupload #{widget.attrs.class ? widget.attrs.class :''}">
     <div class="oe_placeholder_files"/>
-    <div t-if="!widget.get('effective_readonly')" class="oe_add">
+    <div t-if="widget.mode !== 'readonly'" class="oe_add">
         <button class="btn btn-default o_attach"><span class="fa fa-paperclip"/> <t t-esc="widget.string"/></button>
         <t t-call="HiddenInputFile">
             <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
             <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
             <t t-set="multi_upload" t-value="true"/>
-            <input type="hidden" name="model" t-att-value="widget.view.model"/>
+            <input type="hidden" name="model" t-att-value="widget.model"/>
             <input type="hidden" name="id" value="0"/>
-            <input t-if="widget.getSession().override_session" type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+            <input t-if="widget.getSession().override_session" type="hidden" name="session_id" t-att-value="widget.getSession().session_id"/>
         </t>
     </div>
 </div>
 <div t-name="FieldBinaryFileUploader.files" class="oe_attachments">
-    <t t-if="widget.get('effective_readonly')">
-        <div t-foreach="widget.get('value')" t-as="id">
-            <t t-set="file" t-value="widget.data[id]"/>
-            <a target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}"><t t-raw="file.name || file.filename"/></a>
+    <t t-if="widget.mode === 'readonly'">
+        <div t-foreach="widget.value.data" t-as="file">
+            <a target="_blank" t-att-href="widget.metadata[file.id].url" t-attf-title="#{(file.data.name || file.data.filename) + (file.data.date?' \n('+file.data.date+')':'' )}"><t t-raw="file.data.name || file.data.filename"/></a>
         </div>
     </t>
-    <t t-if="!widget.get('effective_readonly')">
-        <div t-foreach="values" t-as="id" class="oe_attachment">
-            <t t-set="file" t-value="widget.data[id]"/>
-            <t t-if="!file.upload">
+    <t t-else="1">
+        <div t-foreach="widget.value.data" t-as="file" class="oe_attachment">
+            <t t-if="!file.data.upload">
                 <div>
-                    <a href="#" class="fa fa-times pull-right oe_delete" title="Delete this file" t-att-data-id="file.id"/>
-                    <t t-raw="file.name || file.filename"/>
+                    <a href="#" class="fa fa-times pull-right oe_delete" title="Delete this file" t-att-data-id="file.data.id"/>
+                    <t t-raw="file.data.name || file.data.filename"/>
                 </div>
-                <a class="o_image" target="_blank" t-att-href="file.url"
-                   t-att-title="file.name"
-                   t-att-data-mimetype="file.mimetype"
-                   t-attf-data-src="/web/image/#{file.id}/100x80"/>
+                <a class="o_image" target="_blank" t-att-href="widget.metadata[file.id] ? widget.metadata[file.id].url : false"
+                   t-att-title="file.data.name"
+                   t-att-data-mimetype="file.data.mimetype"
+                   t-attf-data-src="/web/image/#{file.data.id}/100x80"/>
             </t>
         </div>
-        <div t-foreach="widget.files_uploading" t-as="file" class="oe_attachment">
+        <div t-foreach="widget.uploadingFiles" t-as="file" class="oe_attachment">
             <div>Uploading...</div>
             <a t-att-title="file.name" t-att-name="file.name" class="o_image">
                 <i class="fa fa-spinner fa-spin fa-5x fa-fw"></i>

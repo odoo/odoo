@@ -3954,6 +3954,86 @@ QUnit.module('relational_fields', {
 
         form.destroy();
     });
+
+    QUnit.module('FieldMany2ManyBinaryMultiFiles');
+
+    QUnit.test('widget many2many_binary', function (assert) {
+        assert.expect(14);
+        this.data['ir.attachment'] = {
+            fields: {
+                name: {string:"Name", type: "char"},
+                mimetype: {string: "Mimetype", type: "char"},
+            },
+            records: [{
+                id: 17,
+                name: 'Marley&Me.jpg',
+                mimetype: 'jpg',
+            }],
+        };
+        this.data.turtle.fields.picture_ids = {
+            string: "Pictures",
+            type: "many2many",
+            relation: 'ir.attachment',
+        };
+        this.data.turtle.records[0].picture_ids = [17];
+
+        var form = createView({
+            View: FormView,
+            model: 'turtle',
+            data: this.data,
+            arch:'<form string="Turtles">' +
+                    '<group><field name="picture_ids" widget="many2many_binary"/></group>' +
+                '</form>',
+            archs: {
+                'ir.attachment,false,list': '<tree string="Pictures"><field name="name"/></tree>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(route);
+                if (route === '/web/dataset/call_kw/ir.attachment/read') {
+                    assert.deepEqual(args.args[1], ['name', 'datas_fname', 'mimetype']);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('div.o_form_field.oe_fileupload').length, 1,
+            "there should be the attachment widget");
+        assert.strictEqual(form.$('div.o_form_field.oe_fileupload .oe_attachments').children().length, 1,
+            "there should be no attachment");
+        assert.strictEqual(form.$('div.o_form_field.oe_fileupload .o_attach').length, 0,
+            "there should not be an Add button (readonly)");
+        assert.strictEqual(form.$('div.o_form_field.oe_fileupload .oe_attachment .oe_delete').length, 0,
+            "there should not be a Delete button (readonly)");
+
+        // to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('div.o_form_field.oe_fileupload .o_attach').length, 1,
+            "there should be an Add button");
+        assert.strictEqual(form.$('div.o_form_field.oe_fileupload .o_attach').text().trim(), "Pictures",
+            "the button should be correctly named");
+        assert.strictEqual(form.$('div.o_form_field.oe_fileupload .o_hidden_input_file form').length, 1,
+            "there should be a hidden form to upload attachments");
+
+        // TODO: add an attachment
+        // no idea how to test this
+
+        // delete the attachment
+        form.$('div.o_form_field.oe_fileupload .oe_attachment .oe_delete').click();
+
+
+        assert.verifySteps([
+            '/web/dataset/call_kw/turtle/read',
+            '/web/dataset/call_kw/ir.attachment/read',
+        ]);
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('div.o_form_field.oe_fileupload .oe_attachments').children().length, 0,
+            "there should be no attachment");
+
+        form.destroy();
+    });
 });
 });
 });
