@@ -8,7 +8,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     track_service = fields.Selection(selection_add=[
-        ('timesheet', 'Timesheets on project'),
+        ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
         ('task', 'Create a task per order line to track hours')])
     project_id = fields.Many2one(
         'project.project', 'Project', company_dependent=True,

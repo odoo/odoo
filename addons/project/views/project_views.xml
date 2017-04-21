@@ -80,6 +80,23 @@
             </field>
         </record>
 
+        <record id="project_task_action_sub_task" model="ir.actions.act_window">
+            <field name="name">Sub-tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
+            <field name="context">
+            {
+                'default_parent_id' : active_id,
+                'default_project_id' : project_id,
+                'default_name' : name + ':',
+                'default_partner_id' : partner_id,
+                'search_default_project_id': [project_id],
+            }
+            </field>
+            <field name="search_view_id" ref="project.view_task_search_form"/>
+        </record>
+
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
             <field name="name">project.project.form</field>
@@ -121,6 +138,7 @@
                             <group>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"/>
+                                <field name="subtask_project_id" groups="project.group_subtask_project"/>
                                 <field name="privacy_visibility" widget="radio"/>
                                 <field name="partner_id" string="Customer"/>
                             </group>
@@ -239,6 +257,7 @@
             <field name="arch" type="xml">
                 <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban" on_create="project.open_create_project">
                     <field name="name"/>
+                    <field name="partner_id"/>
                     <field name="use_tasks"/>
                     <field name="color"/>
                     <field name="task_count"/>
@@ -256,6 +275,9 @@
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
                                                 <span><t t-esc="record.name.value"/></span>
+                                                <span t-if="record.partner_id.value">
+                                                    <strong><t t-esc="record.partner_id.value"/></strong>
+                                                </span>
                                             </div>
                                             <div t-if="record.alias_name.value and record.alias_domain.value">
                                                 <span><i class="fa fa-envelope"></i> <t t-esc="record.alias_id.value"/></span>
@@ -353,6 +375,12 @@ action = model.activate_sample_project()
                     </header>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_open_parent_task" string="Parent Task" attrs="{'invisible' : [('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
+                        <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
+                            attrs="{'invisible' : [('parent_id', '!=', False)]}"
+                            context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" groups="project.group_subtask_project">
+                            <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
+                        </button>
                         <button name="toggle_active" type="object" groups="base.group_user"
                                 class="oe_stat_button" icon="fa-archive">
                             <field name="active" widget="boolean_button"
@@ -391,6 +419,9 @@ action = model.activate_sample_project()
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="partner_id"/>
+                                    <field name="parent_id" groups="project.group_subtask_project"/>
+                                    <field name="child_ids" invisible="1" />
+                                    <field name="subtask_project_id" invisible="1" />
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="displayed_image_id" groups="base.group_no_one"/>
                                 </group>

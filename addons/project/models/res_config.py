@@ -25,6 +25,7 @@ class ProjectConfiguration(models.TransientModel):
     module_sale_timesheet = fields.Boolean("Time Billing")
     module_hr_expense = fields.Boolean("Expenses")
     module_project_issue = fields.Boolean("Issue Tracking")
+    group_subtask_project = fields.Boolean("Sub-tasks", implied_group="project.group_subtask_project")
 
     @api.multi
     def set_default_generate_project_alias(self):

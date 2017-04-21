@@ -19,6 +19,11 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_subtask_project" model="res.groups">
+        <field name="name">Use Subtask Project</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
 <data noupdate="1">
     <record id="base.default_user" model="res.users">
         <field name="groups_id" eval="[(4,ref('project.group_project_manager'))]"/>

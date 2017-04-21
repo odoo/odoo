@@ -219,6 +219,8 @@ class Project(models.Model):
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, track_visibility='onchange')
+    subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
+        help="Choosing a sub-tasks project will both enable sub-tasks and set their default project (possibly the project itself)")
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
@@ -256,6 +258,8 @@ class Project(models.Model):
         # Prevent double project creation when 'use_tasks' is checked
         self = self.with_context(project_creation_in_progress=True, mail_create_nosubscribe=True)
         project = super(Project, self).create(vals)
+        if not vals.get('subtask_project_id'):
+            project.subtask_project_id = project.id
         if project.privacy_visibility == 'portal' and project.partner_id:
             project.message_subscribe(project.partner_id.ids)
         return project
@@ -411,6 +415,10 @@ class Task(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
+    parent_id = fields.Many2one('project.task', string='Parent Task')
+    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
+    subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
+    subtask_count = fields.Integer(compute='_compute_subtask_count', type='integer', string="Sub-task count")
 
     @api.onchange('project_id')
     def _onchange_project(self):
@@ -437,6 +445,17 @@ class Task(models.Model):
         if 'remaining_hours' not in default:
             default['remaining_hours'] = self.planned_hours
         return super(Task, self).copy(default)
+
+    @api.multi
+    def _compute_subtask_count(self):
+        for task in self:
+            task.subtask_count = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id)])
+
+    @api.constrains('parent_id')
+    def _check_subtask_project(self):
+        for task in self:
+            if task.parent_id.project_id and task.project_id != task.parent_id.project_id.subtask_project_id:
+                raise UserError(_("You can't define a parent task if its project is not correctly configured. The sub-task's project of the parent task's project should be this task's project"))
 
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):
@@ -684,6 +703,16 @@ class Task(models.Model):
             headers['X-Odoo-Tags'] = ','.join(self.tag_ids.mapped('name'))
         res['headers'] = repr(headers)
         return res
+
+    def action_open_parent_task(self):
+        return {
+            'name': _('Parent Task'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'project.task',
+            'res_id': self.parent_id.id,
+            'type': 'ir.actions.act_window'
+        }
 
 
 class AccountAnalyticAccount(models.Model):
