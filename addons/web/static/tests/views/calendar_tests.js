@@ -216,7 +216,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create and change events', function (assert) {
-        assert.expect(21);
+        assert.expect(26);
 
         var calendar = createView({
             View: CalendarView,
@@ -224,6 +224,7 @@ QUnit.module('Views', {
             data: this.data,
             arch:
             '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
                 'scale_zoom="week" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
@@ -288,6 +289,29 @@ QUnit.module('Views', {
 
         assert.strictEqual(calendar.$('.fc-event:contains(new event in quick create validated by pressing enter key.)').length, 1, "should display the new record by pressing enter key");
 
+
+        // create a new event and edit it
+
+        $cell = calendar.$('.fc-day-grid .fc-row:eq(4) .fc-day:eq(2)');
+
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+
+        assert.strictEqual($('.modal-dialog.modal-sm').length, 1, "should open the quick create dialog");
+
+        $('.modal-body input:first').val('coucou').trigger('input');
+        $('.modal button.btn:contains(Edit)').trigger('click');
+
+        assert.strictEqual($('.modal-dialog.modal-lg .o_form_view').length, 1, "should open the slow create dialog");
+        assert.strictEqual($('.modal-dialog.modal-lg .modal-title').text(), "Create: Events",
+            "should use the string attribute as modal title");
+        assert.strictEqual($('.modal-dialog.modal-lg .o_form_view input[name="name"]').val(), "coucou",
+            "should have set the name from the quick create dialog");
+
+        $('.modal-lg button.btn:contains(Save)').trigger('click');
+
+        assert.strictEqual(calendar.$('.fc-event:contains(coucou)').length, 1, "should display the new record");
+
         // create a new event with 2 days
 
         $cell = calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day:eq(2)');
@@ -316,7 +340,7 @@ QUnit.module('Views', {
         $('.modal button.btn:contains(Ok)').trigger('click');
         assert.notOk(calendar.$('.fc-event:contains(event 4) .fc-content').length, "the record should be deleted");
 
-        assert.strictEqual(calendar.$('.fc-event-container .fc-event').length, 9, "should display 9 events");
+        assert.strictEqual(calendar.$('.fc-event-container .fc-event').length, 10, "should display 10 events");
         // move to next month
         calendar.$buttons.find('.o_calendar_button_next').click();
 

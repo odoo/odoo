@@ -203,10 +203,14 @@ var CalendarController = AbstractController.extend({
             return;
         }
 
+        var title = _t("Create");
+        if (this.renderer.arch.attrs.string) {
+            title += ': ' + this.renderer.arch.attrs.string;
+        }
         new dialogs.FormViewDialog(self, {
             res_model: this.modelName,
             context: context,
-            title: _t("Create"),
+            title: title,
             disable_multiple_selection: true,
             on_saved: function () {
                 if (event.data.on_save) {
