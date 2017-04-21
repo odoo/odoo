@@ -91,7 +91,7 @@ QUnit.module('relational_fields', {
             turtle: {
                 fields: {
                     display_name: { string: "Displayed name", type: "char" },
-                    turtle_foo: {string: "Foo", type: "char", default: "My little Foo Value"},
+                    turtle_foo: {string: "Foo", type: "char"},
                     turtle_bar: {string: "Bar", type: "boolean", default: true},
                     turtle_int: {string: "int", type: "integer", sortable: true},
                     turtle_qux: {string: "Qux", type: "float", digits: [16,1], required: true, default: 1.5},
@@ -2677,6 +2677,7 @@ QUnit.module('relational_fields', {
     QUnit.test('one2many list editable = top', function (assert) {
         assert.expect(6);
 
+        this.data.turtle.fields.turtle_foo.default = "default foo turtle";
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -2711,7 +2712,7 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').length, 2,
             "should have 2 data rows");
-        assert.strictEqual(form.$('tr.o_data_row:first input').val(), 'My little Foo Value',
+        assert.strictEqual(form.$('tr.o_data_row:first input').val(), 'default foo turtle',
             "first row should be the new value");
         assert.ok(form.$('tr.o_data_row:first').hasClass('o_selected_row'),
             "first row should be selected");
@@ -2722,6 +2723,7 @@ QUnit.module('relational_fields', {
 
     QUnit.test('one2many list editable = bottom', function (assert) {
         assert.expect(6);
+        this.data.turtle.fields.turtle_foo.default = "default foo turtle";
 
         var form = createView({
             View: FormView,
@@ -2757,7 +2759,7 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').length, 2,
             "should have 2 data rows");
-        assert.strictEqual(form.$('tr.o_data_row:eq(1) input').val(), 'My little Foo Value',
+        assert.strictEqual(form.$('tr.o_data_row:eq(1) input').val(), 'default foo turtle',
             "second row should be the new value");
         assert.ok(form.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
             "second row should be selected");
@@ -2796,6 +2798,54 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_form_field_one2many .o_kanban_view').length, 1,
             "should have rendered a kanban view");
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many list editable, no onchange when required field is not set', function (assert) {
+        assert.expect(7);
+
+        this.data.turtle.fields.turtle_foo.required = true;
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.int_field = obj.turtles.length;
+            },
+        };
+        this.data.partner.records[0].int_field = 0;
+        this.data.partner.records[0].turtles = [];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="int_field"/>' +
+                    '<field name="turtles">' +
+                        '<tree editable="top">' +
+                            '<field name="turtle_int"/>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_form_field[name="int_field"]').val(), "0",
+            "int_field should start with value 0");
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('.o_form_field[name="int_field"]').val(), "0",
+            "int_field should still be 0 (no onchange should have been done yet");
+
+        assert.verifySteps(['read', 'default_get'], "no onchange should have been applied");
+
+        form.$('.o_field_widget[name="turtle_foo"]').val("some text").trigger('input');
+        assert.strictEqual(form.$('.o_form_field[name="int_field"]').val(), "1",
+            "int_field should now be 1 (the onchange should have been done");
 
         form.destroy();
     });
