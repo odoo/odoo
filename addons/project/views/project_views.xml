@@ -207,6 +207,7 @@
                                 <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                     <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                 </div>
+                                <field name="user_id" invisible="1"/>
                             </group>
                             <group name='options' invisible="1">
                                 <field name="use_tasks"/>

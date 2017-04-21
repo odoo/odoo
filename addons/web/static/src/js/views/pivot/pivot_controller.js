@@ -81,15 +81,12 @@ var PivotController = AbstractController.extend({
      * @returns {Object}
      */
     getContext: function () {
-        if (this.handle) {
-            var state = this.model.get(this.handle);
-            return {
-                pivot_measures: state.measures,
-                pivot_column_groupby: state.data.main_col.groupbys,
-                pivot_row_groupby: state.data.main_row.groupbys,
-            };
-        }
-        return {};
+        var state = this.model.get();
+        return {
+            pivot_measures: state.measures,
+            pivot_column_groupby: state.data.main_col.groupbys,
+            pivot_row_groupby: state.data.main_row.groupbys,
+        };
     },
     /**
      * Render the buttons according to the PivotView.buttons template and
@@ -217,13 +214,12 @@ var PivotController = AbstractController.extend({
     _onButtonClick: function (event) {
         var $target = $(event.target);
         if ($target.hasClass('o_pivot_flip_button')) {
-            this.model.flip(this.handle);
-            this.update(null, {reload: false});
+            this.model.flip();
+            this.update({}, {reload: false});
         }
         if ($target.hasClass('o_pivot_expand_button')) {
-            this.model
-                    .expandAll(this.handle)
-                    .then(this.update_state.bind(this));
+            this.model.expandAll();
+            this.update({reload: false});
         }
         if ($target.parents('.o_pivot_measures_list').length) {
             var parent = $target.parent();
@@ -344,9 +340,8 @@ var PivotController = AbstractController.extend({
         var col_id = $target.data('id');
         var measure = $target.data('measure');
         var isAscending = $target.hasClass('o_pivot_measure_row_sorted_asc');
-        this.model
-            .sortRows(this.handle, col_id, measure, isAscending)
-            .then(this.update.bind(this, {}, {reload: false}));
+        this.model.sortRows(col_id, measure, isAscending);
+        this.update({}, {reload: false});
     },
     /**
      * This method is called when someone clicks on an open header.  When that
@@ -359,7 +354,7 @@ var PivotController = AbstractController.extend({
         event.preventDefault();
         event.stopImmediatePropagation();
         var headerID = $(event.target).data('id');
-        this.model.closeHeader(headerID)
+        this.model.closeHeader(headerID);
         this.update({}, {reload: false});
     },
 

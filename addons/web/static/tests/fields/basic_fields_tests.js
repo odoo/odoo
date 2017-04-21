@@ -2478,8 +2478,7 @@ QUnit.module('basic_fields', {
                     '<sheet>' +
                         '<div class="oe_button_box" name="button_box">' +
                             '<button class="oe_stat_button" name="items"  type="object" icon="fa-gear">' +
-                                '<field string="Useful stat button" name="int_field" widget="statinfo" ' +
-                                        'options="{\'nolabel\': \'true\'}"/>' +
+                                '<field string="Useful stat button" name="int_field" widget="statinfo" nolabel="1"/>' +
                             '</button>' +
                         '</div>' +
                         '<group>' +

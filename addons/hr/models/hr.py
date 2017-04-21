@@ -111,7 +111,7 @@ class Employee(models.Model):
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
     # private partner
     address_home_id = fields.Many2one(
-        'res.partner', 'Home Address')
+        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.')
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)')
     gender = fields.Selection([
