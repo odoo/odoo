@@ -9,7 +9,7 @@
                 <attribute name="attrs">{'readonly': [('team_type', 'in', ['pos', 'ebay'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='dashboard_graph_group']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('dashboard_graph_model', '=', 'pipeline'), ('team_type', '=', 'pos')]}</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('dashboard_graph_model', '=', 'crm.opportunity.report'), ('team_type', '=', 'pos')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='dashboard_graph_group']" position="after">
                 <field name="dashboard_graph_group_pos" attrs="{'invisible': [('team_type', '!=', 'pos')]}"/>

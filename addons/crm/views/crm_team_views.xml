@@ -109,16 +109,16 @@
                             attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                    </xpath>
                     <field name="dashboard_graph_period" position="attributes">
-                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'pipeline')]}</attribute>
+                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'crm.opportunity.report')]}</attribute>
                     </field>
                     <field name="dashboard_graph_period" position="after">
-                        <field name="dashboard_graph_period_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'pipeline')]}"/>
+                        <field name="dashboard_graph_period_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'crm.opportunity.report')]}"/>
                     </field>
                     <field name="dashboard_graph_group" position="attributes">
-                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'pipeline')]}</attribute>
+                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'crm.opportunity.report')]}</attribute>
                     </field>
                     <field name="dashboard_graph_group" position="after">
-                        <field name="dashboard_graph_group_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'pipeline')]}"/>
+                        <field name="dashboard_graph_group_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'crm.opportunity.report')]}"/>
                     </field>
                 </field>
             </record>

@@ -123,9 +123,6 @@ class CrmTeam(models.Model):
     def _graph_y_query(self):
         raise UserError(_('Undefined graph model for Sales Channel: %s') % self.name)
 
-    def _graph_sql_table(self):
-        raise UserError(_('Undefined graph model for Sales Channel: %s') % self.name)
-
     def _extra_sql_conditions(self):
         return ''
 
