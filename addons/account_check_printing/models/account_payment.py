@@ -49,13 +49,6 @@ class AccountPayment(models.Model):
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.")
 
-    @api.onchange('journal_id')
-    def _onchange_journal_id(self):
-        if hasattr(super(AccountPayment, self), '_onchange_journal_id'):
-            super(AccountPayment, self)._onchange_journal_id()
-        if self.journal_id.check_manual_sequencing:
-            self.check_number = self.journal_id.check_sequence_id.number_next_actual
-
     @api.onchange('amount','currency_id')
     def _onchange_amount(self):
         res = super(AccountPayment, self)._onchange_amount()
@@ -70,13 +63,14 @@ class AccountPayment(models.Model):
             if len(communication) > 60:
                 raise ValidationError(_("A check memo cannot exceed 60 characters."))
 
-    @api.model
-    def create(self, vals):
-        if vals['payment_method_id'] == self.env.ref('account_check_printing.account_payment_method_check').id\
-                and vals.get('check_manual_sequencing'):
-            sequence = self.env['account.journal'].browse(vals['journal_id']).check_sequence_id
-            vals.update({'check_number': sequence.next_by_id()})
-        return super(AccountPayment, self).create(vals)
+    @api.multi
+    def post(self):
+        res = super(AccountPayment, self).post()
+        payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
+        for payment in self.filtered(lambda p: p.payment_method_id == payment_method_check and p.check_manual_sequencing):
+            sequence = payment.journal_id.check_sequence_id
+            payment.check_number = sequence.next_by_id()
+        return res
 
     @api.multi
     def print_checks(self):
