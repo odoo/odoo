@@ -726,16 +726,26 @@ class pos_order(osv.osv):
                         closed_session.id,
                         order['name'],
                         order['amount_total'])
-        _logger.warning('attempting to create recovery session for saving order %s', order['name'])
-        new_session_id = session.create(cr, uid, {
-            'config_id': closed_session.config_id.id,
-            'name': _('(RESCUE FOR %(session)s)') % {'session': closed_session.name},
-            'rescue': True, # avoid conflict with live sessions
-        }, context=context)
-        new_session = session.browse(cr, uid, new_session_id, context=context)
 
-        # bypass opening_control (necessary when using cash control)
-        new_session.signal_workflow('open')
+        open_sessions = session.search(cr, uid, [('state', '=', 'opened'),
+                                                 ('rescue', '=', True),
+                                                 ('config_id', '=', closed_session.config_id.id),
+                                                 ('name', 'ilike', closed_session.name) ],
+                                       limit=1, order="start_at DESC", context=context)
+        if open_sessions:
+            new_session_id = open_sessions[0]
+            _logger.warning('using existing recovery session %s for saving order %s', new_session_id, order['name'])
+        else:
+            _logger.warning('attempting to create recovery session for saving order %s', order['name'])
+            new_session_id = session.create(cr, uid, {
+                'config_id': closed_session.config_id.id,
+                'name': _('(RESCUE FOR %(session)s)') % {'session': closed_session.name},
+                'rescue': True, # avoid conflict with live sessions
+            }, context=context)
+            new_session = session.browse(cr, uid, new_session_id, context=context)
+
+            # bypass opening_control (necessary when using cash control)
+            new_session.signal_workflow('open')
 
         return new_session_id
 
