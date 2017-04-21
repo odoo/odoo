@@ -316,18 +316,14 @@ return core.Class.extend({
                 }
                 attrs.mode = mode;
             }
-            if (attrs.Widget.prototype.fetchSubFields) {
-                attrs.relatedFields = {
-                    display_name: {type: 'char'},
-                    //id: {type: 'integer'},
-                };
-                attrs.fieldsInfo = {};
-                attrs.fieldsInfo.default = {display_name: {}, id: {}};
+            if (attrs.Widget.prototype.fieldsToFetch) {
                 attrs.viewType = 'default';
-                if (attrs.color || 'color') {
-                    attrs.relatedFields[attrs.color || 'color'] = {type: 'integer'};
-                    attrs.fieldsInfo.default.color = {};
-                }
+                attrs.relatedFields = attrs.Widget.prototype.fieldsToFetch;
+                attrs.fieldsInfo = {
+                    default: _.mapObject(attrs.Widget.prototype.fieldsToFetch, function () {
+                        return {};
+                    }),
+                };
             }
         }
         return attrs;
