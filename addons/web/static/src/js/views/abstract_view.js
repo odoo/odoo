@@ -102,6 +102,8 @@ var AbstractView = Class.extend({
         if (params.modelName) {
             this.loadParams.modelName = params.modelName;
         }
+
+        this.userContext = params.userContext;
     },
 
     //--------------------------------------------------------------------------

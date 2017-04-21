@@ -3084,7 +3084,7 @@ QUnit.module('Views', {
 
     QUnit.test('*_view_ref in context are passed correctly', function (assert) {
         var done = assert.async();
-        assert.expect(1);
+        assert.expect(4);
 
         createAsyncView({
             View: FormView,
@@ -3095,15 +3095,30 @@ QUnit.module('Views', {
                         '<field name="p" context="{\'tree_view_ref\':\'module.tree_view_ref\'}"/>' +
                     '</sheet>' +
                 '</form>',
+            res_id: 1,
             intercepts: {
                 load_views: function (event) {
-                    assert.strictEqual(event.data.context.eval().tree_view_ref,
-                        'module.tree_view_ref',
+                    var context = event.data.context.eval();
+                    assert.strictEqual(context.tree_view_ref, 'module.tree_view_ref',
                         "context should contain tree_view_ref");
+                    assert.notOk('some_context' in context,
+                        "should not send record's context to load p's fields_view");
                     event.data.on_success();
                 }
-            }
+            },
+            viewOptions: {
+                context: {some_context: false},
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'read') {
+                    assert.deepEqual(args.kwargs.context, {some_context: false},
+                        "record's context shouldn't have been modified");
+                }
+                return this._super.apply(this, arguments);
+            },
         }).then(function (form) {
+            // reload to check that the record's context hasn't been modified
+            form.reload();
             form.destroy();
             done();
         });

@@ -354,7 +354,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var self = this;
         var arch = view.fields_view.arch;
         var View = this.registry.get(arch.attrs.js_class || view.type);
-        var params = _.extend({}, view_options);
+        var params = _.extend({}, view_options, {userContext: this.getSession().user_context});
         if (view.type === "form" && ((this.action.target === 'new' || this.action.target === 'inline') ||
             (view_options && view_options.mode === 'edit'))) {
             params.mode = params.initial_mode || 'edit';
