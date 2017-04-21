@@ -692,31 +692,44 @@ var FormRenderer = BasicRenderer.extend({
         delete this.defs;
 
         return $.when.apply($, defs).then(function () {
-            self.$el.html($form.contents());
+            self._updateView($form.contents());
+        });
+    },
+    /**
+     * Updates the form's $el with new content.
+     *
+     * @private
+     * @see _renderView
+     * @param {JQuery} $newContent
+     */
+    _updateView: function ($newContent) {
+        var self = this;
 
-            // Necessary to allow all sub widgets to use their dimensions in
-            // layout related activities, such as autoresize on fieldtexts
-            core.bus.trigger('DOM_updated');
+        // Set the new content of the form view, and toggle classnames
+        this.$el.html($newContent);
+        this.$el.toggleClass('o_form_nosheet', !this.has_sheet);
+        this.$el.toggleClass('o_form_editable', this.mode === 'edit');
+        this.$el.toggleClass('o_form_readonly', this.mode === 'readonly');
 
-            self.$el.toggleClass('o_form_nosheet', !self.has_sheet);
-            self.$el.toggleClass('o_form_editable', self.mode === 'edit');
-            self.$el.toggleClass('o_form_readonly', self.mode === 'readonly');
-            // Attach the tooltips on the fields' label
-            var focusWidget = self.defaultFocusField;
-            _.each(self.allFieldWidgets[self.state.id], function (widget) {
-                if (!focusWidget) {
-                    focusWidget = widget;
-                }
-                if (core.debug || widget.attrs.help || widget.field.help) {
-                    var idForLabel = self.idsForLabels[widget.name];
-                    var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
-                    self._addFieldTooltip(widget, $label);
-                }
-            });
-            if (focusWidget) {
-                focusWidget.activate(true);
+        // Necessary to allow all sub widgets to use their dimensions in
+        // layout related activities, such as autoresize on fieldtexts
+        core.bus.trigger('DOM_updated');
+
+        // Attach the tooltips on the fields' label
+        var focusWidget = this.defaultFocusField;
+        _.each(this.allFieldWidgets[this.state.id], function (widget) {
+            if (!focusWidget) {
+                focusWidget = widget;
+            }
+            if (core.debug || widget.attrs.help || widget.field.help) {
+                var idForLabel = self.idsForLabels[widget.name];
+                var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
+                self._addFieldTooltip(widget, $label);
             }
         });
+        if (focusWidget) {
+            focusWidget.activate(true);
+        }
     },
 
     //--------------------------------------------------------------------------
