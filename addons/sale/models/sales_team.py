@@ -32,8 +32,8 @@ class CrmTeam(models.Model):
         compute='_compute_sales_to_invoice',
         string='Number of sales to invoice', readonly=True)
     dashboard_graph_model = fields.Selection(selection_add=[
-        ('sales', 'Sales'),
-        ('invoices', 'Invoices'),
+        ('sale.report', 'Sales'),
+        ('account.invoice.report', 'Invoices'),
     ])
 
     def _compute_quotations_to_invoice(self):
@@ -69,37 +69,30 @@ class CrmTeam(models.Model):
             self.browse(datum['team_id'][0]).invoiced = datum['amount_untaxed_signed']
 
     def _graph_date_column(self):
-        if self.dashboard_graph_model == 'sales':
+        if self.dashboard_graph_model == 'sale.report':
             return 'confirmation_date'
-        elif self.dashboard_graph_model == 'invoices':
+        elif self.dashboard_graph_model == 'account.invoice.report':
             return 'date'
         return super(CrmTeam, self)._graph_date_column()
 
     def _graph_y_query(self):
-        if self.dashboard_graph_model == 'sales':
+        if self.dashboard_graph_model == 'sale.report':
             return 'SUM(price_subtotal)'
-        elif self.dashboard_graph_model == 'invoices':
+        elif self.dashboard_graph_model == 'account.invoice.report':
             return 'SUM(price_total)'
         return super(CrmTeam, self)._graph_y_query()
 
-    def _graph_sql_table(self):
-        if self.dashboard_graph_model == 'sales':
-            return 'sale_report'
-        elif self.dashboard_graph_model == 'invoices':
-            return 'account_invoice_report'
-        return super(CrmTeam, self)._graph_sql_table()
-
     def _extra_sql_conditions(self):
-        if self.dashboard_graph_model == 'sales':
+        if self.dashboard_graph_model == 'sale.report':
             return "AND state in ('sale', 'done')"
-        elif self.dashboard_graph_model == 'invoices':
+        elif self.dashboard_graph_model == 'account.invoice.report':
             return "AND state in ('open', 'paid')"
         return super(CrmTeam, self)._extra_sql_conditions()
 
     def _graph_title_and_key(self):
-        if self.dashboard_graph_model == 'sales':
+        if self.dashboard_graph_model == 'sale.report':
             return ['', _('Untaxed Total')] # no more title
-        elif self.dashboard_graph_model == 'invoices':
+        elif self.dashboard_graph_model == 'account.invoice.report':
             return ['', _('Untaxed Total')]
         return super(CrmTeam, self)._graph_title_and_key()
 
@@ -125,13 +118,13 @@ class CrmTeam(models.Model):
         if self.team_type == 'sales':
             self.use_quotations = True
             self.use_invoices = True
-            # do not override dashboard_graph_model 'pipeline' if crm is installed
+            # do not override dashboard_graph_model 'crm.opportunity.report' if crm is installed
             if not self.dashboard_graph_model:
-                self.dashboard_graph_model = 'sales'
+                self.dashboard_graph_model = 'sale.report'
         else:
             self.use_quotations = False
             self.use_invoices = False
-            self.dashboard_graph_model = 'sales'
+            self.dashboard_graph_model = 'sale.report'
         return super(CrmTeam, self)._onchange_team_type()
 
     @api.multi

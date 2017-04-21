@@ -4,7 +4,7 @@
         <record id="pos_sales_team" model="crm.team">
             <field name="name">Point of Sale</field>
             <field name="team_type" eval="'pos'"/>
-            <field name="dashboard_graph_model">sales</field>
+            <field name="dashboard_graph_model">sale.report</field>
         </record>
         <record id="point_of_sale.pos_config_main" model="pos.config">
             <field name="crm_team_id" ref="pos_sales_team"/>
