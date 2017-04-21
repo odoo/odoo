@@ -955,8 +955,10 @@ var FieldMany2ManyTags = AbstractField.extend({
         'click .o_delete': '_onDeleteTag',
         'keydown .o_form_field_many2one input': '_onKeyDown',
     }),
-
-    fetchSubFields: true,
+    fieldsToFetch: {
+        color: {type: 'integer'},
+        display_name: {type: 'char'},
+    },
 
     //--------------------------------------------------------------------------
     // Public
