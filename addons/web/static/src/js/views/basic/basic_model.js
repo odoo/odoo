@@ -825,7 +825,6 @@ var BasicModel = AbstractModel.extend({
     _applyChange: function (recordID, changes) {
         var self = this;
         var record = this.localData[recordID];
-        var onChangeFields = []; // the fields that have changed and that have an on_change
         var field;
         var defs = [];
         record._changes = record._changes || {};
@@ -840,12 +839,19 @@ var BasicModel = AbstractModel.extend({
             } else {
                 record._changes[fieldName] = changes[fieldName];
             }
-            if (field.onChange) {
-                onChangeFields.push(fieldName);
-            }
         }
 
         return $.when.apply($, defs).then(function () {
+            var onChangeFields = []; // the fields that have changed and that have an on_change
+            for (var fieldName in changes) {
+                field = record.fields[fieldName];
+                if (field.onChange) {
+                    var isX2Many = field.type === 'one2many' || field.type === 'many2many';
+                    if (!isX2Many || (self._isX2ManyValid(record._changes[fieldName] || record.data[fieldName]))) {
+                        onChangeFields.push(fieldName);
+                    }
+                }
+            }
             var onchangeDef;
             if (onChangeFields.length) {
                 onchangeDef = self._performOnChange(record, onChangeFields).then(function (result) {
@@ -1947,6 +1953,29 @@ var BasicModel = AbstractModel.extend({
     _getFieldNames: function (element) {
         var fieldsInfo = element.fieldsInfo;
         return Object.keys(fieldsInfo && fieldsInfo[element.viewType] || {});
+    },
+    /**
+     * return true if a list element is 'valid'. Such an element is valid if it
+     * has no sub record with an unset required field.
+     *
+     * This method is meant to be used to check if a x2many change will trigger
+     * an onchange.
+     *
+     * @param {string} id id for a local resource of type 'list'. This is
+     *   assumed to be a list element for a one2many
+     * @returns {boolean}
+     */
+    _isX2ManyValid: function (id) {
+        var isValid = true;
+        var element = this.get(id, {raw: true});
+        _.each(element.data, function (rec) {
+            for (var fieldName in rec.fields) {
+                if (rec.fields[fieldName].required && !rec.data[fieldName]) {
+                    isValid = false;
+                }
+            }
+        });
+        return isValid;
     },
     /**
      * Helper method for the load entry point.
