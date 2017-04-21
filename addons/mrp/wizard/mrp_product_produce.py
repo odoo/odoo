@@ -65,7 +65,7 @@ class MrpProductProduce(models.TransientModel):
     serial = fields.Boolean('Requires Serial')
     production_id = fields.Many2one('mrp.production', 'Production')
     product_id = fields.Many2one('product.product', 'Product')
-    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
+    product_qty = fields.Float(string='Actual Quantity Produced', digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure')
     lot_id = fields.Many2one('stock.production.lot', string='Lot')
     consume_line_ids = fields.Many2many('stock.move.lots', 'mrp_produce_stock_move_lots', string='Product to Track')
