@@ -636,8 +636,6 @@ class Database(http.Controller):
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         try:
-            if not re.match('^[a-zA-Z][a-zA-Z0-9_]+$', name):
-                raise Exception(_('Invalid database name. Only alphanumerical characters and underscore are allowed.'))
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
             request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code)
@@ -650,8 +648,6 @@ class Database(http.Controller):
     @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
     def duplicate(self, master_pwd, name, new_name):
         try:
-            if not re.match('^[a-zA-Z][a-zA-Z0-9_]+$', new_name):
-                raise Exception(_('Invalid database name. Only alphanumerical characters and underscore are allowed.'))
             request.session.proxy("db").duplicate_database(master_pwd, name, new_name)
             return http.local_redirect('/web/database/manager')
         except Exception, e:

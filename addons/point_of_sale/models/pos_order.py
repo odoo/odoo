@@ -65,14 +65,24 @@ class PosOrder(models.Model):
                         closed_session.id,
                         order['name'],
                         order['amount_total'])
-        _logger.warning('attempting to create recovery session for saving order %s', order['name'])
-        new_session = PosSession.create({
-            'config_id': closed_session.config_id.id,
-            'name': _('(RESCUE FOR %(session)s)') % {'session': closed_session.name},
-            'rescue': True,    # avoid conflict with live sessions
-        })
-        # bypass opening_control (necessary when using cash control)
-        new_session.signal_workflow('open')
+
+        open_sessions = PosSession.search([('state', '=', 'opened'),
+                                           ('rescue', '=', True),
+                                           ('config_id', '=', closed_session.config_id.id),
+                                           ('name', 'ilike', closed_session.name)],
+                                          limit=1, order="start_at DESC")
+        if open_sessions:
+            new_session = open_sessions[0]
+            _logger.warning('using existing recovery session %s for saving order %s', new_session, order['name'])
+        else:
+            _logger.warning('attempting to create recovery session for saving order %s', order['name'])
+            new_session = PosSession.create({
+                'config_id': closed_session.config_id.id,
+                'name': _('(RESCUE FOR %(session)s)') % {'session': closed_session.name},
+                'rescue': True,    # avoid conflict with live sessions
+            })
+            # bypass opening_control (necessary when using cash control)
+            new_session.signal_workflow('open')
 
         return new_session
 
