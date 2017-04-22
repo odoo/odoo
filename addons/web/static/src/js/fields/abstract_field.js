@@ -161,17 +161,24 @@ var AbstractField = Widget.extend({
 
     /**
      * Activates the field widget. By default, activation means focusing and
-     * selecting the associated focusable element.
+     * selecting (if possible) the associated focusable element. The selecting
+     * part can be disabled.  In that case, note that the focused input/textarea
+     * will have the cursor at the very end.
      *
+     * @param {boolean} [noselect=false] if false and the input is of type text
+     *   or textarea, the content will also be selected
      * @returns {boolean} true if the widget was activated, false if the
      *                    focusable element was not found or invisible
      */
-    activate: function () {
+    activate: function (noselect) {
         var $focusable = this.getFocusableElement();
         if ($focusable.length && $focusable.is(':visible')) {
             $focusable.focus();
             if ($focusable.is('input[type="text"], textarea')) {
-                setTimeout($focusable.select.bind($focusable), 0);
+                $focusable[0].selectionStart = $focusable[0].selectionEnd = $focusable[0].value.length;
+                if (!noselect) {
+                    setTimeout($focusable.select.bind($focusable), 0);
+                }
             }
             return true;
         }

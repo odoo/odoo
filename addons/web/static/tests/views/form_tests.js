@@ -3285,5 +3285,49 @@ QUnit.module('Views', {
             "there should be 4 read rpcs");
         form.destroy();
     });
+
+    QUnit.test('in edit mode, first field is focused', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="foo"/>' +
+                        '<field name="bar"/>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_form_input[name="foo"]')[0], document.activeElement,
+            "foo field should have focus");
+        assert.strictEqual(form.$('.o_form_input[name="foo"]')[0].selectionStart, 3,
+            "cursor should be at the end");
+
+        form.destroy();
+    });
+
+    QUnit.test('autofocus fields are focused', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="bar"/>' +
+                        '<field name="foo" default_focus="1"/>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_form_input[name="foo"]')[0], document.activeElement,
+            "foo field should have focus");
+
+        form.destroy();
+    });
+
 });
 });
