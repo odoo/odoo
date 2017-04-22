@@ -183,17 +183,14 @@ var BasicModel = AbstractModel.extend({
      * parent.
      *
      * @todo we should remove the deleted records from the localData
-     * @todo is it really necessary to reload the data? it seems artificial, and
-     *   the caller should be able to do that himself
      * @todo why can't we infer modelName?
      *
      * @param {string[]} recordIds list of local resources ids. They should all
      *   be of type 'record', and of the same model
      * @param {string} modelName
-     * @param {string} parentID
      * @returns {Deferred}
      */
-    deleteRecords: function (recordIds, modelName, parentID) {
+    deleteRecords: function (recordIds, modelName) {
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
         return this._rpc({
@@ -208,9 +205,6 @@ var BasicModel = AbstractModel.extend({
                     record.res_id = record.res_ids[record.offset];
                     record.count--;
                 });
-                if (parentID) {
-                    return self.reload(parentID);
-                }
             });
     },
     /**

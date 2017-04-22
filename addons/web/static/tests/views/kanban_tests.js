@@ -649,9 +649,8 @@ QUnit.module('Views', {
     });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
-        assert.expect(21);
+        assert.expect(25);
 
-        var nbRPCs = 0;
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -664,9 +663,11 @@ QUnit.module('Views', {
                     '</kanban>',
             groupBy: ['product_id'],
             mockRPC: function (route, args) {
-                nbRPCs++;
+                if (args.method) {
+                    assert.step(args.method);
+                }
                 return this._super(route, args);
-            }
+            },
         });
 
         // check the initial rendering
@@ -717,6 +718,7 @@ QUnit.module('Views', {
                         "should not be able to archive the records");
         assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive').length,
                         "should not be able to restore the records");
+        assert.verifySteps(['read_group', 'unlink', 'read_group']);
         kanban.destroy();
     });
 

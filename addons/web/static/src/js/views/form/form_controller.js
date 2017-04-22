@@ -338,6 +338,19 @@ var FormController = BasicController.extend({
         this.do_warn(_t("The following fields are invalid:"), warnings.join(''));
     },
     /**
+     * Hook method, called when record(s) has been deleted.
+     *
+     * @override
+     */
+    _onDeletedRecords: function () {
+        var state = this.model.get(this.handle, {raw: true});
+        if (!state.res_ids.length) {
+            this.do_action('history_back');
+        } else {
+            this._super.apply(this, arguments);
+        }
+    },
+    /**
      * We just add the current ID to the state pushed. This allows the web
      * client to add it in the url, for example.
      *
