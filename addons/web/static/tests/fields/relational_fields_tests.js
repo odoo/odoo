@@ -1898,6 +1898,42 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list, editable, with a date in the context', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[1].product_id = 37;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="date"/>' +
+                        '<field name="p" context="{\'date\':date}">' +
+                            '<tree editable="top">' +
+                                '<field name="date"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    assert.strictEqual(args.kwargs.context.date, '2017-01-25',
+                        "should have properly evaluated date key in context");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+
+        form.destroy();
+    });
+
     QUnit.test('one2many list edition, some basic functionality', function (assert) {
         assert.expect(3);
 
