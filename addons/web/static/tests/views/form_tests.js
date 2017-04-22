@@ -1852,6 +1852,42 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('deleting the last record', function (assert) {
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="foo"></field></form>',
+            viewOptions: {
+                ids: [1],
+                index: 0,
+                sidebar: true,
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        // open sidebar, click on delete and confirm
+        form.sidebar.$('button.o_dropdown_toggler_btn').click();
+        form.sidebar.$('a:contains(Delete)').click();
+
+        testUtils.intercept(form, 'do_action', function (event) {
+            assert.strictEqual(event.data.action, 'history_back',
+                "should trigger an history back action");
+        });
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        $('.modal .modal-footer button.btn-primary').click();
+        assert.strictEqual($('.modal').length, 0, 'no confirm modal should be displayed');
+
+        assert.verifySteps(['read', 'unlink']);
+        form.destroy();
+    });
+
     QUnit.test('empty required fields cannot be saved', function (assert) {
         assert.expect(5);
 
