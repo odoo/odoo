@@ -284,7 +284,9 @@ var FormRenderer = BasicRenderer.extend({
         widget.$el.addClass(FIELD_CLASSES[record.fields[node.attrs.name].type]);
         this._addFieldClassNames(widget);
         this._handleAttributes(widget.$el, node);
-
+        if (JSON.parse(node.attrs.default_focus || "0")) {
+            this.defaultFocusField = widget;
+        }
         return widget;
     },
     /**
@@ -700,13 +702,20 @@ var FormRenderer = BasicRenderer.extend({
             self.$el.toggleClass('o_form_editable', self.mode === 'edit');
             self.$el.toggleClass('o_form_readonly', self.mode === 'readonly');
             // Attach the tooltips on the fields' label
+            var focusWidget = self.defaultFocusField;
             _.each(self.allFieldWidgets[self.state.id], function (widget) {
+                if (!focusWidget) {
+                    focusWidget = widget;
+                }
                 if (core.debug || widget.attrs.help || widget.field.help) {
                     var idForLabel = self.idsForLabels[widget.name];
                     var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
                     self._addFieldTooltip(widget, $label);
                 }
             });
+            if (focusWidget) {
+                focusWidget.activate(true);
+            }
         });
     },
 
