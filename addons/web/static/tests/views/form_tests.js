@@ -3394,7 +3394,6 @@ QUnit.module('Views', {
                 }
                 return this._super(route, args);
             },
-            debug: true,
         });
 
         form.$buttons.find('.o_form_button_save').click();
