@@ -327,15 +327,21 @@ DebugManager.include({
         var ds = this._view_manager.dataset;
         if (!this._active_view.controller.getSelectedIds().length) {
             console.warn(_t("No metadata available"));
-            return
+            return;
         }
         ds.call('get_metadata', [this._active_view.controller.getSelectedIds()]).done(function(result) {
+            var metadata = result[0];
+            metadata.creator = field_utils.format.many2one(metadata.create_uid);
+            metadata.lastModifiedBy = field_utils.format.many2one(metadata.write_uid);
+            var createDate = field_utils.parse.datetime(metadata.create_date);
+            metadata.create_date = field_utils.format.datetime(createDate);
+            var modificationDate = field_utils.parse.datetime(metadata.write_date);
+            metadata.write_date = field_utils.format.datetime(modificationDate);
             new Dialog(this, {
                 title: _.str.sprintf(_t("Metadata (%s)"), ds.model),
                 size: 'medium',
                 $content: QWeb.render('WebClient.DebugViewLog', {
-                    perm : result[0],
-                    format : field_utils.format
+                    perm : metadata,
                 })
             }).open();
         });
