@@ -88,6 +88,41 @@ return AbstractController.extend(FieldManagerMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * When the user clicks on a 'action button', this function determines what
+     * should happen.
+     *
+     * @private
+     * @param {Object} attrs the attrs of the button clicked
+     * @param {Object} [record] the current state of the view
+     * @returns {Deferred}
+     */
+    _callButtonAction: function (attrs, record) {
+        var self = this;
+        var def = $.Deferred();
+        var reload = function () {
+            if (!self.isDestroyed()) {
+                self.reload();
+            }
+        };
+        record = record || this.model.get(this.handle);
+        var recordID = record.data.id;
+        this.trigger_up('execute_action', {
+            action_data: _.extend({}, attrs, {
+                context: record.getContext({additionalContext: attrs.context}),
+            }),
+            model: record.model,
+            record_id: recordID,
+            on_closed: function (reason) {
+                if (!_.isObject(reason)) {
+                    reload();
+                }
+            },
+            on_fail: reload,
+            on_success: def.resolve.bind(def),
+        });
+        return this.alive(def);
+    },
+    /**
      * Called by the field manager mixin to confirm that a change just occured
      * (after that potential onchanges have been applied).
      *

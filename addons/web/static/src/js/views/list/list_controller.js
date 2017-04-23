@@ -210,11 +210,8 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onButtonClicked: function (event) {
-        this.trigger_up('execute_action', {
-            action_data: event.data.attrs,
-            model: this.modelName,
-            record_id: event.data.record.res_id,
-        });
+        event.stopPropagation();
+        this._callButtonAction(event.data.attrs, event.data.record);
     },
     /**
      * This event is triggered when a list renderer goes from mode = readonly to
