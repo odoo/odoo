@@ -1302,7 +1302,6 @@ QUnit.module('Views', {
             arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
         });
 
-
         assert.strictEqual(list.$('tr.o_data_row').length, 4,
             "should have 4 records");
         list.$buttons.find('.o_list_button_add').click();
@@ -1525,6 +1524,40 @@ QUnit.module('Views', {
         });
         list.$('td:contains(virtual)').click();
 
+        list.destroy();
+    });
+
+    QUnit.test('pressing enter on last line of editable list view', function (assert) {
+        assert.expect(7);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            mockRPC: function (route, args) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // click on 3rd line
+        list.$('td:contains(gnap)').click();
+        assert.ok(list.$('tr.o_data_row:eq(2)').hasClass('o_selected_row'),
+            "3rd row should be selected");
+
+        // press enter in input
+        list.$('tr.o_selected_row input').trigger({type: 'keydown', which: 13}); // enter
+        assert.ok(list.$('tr.o_data_row:eq(3)').hasClass('o_selected_row'),
+            "4rd row should be selected");
+        assert.notOk(list.$('tr.o_data_row:eq(2)').hasClass('o_selected_row'),
+            "3rd row should no longer be selected");
+
+        // press enter on last row
+        list.$('tr.o_selected_row input').trigger({type: 'keydown', which: 13}); // enter
+        assert.strictEqual(list.$('tr.o_data_row').length, 5, "should have created a 5th row");
+
+        assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/foo/default_get']);
         list.destroy();
     });
 

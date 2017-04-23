@@ -272,6 +272,15 @@ ListRenderer.include({
         return $rows;
     },
     /**
+     * @override
+     * @private
+     * @returns {Deferred} this deferred is resolved immediately
+     */
+    _renderView: function () {
+        this.currentRow = null;
+        return this._super.apply(this, arguments);
+    },
+    /**
      * This is one of the trickiest method in the editable renderer.  It has to
      * do a lot of stuff: it has to determine which cell should be selected (if
      * the target cell is readonly, we need to find another suitable cell), then
@@ -563,6 +572,9 @@ ListRenderer.include({
     _onMoveNextLine: function () {
         if (this.currentRow < this.state.data.length - 1) {
             this._selectCell(this.currentRow + 1, 0);
+        } else {
+            this._unselectRow();
+            this.trigger_up('add_record');
         }
     },
     /**

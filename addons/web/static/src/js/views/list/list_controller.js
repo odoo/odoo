@@ -18,6 +18,7 @@ var qweb = core.qweb;
 
 var ListController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
+        add_record: '_onAddRecord',
         button_clicked: '_onButtonClicked',
         change_mode: '_onChangeMode',
         selection_changed: '_onSelectionChanged',
@@ -149,6 +150,28 @@ var ListController = BasicController.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Add a record to the list
+     *
+     * @private
+     */
+    _addRecord: function () {
+        var self = this;
+        this.model.addDefaultRecord(this.handle, {position: this.editable}).then(function (recordID) {
+            self._toggleNoContentHelper(false);
+            var state = self.model.get(self.handle);
+            self.renderer.updateState(state);
+            self.renderer.editRecord(recordID);
+        });
+    },
+    /**
+     * Archive the current selection
+     *
+     * @private
+     * @param {string[]} ids
+     * @param {boolean} archive
+     * @returns {Deferred}
+     */
     _archive: function (ids, archive) {
         if (ids.length === 0) {
             return $.when();
@@ -205,8 +228,19 @@ var ListController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Add a record to the list
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onAddRecord: function (event) {
+        event.stopPropagation();
+        this._addRecord();
+    },
+    /**
      * Handles a click on a button by performing its action.
      *
+     * @private
      * @param {OdooEvent} event
      */
     _onButtonClicked: function (event) {
@@ -218,6 +252,7 @@ var ListController = BasicController.extend({
      * edit, and vice versa. In that case, we need to make sure that the buttons
      * displayed in the control panel are correct.
      *
+     * @private
      * @param {OdooEvent} event
      */
     _onChangeMode: function (event) {
@@ -228,6 +263,7 @@ var ListController = BasicController.extend({
      * can switch to the form view with no active res_id, so it is in 'create'
      * mode, or we can edit inline.
      *
+     * @private
      * @param {MouseEvent} event
      */
     _onCreateRecord: function (event) {
@@ -236,33 +272,36 @@ var ListController = BasicController.extend({
         // list editable renderer and would unselect the newly created row
         event.stopPropagation();
 
-        var self = this;
         if (this.editable) {
-            this.model.addDefaultRecord(this.handle).then(function (recordID) {
-                self._toggleNoContentHelper(false);
-                var state = self.model.get(self.handle);
-                self.renderer.updateState(state);
-                self.renderer.editRecord(recordID);
-            });
+            this._addRecord();
         } else {
             this.trigger_up('switch_view', {view_type: 'form', res_id: undefined});
         }
     },
     /**
      * Called when the 'delete' action is clicked on in the side bar.
+     *
+     * @private
      */
     _onDeleteSelectedRecords: function () {
         this._deleteRecords(this.selectedRecords);
     },
     /**
      * Handler called when the user clicked on the 'Discard' button.
+     *
+     * @private
+     * @param {MouseEvent} event
      */
-    _onDiscard: function () {
+    _onDiscard: function (event) {
+        event.stopPropagation();
         this.model.discardChanges(this.handle);
+        this._updateButtons('readonly');
         this.update(this.handle, {reload: false});
     },
     /**
      * Opens the Export Dialog
+     *
+     * @private
      */
     _onExportData: function () {
         var record = this.model.get(this.handle);
@@ -274,6 +313,7 @@ var ListController = BasicController.extend({
      * This should be moved in basic controller, and shared between basic views.
      *
      * @override
+     * @private
      * @param {OdooEvent} event
      */
     _onFieldChanged: function (event) {
@@ -287,6 +327,7 @@ var ListController = BasicController.extend({
      * row, which is done when clicking on 'Save' (anywhere outside the row
      * actually), so this function should only switch back to readonly mode
      *
+     * @private
      * @param {MouseEvent} event
      */
     _onSave: function (event) {
@@ -300,6 +341,7 @@ var ListController = BasicController.extend({
      * When the current selection changes (by clicking on the checkboxes on the
      * left), we need to display (or hide) the 'sidebar'.
      *
+     * @private
      * @param {OdooEvent} event
      */
     _onSelectionChanged: function (event) {
@@ -309,6 +351,7 @@ var ListController = BasicController.extend({
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
      *
+     * @private
      * @param {boolean} archive
      */
     _onToggleArchiveState: function (archive) {
@@ -319,6 +362,7 @@ var ListController = BasicController.extend({
      * tell the model to sort itself properly, to update the pager and to
      * rerender the view.
      *
+     * @private
      * @param {OdooEvent} event
      */
     _onToggleColumnOrder: function (event) {
@@ -335,6 +379,7 @@ var ListController = BasicController.extend({
      * This method just transfer the request to the model, then update the
      * renderer.
      *
+     * @private
      * @param {OdooEvent} event
      */
     _onToggleGroup: function (event) {
