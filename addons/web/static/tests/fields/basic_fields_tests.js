@@ -258,6 +258,43 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.module('FieldToggleButton');
+
+    QUnit.test('use toggle_button in list view', function (assert) {
+        assert.expect(6);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="bar" widget="toggle_button" ' +
+                        'options="{&quot;active&quot;: &quot;Reported in last payslips&quot;, &quot;inactive&quot;: &quot;To Report in Payslip&quot;}"/>' +
+                '</tree>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(list.$('button i.fa.fa-circle.o_toggle_button_success').length, 4,
+            "should have 4 green buttons");
+        assert.strictEqual(list.$('button i.fa.fa-circle.text-muted').length, 1,
+            "should have 1 muted button");
+
+        assert.strictEqual(list.$('button').first().attr('title'), "Reported in last payslips",
+            "active buttons should have proper tooltip");
+        assert.strictEqual(list.$('button').last().attr('title'), "To Report in Payslip",
+            "inactive buttons should have proper tooltip");
+
+        // clicking on first button to check the state is properly changed
+        list.$('button').first().click();
+        assert.strictEqual(list.$('button i.fa.fa-circle.o_toggle_button_success').length, 3,
+            "should have 3 green buttons");
+
+        list.$('button').first().click();
+        assert.strictEqual(list.$('button i.fa.fa-circle.o_toggle_button_success').length, 4,
+            "should have 4 green buttons");
+        list.destroy();
+    });
+
 
     QUnit.module('FieldFloat');
 

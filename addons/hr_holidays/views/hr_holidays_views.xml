@@ -166,10 +166,8 @@
                     <field name="date_to" required="1"/>
                     <field name="number_of_days_temp" string="Allocated Days" sum="Remaining Days"/>
                     <field name="state"/>
-                    <button name="toggle_payslip_status" field_name="payslip_status" type="object"
-                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
+                    <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
                     <field name="report_note" groups="hr_holidays.group_hr_holidays_manager"/>
-                    <field name="payslip_status" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -210,10 +208,8 @@
                     <field name="date_to"/>
                     <field name="holiday_status_id"/>
                     <field name="state"/>
-                    <button name="toggle_payslip_status" field_name="payslip_status" type="object"
-                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
+                    <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
                     <field name="report_note"/>
-                    <field name="payslip_status" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -232,9 +228,7 @@
                     <field name="date_to"/>
                     <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                     <field name="state"/>
-                    <field name="payslip_status" invisible="1"/>
-                    <button name="toggle_payslip_status" field_name="payslip_status" type="object"
-                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
+                    <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="not context.get('set_visible',False)"/>
                     <field name="manager_id" invisible="1"/>

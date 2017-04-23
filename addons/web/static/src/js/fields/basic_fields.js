@@ -1668,29 +1668,59 @@ var FieldProgressBar = AbstractField.extend({
 });
 
 /**
-    This widget is intended to be used on boolean fields. It toggles a button
-    switching between a green bullet / gray bullet.
+ * This widget is intended to be used on boolean fields. It toggles a button
+ * switching between a green bullet / gray bullet.
 */
 var FieldToggleBoolean = AbstractField.extend({
     template: "toggle_button",
     events: {
-        'click': 'set_toggle_button'
+        'click': '_onToggleButton'
     },
     supportedFieldTypes: ['boolean'],
-    _render: function () {
-        var class_name = this.value ? 'o_toggle_button_success' : 'text-muted';
-        this.$('i').attr('class', ('fa fa-circle ' + class_name));
-    },
-    set_toggle_button: function () {
-        var toggle_value = !this.value;
-        this._setValue(toggle_value);
-        if (this.mode === 'edit') {
-            this._render();
-        }
-    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * A boolean field is always set since false is a valid value.
+     *
+     * @override
+     */
     isSet: function () {
         return true;
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        var class_name = this.value ? 'o_toggle_button_success' : 'text-muted';
+        this.$('i').attr('class', ('fa fa-circle ' + class_name));
+        var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
+        this.$el.attr('title', title);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggle the button
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onToggleButton: function (event) {
+        event.stopPropagation();
+        this._setValue(!this.value);
+    },
+
 });
 
 var JournalDashboardGraph = AbstractField.extend({
