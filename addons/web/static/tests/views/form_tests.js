@@ -787,6 +787,55 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('buttons in form view, new record, with field id in view', function (assert) {
+        assert.expect(6);
+        // buttons in form view are one of the rare example of situation when we
+        // save a record without reloading it immediately, because we only care
+        // about its id for the next step.  But at some point, if the field id
+        // is in the view, it was registered in the changes, and caused invalid
+        // values in the record (data.id was set to null)
+
+        var resID;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<header>' +
+                        '<button name="post" class="p" string="Confirm" type="object"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="id" invisible="1"/>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'create') {
+                    return this._super.apply(this, arguments).then(function (result) {
+                        resID = result;
+                        return resID;
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        testUtils.intercept(form, 'execute_action', function (event) {
+            assert.step('execute_action');
+            assert.strictEqual(event.data.record_id, resID,
+                "execute action should be done on correct record id");
+            event.data.on_success();
+        });
+        form.$('.o_form_statusbar button.p').click();
+
+        assert.verifySteps(['default_get', 'create', 'execute_action', 'read']);
+        form.destroy();
+    });
+
     QUnit.test('change and save char', function (assert) {
         assert.expect(6);
         var form = createView({
