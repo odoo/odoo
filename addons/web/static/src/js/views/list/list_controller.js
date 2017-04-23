@@ -269,6 +269,20 @@ var ListController = BasicController.extend({
         new DataExport(this, record).open();
     },
     /**
+     * This method comes from the field manager mixin.
+     * @todo: there is a very similar method in kanban and form controllers.
+     * This should be moved in basic controller, and shared between basic views.
+     *
+     * @override
+     * @param {OdooEvent} event
+     */
+    _onFieldChanged: function (event) {
+        if (this.renderer.mode === 'readonly') {
+            event.data.force_save = true;
+        }
+        this._super.apply(this, arguments);
+    },
+    /**
      * changes of the list editable are automatically saved when unselecting the
      * row, which is done when clicking on 'Save' (anywhere outside the row
      * actually), so this function should only switch back to readonly mode

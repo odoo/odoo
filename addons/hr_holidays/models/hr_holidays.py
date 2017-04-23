@@ -530,12 +530,6 @@ class Holidays(models.Model):
         self._remove_resource_leave()
         return True
 
-    @api.multi
-    def toggle_payslip_status(self):
-        record_to_set_true = self.search([('id', 'in', self.ids), ('payslip_status', '=', False)])
-        record_to_set_false = self - record_to_set_true
-        return record_to_set_true.write({'payslip_status': True}) and record_to_set_false.write({'payslip_status': False})
-
     ####################################################
     # Messaging methods
     ####################################################
