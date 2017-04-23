@@ -662,6 +662,10 @@ var BasicModel = AbstractModel.extend({
             }
             var shouldReload = 'reload' in options ? options.reload : true;
             var method = self.isNew(record_id) ? 'create' : 'write';
+            if (record._changes) {
+                // id never changes, and should not be written
+                delete record._changes.id;
+            }
             var changes = self._generateChanges(record);
 
             if (method === 'create') {
@@ -673,8 +677,6 @@ var BasicModel = AbstractModel.extend({
                     }
                 });
             }
-            // make sure we don't write an undefined id
-            delete changes.id;
 
             // in the case of a write, only perform the RPC if there are changes to save
             if (method === 'create' || Object.keys(changes).length) {
