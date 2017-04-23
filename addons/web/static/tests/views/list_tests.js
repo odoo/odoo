@@ -969,7 +969,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('click on a button in a list view', function (assert) {
-        assert.expect(6);
+        assert.expect(9);
 
         var list = createView({
             View: ListView,
@@ -979,6 +979,10 @@ QUnit.module('Views', {
                     '<field name="foo"/>' +
                     '<button string="a button" name="button_action" icon="fa-car" type="object"/>' +
                 '</tree>',
+            mockRPC: function (route) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
             intercepts: {
                 execute_action: function (event) {
                     assert.strictEqual(event.data.record_id, 1,
@@ -989,6 +993,7 @@ QUnit.module('Views', {
                         "should call correct method");
                     assert.strictEqual(event.data.action_data.type, 'object',
                         'should have correct type');
+                    event.data.on_closed();
                 },
             },
         });
@@ -999,6 +1004,8 @@ QUnit.module('Views', {
             'buttons should have correct icon');
 
         list.$('.o_list_button:first > button').click(); // click on the button
+        assert.verifySteps(['/web/dataset/search_read', '/web/dataset/search_read'],
+            "should have reloaded the view (after the action is complete)");
         list.destroy();
     });
 
