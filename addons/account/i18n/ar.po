@@ -37,13 +37,14 @@
 # Hear Here <hearherebox@gmail.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
 # khalil qandil <khalilqandil@gmail.com>, 2017
+# Islam Eldeeb <islameldeb@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-14 10:20+0000\n"
 "PO-Revision-Date: 2017-02-14 10:20+0000\n"
-"Last-Translator: khalil qandil <khalilqandil@gmail.com>, 2017\n"
+"Last-Translator: Islam Eldeeb <islameldeb@gmail.com>, 2017\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -606,12 +607,12 @@ msgstr "<span>(*) هذه الإعدادات خاصة بالشركة المتصل
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "<span>invoice</span>"
-msgstr ""
+msgstr "<span>الفاتورة</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "<span>refund</span>"
-msgstr ""
+msgstr "<span>إعادة المال</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
@@ -4665,6 +4666,9 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .CSV format.\n"
 "-This installs the module account_bank_statement_import_csv."
 msgstr ""
+"احصل على كشوف حساباتك البنكيه من البنك الخاص بك و استوردهم في أودو ب CSV. فورم .\n"
+" - هذا يثبت الموديول \n"
+".account_bank_statement_import_csv"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -5088,7 +5092,7 @@ msgstr "استيراد ملفات .qif "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_csv
 msgid "Import in .csv format"
-msgstr ""
+msgstr "استيراد بفورمات csv."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -5351,7 +5355,7 @@ msgstr "ضريبة الفاتورة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_id
 msgid "Invoice for which this invoice is the refund"
-msgstr ""
+msgstr "الفاتورة التى يتم استرداد هذه الفاتورة منها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_invoice_id
@@ -5362,38 +5366,38 @@ msgstr "رقم الفاتورة"
 #: code:addons/account/models/account_invoice.py:555
 #, python-format
 msgid "Invoice must be a draft in order to set it to Pro-forma."
-msgstr ""
+msgstr "يجب أن تكون الفاتورة مسودة من أجل تعيينها الى فاتورة مبدئية."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:535
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
-msgstr ""
+msgstr "يجب ان تكون الفاتوره ملغية من أجل تعيينها كمسودة."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:563
 #, python-format
 msgid "Invoice must be in draft or Pro-forma state in order to validate it."
-msgstr ""
+msgstr "يجب ان تكون الفاتورة مسودة او فاتوره مبدئيه من أجل التحقق من صحتها."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:587
 #, python-format
 msgid ""
 "Invoice must be in draft, Pro-forma or open state in order to be cancelled."
-msgstr ""
+msgstr "يجب ان تكون الفاتوره مسودة , فاتوره مبدئية او مفتوحة من أجل الغائها."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
 msgid "Invoice must be paid in order to set it to register payment."
-msgstr ""
+msgstr "يجب أن تكون الفاتورة مدفوعة من أجل تعيينها فى سجل المدفوعات."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
 msgid "Invoice must be validated in order to set it to register payment."
-msgstr ""
+msgstr "يجب ان تكون الفاتورة صالحة من أجل تعيينها فى سجل المدفوعات."
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -5546,6 +5550,9 @@ msgid ""
 "journal entry since it would create a gap in the numbering. You should "
 "create the journal entry again and cancel it thanks to a regular revert."
 msgstr ""
+"لا يسمح بحذف سطر من كشف حساب مصرفى انشأ بالفعل كقيد يومية لانه سيؤدى لعمل "
+"فجوة بالترقيم .يجب انشاء قيد يومية مرة اخرى والغاءة وذلك بفضل العودة "
+"النظامية"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:322
@@ -5555,6 +5562,8 @@ msgid ""
 "since it would create a gap in the numbering. You should create the journal "
 "entry again and cancel it thanks to a regular revert."
 msgstr ""
+"غير مسموح حذف امر دفع انشأ بالفعل قيد يومية لانة سيؤدى لعمل فجوة رقمية. يجب "
+"انشاء قيد يومية مرة اخرى والغاءة بفضل العودة النظامية"
 
 #. module: account
 #. openerp-web
@@ -8340,6 +8349,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"اختر \"بيع\" لدفتر اليومية لفواتير العملاء. \n"
+"اختر \"شراء\" لدفتر اليومية فواتير الموردين. \n"
+"اختر \"نقدى\" أو \"بنك\" لدفاتر اليومية المستخدمة في مدفوعات العميل أو المورد.\n"
+" اختر \"عام\" للعمليات المتنوعة لدفتر اليومية. "
 
 #. module: account
 #. openerp-web
@@ -8458,6 +8471,8 @@ msgid ""
 "Set this field to true if this tax can be used in the tax adjustment wizard,"
 " used to manually fill some data in the tax declaration"
 msgstr ""
+"ضع هذا الحقل الى نعم إذا كان يمكن استخدام هذه الضريبة في معالج تسوية الضرائب"
+" , وتستخدم لملء بعض البيانات يدويا في البيان الضريبي"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_visible
@@ -8918,6 +8933,9 @@ msgid ""
 " set when the statement line is reconciled then stored to set the same "
 "number again if the line is cancelled, set to draft and re-processed again."
 msgstr ""
+"الحقل التقني يحتفظ بالرقم المعطى لقيد اليومية, يعين تلقائيا عندما يتم تسوية "
+"سطر كشقف الحساب ثم يخزن لتعيين نفس العدد مرة أخرى إذا تم إلغاء السطر، تعيين "
+"إلى مسودة وإعادة معالجتها مرة أخرى."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_refund_only
@@ -8963,6 +8981,10 @@ msgid ""
 "items are directly exigible, but with the module account_tax_cash_basis, "
 "some will become exigible only when the payment is recorded."
 msgstr ""
+"الحقل التقنى يستخدم لتحديد سطر الضريبة في تقرير ضريبة القيمة المضافة أو لا "
+"(يتم عرض عناصر دفتر اليومية واجب الاداء فقط). افتراضيا، تكون جميع عناصر دفتر"
+" اليومية الجديدة واجبة الاداء مباشرة، ولكن مع النموذج "
+"account_tax_cash_basis، سيصبح بعضها واجب الاداء فقط عند تسجيل الدفعة."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_chart_template_id
@@ -9174,6 +9196,8 @@ msgid ""
 "The first step is to set up your company's information. This is mostly used "
 "in printed business documents like orders and invoices."
 msgstr ""
+"الخطوة الاولى لتثبيت معلومات شركتك. يستخدم هذا عادة لطباعة مستندات عمل مثل "
+"الاوامر والفواتير."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_position_id
@@ -9301,6 +9325,8 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"الحساب المحدد لقيد اليومية يجبرك على توفير عمله ثانوية. يجب عليك حذف العمله "
+"الثانوية من الحساب."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1325
@@ -9374,6 +9400,8 @@ msgid ""
 "This %s has been created from: <a href=# data-oe-model=account.invoice data-"
 "oe-id=%d>%s</a>"
 msgstr ""
+"هذه %s تم انشائها من : <a href=# data-oe-model=account.invoice data-oe-"
+"id=%d>%s</a>"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:101
@@ -9464,6 +9492,8 @@ msgid ""
 "This allows you to manage the revenue recognition on selling products. It keeps track of the installments occurred on those revenue recognitions, and creates account moves for those installment lines\n"
 "-This installs the module account_deferred_revenue."
 msgstr ""
+"هذا يسمح لك بإدارة تقدير الإيرادات على بيع المنتجات. فإنه يتتبع الدفعات التى وقعت على تلك الإيرادات المقدرة ، وينشأ حساب حركة لتلك الدفعات \n"
+"-هذا بتثبيت وحدة account_deferred_revenue."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
@@ -9599,6 +9629,8 @@ msgid ""
 "This move's amount is higher than the transaction's amount. Click to "
 "register a partial payment and keep the payment balance open."
 msgstr ""
+"مبلغ هذه الخطوة أعلى من مبلغ المعاملة. انقر لتسجيل دفعة جزئية والحفاظ على "
+"رصيد الدفع مفتوحا."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_debit_credit
@@ -10129,6 +10161,8 @@ msgid ""
 "Used to hold the reference of the external mean that created this statement "
 "(name of imported file, reference of online synchronization...)"
 msgstr ""
+"يستخدم لحفظ المرجع الخارجي يعنى انشاء هذا البيان (اسم الملف المستوردة، إشارة"
+" التزامن على الانترنت ...)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
@@ -10858,13 +10892,6 @@ msgstr "فعل هذه الميزة"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:298
-#, python-format
-msgid "all"
-msgstr "كل"
-
-#. module: account
-#. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:17
 #, python-format
 msgid "assign to invoice"
@@ -10889,13 +10916,6 @@ msgstr "شفره"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "create a journal entry"
 msgstr "إنشاء قيد اليومية"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:295
-#, python-format
-msgid "customers"
-msgstr "عملاء"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -10934,13 +10954,6 @@ msgstr "لهذا المورد. تستطيع تخصيصهم لتصنيف الفا
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "or"
 msgstr "أو"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:297
-#, python-format
-msgid "others"
-msgstr "غير ذلك"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -11028,13 +11041,6 @@ msgstr "حدد شعار الشركة"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "setup your bank accounts."
 msgstr "اعداد الحسابات المصرفية الخاصة بك"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
-#, python-format
-msgid "suppliers"
-msgstr "مورّدون"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

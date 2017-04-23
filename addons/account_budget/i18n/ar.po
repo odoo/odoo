@@ -3,14 +3,13 @@
 # * account_budget
 # 
 # Translators:
-# amal ahmed <amalalhashemy88@hotmail.com>, 2016
-# Ali zuaby <ali@zuaby.net>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Islam Eldeeb <islameldeb@gmail.com>, 2016
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2016
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 # Mustafa Rawi <mustafa@cubexco.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # amrnegm <amrnegm.01@gmail.com>, 2016
-# hoxhe aits <hoxhe0@gmail.com>, 2016
+# hoxhe Aits <hoxhe0@gmail.com>, 2016
 # hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016
 msgid ""
 msgstr ""
@@ -34,8 +33,10 @@ msgid ""
 "                financial accounts and/or analytic accounts (that may represent\n"
 "                projects, departments, categories of products, etc.)"
 msgstr ""
-"تعريف الميزانية:\n"
-"تقدير الدخل أو المصاريف أو كلاهما معًا للشركة خلال مدة زمنية في المستقبل أو تُحدَد على أساس بعض الحسابات المالية أو التحليلية أو كلاهما معًا( والتي من الممكن أن تُقدم مشروعات المنتجات وأقسامها وأنواعها)."
+"الميزانية أو موازنة المشروع هي توقعات مؤسستك للإيرادات والمصروفات المتوقعة "
+"خلال فترة زمنية في المستقبل. يتم قياس الميزانية على أساس بعض الحسابات في "
+"الدليل المحاسبي أو الحسابات التحليلي (والتي قد تمثل المشروعات، إدارات وأقسام"
+" المؤسسة، المنتجات أو فئات المنتجات، إلخ)"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_account_ids
@@ -57,7 +58,7 @@ msgstr "الحساب التحليلي"
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Approve"
-msgstr "تصديق"
+msgstr "موافقه"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget
@@ -66,18 +67,18 @@ msgstr "تصديق"
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_tree
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "Budget"
-msgstr "الميزانية"
+msgstr "الموازنة"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Budget Items"
-msgstr "بنود الميزانية"
+msgstr "بنود الموازنة"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr "خط الميزانية"
+msgstr "خط الموازنة"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_analytic_account_crossovered_budget_line
@@ -88,13 +89,13 @@ msgstr "خط الميزانية"
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
 msgid "Budget Lines"
-msgstr "خطوط الميزانية"
+msgstr "خطوط الموازنة"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_name
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Budget Name"
-msgstr "اسم الميزانية"
+msgstr "اسم الموازنة"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_post
@@ -103,13 +104,13 @@ msgstr "اسم الميزانية"
 #: model:ir.ui.view,arch_db:account_budget.view_budget_post_search
 #: model:ir.ui.view,arch_db:account_budget.view_budget_post_tree
 msgid "Budgetary Position"
-msgstr "مركز الميزانية"
+msgstr "وضع الموازنة"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
-msgstr "مراكز الميزاينة"
+msgstr "مراكز الموازنة"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
@@ -117,7 +118,7 @@ msgstr "مراكز الميزاينة"
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
 msgid "Budgets"
-msgstr "الميزانيات"
+msgstr "الموازنات"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
@@ -128,15 +129,15 @@ msgid ""
 "                analytic account and monitor its evolution based on the actuals\n"
 "                realised during that period."
 msgstr ""
-"وبمعرفة أين تذهب نقودك، فقلما ما تنفق أكثر مما يحتمل دخلك فعلى الأرجح عليك "
-"مواجهة أهدافك المالية. كما يعتمد تقدير الميزانية بمعرفة قيمة الدخل المتوقع "
-"لكل حساب تحليلي ومراقبة تطور الميزانية على التطبيقات الفعلية خلال هذه "
-"الفترة."
+"عبر متابعة تدفقاتك النقدية، ستكون أقل عُرضة للإنفاق الزائد،\n"
+"وأكثر قدرة على تحقيق أهدافك المالية. سجل توقعاتك عبر إنشاء\n"
+"ميزانية تقديرية تفصل الأرباح المتوقعة لكل حساب تحليلي، وراقب\n"
+"كيف ستجري الأمور على أرض الواقع خلال الفترة التي تحددها."
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Cancel Budget"
-msgstr "إلغاء الميزانية"
+msgstr "إلغاء الموازنة"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -146,14 +147,14 @@ msgstr "ملغى "
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
 msgid "Click to create a new budget."
-msgstr "اضغط لإنشاء ميزانية جديدة"
+msgstr "اضغط لإنشاء موازنة جديدة"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_company_id
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_company_id
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_company_id
 msgid "Company"
-msgstr "المؤسسة"
+msgstr "الشركة"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -184,7 +185,7 @@ msgstr "أنشئ في"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_display_name
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "عرض الاسم"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -201,7 +202,7 @@ msgstr "مسودة"
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "Draft Budgets"
-msgstr "ميزانيات مؤقتة"
+msgstr "موازنة مؤقتة"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_to
@@ -263,7 +264,7 @@ msgstr "المبلغ المخطط"
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Practical Amount"
-msgstr "الكمية العملية"
+msgstr "المبلغ الفعلى"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -296,12 +297,12 @@ msgstr "الميزانية '%s' ليس لديها حسابات!"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_theoritical_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Theoretical Amount"
-msgstr "الكمية النظرية"
+msgstr "المبلغ النظرية"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Theoritical Amount"
-msgstr "الكمية النظرية"
+msgstr "المبلغ النظرية"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
@@ -311,7 +312,7 @@ msgstr "للاعتماد"
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "To Approve Budgets"
-msgstr "للموافقة علي الميزانية"
+msgstr "للموافقة علي الموازنة"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
