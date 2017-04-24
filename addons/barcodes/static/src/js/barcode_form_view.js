@@ -23,7 +23,7 @@ FormController.include({
                     'O-CMD.NEW': 'createRecord',
                     'O-CMD.EDIT': 'toEditMode',
                     'O-CMD.CANCEL': 'discardChange',
-                    'O-CMD.SAVE': 'saveRecord',
+                    'O-CMD.SAVE': function () { return this.saveRecord({reload: true}); },
                     // 'O-CMD.PAGER-PREV':
                     // 'O-CMD.PAGER-NEXT':
                 }
@@ -109,9 +109,7 @@ FormController.include({
     _barcodeWithoutCandidate: function (record, barcode, activeBarcode) {
         var changes = {};
         changes[activeBarcode.name] = barcode;
-        return this.model.notifyChanges(record.id, changes).then(function () {
-            return new $.Deferred().reject();
-        });
+        return this.model.notifyChanges(record.id, changes);
     },
     /**
      * @private
@@ -171,12 +169,15 @@ FormController.include({
         } else {
             methodDef = method.call(this, barcode, activeBarcode);
         }
-        methodDef.always(function () {
-            var record = self.model.get(self.handle);
-            var candidate = self._getBarCodeRecord(record, barcode, activeBarcode);
-            activeBarcode.candidate = candidate;
-            def.resolve();
-        });
+        methodDef
+            .done(function () {
+                var record = self.model.get(self.handle);
+                var candidate = self._getBarCodeRecord(record, barcode, activeBarcode);
+                activeBarcode.candidate = candidate;
+            })
+            .always(function () {
+                def.resolve();
+            });
         return def;
     },
     /**
@@ -231,7 +232,12 @@ FormController.include({
             return;
         }
 
-        if (!_.compact(_.pluck(this.activeBarcode, 'candidate')).length) {
+        var barcodeInfos = _.filter(this.activeBarcode, 'setQuantityWithKeypress');
+        if (!barcodeInfos.length) {
+            return;
+        }
+
+        if (!_.compact(_.pluck(barcodeInfos, 'candidate')).length) {
             return this.do_warn(_t('Error : No last scanned barcode'),
                 _t('To set the quantity please scan a barcode first.'));
         }
