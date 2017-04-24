@@ -92,7 +92,7 @@ class account_invoice_report(osv.osv):
             ('proforma','Pro-forma'),
             ('proforma2','Pro-forma'),
             ('open','Open'),
-            ('paid','Done'),
+            ('paid','Paid'),
             ('cancel','Cancelled')
             ], 'Invoice Status', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
