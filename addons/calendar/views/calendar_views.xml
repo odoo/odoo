@@ -87,6 +87,11 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Meetings">
+              <header>
+                 <button type="object" string="Update only this event" name="action_detach_recurring_event" attrs="{'invisible': [('is_virtual', '=', False)]}"/>
+                 <button type="object" string="Update future events" name="action_future_recurring_event" attrs="{'invisible': [('is_virtual', '=', False)]}"/>
+                 <button type="object" string="Update all events" name="action_all_recurring_event" attrs="{'invisible': [('is_virtual', '=', False)]}"/>
+               </header>
                 <sheet>
                     <button string="Document" class="oe_stat_button pull-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
                     <field name="res_model" invisible="1" />
@@ -94,6 +99,7 @@
                     <field name="state" invisible="1"/>
                     <field name="is_attendee" invisible="1"/>
                     <field name="attendee_status" invisible="1"/>
+                    <field name="is_virtual" attrs="{'invisible': True}"/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
                             <label for="name"/>
@@ -111,10 +117,8 @@
                     </div>
                     <notebook>
                         <page name="page_details" string="Meeting Details">
-                            <group attrs="{'invisible': [('recurrency','==',False)]}" class="oe_edit_only ">
-                                <p class='alert alert-warning'> This event is linked to a recurrence...<br/>
-                                    <button type="object" name="action_detach_recurring_event"  string="Update only this instance"  help="Click here to update only this instance and not all recurrences. " class="oe_link"/>
-                                </p>
+                            <group attrs="{'invisible': [('is_virtual', '=', False)]}" class="oe_edit_only ">
+                                <p class='alert alert-warning'> This event is linked to a recurrence. Choose one of the action above.</p>
                             </group>
                             <group>
                                 <group>
@@ -122,17 +126,17 @@
                                     <field name="stop" attrs="{'invisible': True}"/>
                                     <field name="id" attrs="{'invisible': True}"/>
 
-                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
-                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)], 'readonly': [('is_virtual', '=', True)]}"/>
+                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('is_virtual', '=', True)]}"/>
 
-                                    <field name="start_datetime" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_datetime" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)], 'readonly': [('is_virtual', '=', True)]}"/>
                                     <field name="stop_datetime" invisible="1"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
-                                        <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                        <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('is_virtual', '=', True)]}"/>
                                         <span> hours</span>
                                     </div>
-                                    <field name="allday" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="allday" attrs="{'readonly': [('is_virtual', '=', True)]}"/>
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags" options="
@@ -162,7 +166,7 @@
                                             <div class="o_row">
                                                 <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
                                                 <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
-                                                <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
+                                                <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('recurrency', '=', True),('end_type', '=', 'end_date')]}"/>
                                             </div>
                                         </group>
                                         <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">

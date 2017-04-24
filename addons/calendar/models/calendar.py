@@ -824,6 +824,7 @@ class Meeting(models.Model):
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}, default=_default_partners)
     alarm_ids = fields.Many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False)
     is_highlighted = fields.Boolean(compute='_compute_is_highlighted', string='# Meetings Highlight')
+    is_virtual = fields.Boolean('Is a virtual event', store=False)
 
     @api.multi
     def _compute_attendee(self):
@@ -1258,6 +1259,11 @@ class Meeting(models.Model):
             data['end_type'] = 'end_date'
         return data
 
+    def read_schedule_fields(self):
+        """ Read and return the schedule fields of a calendar event.
+        """
+        return self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
+
     @api.multi
     def get_interval(self, interval, tz=None):
         """ Format and localize some dates to be used in email templates
@@ -1300,12 +1306,28 @@ class Meeting(models.Model):
             self = self.with_context(tz=tz)
         return self._get_display_time(self.start, self.stop, self.duration, self.allday)
 
+    def get_origin_meeting_and_schedule_fields(self):
+        """ Given a virtual event record. This method return the original record and its id. It also return schedule fields for the virtual event.
+            Mainly used to avoid code duplication. This method is used in order to extract useful information in order to make a copy of the event.
+        """
+        real_id = calendar_id2real_id(self.id)
+        meeting_origin = self.browse(real_id)
+
+        meeting_origin_vals = self.read_schedule_fields()
+        meeting_origin_vals['start_date' if meeting_origin_vals['allday'] else 'start_datetime'] = meeting_origin_vals['start']
+        meeting_origin_vals['stop_date' if meeting_origin_vals['allday'] else 'stop_datetime'] = meeting_origin_vals['stop']
+        # We don't want to copy the original id.
+        meeting_origin_vals.pop('id')
+
+        return meeting_origin, meeting_origin_vals
+
     @api.multi
     def detach_recurring_event(self, values=None):
         """ Detach a virtual recurring event by duplicating the original and change reccurent values
             :param values : dict of value to override on the detached event
         """
-        if not values:
+        meeting_origin, meeting_origin_vals = self.get_origin_meeting_and_schedule_fields()
+        if values is None:
             values = {}
 
         real_id = calendar_id2real_id(self.id)
@@ -1315,21 +1337,21 @@ class Meeting(models.Model):
         if data.get('rrule'):
             data.update(
                 values,
-                recurrent_id=real_id,
-                recurrent_id_date=data.get('start'),
+                recurrent_id=meeting_origin.id,
+                recurrent_id_date=meeting_origin_vals.get('start'),
                 rrule_type=False,
                 rrule='',
                 recurrency=False,
-                final_date=datetime.strptime(data.get('start'), DEFAULT_SERVER_DATETIME_FORMAT if data['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))
+                final_date=datetime.strptime(meeting_origin_vals.get('start'), DEFAULT_SERVER_DATETIME_FORMAT if meeting_origin_vals['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or meeting_origin_vals.get('duration'))
             )
-
-            # do not copy the id
-            if data.get('id'):
-                del data['id']
-            return meeting_origin.copy(default=data)
+        return meeting_origin.copy(default=meeting_origin_vals)
 
     @api.multi
     def action_detach_recurring_event(self):
+        """ Action used in the view to only update the virtual event we selected. It call 'detach_recurring_event' function in order to create a new
+            real record from the virtual event.
+            It returns a form view in edit mode with the detached calendar event.
+        """
         meeting = self.detach_recurring_event()
         return {
             'type': 'ir.actions.act_window',
@@ -1337,7 +1359,88 @@ class Meeting(models.Model):
             'view_mode': 'form',
             'res_id': meeting.id,
             'target': 'current',
-            'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
+            'flags': {'form': {'action_buttons': True}, 'initial_mode': 'edit'},
+        }
+
+    @api.multi
+    def get_split_recurring_event(self):
+        """ Duplicate a calendar.event if we want to update all the virtual events from a fixed date.
+            In case of end type with count:
+                It will split the count between past events and remaining events. It will assign pas event count to original event
+                and the remaining count to the new event
+            If end type is a final_date:
+                It will set the final date of the original meeting to the selected event start date.
+                It will set the final date for the new event to the original final date.
+            Special case: If we selected the first event of the recurrence we will return the real id because there is no need to split between future and past events.
+            (update future events from the first event = update all events)
+            :return: A new record set containing the recurrence for future events.
+        """
+        meeting_origin, meeting_origin_vals = self.get_origin_meeting_and_schedule_fields()
+
+        reccurent_dates = meeting_origin._get_recurrent_date_by_event()
+        # If we want all the future event from the first event, that means we want all events and there is no need to split it.
+        real_start = pytz.UTC.localize(fields.Datetime.from_string(meeting_origin_vals['start'])).astimezone(pytz.UTC)
+        try:
+            event_position = reccurent_dates.index(real_start)
+        except IndexError:
+            # This error can raise if the user modify his reccurent settings before click on the action button.
+            raise UserError(_('Save your recurrent settings before choosing an action'))
+        if event_position == 0:
+            return self.browse(meeting_origin.id)
+
+        if meeting_origin_vals.get('rrule'):
+            # if use final date, split old reccurent event until self.start
+            if meeting_origin.end_type == 'end_date':
+                # The final date of the old event is equal to the start date of the new event.
+                meeting_origin_vals['final_date'] = meeting_origin.final_date
+                meeting_origin.final_date = meeting_origin_vals['start']
+            elif meeting_origin.end_type == 'count':
+                # If we use count, we should try to cut the count in two part.
+                old_count, new_count = event_position, meeting_origin.count - event_position
+                meeting_origin.count = old_count
+                meeting_origin_vals['count'] = new_count
+            # meeting_origin will only have one event, in this case it is no more a recurrent event.
+            if event_position == 1:
+                meeting_origin.recurrency = False
+                meeting_origin_vals['recurrency'] = True
+            # new event will only have one event, in this case it is no more a recurrent event.
+            if event_position == len(reccurent_dates) - 1:
+                meeting_origin_vals['recurrency'] = False
+                meeting_origin_vals['rrule'] = ''
+            else:
+                meeting_origin_vals.update(
+                    recurrent_id=meeting_origin.id,
+                    recurrent_id_date=meeting_origin_vals.get('start'),
+                    rrule='',
+                )
+        return meeting_origin.copy(default=meeting_origin_vals)
+
+    @api.multi
+    def action_future_recurring_event(self):
+        """ Used to update the next occurrences of a recurrent event according to one of its events.
+            It'll split the two sets of occurrences in two real calendar events and open the form view of the second one.
+        """
+        meeting = self.get_split_recurring_event()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'calendar.event',
+            'view_mode': 'form',
+            'res_id': meeting.id,
+            'target': 'current',
+            'flags': {'form': {'action_buttons': True}, 'initial_mode': 'edit'}
+        }
+
+    @api.multi
+    def action_all_recurring_event(self):
+        """ Used to update all occurences of a recurrent event. It'll open the form view of the real calendar event.
+        """
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'calendar.event',
+            'view_mode': 'form',
+            'res_id': calendar_id2real_id(self.id),
+            'target': 'current',
+            'flags': {'form': {'action_buttons': True}, 'initial_mode': 'edit'}
         }
 
     @api.multi
@@ -1451,7 +1554,7 @@ class Meeting(models.Model):
                 if not values.get('recurrency', True) or not blacklisted:
                     real_ids = [real_event_id]
                 else:
-                    data = meeting.read(['start', 'stop', 'rrule', 'duration'])[0]
+                    data = meeting.read_schedule_fields()
                     if data.get('rrule'):
                         new_ids = meeting.with_context(dont_notify=True).detach_recurring_event(values).ids  # to prevent multiple notify_next_alarm
 
@@ -1585,6 +1688,7 @@ class Meeting(models.Model):
                     res['display_time'] = self._get_display_time(ls[1], ls[2], res['duration'], res['allday'])
 
             res['id'] = calendar_id
+            res['is_virtual'] = calendar_id != real_id
             result.append(res)
 
         for r in result:
