@@ -1211,11 +1211,11 @@ class Meeting(models.Model):
 
         elif interval == 'month':
             # Localized month name and year
-            result = babel.dates.format_date(date=date, format='MMMM y', locale=self._context.get('lang', 'en_US'))
+            result = babel.dates.format_date(date=date, format='MMMM y', locale=self._context.get('lang') or 'en_US')
 
         elif interval == 'dayname':
             # Localized day name
-            result = babel.dates.format_date(date=date, format='EEEE', locale=self._context.get('lang', 'en_US'))
+            result = babel.dates.format_date(date=date, format='EEEE', locale=self._context.get('lang') or 'en_US')
 
         elif interval == 'time':
             # Localized time

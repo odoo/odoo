@@ -386,3 +386,12 @@ class StockMove(models.Model):
                 'split_from': self.id,  # Needed in order to keep sale connection, but will be removed by unlink
             })
         return self.env['stock.move']
+
+class PushedFlow(models.Model):
+    _inherit = "stock.location.path"
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = super(PushedFlow, self)._prepare_move_copy_values(move_to_copy, new_date)
+        new_move_vals['production_id'] = False
+
+        return new_move_vals
