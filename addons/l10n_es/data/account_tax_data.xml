@@ -315,6 +315,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_1')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_sop_4_inv" model="account.tax.template">
@@ -327,6 +328,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_sop_10" model="account.tax.template">
@@ -339,6 +341,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_3')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_sop_10_inv" model="account.tax.template">
@@ -351,6 +354,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_4')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_sop_12_agr" model="account.tax.template">
@@ -364,6 +368,7 @@
             <field name="type_tax_use">purchase</field>
             <field eval="1" name="include_base_amount"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_5')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_12"/>
         </record>
 
         <record id="iva_sop_21" model="account.tax.template">
@@ -377,6 +382,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="sequence" eval="0"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_6')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_sop_21_inv" model="account.tax.template">
@@ -389,6 +395,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_7')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <!-- EXTRACOMUNITARIO-->
@@ -402,6 +409,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_8')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_0"/>
         </record>
         <record id="iva_X0_compras_bi" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -411,6 +419,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_9')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_0"/>
         </record>
 
         <record id="iva_X4_compras_bc" model="account.tax.template">
@@ -423,6 +432,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_10')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
         <record id="iva_X4_compras_bi" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -434,6 +444,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_11')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_X10_compras_bc" model="account.tax.template">
@@ -446,6 +457,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_12')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
         <record id="iva_X10_compras_bi" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -457,6 +469,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_13')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_X21_compras_bc" model="account.tax.template">
@@ -469,6 +482,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_14')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
         <record id="iva_X21_compras_bi" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -480,6 +494,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_15')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <!-- Ventas -->
@@ -492,6 +507,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_16')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_0"/>
         </record>
 
         <!-- INVERSIÓN DEL SUJETO PASIVO -->
@@ -504,6 +520,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_17')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
         <record id="iva_ISP_compras_21_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -515,6 +532,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_18')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_ISP_compras_21_3" model="account.tax.template">
@@ -527,6 +545,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_19')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_ISP_compras_21" model="account.tax.template">
@@ -538,6 +557,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_20')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_ISP_compras_21_1'), ref('iva_ISP_compras_21_2'), ref('iva_ISP_compras_21_3')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
 
@@ -553,6 +573,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_21')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_rep_10" model="account.tax.template">
@@ -565,6 +586,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_22')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_rep_21" model="account.tax.template">
@@ -577,6 +599,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field eval="0" name="sequence"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_23')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <!-- RECARGO DE EQUIVALENCIA -->
@@ -591,6 +614,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_24')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_05"/>
         </record>
 
         <record id="re_14" model="account.tax.template">
@@ -603,6 +627,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_25')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_14"/>
         </record>
 
         <record id="re_52" model="account.tax.template">
@@ -615,6 +640,7 @@
             <field name="account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_26')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_52"/>
         </record>
 
         <record id="re_buy_05" model="account.tax.template">
@@ -627,6 +653,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_27')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_05"/>
         </record>
 
         <record id="re_buy_14" model="account.tax.template">
@@ -639,6 +666,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_28')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_14"/>
         </record>
 
         <record id="re_buy_52" model="account.tax.template">
@@ -651,6 +679,7 @@
             <field name="account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_29')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_52"/>
         </record>
 
         <!-- OPERACIONES INTRACOMUNITARIAS -->
@@ -665,6 +694,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_30')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_0"/>
         </record>
 
         <!-- Compras -->
@@ -679,6 +709,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_31')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
         <record id="iva_IC_compras_4_bc_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -690,6 +721,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_32')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_IC_compras_4_bc" model="account.tax.template">
@@ -701,6 +733,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_33')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_4_bc_1'), ref('iva_IC_compras_4_bc_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_IC_compras_4_bi_1" model="account.tax.template">
@@ -713,6 +746,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_34')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
         <record id="iva_IC_compras_4_bi_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -724,6 +758,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_35')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_IC_compras_4_bi" model="account.tax.template">
@@ -735,6 +770,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_36')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_4_bi_1'), ref('iva_IC_compras_4_bi_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
 
@@ -748,6 +784,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_37')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
         <record id="iva_IC_compras_10_bc_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -759,6 +796,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_38')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_IC_compras_10_bc" model="account.tax.template">
@@ -770,6 +808,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_39')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_10_bc_1'), ref('iva_IC_compras_10_bc_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_IC_compras_10_bi_1" model="account.tax.template">
@@ -782,6 +821,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_40')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
         <record id="iva_IC_compras_10_bi_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -793,6 +833,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_41')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_IC_compras_10_bi" model="account.tax.template">
@@ -804,6 +845,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_42')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_10_bi_1'), ref('iva_IC_compras_10_bi_2')])]"/>    
+            <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_IC_compras_21_bc_1" model="account.tax.template">
@@ -816,6 +858,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_43')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
         <record id="iva_IC_compras_21_bc_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -827,6 +870,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_44')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_IC_compras_21_bc" model="account.tax.template">
@@ -838,6 +882,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_45')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_21_bc_1'), ref('iva_IC_compras_21_bc_2')])]"/>    
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_IC_compras_21_bi_1" model="account.tax.template">
@@ -850,6 +895,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_46')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
         <record id="iva_IC_compras_21_bi_2" model="account.tax.template">
             <field name="chart_template_id" ref="account_chart_template_common"/>
@@ -861,6 +907,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_47')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_IC_compras_21_bi" model="account.tax.template">
@@ -872,6 +919,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_48')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_21_bi_1'), ref('iva_IC_compras_21_bi_2')])]"/>    
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_IC_compras_21_sv_1" model="account.tax.template">
@@ -884,6 +932,7 @@
             <field name="refund_account_id" ref="pgc_472_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_49')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_IC_compras_21_sv_2" model="account.tax.template">
@@ -896,6 +945,7 @@
             <field name="refund_account_id" ref="pgc_477_child"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_50')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_IC_compras_21_sv" model="account.tax.template">
@@ -907,6 +957,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_51')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('iva_IC_compras_21_sv_1'), ref('iva_IC_compras_21_sv_2')])]"/>    
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <!-- OPERACIONES EXENTAS -->
@@ -921,6 +972,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_52')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_0"/>
         </record>
 
         <!-- Compras -->
@@ -933,6 +985,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_53')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_0"/>
         </record>
 
         <!-- RETENCIONES DE IRPF -->
@@ -960,6 +1013,7 @@
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_54')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_1"/>
         </record>
 
         <record id="irpf_2" model="account.tax.template">
@@ -973,6 +1027,7 @@
             <field name="type_tax_use">purchase</field>
             <field eval="50" name="sequence"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_2"/>
         </record>
 
         <record id="irpf_7" model="account.tax.template">
@@ -985,6 +1040,7 @@
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_7"/>
         </record>
 
         <record id="irpf_9" model="account.tax.template">
@@ -997,6 +1053,7 @@
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_9"/>
         </record>
 
         <record id="irpf_15" model="account.tax.template">
@@ -1009,6 +1066,7 @@
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_58')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_15"/>
         </record>
 
         <record id="irpf_20" model="account.tax.template">
@@ -1021,6 +1079,7 @@
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_20"/>
         </record>
 
         <record id="irpf_21" model="account.tax.template">
@@ -1033,6 +1092,7 @@
             <field name="account_id" ref="pgc_4751_child"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_60')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
 
@@ -1048,6 +1108,7 @@
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_61')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_1"/>
         </record>
 
         <record id="irpf_sale_2" model="account.tax.template">
@@ -1060,6 +1121,7 @@
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_62')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_2"/>
         </record>
 
         <record id="irpf_sale_7" model="account.tax.template">
@@ -1072,6 +1134,7 @@
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_63')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_7"/>
         </record>
 
         <record id="irpf_sale_9" model="account.tax.template">
@@ -1084,6 +1147,7 @@
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_64')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_9"/>
         </record>
 
         <record id="irpf_sale_15" model="account.tax.template">
@@ -1096,6 +1160,7 @@
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_65')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_15"/>
         </record>
 
         <record id="irpf_sale_20" model="account.tax.template">
@@ -1108,6 +1173,7 @@
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_66')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_20"/>
         </record>
 
         <record id="irpf_sale_21" model="account.tax.template">
@@ -1120,5 +1186,6 @@
             <field name="account_id" ref="pgc_473_child"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_67')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 </odoo>
