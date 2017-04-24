@@ -4,6 +4,7 @@
 ## this functions are taken from the setuptools package (version 0.6c8)
 ## http://peak.telecommunity.com/DevCenter/PkgResources#parsing-utilities
 
+from __future__ import print_function
 import re
 
 component_re = re.compile(r'(\d+ | [a-z]+ | \.| -)', re.VERBOSE)
@@ -69,7 +70,7 @@ if __name__ == '__main__':
                 pv = parse_version(v)
                 pvs.append(pv)
                 if verbose:
-                    print v, pv
+                    print(v, pv)
 
             for a, b in zip(pvs, pvs[1:]):
                 assert a < b, '%s < %s == %s' % (a, b, a < b)

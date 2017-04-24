@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import ast
 from urlparse import urlparse
 from lxml import html
@@ -166,7 +167,6 @@ class IrQWeb(models.AbstractModel, QWeb):
             try:
                 options = "{'widget': 'monetary'"
                 for k, v in json.loads(field_options).iteritems():
-                    print k, v
                     if k in ('display_currency', 'from_currency'):
                         options = "%s, '%s': %s" % (options, k, v)
                     else:
