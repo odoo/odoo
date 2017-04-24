@@ -3366,6 +3366,9 @@ QUnit.module('relational_fields', {
                 return this._super.apply(this, arguments);
             },
             res_id: 1,
+            config: {
+                isMobile: false,
+            },
         });
 
         assert.strictEqual(count, 1, 'once search_read should have been done to fetch the relational values');
@@ -3414,6 +3417,9 @@ QUnit.module('relational_fields', {
                     '<header><field name="trululu" widget="statusbar" clickable="True"/></header>' +
                 '</form>',
             res_id: 1,
+            config: {
+                isMobile: false,
+            },
         });
 
         var $selectedStatus = form.$('.o_statusbar_status button[data-value="4"]');
@@ -3442,6 +3448,9 @@ QUnit.module('relational_fields', {
                     '<header><field name="product_id" widget="statusbar"/></header>' +
                 '</form>',
             res_id: 1,
+            config: {
+                isMobile: false,
+            },
         });
 
         assert.ok(form.$('.o_statusbar_status').hasClass('o_form_field_empty'),
@@ -3464,6 +3473,9 @@ QUnit.module('relational_fields', {
                 '<form string="Partners">' +
                     '<header><field name="trululu" widget="statusbar"/></header>' +
                 '</form>',
+            config: {
+                isMobile: false,
+            },
         });
 
         assert.strictEqual(form.$('.o_statusbar_status button:disabled').length, 2, "should have 2 status");
@@ -3485,6 +3497,9 @@ QUnit.module('relational_fields', {
                     '<header><field name="trululu" widget="statusbar" clickable="True"/></header>' +
                 '</form>',
             res_id: 1,
+            config: {
+                isMobile: false,
+            },
         });
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -3513,6 +3528,9 @@ QUnit.module('relational_fields', {
                     '<field name="color" widget="statusbar" statusbar_visible="red"/></header>' +
                 '</form>',
             res_id: 1,
+            config: {
+                isMobile: false,
+            },
         });
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -3547,6 +3565,9 @@ QUnit.module('relational_fields', {
                 return this._super.apply(this, arguments);
             },
             res_id: 1,
+            config: {
+                isMobile: false,
+            },
         });
 
         form.$buttons.find('.o_form_button_edit').click();
