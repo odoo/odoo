@@ -141,6 +141,6 @@ def exp_report_get(db, uid, report_id):
         if self_reports[report_id]['uid'] == uid:
             return _check_report(report_id)
         else:
-            raise Exception, 'AccessDenied'
+            raise Exception('AccessDenied')
     else:
-        raise Exception, 'ReportNotFound'
+        raise Exception('ReportNotFound')
