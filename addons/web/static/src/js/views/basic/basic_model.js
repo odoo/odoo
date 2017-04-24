@@ -2120,7 +2120,7 @@ var BasicModel = AbstractModel.extend({
                     viewType: params.viewType,
                 });
 
-                var defs = [];  // FIXME: remove defs?
+                var defs = [];
                 _.each(fieldNames, function (name) {
                     var field = params.fields[name];
                     data[name] = null;
@@ -2192,7 +2192,9 @@ var BasicModel = AbstractModel.extend({
                                 }
                                 if (value[0] === 6) {
                                     // REPLACE_WITH
-                                    x2manyList._changes = [];
+                                    x2manyList.res_ids = value[2];
+                                    x2manyList.count = x2manyList.res_ids.length;
+                                    defs.push(self._readUngroupedList(x2manyList));
                                 }
                             } else {
                                 // value is an id

@@ -462,7 +462,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('can make a default_record, no onchange', function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
         this.params.context = {};
         this.params.fieldNames = ['product_id', 'category', 'product_ids'];
@@ -472,6 +472,10 @@ QUnit.module('Views', {
         var model = createModel({
             Model: BasicModel,
             data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super(route, args);
+            },
         });
 
         model.load(this.params).then(function (resultID) {
@@ -480,6 +484,53 @@ QUnit.module('Views', {
             assert.deepEqual(record.data.product_ids.data, [], "o2m default should be []");
             assert.deepEqual(record.data.category.data, [], "m2m default should be []");
         });
+
+        assert.verifySteps(['default_get'],
+            "there should be default_get");
+
+        model.destroy();
+    });
+
+    QUnit.test('can make a default_record with default relational values', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.fields.product_id.default = 37;
+        this.data.partner.fields.product_ids.default = [
+            [0, false, {name: 'xmac'}],
+            [0, false, {name: 'xcloud'}]
+        ];
+        this.data.partner.fields.category.default = [
+            [6, false, [12, 14]]
+        ];
+
+        this.params.fieldNames = ['product_id', 'category', 'product_ids'];
+        this.params.res_id = undefined;
+        this.params.type = 'record';
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super(route, args);
+            },
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.deepEqual(record.data.product_id.data.display_name, 'xphone',
+                "m2o default should be xphone");
+            assert.deepEqual(record.data.product_ids.data.length,
+                2, "o2m default should have two records");
+            assert.deepEqual(record.data.product_ids.data[0].data.name,
+                'xmac', "first o2m default value should be xmac");
+            assert.deepEqual(record.data.category.res_ids, [12, 14],
+                "m2m default should be [12, 14]");
+        });
+
+        assert.verifySteps(['default_get', 'name_get'],
+            "there should be default_get and name_get");
+
         model.destroy();
     });
 
