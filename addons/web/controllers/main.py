@@ -54,6 +54,8 @@ env.filters["json"] = json.dumps
 # 1 week cache for asset bundles as advised by Google Page Speed
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
 
+DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
+
 #----------------------------------------------------------
 # Odoo Web helpers
 #----------------------------------------------------------
@@ -630,6 +632,7 @@ class Database(http.Controller):
         d['list_db'] = odoo.tools.config['list_db']
         d['langs'] = odoo.service.db.exp_list_lang()
         d['countries'] = odoo.service.db.exp_list_countries()
+        d['pattern'] = DBNAME_PATTERN
         # databases list
         d['databases'] = []
         try:
@@ -654,8 +657,8 @@ class Database(http.Controller):
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         try:
-            if not re.match('^[a-zA-Z][a-zA-Z0-9_]+$', name):
-                raise Exception(_('Invalid database name. Only alphanumerical characters and underscore are allowed.'))
+            if not re.match(DBNAME_PATTERN, name):
+                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code])
@@ -668,8 +671,8 @@ class Database(http.Controller):
     @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
     def duplicate(self, master_pwd, name, new_name):
         try:
-            if not re.match('^[a-zA-Z][a-zA-Z0-9_]+$', new_name):
-                raise Exception(_('Invalid database name. Only alphanumerical characters and underscore are allowed.'))
+            if not re.match(DBNAME_PATTERN, new_name):
+                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
