@@ -217,8 +217,8 @@ def log_ormcache_stats(sig=None, frame=None):
 
 def get_cache_key_counter(bound_method, *args, **kwargs):
     """ Return the cache, key and stat counter for the given call. """
-    model = bound_method.im_self
-    ormcache = bound_method.clear_cache.im_self
+    model = bound_method.__self__
+    ormcache = bound_method.clear_cache.__self__
     cache, key0, counter = ormcache.lru(model)
     key = key0 + ormcache.key(model, *args, **kwargs)
     return cache, key, counter
