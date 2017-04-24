@@ -599,7 +599,7 @@ QUnit.module('account', {
 
 
     QUnit.test('Reconciliation partial', function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
@@ -627,7 +627,12 @@ QUnit.module('account', {
 
         clientAction.appendTo($('body'));
 
-        var widget = clientAction.widgets[1];
+        var widget = clientAction.widgets[0];
+
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.notOk( widget.$('.cell_right .line_info_button').length, "should not display the partial reconciliation alert");
+
+        widget = clientAction.widgets[1];
 
         assert.notOk( widget.$('.cell_left .line_info_button').length, "should not display the partial reconciliation alert");
         widget.$('.accounting_view thead td:first').trigger('click');
