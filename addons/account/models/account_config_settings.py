@@ -83,10 +83,8 @@ class AccountConfigSettings(models.TransientModel):
         if self.default_purchase_tax_id:
             ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
         """ install a chart of accounts for the given company (if required) """
-        if self.chart_template_id and not self.has_chart_of_accounts and self.company_id.expects_chart_of_accounts:
-            if self.company_id.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
-                raise UserError(_('You can not change a company chart of account once it has been installed'))
-            wizard = self.env['wizard.multi.charts.accounts'].create({
+        if self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
+            wizard = self.env['wizard.multi.charts.accounts'].with_context(first_install=False).create({
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
                 'transfer_account_id': self.chart_template_id.transfer_account_id.id,
@@ -105,6 +103,7 @@ class AccountConfigSettings(models.TransientModel):
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
+        self.chart_template_id = self.company_id.chart_template_id or False
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):

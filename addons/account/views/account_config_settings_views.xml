@@ -32,13 +32,13 @@
                                             Taxes, fiscal positions, chart of accounts &amp; legal statements for your country
                                         </div>
                                         <div class="content-group">
-                                            <span attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}">
+                                            <span>
                                                 <div class="row mt16">
                                                     <label string="Package" class="col-md-3 o_light_label"/>
                                                     <field name="chart_template_id" widget="selection"/>
                                                 </div>
                                                 <div>
-                                                    <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
+                                                    <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link"/>
                                                 </div>
                                             </span>
                                             <div class="row mt16" groups="base.group_no_one">
