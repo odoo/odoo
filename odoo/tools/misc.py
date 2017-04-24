@@ -471,7 +471,7 @@ class profile(object):
         def wrapper(*args, **kwargs):
             profile = cProfile.Profile()
             result = profile.runcall(f, *args, **kwargs)
-            profile.dump_stats(self.fname or ("%s.cprof" % (f.func_name,)))
+            profile.dump_stats(self.fname or ("%s.cprof" % (f.__name__,)))
             return result
 
         return wrapper
