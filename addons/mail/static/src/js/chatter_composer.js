@@ -173,7 +173,7 @@ var ChatterComposer = composer.BasicComposer.extend({
                 var new_names_to_find = _.difference(names_to_find, names_to_remove);
                 var def;
                 if (new_names_to_find.length > 0) {
-                    self._rpc({
+                    def = self._rpc({
                             model: self.model,
                             method: 'message_partner_info_from_emails',
                             args: [[self.context.default_res_id], new_names_to_find, true],
