@@ -479,7 +479,7 @@ class MassMailing(osv.Model):
         if groupby and groupby[0] == "state":
             # Default result structure
             # states = self._get_state_list(cr, uid, context=context)
-            states = [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')]
+            states = [('draft', _('Draft')), ('test', _('Tested')), ('done', _('Sent'))]
             read_group_all_states = [{
                 '__context': {'group_by': groupby[1:]},
                 '__domain': domain + [('state', '=', state_value)],
