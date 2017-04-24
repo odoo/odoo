@@ -35,13 +35,13 @@ class YamlImportAbortion(Exception):
     pass
 
 def _is_yaml_mapping(node, tag_constructor):
-    value = isinstance(node, types.DictionaryType) \
+    value = isinstance(node, dict) \
         and len(node.keys()) == 1 \
         and isinstance(node.keys()[0], tag_constructor)
     return value
 
 def is_comment(node):
-    return isinstance(node, types.StringTypes)
+    return isinstance(node, basestring)
 
 def is_assert(node):
     return isinstance(node, yaml_tag.Assert) \
@@ -144,7 +144,7 @@ class YamlInterpreter(object):
             return False
         #if not xml_id:
         #    raise YamlImportException("The xml_id should be a non empty string.")
-        elif isinstance(xml_id, types.IntType):
+        elif isinstance(xml_id, int):
             id = xml_id
         elif xml_id in self.id_map:
             id = self.id_map[xml_id]
@@ -179,7 +179,7 @@ class YamlInterpreter(object):
     def _get_first_result(self, results, default=False):
         if len(results):
             value = results[0]
-            if isinstance(value, types.TupleType):
+            if isinstance(value, tuple):
                 value = value[0]
         else:
             value = default
@@ -258,11 +258,11 @@ class YamlInterpreter(object):
                 self.assertion_report.record_success()
 
     def _coerce_bool(self, value, default=False):
-        if isinstance(value, types.BooleanType):
+        if isinstance(value, bool):
             b = value
-        if isinstance(value, types.StringTypes):
+        if isinstance(value, str):
             b = value.strip().lower() not in ('0', 'false', 'off', 'no')
-        elif isinstance(value, types.IntType):
+        elif isinstance(value, int):
             b = bool(value)
         else:
             b = default
@@ -618,13 +618,13 @@ class YamlInterpreter(object):
     def _eval_params(self, model, params):
         args = []
         for i, param in enumerate(params):
-            if isinstance(param, types.ListType):
+            if isinstance(param, list):
                 value = self._eval_params(model, param)
             elif is_ref(param):
                 value = self.process_ref(param)
             elif is_eval(param):
                 value = self.process_eval(param)
-            elif isinstance(param, types.DictionaryType): # supports XML syntax
+            elif isinstance(param, dict): # supports XML syntax
                 param_model = self.env[param.get('model', model)]
                 if 'search' in param:
                     q = safe_eval(param['search'], self.eval_context)
@@ -875,7 +875,7 @@ class YamlInterpreter(object):
         elif is_report(node):
             self.process_report(node)
         elif is_function(node):
-            if isinstance(node, types.DictionaryType):
+            if isinstance(node, dict):
                 self.process_function(node)
             else:
                 self.process_function({node: []})
@@ -889,7 +889,7 @@ class YamlInterpreter(object):
             is_preceded_by_comment = True
             self._log(node)
         elif not is_preceded_by_comment:
-            if isinstance(node, types.DictionaryType):
+            if isinstance(node, dict):
                 msg = "Creating %s\n with %s"
                 args = node.items()[0]
                 self._log(msg, *args)
