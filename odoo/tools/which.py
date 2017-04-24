@@ -44,6 +44,7 @@ __all__ = 'which which_files pathsep defpath defpathext F_OK R_OK W_OK X_OK'.spl
 import sys
 from os import access, defpath, pathsep, environ, F_OK, R_OK, W_OK, X_OK
 from os.path import exists, dirname, split, join
+ENOENT = 2
 
 windows = sys.platform.startswith('win')
 
@@ -138,15 +139,10 @@ def which(file, mode=F_OK | X_OK, path=None, pathext=None):
 
         >>> # for doctest see which_files()
     """
-    try:
-        return iter(which_files(file, mode, path, pathext)).next()
-    except StopIteration:
-        try:
-            from errno import ENOENT
-        except ImportError:
-            ENOENT = 2
+    path = next(which_files(file, mode, path, pathext), None)
+    if path is None:
         raise IOError(ENOENT, '%s not found' % (mode & X_OK and 'command' or 'file'), file)
-
+    return path
 
 if __name__ == '__main__':
     import doctest

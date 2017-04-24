@@ -533,7 +533,7 @@ class PoFile(object):
                         raise StopIteration()
                     line = self.lines.pop(0)
                 # This has been a deprecated entry, don't return anything
-                return self.next()
+                return next(self)
 
             if not line.startswith('msgid'):
                 raise Exception("malformed file: bad line: %s" % line)
@@ -547,7 +547,7 @@ class PoFile(object):
                 self.extra_lines = []
                 while line:
                     line = self.lines.pop(0).strip()
-                return self.next()
+                return next(self)
 
             while not line.startswith('msgstr'):
                 if not line:
@@ -574,8 +574,9 @@ class PoFile(object):
             if not fuzzy:
                 _logger.warning('Missing "#:" formated comment at line %d for the following source:\n\t%s',
                                 self.cur_line(), source[:30])
-            return self.next()
+            return next(self)
         return trans_type, name, res_id, source, trad, '\n'.join(comments)
+    __next__ = next
 
     def write_infos(self, modules):
         import odoo.release as release
