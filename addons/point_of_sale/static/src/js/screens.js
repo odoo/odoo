@@ -1216,8 +1216,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             })
             .then(function(partner_id){
                 self.saved_client_details(partner_id);
-            },function(err,event){
-                event.preventDefault();
+            },function(type,err){
                 self.gui.show_popup('error',{
                     'title': _t('Error: Could not Save Changes'),
                     'body': _t('Your Internet connection is probably down.'),
