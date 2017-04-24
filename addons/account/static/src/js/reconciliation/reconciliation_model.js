@@ -403,10 +403,10 @@ var StatementModel = BasicModel.extend({
     togglePartialReconcile: function (handle) {
         var line = this.getLine(handle);
         var props = _.filter(line.reconciliation_proposition, {'invalid': false});
-        if (props.length !== 1) {
+        var prop = props[0];
+        if (props.length !== 1 || Math.abs(line.st_line.amount) >= Math.abs(prop.amount)) {
             return $.Deferred().reject();
         }
-        var prop = props[0];
         prop.partial_reconcile = !prop.partial_reconcile;
         if (!prop.partial_reconcile) {
             return this._computeLine(line);

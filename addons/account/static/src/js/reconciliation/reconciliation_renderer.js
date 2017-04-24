@@ -303,7 +303,11 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
 
-            if ((state.balance.amount !== 0 || line.partial_reconcile) && props.length === 1) {
+            if ((state.balance.amount !== 0 || line.partial_reconcile) && props.length === 1 &&
+                    (
+                        (state.st_line.amount > 0 && state.st_line.amount < props[0].amount) ||
+                        (state.st_line.amount < 0 && state.st_line.amount > props[0].amount))
+                    ) {
                 var $cell = $line.find(line.amount > 0 ? '.cell_right' : '.cell_left');
                 var text;
                 if (line.partial_reconcile) {
