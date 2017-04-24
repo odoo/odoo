@@ -565,21 +565,38 @@ class Report(osv.Model):
         :param documents: list of path of pdf files
         :returns: path of the merged pdf
         """
-        writer = PdfFileWriter()
-        streams = []  # We have to close the streams *after* PdfFilWriter's call to write()
-        for document in documents:
-            pdfreport = file(document, 'rb')
-            streams.append(pdfreport)
-            reader = PdfFileReader(pdfreport)
-            for page in range(0, reader.getNumPages()):
-                writer.addPage(reader.getPage(page))
+        _documents = documents[:]
+        max_open_files = 100
+        temporary_files = []
+        while _documents:
+            writer = PdfFileWriter()
+            streams = []  # We have to close the streams *after* PdfFilWriter's call to write()
+            while _documents:
+                document = _documents.pop(0)
+                pdfreport = file(document, 'rb')
+                streams.append(pdfreport)
+                reader = PdfFileReader(pdfreport)
+                for page in range(0, reader.getNumPages()):
+                    writer.addPage(reader.getPage(page))
+                if len(streams) >= max_open_files:
+                    break
 
-        merged_file_fd, merged_file_path = tempfile.mkstemp(suffix='.html', prefix='report.merged.tmp.')
-        with closing(os.fdopen(merged_file_fd, 'w')) as merged_file:
-            writer.write(merged_file)
+            merged_file_fd, merged_file_path = tempfile.mkstemp(suffix='.html', prefix='report.merged.tmp.')
+            with closing(os.fdopen(merged_file_fd, 'w')) as merged_file:
+                writer.write(merged_file)
 
-        for stream in streams:
-            stream.close()
+            for stream in streams:
+                stream.close()
+
+            if len(streams) >= max_open_files:
+                _documents.insert(0, merged_file_path)
+                temporary_files.append(merged_file_path)
+
+        for temporary_file in temporary_files:
+            try:
+                os.unlink(temporary_file)
+            except (OSError, IOError):
+                _logger.error('Error when trying to remove file %s' % temporary_file)
 
         return merged_file_path
 
