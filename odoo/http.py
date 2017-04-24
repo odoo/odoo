@@ -966,8 +966,8 @@ def routing_map(modules, nodb_only, converters=None):
                     routing = dict(type='http', auth='user', methods=None, routes=None)
                     methods_done = list()
                     # update routing attributes from subclasses(auth, methods...)
-                    for claz in reversed(mv.im_class.mro()):
-                        fn = getattr(claz, mv.func_name, None)
+                    for claz in reversed(mv.__self__.__class__.mro()):
+                        fn = getattr(claz, mv.__name__, None)
                         if fn and hasattr(fn, 'routing') and fn not in methods_done:
                             methods_done.append(fn)
                             routing.update(fn.routing)
