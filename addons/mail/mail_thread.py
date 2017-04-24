@@ -675,7 +675,8 @@ class mail_thread(osv.AbstractModel):
         query = {'db': cr.dbname}
         fragment = {
             'login': partner.user_ids[0].login,
-            'action': 'mail.action_mail_redirect',
+            'action': self.pool.get('ir.model.data').get_object_reference(
+                cr, uid, 'mail', 'action_mail_redirect')[1],
         }
         if mail.notification:
             fragment['message_id'] = mail.mail_message_id.id
