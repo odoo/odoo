@@ -56,7 +56,7 @@ class account_journal(models.Model):
         last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '<=', last_month.strftime(DF))], order="date desc, id desc", limit=1)
         start_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
 
-        locale = self._context.get('lang', 'en_US')
+        locale = self._context.get('lang') or 'en_US'
         show_date = last_month
         #get date in locale format
         name = format_date(show_date, 'd LLLL Y', locale=locale)
@@ -94,7 +94,7 @@ class account_journal(models.Model):
         data = []
         today = datetime.strptime(fields.Date.context_today(self), DF)
         data.append({'label': _('Past'), 'value':0.0, 'type': 'past'})
-        day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang', 'en_US')))
+        day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang') or 'en_US'))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         for i in range(-1,4):
             if i==0:
@@ -105,9 +105,9 @@ class account_journal(models.Model):
                 start_week = first_day_of_week + timedelta(days=i*7)
                 end_week = start_week + timedelta(days=6)
                 if start_week.month == end_week.month:
-                    label = str(start_week.day) + '-' +str(end_week.day)+ ' ' + format_date(end_week, 'MMM', locale=self._context.get('lang', 'en_US'))
+                    label = str(start_week.day) + '-' +str(end_week.day)+ ' ' + format_date(end_week, 'MMM', locale=self._context.get('lang') or 'en_US')
                 else:
-                    label = format_date(start_week, 'd MMM', locale=self._context.get('lang', 'en_US'))+'-'+format_date(end_week, 'd MMM', locale=self._context.get('lang', 'en_US'))
+                    label = format_date(start_week, 'd MMM', locale=self._context.get('lang') or 'en_US')+'-'+format_date(end_week, 'd MMM', locale=self._context.get('lang') or 'en_US')
             data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
 
         # Build SQL query to find amount aggregated by week
