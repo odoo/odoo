@@ -749,7 +749,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
         return $.when(
             this._super($searchview_parent),
-            this.drawer.appendTo($searchview_drawer_node)
+            (this.headless ? $.when() : this.drawer.appendTo($searchview_drawer_node))
         );
     },
 
