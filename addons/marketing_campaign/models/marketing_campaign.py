@@ -426,7 +426,7 @@ class MarketingCampaignWorkitem(models.Model):
     campaign_id = fields.Many2one('marketing.campaign', related='activity_id.campaign_id', string='Campaign', readonly=True, store=True)
     object_id = fields.Many2one('ir.model', related='activity_id.campaign_id.object_id', string='Resource', index=1, readonly=True, store=True)
     res_id = fields.Integer('Resource ID', index=1, readonly=True)
-    res_name = fields.Char(compute='_compute_res_name', string='Resource Name', search='search_res_name')
+    res_name = fields.Char(compute='_compute_res_name', string='Resource Name', search='_search_res_name')
     date = fields.Datetime('Execution Date', readonly=True, default=False,
         help='If date is not set, this workitem has to be run manually')
     partner_id = fields.Many2one('res.partner', 'Partner', index=1, readonly=True)
