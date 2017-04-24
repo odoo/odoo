@@ -213,9 +213,15 @@ class PushedFlow(models.Model):
                 # TDE FIXME: should probably be done in the move model IMO
                 move._push_apply()
         else:
-            new_move = move.copy({
-                'origin': move.origin or move.picking_id.name or "/",
-                'location_id': move.location_dest_id.id,
+            new_move_vals = self._prepare_move_copy_values(move, new_date)
+            new_move = move.copy(new_move_vals)
+            move.write({'move_dest_id': new_move.id})
+            new_move.action_confirm()
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = {
+                'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
+                'location_id': move_to_copy.location_dest_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'date': new_date,
                 'date_expected': new_date,
@@ -226,6 +232,6 @@ class PushedFlow(models.Model):
                 'push_rule_id': self.id,
                 'warehouse_id': self.warehouse_id.id,
                 'procurement_id': False,
-            })
-            move.write({'move_dest_id': new_move.id})
-            new_move.action_confirm()
+            }
+
+        return new_move_vals

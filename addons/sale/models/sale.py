@@ -347,7 +347,7 @@ class SaleOrder(models.Model):
                     vals = {}
                     if order.name not in invoices[group_key].origin.split(', '):
                         vals['origin'] = invoices[group_key].origin + ', ' + order.name
-                    if order.client_order_ref and order.client_order_ref not in invoices[group_key].name.split(', '):
+                    if order.client_order_ref and order.client_order_ref not in invoices[group_key].name.split(', ') and order.client_order_ref != invoices[group_key].name:
                         vals['name'] = invoices[group_key].name + ', ' + order.client_order_ref
                     invoices[group_key].write(vals)
                 if line.qty_to_invoice > 0:
@@ -822,7 +822,6 @@ class SaleOrderLine(models.Model):
             'uom_id': self.product_uom.id,
             'product_id': self.product_id.id or False,
             'layout_category_id': self.layout_category_id and self.layout_category_id.id or False,
-            'product_id': self.product_id.id or False,
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
             'account_analytic_id': self.order_id.project_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
