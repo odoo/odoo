@@ -481,8 +481,7 @@ PaymentScreenWidget.include({
                     }
                 }
 
-            }).fail(function (error, event) {
-                event.preventDefault();
+            }).fail(function (type, error) {
                 self.retry_mercury_transaction(def, null, retry_nr, false, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
             });
     },
@@ -597,8 +596,7 @@ PaymentScreenWidget.include({
                         });
                     }
                 }
-            }).fail(function (error, event) {
-                event.preventDefault();
+            }).fail(function (type, error) {
                 self.retry_mercury_transaction(def, null, retry_nr, false, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
             });
     },

@@ -568,7 +568,7 @@ exports.PosModel = Backbone.Model.extend({
                 } else {
                     def.reject();
                 }
-            }, function(err,event){ event.preventDefault(); def.reject(); });
+            }, function(type,err){ def.reject(); });
         return def;
     },
 
@@ -910,7 +910,7 @@ exports.PosModel = Backbone.Model.extend({
                 });
                 self.set('failed',false);
                 return server_ids;
-            }).fail(function (error, event){
+            }).fail(function (type, error){
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
                     //if warning do not need to display traceback!!
                     if (error.data.exception_type == 'warning') {
@@ -926,9 +926,6 @@ exports.PosModel = Backbone.Model.extend({
                     }
                     self.set('failed',error);
                 }
-                // prevent an error popup creation by the rpc failure
-                // we want the failure to be silent as we send the orders in the background
-                event.preventDefault();
                 console.error('Failed to send orders:', orders);
             });
     },

@@ -265,13 +265,11 @@ var TableWidget = PosBaseWidget.extend({
                         }
                         self.renderElement();
                     });
-            }, function(err,event) {
+            }, function(type,err) {
                 self.gui.show_popup('error',{
                     'title':_t('Changes could not be saved'),
                     'body': _t('You must be connected to the internet to save your changes.'),
                 });
-                event.stopPropagation();
-                event.preventDefault();
             });
     },
     // destroy the table.  We do not really destroy it, we set it
@@ -306,13 +304,11 @@ var TableWidget = PosBaseWidget.extend({
                 }
                 floorplan.update_toolbar();
                 self.destroy();
-            }, function(err, event) {
+            }, function(type, err) {
                 self.gui.show_popup('error', {
                     'title':_t('Changes could not be saved'),
                     'body': _t('You must be connected to the internet to save your changes.'),
                 });
-                event.stopPropagation();
-                event.preventDefault();
             });
     },
     get_notifications: function(){  //FIXME : Make this faster
@@ -424,13 +420,11 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
                 method: 'write',
                 args: [[this.floor.id], {'background_color': background}],
             })
-            .fail(function (err, event){
+            .fail(function (type, err){
                 self.gui.show_popup('error',{
                     'title':_t('Changes could not be saved'),
                     'body': _t('You must be connected to the internet to save your changes.'),
                 });
-                event.stopPropagation();
-                event.preventDefault();
             });
         this.$('.floor-map').css({"background-color": _.escape(background)});
     },
