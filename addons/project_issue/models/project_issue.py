@@ -27,7 +27,7 @@ class ProjectIssue(models.Model):
     date_deadline = fields.Date(string='Deadline')
     partner_id = fields.Many2one('res.partner', string='Contact', index=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    description = fields.Text('Private Note')
+    description = fields.Html('Private Note')
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
         ('blocked', 'Red'),
