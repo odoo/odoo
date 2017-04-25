@@ -270,8 +270,8 @@ class MailMail(models.Model):
                 # load attachment binary data with a separate read(), as prefetching all
                 # `datas` (binary field) could bloat the browse cache, triggerring
                 # soft/hard mem limits with temporary data.
-                attachments = [(a['datas_fname'], base64.b64decode(a['datas']))
-                               for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas'])]
+                attachments = [(a['datas_fname'], base64.b64decode(a['datas']), a['mimetype'])
+                               for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas', 'mimetype'])]
 
                 # specific behavior to customize the send email for notified partners
                 email_list = []

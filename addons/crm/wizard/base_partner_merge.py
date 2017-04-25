@@ -489,13 +489,19 @@ class MergePartnerAutomatic(models.TransientModel):
 
         counter = 0
         for min_id, aggr_ids in self._cr.fetchall():
-            # exclude partner according to options
-            if model_mapping and self._partner_use_in(aggr_ids, model_mapping):
+            # To ensure that the used partners are accessible by the user
+            partners = self.env['res.partner'].search([('id', 'in', aggr_ids)])
+            if len(partners) < 2:
                 continue
+
+            # exclude partner according to options
+            if model_mapping and self._partner_use_in(partners.ids, model_mapping):
+                continue
+
             self.env['base.partner.merge.line'].create({
                 'wizard_id': self.id,
                 'min_id': min_id,
-                'aggr_ids': aggr_ids,
+                'aggr_ids': partners.ids,
             })
             counter += 1
 
