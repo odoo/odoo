@@ -716,19 +716,24 @@ class GroupsView(models.Model):
         view = self.env.ref('base.user_groups_view', raise_if_not_found=False)
         if view and view.exists() and view._name == 'ir.ui.view':
             group_no_one = view.env.ref('base.group_no_one')
-            xml1, xml2 = [], []
-            xml1.append(E.separator(string=_('Application'), colspan="2"))
+            xml0, xml1, xml2 = [], [], []
+            xml1.append(E.separator(string=_('Applications'), colspan="2"))
             for app, kind, gs in self.get_groups_by_application():
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
                 attrs = {}
                 if app.xml_id in ('base.module_category_hidden', 'base.module_category_extra', 'base.module_category_usability'):
                     attrs['groups'] = 'base.group_no_one'
-
                 if kind == 'selection':
-                    # application name with a selection field
-                    field_name = name_selection_groups(gs.ids)
-                    xml1.append(E.field(name=field_name, **attrs))
-                    xml1.append(E.newline())
+                    if app.xml_id == 'base.module_category_user_type':
+                        attrs['widget'] = 'radio'
+                        attrs['options'] = "{'horizontal': true}"
+                        field_name = name_selection_groups(gs.ids)
+                        xml0.append(E.field(name=field_name, **attrs))
+                    else:
+                        # application name with a selection field
+                        field_name = name_selection_groups(gs.ids)
+                        xml1.append(E.field(name=field_name, **attrs))
+                        xml1.append(E.newline())
                 else:
                     # application separator with boolean fields
                     app_name = app.name or _('Other')
@@ -742,7 +747,7 @@ class GroupsView(models.Model):
                             xml2.append(E.field(name=field_name, **attrs))
 
             xml2.append({'class': "o_label_nowrap"})
-            xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
+            xml = E.field(E.group(*(xml0), col="2", groups="base.group_no_one"), E.group(*(xml1), attrs = "{'invisible': [('share', '=', True)]}", col="2"), E.group(*(xml2), groups="base.group_no_one", attrs = "{'invisible': [('share', '=', True)]}", col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
             view.with_context(lang=None).write({'arch': xml_content, 'arch_fs': False})
@@ -766,7 +771,7 @@ class GroupsView(models.Model):
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
             # check whether order is total, i.e., sequence orders are distinct
-            if len(set(order.itervalues())) == len(gs):
+            if len(set(order.itervalues())) == len(gs) or app.xml_id == 'base.module_category_user_type':
                 return (app, 'selection', gs.sorted(key=order.get))
             else:
                 return (app, 'boolean', gs)
@@ -831,9 +836,17 @@ class UsersView(models.Model):
                 values1[key] = val
 
         if 'groups_id' not in values and (add or rem):
+            default_user = self.env.ref('base.default_user', False)
+            portal_group = self.env.ref('base.group_portal', False)
+            public_group = self.env.ref('base.group_public', False)
             # remove group ids in `rem` and add group ids in `add`
-            values1['groups_id'] = zip(repeat(3), rem) + zip(repeat(4), add)
-
+            if portal_group and portal_group.id in add:
+                values1['groups_id'] = zip(repeat(3), self.groups_id.ids) + zip(repeat(4), portal_group.ids)
+            elif public_group and public_group.id in add:
+                values1['groups_id'] = zip(repeat(3), self.groups_id.ids) + zip(repeat(4), public_group.ids)
+            else:
+                default_user_group_ids = default_user and default_user.groups_id.ids
+                values1['groups_id'] = zip(repeat(3), rem) + zip(repeat(4), add + default_user_group_ids)
         return values1
 
     @api.model
@@ -887,10 +900,13 @@ class UsersView(models.Model):
             if kind == 'selection':
                 # selection group field
                 tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
+                selection_value = [(g.id, g.name) for g in gs]
+                if 'base.module_category_user_type' not in gs.mapped('category_id.xml_id'):
+                    selection_value = [(False, '')] + selection_value
                 res[name_selection_groups(gs.ids)] = {
                     'type': 'selection',
                     'string': app.name or _('Other'),
-                    'selection': [(False, '')] + [(g.id, g.name) for g in gs],
+                    'selection': selection_value,
                     'help': '\n'.join(tips),
                     'exportable': False,
                     'selectable': False,
