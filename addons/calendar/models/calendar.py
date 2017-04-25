@@ -170,6 +170,7 @@ class Attendee(models.Model):
                 vals = {}
                 if ics_file:
                     vals['attachment_ids'] = [(0, 0, {'name': 'invitation.ics',
+                                                      'mimetype': 'text/calendar',
                                                       'datas_fname': 'invitation.ics',
                                                       'datas': str(ics_file).encode('base64')})]
                 vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
