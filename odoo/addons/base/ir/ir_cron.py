@@ -114,10 +114,11 @@ class ir_cron(models.Model):
                 if hasattr(model, method_name):
                     log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
                     odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self._cr.dbname, self._uid, '*', model_name, method_name)+tuple(args), depth=log_depth)
+                    start_time = False
                     if _logger.isEnabledFor(logging.DEBUG):
                         start_time = time.time()
                     getattr(model, method_name)(*args)
-                    if _logger.isEnabledFor(logging.DEBUG):
+                    if start_time and _logger.isEnabledFor(logging.DEBUG):
                         end_time = time.time()
                         _logger.debug('%.3fs (%s, %s)', end_time - start_time, model_name, method_name)
                     self.pool.signal_caches_change()

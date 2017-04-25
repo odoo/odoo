@@ -1077,6 +1077,8 @@ class AccountInvoice(models.Model):
             :param date: payment date, defaults to fields.Date.context_today(self)
             :param writeoff_acc: account in which to create a writeoff if pay_amount < self.residual, so that the invoice is fully paid
         """
+        if isinstance( pay_journal, ( int, long ) ):
+            pay_journal = self.env['account.journal'].browse([pay_journal])
         assert len(self) == 1, "Can only pay one invoice at a time."
         payment_type = self.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
         if payment_type == 'inbound':
@@ -1106,6 +1108,8 @@ class AccountInvoice(models.Model):
             'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
         })
         payment.post()
+
+        return True
 
     @api.multi
     def _track_subtype(self, init_values):
