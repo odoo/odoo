@@ -25,6 +25,11 @@ class TestPyLint(TransactionCase):
         'W0123',  # eval used
         'W0101',  # unreachable code
 
+        # py3k checks
+        'print-statement',
+        'backtick',
+        'next-method-called',
+
         'misplaced-future',
         'relative-import',
         'deprecated-module',
