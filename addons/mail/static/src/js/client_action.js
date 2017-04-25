@@ -90,6 +90,9 @@ var PartnerInviteDialog = Dialog.extend({
 var ChatAction = Widget.extend(ControlPanelMixin, {
     template: 'mail.client_action',
 
+    custom_events: {
+        search: '_onSearch',
+    },
     events: {
         "click .o_mail_chat_channel_item": function (event) {
             event.preventDefault();
@@ -200,7 +203,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                               chat_manager.get_channel('channel_inbox');
 
         this.searchview = new SearchView(this, this.dataset, this.fields_view, options);
-        this.searchview.on('search_data', this, this.on_search);
 
         this.basic_composer = new composer.BasicComposer(this, {mention_partners_restricted: true});
         this.extended_composer = new composer.ExtendedComposer(this, {mention_partners_restricted: true});
@@ -557,17 +559,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
     },
 
-    on_search: function (domains) {
-        var session = this.getSession();
-        var result = pyeval.eval_domains_and_contexts({
-            domains: domains,
-            contexts: [session.user_context],
-        });
-
-        this.domain = result.domain;
-        this.fetch_and_render_thread();
-    },
-
     on_post_message: function (message) {
         var self = this;
         var options = this.selected_message ? {} : {channel_id: this.channel.id};
@@ -669,6 +660,24 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     destroy: function() {
         this.$buttons.off().destroy();
         this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {OdooEvent}
+     */
+    _onSearch: function (event) {
+        var session = this.getSession();
+        var result = pyeval.eval_domains_and_contexts({
+            domains: event.data.domains,
+            contexts: [session.user_context],
+        });
+        this.domain = result.domain;
+        this.fetch_and_render_thread();
     },
 });
 
