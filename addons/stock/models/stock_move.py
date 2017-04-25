@@ -3,7 +3,6 @@
 
 from datetime import datetime
 from dateutil import relativedelta
-import time
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
@@ -117,8 +116,6 @@ class StockMove(models.Model):
              "its current stock) to gather products. If we want to chain moves and have this one to wait for the previous,"
              "this second option should be chosen.")
     scrapped = fields.Boolean('Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
-    quant_ids = fields.Many2many('stock.quant', 'stock_quant_move_rel', 'move_id', 'quant_id', 'Moved Quants', copy=False)
-    reserved_quant_ids = fields.One2many('stock.quant', 'reservation_id', 'Reserved quants')
     linked_move_operation_ids = fields.One2many(
         'stock.move.operation.link', 'move_id', 'Linked Operations', readonly=True,
         help='Operations that impact this move for the computation of the remaining quantities')
@@ -135,7 +132,6 @@ class StockMove(models.Model):
         help='If checked, when this move is cancelled, cancel the linked move too')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
-    lot_ids = fields.Many2many('stock.production.lot', string='Lots/Serial Numbers', compute='_compute_lot_ids')
     origin_returned_move_id = fields.Many2one('stock.move', 'Origin return move', copy=False, help='Move that created the return move')
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
     reserved_availability = fields.Float(
@@ -170,13 +166,6 @@ class StockMove(models.Model):
     def _get_remaining_qty(self):
         self.remaining_qty = float_round(self.product_qty - sum(self.mapped('linked_move_operation_ids').mapped('qty')), precision_rounding=self.product_id.uom_id.rounding)
 
-    @api.one
-    @api.depends('state', 'quant_ids.lot_id', 'reserved_quant_ids.lot_id')
-    def _compute_lot_ids(self):
-        if self.state == 'done':
-            self.lot_ids = self.mapped('quant_ids').mapped('lot_id').ids
-        else:
-            self.lot_ids = self.mapped('reserved_quant_ids').mapped('lot_id').ids
 
     @api.one
     @api.depends('reserved_quant_ids.qty')
@@ -308,17 +297,6 @@ class StockMove(models.Model):
         """ Returns the unit price to store on the quant """
         return self.price_unit or self.product_id.standard_price
 
-    def get_removal_strategy(self):
-        ''' Returns the removal strategy to consider for the given move/ops '''
-        if self.product_id.categ_id.removal_strategy_id:
-            return self.product_id.categ_id.removal_strategy_id.method
-        loc = self.location_id
-        while loc:
-            if loc.removal_strategy_id:
-                return loc.removal_strategy_id.method
-            loc = loc.location_id
-        return 'fifo'
-
     @api.returns('self')
     @api.multi  # TDE: DECORATOR to remove
     def get_ancestors(self):
@@ -345,13 +323,7 @@ class StockMove(models.Model):
 
     @api.multi
     def do_unreserve(self):
-        if any(move.state in ('done', 'cancel') for move in self):
-            raise UserError(_('Cannot unreserve a done move'))
-        self.quants_unreserve()
-        if not self.env.context.get('no_state_change'):
-            waiting = self.filtered(lambda move: move.procure_method == 'make_to_order' or move.get_ancestors())
-            waiting.write({'state': 'waiting'})
-            (self - waiting).write({'state': 'confirmed'})
+        pass
 
     def _push_apply(self):
         # TDE CLEANME: I am quite sure I already saw this code somewhere ... in routing ??
@@ -555,217 +527,11 @@ class StockMove(models.Model):
                 raise UserError(_('You need to provide a Lot/Serial Number for product %s') % move.product_id.name)
 
     @api.multi
-    def action_assign(self, no_prepare=False):
-        """ Checks the product type and accordingly writes the state. """
-        # TDE FIXME: remove decorator once everything is migrated
-        # TDE FIXME: clean me, please
-        main_domain = {}
-
-        Quant = self.env['stock.quant']
-        Uom = self.env['product.uom']
-        moves_to_assign = self.env['stock.move']
-        moves_to_do = self.env['stock.move']
-        operations = self.env['stock.pack.operation']
-        ancestors_list = {}
-
-        # work only on in progress moves
-        moves = self.filtered(lambda move: move.state in ['confirmed', 'waiting', 'assigned'])
-        moves.filtered(lambda move: move.reserved_quant_ids).do_unreserve()
-        for move in moves:
-            if move.location_id.usage in ('supplier', 'inventory', 'production'):
-                moves_to_assign |= move
-                # TDE FIXME: what ?
-                # in case the move is returned, we want to try to find quants before forcing the assignment
-                if not move.origin_returned_move_id:
-                    continue
-            # if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
-            ancestors = move.find_move_ancestors()
-            if move.product_id.type == 'consu' and not ancestors:
-                moves_to_assign |= move
-                continue
-            else:
-                moves_to_do |= move
-
-                # we always search for yet unassigned quants
-                main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
-
-                ancestors_list[move.id] = True if ancestors else False
-                if move.state == 'waiting' and not ancestors:
-                    # if the waiting move hasn't yet any ancestor (PO/MO not confirmed yet), don't find any quant available in stock
-                    main_domain[move.id] += [('id', '=', False)]
-                elif ancestors:
-                    main_domain[move.id] += [('history_ids', 'in', ancestors.ids)]
-
-                # if the move is returned from another, restrict the choice of quants to the ones that follow the returned move
-                if move.origin_returned_move_id:
-                    main_domain[move.id] += [('history_ids', 'in', move.origin_returned_move_id.id)]
-                for link in move.linked_move_operation_ids:
-                    operations |= link.operation_id
-
-        # Check all ops and sort them: we want to process first the packages, then operations with lot then the rest
-        operations = operations.sorted(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.pack_lot_ids and -1 or 0))
-        for ops in operations:
-            # TDE FIXME: this code seems to be in action_done, isn't it ?
-            # first try to find quants based on specific domains given by linked operations for the case where we want to rereserve according to existing pack operations
-            if not (ops.product_id and ops.pack_lot_ids):
-                for record in ops.linked_move_operation_ids:
-                    move = record.move_id
-                    if move.id in main_domain:
-                        qty = record.qty
-                        domain = main_domain[move.id]
-                        if qty:
-                            quants = Quant.quants_get_preferred_domain(qty, move, ops=ops, domain=domain, preferred_domain_list=[])
-                            Quant.quants_reserve(quants, move, record)
-            else:
-                lot_qty = {}
-                rounding = ops.product_id.uom_id.rounding
-                for pack_lot in ops.pack_lot_ids:
-                    lot_qty[pack_lot.lot_id.id] = ops.product_uom_id._compute_quantity(pack_lot.qty, ops.product_id.uom_id)
-                for record in ops.linked_move_operation_ids:
-                    move_qty = record.qty
-                    move = record.move_id
-                    domain = main_domain[move.id]
-                    for lot in lot_qty:
-                        if float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(move_qty, 0, precision_rounding=rounding) > 0:
-                            qty = min(lot_qty[lot], move_qty)
-                            quants = Quant.quants_get_preferred_domain(qty, move, ops=ops, lot_id=lot, domain=domain, preferred_domain_list=[])
-                            Quant.quants_reserve(quants, move, record)
-                            lot_qty[lot] -= qty
-                            move_qty -= qty
-
-        # Sort moves to reserve first the ones with ancestors, in case the same product is listed in
-        # different stock moves.
-        for move in sorted(moves_to_do, key=lambda x: -1 if ancestors_list.get(x.id) else 0):
-            # then if the move isn't totally assigned, try to find quants without any specific domain
-            if move.state != 'assigned' and not self.env.context.get('reserve_only_ops'):
-                qty_already_assigned = move.reserved_availability
-                qty = move.product_qty - qty_already_assigned
-
-                quants = Quant.quants_get_preferred_domain(qty, move, domain=main_domain[move.id], preferred_domain_list=[])
-                Quant.quants_reserve(quants, move)
-
-        # force assignation of consumable products and incoming from supplier/inventory/production
-        # Do not take force_assign as it would create pack operations
-        if moves_to_assign:
-            moves_to_assign.write({'state': 'assigned'})
-        if not no_prepare:
-            self.check_recompute_pack_op()
+    def action_assign(self):
+        return True
 
     @api.multi
     def action_cancel(self):
-        """ Cancels the moves and if all moves are cancelled it cancels the picking. """
-        # TDE DUMB: why is cancel_procuremetn in ctx we do quite nothing ?? like not updating the move ??
-        if any(move.state == 'done' for move in self):
-            raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
-
-        procurements = self.env['procurement.order']
-        for move in self:
-            if move.reserved_quant_ids:
-                move.quants_unreserve()
-            if self.env.context.get('cancel_procurement'):
-                if move.propagate:
-                    pass
-                    # procurements.search([('move_dest_id', '=', move.id)]).cancel()
-            else:
-                if move.move_dest_id:
-                    if move.propagate:
-                        move.move_dest_id.action_cancel()
-                    elif move.move_dest_id.state == 'waiting':
-                        # If waiting, the chain will be broken and we are not sure if we can still wait for it (=> could take from stock instead)
-                        move.move_dest_id.write({'state': 'confirmed'})
-                if move.procurement_id:
-                    procurements |= move.procurement_id
-
-        self.write({'state': 'cancel', 'move_dest_id': False})
-        if procurements:
-            procurements.check()
-        return True
-
-    def recalculate_move_state(self):
-        '''Recompute the state of moves given because their reserved quants were used to fulfill another operation'''
-        # TDE FIXME: what is the real purpose of this ? probably clean me
-        for move in self:
-            vals = {}
-            reserved_quant_ids = move.reserved_quant_ids
-            if len(reserved_quant_ids) > 0 and not move.partially_available:
-                vals['partially_available'] = True
-            if len(reserved_quant_ids) == 0 and move.partially_available:
-                vals['partially_available'] = False
-            if move.state == 'assigned':
-                if move.procure_method == 'make_to_order' or move.find_move_ancestors():
-                    vals['state'] = 'waiting'
-                else:
-                    vals['state'] = 'confirmed'
-            if vals:
-                move.write(vals)
-
-    @api.model
-    def _move_quants_by_lot(self, ops, lot_qty, quants_taken, false_quants, lot_move_qty, quant_dest_package_id):
-        """
-        This function is used to process all the pack operation lots of a pack operation
-        For every move:
-            First, we check the quants with lot already reserved (and those are already subtracted from the lots to do)
-            Then go through all the lots to process:
-                Add reserved false lots lot by lot
-                Check if there are not reserved quants or reserved elsewhere with that lot or without lot (with the traditional method)
-        """
-        return self.browse(lot_move_qty)._move_quants_by_lot_v10(quants_taken, false_quants, ops, lot_qty, lot_move_qty, quant_dest_package_id)
-
-    @api.multi
-    def _move_quants_by_lot_v10(self, quants_taken, false_quants, pack_operation, lot_quantities, lot_move_quantities, dest_package_id):
-        Quant = self.env['stock.quant']
-        rounding = pack_operation.product_id.uom_id.rounding
-        preferred_domain_list = [[('reservation_id', '=', False)], ['&', ('reservation_id', 'not in', self.ids), ('reservation_id', '!=', False)]]
-
-        for move_rec_updateme in self:
-            from collections import defaultdict
-            lot_to_quants = defaultdict(list)
-
-            # Assign quants already reserved with lot to the correct
-            for quant in quants_taken:
-                if quant[0] <= move_rec_updateme.reserved_quant_ids:
-                    lot_to_quants[quant[0].lot_id.id].append(quant)
-
-            false_quants_move = [x for x in false_quants if x[0].reservation_id.id == move_rec_updateme.id]
-            for lot_id in lot_quantities:
-                redo_false_quants = False
-
-                # Take remaining reserved quants with  no lot first
-                # (This will be used mainly when incoming had no lot and you do outgoing with)
-                while false_quants_move and float_compare(lot_quantities[lot_id], 0, precision_rounding=rounding) > 0 and float_compare(lot_move_quantities[move_rec_updateme.id], 0, precision_rounding=rounding) > 0:
-                    qty_min = min(lot_quantities[lot_id], lot_move_quantities[move_rec_updateme.id])
-                    if false_quants_move[0].qty > qty_min:
-                        lot_to_quants[lot_id] += [(false_quants_move[0], qty_min)]
-                        qty = qty_min
-                        redo_false_quants = True
-                    else:
-                        qty = false_quants_move[0].qty
-                        lot_to_quants[lot_id] += [(false_quants_move[0], qty)]
-                        false_quants_move.pop(0)
-                    lot_quantities[lot_id] -= qty
-                    lot_move_quantities[move_rec_updateme.id] -= qty
-
-                # Search other with first matching lots and then without lots
-                if float_compare(lot_move_quantities[move_rec_updateme.id], 0, precision_rounding=rounding) > 0 and float_compare(lot_quantities[lot_id], 0, precision_rounding=rounding) > 0:
-                    # Search if we can find quants with that lot
-                    qty = min(lot_quantities[lot_id], lot_move_quantities[move_rec_updateme.id])
-                    quants = Quant.quants_get_preferred_domain(
-                        qty, move_rec_updateme, ops=pack_operation, lot_id=lot_id, domain=[('qty', '>', 0)],
-                        preferred_domain_list=preferred_domain_list)
-                    lot_to_quants[lot_id] += quants
-                    lot_quantities[lot_id] -= qty
-                    lot_move_quantities[move_rec_updateme.id] -= qty
-
-                # Move all the quants related to that lot/move
-                if lot_to_quants[lot_id]:
-                    Quant.quants_move(
-                        lot_to_quants[lot_id], move_rec_updateme, pack_operation.location_dest_id,
-                        location_from=pack_operation.location_id, lot_id=lot_id,
-                        owner_id=pack_operation.owner_id.id, src_package_id=pack_operation.package_id.id,
-                        dest_package_id=dest_package_id)
-                    if redo_false_quants:
-                        false_quants_move = [x for x in move_rec_updateme.reserved_quant_ids if (not x.lot_id) and (x.owner_id.id == pack_operation.owner_id.id) and
-                                             (x.location_id.id == pack_operation.location_id.id) and (x.package_id.id == pack_operation.package_id.id)]
         return True
 
     @api.multi
@@ -977,9 +743,3 @@ class StockMove(models.Model):
             'res_id': self.id}
     show_picking = action_show_picking
 
-    # Quants management
-    # ----------------------------------------------------------------------
-
-    def quants_unreserve(self):
-        self.filtered(lambda x: x.partially_available).write({'partially_available': False})
-        self.mapped('reserved_quant_ids').sudo().write({'reservation_id': False})
