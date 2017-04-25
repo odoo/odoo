@@ -12,13 +12,14 @@
             <script type="text/javascript" src="/account/static/src/js/reconciliation/reconciliation_renderer.js"></script>
 
             <!-- <script type="text/javascript" src="/account/static/src/js/tour_bank_statement_reconciliation.js"></script> -->
-            <script type="text/javascript" src="/account/static/src/js/account_payment_widget.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/account_payment_field.js"></script>
         </xpath>
     </template>
 
     <template id="qunit_suite" name="account_reconciliation tests" inherit_id="web.qunit_suite">
         <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
             <script type="text/javascript" src="/account/static/tests/reconciliation_tests.js"></script>
+            <script type="text/javascript" src="/account/static/tests/account_payment_field_tests.js"></script>
         </xpath>
     </template>
 </odoo>
