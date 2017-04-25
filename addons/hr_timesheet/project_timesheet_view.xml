@@ -65,9 +65,9 @@
             <field name="context">
             {
                 'default_parent_id' : active_id,
-                'default_project_id' : project_id,
-                'default_name' : name + ':',
-                'default_partner_id' : partner_id,
+                'default_project_id' : context.get('project_id'),
+                'default_name' : context.get('name', '') + ':',
+                'default_partner_id' : context.get('partner_id'),
             }
             </field>
             <field name="search_view_id" ref="project.view_task_search_form"/>
