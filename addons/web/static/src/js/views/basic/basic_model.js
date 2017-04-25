@@ -1253,8 +1253,7 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
-                context: record.context,
-                // context: {bin_size: true} // FIXME: when editing a subrecord in the partner form view, it tries to write the bin_size on the image field
+                context: _.extend({}, record.context, {bin_size: true}),
             })
             .then(function (result) {
                 result = result[0];
