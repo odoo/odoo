@@ -335,8 +335,6 @@ var FormRenderer = BasicRenderer.extend({
             });
             this._registerModifiers(node, this.state, $label, {
                 callback: function (element, modifiers, record) {
-                    var recordWidgets = self.allFieldWidgets[record.id];
-                    var widget = _.findWhere(recordWidgets, {name: fieldName});
                     element.$el.toggleClass('o_form_label_empty', !!(
                         record.data.id
                         && (modifiers.readonly || self.mode === 'readonly')
@@ -623,7 +621,11 @@ var FormRenderer = BasicRenderer.extend({
         var self = this;
         var $headers = $('<ul class="nav nav-tabs">');
         var $pages = $('<div class="tab-content nav nav-tabs">');
-        _.each(node.children, function (child, index) {
+        // renderedTabs is used to aggregate the generated $headers and $pages
+        // alongside their node, so that their modifiers can be registered once
+        // all tabs have been rendered, to ensure that the first visible tab
+        // is correctly activated
+        var renderedTabs = _.map(node.children, function (child, index) {
             var pageID = _.uniqueId('notebook_page_');
             var $header = self._renderTabHeader(child, pageID);
             var $page = self._renderTabPage(child, pageID);
@@ -632,20 +634,28 @@ var FormRenderer = BasicRenderer.extend({
                 $page.addClass('active');
             }
             self._handleAttributes($header, child);
-            self._registerModifiers(child, self.state, $header, {
-                callback: function (element, modifiers, record) {
+            $headers.append($header);
+            $pages.append($page);
+            return {
+                $header: $header,
+                $page: $page,
+                node: child,
+            };
+        });
+        // register the modifiers for each tab
+        _.each(renderedTabs, function (tab) {
+            self._registerModifiers(tab.node, self.state, tab.$header, {
+                callback: function (element, modifiers) {
                     // if the active tab is invisible, activate the first visible tab instead
                     if (modifiers.invisible && element.$el.hasClass('active')) {
                         element.$el.removeClass('active');
-                        $page.removeClass('active');
+                        tab.$page.removeClass('active');
                         var $firstVisibleTab = $headers.find('li:not(.o_form_invisible):first()');
                         $firstVisibleTab.addClass('active');
                         $pages.find($firstVisibleTab.find('a').attr('href')).addClass('active');
                     }
                 },
             });
-            $headers.append($header);
-            $pages.append($page);
         });
         return $('<div class="o_notebook">')
                 .data('name', node.attrs.name || '_default_')
