@@ -116,10 +116,15 @@ var RecordQuickCreate = AbstractQuickCreate.extend({
     template: "KanbanView.QuickCreate",
     /**
      * @override
+     * @param {Widget} parent
+     * @param {Object} options
+     * @param {string|number} options.width defines the element's width
+     * @param {string} [options.defaultName] the record's default name
      */
-    init: function (parent, width) {
+    init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.width = width;
+        this.width = options.width;
+        this.defaultName = options.defaultName;
     },
     /**
      * @override
@@ -127,6 +132,7 @@ var RecordQuickCreate = AbstractQuickCreate.extend({
     start: function () {
         this.$el.css({width: this.width});
         this.$input = this.$('input');
+        this._addDefaultName();
         this.$input.focus();
         return this._super.apply(this, arguments);
     },
@@ -135,6 +141,16 @@ var RecordQuickCreate = AbstractQuickCreate.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Set the default value for the record name.
+     *
+     * @private
+     */
+    _addDefaultName: function () {
+        if (this.defaultName) {
+            this.$input.val(this.defaultName);
+        }
+    },
     /**
      * Triggers up an event to cancel the quick creation
      *
@@ -153,6 +169,23 @@ var RecordQuickCreate = AbstractQuickCreate.extend({
      */
     _notifyAdd: function (value) {
         this.trigger_up('quick_create_add_record', {value: value});
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Add the default value for the record name again after creating
+     * the previous record.
+     * 
+     * @override
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAddClicked: function (event) {
+        this._super.apply(this, arguments);
+        this._addDefaultName();
     },
 });
 
