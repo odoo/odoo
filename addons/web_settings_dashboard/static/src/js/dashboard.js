@@ -76,11 +76,36 @@ var DashboardInvitations = Widget.extend({
         'click .o_web_settings_dashboard_access_rights': 'on_access_rights_clicked',
         'click .o_web_settings_dashboard_user': 'on_user_clicked',
         'click .o_web_settings_dashboard_more': 'on_more',
+        'focusout .select2-input': 'on_focusout',
     },
     init: function(parent, data){
         this.data = data;
         this.parent = parent;
         return this._super.apply(this, arguments);
+    },
+    start: function(){
+        var temp = this._super.apply(this, arguments);
+        var self = this;
+        this.s2input = this.parent.$('textarea#user_emails').select2({
+            placeholder: _t("Enter e-mail addresses"),
+            tags: [],
+            tokenSeparators: [" ", ","],
+            dropdownCss: {display:'none'},
+            width: '100%',
+        });
+        this.s2input.on("select2-open", function(e){
+            $('.select2-drop-mask').remove();
+        });
+        return temp;
+    },
+    on_focusout: function(e){
+        var self = this;
+        var value = $(e.currentTarget).val();
+        this.s2input = this.parent.$('textarea#user_emails');
+        if(value){
+            var data = _.union(self.s2input.select2('data'), [{id:value, text:value}]);
+            self.s2input.select2('data', data);
+        }
     },
     send_invitations: function(e){
         var self = this;
@@ -143,11 +168,13 @@ var DashboardInvitations = Widget.extend({
         var self = this;
         e.preventDefault();
         var action = {
+            name: _t('Users'),
             type: 'ir.actions.act_window',
             view_type: 'form',
             view_mode: 'tree,form',
             res_model: 'res.users',
             domain: [['log_ids', '=', false]],
+            context: {'search_default_no_share': true},
             views: [[false, 'list'], [false, 'form']],
         };
         this.do_action(action,{
