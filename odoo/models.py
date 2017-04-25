@@ -1612,7 +1612,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 result[key] = line
 
         # add folding information if present
-        if field.relational and groups._fold_name in groups._fields:
+        if field.relational and groups._fold_name in groups._fields and not self._context.get('unfold_all', False):
             fold = {group.id: group[groups._fold_name]
                     for group in groups.browse([key for key in result if key])}
             for key, line in result.items():

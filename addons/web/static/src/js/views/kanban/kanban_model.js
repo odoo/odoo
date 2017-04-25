@@ -7,6 +7,7 @@ odoo.define('web.KanbanModel', function (require) {
  */
 
 var BasicModel = require('web.BasicModel');
+var config = require('web.config');
 
 var KanbanModel = BasicModel.extend({
 
@@ -249,6 +250,9 @@ var KanbanModel = BasicModel.extend({
         var self = this;
         if (list.groupedBy.length > 1) {
             list.groupedBy = [list.groupedBy[0]];
+        }
+        if (config.isMobile) {
+            list.context['unfold_all'] = true;
         }
         return this._super.apply(this, arguments).then(function (result) {
             return self._readTooltipFields(list).then(_.constant(result));

@@ -3,6 +3,7 @@ odoo.define('web.KanbanRenderer', function (require) {
 
 var BasicRenderer = require('web.BasicRenderer');
 var core = require('web.core');
+var config = require("web.config");
 var KanbanColumn = require('web.KanbanColumn');
 var KanbanRecord = require('web.KanbanRecord');
 var quick_create = require('web.kanban_quick_create');
@@ -83,10 +84,14 @@ function transformQwebTemplate(node, fields) {
 
 var KanbanRenderer = BasicRenderer.extend({
     className: 'o_kanban_view',
+    events: {
+        'click .o_kanban_mobile_tab': function(event) {
+            this._moveToGroup($(event.currentTarget).index());
+        }
+    },
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events || {}, {
         'set_progress_bar_state': '_onSetProgressBarState',
     }),
-
     /**
      * @override
      */
@@ -107,8 +112,9 @@ var KanbanRenderer = BasicRenderer.extend({
         if (this.columnOptions.hasProgressBar) {
             this.columnOptions.progressBarStates = {};
         }
-
         this._setState(state);
+        // Used for mobile, when returning back to view
+        this.last_active_mobile_tab = 0;
     },
 
     //--------------------------------------------------------------------------
@@ -116,10 +122,11 @@ var KanbanRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Displays the quick create record in the first column.
+     * Displays the quick create record in the first column if not mobile otherwise,
+     * Uses active column index.
      */
     addQuickCreate: function () {
-        this.widgets[0].addQuickCreate();
+        this.widgets[this.last_active_mobile_tab].addQuickCreate();
     },
     /**
      * Toggle fold/unfold the Column quick create widget
@@ -224,6 +231,9 @@ var KanbanRenderer = BasicRenderer.extend({
         var self = this;
 
         // Render columns
+        if (config.isMobile) {
+            this.$el.append($(qweb.render("KanbanView.MobileTabs", {'data': this.state.data})));
+        }
         _.each(this.state.data, function (group) {
             var column = new KanbanColumn(self, group, self.columnOptions, self.recordOptions);
             if (!group.value) {
@@ -306,6 +316,15 @@ var KanbanRenderer = BasicRenderer.extend({
                 this._renderUngrouped(fragment);
             }
             this.$el.append(fragment);
+
+            if (this.widgets && config.isMobile && isGrouped) {
+                core.bus.on("DOM_updated", this, function() {
+                    this._enableSwipeOnRecordGroup();
+                    this._moveToGroup(this.last_active_mobile_tab);
+                });
+                // Required to allow mobile kanban stage tabs to enable swipe and move to active tab
+                core.bus.trigger('DOM_updated');
+            }
         }
 
         return this._super.apply(this, arguments).then(_.invoke.bind(_, oldWidgets, 'destroy'));
@@ -361,6 +380,70 @@ var KanbanRenderer = BasicRenderer.extend({
         }
         _.extend(this.columnOptions.progressBarStates[ev.data.columnID], ev.data.values);
     },
+    /**
+     * Enables swipe on kanban columns
+     *
+     * @private
+     */
+    _enableSwipeOnRecordGroup: function() {
+        var self = this;
+        this.$el.find(".o_kanban_group").swipe({
+            swipeLeft: function() {
+                self._moveToGroup(++self.last_active_mobile_tab);
+            },
+            swipeRight: function() {
+                self._moveToGroup(--self.last_active_mobile_tab);
+            }
+        });
+    },
+    /**
+     * Move to kanban group when tap on tab or swipe 
+     *
+     * @private
+     * @param {integer} group index
+     */
+    _moveToGroup: function(move_to_index) {
+        var self = this;
+        if (this.widgets.length - 1 < move_to_index) {
+            this.last_active_mobile_tab = this.widgets.length - 1;
+            return;
+        } else if (move_to_index < 0) {
+            this.last_active_mobile_tab = 0;
+            return;
+        }
+        this.last_active_mobile_tab = move_to_index;
+        var moveTo = move_to_index;
+        var next = move_to_index + 1;
+        var previous = move_to_index - 1;
+        this.$el.find(".o_kanban_group").removeClass("previous next current before after");
+        this.$el.find(".o_kanban_mobile_tab").removeClass("previous next current before after");
+        _.each(this.widgets, function(column, index) {
+            var recordPane = self.$el.find(".o_kanban_group[data-id=" + column.id + "]");
+            var tab = self.$el.find(".o_kanban_mobile_tab[data-id=" + column.id + "]");
+            if (index == previous) {
+                tab.addClass("previous");
+                tab.css("margin-left", "-" + (tab.outerWidth() / 2) + "px");
+                recordPane.addClass("previous");
+            } else if (index == next) {
+                tab.addClass("next");
+                tab.css("margin-left", "-" + (tab.outerWidth() / 2) + "px");
+                recordPane.addClass("next");
+            } else if (index < moveTo) {
+                tab.addClass("before");
+                tab.css("margin-left", "-" + tab.outerWidth() + "px");
+                recordPane.addClass("before");
+            } else if (index == moveTo) {
+                var marginLeft = tab.outerWidth() / 2;
+                tab.css("margin-left", "-" + marginLeft + "px");
+                tab.addClass("current");
+                recordPane.addClass("current");
+            } else if (index > moveTo) {
+                tab.addClass("after");
+                tab.css("margin-left", "0");
+                recordPane.addClass("after");
+            }
+        });
+    }
 });
 
 return KanbanRenderer;
