@@ -18,7 +18,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="group_mrp_routings"/>
                                     <div class="text-muted">
-                                        Go through a production routing with work orders
+                                        Process operations at specific work centers based on the routing defined on the bill of material of the final product
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
                                         <div class="mt16">
@@ -29,6 +29,39 @@
                                                 <button name="%(mrp.mrp_workcenter_action)d" icon="fa-arrow-right" type="action" string="Work Centers" class="btn-link"/>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-12 o_setting_box" id="mrp_quality">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_quality_mrp" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_quality_mrp"/>
+                                    <div class="text-muted">
+                                        Manage quality control points, quality checks and quality alerts
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-12 o_setting_box" id="mrp_repair">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_mrp_repair"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_mrp_repair"/>
+                                    <div class="text-muted">
+                                        Repair products and invoice the repair orders
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-12 o_setting_box" id="mrp_maintenance">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_mrp_maintenance" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_mrp_maintenance"/>
+                                    <div class="text-muted">
+                                        Schedule the maintenance of your equipment
                                     </div>
                                 </div>
                             </div>
@@ -56,7 +89,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_mrp_mps"/>
                                     <div class="text-muted">
-                                        Plan procurement orders based on forecasts
+                                        Plan procurements based on forecasts
                                     </div>
                                     <div class="content-group" id="content_mrp_mps"/>
                                 </div>
