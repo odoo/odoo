@@ -2374,6 +2374,48 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many kanban with edit type action and domain widget (widget wich use SpecialData)', function (assert) {
+        assert.expect(1);
+
+        this.data.turtle.fields.model_name = {string: "Domain Condition Model", type: "char"};
+        this.data.turtle.fields.condition = {string: "Domain Condition", type: "char"};
+        _.each(this.data.turtle.records, function (record) {
+            record.model_name = 'partner';
+            record.condition = '[]';
+        });
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles" mode="kanban">' +
+                            '<kanban>' +
+                                '<templates>' +
+                                    '<t t-name="kanban-box">' +
+                                        '<div><field name="display_name"/></div>' +
+                                        '<div><field name="turtle_foo"/></div>' +
+                                        '<div> <a type="edit"> Edit </a> </div>' +
+                                    '</t>' +
+                                '</templates>' +
+                            '</kanban>' +
+                            '<form>' +
+                                '<field name="product_id" widget="statusbar"/>' +
+                                '<field name="model_name"/>' +
+                                '<field name="condition" widget="domain" options="{\'model\': \'model_name\'}"/>' +
+                            '</form>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$('.oe_kanban_action:eq(0)').click();
+        assert.strictEqual($('.o_domain_selector').length, 1, "should add domain selector widget");
+        form.destroy();
+    });
+
     QUnit.test('one2many without inline tree arch', function (assert) {
         assert.expect(2);
 
