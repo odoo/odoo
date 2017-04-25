@@ -10,6 +10,7 @@ odoo.define('web.KanbanController', function (require) {
 var BasicController = require('web.BasicController');
 var Context = require('web.Context');
 var core = require('web.core');
+var config = require('web.config');
 var view_dialogs = require('web.view_dialogs');
 
 var _t = core._t;
@@ -29,6 +30,7 @@ var KanbanController = BasicController.extend({
         kanban_column_archive_records: '_onArchiveRecords',
         kanban_load_more: '_onLoadMore',
         column_toggle_fold: '_onToggleColumn',
+        kanban_load_records: '_onLoadColumnRecords'
     }),
     /**
      * @override
@@ -230,6 +232,19 @@ var KanbanController = BasicController.extend({
             self.renderer.updateColumn(db_id, data);
             self._updateEnv();
         });
+    },
+    /**
+     * @param {OdooRevent} event
+     */
+    _onLoadColumnRecords: function (event) {
+        var self = this;
+        var column = event.target;
+        // Calling loadMore with offset override to zero
+        this.model.loadMore(column.db_id, 0).then(function (db_id) {
+            var data = self.model.get(db_id);
+            self.renderer.updateColumn(db_id, data);
+        });
+
     },
     /**
      * @param {OdooEvent} event

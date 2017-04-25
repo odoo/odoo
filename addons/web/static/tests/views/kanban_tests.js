@@ -1,12 +1,14 @@
 odoo.define('web.kanban_tests', function (require) {
 "use strict";
 
+var core = require('web.core');
+var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
-var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
-var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
+var widgetRegistry = require('web.widget_registry');
 
+var createAsyncView = testUtils.createAsyncView;
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
@@ -2051,6 +2053,52 @@ QUnit.module('Views', {
                 "quick create should have been added in the first column");
         }
     });
+
+    QUnit.test('mobile grouped rendering', function (assert) {
+        assert.expect(8);
+        var done = assert.async();
+
+        createAsyncView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test o_kanban_small_column" on_create="quick_create">' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['product_id'],
+            config: {
+                isMobile: true
+            }
+        }).then(function (kanban) {
+
+            // Dummy dom update trigger for activate mobile tabs and move to first column
+            core.bus.trigger("DOM_updated");
+
+            assert.equal(kanban.$el.find('.o_kanban_group').length, 2, "2 colomns are created" );
+
+            kanban.$buttons.find('.o-kanban-button-new').click(); // Click on 'Create'
+            assert.ok(kanban.$('.o_kanban_group:nth(0) > div:nth(1)').hasClass('o_kanban_quick_create'),
+                "clicking on create should open the quick_create in the first column");
+
+            assert.equal(kanban.$el.find('.o_kanban_mobile_tab.current > span').html(), "hello", "First tab 'hello' is active tab with class 'current'" );
+            assert.equal(kanban.$el.find('.o_kanban_group.current > div.o_kanban_record').length, "2", "there is 2 record in active 'hello' tab" );
+            assert.equal(kanban.$el.find('.o_kanban_group.next > div.o_kanban_record').length, "0", "there is 0 record in next tab. Records will load when click on next tab");
+
+            kanban.$el.find('.o_kanban_mobile_tab.next').trigger('click'); // Moving to next tab
+            assert.equal(kanban.$el.find('.o_kanban_mobile_tab.current > span').html(), "xmo", "Second tab 'xmo' is active with class 'current'" );
+            assert.equal(kanban.$el.find('.o_kanban_group.current > div.o_kanban_record').length, "2", "there is 2 record in active 'xmo' tab. Records are loaded after click on tab");
+
+            kanban.$buttons.find('.o-kanban-button-new').click(); // Click on 'Create'
+            assert.ok(kanban.$('.o_kanban_group:nth(1) >  div:nth(1)').hasClass('o_kanban_quick_create'),
+                "clicking on create should open the quick_create in the second column");
+
+            kanban.destroy();
+            done();
+        });
+    });
+
 });
 
 });

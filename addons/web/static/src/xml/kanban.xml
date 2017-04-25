@@ -8,6 +8,16 @@
     </div>
 </t>
 
+<t t-name="KanbanView.MobileTabs">
+    <div class="o_kanban_mobile_tabs">
+        <t t-foreach="data" t-as="group">
+            <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id">
+                <span class="o_column_title"><t t-esc="group.value"/></span>
+            </div>
+        </t>
+    </div>
+</t>
+
 <t t-name="KanbanView.Group">
     <div class="o_kanban_group" t-att-data-id="widget.id">
         <div class="o_kanban_header">
