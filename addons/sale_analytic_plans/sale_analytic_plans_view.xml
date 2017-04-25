@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
            <xpath expr="//field[@name='order_line']/form//field[@name='tax_id']" position="after">
-               <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]" groups="analytic.group_analytic_accounting"/>
+               <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
            </xpath>
         </field>
     </record>
@@ -24,7 +24,7 @@
         <field name="inherit_id" ref="sale.view_order_line_form2"/>
         <field name="arch" type="xml">
             <field name="product_id" position="after">
-                <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]" groups="analytic.group_analytic_accounting"/>
+                <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
             </field>
         </field>
     </record>
