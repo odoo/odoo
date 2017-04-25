@@ -5,6 +5,7 @@ var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
 var ListView = require('web.ListView');
+var session = require('web.session');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
@@ -31,6 +32,7 @@ QUnit.module('basic_fields', {
                     currency_id: {string: "Currency", type: "many2one", relation: "currency", searchable: true},
                     selection: {string: "Selection", type: "selection", searchable:true,
                         selection: [['normal', 'Normal'],['blocked', 'Blocked'],['done', 'Done']]},
+                    document: {string: "Binary", type: "binary"},
                 },
                 records: [{
                     id: 1,
@@ -45,6 +47,7 @@ QUnit.module('basic_fields', {
                     timmy: [],
                     trululu: 4,
                     selection: 'blocked',
+                    document: 'coucou==\n',
                 }, {
                     id: 2,
                     display_name: "second record",
@@ -753,6 +756,61 @@ QUnit.module('basic_fields', {
         assert.strictEqual($textarea.innerHeight(), $textarea[0].scrollHeight,
             "textarea should not have a scroll bar");
         form.destroy();
+    });
+
+    QUnit.module('FieldBinary');
+
+    QUnit.test('binary fields are correctly rendered', function (assert) {
+        assert.expect(9);
+
+        // save the session function
+        var oldGetFile = session.get_file;
+        session.get_file = function (option) {
+            assert.strictEqual(option.data.field, 'document',
+                "we should download the field document");
+            assert.strictEqual(option.data.data, 'coucou==\n',
+                "we should download the correct data");
+            option.complete();
+            return $.when();
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="document"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('a.o_form_field[name="document"] > .fa-download').length, 1,
+            "the binary field should be rendered as a downloadable link in readonly");
+
+        form.$('a.o_form_field[name="document"]').click();
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('a.o_form_field[name="document"] > .fa-download').length, 0,
+            "the binary field should not be rendered as a downloadable link in edit");
+        assert.strictEqual(form.$('div.o_form_field_binary_file[name="document"]').length, 1,
+            "the binary field should be correctly rendered in edit");
+        assert.strictEqual(form.$('.o_form_field_binary_file > input').attr('readonly'), 'readonly',
+            "the input should be readonly");
+        assert.strictEqual(form.$('.o_form_field_binary_file > .o_clear_file_button').length, 1,
+            "there shoud be a button to clear the file");
+
+        form.$('.o_form_field_binary_file > .o_clear_file_button').click();
+
+        assert.ok(form.$('.o_form_field_binary_file > input').hasClass('o_hidden'),
+            "the input should be hidden");
+        assert.strictEqual(form.$('.o_form_field_binary_file > .o_select_file_button:not(.o_hidden)').length, 1,
+            "there shoud be a button to upload the file");
+
+        form.destroy();
+
+        // restore the session function
+        session.get_file = oldGetFile;
     });
 
 

@@ -957,7 +957,7 @@ var AbstractFieldBinary = AbstractField.extend({
                     self.on_file_uploaded(file.size, file.name, file.type, data);
                 };
             } else {
-                this.$('form.o_form_binary_form input[name=session_id]').val(this.session.session_id);
+                this.$('form.o_form_binary_form input[name=session_id]').val(this.getSession().session_id);
                 this.$('form.o_form_binary_form').submit();
             }
             this.$('.o_form_binary_progress').show();
@@ -1102,7 +1102,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
             framework.blockUI();
             var c = crash_manager;
             var filename_fieldname = this.attrs.filename;
-            this.session.get_file({
+            this.getSession().get_file({
                 'url': '/web/content',
                 'data': {
                     'model': this.model,
@@ -1114,7 +1114,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                     'data': utils.is_bin_size(this.value) ? null : this.value,
                 },
                 'complete': framework.unblockUI,
-                'error': c.rpc_error.bind(c)
+                'error': c.rpc_error.bind(c),
             });
             ev.stopPropagation();
         }
