@@ -36,6 +36,7 @@ var KanbanColumn = Widget.extend({
         this._super(parent);
         this.db_id = data.id;
         this.data_records = data.data;
+        this.data = data;
 
         var value = data.value;
         this.id = data.res_id || value;
@@ -140,8 +141,10 @@ var KanbanColumn = Widget.extend({
             return;
         }
         var self = this;
-        var width = this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8;
-        this.quickCreateWidget = new RecordQuickCreate(this, width);
+        this.quickCreateWidget = new RecordQuickCreate(this, {
+            width: this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8,
+            defaultName: this.data.getContext().default_name,
+        });
         this.quickCreateWidget.insertAfter(this.$header);
         this.quickCreateWidget.$el.focusout(function () {
             var hasFocus = (self.quickCreateWidget.$(':focus').length > 0);
