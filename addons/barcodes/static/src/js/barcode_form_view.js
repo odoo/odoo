@@ -15,6 +15,11 @@ FormController.include({
         activeBarcode: '_barcodeActivated',
     }),
 
+    /**
+     * add default barcode commands for from view
+     *
+     * @override
+     */
     init: function () {
         this._super.apply(this, arguments);
         this.activeBarcode = {
@@ -42,9 +47,9 @@ FormController.include({
 
     /**
      * @private
-     * @param {any} barcode
-     * @param {any} activeBarcode
-     * @returns {any}
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
+     * @returns {Deferred}
      */
     _barcodeAddX2MQuantity: function (barcode, activeBarcode) {
         if (this.mode === 'readonly') {
@@ -63,20 +68,20 @@ FormController.include({
     },
     /**
      * @private
-     * @param {any} record
-     * @param {any} barcode
-     * @param {any} activeBarcode
+     * @param {Object} candidate: record in the x2m
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
      * @returns {boolean}
      */
-    _barcodeRecordFilter: function (record, barcode, activeBarcode) {
-        return record.data.product_barcode === barcode;
+    _barcodeRecordFilter: function (candidate, barcode, activeBarcode) {
+        return candidate.data.product_barcode === barcode;
     },
     /**
      * @private
-     * @param {any} candidate
-     * @param {any} record
-     * @param {any} barcode
-     * @param {any} activeBarcode
+     * @param {Object} candidate: record in the x2m
+     * @param {Object} current record
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
      * @returns {Deferred}
      */
     _barcodeSelectedCandidate: function (candidate, record, barcode, activeBarcode) {
@@ -101,9 +106,9 @@ FormController.include({
     },
     /**
      * @private
-     * @param {any} record
-     * @param {any} barcode
-     * @param {any} activeBarcode
+     * @param {Object} current record
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
      * @returns {Deferred}
      */
     _barcodeWithoutCandidate: function (record, barcode, activeBarcode) {
@@ -113,10 +118,10 @@ FormController.include({
     },
     /**
      * @private
-     * @param {any} record
-     * @param {any} barcode
-     * @param {any} activeBarcode
-     * @returns {any}
+     * @param {Object} current record
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
+     * @returns {Object|undefined}
      */
     _getBarCodeRecord: function (record, barcode, activeBarcode) {
         var self = this;
@@ -137,6 +142,13 @@ FormController.include({
      * with the widget option
      *
      * @param {OdooEvent} event
+     * @param {string} event.data.name: the current field name
+     * @param {string} [event.data.fieldName] optional for x2many sub field
+     * @param {string} [event.data.quantity] optional field to increase quantity
+     * @param {Object} [event.data.commands] optional added methods
+     *     can use comand with specific barcode (with ReservedBarcodePrefixes)
+     *     or change 'barcode' for all other received barcodes
+     *     (e.g.: 'O-CMD.MAIN-MENU': function ..., barcode: function () {...})
      */
     _barcodeActivated: function (event) {
         event.stopPropagation();
@@ -155,9 +167,9 @@ FormController.include({
     },
     /**
      * @private
-     * @param {any} method
-     * @param {any} barcode
-     * @param {any} activeBarcode
+     * @param {string|function} method defined by the commands options
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
      * @returns {Deferred}
      */
     _barcodeActiveScanned: function (method, barcode, activeBarcode) {
@@ -185,7 +197,8 @@ FormController.include({
      * widget options then update the renderer
      *
      * @private
-     * @param {string} barcode
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {DOM Object} target
      * @returns {Deferred}
      */
     _barcodeScanned: function (barcode, target) {
@@ -221,7 +234,7 @@ FormController.include({
     },
     /**
      * @private
-     * @param {any} event
+     * @param {KeyEvent} event
      */
     _quantityListener: function (event) {
         var character = String.fromCharCode(event.which);
@@ -250,8 +263,8 @@ FormController.include({
     },
     /**
      * @private
-     * @param {any} character
-     * @param {any} activeBarcode
+     * @param {string} character
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
      */
     _quantityOpenDialog: function (character, activeBarcode) {
         var self = this;
