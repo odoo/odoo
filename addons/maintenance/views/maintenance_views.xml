@@ -23,7 +23,7 @@
                 <separator/>
                 <filter string="Unscheduled Maintenance" domain="[('schedule_date', '=', False)]" name="unscheduled"/>
                 <separator/>
-                <filter string="My Requests" name="my_requests" domain="[('owner_user_id', '=', uid)]"/>
+                <filter string="My Requests" name="my_requests" domain="[('technician_user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="My Activities" name="activities_my"
                     domain="[('activity_ids.user_id', '=', uid)]"/>
