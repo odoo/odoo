@@ -30,7 +30,7 @@ class WebsiteConfigSettings(models.TransientModel):
     module_sale_ebay = fields.Boolean("eBay connector")
     module_sale_coupon = fields.Boolean("Discount Programs")
 
-    group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image')
+    group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
     group_discount_per_so_line = fields.Boolean(string="Discounted Prices", implied_group='sale.group_discount_per_so_line')
     group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address')
 
@@ -58,8 +58,14 @@ class WebsiteConfigSettings(models.TransientModel):
     order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email',
         default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]", 
         help="Email sent to customer at the end of the checkout process")
-    group_show_price_subtotal = fields.Boolean("Show subtotal", implied_group='sale.group_show_price_subtotal')
-    group_show_price_total = fields.Boolean("Show total", implied_group='sale.group_show_price_total')
+    group_show_price_subtotal = fields.Boolean(
+        "Show subtotal",
+        implied_group='sale.group_show_price_subtotal',
+        group='base.group_portal,base.group_user,base.group_public')
+    group_show_price_total = fields.Boolean(
+        "Show total",
+        implied_group='sale.group_show_price_total',
+        group='base.group_portal,base.group_user,base.group_public')
 
     default_invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
