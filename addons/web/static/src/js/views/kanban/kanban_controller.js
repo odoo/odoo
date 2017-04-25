@@ -259,7 +259,7 @@ var KanbanController = BasicController.extend({
             action_data: attrs,
             model: record.model,
             record_id: record.res_id,
-            on_close: function () {
+            on_closed: function () {
                 self.model.reload(record.id).then(function (db_id) {
                     var data = self.model.get(db_id);
                     var kanban_record = event.target;
