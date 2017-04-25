@@ -79,4 +79,5 @@ class BaseModuleUpgrade(models.TransientModel):
 
     @api.multi
     def config(self):
+        # pylint: disable=next-method-called
         return self.env['res.config'].next()
