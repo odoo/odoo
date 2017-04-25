@@ -178,7 +178,7 @@
                             <field name="location_dest_id" />
                             <field name="partner_id" context="{'contact_display':'partner'}" />
                             <field name="picking_partner_id" context="{'contact_display':'partner'}"/>
-                            <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
+                            <field name="move_dest_ids" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one" attrs="{'invisible': [('state', '=', 'done')]}">
                             <field name="string_availability_info"/>
@@ -222,7 +222,7 @@
                        <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
                         <field name="create_date" invisible="1"/>
                         <field name="date_expected"/>
-                        <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
+                        <field name="move_dest_ids" groups="base.group_no_one" readonly="1"/>
                     </group>
                     <group name="quants_grp" string="Reserved" attrs="{'invisible': [('state', '=', 'draft')]}">
                         <field name="string_availability_info"/>

@@ -521,7 +521,9 @@ class Warehouse(models.Model):
                 'action': 'move',
                 'picking_type_id': routing.picking_type.id,
                 'procure_method': first_rule is True and 'make_to_stock' or 'make_to_order',
-                'warehouse_id': self.id}
+                'warehouse_id': self.id,
+                'propagate': routing.picking_type != self.pick_type_id,
+            }
             route_pull_values.update(values or {})
             route_pull_values.update(pull_values or {})
             pull_rules_list.append(route_pull_values)
