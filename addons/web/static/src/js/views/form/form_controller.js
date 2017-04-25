@@ -21,6 +21,9 @@ var FormController = BasicController.extend({
     }),
     /**
      * @override
+     *
+     * @param {boolean} params.hasSidebar
+     * @param {Object} params.toolbarActions
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
@@ -29,7 +32,7 @@ var FormController = BasicController.extend({
         this.footerToButtons = params.footerToButtons;
         this.defaultButtons = params.defaultButtons;
         this.hasSidebar = params.hasSidebar;
-        this.toolbar = params.toolbar;
+        this.toolbarActions = params.toolbarActions || {};
     },
 
     //--------------------------------------------------------------------------
@@ -71,13 +74,12 @@ var FormController = BasicController.extend({
      * Returns the current res_id, wrapped in a list. This is only used by the
      * sidebar (and the debugmanager)
      *
-     * @todo This should be private.  Need to change sidebar code
+     * @override
      *
      * @returns {number[]} either [current res_id] or []
      */
     getSelectedIds: function () {
         var env = this.model.get(this.handle, {env: true});
-        // FIX ME : fix sidebar widget
         return env.currentId ? [env.currentId] : [];
     },
     /**
@@ -137,12 +139,6 @@ var FormController = BasicController.extend({
      **/
     renderSidebar: function ($node) {
         if (!this.sidebar && this.hasSidebar) {
-            this.sidebar = new Sidebar(this, {
-                editable: this.is_action_enabled('edit')
-            });
-            if (this.toolbar) {
-                this.sidebar.add_toolbar(this.toolbar);
-            }
             var otherItems = [];
             if (this.is_action_enabled('delete')) {
                 otherItems.push({
@@ -156,7 +152,16 @@ var FormController = BasicController.extend({
                     callback: this._onDuplicateRecord.bind(this),
                 });
             }
-            this.sidebar.add_items('other', otherItems);
+            this.sidebar = new Sidebar(this, {
+                editable: this.is_action_enabled('edit'),
+                viewType: 'form',
+                env: {
+                    context: this.model.get(this.handle).getContext(),
+                    activeIds: this.getSelectedIds(),
+                    model: this.modelName,
+                },
+                actions: _.extend(this.toolbarActions, {other: otherItems}),
+            });
             this.sidebar.appendTo($node);
 
             // Show or hide the sidebar according to the view mode

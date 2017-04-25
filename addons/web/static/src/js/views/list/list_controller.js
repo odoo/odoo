@@ -30,16 +30,15 @@ var ListController = BasicController.extend({
      * @constructor
      * @override
      * @param {Object} params
-     * @param {Object} params
      * @param {boolean} params.editable
      * @param {boolean} params.hasSidebar
-     * @param {boolean} params.hasToolbar
+     * @param {Object} params.toolbarActions
      * @param {boolean} params.noLeaf
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.hasSidebar = params.hasSidebar;
-        this.hasToolbar = params.hasToolbar;
+        this.toolbarActions = params.toolbarActions || {};
         this.editable = params.editable;
         this.noLeaf = params.noLeaf;
         this.selectedRecords = []; // there is no selected record by default
@@ -72,7 +71,7 @@ var ListController = BasicController.extend({
      * if the header checkbox has been checked. This is done by evaluating the
      * search results, and then adding the dataset domain (i.e. action domain).
      *
-     * @todo This is done only for the sidebar.  The full mechanism is wrong,
+     * @todo This is done only for the data export.  The full mechanism is wrong,
      * this method should be private, most of the code in the sidebar should be
      * moved to the controller, and we should not use the getParent method...
      *
@@ -99,7 +98,7 @@ var ListController = BasicController.extend({
      * Returns the list of currently selected res_ids (with the check boxes on
      * the left)
      *
-     * @todo This should be private.  Need to change sidebar code
+     * @override
      *
      * @returns {number[]} list of res_ids
      */
@@ -135,12 +134,6 @@ var ListController = BasicController.extend({
      */
     renderSidebar: function ($node) {
         if (this.hasSidebar && !this.sidebar) {
-            this.sidebar = new Sidebar(this, {
-                editable: this.is_action_enabled('edit')
-            });
-            if (this.hasToolbar) {
-                this.sidebar.add_toolbar(this.fields_view.toolbar);
-            }
             var other = [{
                 label: _t("Export"),
                 callback: this._onExportData.bind(this)
@@ -160,8 +153,16 @@ var ListController = BasicController.extend({
                     label: _t('Delete'),
                     callback: this._onDeleteSelectedRecords.bind(this)
                 });
+            this.sidebar = new Sidebar(this, {
+                editable: this.is_action_enabled('edit'),
+                env: {
+                    context: this.model.get(this.handle).getContext(),
+                    activeIds: this.getSelectedIds(),
+                    model: this.modelName,
+                },
+                actions: _.extend(this.toolbarActions, {other: other}),
+            });
             }
-            this.sidebar.add_items('other', other);
             this.sidebar.appendTo($node);
 
             this._toggleSidebar();
@@ -231,6 +232,15 @@ var ListController = BasicController.extend({
     _confirmSave: function (id) {
         var state = this.model.get(this.handle);
         return this.renderer.confirmSave(state, id);
+    },
+    /**
+     * @override
+     * @private
+     */
+    _getSidebarEnv: function() {
+        var env = this._super.apply(this, arguments);
+        var record = this.model.get(this.handle);
+        return _.extend(env, {domain: record.getDomain()});
     },
     /**
      * Allows to change the mode of a single row.
@@ -379,6 +389,13 @@ var ListController = BasicController.extend({
     _onSelectionChanged: function (event) {
         this.selectedRecords = event.data.selection;
         this._toggleSidebar();
+    },
+    /**
+     * @override
+     */
+    _onSidebarDataAsked: function (event) {
+        var env = this._getSidebarEnv();
+        event.data.callback(env);
     },
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.

@@ -1082,6 +1082,12 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {sidebar: true},
             res_id: 1,
+            mockRPC: function(route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.ok(!form.sidebar.$el.hasClass('o_hidden'), 'sidebar should be visible');
@@ -1221,6 +1227,12 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {sidebar: true},
+            mockRPC: function(route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.strictEqual(form.get('title'), 'first record',
@@ -1668,6 +1680,12 @@ QUnit.module('Views', {
             arch: '<form string="Partners"><field name="foo"></field></form>',
             res_id: 1,
             viewOptions: {sidebar: true},
+            mockRPC: function(route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -2009,6 +2027,12 @@ QUnit.module('Views', {
                 sidebar: true,
             },
             res_id: 1,
+            mockRPC: function(route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should be 1');
@@ -2048,6 +2072,9 @@ QUnit.module('Views', {
             },
             res_id: 1,
             mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             }
@@ -3598,47 +3625,106 @@ QUnit.module('Views', {
         });
 
     QUnit.test('onchanges are applied before checking if it can be saved', function (assert) {
-        assert.expect(4);
+       assert.expect(4);
 
-        this.data.partner.onchanges.foo = function (obj) {};
-        this.data.partner.fields.foo.required = true;
+       this.data.partner.onchanges.foo = function (obj) {};
+       this.data.partner.fields.foo.required = true;
 
-        var def = $.Deferred();
+       var def = $.Deferred();
+
+       var form = createView({
+           View: FormView,
+           model: 'partner',
+           data: this.data,
+           arch: '<form string="Partners">' +
+                   '<sheet><group>' +
+                       '<field name="foo"/>' +
+                   '</group></sheet>' +
+               '</form>',
+           res_id: 2,
+           mockRPC: function (route, args) {
+               var result = this._super.apply(this, arguments);
+               assert.step(args.method);
+               if (args.method === 'onchange') {
+                   return def.then(function () {
+                       return result;
+                   });
+               }
+               return result;
+           },
+           intercepts: {
+               warning: function () {
+                   assert.step('warning');
+               },
+           },
+       });
+
+       form.$buttons.find('.o_form_button_edit').click();
+       form.$('input[name="foo"]').val('').trigger("input");
+       form.$buttons.find('.o_form_button_save').click();
+
+       def.resolve();
+
+       assert.verifySteps(['read', 'onchange', 'warning'])
+       form.destroy();
+   });
+
+    QUnit.test('display toolbar', function (assert) {
+        assert.expect(7);
 
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
+            res_id: 1,
             arch: '<form string="Partners">' +
-                    '<sheet><group>' +
-                        '<field name="foo"/>' +
-                    '</group></sheet>' +
+                    '<group><field name="bar"/></group>' +
                 '</form>',
-            res_id: 2,
-            mockRPC: function (route, args) {
-                var result = this._super.apply(this, arguments);
-                assert.step(args.method);
-                if (args.method === 'onchange') {
-                    return def.then(function () {
-                        return result;
-                    });
-                }
-                return result;
+            toolbar: {
+                action: [{
+                    model_name: 'partner',
+                    name: 'Action partner',
+                    type: 'ir.actions.server',
+                    usage: 'ir_actions_server',
+                }],
+                print: [],
             },
-            intercepts: {
-                warning: function () {
-                    assert.step('warning');
-                },
+            viewOptions: {
+                sidebar: true,
+            },
+            mockRPC: function(route, args) {
+                if (route === '/web/action/load') {
+                    assert.strictEqual(args.context.active_id, 1,
+                        "the active_id shoud be 1.");
+                    assert.deepEqual(args.context.active_ids, [1],
+                        "the active_ids should be an array with 1 inside.");
+                    return $.when({});
+                }
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
             },
         });
 
-        form.$buttons.find('.o_form_button_edit').click();
-        form.$('input[name="foo"]').val('').trigger("input");
-        form.$buttons.find('.o_form_button_save').click();
+        var $dropdowns = $('.o_web_client .o_control_panel .btn-group .o_dropdown_toggler_btn');
+        assert.strictEqual($dropdowns.length, 3,
+            "there should be 3 dropdowns (print, attachment, action) in the toolbar.");
+        var $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[2].children;
+        assert.strictEqual($actions.length, 3,
+            "there should be 3 actions");
+        var $customAction = $('.o_web_client .o_control_panel .btn-group .dropdown-menu li a')[2];
+        assert.strictEqual($customAction.text.trim(), 'Action partner',
+            "the custom action should have 'Action partner' as name");
+        testUtils.intercept(form, 'do_action', function (event) {
+            var context = event.data.action.context.__contexts[1];
+            assert.strictEqual(context.active_id, 1,
+                "the active_id shoud be 1.");
+            assert.deepEqual(context.active_ids, [1],
+                "the active_ids should be an array with 1 inside.");
+        });
+        $customAction.click();
 
-        def.resolve();
-
-        assert.verifySteps(['read', 'onchange', 'warning'])
         form.destroy();
     });
 

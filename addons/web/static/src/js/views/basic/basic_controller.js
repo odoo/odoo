@@ -19,6 +19,7 @@ var _t = core._t;
 var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         reload: '_onReload',
+        sidebar_data_asked: '_onSidebarDataAsked'
     }),
     /**
      * @override
@@ -125,6 +126,14 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             }
             self._setMode('readonly', recordID);
         });
+    },
+    /**
+     * Method that will be overriden by the views with the ability to have selected ids
+     *
+     * @returns []
+     */
+    getSelectedIds: function () {
+        return [];
     },
     /**
      * @override
@@ -288,6 +297,19 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         }
     },
     /**
+     * Returns the new sidebar env
+     *
+     * @private
+     * @return {Object} the new sidebar env
+     */
+    _getSidebarEnv: function () {
+        return {
+            context: this.model.get(this.handle).getContext(),
+            activeIds: this.getSelectedIds(),
+            model: this.modelName,
+        };
+    },
+    /**
      * Used by list and kanban views to determine whether or not to display
      * the no content helper (if there is no data in the state to display)
      *
@@ -389,9 +411,15 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     /**
      * Helper method, to get the current environment variables from the model
      * and notifies the component chain (by bubbling an event up)
+     *
+     * @private
      */
     _updateEnv: function () {
         var env = this.model.get(this.handle, {env: true});
+        if (this.sidebar) {
+            var sidebarEnv = this._getSidebarEnv();
+            this.sidebar.updateEnv(sidebarEnv);
+        }
         this.trigger_up('env_updated', env);
     },
     /**
@@ -456,6 +484,17 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             // no db_id given, so reload the main record
             this.reload({fieldNames: data.fieldNames});
         }
+    },
+    /**
+     * Handler used to get all the data necessary when a custom action is
+     * performed through the sidebar.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onSidebarDataAsked: function (event) {
+        var sidebarEnv = this._getSidebarEnv();
+        event.data.callback(sidebarEnv);
     },
 });
 
