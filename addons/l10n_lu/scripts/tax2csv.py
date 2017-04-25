@@ -59,7 +59,7 @@ class LuxTaxGenerator:
         writer = csv.writer(open('account.tax.code.template-%s.csv' %
                                  self.suffix, 'wb'))
         tax_codes_iterator = self.iter_tax_codes()
-        keys = tax_codes_iterator.next()
+        keys = next(tax_codes_iterator)
         writer.writerow(keys)
 
         # write structure tax codes
@@ -87,7 +87,7 @@ class LuxTaxGenerator:
                 new_tax_codes[tax_code_id] = (new_name, new_parent_code)
 
         taxes_iterator = self.iter_taxes()
-        keys = taxes_iterator.next()
+        next(taxes_iterator)
         for row in taxes_iterator:
             if not _is_true(row['active']):
                 continue
@@ -157,7 +157,7 @@ class LuxTaxGenerator:
         writer = csv.writer(open('account.tax.template-%s.csv' %
                                  self.suffix, 'wb'))
         taxes_iterator = self.iter_taxes()
-        keys = taxes_iterator.next()
+        keys = next(taxes_iterator)
         writer.writerow(keys[3:] + ['sequence'])
         seq = 100
         for row in sorted(taxes_iterator, key=lambda r: r['description']):
@@ -175,7 +175,7 @@ class LuxTaxGenerator:
                                  'position.tax.template-%s.csv' %
                                  self.suffix, 'wb'))
         fiscal_pos_map_iterator = self.iter_fiscal_pos_map()
-        keys = fiscal_pos_map_iterator.next()
+        keys = next(fiscal_pos_map_iterator)
         writer.writerow(keys)
         for row in fiscal_pos_map_iterator:
             writer.writerow(map(_e, row.values()))
