@@ -1265,7 +1265,7 @@ var BasicModel = AbstractModel.extend({
             })
             .then(function () {
                 return self._fetchX2Manys(record, options).then(function () {
-                    return self._postprocess(record);
+                    return self._postprocess(record, options);
                 });
             });
     },
@@ -1318,27 +1318,30 @@ var BasicModel = AbstractModel.extend({
      * start with _fetchSpecial).
      *
      * @param {Object} record - an element from the localData
+     * @param {Object} options
      * @returns {Deferred<Array>}
      *          The deferred is resolved with an array containing the names of
      *          the field whose special data has been changed.
      */
-    _fetchSpecialData: function (record) {
+    _fetchSpecialData: function (record, options) {
         var self = this;
-        var fieldNames = [];
-        return $.when.apply($, _.map(record.getFieldNames(), function (name) {
-            var fieldInfo = record.fieldsInfo[record.viewType][name] || {};
+        var specialFieldNames = [];
+        var fieldNames = (options && options.fieldNames) || record.getFieldNames();
+        return $.when.apply($, _.map(fieldNames, function (name) {
+            var viewType = (options && options.viewType) || record.viewType;
+            var fieldInfo = record.fieldsInfo[viewType][name] || {};
             var Widget = fieldInfo.Widget;
             if (Widget && Widget.prototype.specialData) {
-                return self[Widget.prototype.specialData](record, name).then(function (data) {
+                return self[Widget.prototype.specialData](record, name, fieldInfo).then(function (data) {
                     if (data === undefined) {
                         return;
                     }
                     record.specialData[name] = data;
-                    fieldNames.push(name);
+                    specialFieldNames.push(name);
                 });
             }
         })).then(function () {
-            return fieldNames;
+            return specialFieldNames;
         });
     },
     /**
@@ -1347,6 +1350,7 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {Object} record - an element from the localData
      * @param {Object} fieldName - the name of the field
+     * @param {Object} fieldInfo
      * @param {string[]} [fieldsToRead] - the m2os fields to read (id and
      *                                  display_name are automatic).
      * @returns {Deferred<any>}
@@ -1355,7 +1359,7 @@ var BasicModel = AbstractModel.extend({
      *          parameters), no RPC is done and the deferred is resolved with
      *          the undefined value.
      */
-    _fetchSpecialMany2ones: function (record, fieldName, fieldsToRead) {
+    _fetchSpecialMany2ones: function (record, fieldName, fieldInfo, fieldsToRead) {
         var field = record.fields[fieldName];
         if (field.type !== "many2one") {
             return $.when();
@@ -1452,16 +1456,17 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {Object} record - an element from the localData
      * @param {Object} fieldName - the name of the field
+     * @param {Object} fieldInfo
      * @returns {Deferred<any>}
      *          The deferred is resolved with the fetched special data. If this
      *          data is the same as the previously fetched one (for the given
      *          parameters), no RPC is done and the deferred is resolved with
      *          the undefined value.
      */
-    _fetchSpecialStatus: function (record, fieldName) {
-        var foldField = record.fieldsInfo[record.viewType][fieldName].options.fold_field;
+    _fetchSpecialStatus: function (record, fieldName, fieldInfo) {
+        var foldField = fieldInfo.options.fold_field;
         var fieldsToRead = foldField ? [foldField] : [];
-        return this._fetchSpecialMany2ones(record, fieldName, fieldsToRead).then(function (m2os) {
+        return this._fetchSpecialMany2ones(record, fieldName, fieldInfo, fieldsToRead).then(function (m2os) {
             _.each(m2os, function (m2o) {
                 m2o.fold = foldField ? m2o[foldField] : false;
             });
@@ -1474,16 +1479,17 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {Object} record - an element from the localData
      * @param {Object} fieldName - the name of the field
+     * @param {Object} fieldInfo
      * @returns {Deferred<any>}
      *          The deferred is resolved with the fetched special data. If this
      *          data is the same as the previously fetched one (for the given
      *          parameters), no RPC is done and the deferred is resolved with
      *          the undefined value.
      */
-    _fetchSpecialDomain: function (record, fieldName) {
+    _fetchSpecialDomain: function (record, fieldName, fieldInfo) {
         var context = record.getContext({fieldName: fieldName});
 
-        var domainModel = record.fieldsInfo[record.viewType][fieldName].options.model;
+        var domainModel = fieldInfo.options.model;
         if (record.data.hasOwnProperty(domainModel)) {
             domainModel = record._changes && record._changes[domainModel] || record.data[domainModel];
         }
@@ -2355,10 +2361,11 @@ var BasicModel = AbstractModel.extend({
      *
      * @see _fetchRecord @see _makeDefaultRecord
      *
-     * @param {any} record
+     * @param {Object} record
+     * @param {Object} record
      * @returns {Deferred -> Object} resolves to the finished resource
      */
-    _postprocess: function (record) {
+    _postprocess: function (record, options) {
         var self = this;
         var defs = [];
         _.each(record.getFieldNames(), function (name) {
@@ -2381,7 +2388,7 @@ var BasicModel = AbstractModel.extend({
             }
         });
 
-        defs.push(this._fetchSpecialData(record));
+        defs.push(this._fetchSpecialData(record, options));
 
         return $.when.apply($, defs).then(function () {
             return record;
