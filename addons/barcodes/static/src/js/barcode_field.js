@@ -71,15 +71,6 @@ var FieldFloatScannable = basicFields.FieldFloat.extend({
 
 var FormViewBarcodeHandler = AbstractField.extend({
     /**
-     * Trigger_up 'activeBarcode' to activate features and send options
-     * - @params {string} name: the current field name
-     * - @params {string} [fieldName] optional for x2many sub field
-     * - @params {string} [quantity] optional field to increase quantity
-     * - @params {Object} [commands] optional added methods
-     *     can use comand with specific barcode (with ReservedBarcodePrefixes)
-     *     or change 'barcode' for all other received barcodes
-     *     (e.g.: 'O-CMD.MAIN-MENU': function ..., barcode: function () {...})
-     *
      * @override
      */
     init: function() {
