@@ -110,6 +110,7 @@ var AbstractActivityField = AbstractField.extend({
 // -----------------------------------------------------------------------------
 var Activity = AbstractActivityField.extend({
     className: 'o_mail_activity',
+    no_tabindex: true,
     events: {
         'click .o_activity_edit': '_onEditActivity',
         'click .o_activity_unlink': '_onUnlinkActivity',
