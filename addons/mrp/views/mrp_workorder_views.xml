@@ -62,15 +62,10 @@
         <field name="domain">[('production_id', '=', active_id)]</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-            Click to start a new work order.
-          </p><p>
-            Work Orders is the list of operations to be performed for each
-            manufacturing order. Once you start the first work order of a
-            manufacturing order, the manufacturing order is automatically
-            marked as started. Once you finish the latest operation of a
-            manufacturing order, the MO is automatically done and the related
-            products are produced.
-          </p>
+            Work Orders are operations to be processed at a Work Center to realize a
+            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
+            they are based on the Routing defined on these ones
+            </p>
         </field>
     </record>
 
@@ -366,15 +361,10 @@
         <field name="view_id" ref="mrp_workorder_view_gantt"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-            Click to start a new work order.
-          </p><p>
-            Work Orders is the list of operations to be performed for each
-            manufacturing order. Once you start the first work order of a
-            manufacturing order, the manufacturing order is automatically
-            marked as started. Once you finish the latest operation of a
-            manufacturing order, the MO is automatically done and the related
-            products are produced.
-          </p>
+           Work Orders are operations to be processed at a Work Center to realize a
+           Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
+           they are based on the Routing defined on these ones.
+           </p>
         </field>
     </record>
 
@@ -409,14 +399,9 @@
         <field name="context">{'search_default_ready': True, 'search_default_progress': True}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-            Click to start a new work order.
-          </p><p>
-            Work Orders is the list of operations to be performed for each
-            manufacturing order. Once you start the first work order of a
-            manufacturing order, the manufacturing order is automatically
-            marked as started. Once you finish the latest operation of a
-            manufacturing order, the MO is automatically done and the related
-            products are produced.
+            Work Orders are operations to be processed at a Work Center to realize a
+            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
+            they are based on the Routing defined on these ones.
           </p>
         </field>
     </record>
