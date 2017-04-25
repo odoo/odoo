@@ -32,15 +32,17 @@ var StandaloneFieldManagerMixin = _.extend({}, FieldManagerMixin, {
      * @param {string} id basicModel Id for the changed record
      * @param {string[]} fields the fields (names) that have been changed
      * @param {OdooEvent} event the event that triggered the change
+     * @returns {Deferred}
      */
     _confirmChange: function (id, fields, event) {
-        FieldManagerMixin._confirmChange.apply(this, arguments);
+        var result = FieldManagerMixin._confirmChange.apply(this, arguments);
         var record = this.model.get(id);
         _.each(this.registeredWidgets[id], function (widget, fieldName) {
             if (_.contains(fields, fieldName)) {
                 widget.reset(record, event);
             }
         });
+        return result;
     },
 
     _registerWidget: function (datapointID, fieldName, widget) {

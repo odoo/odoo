@@ -3464,5 +3464,50 @@ QUnit.module('Views', {
             form.destroy();
         });
 
+    QUnit.test('onchanges are applied before checking if it can be saved', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges.foo = function (obj) {};
+        this.data.partner.fields.foo.required = true;
+
+        var def = $.Deferred();
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet><group>' +
+                        '<field name="foo"/>' +
+                    '</group></sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                assert.step(args.method);
+                if (args.method === 'onchange') {
+                    return def.then(function () {
+                        return result;
+                    });
+                }
+                return result;
+            },
+            intercepts: {
+                warning: function () {
+                    assert.step('warning');
+                },
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input[name="foo"]').val('').trigger("input");
+        form.$buttons.find('.o_form_button_save').click();
+
+        def.resolve();
+
+        assert.verifySteps(['read', 'onchange', 'warning'])
+        form.destroy();
+    });
+
 });
 });

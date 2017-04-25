@@ -200,48 +200,13 @@ var FormController = BasicController.extend({
         }
     },
     /**
-     * Save the current record
+     * Save the current record (@see _saveRecord)
      *
      * @param {Object} options
-     * @param {boolean} [options.stayInEdit=false] if true, don't switch to
-     *   readonly mode after saving the record
-     * @param {boolean} [options.reload=true] if true, reload the record after
-     *   saving
-     * @param {boolean} [options.savePoint=false] if true, the record will only
-     *   be 'locally' saved: its changes will move from the _changes key to the
-     *   data key
      * @returns {Deferred}
      */
     saveRecord: function (options) {
-        var self = this;
-        options = options || {};
-
-        // some field widgets (e.g. 'html') can't detect (all) their changes, so
-        // we ask them to commit their current value before saving
-        this.renderer.commitChanges();
-
-        var stayInEdit = 'stayInEdit' in options ? options.stayInEdit : false;
-        var shouldReload = 'reload' in options ? options.reload : true;
-        if (!this.model.isDirty(this.handle) && !this.model.isNew(this.handle)) {
-            if (!stayInEdit) {
-                this._toReadOnlyMode();
-            }
-            return $.Deferred().resolve();
-        } else {
-            return this.canBeSaved()
-                .then(function () {
-                    return self.model.save(self.handle, {
-                        reload: shouldReload,
-                        savePoint: options.savePoint
-                    });
-                })
-                .then(function () {
-                    if (!stayInEdit) {
-                        self._toReadOnlyMode();
-                    }
-                    self.isDirty = false;
-                });
-        }
+        return this.mutex.exec(this._saveRecord.bind(this, options));
     },
     /**
      * We need to check for all 'mode' change, because the information is not
@@ -271,7 +236,7 @@ var FormController = BasicController.extend({
     _confirmSave: function (id) {
         this.isDirty = false;
         if (id === this.handle) {
-            this.reload();
+            return this.reload();
         } else {
             // a subrecord changed, so update the corresponding relational field
             // i.e. the one whose value is a record with the given id or a list
@@ -281,7 +246,7 @@ var FormController = BasicController.extend({
                 return _.isObject(d) &&
                     (d.id === id || _.findWhere(d.data, {id: id}));
             });
-            this.renderer.confirmChange(record, record.id, [fieldsChanged]);
+            return this.renderer.confirmChange(record, record.id, [fieldsChanged]);
         }
     },
     /**
@@ -328,6 +293,49 @@ var FormController = BasicController.extend({
         var env = this.model.get(this.handle, {env: true});
         state.id = env.currentId;
         this._super(state);
+    },
+    /**
+     * Save the record
+     *
+     * @param {Object} options
+     * @param {boolean} [options.stayInEdit=false] if true, don't switch to
+     *   readonly mode after saving the record
+     * @param {boolean} [options.reload=true] if true, reload the record after
+     *   saving
+     * @param {boolean} [options.savePoint=false] if true, the record will only
+     *   be 'locally' saved: its changes will move from the _changes key to the
+     *   data key
+     * @returns {Deferred}
+     */
+    _saveRecord: function (options) {
+        var self = this;
+        options = options || {};
+
+        // some field widgets (e.g. 'html') can't detect (all) their changes, so
+        // we ask them to commit their current value before saving
+        this.renderer.commitChanges();
+
+        var stayInEdit = 'stayInEdit' in options ? options.stayInEdit : false;
+        var shouldReload = 'reload' in options ? options.reload : true;
+        if (!this.model.isDirty(this.handle) && !this.model.isNew(this.handle)) {
+            if (!stayInEdit) {
+                this._toReadOnlyMode();
+            }
+            return $.Deferred().resolve();
+        } else {
+            return self.canBeSaved().then(function () {
+                return self.model.save(self.handle, {
+                    reload: shouldReload,
+                    savePoint: options.savePoint
+                })
+                .then(function () {
+                    if (!stayInEdit) {
+                        self._toReadOnlyMode();
+                    }
+                    self.isDirty = false;
+                });
+            });
+        }
     },
     /**
      * Change the view mode to 'edit'

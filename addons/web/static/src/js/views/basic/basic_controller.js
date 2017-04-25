@@ -8,9 +8,10 @@ odoo.define('web.BasicController', function (require) {
  */
 
 var AbstractController = require('web.AbstractController');
-var FieldManagerMixin = require('web.FieldManagerMixin');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var FieldManagerMixin = require('web.FieldManagerMixin');
 var Pager = require('web.Pager');
 
 var _t = core._t;
@@ -34,6 +35,7 @@ return AbstractController.extend(FieldManagerMixin, {
         FieldManagerMixin.init.call(this, this.model);
         this.handle = params.initialState.id;
         this.isDirty = false;
+        this.mutex = new concurrency.Mutex();
     },
     /**
      * @override
@@ -88,6 +90,18 @@ return AbstractController.extend(FieldManagerMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * We override applyChanges (from the field manager mixin) to protect it
+     * with a mutex.
+     *
+     * @override
+     */
+    _applyChanges: function (dataPointID, changes, event) {
+        var _super = FieldManagerMixin._applyChanges.bind(this);
+        return this.mutex.exec(function () {
+            return _super(dataPointID, changes, event);
+        });
+    },
+    /**
      * When the user clicks on a 'action button', this function determines what
      * should happen.
      *
@@ -132,10 +146,11 @@ return AbstractController.extend(FieldManagerMixin, {
      * @param {string} id - the id of one of the view's records
      * @param {string[]} fields - the changed fields
      * @param {OdooEvent} e - the event that triggered the change
+     * @returns {Deferred}
      */
     _confirmChange: function (id, fields, e) {
         var state = this.model.get(this.handle);
-        this.renderer.confirmChange(state, id, fields, e);
+        return this.renderer.confirmChange(state, id, fields, e);
     },
     /**
      * Delete records (and ask for confirmation if necessary)

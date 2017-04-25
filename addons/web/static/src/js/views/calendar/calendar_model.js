@@ -280,6 +280,7 @@ return AbstractModel.extend({
     /**
      * @param {Object} record
      * @param {integer} record.id
+     * @returns {Deferred}
      */
     updateRecord: function (record) {
         // Cannot modify actual name yet
