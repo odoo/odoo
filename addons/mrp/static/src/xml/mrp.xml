@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="FieldPdfViewer">
         <div class="o_form_field_pdfviewer">
-            <div t-if="!widget.get('effective_readonly')" class="o_form_pdf_controls mt8">
+            <div t-if="widget.mode !== 'readonly'" class="o_form_pdf_controls mt8">
                 <span class="o_form_binary_progress">Uploading...</span>
                 <button type="button" class="btn btn-sm btn-primary o_select_file_button" title="Select">Upload your file</button>
                 <button class="btn btn-sm btn-default fa fa-pencil o_select_file_button" title="Select" type="button"></button>

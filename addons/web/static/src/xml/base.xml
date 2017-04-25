@@ -1023,7 +1023,7 @@
             <input type="hidden" name="session_id" value="" t-if="widget.getSession().override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <input t-if="widget.image_only" type="file" class="o_form_input_file" name="ufile" accept="image/*"/>
-            <input t-else="1" type="file" class="o_form_input_file" name="ufile" t-att="{'multiple': multi_upload ? 'multiple' : null}"/>
+            <input t-if="!widget.image_only" type="file" class="o_form_input_file" name="ufile" t-att="{'multiple': multi_upload ? 'multiple' : null}"/>
             <t t-raw="0"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
