@@ -1019,8 +1019,12 @@ class Picking(models.Model):
                 pack_operation_ids |= op
             if operations:
                 pack_operation_ids.check_tracking()
-                package = QuantPackage.create({})
-                pack_operation_ids.write({'result_package_id': package.id})
+                for location_dest in pack_operation_ids.mapped(
+                        'location_dest_id'):
+                    package = QuantPackage.create({})
+                    pack_operation_ids.filtered(
+                        lambda p: p.location_dest_id == location_dest).write(
+                            {'result_package_id': package.id})
             else:
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package
