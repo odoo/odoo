@@ -352,12 +352,11 @@
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to add a work center.
+                Click here to create a new Work Center
               </p><p>
-                Work Centers allow you to create and manage manufacturing
-                units. They consist of workers and/or machines, which are
-                considered as units for task assignation as well as capacity
-                and planning forecast.
+                Manufacturing operations are processed at Work Centers. A Work Center can be composed
+                of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
+                The Work Centers are defined on the Routing's operations.
               </p>
             </field>
         </record>
@@ -371,12 +370,12 @@
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
             <field name="help" type="html">
               <p>
-                To create a new work center, Go to <b><i> Master Data/Work Centers. </i></b>
+                <a type="action" name="%(mrp_workcenter_action)d">Click here
+                </a> to create a new Work Center.
               </p><p>
-                Work Centers allow you to create and manage manufacturing
-                units. They consist of workers and/or machines, which are
-                considered as units for task assignation as well as capacity
-                and planning forecast.
+                Manufacturing operations are processed at Work Centers. A Work Center can be composed of
+                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
+                The Work Centers are defined on the Routing's operations. 
               </p>
             </field>
         </record>
