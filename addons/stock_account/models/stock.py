@@ -176,7 +176,7 @@ class StockQuant(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    to_refund = fields.Boolean(string="To Refund",
+    to_refund = fields.Boolean(string="To Refund (update SO/PO)",
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
 
     @api.multi
@@ -369,4 +369,4 @@ class StockReturnPicking(models.TransientModel):
 class StockReturnPickingLine(models.TransientModel):
     _inherit = "stock.return.picking.line"
 
-    to_refund = fields.Boolean(string="To Refund", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
+    to_refund = fields.Boolean(string="To Refund (update SO/PO)", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
