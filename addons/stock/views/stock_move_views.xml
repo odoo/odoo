@@ -183,9 +183,6 @@
                         <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one" attrs="{'invisible': [('state', '=', 'done')]}">
                             <field name="string_availability_info"/>
                         </group>
-                        <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
-                            <field name="quant_ids" readonly="1" nolabel="1"/>
-                        </group>
                     </group>
                 </sheet>
                 </form>
@@ -229,9 +226,6 @@
                     </group>
                     <group name="quants_grp" string="Reserved" attrs="{'invisible': [('state', '=', 'draft')]}">
                         <field name="string_availability_info"/>
-                    </group>
-                    <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
-                        <field name="quant_ids" readonly="1" nolabel="1"/>
                     </group>
                 </group>
                 </form>

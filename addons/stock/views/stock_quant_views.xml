@@ -16,8 +16,8 @@
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
                     <separator/>
-                    <filter name="negative" string="Negative" domain="[('qty', '&lt;', 0.0)]"/>
-                    <filter name="positive" string="Positive" domain="[('qty', '&gt;', 0.0)]"/>
+                    <filter name="negative" string="Negative" domain="[('quantity', '&lt;', 0.0)]"/>
+                    <filter name="positive" string="Positive" domain="[('quantity', '&gt;', 0.0)]"/>
                 </group>
                 <group expand='0' string='Group by...'>
                     <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
@@ -40,7 +40,7 @@
                 <group>
                     <group>
                         <field name="product_id"/>
-                        <field name="qty"/>
+                        <field name="quantity"/>
                         <field name="product_uom_id" groups="product.group_uom"/>
                         <field name="lot_id" groups="stock.group_production_lot"/>
                         <field name="package_id" groups="stock.group_tracking_lot"/>
@@ -49,23 +49,7 @@
                     </group>
                     <group>
                         <field name="in_date"/>
-                        <field name="reservation_id"/>
-                        <field name="propagated_from_id"/>
-                        <field name="inventory_value"/>
                     </group>
-                </group>
-                <group>
-                    <field name="history_ids" string="History">
-                        <tree readonly="1" default_order="date">
-                            <field name="picking_id"/>
-                            <button type="object" name="show_picking" icon="fa-list-alt" attrs="{'invisible': [('picking_id', '=', False)]}"/>
-                            <field name="product_uom_qty"/>
-                            <field name="date"/>
-                            <field name="location_id" groups="stock.group_stock_multi_locations" string="Source Location Zone"/>
-                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" string="Destination Location Zone"/>
-                            <field name="state" invisible="1"/>
-                        </tree>
-                    </field>
                 </group>
             </form>
         </field>
@@ -78,34 +62,18 @@
         <field name="arch" type="xml">
             <tree string="Inventory Valuation" create="0" delete="0">
                 <field name="product_id"/>
-                <field name="qty"/>
+                <field name="quantity"/>
                 <field name="product_uom_id" groups="product.group_uom"/>
                 <field name="location_id"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
-                <field name="packaging_type_id" invisible="1"/>
                 <field name="in_date"/>
-                <field name="inventory_value" sum="Total"/>
-                <field name="reservation_id" invisible='1'/>
-                <field name="propagated_from_id" invisible='1'/>
                 <field name='company_id' groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_stock_quant_graph_value">
-        <field name="name">stock.quant.graph</field>
-        <field name="model">stock.quant</field>
-        <field eval="12" name="priority"/>
-        <field name="arch" type="xml">
-            <graph string="Inventory Valuation" type="pie">
-                <field name="product_id" type="row"/>
-                <field name="qty" type="measure"/>
-                <field name="inventory_value" type="measure"/>
-            </graph>
-        </field>
-    </record>
 
     <record model="ir.ui.view" id="view_stock_quant_pivot">
         <field name="name">stock.quant.pivot</field>
@@ -113,7 +81,7 @@
         <field name="arch" type="xml">
             <pivot string="Inventory">
                 <field name="location_id" type="row"/>
-                <field name="qty" type="measure"/>
+                <field name="quantity" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -202,7 +170,7 @@
                             <field name="quant_ids">
                                 <tree string="Quants">
                                     <field name="product_id"/>
-                                    <field name="qty"/>
+                                    <field name="quantity"/>
                                     <field name="location_id"/>
                                     <field name="in_date"/>
                                 </tree>

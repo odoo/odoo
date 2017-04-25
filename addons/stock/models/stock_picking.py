@@ -253,10 +253,6 @@ class Picking(models.Model):
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs',
         readonly=True)
 
-    quant_reserved_exist = fields.Boolean(
-        'Has quants already reserved', compute='_compute_quant_reserved_exist',
-        help='Check the existance of quants linked to this picking')
-
     partner_id = fields.Many2one(
         'res.partner', 'Partner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
@@ -357,11 +353,6 @@ class Picking(models.Model):
     def _has_scrap_move(self):
         # TDE FIXME: better implementation
         self.has_scrap_move = bool(self.env['stock.move'].search_count([('picking_id', '=', self.id), ('scrapped', '=', True)]))
-
-    @api.one
-    def _compute_quant_reserved_exist(self):
-        # TDE TODO: chould probably be cleaned with a search in quants
-        self.quant_reserved_exist = any(move.reserved_quant_ids for move in self.mapped('move_lines'))
 
     @api.one
     def _compute_pack_operation_exist(self):
@@ -621,15 +612,7 @@ class Picking(models.Model):
 
     @api.multi
     def do_unreserve(self):
-        """
-          Will remove all quants for picking in picking_ids
-        """
-        moves_to_unreserve = self.mapped('move_lines').filtered(lambda move: move.state not in ('done', 'cancel'))
-        pack_line_to_unreserve = self.mapped('pack_operation_ids')
-        if moves_to_unreserve:
-            if pack_line_to_unreserve:
-                pack_line_to_unreserve.unlink()
-            moves_to_unreserve.do_unreserve()
+        return True
 
     def recompute_remaining_qty(self, done_qtys=False):
 
