@@ -6,6 +6,7 @@
 #-------------------------------------------------------------
 
 
+from __future__ import print_function
 to_19_fr = ( u'zéro',  'un',   'deux',  'trois', 'quatre',   'cinq',   'six',
           'sept', 'huit', 'neuf', 'dix',   'onze', 'douze', 'treize',
           'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf' )
@@ -163,19 +164,7 @@ def amount_to_text(nbr, lang='fr', currency='euro'):
     
     if lang not in _translate_funcs:
 #TODO: use logger   
-        print "WARNING: no translation function found for lang: '%s'" % (lang,)
+        print("WARNING: no translation function found for lang: '%s'" % (lang,))
 #TODO: (default should be en) same as above
         lang = 'fr'
     return _translate_funcs[lang](abs(nbr), currency)
-
-if __name__=='__main__':
-    from sys import argv
-    
-    lang = 'nl'
-    if len(argv) < 2:
-        for i in range(1,200):
-            print i, ">>", amount_to_text(i, lang)
-        for i in range(200,999999,139):
-            print i, ">>", amount_to_text(i, lang)
-    else:
-        print amount_to_text(int(argv[1]), lang)

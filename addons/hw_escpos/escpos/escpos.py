@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import base64
 import copy
 import io
@@ -145,7 +146,7 @@ class StyleStack:
         _style = {}
         for attr in style:
             if attr in self.cmds and not style[attr] in self.cmds[attr]:
-                print 'WARNING: ESC/POS PRINTING: ignoring invalid value: '+utfstr(style[attr])+' for style: '+utfstr(attr)
+                print('WARNING: ESC/POS PRINTING: ignoring invalid value: %s for style %s' % (style[attr], utfstr(attr)))
             else:
                 _style[attr] = self.enforce_type(attr, style[attr])
         self.stack.append(_style)
@@ -155,7 +156,7 @@ class StyleStack:
         _style = {}
         for attr in style:
             if attr in self.cmds and not style[attr] in self.cmds[attr]:
-                print 'WARNING: ESC/POS PRINTING: ignoring invalid value: '+utfstr(style[attr])+' for style: '+utfstr(attr)
+                print('WARNING: ESC/POS PRINTING: ignoring invalid value: %s for style %s' % (style[attr], attr))
             else:
                 self.stack[-1][attr] = self.enforce_type(attr, style[attr])
 
@@ -383,7 +384,7 @@ class Escpos:
 
 
         if im.size[0] > 512:
-            print  "WARNING: Image is wider than 512 and could be truncated at print time "
+            print("WARNING: Image is wider than 512 and could be truncated at print time ")
         if im.size[1] > 255:
             raise ImageSizeError()
 
@@ -429,12 +430,12 @@ class Escpos:
 
     def print_base64_image(self,img):
 
-        print 'print_b64_img'
+        print('print_b64_img')
 
         id = md5.new(img).digest()
 
         if id not in self.img_cache:
-            print 'not in cache'
+            print('not in cache')
 
             img = img[img.find(',')+1:]
             f = io.BytesIO('img')
@@ -449,16 +450,16 @@ class Escpos:
             else:
                 img.paste(img_rgba)
 
-            print 'convert image'
+            print('convert image')
         
             pix_line, img_size = self._convert_image(img)
 
-            print 'print image'
+            print('print image')
 
             buffer = self._raw_print_image(pix_line, img_size)
             self.img_cache[id] = buffer
 
-        print 'raw image'
+        print('raw image')
 
         self._raw(self.img_cache[id])
 
