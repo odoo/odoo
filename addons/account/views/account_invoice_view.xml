@@ -354,12 +354,12 @@
             <field name="arch" type="xml">
                 <form string="Invoice" class="o_invoice_form">
                 <header>
+                    <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
                     <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',True), ('state', 'not in', ('open','paid'))]}" class="oe_highlight o_invoice_send" groups="base.group_user"/>
-                    <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', 'not in', ('open','paid'))]}" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',False), ('state', 'not in', ('open','paid'))]}" groups="base.group_user"/>
+                    <button name="%(action_account_invoice_payment)d" id="account_invoice_payment_btn" type="action" states="open" string="Register Payment" groups="account.group_account_invoice"/>
+                    <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', 'not in', ('open','paid'))]}" class="oe_highlight" groups="base.group_user" tabindex="-1"/>
                     <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', 'not in', ('open','paid'))]}" groups="base.group_user"/>
-                    <button name="%(action_account_invoice_payment)d" id="account_invoice_payment_btn" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
-                    <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight o_invoice_validate" groups="account.group_account_invoice"/>
                     <button name="%(action_account_invoice_refund)d" type='action' string='Add Credit Note' groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', '=', 'out_refund'), ('state', 'not in', ('open','paid'))]}"/>
                     <button name="action_invoice_draft" states="cancel" string="Reset to Draft" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid"/>
@@ -415,7 +415,7 @@
                                     <field name="product_id" domain="[('sale_ok','=',True)]"/>
                                     <field name="origin" invisible="1"/>
                                     <field name="is_rounding_line" invisible="1"/>
-                                    <field name="name"/>
+                                    <field name="name" tabindex="-1"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
@@ -426,10 +426,10 @@
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>
-                                    <field name="discount" groups="base.group_no_one"/>
-                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type}"
+                                    <field name="discount" groups="base.group_no_one" tabindex="-1"/>
+                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" context="{'type':parent.type}"
                                         domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
-                                    <field name="price_subtotal" string="Subtotal"/>
+                                    <field name="price_subtotal" string="Subtotal" tabindex="-1"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile">
@@ -505,9 +505,9 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user" tabindex="-1"/>
+                    <field name="activity_ids" widget="mail_activity" tabindex="-1"/>
+                    <field name="message_ids" widget="mail_thread" tabindex="-1"/>
                 </div>
                 </form>
             </field>
