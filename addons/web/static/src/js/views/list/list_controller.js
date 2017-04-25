@@ -187,10 +187,11 @@ var ListController = BasicController.extend({
      * @override
      * @param {string} id a basicmodel valid resource handle.  It is supposed to
      *   be a record from the list view.
+     * @returns {Deferred}
      */
     _confirmSave: function (id) {
         var state = this.model.get(this.handle);
-        this.renderer.confirmSave(state, id);
+        return this.renderer.confirmSave(state, id);
     },
     /**
      * Display the sidebar (the 'action' menu in the control panel) if we have

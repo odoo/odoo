@@ -80,9 +80,10 @@ var KanbanController = BasicController.extend({
     /**
      * @override method comes from field manager mixin
      * @param {string} id local id from the basic record data
+     * @returns {Deferred}
      */
     _confirmSave: function (id) {
-        this.renderer.updateRecord(this.model.get(id));
+        return this.renderer.updateRecord(this.model.get(id));
     },
     /**
      * The nocontent helper should be displayed in kanban:
