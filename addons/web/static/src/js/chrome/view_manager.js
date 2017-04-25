@@ -290,7 +290,10 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 view.loaded = view.loaded.then(function() {
                     // By default, the view will be loaded in readonly mode
                     // Returns to this default mode if you load action from breadcrumb
-                    view_options = _.extend({mode: 'readonly'}, view_options, self.env);
+                    view_options = _.extend({}, view_options, self.env);
+                    if (view_type === 'form') {
+                        view_options.mode = view_options.mode || 'readonly';
+                    }
                     return view.controller.reload(view_options);
                 });
             }
