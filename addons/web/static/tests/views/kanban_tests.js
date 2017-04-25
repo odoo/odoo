@@ -944,6 +944,45 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('button executes action and reloads', function (assert) {
+        assert.expect(5);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<templates><div t-name="kanban-box">' +
+                        '<field name="foo"/>' +
+                        '<button type="object" name="a1" />' +
+                    '</div></templates>' +
+                '</kanban>',
+            mockRPC: function (route) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(kanban.$('button[data-name="a1"]').length,
+            "kanban should have at least one button a1");
+
+        var count = 0;
+        testUtils.intercept(kanban, 'execute_action', function (event) {
+            count++;
+            event.data.on_closed();
+        });
+        $('button[data-name="a1"]').first().click();
+        assert.strictEqual(count, 1, "should have triggered a execute action");
+
+        assert.verifySteps([
+            '/web/dataset/search_read',
+            '/web/dataset/call_kw/partner/read'
+        ], 'a read should be done after the call button to reload the record');
+
+        kanban.destroy();
+    });
+
     QUnit.test('rendering date and datetime', function (assert) {
         assert.expect(2);
 
