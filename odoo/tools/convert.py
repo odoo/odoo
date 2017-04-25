@@ -850,7 +850,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 
     input = cStringIO.StringIO(csvcontent) #FIXME
     reader = csv.reader(input, quotechar='"', delimiter=',')
-    fields = reader.next()
+    fields = next(reader)
 
     if not (mode == 'init' or 'id' in fields):
         _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
