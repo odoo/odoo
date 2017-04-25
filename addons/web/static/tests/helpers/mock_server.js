@@ -61,12 +61,15 @@ var MockServer = Class.extend({
      * @param {string} model a model name (that should be in this.data)
      * @returns {Object} an object with 2 keys: arch and fields
      */
-    fieldsViewGet: function (arch, model) {
+    fieldsViewGet: function (arch, model, toolbar) {
         var fields = $.extend(true, {}, this.data[model].fields);
         var fvg = this._fieldsViewGet(arch, model, fields);
         var fields_views = {};
         fields_views[fvg.type] = fvg;
         data_manager.processViews(fields_views, fields);
+        if (toolbar) {
+            fvg.toolbar = toolbar;
+        }
         return fields_views[fvg.type];
     },
     /**

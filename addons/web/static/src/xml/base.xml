@@ -241,12 +241,12 @@
                 </li>
                 <li t-if="section.name == 'files' and widget.options.editable" class="o_sidebar_add_attachment">
                     <t t-call="HiddenInputFile">
-                        <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                        <t t-set="fileupload_id" t-value="widget.fileuploadId"/>
                         <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
                         <t t-set="multi_upload" t-value="true"/>
-                        <input type="hidden" name="model" t-att-value="widget.dataset and widget.dataset.model"/>
-                        <input type="hidden" name="id" t-att-value="widget.model_id"/>
-                        <input type="hidden" name="session_id" t-att-value="widget.session.session_id" t-if="widget.session.override_session"/>
+                        <input type="hidden" name="model" t-att-value="widget.env and widget.env.model"/>
+                        <input type="hidden" name="id" t-att-value="widget.env.activeIds[0]"/>
+                        <input type="hidden" name="session_id" t-att-value="widget.getSession().session_id" t-if="widget.getSession().override_session"/>
                         <span>Add...</span>
                     </t>
                 </li>

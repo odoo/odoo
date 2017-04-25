@@ -41,6 +41,7 @@ var ListView = BasicView.extend({
 
         this.controllerParams.editable = arch.attrs.editable;
         this.controllerParams.hasSidebar = params.sidebar;
+        this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.activeActions.delete = true;
         this.controllerParams.noLeaf = !!this.loadParams.context.group_by_no_leaf;
         this.controllerParams.mode = mode;

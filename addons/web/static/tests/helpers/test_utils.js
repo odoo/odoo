@@ -126,7 +126,7 @@ function createAsyncView(params) {
 
     // add mock environment: mock server, session, fieldviewget, ...
     var mockServer = addMockEnvironment(widget, params);
-    var viewInfo = mockServer.fieldsViewGet(params.arch, params.model);
+    var viewInfo = mockServer.fieldsViewGet(params.arch, params.model, params.toolbar);
 
     // create the view
     var viewOptions = {

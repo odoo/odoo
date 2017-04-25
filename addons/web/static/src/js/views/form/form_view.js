@@ -30,7 +30,7 @@ var FormView = BasicView.extend({
         this.loadParams.parentID = params.parentID;
 
         this.controllerParams.hasSidebar = params.sidebar;
-        this.controllerParams.toolbar = false;
+        this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.footerToButtons = params.footer_to_buttons;
         if ('action' in params && 'flags' in params.action) {
             this.controllerParams.footerToButtons = params.action.flags.footer_to_buttons;

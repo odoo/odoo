@@ -574,6 +574,9 @@ QUnit.module('Views', {
             viewOptions: {sidebar: true},
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: function (route) {
+                if (route === '/web/dataset/call_kw/ir.attachment/search_read') {
+                    return $.when([]);
+                }
                 assert.step(route);
                 return this._super.apply(this, arguments);
             },
@@ -1690,6 +1693,41 @@ QUnit.module('Views', {
             "5th row should be selected");
 
         assert.verifySteps(['write', 'read', 'default_get']);
+        list.destroy();
+    });
+
+    QUnit.test('display toolbar', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'event',
+            data: this.data,
+            arch: '<tree><field name="name"/></tree>',
+            toolbar: {
+                action: [{
+                    model_name: 'event',
+                    name: 'Action event',
+                    type: 'ir.actions.server',
+                    usage: 'ir_actions_server',
+                }],
+                print: [],
+            },
+            viewOptions: {
+                sidebar: true,
+            },
+        });
+
+        var $dropdowns = $('.o_web_client .o_control_panel .btn-group .o_dropdown_toggler_btn');
+        assert.strictEqual($dropdowns.length, 2,
+            "there should be 2 dropdowns in the toolbar.");
+        var $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[1].children;
+        assert.strictEqual($actions.length, 3,
+            "there should be 3 actions");
+        var $customAction = $('.o_web_client .o_control_panel .btn-group .dropdown-menu li a')[2];
+        assert.strictEqual($customAction.text.trim(), 'Action event',
+            "the custom action should have 'Action event' as name");
+
         list.destroy();
     });
 
