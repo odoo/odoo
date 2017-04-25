@@ -54,7 +54,6 @@
         'views/procurement_views.xml',
         'views/stock_warehouse_views.xml',
         'views/stock_move_views.xml',
-        'views/stock_pack_operation_views.xml',
         'views/product_views.xml',
         'views/stock_config_settings_views.xml',
 
