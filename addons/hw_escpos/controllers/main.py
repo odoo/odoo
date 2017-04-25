@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from __future__ import print_function
 import commands
 import logging
 import math
@@ -131,9 +132,9 @@ class EscposDriver(Thread):
                 self.status['messages'] = []
 
         if status == 'error' and message:
-            _logger.error('ESC/POS Error: '+message)
+            _logger.error('ESC/POS Error: %s', message)
         elif status == 'disconnected' and message:
-            _logger.warning('ESC/POS Device Disconnected: '+message)
+            _logger.warning('ESC/POS Device Disconnected: %s', message)
 
     def run(self):
         printer = None
@@ -170,17 +171,16 @@ class EscposDriver(Thread):
                 error = False
 
             except NoDeviceError as e:
-                print "No device found %s" %str(e)
+                print("No device found %s" % e)
             except HandleDeviceError as e:
-                print "Impossible to handle the device due to previous error %s" % str(e)
+                print("Impossible to handle the device due to previous error %s" % e)
             except TicketNotPrinted as e:
-                print "The ticket does not seems to have been fully printed %s" % str(e)
+                print("The ticket does not seems to have been fully printed %s" % e)
             except NoStatusError as e:
-                print "Impossible to get the status of the printer %s" % str(e)
+                print("Impossible to get the status of the printer %s" % e)
             except Exception as e:
-                self.set_status('error', str(e))
-                errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
-                _logger.error(errmsg);
+                self.set_status('error', e)
+                _logger.exception()
             finally:
                 if error:
                     self.queue.put((timestamp, task, data))

@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from __future__ import print_function
 import serial
 import socket
 import usb.core
@@ -170,9 +171,9 @@ class Serial(Escpos):
         self.device = serial.Serial(port=self.devfile, baudrate=self.baudrate, bytesize=self.bytesize, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=self.timeout, dsrdtr=True)
 
         if self.device is not None:
-            print "Serial printer enabled"
+            print("Serial printer enabled")
         else:
-            print "Unable to open serial printer on: %s" % self.devfile
+            print("Unable to open serial printer on: %s" % self.devfile)
 
 
     def _raw(self, msg):
@@ -206,7 +207,7 @@ class Network(Escpos):
         self.device.connect((self.host, self.port))
 
         if self.device is None:
-            print "Could not open socket for %s" % self.host
+            print("Could not open socket for %s" % self.host)
 
 
     def _raw(self, msg):

@@ -7,6 +7,7 @@
 
 See <http://github.com/ActiveState/appdirs> for details and usage.
 """
+from __future__ import print_function
 # Dev Notes:
 # - MSDN on where to store app data files:
 #   http://support.microsoft.com/default.aspx?scid=kb;en-us;310294#XSLTH3194121123120121120120

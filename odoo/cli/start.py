@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import argparse
 import glob
 import itertools
@@ -77,5 +78,5 @@ class Start(Command):
         main(cmdargs)
 
 def die(message, code=1):
-    print >>sys.stderr, message
+    print(message, file=sys.stderr)
     sys.exit(code)
