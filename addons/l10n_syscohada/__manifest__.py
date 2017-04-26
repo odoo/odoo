@@ -27,6 +27,7 @@ Countries that use OHADA are the following:
         'account',
     ],
     'data': [
+        'data/account_data.xml',
         'data/l10n_syscohada_chart_data.xml',
         'data/account_chart_template_data.yml',
     ],
