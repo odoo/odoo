@@ -43,7 +43,7 @@
                         <span><i class="fa fa-users fa-fw o_cal_avatar"/></span>
                     </t>
                     <t t-if="widget.avatar_field &amp;&amp; (filter.value != 'all')">
-                        <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field || 'image_small'}" class="o_cal_avatar"/>
+                        <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cal_avatar"/>
                     </t>
                     <t t-set="color" t-value="widget.getColor(filter.color_index)"/>
                     <span t-if="typeof color === 'number'" t-attf-class="color_filter o_underline_color_#{widget.getColor(filter.color_index)}"><t t-esc="filter.label"/></span>
