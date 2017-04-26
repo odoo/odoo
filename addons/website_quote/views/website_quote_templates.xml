@@ -27,8 +27,8 @@
                         <th><span t-if="any([line.tax_id for line in quotation.order_line])">Taxes</span></th>
                         <th><span t-if="True in [line.discount > 0 for line in quotation.order_line]">Discount</span></th>
                         <th class="text-right">Unit Price</th>
-                        <th class="text-right" groups="sale.group_show_price_subtotal">Amount</th>
-                        <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
+                        <th class="text-right" groups="account.group_show_price_subtotal">Amount</th>
+                        <th class="text-right price_tax_included" groups="account.group_show_price_total">Total Price</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -74,11 +74,11 @@
                                         <t t-esc="(1-line.discount / 100.0) * line.price_unit" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                     </div>
                               </td>
-                              <td class="text-right" groups="sale.group_show_price_subtotal">
+                              <td class="text-right" groups="account.group_show_price_subtotal">
                                   <span t-field="line.price_subtotal"
                                         t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                               </td>
-                              <td class="text-right" groups="sale.group_show_price_total">
+                              <td class="text-right" groups="account.group_show_price_total">
                                   <span t-field="line.price_total"
                                         t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                               </td>

@@ -127,3 +127,20 @@ class AccountConfigSettings(models.TransientModel):
             if self.env['res.company'].browse(values.get('company_id')).currency_id.id == values.get('currency_id'):
                 values.pop('currency_id')
         return super(AccountConfigSettings, self).create(values)
+
+class ResConfigSettings(models.TransientModel):
+    _inherit = 'res.config.settings'
+
+    group_show_price_subtotal = fields.Boolean(
+        "Show subtotal",
+        implied_group='account.group_show_price_subtotal',
+        group='base.group_portal,base.group_user,base.group_public')
+    group_show_price_total = fields.Boolean(
+        "Show total",
+        implied_group='account.group_show_price_total',
+        group='base.group_portal,base.group_user,base.group_public')
+
+    sale_show_tax = fields.Selection([
+        ('subtotal', 'Tax-Excluded Prices'),
+        ('total', 'Tax-Included Prices')], "Tax Display", default="total",
+        required=True)

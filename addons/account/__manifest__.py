@@ -21,6 +21,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'security/ir.model.access.csv',
         'data/data_account_type.xml',
         'data/account_data.xml',
+        'data/res_config_settings_data.xml',
         'views/account_menuitem.xml',
         'views/account_payment_view.xml',
         'wizard/account_reconcile_view.xml',
