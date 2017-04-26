@@ -109,7 +109,7 @@ class pos_session_opening(osv.osv_memory):
             result = r and r[0] or False
 
         count = self.pool.get('pos.config').search_count(cr, uid, [('state', '=', 'active')], context=context)
-        show_config = bool(count > 1)
+        show_config = bool(count > 0)
         return {
             'pos_config_id' : result,
             'show_config' : show_config,
