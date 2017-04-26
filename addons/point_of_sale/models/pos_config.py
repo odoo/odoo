@@ -245,7 +245,8 @@ class PosConfig(models.Model):
     # Methods to open the POS
     @api.multi
     def open_ui(self):
-        assert len(self.ids) == 1, "you can open only one session at a time"
+        """ open the pos interface """
+        self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
             'url':   '/pos/web/',
@@ -254,14 +255,23 @@ class PosConfig(models.Model):
 
     @api.multi
     def open_existing_session_cb_close(self):
-        assert len(self.ids) == 1, "you can open only one session at a time"
+        """ open session button
+
+        If the pos is configured in cash control, set in closing control state
+        """
+        self.ensure_one()
         if self.current_session_id.cash_control:
             self.current_session_id.action_pos_session_closing_control()
         return self.open_session_cb()
 
     @api.multi
     def open_session_cb(self):
-        assert len(self.ids) == 1, "you can open only one session at a time"
+        """ new session button
+
+        create one if none exist
+        access cash control interface if enabled or start a session
+        """
+        self.ensure_one()
         if not self.current_session_id:
             self.current_session_id = self.env['pos.session'].create({
                 'user_id': self.env.uid,
@@ -274,7 +284,11 @@ class PosConfig(models.Model):
 
     @api.multi
     def open_existing_session_cb(self):
-        assert len(self.ids) == 1, "you can open only one session at a time"
+        """ close session button
+
+        access session form to validate entries
+        """
+        self.ensure_one()
         return self._open_session(self.current_session_id.id)
 
     def _open_session(self, session_id):
