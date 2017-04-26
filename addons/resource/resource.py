@@ -170,7 +170,7 @@ class resource_calendar(osv.osv):
     def get_weekdays(self, cr, uid, id, default_weekdays=None, context=None):
         """ Return the list of weekdays that contain at least one working interval.
         If no id is given (no calendar), return default weekdays. """
-        if id is None:
+        if not id:
             return default_weekdays if default_weekdays is not None else [0, 1, 2, 3, 4]
         calendar = self.browse(cr, uid, id, context=None)
         weekdays = set()
@@ -320,7 +320,7 @@ class resource_calendar(osv.osv):
         work_dt = start_dt.replace(hour=0, minute=0, second=0)
 
         # no calendar: try to use the default_interval, then return directly
-        if id is None:
+        if not id:
             working_interval = []
             if default_interval:
                 working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0),
@@ -444,7 +444,7 @@ class resource_calendar(osv.osv):
 
             working_intervals = self.get_working_intervals_of_day(cr, uid, id, **call_args)
 
-            if id is None and not working_intervals:  # no calendar -> consider working 8 hours
+            if not id and not working_intervals:  # no calendar -> consider working 8 hours
                 remaining_hours -= 8.0
             elif working_intervals:
                 if backwards:
@@ -538,7 +538,7 @@ class resource_calendar(osv.osv):
                 compute_leaves=compute_leaves, resource_id=resource_id,
                 default_interval=default_interval,
                 context=context)
-            if id is None or working_intervals:  # no calendar -> no working hours, but day is considered as worked
+            if not id or working_intervals:  # no calendar -> no working hours, but day is considered as worked
                 planned_days += 1
                 intervals += working_intervals
             # get next day
