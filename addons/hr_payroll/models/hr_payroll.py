@@ -85,6 +85,7 @@ class HrContract(models.Model):
         ('bi-weekly', 'Bi-weekly'),
         ('bi-monthly', 'Bi-monthly'),
     ], string='Scheduled Pay', index=True, default='monthly')
+    resource_calendar_id = fields.Many2one(required=True)
 
     @api.multi
     def get_all_structures(self):
@@ -98,6 +99,20 @@ class HrContract(models.Model):
         # YTI TODO return browse records
         return list(set(structures._get_parent_structure().ids))
 
+    @api.multi
+    def get_attribute(self, code, attribute):
+        return getattr(self.env['hr.contract.advantage.template'].search([('code', '=', code)], limit=1), attribute)
+
+
+class HrContractAdvandageTemplate(models.Model):
+    _name = 'hr.contract.advantage.template'
+    _description = "Employee's Advantage on Contract"
+
+    name = fields.Char('Name', required=True)
+    code = fields.Char('Code', required=True)
+    lower_bound = fields.Float('Lower Bound', help="Lower bound authorized by the employer for this advantage")
+    upper_bound = fields.Float('Upper Bound', help="Upper bound authorized by the employer for this advantage")
+    default_value = fields.Float('Default value for this advantage')
 
 class HrContributionRegister(models.Model):
     _name = 'hr.contribution.register'
@@ -286,7 +301,7 @@ class HrPayslip(models.Model):
         clause_2 = ['&', ('date_start', '<=', date_to), ('date_start', '>=', date_from)]
         #OR if it starts before the date_from and finish after the date_end (or never finish)
         clause_3 = ['&', ('date_start', '<=', date_from), '|', ('date_end', '=', False), ('date_end', '>=', date_to)]
-        clause_final = [('employee_id', '=', employee.id), '|', '|'] + clause_1 + clause_2 + clause_3
+        clause_final = [('employee_id', '=', employee.id), ('state', '=', 'open'), '|', '|'] + clause_1 + clause_2 + clause_3
         return self.env['hr.contract'].search(clause_final).ids
 
     @api.multi
@@ -304,14 +319,14 @@ class HrPayslip(models.Model):
         return True
 
     @api.model
-    def get_worked_day_lines(self, contract_ids, date_from, date_to):
+    def get_worked_day_lines(self, contracts, date_from, date_to):
         """
-        @param contract_ids: list of contract id
+        @param contract: Browse record of contracts
         @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
         """
         res = []
         # fill only if the contract as a working schedule linked
-        for contract in self.env['hr.contract'].browse(contract_ids).filtered(lambda contract: contract.resource_calendar_id):
+        for contract in contracts.filtered(lambda contract: contract.resource_calendar_id):
             day_from = datetime.combine(fields.Date.from_string(date_from), datetime_time.min)
             day_to = datetime.combine(fields.Date.from_string(date_to), datetime_time.max)
 
@@ -329,7 +344,7 @@ class HrPayslip(models.Model):
                         'number_of_hours': 0.0,
                         'contract_id': contract.id,
                     })
-                    leave_time = (interval[1] - interval[0]).seconds/3600
+                    leave_time = (interval[1] - interval[0]).seconds / 3600
                     current_leave_struct['number_of_hours'] += leave_time
                     work_hours = contract.employee_id.get_day_work_hours_count(interval[0].date(), calendar=contract.resource_calendar_id)
                     current_leave_struct['number_of_days'] += leave_time / work_hours
@@ -348,12 +363,10 @@ class HrPayslip(models.Model):
             res += [attendances] + leaves.values()
         return res
 
-    # YTI TODO contract_ids should be a browse record
     @api.model
-    def get_inputs(self, contract_ids, date_from, date_to):
+    def get_inputs(self, contracts, date_from, date_to):
         res = []
 
-        contracts = self.env['hr.contract'].browse(contract_ids)
         structure_ids = contracts.get_all_structures()
         rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
@@ -374,9 +387,7 @@ class HrPayslip(models.Model):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
-            if category.code in localdict['categories'].dict:
-                amount += localdict['categories'].dict[category.code]
-            localdict['categories'].dict[category.code] = amount
+            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
             return localdict
 
         class BrowsableObject(object):
@@ -567,8 +578,9 @@ class HrPayslip(models.Model):
             'struct_id': struct.id,
         })
         #computation of the salary input
-        worked_days_line_ids = self.get_worked_day_lines(contract_ids, date_from, date_to)
-        input_line_ids = self.get_inputs(contract_ids, date_from, date_to)
+        contracts = self.env['hr.contract'].browse(contract_ids)
+        worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
+        input_line_ids = self.get_inputs(contracts, date_from, date_to)
         res['value'].update({
             'worked_days_line_ids': worked_days_line_ids,
             'input_line_ids': input_line_ids,
@@ -601,13 +613,14 @@ class HrPayslip(models.Model):
         self.struct_id = self.contract_id.struct_id
 
         #computation of the salary input
-        worked_days_line_ids = self.get_worked_day_lines(contract_ids, date_from, date_to)
+        contracts = self.env['hr.contract'].browse(contract_ids)
+        worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
         worked_days_lines = self.worked_days_line_ids.browse([])
         for r in worked_days_line_ids:
             worked_days_lines += worked_days_lines.new(r)
         self.worked_days_line_ids = worked_days_lines
 
-        input_line_ids = self.get_inputs(contract_ids, date_from, date_to)
+        input_line_ids = self.get_inputs(contracts, date_from, date_to)
         input_lines = self.input_line_ids.browse([])
         for r in input_line_ids:
             input_lines += input_lines.new(r)
@@ -621,6 +634,13 @@ class HrPayslip(models.Model):
         self.with_context(contract=True).onchange_employee()
         return
 
+    def get_salary_line_total(self, code):
+        self.ensure_one()
+        line = self.line_ids.filtered(lambda line: line.code == code)
+        if line:
+            return line[0].total
+        else:
+            return 0.0
 
 class HrPayslipWorkedDays(models.Model):
     _name = 'hr.payslip.worked_days'
