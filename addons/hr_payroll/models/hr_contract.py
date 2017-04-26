@@ -40,6 +40,15 @@ class HrContract(models.Model):
     def get_attribute(self, code, attribute):
         return getattr(self.env['hr.contract.advantage.template'].search([('code', '=', code)], limit=1), attribute)
 
+    @api.multi
+    def set_attribute_value(self, code, active):
+        for contract in self:
+            if active:
+                value = self.env['hr.contract.advantage.template'].search([('code', '=', code)], limit=1).default_value
+                setattr(contract, code, value)
+            else:
+                setattr(contract, code, 0.0)
+
 
 class HrContractAdvandageTemplate(models.Model):
     _name = 'hr.contract.advantage.template'
