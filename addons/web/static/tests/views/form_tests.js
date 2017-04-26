@@ -3540,5 +3540,77 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('check interactions between multiple FormViewDialogs', function (assert) {
+        assert.expect(7);
+
+        this.data.product.fields.product_ids = {
+            string: "one2many product", type: "one2many", relation: "product",
+        };
+
+        this.data.partner.records[0].product_id = 37;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            res_id: 1,
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="product_id"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form':
+                    '<form string="Products">' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="display_name"/>' +
+                                '<field name="product_ids"/>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+                'product,false,list': '<tree><field name="display_name"/></tree>'
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/product/get_formview_id') {
+                    return $.when(false);
+                } else if (args.method === 'write') {
+                    assert.strictEqual(args.model, 'product',
+                        "should write on product model");
+                    assert.strictEqual(args.args[1].product_ids[0][2].display_name, 'xtv',
+                        "display_name of the new object should be xtv");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        // Open first dialog
+        form.$('.o_external_button').click();
+        assert.strictEqual($('.modal').length, 1,
+            "One FormViewDialog should be opened");
+        var $firstModal = $('.modal');
+        assert.strictEqual($firstModal.find('.o_form_input').val(), 'xphone',
+            "display_name should be correctly displayed");
+
+        // Open second dialog
+        $firstModal.find('.o_form_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal').length, 2,
+            "two FormViewDialogs should be opened");
+        var $secondModal = $('.modal:nth(1)');
+        // Add new value
+        $secondModal.find('.o_form_input').val('xtv').trigger('input');
+        $secondModal.find('.modal-footer button:first').click(); // Save & close
+        assert.strictEqual($('.modal').length, 1,
+            "last opened dialog should be closed");
+
+        // Check that data in first dialog is correctly updated
+        assert.strictEqual($firstModal.find('tr.o_data_row td').text(), 'xtv',
+            "should have added a line with xtv as new record");
+        $firstModal.find('.modal-footer button:first').click(); // Save & close
+        form.destroy();
+    });
 });
 });
