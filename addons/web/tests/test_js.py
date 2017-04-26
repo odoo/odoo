@@ -10,4 +10,4 @@ class WebSuite(odoo.tests.HttpCase):
     at_install = False
 
     def test_01_js(self):
-        self.phantom_js('/web/tests?mod=web', "", "", login='admin')
+        self.phantom_js('/web/tests?mod=web', "", "", login='admin', timeout=120)
