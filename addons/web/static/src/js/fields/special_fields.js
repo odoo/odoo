@@ -41,7 +41,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
      */
     _render: function () {
         this._super.apply(this, arguments);
-        this._renderTimezoneMismatch.bind(this);
+        this._renderTimezoneMismatch();
     },
     /**
      * Display the time in the user timezone (reload each second)
