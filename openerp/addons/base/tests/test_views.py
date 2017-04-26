@@ -9,6 +9,7 @@ from lxml.builder import E
 
 from psycopg2 import IntegrityError
 
+from openerp.osv.orm import modifiers_tests
 from openerp.exceptions import ValidationError
 from openerp.tests import common
 import openerp.tools
@@ -856,6 +857,10 @@ class test_views(ViewCase):
                     E.button(name="action_next", type="object", string="New button")),
                 string="Replacement title", version="7.0"
             ))
+
+    def test_modifiers(self):
+        # implemeted elsewhere...
+        modifiers_tests()
 
 class ViewModeField(ViewCase):
     """
