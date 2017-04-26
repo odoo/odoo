@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import report_paperformat
 from . import res_country
 from . import res_lang
 from . import res_partner

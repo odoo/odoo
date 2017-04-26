@@ -126,10 +126,10 @@ class EmployeesYearlySalaryReport(models.AbstractModel):
         return self.total
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id'))
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': model,
             'data': data,
@@ -142,4 +142,3 @@ class EmployeesYearlySalaryReport(models.AbstractModel):
             'get_allow': self.get_allow,
             'get_deduct': self.get_deduct,
         }
-        return self.env['report'].render('l10n_in_hr_payroll.report_hryearlysalary', docargs)

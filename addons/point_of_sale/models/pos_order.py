@@ -1002,8 +1002,8 @@ class ReportSaleDetails(models.AbstractModel):
         }
 
     @api.multi
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         data = dict(data or {})
         configs = self.env['pos.config'].browse(data['config_ids'])
         data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs))
-        return self.env['report'].render('point_of_sale.report_saledetails', data)
+        return data

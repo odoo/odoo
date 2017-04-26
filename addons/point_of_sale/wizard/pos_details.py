@@ -45,5 +45,4 @@ class PosDetails(models.TransientModel):
     @api.multi
     def generate_report(self):
         data = {'date_start': self.start_date, 'date_stop': self.end_date, 'config_ids': self.pos_config_ids.ids}
-        return self.env['report'].get_action(
-            [], 'point_of_sale.report_saledetails', data=data)
+        return self.env.ref('point_of_sale.sale_details_report').report_action([], data=data)

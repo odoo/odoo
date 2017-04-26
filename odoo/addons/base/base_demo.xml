@@ -31,6 +31,7 @@
 
         <record id="main_company" model="res.company">
             <field name="name">YourCompany</field>
+            <field name="external_report_layout">standard</field>
         </record>
 
         <record id="user_demo" model="res.users">
@@ -80,6 +81,5 @@
         <record id="base.group_portal" model="res.groups"><!-- Add the demo user to the portal (and therefore to the portal member group) -->
             <field name="users" eval="[(4,ref('demo_user0'))]"/>
         </record>
-
     </data>
 </odoo>

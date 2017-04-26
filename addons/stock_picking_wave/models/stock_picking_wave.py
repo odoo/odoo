@@ -50,7 +50,7 @@ class StockPickingWave(models.Model):
         pickings = self.mapped('picking_ids')
         if not pickings:
             raise UserError(_('Nothing to print.'))
-        return self.env["report"].with_context(active_ids=pickings.ids, active_model='stock.picking').get_action([], 'stock.report_picking')
+        return self.env.ref('stock.action_report_picking').with_context(active_ids=pickings.ids, active_model='stock.picking').report_action([])
 
     @api.multi
     def done(self):

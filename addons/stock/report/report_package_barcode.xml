@@ -2,7 +2,7 @@
 <odoo>
 <data>
 <template id="report_package_barcode">
-    <t t-call="report.basic_layout">
+    <t t-call="web.basic_layout">
         <t t-foreach="docs" t-as="o">
             <t>
                 <div class="page">
@@ -51,7 +51,7 @@
 </template>
 
 <template id="report_package_barcode_small">
-    <t t-call="report.basic_layout">
+    <t t-call="web.basic_layout">
         <t t-foreach="docs" t-as="o">
             <t>
                 <div class="page">

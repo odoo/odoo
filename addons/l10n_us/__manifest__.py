@@ -9,7 +9,7 @@
 United States - Chart of accounts.
 ==================================
     """,
-    'depends': ['l10n_generic_coa', 'report'],
+    'depends': ['l10n_generic_coa'],
     'data': [
         'data/res_company_data.xml',
     ],

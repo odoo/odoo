@@ -61,15 +61,21 @@
                             <button name="unlink_action" string="Remove from the 'Print' menu" type="object"
                                     attrs="{'invisible':[('ir_values_id','=',False)]}" icon="fa-minus-square"
                                     help="Remove the contextual action related this report" class="oe_stat_button"/>
+                            <button name="associated_view" string="QWeb views" type="object"
+                                    attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html'])]}" icon='fa-code'
+                                    class="oe_stat_button"/>
                         </div>
                         <group>
                             <group>
                                 <field name="name"/>
                                 <field name="report_type"/>
+                                <field name="paperformat_id"
+                                       attrs="{'invisible':[('report_type','not in',['qweb-pdf'])]}"/>
                             </group>
                             <group>
                                 <field name="model"/>
                                 <field name="report_name"/>
+                                <field name="print_report_name" />
                             </group>
                         </group>
                         <notebook>

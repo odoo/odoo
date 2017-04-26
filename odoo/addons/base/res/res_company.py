@@ -52,10 +52,27 @@ class Company(models.Model):
     vat = fields.Char(related='partner_id.vat', string="TIN")
     company_registry = fields.Char()
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
+    paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('report.paperformat_euro', raise_if_not_found=False))
+    external_report_layout = fields.Selection([
+        ('background', 'Background'),
+        ('boxed', 'Boxed'),
+        ('clean', 'Clean'),
+        ('standard', 'Standard'),
+    ], string='Document Template')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
+
+    @api.model_cr
+    def init(self):
+        for company in self.search([('paperformat_id', '=', False)]):
+            paperformat_euro = self.env.ref('report.paperformat_euro', False)
+            if paperformat_euro:
+                company.write({'paperformat_id': paperformat_euro.id})
+        sup = super(Company, self)
+        if hasattr(sup, 'init'):
+            sup.init()
 
     def _get_company_address_fields(self, partner):
         return {
@@ -215,3 +232,20 @@ class Company(models.Model):
     def _check_parent_id(self):
         if not self._check_recursion():
             raise ValidationError(_('Error ! You cannot create recursive companies.'))
+
+    @api.multi
+    def open_company_edit_report(self):
+        self.ensure_one()
+        return self.env['base.config.settings'].open_company()
+
+    @api.multi
+    def set_report_template(self):
+        self.ensure_one()
+        if self.env.context.get('report_template', False):
+            self.external_report_layout = self.env.context['report_template']
+        if self.env.context.get('default_report_name'):
+            document = self.env.get(self.env.context['active_model']).browse(self.env.context['active_id'])
+            report_name = self.env.context['default_report_name']
+            report_action = self.env['ir.actions.report'].search([('report_name', '=', report_name)], limit=1)
+            return report_action.report_action(document, config=False)
+        return False

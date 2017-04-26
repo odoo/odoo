@@ -85,5 +85,51 @@
             <field eval="'ir.actions.act_window,%d'%company_normal_action_tree" name="value"/>
         </record>
 
+        <record id="view_company_report_form" model="ir.ui.view">
+            <field name="name">res.company.report.form</field>
+            <field name="model">res.company</field>
+            <field name="priority">1024</field>
+            <field name="arch" type="xml">
+                <form string="Company">
+                    <field name="logo" invisible="1"/>
+                    <div class="alert alert-warning" attrs="{'invisible': [('logo','!=',False)]}">
+                        <p>
+                            <strong>No logo found!</strong>
+                            To get a beautiful document, you should review your
+                            company data: upload a logo, set
+                            your address, etc.
+                        </p>
+                        <button name="open_company_edit_report" type="object" string="⇒ Review Company Data" class="btn-link"/>
+                    </div>
+                    <div class="row mt16">
+                        <div class="col-xs-3 text-center">
+                            <button type="object" name="set_report_template" context="{'report_template': 'background'}">
+                                <img src="/report/static/src/img/preview_background.png" class="img img-responsive img-thumbnail" alt="Preview Background Template"/>
+                            </button>
+                            <a href="/report/static/src/pdf/preview_background.pdf" target="_blank">preview</a>
+                        </div><div class="col-xs-3 text-center">
+                            <button type="object" name="set_report_template" context="{'report_template': 'boxed'}">
+                                <img src="/report/static/src/img/preview_boxed.png" class="img img-responsive img-thumbnail" alt="Preview Boxed Template"/>
+                            </button>
+                            <a href="/report/static/src/pdf/preview_boxed.pdf" target="_blank">preview</a>
+                        </div><div class="col-xs-3 text-center">
+                            <button type="object" name="set_report_template" context="{'report_template': 'clean'}">
+                                <img src="/report/static/src/img/preview_clean.png" class="img img-responsive img-thumbnail" alt="Preview Clean Template"/>
+                            </button>
+                            <a href="/report/static/src/pdf/preview_clean.pdf" target="_blank">preview</a>
+                        </div><div class="col-xs-3 text-center">
+                            <button type="object" name="set_report_template" context="{'report_template': 'standard'}">
+                                <img src="/report/static/src/img/preview_standard.png" class="img img-responsive img-thumbnail" alt="Preview Minimalist Template"/>
+                            </button>
+                            <a href="/report/static/src/pdf/preview_standard.pdf" target="_blank">preview</a>
+                        </div>
+                    </div>
+                    <footer>
+                        <button string="Close" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
     </data>
 </odoo>

@@ -56,14 +56,14 @@ class ReportTrialBalance(models.AbstractModel):
 
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         self.model = self.env.context.get('active_model')
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = data['form'].get('display_account')
         accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
         account_res = self.with_context(data['form'].get('used_context'))._get_accounts(accounts, display_account)
 
-        docargs = {
+        return {
             'doc_ids': self.ids,
             'doc_model': self.model,
             'data': data['form'],
@@ -71,4 +71,3 @@ class ReportTrialBalance(models.AbstractModel):
             'time': time,
             'Accounts': account_res,
         }
-        return self.env['report'].render('account.report_trialbalance', docargs)

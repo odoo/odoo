@@ -26,4 +26,4 @@ class product_price_list(models.TransientModel):
         res = res and res[0] or {}
         res['price_list'] = res['price_list'][0]
         datas['form'] = res
-        return self.env['report'].get_action([], 'product.report_pricelist', data=datas)
+        return self.env.ref('product.action_report_pricelist').report_action([], data=datas)

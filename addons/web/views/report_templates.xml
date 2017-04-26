@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Assets for reports -->
+
+    <template id="report_assets_common">
+        <t t-call="web.less_helpers"/>
+
+        <link href="/web/static/src/less/import_bootstrap.less" rel="stylesheet" type="text/less"/>
+        <link href="/base/static/src/css/description.css" rel="stylesheet" type="text/css"/>
+
+        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/>
+
+        <!-- FIXME remove website dependency ..? -->
+        <link href="/website/static/src/less/website.wrapwrap.less" rel="stylesheet" type="text/less"/>
+        <link href="/website/static/src/less/website.snippets.less" rel="stylesheet" type="text/less"/>
+
+        <!-- TODO: Put in the right report ..? -->
+        <link href="https://fonts.googleapis.com/css?family=Work+Sans:thin,light,regular,medium,bold,semi-bold" rel="stylesheet"/>
+
+        <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+
+        <link href="/web/static/src/less/report.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/src/less/layout_background.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/src/less/layout_boxed.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/src/less/layout_clean.less" rel="stylesheet" type="text/less"/>
+    </template>
+
+    <template id="report_assets_pdf">
+        <link href="/web/static/src/css/reset.min.css" rel="stylesheet"/>
+    </template>
+
+    <template id="report_assets_editor">
+        <t t-call="web.less_helpers"/>
+
+        <link href="/web/static/src/less/report.editor.less" rel="stylesheet" type="text/less"/>
+
+        <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
+        <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
+        <script type="text/javascript" src='/web/static/src/js/report/report.editor.js' />
+    </template>
+
+    <!-- Private templates used internally by reports -->
+
+    <template id="report_layout" name="Report layout">&lt;!DOCTYPE html&gt;
+        <html t-att-lang="lang and lang.replace('_', '-')"
+              t-att-data-editable="'1' if editable else None"
+              t-att-data-translatable="'1' if translatable else None"
+              t-att-data-edit_translations="'1' if edit_translations else None"
+              t-att-data-main-object="repr(main_object) if editable else None"
+              t-att-data-report-margin-top="data_report_margin_top"
+              t-att-data-report-header-spacing="data_report_header_spacing"
+              t-att-data-report-dpi="data_report_dpi"
+              t-att-web-base-url="web_base_url">
+            <head>
+                <meta charset="utf-8" />
+                <meta name="viewport" content="initial-scale=1"/>
+                <title><t t-esc="title or 'Odoo Report'"/></title>
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.report_assets_common" t-js="false"/>
+                <t t-if="editable">
+                    <t t-call-assets="web_editor.summernote" t-js="false"/>
+                    <t t-call-assets="web_editor.assets_editor" t-js="false"/>
+                    <t t-call-assets="web.report_assets_editor" t-js="false"/>
+                </t>
+                <t t-if="editable">
+                    <t t-call-assets="web.assets_common" t-css="false"/>
+                    <t t-call-assets="web_editor.summernote" t-css="false"/>
+                    <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+                    <t t-call-assets="web.report_assets_editor" t-css="false"/>
+                </t>
+            </head>
+            <body class="container">
+                <div id="wrapwrap">
+                    <main>
+                        <t t-raw="0"/>
+                    </main>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    <template id="html_container">
+        <t t-set="body_classname" t-value="'container'"/>
+        <t t-call="web.report_layout">
+            <t t-raw="0"/>
+        </t>
+    </template>
+
+    <template id="minimal_layout">
+        <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
+        &lt;!DOCTYPE html&gt;
+        <html style="height: 0;">
+            <head>
+                <t t-call-assets="web.report_assets_pdf" t-js="false"/>
+                <t t-call-assets="web.report_assets_common" t-js="false"/>
+                <t t-call-assets="web.report_assets_pdf" t-css="false"/>
+                <t t-call-assets="web.report_assets_common" t-css="false"/>
+                <meta charset="utf-8"/>
+                <t t-if="subst is True">
+                    <script>
+                        function subst() {
+                            var vars = {};
+                            var x = document.location.search.substring(1).split('&amp;');
+                            for (var i in x) {
+                                var z = x[i].split('=', 2);
+                                vars[z[0]] = unescape(z[1]);
+                            }
+                            var x=['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
+                            for (var i in x) {
+                                var y = document.getElementsByClassName(x[i]);
+                                for (var j=0; j&lt;y.length; ++j)
+                                    y[j].textContent = vars[x[i]];
+                            }
+                        }
+                    </script>
+                </t>
+            </head>
+            <body class="container" onload="subst()">
+                <t t-raw="body"/>
+            </body>
+        </html>
+    </template>
+
+    <!-- External layouts styles -->
+
+    <template id="external_layout_background">
+        <div class="header o_background_header">
+            <div class="pull-right">
+                <h3 class="mt0 text-right" t-field="company.report_header"/>
+            </div>
+            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" class="pull-left"/>
+            <div class="pull-left company_address">
+                <div>
+                    <strong t-field="company.partner_id.name"/>
+                </div>
+                <span t-field="company.partner_id"
+                    t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+            </div>
+            <div class="clearfix mb8"/>
+        </div>
+
+        <div class="article o_report_layout_background">
+            <t t-raw="0" />
+        </div>
+
+        <div class="footer o_background_footer">
+            <div class="text-center">
+                <ul class="list-inline">
+                    <li t-if="company.phone"><i class="fa fa-phone"/> <span t-field="company.phone"/></li>
+                    <li t-if="company.fax"><i class="fa fa-fax"/> <span t-field="company.fax"/></li>
+                    <li t-if="company.email"><i class="fa fa-at"/> <span t-field="company.email"/></li>
+                    <li t-if="company.website"><i class="fa fa-globe"/> <span t-field="company.website"/></li>
+                    <li t-if="company.vat"><i class="fa fa-building-o"/> VAT: <span t-field="company.vat"/></li>
+                </ul>
+                <div t-field="company.report_footer"/>
+                <div class="text-muted">
+                    Page:
+                    <span class="page"/>
+                    of
+                    <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_boxed">
+        <div class="header o_boxed_header">
+            <div class="row mb8">
+                <div class="col-xs-6">
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/>
+                </div>
+                <div class="col-xs-6 text-right mb4">
+                    <h4 class="mt0" t-field="company.report_header"/>
+                    <div name="company_address" class="mb4">
+                        <span class="company_address" t-field="company.partner_id"
+                            t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="article o_report_layout_boxed">
+          <t t-raw="0" />
+        </div>
+
+        <div class="footer o_boxed_footer">
+            <div class="text-center">
+                <ul class="list-inline">
+                    <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
+                    <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+                    <li t-if="company.email">Mail: <span t-field="company.email"/></li>
+                    <li t-if="company.website">Web: <span t-field="company.website"/></li>
+                    <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
+                </ul>
+                <div t-field="company.report_footer"/>
+                <div>
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_clean">
+        <div class="header o_clean_header">
+            <div class="row">
+                <div class="col-xs-6">
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/>
+                </div>
+                <div class="col-xs-5 col-xs-offset-1" name="company_address">
+                    <ul class="list-unstyled">
+                        <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
+                        <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
+                        <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
+                        <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+                        <li t-if="company.email"><span t-field="company.email"/></li>
+                        <li t-if="company.website"><span t-field="company.website"/></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="article o_report_layout_clean">
+            <t t-raw="0" />
+        </div>
+
+        <div class="footer o_clean_footer">
+            <div class="row mt8">
+                <div class="col-xs-3">
+                    <span t-field="company.report_footer"/>
+                </div>
+                <div class="col-xs-4 text-right">
+                    <span class="company_address" t-field="company.partner_id"
+                        t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                </div>
+                <div class="col-xs-4">
+                    <h4 class="mt0 mb0 text-uppercase" t-field="company.report_header"/>
+                </div>
+                <div class="col-xs-1">
+                    <ul class="list-inline pagenumber pull-right text-center">
+                        <li><strong><span class="page"/></strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_standard">
+        <div class="header">
+            <div class="row">
+                <div class="col-xs-3 mb4">
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
+                </div>
+                <div class="col-xs-9 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
+            </div>
+            <div t-if="company.logo or company.report_header" class="row zero_min_height">
+                <div class="col-xs-12">
+                    <div style="border-bottom: 1px solid black;"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6" name="company_address">
+                    <span t-field="company.partner_id"
+                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                        style="border-bottom: 1px solid black; display:inline-block;"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="article o_report_layout_standard">
+            <t t-raw="0" />
+        </div>
+
+        <div class="footer">
+            <div class="text-center" style="border-top: 1px solid black;">
+                <ul class="list-inline mb4">
+                    <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
+                    <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+                    <li t-if="company.email">Email: <span t-field="company.email"/></li>
+                    <li t-if="company.website">Web: <span t-field="company.website"/></li>
+                    <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
+                </ul>
+
+                <div name="financial_infos">
+                    <span t-field="company.report_footer"/>
+                </div>
+
+                <div class="text-muted">
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Public api: layout to t-call from reports -->
+
+    <template id="external_layout">
+        <!-- Multicompany -->
+        <t t-if="not o and doc">
+            <t t-set="o" t-value="doc"/>
+        </t>
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id.sudo()"/>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"/>
+        </t>
+
+        <t t-if="company.external_report_layout == 'background'">
+            <t t-call="web.external_layout_background"><t t-raw="0"/></t>
+        </t>
+        <t t-if="company.external_report_layout == 'boxed'">
+            <t t-call="web.external_layout_boxed"><t t-raw="0"/></t>
+        </t>
+        <t t-if="company.external_report_layout == 'clean'">
+            <t t-call="web.external_layout_clean"><t t-raw="0"/></t>
+        </t>
+        <t t-if="company.external_report_layout in (False, 'standard')">
+            <t t-call="web.external_layout_standard"><t t-raw="0"/></t>
+        </t>
+    </template>
+
+    <template id="internal_layout">
+        <!-- Multicompany -->
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id"/>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"/>
+        </t>
+
+        <div class="header">
+            <div class="row">
+                <div class="col-xs-3">
+                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                </div>
+                <div class="col-xs-2 col-xs-offset-2 text-center">
+                    <span t-esc="company.name"/>
+                </div>
+                <div class="col-xs-2 col-xs-offset-3 text-right">
+                    <ul class="list-inline">
+                        <li><span class="page"/></li>
+                        <li>/</li>
+                        <li><span class="topage"/></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="article">
+          <t t-raw="0" />
+        </div>
+    </template>
+
+    <template id="basic_layout">
+        <t t-call="web.html_container">
+            <div class="article">
+                <t t-raw="0" />
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import babel.messages.pofile
 import base64
 import csv
@@ -24,15 +23,17 @@ import werkzeug.wrappers
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
+from werkzeug import url_decode
 
 
 import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_resource_path
-from odoo.tools import topological_sort
+from odoo.tools import topological_sort, html_escape
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt
+from odoo.tools.safe_eval import safe_eval
 from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, \
                       serialize_exception as _serialize_exception
@@ -1535,3 +1536,115 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
+
+
+class ReportController(http.Controller):
+
+    #------------------------------------------------------
+    # Report controllers
+    #------------------------------------------------------
+    @http.route([
+        '/report/<converter>/<reportname>',
+        '/report/<converter>/<reportname>/<docids>',
+    ], type='http', auth='user', website=True)
+    def report_routes(self, reportname, docids=None, converter=None, **data):
+        report = request.env['ir.actions.report']._get_report_from_name(reportname)
+        context = dict(request.env.context)
+
+        if docids:
+            docids = [int(i) for i in docids.split(',')]
+        if data.get('options'):
+            data.update(json.loads(data.pop('options')))
+        if data.get('context'):
+            # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
+            # the user explicitely wants to change the lang, this mechanism overwrites it.
+            data['context'] = json.loads(data['context'])
+            if data['context'].get('lang'):
+                del data['context']['lang']
+            context.update(data['context'])
+        if converter == 'html':
+            html = report.with_context(context).render_qweb_html(docids, data=data)[0]
+            return request.make_response(html)
+        elif converter == 'pdf':
+            pdf = report.with_context(context).render_qweb_pdf(docids, data=data)[0]
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            return request.make_response(pdf, headers=pdfhttpheaders)
+        else:
+            raise werkzeug.exceptions.HTTPException(description='Converter %s not implemented.' % converter)
+
+    #------------------------------------------------------
+    # Misc. route utils
+    #------------------------------------------------------
+    @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="public")
+    def report_barcode(self, type, value, width=600, height=100, humanreadable=0):
+        """Contoller able to render barcode images thanks to reportlab.
+        Samples:
+            <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
+            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
+                ('QR', o.name, 200, 200)"/>
+
+        :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
+        'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
+        'UPCA', 'USPS_4State'
+        :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
+        at the bottom of the output image
+        """
+        try:
+            barcode = request.env['ir.actions.report'].barcode(type, value, width=width, height=height, humanreadable=humanreadable)
+        except (ValueError, AttributeError):
+            raise exceptions.HTTPException(description='Cannot convert into barcode.')
+
+        return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
+
+    @http.route(['/report/download'], type='http', auth="user")
+    def report_download(self, data, token):
+        """This function is used by 'qwebactionmanager.js' in order to trigger the download of
+        a pdf/controller report.
+
+        :param data: a javascript array JSON.stringified containg report internal url ([0]) and
+        type [1]
+        :returns: Response with a filetoken cookie and an attachment header
+        """
+        requestcontent = json.loads(data)
+        url, type = requestcontent[0], requestcontent[1]
+        try:
+            if type == 'qweb-pdf':
+                reportname = url.split('/report/pdf/')[1].split('?')[0]
+
+                docids = None
+                if '/' in reportname:
+                    reportname, docids = reportname.split('/')
+
+                if docids:
+                    # Generic report:
+                    response = self.report_routes(reportname, docids=docids, converter='pdf')
+                else:
+                    # Particular report:
+                    data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
+                    response = self.report_routes(reportname, converter='pdf', **dict(data))
+
+                report = request.env['ir.actions.report']._get_report_from_name(reportname)
+                filename = "%s.%s" % (report.name, "pdf")
+                if docids:
+                    ids = [int(x) for x in docids.split(",")]
+                    obj = request.env[report.model].browse(ids)
+                    if report.print_report_name and not len(obj) > 1:
+                        report_name = safe_eval(report.print_report_name, {'object': obj, 'time': time})
+                        filename = "%s.%s" % (report_name, "pdf")
+                response.headers.add('Content-Disposition', content_disposition(filename))
+                response.set_cookie('fileToken', token)
+                return response
+            else:
+                return
+        except Exception as e:
+            se = _serialize_exception(e)
+            error = {
+                'code': 200,
+                'message': "Odoo Server Error",
+                'data': se
+            }
+            return request.make_response(html_escape(json.dumps(error)))
+
+    @http.route(['/report/check_wkhtmltopdf'], type='json', auth="user")
+    def check_wkhtmltopdf(self):
+        return request.env['ir.actions.report'].get_wkhtmltopdf_state()

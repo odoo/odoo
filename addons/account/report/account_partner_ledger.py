@@ -68,7 +68,7 @@ class ReportPartnerLedger(models.AbstractModel):
         return result
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         data['computed'] = {}
 
         obj_partner = self.env['res.partner']
@@ -107,7 +107,7 @@ class ReportPartnerLedger(models.AbstractModel):
         partners = obj_partner.browse(partner_ids)
         partners = sorted(partners, key=lambda x: (x.ref, x.name))
 
-        docargs = {
+        return {
             'doc_ids': partner_ids,
             'doc_model': self.env['res.partner'],
             'data': data,
@@ -116,4 +116,3 @@ class ReportPartnerLedger(models.AbstractModel):
             'lines': self._lines,
             'sum_partner': self._sum_partner,
         }
-        return self.env['report'].render('account.report_partnerledger', docargs)

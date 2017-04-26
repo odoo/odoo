@@ -3,7 +3,7 @@
 <data>
 <template id="report_mrprepairorder">
         <t t-foreach="docs" t-as="o">
-            <t t-call="report.external_layout">
+            <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({'lang': o.partner_id.lang})" />
                 <div class="page">
                     <div class="oe_structure"/>
@@ -159,7 +159,7 @@
 </template>
 
 <template id="report_mrprepairorder2">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="doc">
             <t t-call="mrp_repair.report_mrprepairorder" t-lang="doc.partner_id.lang"/>
         </t>

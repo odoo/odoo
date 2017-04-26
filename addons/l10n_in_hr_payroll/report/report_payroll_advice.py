@@ -46,9 +46,9 @@ class payroll_advice_report(models.AbstractModel):
         return result
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         advice = self.env['hr.payroll.advice'].browse(docids)
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': 'hr.payroll.advice',
             'data': data,
@@ -59,4 +59,3 @@ class payroll_advice_report(models.AbstractModel):
             'get_detail': self.get_detail,
             'get_bysal_total': self.get_bysal_total,
         }
-        return self.env['report'].render('l10n_in_hr_payroll.report_payrolladvice', docargs)

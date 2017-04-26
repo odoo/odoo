@@ -796,10 +796,6 @@ class YamlInterpreter(object):
         for field,dest in (('file', 'report_file'), ('attachment','attachment'),('attachment_use','attachment_use')):
             if getattr(node, field):
                 values[dest] = getattr(node, field)
-        if node.auto:
-            values['auto'] = safe_eval(node.auto)
-        if node.header:
-            values['header'] = safe_eval(node.header)
         values['multi'] = node.multi and safe_eval(node.multi)
         xml_id = node.id
         self.validate_xml_id(xml_id)

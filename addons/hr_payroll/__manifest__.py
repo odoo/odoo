@@ -24,7 +24,6 @@ Generic Payroll system.
         'hr_contract',
         'hr_holidays',
         'decimal_precision',
-        'report',
     ],
     'data': [
         'security/hr_payroll_security.xml',

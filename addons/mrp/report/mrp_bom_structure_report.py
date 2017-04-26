@@ -41,12 +41,11 @@ class BomStructureReport(models.AbstractModel):
         return children
 
     @api.multi
-    def render_html(self, docids, data=None):
-        docargs = {
+    def get_report_values(self, docids, data=None):
+        return {
             'doc_ids': docids,
             'doc_model': 'mrp.bom',
             'docs': self.env['mrp.bom'].browse(docids),
             'get_children': self.get_children,
             'data': data,
         }
-        return self.env['report'].render('mrp.mrp_bom_structure_report', docargs)
