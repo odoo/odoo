@@ -118,13 +118,13 @@ class Employee(models.Model):
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ], groups="hr.group_hr_user")
+    ], groups="hr.group_hr_user", default="male")
     marital = fields.Selection([
         ('single', 'Single'),
-        ('married', 'Married'),
+        ('married', 'Married (or similar)'),
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
-    ], string='Marital Status', groups="hr.group_hr_user")
+    ], string='Marital Status', groups="hr.group_hr_user", default='single')
     birthday = fields.Date('Date of Birth', groups="hr.group_hr_user")
     ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user")
     sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user")
@@ -135,6 +135,10 @@ class Employee(models.Model):
         domain="[('partner_id', '=', address_home_id)]",
         groups="hr.group_hr_user",
         help='Employee bank salary account')
+    permit_no = fields.Char('Work Permit No')
+    visa_no = fields.Char('Visa No')
+    visa_expire = fields.Date('Visa Expire Date')
+
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
         "Photo", default=_default_image, attachment=True,

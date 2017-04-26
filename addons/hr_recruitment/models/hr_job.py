@@ -20,6 +20,7 @@ class Job(models.Model):
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
     user_id = fields.Many2one('res.users', "Recruitment Responsible", track_visibility='onchange')
+    hr_responsible_id = fields.Many2one('res.users', "HR Responsible", track_visibility='onchange')
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Applications")
     documents_count = fields.Integer(compute='_compute_document_ids', string="Documents")
     alias_id = fields.Many2one(
@@ -47,7 +48,7 @@ class Job(models.Model):
 
     @api.multi
     def _compute_application_count(self):
-        read_group_result = self.env['hr.applicant'].read_group([('job_id', '=', self.id)], ['job_id'], ['job_id'])
+        read_group_result = self.env['hr.applicant'].read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
         result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
         for job in self:
             job.application_count = result.get(job.id, 0)
