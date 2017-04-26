@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
+from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools.misc import formatLang
 
@@ -98,7 +99,8 @@ class account_journal(models.Model):
                 data.append({'x': short_name, 'y':last_balance, 'name': name})
 
         [graph_title, graph_key] = self._graph_title_and_key()
-        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True}]
+        color = '#875A7B' if '+e' in version else '#7c7bad'
+        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color}]
 
     @api.multi
     def get_bar_graph_datas(self):
