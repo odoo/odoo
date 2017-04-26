@@ -245,16 +245,14 @@ class IrSequence(models.Model):
                 specific company will get higher priority.
         """
         self.check_access_rights('read')
-        company_ids = self.env['res.company'].search([]).ids + [False]
-        seq_ids = self.search(['&', ('code', '=', sequence_code), ('company_id', 'in', company_ids)])
-        if not seq_ids:
-            _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
-            return False
         force_company = self._context.get('force_company')
         if not force_company:
             force_company = self.env.user.company_id.id
-        preferred_sequences = [s for s in seq_ids if s.company_id and s.company_id.id == force_company]
-        seq_id = preferred_sequences[0] if preferred_sequences else seq_ids[0]
+        seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [force_company, False])], order='company_id')
+        if not seq_ids:
+            _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
+            return False
+        seq_id = seq_ids[0]
         return seq_id._next()
 
     @api.model
