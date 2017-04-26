@@ -1413,7 +1413,7 @@ exports.Orderline = Backbone.Model.extend({
         }
         return false;
     },
-    compute_all: function(taxes, price_unit, quantity, currency_rounding) {
+    compute_all: function(taxes, price_unit, quantity, currency_rounding, no_map_tax) {
         var self = this;
         var list_taxes = [];
         var currency_rounding_bak = currency_rounding;
@@ -1424,7 +1424,9 @@ exports.Orderline = Backbone.Model.extend({
         var total_included = total_excluded;
         var base = total_excluded;
         _(taxes).each(function(tax) {
-            tax = self._map_tax_fiscal_position(tax);
+            if (!no_map_tax){
+                tax = self._map_tax_fiscal_position(tax);
+            }
             if (tax.amount_type === 'group'){
                 var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);
                 total_excluded = ret.total_excluded;
@@ -1955,6 +1957,27 @@ exports.Order = Backbone.Model.extend({
         this.orderlines.remove(line);
         this.select_orderline(this.get_last_orderline());
     },
+
+    fix_tax_included_price: function(line){
+        if(this.fiscal_position){
+            var unit_price = line.price;
+            var taxes = line.get_taxes();
+            var mapped_included_taxes = [];
+            _(taxes).each(function(tax) {
+                var line_tax = line._map_tax_fiscal_position(tax);
+                if(tax.price_include && tax.id != line_tax.id){
+
+                    mapped_included_taxes.push(tax);
+                }
+            })
+
+            unit_price = line.compute_all(mapped_included_taxes, unit_price, 1, this.pos.currency.rounding, true).total_excluded;
+
+            line.set_unit_price(unit_price);
+        }
+
+    },
+
     add_product: function(product, options){
         if(this._printed){
             this.destroy();
@@ -1970,9 +1993,14 @@ exports.Order = Backbone.Model.extend({
         if(options.quantity !== undefined){
             line.set_quantity(options.quantity);
         }
+
         if(options.price !== undefined){
             line.set_unit_price(options.price);
         }
+
+        //To substract from the unit price the included taxes mapped by the fiscal position
+        this.fix_tax_included_price(line);
+
         if(options.discount !== undefined){
             line.set_discount(options.discount);
         }
