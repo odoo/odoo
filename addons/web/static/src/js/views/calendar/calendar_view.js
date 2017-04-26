@@ -118,7 +118,7 @@ var CalendarView = AbstractView.extend({
         this.controllerParams.context = params.context || {};
 
         this.rendererParams.displayFields = displayFields;
-        this.rendererParams.eventTemplate = _.findWhere(arch.children, {'tag': 'template'});
+        this.rendererParams.eventTemplate = _.findWhere(arch.children, {'tag': 'templates'});
 
         this.loadParams.fieldNames = _.uniq(fieldNames);
         this.loadParams.mapping = mapping;
