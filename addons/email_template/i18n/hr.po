@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-12-01 11:34+0000\n"
+"PO-Revision-Date: 2017-03-22 11:00+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr "Sadržaj"
 #. module: email_template
 #: help:email.template,email_cc:0 help:email_template.preview,email_cc:0
 msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr ""
+msgstr "Carbon copy primatelji"
 
 #. module: email_template
 #: field:email.template,email_cc:0 field:email_template.preview,email_cc:0
@@ -96,23 +96,23 @@ msgstr "Izaberi primjer"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
-msgstr ""
+msgstr "Adrese primatelja u CC-u odvojene zarezom "
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr ""
+msgstr "Ids primatelja odvojen zarezima"
 
 #. module: email_template
 #: help:email.template,partner_to:0 help:email_template.preview,partner_to:0
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
+msgstr "Ids primatelja odvojeni zarezima"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Comma-separated recipient addresses"
-msgstr ""
+msgstr "Adrese primatelja odvojene zarezom"
 
 #. module: email_template
 #: help:email.template,email_to:0 help:email_template.preview,email_to:0
@@ -158,7 +158,7 @@ msgid ""
 "Default recipients of the record:\n"
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
-msgstr ""
+msgstr "Zadani primatelji zapisnika:\n- partner (pomoću ID partnera ili partner_id polja) ILI\n- e-mail (pomoću email_from ili e-mail polje)"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:355
@@ -224,7 +224,7 @@ msgstr "Polje"
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr ""
+msgstr "Konačni rezervirani izraz koji se treba kopirati i zalijepiti u željeno polje predloška."
 
 #. module: email_template
 #: field:email.template,email_from:0 field:email_template.preview,email_from:0
@@ -256,7 +256,7 @@ msgid ""
 "If opt-out is checked, this contact has refused to receive emails for mass "
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the partners when performing mass mailing."
-msgstr ""
+msgstr "Ako je kvadratić 'Isključiti iz masove e-pošte' označen, kontakt je odbio primanje e-mailova za masovno slanje i marketinšku kampanju. Filter \"Raspoloživi za masovno slanje' omogućuje korisnicima da filtriraju te partnere."
 
 #. module: email_template
 #: field:email.template,lang:0 field:email_template.preview,lang:0
@@ -288,7 +288,7 @@ msgstr "Naziv"
 msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
-msgstr ""
+msgstr "Naziv koji se treba koristiti za kreiranu datoteku izvješća (može sadržavati zamjenske tekstove)\nProširenje se može izostaviti i u tom će slučaju doći iz tipa izvješća. "
 
 #. module: email_template
 #: field:res.partner,opt_out:0
@@ -307,7 +307,7 @@ msgstr "Preferirani server za izlaznu poštu. Ako nije podešen koristiti će se
 #: field:email.template,report_template:0
 #: field:email_template.preview,report_template:0
 msgid "Optional report to print and attach"
-msgstr ""
+msgstr "Izborno izvješće za ispisati i pridodati"
 
 #. module: email_template
 #: help:email.template,lang:0 help:email_template.preview,lang:0
@@ -316,7 +316,7 @@ msgid ""
 "email. If not set, the english version will be used. This should usually be "
 "a placeholder expression that provides the appropriate language, e.g. "
 "${object.partner_id.lang}."
-msgstr ""
+msgstr "Izborni jezik prijevoda (ISO kod) može se izabrati prilikom slanja e-maila. Ako nije postavljen, koristit će se engleski jezik. Ovo bi obično trebao biti rezervirani izraz koji pruža odgovarajući jezik, npr. ${object.partner_id.lang}."
 
 #. module: email_template
 #: help:email.template,null_value:0 help:email_template.preview,null_value:0
@@ -332,7 +332,7 @@ msgstr "Odlazni E-mail poslužitelj"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Override author's email"
-msgstr ""
+msgstr "Prijeđi autorov e-mail"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_res_partner
@@ -474,7 +474,7 @@ msgstr "Bočna tipka"
 #: field:email.template,ref_ir_act_window:0
 #: field:email_template.preview,ref_ir_act_window:0
 msgid "Sidebar action"
-msgstr ""
+msgstr "Bočna akcija"
 
 #. module: email_template
 #: help:email.template,ref_ir_act_window:0
@@ -482,13 +482,13 @@ msgstr ""
 msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
-msgstr ""
+msgstr "Bočna akcija kako bi ovaj predložak bio dostupan na zapisima povezanog modela dokumenta"
 
 #. module: email_template
 #: help:email.template,ref_ir_value:0
 #: help:email_template.preview,ref_ir_value:0
 msgid "Sidebar button to open the sidebar action"
-msgstr ""
+msgstr "Bočna tipka za otvaranje bočne akcije"
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
@@ -542,7 +542,7 @@ msgstr ""
 msgid ""
 "The values displayed hereunder are informative. When sending the email, the values\n"
 "                                will be taken from the email template."
-msgstr ""
+msgstr "Prikazane vrijednosti su informativne. Prilikom slanja e-maila uzet\nće se vrijednosti iz e-mail predloška."
 
 #. module: email_template
 #: field:email.template,email_to:0 field:email_template.preview,email_to:0
@@ -580,14 +580,14 @@ msgstr "Upozorenje!"
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
-msgstr ""
+msgstr "Kada je odnosno polje odabrano kao prvo polje, ovo Vam polje omogućava odabir ciljanog polja unutar odredišnog modela dokumenta (pod-model)."
 
 #. module: email_template
 #: help:email.template,sub_object:0 help:email_template.preview,sub_object:0
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr ""
+msgstr "Kada je vezno polje odabrano kao prvo polje, ovo polje prikazuje model dokumenta prema kojem ide veza."
 
 #. module: email_template
 #: help:email.template,attachment_ids:0

@@ -276,7 +276,7 @@ openerp.web_calendar = function(instance) {
                     self.proxy('update_record')(event._id, data);
                 },
                 eventRender: function (event, element, view) {
-                    element.find('.fc-event-title').html(event.title);
+                    element.find('.fc-event-title').html(event.title + event.attendee_avatars);
                 },
                 eventAfterRender: function (event, element, view) {
                     if ((view.name !== 'month') && (((event.end-event.start)/60000)<=30)) {
@@ -567,7 +567,6 @@ openerp.web_calendar = function(instance) {
                     if (attendee_other.length>2) {
                         the_title_avatar += '<span class="attendee_head" title="' + attendee_other.slice(0, -2) + '">+</span>';
                     }
-                    the_title = the_title_avatar + the_title;
                 }
             }
             
@@ -578,6 +577,7 @@ openerp.web_calendar = function(instance) {
                 'start': date_start.toString('yyyy-MM-dd HH:mm:ss'),
                 'end': date_stop.toString('yyyy-MM-dd HH:mm:ss'),
                 'title': the_title,
+                'attendee_avatars': the_title_avatar,
                 'allDay': (this.fields[this.date_start].type == 'date' || (this.all_day && evt[this.all_day]) || false),
                 'id': evt.id,
                 'attendees':attendees

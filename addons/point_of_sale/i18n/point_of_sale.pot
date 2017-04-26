@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-21 14:07+0000\n"
+"POT-Creation-Date: 2017-03-28 09:46+0000\n"
+"PO-Revision-Date: 2017-03-28 09:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -373,11 +373,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
-
-#. module: point_of_sale
-#: help:res.users,ean13:0
-msgid "BarCode"
 msgstr ""
 
 #. module: point_of_sale
@@ -1150,6 +1145,33 @@ msgid "Discounts"
 msgstr ""
 
 #. module: point_of_sale
+#: field:pos.category,display_name:0
+#: field:pos.config,display_name:0
+#: field:pos.confirm,display_name:0
+#: field:pos.details,display_name:0
+#: field:pos.discount,display_name:0
+#: field:pos.ean_wizard,display_name:0
+#: field:pos.make.payment,display_name:0
+#: field:pos.open.statement,display_name:0
+#: field:pos.order,display_name:0
+#: field:pos.order.line,display_name:0
+#: field:pos.session,display_name:0
+#: field:pos.session.opening,display_name:0
+#: field:report.point_of_sale.report_detailsofsales,display_name:0
+#: field:report.point_of_sale.report_invoice,display_name:0
+#: field:report.point_of_sale.report_payment,display_name:0
+#: field:report.point_of_sale.report_receipt,display_name:0
+#: field:report.point_of_sale.report_saleslines,display_name:0
+#: field:report.point_of_sale.report_statement,display_name:0
+#: field:report.point_of_sale.report_usersproduct,display_name:0
+#: field:report.pos.order,display_name:0
+#: field:report.sales.by.user.pos,display_name:0
+#: field:report.sales.by.user.pos.month,display_name:0
+#: field:report.transaction.pos,display_name:0
+msgid "Display Name"
+msgstr ""
+
+#. module: point_of_sale
 #: view:pos.open.statement:point_of_sale.view_pos_open_statement
 msgid "Do you want to open cash registers?"
 msgstr ""
@@ -1663,9 +1685,12 @@ msgid "Invalid Ean"
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1088
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
 #: view:pos.order:point_of_sale.view_pos_pos_form
 #: field:pos.order,invoice_id:0
+#, python-format
 msgid "Invoice"
 msgstr ""
 
@@ -1731,6 +1756,33 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.config,iface_big_scrollbars:0
 msgid "Large Scrollbars"
+msgstr ""
+
+#. module: point_of_sale
+#: field:pos.category,__last_update:0
+#: field:pos.config,__last_update:0
+#: field:pos.confirm,__last_update:0
+#: field:pos.details,__last_update:0
+#: field:pos.discount,__last_update:0
+#: field:pos.ean_wizard,__last_update:0
+#: field:pos.make.payment,__last_update:0
+#: field:pos.open.statement,__last_update:0
+#: field:pos.order,__last_update:0
+#: field:pos.order.line,__last_update:0
+#: field:pos.session,__last_update:0
+#: field:pos.session.opening,__last_update:0
+#: field:report.point_of_sale.report_detailsofsales,__last_update:0
+#: field:report.point_of_sale.report_invoice,__last_update:0
+#: field:report.point_of_sale.report_payment,__last_update:0
+#: field:report.point_of_sale.report_receipt,__last_update:0
+#: field:report.point_of_sale.report_saleslines,__last_update:0
+#: field:report.point_of_sale.report_statement,__last_update:0
+#: field:report.point_of_sale.report_usersproduct,__last_update:0
+#: field:report.pos.order,__last_update:0
+#: field:report.sales.by.user.pos,__last_update:0
+#: field:report.sales.by.user.pos.month,__last_update:0
+#: field:report.transaction.pos,__last_update:0
+msgid "Last Modified on"
 msgstr ""
 
 #. module: point_of_sale
