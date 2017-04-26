@@ -185,8 +185,24 @@ var AbstractView = Class.extend({
      */
     _loadLibs: function () {
         var defs = [];
-        _.each(this.config.js_libs, function (url) {
-            defs.push(ajax.loadJS(url));
+        var jsDefs;
+        _.each(this.config.js_libs, function (urls) {
+            if (typeof(urls) === 'string') {
+                // js_libs is an array of urls: those urls can be loaded in
+                // parallel
+                defs.push(ajax.loadJS(urls));
+            } else {
+                // js_libs is an array of arrays of urls: those arrays of urls
+                // must be loaded sequentially, but the urls inside each
+                // sub-array can be loaded in parallel
+                defs.push($.when.apply($, jsDefs).then(function () {
+                    jsDefs = [];
+                    _.each(urls, function (url) {
+                        jsDefs.push(ajax.loadJS(url));
+                    });
+                    return $.when.apply($, jsDefs);
+                }));
+            }
         });
         _.each(this.config.css_libs, function (url) {
             defs.push(ajax.loadCSS(url));
