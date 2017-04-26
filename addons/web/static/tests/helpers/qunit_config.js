@@ -33,6 +33,10 @@ QUnit.config.autostart = false;
  */
 QUnit.config.testTimeout = 1 * 60 * 1000;
 
+/**
+ * Hide passed tests by default in the QUnit page
+ */
+QUnit.config.hidepassed = true;
 
 var sortButtonAppended = false;
 
