@@ -2,8 +2,8 @@
 <odoo>
 
     <template id="report_delivery_document">
-        <t t-call="report.html_container">
-            <t t-call="report.external_layout">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
                 <div class="page">
                     <div class="row" name="customer_address">

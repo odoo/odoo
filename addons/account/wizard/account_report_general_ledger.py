@@ -20,4 +20,4 @@ class AccountReportGeneralLedger(models.TransientModel):
         if data['form'].get('initial_balance') and not data['form'].get('date_from'):
             raise UserError(_("You must define a Start Date"))
         records = self.env[data['model']].browse(data.get('ids', []))
-        return self.env['report'].with_context(landscape=True).get_action(records, 'account.report_generalledger', data=data)
+        return self.env.ref('account.action_report_general_ledger').with_context(landscape=True).report_action(records, data=data)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_saleorder_document">
-    <t t-call="report.external_layout">
+    <t t-call="web.external_layout">
         <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
         <div class="page">
             <div class="oe_structure"/>
@@ -181,7 +181,7 @@
 
 
 <template id="report_saleorder">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="doc">
             <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
         </t>

@@ -130,12 +130,11 @@ class SaleOrderReportProforma(models.AbstractModel):
     _name = 'report.sale.report_saleproforma'
 
     @api.multi
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         docs = self.env['sale.order'].browse(docids)
-        docargs = {
+        return {
             'doc_ids': docs.ids,
             'doc_model': 'sale.order',
             'docs': docs,
             'proforma': True
         }
-        return self.env['report'].render('sale.report_saleorder', docargs)

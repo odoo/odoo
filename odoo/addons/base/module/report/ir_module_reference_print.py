@@ -25,15 +25,13 @@ class IrModelReferenceReport(models.AbstractModel):
         return []
 
     @api.model
-    def render_html(self, docids, data=None):
-        Report = self.env['report']
-        report = Report._get_report_from_name('base.report_irmodulereference')
+    def get_report_values(self, docids, data=None):
+        report = self.env['ir.actions.report']._get_report_from_name('base.report_irmodulereference')
         selected_modules = self.env['ir.module.module'].browse(docids)
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': report.model,
             'docs': selected_modules,
             'findobj': self._object_find,
             'findfields': self._fields_find,
         }
-        return Report.render('base.report_irmodulereference', docargs)

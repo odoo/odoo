@@ -17,7 +17,7 @@ Key Features
 * Manage your Events and Registrations
 * Use emails to automatically confirm and send acknowledgments for any event registration
 """,
-    'depends': ['base_setup', 'mail', 'report'],
+    'depends': ['base_setup', 'mail'],
     'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',

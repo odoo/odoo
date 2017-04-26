@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+    <data>
         <!-- report.paperformat -->
         <record id="paperformat_view_tree" model="ir.ui.view">
             <field name="name">paper_format_view_tree</field>
@@ -70,12 +70,11 @@
             groups="base.group_no_one"
             />
 
-
         <!-- Customize the company form view by adding paperformat field as well as demo reports -->
         <!-- Demo reports definition -->
         <template id="preview_internalreport">
-            <t t-call="report.html_container">
-                <t t-call="report.internal_layout">
+            <t t-call="web.html_container">
+                <t t-call="web.internal_layout">
                     <div class="page">
                         <p>This is a sample of an internal report.</p>
                     </div>
@@ -83,8 +82,8 @@
             </t>
         </template>
         <template id="preview_externalreport">
-            <t t-call="report.html_container">
-                <t t-call="report.external_layout">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
                     <div class="page">
                         <p>This is a sample of an external report.</p>
                     </div>
@@ -93,15 +92,15 @@
         </template>
         <report id="action_report_internalpreview"
             model="res.company"
-            name="report.preview_internalreport"
-            file="report.preview_internalreport"
+            name="base.preview_internalreport"
+            file="base.preview_internalreport"
             string="Preview Internal Report"
             report_type="qweb-pdf"/>
         <report id="action_report_externalpreview"
             model="res.company"
-            name="report.preview_externalreport"
-            file="report.preview_externalreport"
+            name="base.preview_externalreport"
+            file="base.preview_externalreport"
             string="Preview External Report"
             report_type="qweb-pdf"/>
-
+    </data>
 </odoo>

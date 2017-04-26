@@ -31,7 +31,7 @@ class ReportOverdue(models.AbstractModel):
         return res
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         totals = {}
         lines = self._get_account_move_lines(docids)
         lines_to_display = {}
@@ -57,7 +57,7 @@ class ReportOverdue(models.AbstractModel):
                     totals[partner_id][currency]['paid'] += line['credit']
                     totals[partner_id][currency]['mat'] += line['mat']
                     totals[partner_id][currency]['total'] += line['debit'] - line['credit']
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': 'res.partner',
             'docs': self.env['res.partner'].browse(docids),
@@ -66,4 +66,3 @@ class ReportOverdue(models.AbstractModel):
             'Totals': totals,
             'Date': fields.date.today(),
         }
-        return self.env['report'].render('account.report_overdue', values=docargs)

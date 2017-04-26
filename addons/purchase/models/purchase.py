@@ -307,7 +307,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def print_quotation(self):
-        return self.env['report'].get_action(self, 'purchase.report_purchasequotation')
+        return self.env.ref('purchase.report_purchase_quotation').report_action(self)
 
     @api.multi
     def button_approve(self, force=False):

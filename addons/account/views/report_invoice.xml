@@ -2,7 +2,7 @@
 <odoo>
 <data>
 <template id="report_invoice_document">
-    <t t-call="report.external_layout">
+    <t t-call="web.external_layout">
         <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
         <div class="page">
             <div class="row">
@@ -164,7 +164,7 @@
 </template>
 
 <template id="report_invoice">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="o">
             <t t-call="account.report_invoice_document" t-lang="o.partner_id.lang"/>
         </t>
@@ -183,7 +183,7 @@
 </template>
 
 <template id="account_invoice_report_duplicate_main">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="o">
             <t t-call="account.account_invoice_report_duplicate" t-lang="o.partner_id.lang"/>
         </t>

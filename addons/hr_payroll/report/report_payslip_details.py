@@ -87,9 +87,9 @@ class PayslipDetailsReport(models.AbstractModel):
         return res
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         payslips = self.env['hr.payslip'].browse(docids)
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': 'hr.payslip',
             'docs': payslips,
@@ -97,4 +97,3 @@ class PayslipDetailsReport(models.AbstractModel):
             'get_details_by_rule_category': self.get_details_by_rule_category(payslips.mapped('details_by_salary_rule_category').filtered(lambda r: r.appears_on_payslip)),
             'get_lines_by_contribution_register': self.get_lines_by_contribution_register(payslips.mapped('line_ids').filtered(lambda r: r.appears_on_payslip)),
         }
-        return self.env['report'].render('hr_payroll.report_payslipdetails', docargs)

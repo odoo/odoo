@@ -2,7 +2,7 @@
 <odoo>
 
         <report
-            id="report_holidays_summary"
+            id="action_report_holidayssummary"
             string="Leaves Summary"
             model="hr.holidays"
             report_type="qweb-pdf"
@@ -10,7 +10,7 @@
             file="hr_holidays.report_holidayssummary"
             menu="False"/>
 
-        <record id="report_holidays_summary" model="ir.actions.report">
+        <record id="action_report_holidayssummary" model="ir.actions.report">
             <field name="paperformat_id" ref="hr_holidays.paperformat_hrsummary"/>
         </record>
 
