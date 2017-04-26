@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo.exceptions import AccessError, MissingError
 from odoo.tests.common import TransactionCase
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, pycompat
 
 
 class TestORM(TransactionCase):
@@ -193,7 +193,7 @@ class TestInherits(TransactionCase):
         """ `default_get` cannot return a dictionary or a new id """
         defaults = self.env['res.users'].default_get(['partner_id'])
         if 'partner_id' in defaults:
-            self.assertIsInstance(defaults['partner_id'], (bool, int, long))
+            self.assertIsInstance(defaults['partner_id'], (bool, pycompat.integer_types))
 
     def test_create(self):
         """ creating a user should automatically create a new partner """

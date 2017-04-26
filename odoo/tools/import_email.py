@@ -125,7 +125,7 @@ class ReceiverEmail2Event(object):
                     os.mkdir(newdir)
 
                 counter += 1
-                fd = file(os.path.join(newdir, filename), 'w')
+                fd = open(os.path.join(newdir, filename), 'w')
                 fd.write(part.get_payload(decode=1))
                 fd.close()
         else:

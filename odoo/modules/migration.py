@@ -137,7 +137,8 @@ class MigrationManager(object):
                     try:
                         fp, fname = tools.file_open(pyfile, pathinfo=True)
 
-                        if not isinstance(fp, file):
+                        # FIXME: imp.load_source removed in P3, and so is the ``file`` object...
+                        if not isinstance(fp, file):# pylint: disable=file-builtin
                             # imp.load_source need a real file object, so we create
                             # one from the file-like object we get from file_open
                             fp2 = os.tmpfile()

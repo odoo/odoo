@@ -27,6 +27,7 @@ from cStringIO import StringIO
 from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
 from itertools import islice, izip, groupby, repeat
 from lxml import etree
+
 from which import which
 from threading import local
 import traceback
@@ -41,6 +42,7 @@ except ImportError:
 from config import config
 from cache import *
 from .parse_version import parse_version 
+from . import pycompat
 
 import odoo
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
@@ -279,7 +281,7 @@ def flatten(list):
     return r
 
 def reverse_enumerate(l):
-    """Like enumerate but in the other sens
+    """Like enumerate but in the other direction
     
     Usage::
     >>> a = ['a', 'b', 'c']
@@ -295,7 +297,7 @@ def reverse_enumerate(l):
       File "<stdin>", line 1, in <module>
     StopIteration
     """
-    return izip(xrange(len(l)-1, -1, -1), reversed(l))
+    return izip(pycompat.range(len(l)-1, -1, -1), reversed(l))
 
 def partition(pred, elems):
     """ Return a pair equivalent to:
@@ -654,8 +656,11 @@ def posix_to_ldml(fmt, locale):
 def split_every(n, iterable, piece_maker=tuple):
     """Splits an iterable into length-n pieces. The last piece will be shorter
        if ``n`` does not evenly divide the iterable length.
-       @param ``piece_maker``: function to build the pieces
-       from the slices (tuple,list,...)
+       
+       :param int n: maximum size of each generated chunk
+       :param Iterable iterable: iterable to chunk into pieces
+       :param piece_maker: callable taking an iterable and collecting each 
+                           chunk from its slice, *must consume the entire slice*.
     """
     iterator = iter(iterable)
     piece = piece_maker(islice(iterator, n))
@@ -989,6 +994,39 @@ class LastOrderedSet(OrderedSet):
     def add(self, elem):
         OrderedSet.discard(self, elem)
         OrderedSet.add(self, elem)
+
+def unique(it):
+    """ "Uniquifier" for the provided iterable: will output each element of
+    the iterable once.
+
+    The iterable's elements must be hashahble.
+
+    :param Iterable it:
+    :rtype: Iterator
+    """
+    seen = set()
+    for e in it:
+        if e not in seen:
+            seen.add(e)
+            yield e
+
+class Reverse(object):
+    """ Wraps a value and reverses its ordering, useful in key functions when
+    mixing ascending and descending sort on non-numeric data as the
+    ``reverse`` parameter can not do piecemeal reordering.
+    """
+    __slots__ = ['val']
+
+    def __init__(self, val):
+        self.val = val
+
+    def __eq__(self, other): return self.val == other.val
+    def __ne__(self, other): return self.val != other.val
+
+    def __ge__(self, other): return self.val <= other.val
+    def __gt__(self, other): return self.val < other.val
+    def __le__(self, other): return self.val >= other.val
+    def __lt__(self, other): return self.val > other.val
 
 @contextmanager
 def ignore(*exc):

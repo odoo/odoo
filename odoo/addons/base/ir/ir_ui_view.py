@@ -22,7 +22,7 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.osv import orm
-from odoo.tools import config, graph, ConstantMapping, SKIPPED_ELEMENT_TYPES
+from odoo.tools import config, graph, ConstantMapping, SKIPPED_ELEMENT_TYPES, pycompat
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.parse_version import parse_version
 from odoo.tools.safe_eval import safe_eval
@@ -944,7 +944,7 @@ actual arch.
         view ID or an XML ID. Note that this method may be overridden for other
         kinds of template values.
         """
-        if isinstance(template, (int, long)):
+        if isinstance(template, pycompat.integer_types):
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
@@ -1045,7 +1045,7 @@ actual arch.
 
     @api.multi
     def render(self, values=None, engine='ir.qweb'):
-        assert isinstance(self.id, (int, long))
+        assert isinstance(self.id, pycompat.integer_types)
 
         qcontext = dict(
             env=self.env,

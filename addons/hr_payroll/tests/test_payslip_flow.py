@@ -74,12 +74,12 @@ class TestPayslipFlow(TestPayslipBase):
         # I print the payslip report
         data, format = render_report(self.env.cr, self.env.uid, richard_payslip.ids, 'hr_payroll.report_payslip', {}, {})
         if config.get('test_report_directory'):
-            file(os.path.join(config['test_report_directory'], 'hr_payroll-payslip.'+ format), 'wb+').write(data)
+            open(os.path.join(config['test_report_directory'], 'hr_payroll-payslip.'+ format), 'wb+').write(data)
 
         # I print the payslip details report
         data, format = render_report(self.env.cr, self.env.uid, richard_payslip.ids, 'hr_payroll.report_payslipdetails', {}, {})
         if config.get('test_report_directory'):
-            file(os.path.join(config['test_report_directory'], 'hr_payroll-payslipdetails.'+ format), 'wb+').write(data)
+            open(os.path.join(config['test_report_directory'], 'hr_payroll-payslipdetails.'+ format), 'wb+').write(data)
 
         # I print the contribution register report
         context = {'model': 'hr.contribution.register', 'active_ids': [self.ref('hr_payroll.hr_houserent_register')]}
