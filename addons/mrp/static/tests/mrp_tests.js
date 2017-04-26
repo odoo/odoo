@@ -17,11 +17,13 @@ QUnit.module('mrp', {
                         selection: [['waiting', 'Waiting'], ['chilling', 'Chilling']],
                     },
                     document: {string: "Document", type: "binary"},
+                    duration: {string: "Duration", type: "float"},
                 },
                 records: [{
                     id: 1,
                     document: 'coucou==\n',
                     state: 'waiting',
+                    duration: 6000,
                 }],
                 onchanges: {},
             },
@@ -100,6 +102,39 @@ QUnit.module('mrp', {
             "the widget should be correctly named");
         assert.strictEqual(form.$('.o_form_field .label-danger').length, 1,
             "the label should be danger");
+
+        form.destroy();
+    });
+
+    QUnit.test("mrp_time_counter: basic rendering", function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            res_id: 1,
+            arch:
+                '<form>' +
+                    '<field name="duration" widget="mrp_time_counter"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'mrp.workcenter.productivity') {
+                    assert.ok(true, "the widget should fetch the mrp.workcenter.productivity");
+                    return $.when([{
+                        date_start: '2017-01-01 08:00:00',
+                        date_end: '2017-01-01 10:00:00',
+                    }, {
+                        date_start: '2017-01-01 12:00:00',
+                        date_end: '2017-01-01 12:30:00',
+                    }]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_form_field[name="duration"]').text(), "02:30:00",
+            "the timer should be correctly set");
 
         form.destroy();
     });
