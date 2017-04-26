@@ -3612,5 +3612,38 @@ QUnit.module('Views', {
         $firstModal.find('.modal-footer button:first').click(); // Save & close
         form.destroy();
     });
+
+    QUnit.test('fields and record contexts are not mixed', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="trululu" context="{\'test\': 1}"/>' +
+                    '</group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.strictEqual(args.kwargs.context.test, 1,
+                        "field's context should be sent");
+                    assert.notOk('mainContext' in args.kwargs.context,
+                        "record's context should not be sent");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 2,
+            viewOptions: {
+                mode: 'edit',
+                context: {mainContext: 3},
+            },
+        });
+
+        form.$('.o_form_input:first').click(); // trigger the name_search
+
+        form.destroy();
+    });
 });
 });

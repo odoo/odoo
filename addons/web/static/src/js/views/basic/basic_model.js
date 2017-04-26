@@ -1851,18 +1851,22 @@ var BasicModel = AbstractModel.extend({
      * @param {string|Object} [options.additionalContext]
      *        another context to evaluate and merge to the returned context
      * @param {string} [options.fieldName]
-     *        the name of the field whose context needs to be added to the
-     *        result (and evaluated)
+     *        if given, this field's context is added to the context, instead of
+     *        the element's context (except if options.full is true)
+     * @param {boolean} [options.full=false]
+     *        if true and fieldName given in options, the element's context
+     *        is added to the context
      * @returns {Object} the evaluated context
      */
     _getContext: function (element, options) {
-        var context = new Context(session.user_context, element.context);
+        options = options || {};
+        var context = new Context(session.user_context);
         context.set_eval_context(this._getEvalContext(element));
 
-        if (options && options.additionalContext) {
-            context.add(options.additionalContext);
+        if (options.full || !options.fieldName) {
+            context.add(element.context);
         }
-        if (options && options.fieldName) {
+        if (options.fieldName) {
             var viewType = options.viewType || element.viewType;
             var fieldInfo = element.fieldsInfo[viewType][options.fieldName];
             if (fieldInfo && fieldInfo.context) {
@@ -1873,6 +1877,9 @@ var BasicModel = AbstractModel.extend({
                     context.add(fieldParams.context);
                 }
             }
+        }
+        if (options.additionalContext) {
+            context.add(options.additionalContext);
         }
         if (element.rawContext) {
             var rawContext = new Context(element.rawContext);
@@ -2319,7 +2326,9 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var onchange_spec = this._buildOnchangeSpecs(record);
         var idList = record.data.id ? [record.data.id] : [];
-        var options = {};
+        var options = {
+            full: true,
+        };
         if (fields.length === 1) {
             fields = fields[0];
             // if only one field changed, add its context to the RPC context
