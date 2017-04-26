@@ -558,8 +558,12 @@ var BasicComposer = Widget.extend(chat_mixin, {
                 break;
             // ESCAPE: close mention propositions
             case $.ui.keyCode.ESCAPE:
-                event.stopPropagation();
-                this.mention_manager.reset_suggestions();
+                if (this.mention_manager.is_open()) {
+                    event.stopPropagation();
+                    this.mention_manager.reset_suggestions();
+                } else {
+                    this.trigger_up("escape_pressed");
+                }
                 break;
             // ENTER, UP, DOWN: check if navigation in mention propositions
             case $.ui.keyCode.ENTER:
