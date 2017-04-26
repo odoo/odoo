@@ -1507,7 +1507,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             name
             for name, field in pycompat.items(self._fields)
             if name not in values
-            if name not in MAGIC_COLUMNS
+            if self._log_access and name not in MAGIC_COLUMNS
             if not (field.inherited and field.related_field.model_name in avoid_models)
         }
 
@@ -2982,7 +2982,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.check_access_rights('write')
 
         # No user-driven update of these columns
-        for field in itertools.chain(MAGIC_COLUMNS, ('parent_left', 'parent_right')):
+        pop_fields = ['parent_left', 'parent_right']
+        if self._log_access:
+            pop_fields.extend(MAGIC_COLUMNS)
+        for field in pop_fields:
             vals.pop(field, None)
 
         # split up fields into old-style and pure new-style ones
@@ -3250,7 +3253,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # add missing defaults, and drop fields that may not be set by user
         vals = self._add_missing_default_values(vals)
-        for field in itertools.chain(MAGIC_COLUMNS, ('parent_left', 'parent_right')):
+        pop_fields = ['parent_left', 'parent_right']
+        if self._log_access:
+            pop_fields.extend(MAGIC_COLUMNS)
+        for field in pop_fields:
             vals.pop(field, None)
 
         # split up fields into old-style and pure new-style ones
