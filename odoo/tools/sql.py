@@ -23,7 +23,7 @@ _CONFDELTYPES = {
 
 def table_exists(cr, tablename):
     """ Return whether the given table exists. """
-    query = "SELECT 1 FROM information_schema.tables WHERE table_name=%s"
+    query = "SELECT 1 FROM information_schema.tables WHERE table_name=%s AND table_schema != 'information_schema'"
     cr.execute(query, (tablename,))
     return cr.rowcount
 
