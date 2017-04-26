@@ -152,46 +152,86 @@ var SetBulletStatus = AbstractField.extend({
 });
 
 var TimeCounter = AbstractField.extend({
-    start_time_counter: function () {
+    supportedFieldTypes: [],
+    /**
+     * @override
+     */
+    willStart: function () {
+        var self = this;
+        var def = this._rpc({
+            model: 'mrp.workcenter.productivity',
+            method: 'search_read',
+            domain: [
+                ['workorder_id', '=', this.record.data.id],
+                ['user_id', '=', this.getSession().uid],
+            ],
+        }).then(function (result) {
+            if (self.mode === 'readonly') {
+                var currentDate = new Date();
+                self.duration = 0;
+                _.each(result, function (data) {
+                    self.duration += data.date_end ?
+                        self._getDateDifference(data.date_start, data.date_end) :
+                        self._getDateDifference(time.auto_str_to_date(data.date_start), currentDate);
+                });
+            }
+        });
+        return $.when(this._super.apply(this, arguments), def);
+    },
+
+    destroy: function () {
+        this._super.apply(this, arguments);
+        clearTimeout(this.timer);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    isSet: function () {
+        return true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Compute the difference between two dates.
+     *
+     * @private
+     * @param {string} dateStart
+     * @param {string} dateEnd
+     * @returns {integer} the difference in millisecond
+     */
+    _getDateDifference: function (dateStart, dateEnd) {
+        return moment(dateEnd).diff(moment(dateStart));
+    },
+    /**
+     * @override
+     */
+    _render: function () {
+        this._startTimeCounter();
+    },
+    /**
+     * @private
+     */
+    _startTimeCounter: function () {
         var self = this;
         clearTimeout(this.timer);
         if (this.record.data.is_user_working) {
-            this.duration += 1000;
             this.timer = setTimeout(function () {
-                self.start_time_counter();
+                self.duration += 1000;
+                self._startTimeCounter();
             }, 1000);
         } else {
             clearTimeout(this.timer);
         }
         this.$el.html($('<span>' + moment.utc(this.duration).format("HH:mm:ss") + '</span>'));
     },
-    render: function () {
-        var self = this;
-        this._super.apply(this, arguments);
-        var productivity_domain = [['workorder_id', '=', this.record.data.id], ['user_id', '=', self.session.uid]];
-        this.trigger_up('perform_model_rpc', {
-            method: 'search_read',
-            model: 'mrp.workcenter.productivity',
-            args: [productivity_domain, []],
-            on_success: function (result) {
-                if (self.mode === "readonly") {
-                    var current_date = new Date();
-                    self.duration = 0;
-                    _.each(result, function (data) {
-                        self.duration += data.date_end ? self.get_date_difference(data.date_start, data.date_end) : self.get_date_difference(time.auto_str_to_date(data.date_start), current_date);
-                    });
-                    self.start_time_counter();
-                }
-            },
-        });
-    },
-    get_date_difference: function (date_start, date_end) {
-        var difference = moment(date_end).diff(moment(date_start));
-        return moment.duration(difference);
-    },
-    has_no_value: function () {
-        return false;
-    }
 });
 
 field_registry
