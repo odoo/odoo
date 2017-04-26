@@ -116,16 +116,34 @@ var FieldPdfViewer = FieldBinaryFile.extend({
 
 });
 
+/**
+ * This widget is used to display the availability on a workorder.
+ */
 var SetBulletStatus = AbstractField.extend({
+    // as this widget is based on hardcoded values, use it in another context
+    // probably won't work
+    // supportedFieldTypes: ['selection'],
+    /**
+     * @override
+     */
     init: function () {
         this._super.apply(this, arguments);
         this.classes = this.nodeOptions && this.nodeOptions.classes || {};
     },
-    render_readonly: function () {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @override
+     */
+    _renderReadonly: function () {
         this._super.apply(this, arguments);
         var bullet_class = this.classes[this.value] || 'default';
         if (this.value) {
-            var title = this.value === 'waiting'? _t('Waiting Materials') : _t('Ready to produce');
+            var title = this.value === 'waiting' ? _t('Waiting Materials') : _t('Ready to produce');
             this.$el.attr({'title': title, 'style': 'display:inline'});
             this.$el.removeClass('text-success text-danger text-default');
             this.$el.html($('<span>' + title + '</span>').addClass('label label-' + bullet_class));

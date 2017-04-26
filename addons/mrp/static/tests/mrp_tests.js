@@ -11,11 +11,17 @@ QUnit.module('mrp', {
         this.data = {
             partner: {
                 fields: {
+                    state: {
+                        string: "State",
+                        type: "selection",
+                        selection: [['waiting', 'Waiting'], ['chilling', 'Chilling']],
+                    },
                     document: {string: "Document", type: "binary"},
                 },
                 records: [{
                     id: 1,
                     document: 'coucou==\n',
+                    state: 'waiting',
                 }],
                 onchanges: {},
             },
@@ -72,6 +78,28 @@ QUnit.module('mrp', {
         assert.strictEqual(form.$('.o_form_field iframe.o_pdfview_iframe').attr('src'),
             '#test:/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1',
             "the src attribute should be correctly set on the iframe");
+
+        form.destroy();
+    });
+
+    QUnit.test("bullet_state: basic rendering", function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            res_id: 1,
+            arch:
+                '<form>' +
+                    '<field name="state" widget="bullet_state" options="{\'classes\': {\'waiting\': \'danger\'}}"/>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('.o_form_field').text(), "Waiting Materials",
+            "the widget should be correctly named");
+        assert.strictEqual(form.$('.o_form_field .label-danger').length, 1,
+            "the label should be danger");
 
         form.destroy();
     });
