@@ -9,7 +9,7 @@ class ProductTemplate(models.Model):
 
     track_service = fields.Selection(selection_add=[
         ('timesheet', 'Timesheets on project'),
-        ('task', 'Create a task and track hours')])
+        ('task', 'Create a task per order line to track hours')])
     project_id = fields.Many2one(
         'project.project', 'Project', company_dependent=True,
         help='Create a task under this project on sales order validation. This setting must be set for each company.')
