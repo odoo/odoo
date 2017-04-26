@@ -246,7 +246,7 @@ class Repair(models.Model):
 
     @api.multi
     def print_repair_order(self):
-        return self.env['report'].get_action(self, 'mrp_repair.report_mrprepairorder')
+        return self.env.ref('mrp_repair.action_report_mrp_repair_order').report_action(self)
 
     def action_repair_invoice_create(self):
         self.action_invoice_create()

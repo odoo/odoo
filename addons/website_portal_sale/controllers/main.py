@@ -225,7 +225,7 @@ class website_account(website_account):
             return request.render("website.403")
         # print report as sudo, since it require access to taxes, payment term, ... and portal
         # does not have those access rights.
-        pdf = request.env['report'].sudo().get_pdf([invoice_id], 'account.report_invoice')
+        pdf = request.env.ref('account.account_invoices').sudo().render_qweb_pdf([invoice_id])[0]
         pdfhttpheaders = [
             ('Content-Type', 'application/pdf'),
             ('Content-Length', len(pdf)),

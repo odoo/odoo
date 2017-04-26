@@ -25,7 +25,7 @@ Dashboard / Reports for Purchase Management will include:
 * Purchase Analysis
     """,
     'website': 'https://www.odoo.com/page/purchase',
-    'depends': ['stock_account', 'report'],
+    'depends': ['stock_account'],
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',

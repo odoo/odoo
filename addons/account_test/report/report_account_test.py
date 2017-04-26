@@ -61,11 +61,10 @@ class ReportAssertAccount(models.AbstractModel):
         return result
 
     @api.model
-    def render_html(self, docids, data=None):
-        Report = self.env['report']
-        report = Report._get_report_from_name('account_test.report_accounttest')
+    def get_report_values(self, docids, data=None):
+        report = self.env['ir.actions.report']._get_report_from_name('account_test.report_accounttest')
         records = self.env['accounting.assert.test'].browse(self.ids)
-        docargs = {
+        return {
             'doc_ids': self._ids,
             'doc_model': report.model,
             'docs': records,
@@ -73,4 +72,3 @@ class ReportAssertAccount(models.AbstractModel):
             'execute_code': self.execute_code,
             'datetime': datetime
         }
-        return Report.render('account_test.report_accounttest', docargs)

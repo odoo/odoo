@@ -10,7 +10,7 @@
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="auto_delete" eval="True"/>
-            <field name="report_template" ref="report_sale_order"/>
+            <field name="report_template" ref="action_report_saleorder"/>
             <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[

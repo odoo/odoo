@@ -4,7 +4,6 @@
 from . import ir
 from . import module
 from . import res
-from . import report
 
 def post_init(cr, registry):
     """Rewrite ICP's to force groups"""

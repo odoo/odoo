@@ -148,7 +148,7 @@ class AccountInvoice(models.Model):
         self.ensure_one()
         if self.l10n_ch_isr_valid:
             self.l10n_ch_isr_sent = True
-            return self.env['report'].get_action(self, 'l10n_ch.isr_report_main')
+            return self.env.ref('l10n_ch.l10n_ch_isr_report').report_action(self)
         else:
            raise ValidationError(_("""You cannot generate an ISR yet.\n
                                    For this, you need to :\n

@@ -29,6 +29,6 @@ class TestReports(odoo.tests.TransactionCase):
                     report_records = report_records[:1]
 
                 # Test report generation
-                self.env['report'].get_html(report_records.ids, report.report_name)
+                report.render_qweb_html(report_records.ids)
             else:
                 continue

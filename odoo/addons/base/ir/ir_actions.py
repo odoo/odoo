@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
+from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.http import request
+
 import datetime
 import dateutil
 import logging
-import os
 import time
-from pytz import timezone
 
-import odoo
-from odoo import api, fields, models, tools, _
-from odoo.exceptions import MissingError, UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval, test_python_expr
+from pytz import timezone
 
 _logger = logging.getLogger(__name__)
 
@@ -69,87 +70,6 @@ class IrActions(models.Model):
             'dateutil': dateutil,
             'timezone': timezone,
         }
-
-
-class IrActionsReport(models.Model):
-    _name = 'ir.actions.report'
-    _inherit = 'ir.actions.actions'
-    _table = 'ir_act_report_xml'
-    _sequence = 'ir_actions_id_seq'
-    _order = 'name'
-
-    name = fields.Char(translate=True)
-    type = fields.Char(default='ir.actions.report')
-
-    model = fields.Char(required=True)
-    report_type = fields.Selection([('qweb-pdf', 'PDF'), ('qweb-html', 'HTML')], required=True, default="pdf",
-                                   help="HTML will open the report directly in your browser, PDF will use wkhtmltopdf to render the HTML into a PDF file and let you download it, Controller allows you to define the url of a custom controller outputting any kind of report.")
-    report_name = fields.Char(string='Template Name', required=True,
-                              help="For QWeb reports, name of the template used in the rendering. The method 'render_html' of the model 'report.template_name' will be called (if any) to give the html. For RML reports, this is the LocalService name.")
-    groups_id = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
-    ir_values_id = fields.Many2one('ir.values', string='More Menu entry', readonly=True,
-                                   help='More menu entry.', copy=False)
-
-    # options
-    multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
-    attachment_use = fields.Boolean(string='Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
-    attachment = fields.Char(string='Save as Attachment Prefix',
-                             help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
-
-    # Deprecated rml stuff
-    header = fields.Boolean(string='Add RML Header', default=True, help="Add or not the corporate RML header")
-    parser = fields.Char(string='Parser Class')
-    auto = fields.Boolean(string='Custom Python Parser', default=True)
-
-    report_file = fields.Char(string='Report File', required=False, readonly=False, store=True,
-                              help="The path to the main report file (depending on Report Type) or empty if the content is in another field")
-
-    @api.multi
-    def create_action(self):
-        """ Create a contextual action for each report. """
-        for report in self:
-            ir_values = self.env['ir.values'].sudo().create({
-                'name': report.name,
-                'model': report.model,
-                'key2': 'client_print_multi',
-                'value': "ir.actions.report,%s" % report.id,
-            })
-            report.write({'ir_values_id': ir_values.id})
-        return True
-
-    @api.multi
-    def unlink_action(self):
-        """ Remove the contextual actions created for the reports. """
-        self.check_access_rights('write', raise_exception=True)
-        for report in self:
-            if report.ir_values_id:
-                try:
-                    report.ir_values_id.sudo().unlink()
-                except Exception:
-                    raise UserError(_('Deletion of the action record failed.'))
-        return True
-
-    @api.model
-    def render_html(self, res_ids, data=None):
-        return self.env['report'].get_html(res_ids, self.report_name, data=data), 'html'
-
-    @api.multi
-    def render_pdf(self, res_ids, data=None):
-        # In case of test environment without enough workers to perform calls to wkhtmltopdf,
-        # fallback to render_html.
-        if tools.config['test_enable'] and not tools.config['test_report_directory']:
-            return self.render_html(res_ids, data=data)
-        return self.env['report'].get_pdf(res_ids, self.report_name, data=data), 'pdf'
-
-    @api.multi
-    def render(self, res_ids, data=None):
-        report_type = self.report_type.lower()
-        if report_type.startswith('qweb-'):
-            report_type = report_type[5:]
-        render_func = getattr(self, 'render_' + report_type, None)
-        if not render_func:
-            return None
-        return render_func(res_ids, data=data)
 
 
 class IrActionsActWindow(models.Model):

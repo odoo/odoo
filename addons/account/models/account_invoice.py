@@ -411,7 +411,7 @@ class AccountInvoice(models.Model):
         """
         self.ensure_one()
         self.sent = True
-        return self.env['report'].get_action(self, 'account.report_invoice')
+        return self.env.ref('account.account_invoices').report_action(self)
 
     @api.multi
     def action_invoice_sent(self):
@@ -564,14 +564,14 @@ class AccountInvoice(models.Model):
         self.write({'state': 'draft', 'date': False})
         # Delete former printed invoice
         try:
-            report_invoice = self.env['report']._get_report_from_name('account.report_invoice')
+            report_invoice = self.env['ir.actions.report']._get_report_from_name('account.report_invoice')
         except IndexError:
             report_invoice = False
         if report_invoice and report_invoice.attachment:
             for invoice in self:
                 with invoice.env.do_in_draft():
                     invoice.number, invoice.state = invoice.move_name, 'open'
-                    attachment = self.env['report']._attachment_stored(invoice, report_invoice)[invoice.id]
+                attachment = self.env['ir.actions.report'].retrieve_attachment(invoice.id)
                 if attachment:
                     attachment.unlink()
         return True

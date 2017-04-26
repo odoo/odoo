@@ -101,11 +101,10 @@ class HrHolidaySummaryReport(models.AbstractModel):
         return res
 
     @api.model
-    def render_html(self, docids, data=None):
-        Report = self.env['report']
-        holidays_report = Report._get_report_from_name('hr_holidays.report_holidayssummary')
+    def get_report_values(self, docids, data=None):
+        holidays_report = self.env['ir.actions.report']._get_report_from_name('hr_holidays.report_holidayssummary')
         holidays = self.env['hr.holidays'].browse(self.ids)
-        docargs = {
+        return {
             'doc_ids': self.ids,
             'doc_model': holidays_report.model,
             'docs': holidays,
@@ -115,4 +114,3 @@ class HrHolidaySummaryReport(models.AbstractModel):
             'get_data_from_report': self._get_data_from_report(data['form']),
             'get_holidays_status': self._get_holidays_status(),
         }
-        return Report.render('hr_holidays.report_holidayssummary', docargs)

@@ -143,11 +143,11 @@ class ReportFinancial(models.AbstractModel):
         return lines
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         self.model = self.env.context.get('active_model')
         docs = self.env[self.model].browse(self.env.context.get('active_id'))
         report_lines = self.get_account_lines(data.get('form'))
-        docargs = {
+        return {
             'doc_ids': self.ids,
             'doc_model': self.model,
             'data': data['form'],
@@ -155,4 +155,3 @@ class ReportFinancial(models.AbstractModel):
             'time': time,
             'get_account_lines': report_lines,
         }
-        return self.env['report'].render('account.report_financial', docargs)

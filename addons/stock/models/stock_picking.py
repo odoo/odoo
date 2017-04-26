@@ -445,7 +445,7 @@ class Picking(models.Model):
     @api.multi
     def do_print_picking(self):
         self.write({'printed': True})
-        return self.env["report"].get_action(self, 'stock.report_picking')
+        return self.env.ref('stock.action_report_picking').report_action(self)
 
     @api.multi
     def action_confirm(self):
