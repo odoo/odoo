@@ -75,6 +75,7 @@ var M2ODialog = Dialog.extend({
 });
 
 var FieldMany2One = AbstractField.extend({
+    supportedFieldTypes: ['many2one'],
     template: 'FieldMany2One',
     custom_events: {
         'quick_create': '_onQuickCreate',
@@ -87,7 +88,6 @@ var FieldMany2One = AbstractField.extend({
         'click .o_external_button': '_onExternalButtonClick',
         'click': '_onClick',
     }),
-    supported_field_types: ['many2one'],
 
     init: function () {
         this._super.apply(this, arguments);
