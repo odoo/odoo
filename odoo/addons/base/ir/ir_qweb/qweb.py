@@ -1475,7 +1475,7 @@ class QWeb(object):
                         ctx=ast.Load()
                     ),
                     args=[
-                        ast.Str(str(tmpl)),
+                        self._compile_format(str(tmpl)),
                         ast.Name(id=name_options, ctx=ast.Load()),
                     ],
                     keywords=[], starargs=None, kwargs=None
