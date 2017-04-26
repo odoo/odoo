@@ -18,13 +18,14 @@ class FleetVehicleCost(models.Model):
     cost_type = fields.Selection([('contract', 'Contract'), ('services', 'Services'), ('fuel', 'Fuel'), ('other', 'Other')],
         'Category of the cost', default="other", help='For internal purpose only', required=True)
     parent_id = fields.Many2one('fleet.vehicle.cost', 'Parent', help='Parent cost to this current cost')
-    cost_ids = fields.One2many('fleet.vehicle.cost', 'parent_id', 'Included Services')
+    cost_ids = fields.One2many('fleet.vehicle.cost', 'parent_id', 'Included Services', copy=True)
     odometer_id = fields.Many2one('fleet.vehicle.odometer', 'Odometer', help='Odometer measure of the vehicle at the moment of this log')
     odometer = fields.Float(compute="_get_odometer", inverse='_set_odometer', string='Odometer Value', help='Odometer measure of the vehicle at the moment of this log')
     odometer_unit = fields.Selection(related='vehicle_id.odometer_unit', string="Unit", readonly=True)
     date = fields.Date(help='Date when the cost has been executed')
     contract_id = fields.Many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost')
     auto_generated = fields.Boolean('Automatically Generated', readonly=True)
+    description = fields.Char("Cost Description")
 
     def _get_odometer(self):
         for record in self:
@@ -160,7 +161,7 @@ class FleetVehicle(models.Model):
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
     fuel_logs_count = fields.Integer(compute="_compute_count_all", string='Fuel Logs')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
-    acquisition_date = fields.Date('Acquisition Date', required=False, help='Date when the vehicle has been bought')
+    acquisition_date = fields.Date('Immatriculation Date', required=False, help='Date when the vehicle has been immatriculated')
     color = fields.Char(help='Color of the vehicle')
     state_id = fields.Many2one('fleet.vehicle.state', 'State', default=_get_default_state, help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
@@ -183,7 +184,12 @@ class FleetVehicle(models.Model):
     contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder', string='Has Contracts Overdue', multi='contract_info')
     contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon', multi='contract_info')
     contract_renewal_total = fields.Text(compute='_compute_contract_reminder', string='Total of contracts due or overdue minus one', multi='contract_info')
-    car_value = fields.Float(help='Value of the bought vehicle')
+    car_value = fields.Float(string="Catalog Value (VAT incl.)", help='Value of the bought vehicle')
+    residual_value = fields.Float()
+
+    _sql_constraints = [
+        ('driver_id_unique', 'UNIQUE(driver_id)', 'Only one car can be assigned to the same employee!')
+    ]
 
     @api.depends('model_id', 'license_plate')
     def _compute_vehicle_name(self):
@@ -216,7 +222,7 @@ class FleetVehicle(models.Model):
             record.odometer_count = Odometer.search_count([('vehicle_id', '=', record.id)])
             record.fuel_logs_count = LogFuel.search_count([('vehicle_id', '=', record.id)])
             record.service_count = LogService.search_count([('vehicle_id', '=', record.id)])
-            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id)])
+            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id), ('state', '=', 'open')])
             record.cost_count = Cost.search_count([('vehicle_id', '=', record.id), ('parent_id', '=', False)])
 
     @api.depends('log_contracts')
@@ -336,6 +342,8 @@ class FleetVehicle(models.Model):
 
             return super(FleetVehicle, self).write(vals)
 
+    # TODO: Split models in hr_payroll and fleet into several files (this is a real pain in the arse)
+
     @api.multi
     def return_action_to_open(self):
         """ This opens the xml view specified in xml_id for the current vehicle """
@@ -373,6 +381,7 @@ class FleetVehicleOdometer(models.Model):
     value = fields.Float('Odometer Value', group_operator="max")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True)
     unit = fields.Selection(related='vehicle_id.odometer_unit', string="Unit", readonly=True)
+    driver_id = fields.Many2one(related="vehicle_id.driver_id", string="Driver")
 
     @api.depends('vehicle_id', 'date')
     def _compute_vehicle_log_name(self):
@@ -522,6 +531,7 @@ class FleetVehicleLogContract(models.Model):
     sum_cost = fields.Float(compute='_compute_sum_cost', string='Indicative Costs Total')
     cost_id = fields.Many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade')
     cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)  # we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
+    odometer = fields.Float(string='Odometer at creation', help='Odometer measure of the vehicle at the moment of the contract creation')
 
     @api.depends('vehicle_id', 'cost_subtype_id', 'date')
     def _compute_contract_name(self):

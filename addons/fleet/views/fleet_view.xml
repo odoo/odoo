@@ -5,38 +5,40 @@
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
                 <form string="Model">
-                    <field name="image_medium" widget='image' class="oe_avatar"/>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. Model S"/>
-                        </h1>
-                        <label for="brand_id" class="oe_edit_only"/>
-                        <h2>
-                            <field name="brand_id" placeholder="e.g. Tesla"/>
-                        </h2>
-                    </div>
-                    <notebook>
-                        <page string="Vendors">
-                            <field name="vendors">
-                                <kanban quick_create="false" create="true">
-                                    <field name="name"/>
-                                    <templates>
-                                        <t t-name="kanban-box">
-                                            <div style="position: relative">
-                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                <div class="oe_module_vignette">
-                                                    <div class="oe_module_desc">
-                                                        <field name="name"/>
+                    <sheet>
+                        <field name="image_medium" widget='image' class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Model S"/>
+                            </h1>
+                            <label for="brand_id" class="oe_edit_only"/>
+                            <h2>
+                                <field name="brand_id" placeholder="e.g. Tesla"/>
+                            </h2>
+                        </div>
+                        <notebook>
+                            <page string="Vendors" name="vendors">
+                                <field name="vendors" widget="many2many_kanban">
+                                    <kanban quick_create="false" create="true">
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div style="position: relative">
+                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                    <div class="oe_module_vignette">
+                                                        <div class="oe_module_desc">
+                                                            <field name="name"/>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </t>
-                                    </templates>
-                                </kanban>
-                            </field>
-                        </page>
-                    </notebook>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -153,7 +155,7 @@
             <field name="model">fleet.vehicle.state</field>
             <field name="arch" type="xml">
                 <tree string="State" editable="bottom">
-                    <field name="sequence" widget="handler" invisible="1"/>
+                    <field name="sequence" widget="handler"/>
                     <field name="name" />
 
                 </tree>
@@ -177,8 +179,8 @@
 
         <menuitem name="Fleet" id="menu_root" sequence="115" groups="fleet_group_user" web_icon="fleet,static/description/icon.png"/>
         <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="100" groups="fleet_group_manager"/>
-        <menuitem action="fleet_vehicle_model_action" parent="fleet_configuration" id="fleet_vehicle_model_menu" groups="base.group_no_one"/>
-        <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" groups="base.group_no_one"/>
+        <menuitem action="fleet_vehicle_model_action" parent="fleet_configuration" id="fleet_vehicle_model_menu"/>
+        <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu"/>
         <menuitem action="fleet_vehicle_state_action" parent="fleet_configuration" id="fleet_vehicle_state_menu" groups="fleet_group_manager"/>
 
         <record id='fleet_vehicle_view_form' model='ir.ui.view'>
@@ -195,7 +197,7 @@
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-book"
-                                context="{'xml_id':'fleet_vehicle_log_contract_action'}"
+                                context="{'xml_id':'fleet_vehicle_log_contract_action', 'search_default_open': 1}"
                                 help="show the contract for this vehicle">
                                 <field name="contract_count" widget="statinfo" string="Contracts"/>
                             </button>
@@ -263,6 +265,7 @@
                                 </div>
                                 <field name="acquisition_date" />
                                 <field name="car_value" />
+                                <field name="residual_value"/>
                             </group>
                         </group>
                         <group col="2">
@@ -275,7 +278,7 @@
                                 <field name="transmission" />
                                 <field name="fuel_type" />
                                 <label for="co2"/>
-                                <div class="o_row">
+                                <div class="o_row" name="co2">
                                     <field name="co2"/><span>g/km</span>
                                 </div>
                                 <field name="horsepower" />
@@ -472,12 +475,17 @@
                                     <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
                                         <tree editable="bottom">
                                             <field name="cost_subtype_id" string="Service" domain="[('category','=','service')]"/>
+                                            <field name="description"/>
                                             <field name="amount" sum="Price" string="Indicative Cost" />
                                         </tree>
                                     </field>
 
                                 </group>
-                                <div class="oe_right"><group><field name="sum_cost" string="Indicative Costs Total"/></group></div>
+                                <div class="oe_right">
+                                    <group>
+                                        <field name="sum_cost" string="Indicative Costs Total"/>
+                                    </group>
+                                </div>
                             </page>
                             <page string="Generated Recurring Costs">
                                 <group>
@@ -547,6 +555,7 @@
             <field name="arch" type="xml">
                 <search string="Vehicles Contracts">
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <filter string="In Progress" name="open" domain="[('state', '=', 'open')]"/>
                 </search>
             </field>
         </record>
@@ -556,6 +565,7 @@
             <field name="res_model">fleet.vehicle.log.contract</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+            <field name="context">{'search_default_open': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new contract.
@@ -598,6 +608,7 @@
                 <tree string="Odometer Logs" editable="top">
                     <field name="date" />
                     <field name="vehicle_id"/>
+                    <field name="driver_id"/>
                     <field name="value" />
                     <field name="unit" />
                 </tree>
@@ -880,7 +891,7 @@
             </field>
         </record>
 
-        <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="112" groups="base.group_no_one"/>
+        <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="112"/>
 
         <record id='fleet_vehicle_service_types_view_tree' model='ir.ui.view'>
             <field name="name">fleet.service.type.tree</field>
@@ -910,7 +921,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_service_types_action" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" groups="base.group_no_one"/>
+        <menuitem action="fleet_vehicle_service_types_action" parent="fleet_configuration" id="fleet_vehicle_service_types_menu"/>
 
         <record id='fleet_vehicle_cost_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.tree</field>
@@ -918,6 +929,7 @@
             <field name="arch" type="xml">
                 <tree string="Vehicle Costs">
                     <field name="vehicle_id"/>
+                    <field name="description"/>
                     <field name="cost_subtype_id"/>
                     <field name="date"/>
                 </tree>
@@ -1008,6 +1020,7 @@
                                 <field name="vehicle_id" />
                                 <field name="cost_subtype_id"/>
                                 <field name="amount"/>
+                                <field name="description"/>
                             </group>
                             <group>
                                 <field name="date"/>
