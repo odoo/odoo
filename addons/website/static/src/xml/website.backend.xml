@@ -7,6 +7,11 @@
 
     <t t-name="website.WebsiteDashboardMain">
         <div class="o_dashboards">
+                <!-- <a href="#" class="o_box_item o_dashboard_action btn btn-primary" name="website.action_website" title="Go to Website">
+                    <div class="o_inner_box o_primary">
+                        Go to Website
+                    </div>
+                </a> -->
             <div class="container-fluid o_website_dashboard">
                 <t t-call="website.dashboard_header"/>
                 <div class="o_website_dashboard_content"/>
@@ -17,13 +22,8 @@
     <t t-name="website.dashboard_header">
         <div class="row o_dashboard_common">
             <div class="o_box">
-                <a href="#" class="o_box_item o_dashboard_action" name="website.action_website" title="Go to Website">
-                    <div class="o_inner_box o_primary">
-                        <i class="fa fa-globe fa-3x"></i><br/>
-                        Go to Website
-                    </div>
-                </a>
-                <t t-if="widget.groups.system">
+
+                <!-- <t t-if="widget.groups.system">
                     <t t-set="apps" t-value="{
                         'website_crm':              {'icon': 'fa-file-text-o', 'help': _('Add a contact form to your Contact Us page.')},
                         'website_sale':             {'icon': 'fa-shopping-cart', 'help': _('Sell online to reach new customers.')},
@@ -59,7 +59,7 @@
                             </div>
                         </a>
                     </t>
-                </t>
+                </t> -->
             </div>
         </div>
     </t>
@@ -102,5 +102,12 @@
             <button class="btn btn-sm btn-default js_date_range" data-date="month">Last Month</button>
             <button class="btn btn-sm btn-default js_date_range" data-date="year">Last Year</button>
         </div>
+    </t>
+    <t t-name="website.breadcrumb_web">
+        <a href="#" class="o_dashboard_action btn btn-primary breadcrumb" name="website.action_website" title="Go to Website">
+            <div class="o_inner_box o_primary">
+                Go to Website
+            </div>
+        </a>
     </t>
 </templates>

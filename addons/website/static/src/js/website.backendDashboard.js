@@ -49,6 +49,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     start: function() {
         var self = this;
         return this._super().then(function() {
+            // self.move_btn();
             self.update_cp();
             self.render_dashboards();
             self.render_graphs();
@@ -285,6 +286,22 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         this.update_control_panel({
             cp_content: {
                 $searchview: this.$searchview,
+            },
+            breadcrumbs: this.getParent().get_breadcrumbs(),
+        });
+    },
+    // Added by jao 
+    move_btn: function(){
+        var self = this;
+        if (!this.$btnright) {
+            this.$btnright = $(QWeb.render("website.breadcrumb_web", {
+                widget: this,
+            }));
+
+        }
+    this.update_control_panel({
+            cp_content: {
+                $btnright: this.$btnright,
             },
             breadcrumbs: this.getParent().get_breadcrumbs(),
         });
