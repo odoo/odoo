@@ -7,6 +7,12 @@
         </xpath>
     </template>
 
+    <template id="qunit_suite" inherit_id="web.qunit_suite">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/calendar/static/tests/calendar_tests.js"/>
+        </xpath>
+    </template>
+
     <!-- Template rendered in route auth=None, for anonymous user. This allow them to see meeting details -->
     <template id="invitation_page_anonymous" name="Calendar Invitation Page for anonymous users">
         <t t-call="web.layout">
