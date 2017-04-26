@@ -1253,7 +1253,8 @@ class account_invoice_line(models.Model):
         'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id')
     def _compute_price(self):
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
+        taxes = self.invoice_line_tax_id.compute_all_wrap(
+            price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id, currency=self.invoice_id.currency_id)
         self.price_subtotal = taxes['total']
         if self.invoice_id:
             self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
@@ -1452,9 +1453,9 @@ class account_invoice_line(models.Model):
             mres['invl_id'] = line.id
             res.append(mres)
             tax_code_found = False
-            taxes = line.invoice_line_tax_id.compute_all(
+            taxes = line.invoice_line_tax_id.compute_all_wrap(
                 (line.price_unit * (1.0 - (line.discount or 0.0) / 100.0)),
-                line.quantity, line.product_id, inv.partner_id)['taxes']
+                line.quantity, line.product_id, inv.partner_id, currency=line.invoice_id.currency_id)['taxes']
             for tax in taxes:
                 if inv.type in ('out_invoice', 'in_invoice'):
                     tax_code_id = tax['base_code_id']
@@ -1578,17 +1579,17 @@ class account_invoice_tax(models.Model):
         currency = invoice.currency_id.with_context(date=invoice.date_invoice or fields.Date.context_today(invoice))
         company_currency = invoice.company_id.currency_id
         for line in invoice.invoice_line:
-            taxes = line.invoice_line_tax_id.compute_all(
+            taxes = line.invoice_line_tax_id.compute_all_wrap(
                 (line.price_unit * (1 - (line.discount or 0.0) / 100.0)),
-                line.quantity, line.product_id, invoice.partner_id)['taxes']
-            for tax in taxes:
+                line.quantity, line.product_id, invoice.partner_id, currency=currency)
+            for tax in taxes['taxes']:
                 val = {
                     'invoice_id': invoice.id,
                     'name': tax['name'],
                     'amount': tax['amount'],
                     'manual': False,
                     'sequence': tax['sequence'],
-                    'base': currency.round(tax['price_unit'] * line['quantity']),
+                    'base': currency.round(taxes.get('base') or tax['price_unit'] * line['quantity']),
                 }
                 if invoice.type in ('out_invoice','in_invoice'):
                     val['base_code_id'] = tax['base_code_id']

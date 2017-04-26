@@ -2090,6 +2090,10 @@ class account_tax(osv.osv):
 
     @api.v7
     def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
+        return self.compute_all_wrap(cr, uid, taxes, price_unit, quantity, product=product, partner=partner, force_excluded=force_excluded)
+
+    @api.v7
+    def compute_all_wrap(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False, currency=None, context=None):
         """
         :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
             tax. It's used in encoding by line where you don't matter if you encoded a tax with that boolean to True or
@@ -2100,6 +2104,10 @@ class account_tax(osv.osv):
                 'taxes': []                  # List of taxes, see compute for the format
             }
         """
+        tax_obj = self.pool.get('account.tax')
+        if context is None:
+            context = {}
+        ctx = dict(context)
 
         # By default, for each tax, tax amount will first be computed
         # and rounded at the 'Account' decimal precision for each
@@ -2114,7 +2122,9 @@ class account_tax(osv.osv):
         tax_compute_precision = precision
         if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
             tax_compute_precision += 5
-        totalin = totalex = round(price_unit * quantity, precision)
+        else:
+            ctx['currency_round'] = True
+        totalin = totalex = base = round(price_unit * quantity, precision)
         tin = []
         tex = []
         for tax in taxes:
@@ -2122,34 +2132,46 @@ class account_tax(osv.osv):
                 tex.append(tax)
             else:
                 tin.append(tax)
-        tin = self.compute_inv(cr, uid, tin, price_unit, quantity, product=product, partner=partner, precision=tax_compute_precision)
+        tin = self.compute_inv_wrap(cr, uid, tin, price_unit, quantity, product=product, partner=partner, precision=tax_compute_precision, currency=currency, context=ctx)
         for r in tin:
             totalex -= r.get('amount', 0.0)
+            if r.get('id'):
+                t = tax_obj.browse(cr, uid, r['id'], context=context)
+                if t.price_include and not t.include_base_amount:
+                    base -= r.get('amount', 0.0)
         totlex_qty = 0.0
         try:
             totlex_qty = totalex/quantity
         except:
             pass
-        tex = self._compute(cr, uid, tex, totlex_qty, quantity, product=product, partner=partner, precision=tax_compute_precision)
+        tex = self._compute_wrap(cr, uid, tex, totlex_qty, quantity, product=product, partner=partner, precision=tax_compute_precision, currency=currency, context=ctx)
         for r in tex:
             totalin += r.get('amount', 0.0)
         return {
             'total': totalex,
             'total_included': totalin,
-            'taxes': tin + tex
+            'taxes': tin + tex,
+            'base': base,
         }
 
     @api.v8
     def compute_all(self, price_unit, quantity, product=None, partner=None, force_excluded=False):
-        return account_tax.compute_all(
+        return self.compute_all_wrap(price_unit, quantity, product=product, partner=partner, force_excluded=force_excluded)
+
+    @api.v8
+    def compute_all_wrap(self, price_unit, quantity, product=None, partner=None, force_excluded=False, currency=None):
+        return account_tax.compute_all_wrap(
             self._model, self._cr, self._uid, self, price_unit, quantity,
-            product=product, partner=partner, force_excluded=force_excluded)
+            product=product, partner=partner, force_excluded=force_excluded, currency=currency, context=self.env.context)
 
     def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
         _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
         return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
 
     def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
+        return self._compute_wrap(cr, uid, taxes, price_unit, quantity, product=product, partner=partner, precision=precision)
+
+    def _compute_wrap(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None, currency=None, context=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
 
@@ -2158,15 +2180,23 @@ class account_tax(osv.osv):
             tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
             one tax for each tax id in IDS and their children
         """
+        if context is None:
+            context = {}
         if not precision:
             precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         res = self._unit_compute(cr, uid, taxes, price_unit, product, partner, quantity)
         total = 0.0
         for r in res:
             if r.get('balance',False):
-                r['amount'] = round(r.get('balance', 0.0) * quantity, precision) - total
+                if context.get('currency_round') and currency:
+                    r['amount'] = self.pool['res.currency'].round(cr, uid, currency, r.get('balance', 0.0) * quantity)
+                else:
+                    r['amount'] = round(r.get('balance', 0.0) * quantity, precision) - total
             else:
-                r['amount'] = round(r.get('amount', 0.0) * quantity, precision)
+                if context.get('currency_round') and currency:
+                    r['amount'] = self.pool['res.currency'].round(cr, uid, currency, r.get('amount', 0.0) * quantity)
+                else:
+                    r['amount'] = round(r.get('amount', 0.0) * quantity, precision)
                 total += r['amount']
         return res
 
@@ -2252,6 +2282,9 @@ class account_tax(osv.osv):
         return res
 
     def compute_inv(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
+        return self.compute_inv_wrap(cr, uid, taxes, price_unit, quantity, product=product, partner=partner, precision=precision)
+
+    def compute_inv_wrap(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None, currency=None, context=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
         Price Unit is a Tax included price
@@ -2261,15 +2294,24 @@ class account_tax(osv.osv):
             tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
             one tax for each tax id in IDS and their children
         """
+        tax_obj = self.pool['account.tax']
+        if context is None:
+            context = {}
         if not precision:
             precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         res = self._unit_compute_inv(cr, uid, taxes, price_unit, product, partner=None)
         total = 0.0
         for r in res:
             if r.get('balance',False):
-                r['amount'] = round(r['balance'] * quantity, precision) - total
+                if context.get('currency_round') and currency:
+                    r['amount'] = self.pool['res.currency'].round(cr, uid, currency, r['balance'] * quantity)
+                else:
+                    r['amount'] = round(r['balance'] * quantity, precision) - total
             else:
-                r['amount'] = round(r['amount'] * quantity, precision)
+                if context.get('currency_round') and currency:
+                    r['amount'] = self.pool['res.currency'].round(cr, uid, currency, r['amount'] * quantity)
+                else:
+                    r['amount'] = round(r['amount'] * quantity, precision)
                 total += r['amount']
         return res
 
