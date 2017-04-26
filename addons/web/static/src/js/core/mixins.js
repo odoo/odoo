@@ -495,19 +495,23 @@ var ServicesMixin = {
         return session;
     },
     /**
-     * Informs the action manager to do an action. This supposes that
-     * the action manager can be found amongst the ancestors of the current widget.
-     * If that's not the case this method will simply return `false`.
+     * Informs the action manager to do an action. This supposes that the action
+     * manager can be found amongst the ancestors of the current widget.
+     * If that's not the case this method will simply return an unresolved
+     * deferred.
+     *
+     * @param {any} action
+     * @param {any} options
+     * @returns {Deferred}
      */
     do_action: function (action, options) {
         var def = $.Deferred();
-        options = options || {};
-        var oldOnSuccess = options.on_success;
-        options.on_success = function (result) {
-            oldOnSuccess(result);
-            def.resolve(result);
-        };
-        this.trigger_up('do_action', {'action': action, options: options});
+
+        this.trigger_up('do_action', {
+            action: action,
+            options: options,
+            on_success: function (result) { def.resolve(result); },
+        });
         return def;
     },
     do_notify: function (title, message, sticky, className) {
