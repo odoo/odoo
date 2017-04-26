@@ -1409,12 +1409,12 @@ QUnit.module('basic_fields', {
             'The value should be displayed properly.');
 
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('input.o_form_input').val(), '9.10',
+        assert.strictEqual(form.$('input.o_form_input').first().val(), '9.10',
             'The input should be rendered without the currency symbol.');
         assert.strictEqual(form.$('input.o_form_input').parent().children().first().text(), '$',
             'The input should be preceded by a span containing the currency symbol.');
 
-        form.$('input.o_form_input').val('108.2458938598598').trigger('input');
+        form.$('input.o_form_input').first().val('108.2458938598598').trigger('input');
         assert.strictEqual(form.$('input.o_form_input').val(), '108.2458938598598',
             'The value should not be formated yet.');
 
@@ -1450,13 +1450,13 @@ QUnit.module('basic_fields', {
             'The value should be displayed properly.');
 
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('input.o_form_input').val(), '0.00',
+        assert.strictEqual(form.$('input.o_form_input').first().val(), '0.00',
             'The input should be rendered without the currency symbol.');
         assert.strictEqual(form.$('input.o_form_input').parent().children().eq(1).text(), '€',
             'The input should be followed by a span containing the currency symbol.');
 
-        form.$('input.o_form_input').val('108.2458938598598').trigger('input');
-        assert.strictEqual(form.$('input.o_form_input').val(), '108.2458938598598',
+        form.$('input.o_form_input').first().val('108.2458938598598').trigger('input');
+        assert.strictEqual(form.$('input.o_form_input').first().val(), '108.2458938598598',
             'The value should not be formated yet.');
 
         form.$buttons.find('.o_form_button_save').click();

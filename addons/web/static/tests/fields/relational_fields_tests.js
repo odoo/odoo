@@ -557,6 +557,27 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('no_create option on a many2one', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<sheet>' +
+                            '<field name="product_id" options="{\'no_create\': True}"/>' +
+                        '</sheet>' +
+                '</form>',
+        });
+
+        form.$('.o_form_field_many2one input').focus();
+        form.$('.o_form_field_many2one input').val('new partner').trigger('keyup').trigger('focusout');
+
+        assert.strictEqual($('.modal').length, 0, "should not display the create modal");
+        form.destroy();
+    });
+
     QUnit.module('FieldOne2Many');
 
     QUnit.test('one2many basic properties', function (assert) {
