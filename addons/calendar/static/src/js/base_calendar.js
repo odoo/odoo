@@ -2,6 +2,7 @@ odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
 var bus = require('bus.bus').bus;
+var BasicModel = require('web.BasicModel');
 var field_registry = require('web.field_registry');
 var Notification = require('web.notification').Notification;
 var relational_fields = require('web.relational_fields');
@@ -104,14 +105,50 @@ WebClient.include({
     },
 });
 
+BasicModel.include({
+    /**
+     * @private
+     * @param {Object} record
+     * @param {string} fieldName
+     * @returns {Deferred}
+     */
+    _fetchSpecialAttendeeStatus: function (record, fieldName) {
+        var context = record.getContext({fieldName: fieldName});
+        var attendeeIDs = record.data[fieldName] ? this.localData[record.data[fieldName]].res_ids : [];
+        var meetingID = _.isNumber(record.res_id) ? record.res_id : false;
+        return this._rpc({
+            model: 'res.partner',
+            method: 'get_attendee_detail',
+            args: [attendeeIDs, meetingID],
+            context: context,
+        }).then(function (result) {
+            return _.map(result, function (d) {
+                return _.object(['id', 'display_name', 'status', 'color'], d);
+            });
+        });
+    },
+});
+
 var Many2ManyAttendee = FieldMany2ManyTags.extend({
-    supported_field_types: [],
+    // as this widget is model dependant (rpc on res.partner), use it in another
+    // context probably won't work
+    // supportedFieldTypes: ['many2many'],
     tag_template: "Many2ManyAttendeeTag",
-    // FIXME: This widget used to refetch the relational data fields needed to
-    //        its rendering. Basically, all usual fields for tags plus "status".
-    //        This can't currently be done with the current implementation of
-    //        the new view. For now, the attendee tags will be missing the
-    //        status indicator in studio mode.
+    specialData: "_fetchSpecialAttendeeStatus",
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _getRenderTagsContext: function () {
+        var result = this._super.apply(this, arguments);
+        result.attendeesData = this.record.specialData.partner_ids;
+        return result;
+    },
 });
 
 field_registry.add('many2manyattendee', Many2ManyAttendee);

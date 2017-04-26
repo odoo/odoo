@@ -1202,6 +1202,20 @@ var FieldMany2ManyTags = AbstractField.extend({
         }
     },
     /**
+     * Get the QWeb rendering context used by the tag template; this computation
+     * is placed in a separate function for other tags to override it.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getRenderTagsContext: function () {
+        var elements = this.value ? _.pluck(this.value.data, 'data') : [];
+        return {
+            elements: elements,
+            readonly: this.mode === "readonly",
+        };
+    },
+    /**
      * @private
      * @param {any} id
      */
@@ -1246,11 +1260,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @private
      */
     _renderTags: function () {
-        var elements = this.value ? _.pluck(this.value.data, 'data') : [];
-        this.$el.html(qweb.render(this.tag_template, {
-            elements: elements,
-            readonly: this.mode === "readonly",
-        }));
+        this.$el.html(qweb.render(this.tag_template, this._getRenderTagsContext()));
     },
 
     //--------------------------------------------------------------------------
