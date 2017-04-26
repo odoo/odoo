@@ -8,6 +8,7 @@ from lxml import etree
 from lxml.builder import E
 from psycopg2 import IntegrityError
 
+from odoo.osv.orm import modifiers_tests
 from odoo.exceptions import ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger
@@ -815,6 +816,10 @@ class TestViews(ViewCase):
                     E.button(name="action_next", type="object", string="New button")),
                 string="Replacement title", version="7.0"
             ))
+
+    def test_modifiers(self):
+        # implemeted elsewhere...
+        modifiers_tests()
 
 
 class ViewModeField(ViewCase):
