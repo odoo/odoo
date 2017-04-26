@@ -13,6 +13,7 @@ odoo.define("website.tour.banner", function (require) {
     }, [{
         trigger: "a[data-action=edit]",
         content: _t("<b>Click Edit</b> to start designing your homepage."),
+        extra_trigger: ".homepage",
         position: "bottom",
     }, {
         trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
