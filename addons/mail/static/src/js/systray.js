@@ -6,6 +6,7 @@ var framework = require('web.framework');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
+var config = require('web.config');
 
 var chat_manager = require('mail.chat_manager');
 
@@ -26,6 +27,10 @@ var MessagingMenu = Widget.extend({
         "click .o_filter_button": "on_click_filter_button",
         "click .o_new_message": "on_click_new_message",
         "click .o_mail_channel_preview": "_onClickChannel",
+    },
+    init: function (parent) {
+        this.isMobile = config.isMobile;
+        this._super(parent);
     },
     start: function () {
         this.$filter_buttons = this.$('.o_filter_button');
