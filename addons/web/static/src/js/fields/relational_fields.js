@@ -545,6 +545,9 @@ var FieldX2Many = AbstractField.extend({
             this.activeActions.create = arch.attrs.create ?
                                             JSON.parse(arch.attrs.create) :
                                             true;
+            this.activeActions.delete = arch.attrs.delete ?
+                                            JSON.parse(arch.attrs.delete) :
+                                            true;
             this.editable = arch.attrs.editable;
         }
     },
@@ -613,7 +616,7 @@ var FieldX2Many = AbstractField.extend({
                 arch: arch,
                 mode: this.mode,
                 addCreateLine: !this.isReadonly && this.activeActions.create,
-                addTrashIcon: !this.isReadonly,
+                addTrashIcon: !this.isReadonly && this.activeActions.delete,
                 viewType: 'list',
             });
         }

@@ -3263,6 +3263,54 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many: create & delete attributes', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].timmy = [12, 14];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy">' +
+                        '<tree create="true" delete="true">' +
+                            '<field name="color"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_form_field_x2many_list_row_add').length, 1, "should have the 'Add an item' link");
+        assert.strictEqual(form.$('.o_list_record_delete').length, 2, "should have the 'Add an item' link");
+
+        form.destroy();
+
+        form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy">' +
+                        '<tree create="false" delete="false">' +
+                            '<field name="color"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_form_field_x2many_list_row_add').length, 0, "should not have the 'Add an item' link");
+        assert.strictEqual(form.$('.o_list_record_delete').length, 0, "should not have the 'Add an item' link");
+
+        form.destroy();
+    });
+
     QUnit.test('many2many list: create action disabled', function (assert) {
         assert.expect(2);
         var form = createView({
