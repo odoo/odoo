@@ -172,6 +172,29 @@ function ReloadContext (parent, action) {
 }
 core.action_registry.add("reload_context", ReloadContext);
 
+/**
+ * This client action simply displays a notification. It is useful when we
+ * do an action (such as a server action), that does not need to do anything,
+ * except give some feedback to the user.
+ * @param {ActionManager} parent
+ * @param {Object} action
+ * 
+ * The action dict that the server gives must have a params key which must contain
+ * {string} title
+ * And may contain
+ * {string} message
+ * {Boolean} sticky 
+ */
+
+function NotifyUser (parent, action) {
+    var message = action.params.message || '';
+    var sticky = action.params.sticky || false;
+
+    parent.do_notify(action.params.title, message, sticky);
+}
+
+core.action_registry.add("notify_user", NotifyUser);
+
 
 // nvd3 customization
 //-------------------------------------------------------------------------
