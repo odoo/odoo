@@ -82,7 +82,7 @@
                         <field name="state" widget="statusbar" clickable="1"/>
                     </header>
                     <sheet>
-                    <div class="oe_title">
+                    <div class="oe_title" name="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" placeholder="Contract Reference"/>
@@ -91,41 +91,41 @@
                     <group>
                         <group>
                             <field name="employee_id"/>
+                            <field name="department_id"/>
                             <field name="job_id"/>
                         </group>
                         <group>
-                            <field name="department_id"/>
                             <field name="type_id"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Information" name="information">
-                            <group>
-                                <group name="salary_and_advantages" string="Salary and Advantages">
-                                    <field name="wage"/>
-                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2"/>
+                        <page string="Salary Information" name="information">
+                            <group name="main_info">
+                                <group name="salary_and_advantages" string="Monthly Advantages in Cash">
+                                    <label for="wage"/>
+                                    <div class="o_row" name="wage">
+                                        <field name="wage" nolabel="1"/>
+                                        <span>/ month</span>
+                                    </div>
+                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2" invisible="1"/>
                                 </group>
-                                <group name="duration_group" string="Duration">
-                                    <label for="trial_date_start" string="Trial Period Duration"/>
-                                    <div>
-                                        <field name="trial_date_start" class="oe_inline"/>
-                                        <span attrs="{'invisible': ['|', ('trial_date_start', '=', False), ('trial_date_end', '=', False)]}"> - </span><field name="trial_date_end" class="oe_inline"/>
+                            </group>
+                        </page>
+                        <page string="Other Information" name="other">
+                            <group>
+                                <group name="duration_group" string="Contract Terms">
+                                    <field name="date_start"/>
+                                    <label for="date_end"/>
+                                    <div class="o_row">
+                                        <field name="date_end" nolabel="1"/>
+                                        <span class="text-muted">(If fixed-term contract)</span>
                                     </div>
-                                    <label for="date_start" string="Duration"/>
-                                    <div>
-                                        <field name="date_start" class="oe_inline"/><span attrs="{'invisible': ['|', ('date_start', '=', False), ('date_end', '=', False)]}"> - </span><field name="date_end" class="oe_inline"/>
-                                    </div>
+                                    <field name="trial_date_end"/>
                                     <field name="resource_calendar_id"/>
                                 </group>
                             </group>
-                            <separator string="Notes"/>
-                            <field name="notes"/>
-                        </page>
-                        <page string="Work Permit">
-                            <group col="4">
-                                <field name="visa_no"/>
-                                <field name="permit_no"/>
-                                <field name="visa_expire"/>
+                            <group string="Notes">
+                                <field name="notes" nolabel="1"/>
                             </group>
                         </page>
                     </notebook>
