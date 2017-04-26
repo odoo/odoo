@@ -55,4 +55,9 @@
     <result id="scoped-parameter">
         ok
     </result>
+
+    <t t-name="basic-caller">
+        <t t-call="{{True and '_basic-callee' or 'other'}}"/>
+    </t>
+    <result id="basic-caller">ok</result>
 </templates>
