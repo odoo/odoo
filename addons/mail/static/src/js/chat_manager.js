@@ -82,6 +82,8 @@ function add_message (data, options) {
         _.each(msg.channel_ids, function (channel_id) {
             var channel = chat_manager.get_channel(channel_id);
             if (channel) {
+                // For mobile tabs view, we show recent message for channel. 
+                channel.last_message = msg;
                 add_to_cache(msg, []);
                 if (options.domain && options.domain !== []) {
                     add_to_cache(msg, options.domain);
@@ -288,6 +290,7 @@ function make_channel (data, options) {
         group_based_subscription: data.group_based_subscription,
         needaction_counter: data.message_needaction_counter || 0,
         unread_counter: 0,
+        last_message: data.last_message,
         last_seen_message_id: data.seen_message_id,
         cache: {'[]': {
             all_history_loaded: false,
