@@ -11,7 +11,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 var HEIGHT_OPEN = '400px';
-var HEIGHT_FOLDED = '28px';
+var HEIGHT_FOLDED = '34px';
 
 return Widget.extend({
     template: "mail.ChatWindow",
@@ -43,6 +43,8 @@ return Widget.extend({
         this.status = this.options.status;
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
+        this.isMobile = config.isMobile;
+        this.last_seen_on = this.options.last_seen_on;
     },
     start: function () {
         this.$input = this.$('.o_composer_text_field');
@@ -73,21 +75,24 @@ return Widget.extend({
         this.unread_msgs = counter;
         this.render_header();
     },
-    update_status: function (status) {
+    update_status: function (status, last_seen_on) {
         this.status = status;
+        this.last_seen_on = last_seen_on;
         this.render_header();
     },
     render_header: function () {
         this.$header.html(QWeb.render('mail.ChatWindowHeaderContent', {
             status: this.status,
+            last_seen_on: this.last_seen_on,
             title: this.title,
+            isMobile: this.isMobile,
             unread_counter: this.unread_msgs,
         }));
     },
     fold: function () {
         this.$el.animate({
             height: this.folded ? HEIGHT_FOLDED : HEIGHT_OPEN
-        });
+        }, 200);
     },
     toggle_fold: function (fold) {
         this.folded = _.isBoolean(fold) ? fold : !this.folded;

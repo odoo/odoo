@@ -9,12 +9,14 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     im_status = fields.Char('IM Status', compute='_compute_im_status')
+    last_seen = fields.Datetime('User last Seen', compute='_compute_im_status')
 
     @api.multi
     def _compute_im_status(self):
         self.env.cr.execute("""
             SELECT
                 U.partner_id as id,
+                B.last_presence as last_seen,
                 CASE WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
                      WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
                      ELSE 'online'
@@ -23,9 +25,11 @@ class ResPartner(models.Model):
                 JOIN res_users U ON B.user_id = U.id
             WHERE U.partner_id IN %s AND U.active = 't'
         """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, tuple(self.ids)))
-        res = dict(((status['id'], status['status']) for status in self.env.cr.dictfetchall()))
+        res = dict(((status['id'], (status['status'], status['last_seen'])) for status in self.env.cr.dictfetchall()))
         for partner in self:
-            partner.im_status = res.get(partner.id, 'offline')
+            status = res.get(partner.id)
+            partner.im_status = status[0] if status else 'offline'
+            partner.last_seen = status[1] if status else False
 
     @api.model
     def im_search(self, name, limit=20):

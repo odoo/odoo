@@ -48,6 +48,7 @@ function open_chat (session, options) {
             autofocus: !options.passively,
             input_less: session.mass_mailing,
             status: session.status,
+            last_seen_on: session.last_seen_on
         };
         chat_session = {
             id: session.id,
@@ -272,6 +273,7 @@ function render_hidden_sessions_dropdown () {
         sessions: display_state.hidden_sessions,
         open: display_state.windows_dropdown_is_open,
         unread_counter: display_state.hidden_unread_counter,
+        last_seen_on: false
     }));
     return $dropdown;
 }
@@ -359,7 +361,7 @@ core.bus.on('web_client_ready', null, function () {
     chat_manager.bus.on('update_dm_presence', null, function (channel) {
         _.each(chat_sessions, function (session) {
             if (channel.id === session.id) {
-                session.window.update_status(channel.status);
+                session.window.update_status(channel.status, channel.last_seen_on);
             }
         });
     });

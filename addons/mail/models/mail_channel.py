@@ -353,7 +353,12 @@ class Channel(models.Model):
                                           .with_context(active_test=False)
                                           .channel_partner_ids
                                           .filtered(lambda p: p.id != self.env.user.partner_id.id)
-                                          .read(['id', 'name', 'im_status']))
+                                          .read(['id', 'name', 'im_status', 'last_seen']))
+
+            last_message = channel.channel_fetch_preview()
+            if last_message:
+                info['last_message'] = last_message[0].get('last_message')
+
             # add user session state, if available and if user is logged
             if partner_channels.ids:
                 partner_channel = partner_channels.filtered(lambda c: channel.id == c.channel_id.id)

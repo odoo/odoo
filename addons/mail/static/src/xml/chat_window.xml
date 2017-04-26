@@ -8,6 +8,7 @@
                     <t t-set="status" t-value="widget.status"/>
                     <t t-set="title" t-value="widget.title"/>
                     <t t-set="unread_counter" t-value="widget.unread_msgs"/>
+                    <t t-set="last_seen_on" t-value="widget.last_seen_on"/>
                 </t>
             </div>
             <div class="o_chat_content">
@@ -33,6 +34,7 @@
                             <t t-set="status" t-value="session.window.status"/>
                             <t t-set="title" t-value="session.window.title"/>
                             <t t-set="unread_counter" t-value="session.window.unread_msgs"/>
+                            <t t-set="last_seen_on" t-value="false"/>
                         </t>
                     </li>
                 </t>
@@ -41,12 +43,20 @@
     </t>
 
     <t t-name="mail.ChatWindowHeaderContent">
+        <span t-if="isMobile">
+            <a href="#" class="o_chat_window_close fa fa-1x fa-arrow-left"/>&amp;nbsp;&amp;nbsp;
+        </span>
         <span class="o_chat_title">
             <t t-if="status" t-call="mail.chat.UserStatus"/>
             <t t-esc="title"/>
             <span t-if="unread_counter"> (<t t-esc="unread_counter"/>)</span>
+            <t t-if="status">
+                <small class="o_last_seen_on">
+                    <t t-if="status != 'online' &amp;&amp; last_seen_on"> - <t t-esc="last_seen_on"/></t>
+                </small>
+            </t>
         </span>
-        <span class="o_chat_window_buttons">
+        <span t-if="!isMobile" class="o_chat_window_buttons">
             <a href="#" class="o_chat_window_close fa fa-close"/>
         </span>
     </t>
