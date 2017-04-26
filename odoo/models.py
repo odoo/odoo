@@ -398,7 +398,7 @@ class BaseModel(object):
             This method should only be used for manual fields.
         """
         cls = type(self)
-        field = cls._fields.pop(name)
+        field = cls._fields.pop(name, None)
         if hasattr(cls, name):
             delattr(cls, name)
         return field
