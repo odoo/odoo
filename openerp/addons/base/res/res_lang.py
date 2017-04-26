@@ -269,7 +269,7 @@ class Lang(models.Model):
 
             if percent[-1] in 'eEfFgG':
                 parts = formatted.split('.')
-                parts[0], _ = intersperse(parts[0], eval_lang_grouping, thousands_sep)
+                parts[0] = intersperse(parts[0], eval_lang_grouping, thousands_sep)[0]
 
                 formatted = decimal_point.join(parts)
 
