@@ -327,7 +327,7 @@ class Applicant(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         record = self[0]
-        if 'emp_id' in init_values and record.emp_id:
+        if 'emp_id' in init_values and record.emp_id and record.emp_id.active:
             return 'hr_recruitment.mt_applicant_hired'
         elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:
             return 'hr_recruitment.mt_applicant_new'
