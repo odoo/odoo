@@ -65,6 +65,9 @@
         'data/stock_sequence_data.xml',
         'data/web_planner_data.xml',
     ],
+    'qweb': [
+        'static/src/xml/stock_traceability_report_backend.xml',
+    ],
     'test': [
         'test/procrule.yml',
         'test/stock_users.yml',

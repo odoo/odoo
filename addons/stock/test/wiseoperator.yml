@@ -24,9 +24,9 @@
 - 
   !python {model: stock.picking, id: pick1_wise}: |
     self.action_confirm()
-    self.do_prepare_partial()
-- 
-  Put 6 pieces in shelf1 and 4 pieces in shelf2
+    self.action_assign()
+-
+  Put 4 pieces in shelf1 and 6 pieces in shelf2
 - 
   !python {model: stock.picking, id: pick1_wise}: |
     stock_pack = self.env['stock.pack.operation']
@@ -34,14 +34,14 @@
     package1 = stock_quant_pack.create({'name': 'Pack 1'})
     self.pack_operation_ids[0].write({
       'result_package_id': package1.id,
-      'product_qty': 4,
+      'qty_done': 4,
       'location_dest_id': ref('stock_location_components')
     })
     new_pack1 = stock_pack.create({
       'product_id': ref('product_wise'),
       'product_uom_id': ref('product.product_uom_unit'),
       'picking_id': ref('pick1_wise'),
-      'product_qty': 6.0,
+      'qty_done': 6.0,
       'location_id': ref('stock_location_suppliers'),
       'location_dest_id': ref('stock_location_14')
     })
@@ -74,6 +74,7 @@
   !python {model: stock.picking, id: delivery_order_wise1}: |
     self.action_confirm()
     self.action_assign()
+    assert self.state == 'assigned'
 - 
   Make a delivery order of 5 pieces to the customer
 - 
@@ -92,22 +93,43 @@
   !python {model: stock.picking, id: delivery_order_wise2}: |
     self.action_confirm()
     self.action_assign()
+    assert self.state == 'assigned'
 - 
   The operator is a wise guy and decides to do the opposite of what Odoo proposes.  He uses the products reserved on picking 1 on picking 2 and vice versa
 - 
   !python {model: stock.picking, id: False}: |
-    stock_pack = self.env['stock.pack.operation']
     picking1 = self.browse(ref('delivery_order_wise1'))
     picking2 = self.browse(ref('delivery_order_wise2'))
-    pack_ids1 = [x.id for x in picking1.pack_operation_ids]
-    pack_ids2 = [x.id for x in picking2.pack_operation_ids]
-    self.env['stock.pack.operation'].browse(pack_ids1).write({'picking_id': picking2.id})
-    self.env['stock.pack.operation'].browse(pack_ids2).write({'picking_id': picking1.id})
-    link_obj = self.env['stock.move.operation.link']
-    # The recompute remaining qtys does not take into account that pack operations change picking
-    links = link_obj.search([('operation_id', 'in', pack_ids1 + pack_ids2)])
-    links.unlink()
-- 
+    move1 = picking1.move_lines[0]
+    move2 = picking2.move_lines[0]
+    pack_ids1 = picking1.pack_operation_ids
+    pack_ids2 = picking2.pack_operation_ids
+
+    assert pack_ids1.location_id.id == ref('stock_location_14')
+    assert set(pack_ids2.mapped('location_id.id')) == set([ref('stock_location_components'), ref('stock_location_14')])
+
+    # put the move lines from picking2 into picking1
+    for pack_id2 in pack_ids2:
+      new_pack_id1 = pack_id2.copy(default={'picking_id': picking1.id, 'move_id': move1.id})
+      new_pack_id1.qty_done = new_pack_id1.product_qty
+      new_pack_id1.with_context(bypass_reservation_update=True).product_uom_qty = 0
+
+    new_move_lines = picking1.pack_operation_ids.filtered(lambda p: p.qty_done)
+    assert sum(new_move_lines.mapped('product_qty')) == 0
+    assert sum(new_move_lines.mapped('qty_done')) == 5
+    assert set(new_move_lines.mapped('location_id.id')) == set([ref('stock_location_components'), ref('stock_location_14')])
+
+    # put the move line from picking1 into picking2
+    new_pack_id2 = pack_ids1.copy(default={'picking_id': picking2.id, 'move_id': move2.id})
+    new_pack_id2.qty_done = new_pack_id2.product_qty
+    new_pack_id2.with_context(bypass_reservation_update=True).product_uom_qty = 0
+
+    new_move_lines = picking2.pack_operation_ids.filtered(lambda p: p.qty_done)
+    assert len(new_move_lines) == 1
+    assert sum(new_move_lines.mapped('product_qty')) == 0
+    assert sum(new_move_lines.mapped('qty_done')) == 5
+    assert new_move_lines.location_id.id == ref('stock_location_14')
+-
   Process this picking
 - 
   !python {model: stock.picking, id: delivery_order_wise1}: |
@@ -116,7 +138,7 @@
   Check there was no negative quant created by this picking
 - 
   !python {model: stock.quant, id: False}: |
-    records = self.search([('product_id','=',ref('product_wise')), ('qty', '<', 0.0)])
+    records = self.search([('product_id','=',ref('product_wise')), ('quantity', '<', 0.0)])
     assert len(records.ids) == 0, 'This should not have created a negative quant'
 - 
   Check the other delivery order has changed its state back to partially available
