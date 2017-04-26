@@ -44,14 +44,19 @@
         <field name="code">ONSS</field>
         <field name="parent_id" ref="hr_payroll.ALW"/>
     </record>
+    <record id="hr_payroll_head_employment_bonus" model="hr.salary.rule.category">
+        <field name="name">Employment Bonus</field>
+        <field name="code">EmpBonus</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
     <record id="hr_payroll_head_div_impos" model="hr.salary.rule.category">
         <field name="name">Misc. Taxable</field>
         <field name="code">DIV. IMPOS</field>
         <field name="parent_id" ref="hr_payroll.ALW"/>
     </record>
     <record id="hr_payroll_head_pp" model="hr.salary.rule.category">
-        <field name="name">Withholding Tax Grid 2011 (Precompte Professionnel Bareme 2011)</field>
-        <field name="code">P.P.</field>
+        <field name="name">Withholding Tax Grid 2017 (Precompte Professionnel Bareme 2017)</field>
+        <field name="code">PP</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
     <record id="hr_payroll_head_div_net" model="hr.salary.rule.category">
@@ -61,10 +66,24 @@
     </record>
     <record id="hr_payroll_head_child_alw" model="hr.salary.rule.category">
         <field name="name">Child Allowance Belgium</field>
-        <field name="code">Ch.A</field>
+        <field name="code">ChA</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
-
+    <record id="hr_salary_rule_category_family_reductions" model="hr.salary.rule.category">
+        <field name="name">Reduction for special family charges</field>
+        <field name="code">FamRed</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    <record id="hr_salary_rule_pp_reductions" model="hr.salary.rule.category">
+        <field name="name">Withholding Tax Reduction</field>
+        <field name="code">PPRed</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    <record id="hr_salary_rule_category_spec_soc_contribution" model="hr.salary.rule.category">
+        <field name="name">Special social contribution</field>
+        <field name="code">SSC</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
 <!-- HR SALARY RULES-->
     <record id="hr_payroll_rules_maj" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_salary"/> 
@@ -76,11 +95,12 @@
     </record>
     <record id="hr_payroll_rules_employee" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_salary"/> 
-        <field name="name">Employee Salary</field>
+        <field name="name">Gross Salary</field>
         <field name="code">SALARY</field>
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = contract.wage * 1</field>
+        <field name="amount_python_compute">result = contract.wage * 1 + contract.car_atn + contract.mobile + contract.mobile_plus + contract.internet</field>
+        <field name="sequence">20</field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_onss_rule" model="hr.salary.rule">
@@ -93,19 +113,87 @@
         <field name="amount_percentage_base">SALARY</field>
         <field name="amount_percentage">-13.07</field>
         <field name="register_id" ref="contrib_register_onss"/>
-   </record>
-   <record id="hr_payroll_rules_p_p_b1" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_pp"/> 
-        <field name="name">Withholding Tax Grid 2011</field>
-        <field name="code">P.P</field>
-        <field name="sequence">120</field>
-        <field name="amount_select">fix</field>
-        <field name="condition_select">none</field>
-        <field name="appears_on_payslip" eval="False"/>
     </record>
+    <record id="hr_salary_rule_employment_bonus_employees" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_employment_bonus"/> 
+        <field name="name">Employment Bonus</field>
+        <field name="code">EmpBonus.1</field>
+        <field name="sequence">42</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories.BRUT &lt;= 2431.27</field> 
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+salary = categories.BRUT
+if salary &lt;= 1577.89:
+    result = 193.79
+elif salary &lt;= 2461.27:
+    result = 193.79 - (0.2194 * (salary - 1577.89))
+        </field>
+    </record>
+    <record id="hr_salary_rule_employment_bonus_workers" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_employment_bonus"/> 
+        <field name="name">Employment Bonus</field>
+        <field name="code">EmpBonus.2</field>
+        <field name="sequence">42</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories.BRUT + categories.ONSS &lt;= 2431.27</field> 
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+salary = categories.BRUT
+if salary &lt;= 1577.89:
+    result = 209.29
+elif salary &lt;= 2461.27:
+    result = 209.29 - (0.2369 * (salary - 1577.89))
+        </field>
+    </record>
+    <record id="hr_payroll_rules_mis_ex_onss_1" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
+        <field name="name">Special social cotisation</field>
+        <field name="code">M.ONSS.1</field>
+        <field name="amount_select">fix</field>
+        <field name="sequence">165</field>
+        <field name="condition_select">python</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_python">result = (((employee.marital=='single') or (employee.marital=='married' and employee.spouse_fiscal_status=='without income')) and (employee.resident_bool!=True))</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if contract.wage &gt;= 0.01 and contract.wage &lt;= 1095.09:
+    result = 0.0
+elif contract.wage &gt;= 1095.10 and contract.wage &lt;= 1945.38:
+    result = 0.0
+elif contract.wage &gt;= 1945.39 and contract.wage &lt;= 2190.18:
+    result = -min((contract.wage - 1945.38) * 0.076, 18.60)
+elif contract.wage &gt;= 2190.19 and contract.wage &lt;= 6038.82:
+    result = -min(18.60 + (contract.wage - 2190.18) * 0.011, 60.94)
+else:
+    result = -60.94
+        </field>
+    </record> 
+    <record id="hr_payroll_rules_mis_ex_onss_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
+        <field name="name">Special social cotisation</field>
+        <field name="code">M.ONSS.2</field>
+        <field name="amount_select">fix</field>
+        <field name="sequence">165</field>
+        <field name="condition_select">python</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_python">result = (((employee.marital=='married' and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if contract.wage &gt;= 0.01 and contract.wage &lt;= 1095.09:
+    result = 0.0
+elif contract.wage &gt;= 1095.10 and contract.wage &lt;= 1945.38:
+    result = -9.30
+elif contract.wage &gt;= 1945.39 and contract.wage &lt;= 2190.18:
+    result = -min(max((contract.wage - 1945.38) * 0.076, 9.30), 18.60)
+elif contract.wage &gt;= 2190.19 and contract.wage &lt;= 6038.82:
+    result = -min(18.60 + (contract.wage - 2190.18) * 0.011, 51.64)
+else:
+    result = -51.64
+        </field>
+    </record> 
     <record id="hr_payroll_rules_bareme" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/>
-        <field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
         <field name="name">Withholding Tax</field>
         <field name="code">B.I.</field>
         <field name="amount_select">fix</field>
@@ -116,7 +204,6 @@
     </record>
     <record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/>
-        <field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
         <field name="name">Withholding Tax</field>
         <field name="code">B.II</field>
         <field name="amount_select">fix</field>
@@ -127,7 +214,6 @@
     </record>
     <record id="hr_payroll_rules_baremeIII" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/>
-        <field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
         <field name="name">Withholding Tax</field>
         <field name="code">B.III</field>
         <field name="amount_select">fix</field>
@@ -136,17 +222,63 @@
         <field name="condition_python">result = employee.resident_bool==True</field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
+    <record id="hr_salary_rule_pp_reduction_low_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_pp_reductions"/> 
+        <field name="name">Withholding Tax Reduction for Low Salaries</field>
+        <field name="code">PPRed.0</field>
+        <field name="sequence">131</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories.GROSS &lt;= 2027.86 and categories.GROSS &gt; 565.02</field> 
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 5.83
+        </field>
+    </record>
+    <record id="hr_salary_rule_pp_reduction_employees" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_pp_reductions"/> 
+        <field name="name">Withholding Tax Reduction for Low Salaries (ONSS)</field>
+        <field name="code">PPRed.1</field>
+        <field name="sequence">132</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories.BRUT &lt;= 2431.27</field> 
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+salary = categories.BRUT
+percentage = 0.2803
+if salary &lt;= 1577.89:
+    result = 193.79 * percentage
+elif salary &lt;= 2461.27:
+    result = (193.79 - (0.2194 * (salary - 1577.89))) * percentage
+        </field>
+    </record>
+    <record id="hr_salary_rule_pp_reduction_workers" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_pp_reductions"/> 
+        <field name="name">Withholding Tax Reduction for Low Salaries (ONSS)</field>
+        <field name="code">PPRed.2</field>
+        <field name="sequence">133</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories.BRUT &lt;= 2431.27</field> 
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+salary = categories.BRUT
+percentage = 0.2803
+if salary &lt;= 1577.89:
+    result = 209.29 * percentage
+elif salary &lt;= 2461.27:
+    result = (209.29 - (0.2369 * (salary - 1577.89))) * percentage
+        </field>
+    </record>
     <record id="hr_payroll_rules_child_alw" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="category_id" ref="hr_payroll_head_child_alw"/>
         <field name="name">Child Allowance Belgium</field>
         <field name="code">Child.Allowance</field>
         <field name="sequence">140</field>
         <field name="amount_select">fix</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(employee.children)</field>
+        <field name="condition_python">result = bool(employee.dependent_children)</field>
     </record>
     <record id="hr_payroll_rules_child" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="category_id" ref="hr_payroll_head_child_alw"/>
         <field name="parent_rule_id" ref="hr_payroll_rules_child_alw"/>
         <field name="name">Child Allowance Belgium</field>
         <field name="code">Ch.A</field>
@@ -160,114 +292,195 @@
 
                                                 a) Reduction for dependent children</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(employee.children)</field>
+        <field name="condition_python">result = bool(employee.dependent_children)</field>
     </record>
-    <record id="hr_payroll_rules_child_handicap" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.DED"/>
-        <field name="parent_rule_id" ref="hr_payroll_rules_child_alw"/>
-        <field name="name">Child Allowance for the Disabled Belgium</field>
-        <field name="code">Ch.Handicap</field>
-        <field name="amount_select">fix</field>
+    <record id="hr_salary_rule_other_family_charges_reductions" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_family_reductions"/>
+        <field name="name">Other family charges reductions</field>
+        <field name="code">Oth.Fam.Red</field>
         <field name="sequence">143</field>
-        <field name="note">"Disabled child" means:
-
-                    the child reaches at least 66% of failure or reduced physical or mental capacity
-                    the head of one or more conditions;
-
-
-                    the child that is established, regardless of age, that due to developments and recognized
-                    before age 65</field>
-                <field name="condition_select">python</field>
-                <field name="condition_python">result = bool(employee.disabled_children_number)</field>
+        <field name="amount_select">fix</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = True</field>
+    </record>
+    <record id="hr_salary_rule_reduction_isolated" model="hr.salary.rule">
+        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
+        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
+        <field name="name">Reduction for isolated people</field>
+        <field name="code">Red.Iso</field>
+        <field name="sequence">144</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (employee.marital == 'single') and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = min(25.00, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+    </record>
+    <record id="hr_salary_rule_reduction_isolated_parent" model="hr.salary.rule">
+        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
+        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
+        <field name="name">Reduction for isolated parent</field>
+        <field name="code">Red.Iso.Par</field>
+        <field name="sequence">144</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (employee.marital == 'widower' or (employee.marital in ['divorced', 'single', 'widower'] and employee.dependent_children)) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = min(35.00, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+    </record>
+    <record id="hr_salary_rule_reduction_disabled" model="hr.salary.rule">
+        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
+        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
+        <field name="name">Reduction for disabled employee</field>
+        <field name="code">Red.Dis</field>
+        <field name="sequence">145</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (employee.disabled) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = min(35.00, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+    </record>
+    <record id="hr_salary_rule_reduction_seniors" model="hr.salary.rule">
+        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
+        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
+        <field name="name">Reduction for dependent seniors</field>
+        <field name="code">Red.Seniors</field>
+        <field name="sequence">146</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (employee.other_dependent_people and employee.dependent_seniors) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = min(71.0 * employee.dependent_seniors, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+    </record>
+    <record id="hr_salary_rule_reduction_juniors" model="hr.salary.rule">
+        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
+        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
+        <field name="name">Reduction for dependent juniors</field>
+        <field name="code">Red.Juniors</field>
+        <field name="sequence">147</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (employee.other_dependent_people and employee.dependent_juniors) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = min(35.0 * employee.dependent_juniors, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+    </record>
+    <record id="hr_salary_rule_reduction_insufficient_net" model="hr.salary.rule">
+        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
+        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
+        <field name="name">Reduction for low spouse revenue</field>
+        <field name="code">Red.Spouse.Net</field>
+        <field name="sequence">148</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (employee.marital == 'married' and employee.spouse_net_revenue &lt;= 221.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = min(110.50, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+    </record>
+    <record id="hr_salary_rule_reduction_insufficient_other_net" model="hr.salary.rule">
+        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
+        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
+        <field name="name">Reduction for low spouse other revenue</field>
+        <field name="code">Red.Spouse.Oth.Net</field>
+        <field name="sequence">149</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (employee.marital == 'married' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 440.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = min(220.0, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_payroll_rules_spouse_handicap" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
         <field name="name">Disabled Spouse Allowance</field>
         <field name="code">Sp.handicap</field>
-        <field name="amount_select">fix</field>
-        <field name="sequence">145</field>
-        <field name="amount_fix">31</field>
+        <field name="sequence">150</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = employee.disabled_spouse_bool==True</field>
-    </record>
-    <record id="hr_payroll_rules_company_car_parent" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_div_impos"/>
-        <field name="name">Company Car</field>
-        <field name="code">car</field>
-        <field name="amount_select">fix</field>
-        <field name="sequence">15</field>
-        <field name="condition_select">none</field>
-        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_python">result = (employee.disabled_spouse_bool==True) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">min(35.0, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_payroll_rules_parent_company_car" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_impos"/>
-        <field name="name">Company car</field>
-        <field name="parent_rule_id" ref="hr_payroll_rules_company_car_parent"/>
-        <field name="code">CAR 1</field>
+        <field name="name">ATN Company Car</field>
+        <field name="code">ATN.CAR</field>
         <field name="sequence">15</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.car_employee_deduction)</field>
+        <field name="condition_python">
+result = bool(contract.transport_mode == 'company_car' and contract.car_atn)
+        </field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = contract.car_employee_deduction</field>
+        <field name="amount_python_compute">
+result = contract.car_atn
+        </field>
+    </record>
+    <record id="hr_salary_rule_atn_internet" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">ATN Internet</field>
+        <field name="code">ATN.INT</field>
+        <field name="sequence">16</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.internet)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 5.0</field>
+    </record>
+    <record id="hr_salary_rule_atn_mobile" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">ATN Mobile</field>
+        <field name="code">ATN.MOB</field>
+        <field name="sequence">17</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.mobile)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 12.0</field>
     </record>
     <record id="hr_payroll_rules_company_car_2" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
-        <field name="name">Retenue Company car</field>
-        <field name="parent_rule_id" ref="hr_payroll_rules_company_car_parent"/>
-        <field name="code">CAR 2</field>
+        <field name="name">ATN Company Car</field>
+        <field name="code">ATN.CAR.2</field>
         <field name="sequence">160</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = contract.car_employee_deduction</field>
+        <field name="condition_python">
+result = bool(contract.transport_mode == 'company_car' and contract.car_atn)
+        </field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = -contract.car_employee_deduction</field>
+        <field name="amount_python_compute">
+result = -contract.car_atn
+        </field>
     </record>
-    <record id="hr_payroll_rules_company_car_emp" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.COMP"/>
-        <field name="name">Company car, Company part</field>
-        <field name="parent_rule_id" ref="hr_payroll_rules_company_car_parent"/>
-        <field name="code">CAR 3</field>
-        <field name="sequence">160</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.car_company_amount)</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = -contract.car_company_amount</field>
-        <field name="appears_on_payslip" eval="False"/>
-    </record>
-    <record id="hr_payroll_rules_parent_ch" model="hr.salary.rule">
+    <record id="hr_salary_rule_atn_internet_2" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
-        <field name="name">Meal Voucher</field>
-        <field name="code">MEAL_V</field>
-        <field name="amount_select">fix</field>
-        <field name="sequence">165</field>
-        <field name="condition_select">none</field>
-        <field name="appears_on_payslip" eval="False"/>
-    </record>
-    <record id="hr_payroll_rules_ch_value" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.COMP"/>
-        <field name="parent_rule_id" ref="hr_payroll_rules_parent_ch"/>
-        <field name="name">Meal Voucher, Company Part</field>
-        <field name="code">MEAL_V_COMP</field>
-        <field name="amount_select">fix</field>
-        <field name="sequence">165</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = -(contract.meal_voucher_amount - contract.meal_voucher_employee_deduction) * worked_days.WORK100.number_of_days</field>
+        <field name="name">ATN Internet</field>
+        <field name="code">ATN.INT.2</field>
+        <field name="sequence">161</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.meal_voucher_amount)</field>
+        <field name="condition_python">result = contract.internet</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -5.0</field>
+    </record>
+    <record id="hr_salary_rule_atn_mobile_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">ATN Mobile</field>
+        <field name="code">ATN.MOB.2</field>
+        <field name="sequence">162</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.mobile</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -12.0</field>
+    </record>
+    <record id="hr_salary_rule_commission_on_target" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Commission on Target</field>
+        <field name="code">COM</field>
+        <field name="sequence">170</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.commission_on_target)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.warrant_value_employee / 12.0</field>
         <field name="appears_on_payslip" eval="False"/>
-        <field name="register_id" ref="contrib_register_meal_vouchers"/>
     </record>
     <record id="hr_payroll_rules_ch_worker" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
         <field name="name">Retain on Meal Voucher</field>
-        <field name="parent_rule_id" ref="hr_payroll_rules_parent_ch"/>
         <field name="code">MEAL_V_EMP</field>
         <field name="sequence">165</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.meal_voucher_employee_deduction)</field>
+        <field name="condition_python">result = bool(contract.meal_voucher_amount)</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">-100.0</field>
-        <field name="amount_percentage_base">contract.meal_voucher_employee_deduction</field>
-        <field name="quantity">worked_days.WORK100.number_of_days</field>
+        <field name="amount_percentage_base">contract.meal_voucher_amount - contract.meal_voucher_paid_by_employer</field>
+        <field name="quantity">worked_days.WORK100 and worked_days.WORK100.number_of_days</field>
         <field name="appears_on_payslip" eval="True"/>
         <field name="register_id" ref="contrib_register_meal_vouchers"/>
     </record>
@@ -278,38 +491,18 @@
         <field name="amount_select">code</field>
         <field name="sequence">65</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.travel_reimbursement_amount)</field>
-        <field name="amount_python_compute">result = contract.travel_reimbursement_amount</field>
+        <field name="condition_python">result = bool(contract.others_reimbursed_amount)</field>
+        <field name="amount_python_compute">result = contract.others_reimbursed_amount</field>
     </record>
-    <record id="hr_payroll_rules_mis_ex_onss" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.DED"/>
-        <field name="name">Miscellaneous exempt ONSS</field>
-        <field name="code">M.ONSS</field>
+    <record id="hr_salary_rule_representation_fees" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Representation Fees</field>
+        <field name="code">REP.FEES</field>
         <field name="amount_select">code</field>
-        <field name="sequence">165</field>
+        <field name="sequence">171</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.misc_onss_deduction)</field>
-        <field name="amount_python_compute">result = -contract.misc_onss_deduction</field>
-    </record>
-    <record id="hr_payroll_rules_insurance" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.DED"/>
-        <field name="name">Insurance</field>
-        <field name="code">Ins</field>
-        <field name="amount_select">code</field>
-        <field name="sequence">165</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.insurance_employee_deduction)</field>
-        <field name="amount_python_compute">result = -contract.insurance_employee_deduction</field>
-    </record>
-    <record id="hr_payroll_rules_advantage" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.ALW"/>
-        <field name="name">Benefits of various nature</field>
-        <field name="code">Ben</field>
-        <field name="amount_select">code</field>
-        <field name="sequence">10</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.misc_advantage_amount)</field>
-        <field name="amount_python_compute">result = contract.misc_advantage_amount</field>
+        <field name="condition_python">result = bool(contract.representation_fees)</field>
+        <field name="amount_python_compute">result = contract.representation_fees</field>
     </record>
     <record id="hr_payroll_rules_suppl_net" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
@@ -334,15 +527,119 @@
     <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
         <field name="code">C.P.218</field>
         <field name="name">Belgian Employee</field>
-        <field eval="[(6, 0, [ref('hr_payroll_rules_company_car_parent'),ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_employee'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw'),ref('hr_payroll_rules_parent_ch'),ref('hr_payroll_rules_reim_travel'),ref('hr_payroll_rules_mis_ex_onss'),ref('hr_payroll_rules_insurance'),ref('hr_payroll_rules_advantage'),ref('hr_payroll_rules_suppl_net'),ref('hr_payroll_rules_retained_net')])]" name="rule_ids"/>
+        <field eval="[(6, 0, [
+            ref('hr_payroll_rules_parent_company_car'),
+            ref('hr_payroll_rules_company_car_2'),
+            ref('hr_salary_rule_atn_mobile_2'),
+            ref('hr_salary_rule_atn_internet_2'),
+            ref('hr_salary_rule_atn_internet'),
+            ref('hr_salary_rule_atn_mobile'),
+            ref('hr_payroll_rules_onss_rule'),
+            ref('hr_salary_rule_employment_bonus_employees'),
+            ref('hr_payroll_rules_employee'),
+            ref('hr_payroll_rules_bareme'),
+            ref('hr_payroll_rules_baremeII'),
+            ref('hr_payroll_rules_baremeIII'),
+            ref('hr_salary_rule_other_family_charges_reductions'),
+            ref('hr_payroll_rules_child_alw'),
+            ref('hr_payroll_rules_ch_worker'),
+            ref('hr_payroll_rules_reim_travel'),
+            ref('hr_payroll_rules_mis_ex_onss_1'),
+            ref('hr_payroll_rules_mis_ex_onss_2'),
+            ref('hr_salary_rule_representation_fees'),
+            ref('hr_payroll_rules_suppl_net'),
+            ref('hr_payroll_rules_retained_net'),
+            ref('hr_salary_rule_commission_on_target'),
+            ref('hr_salary_rule_pp_reduction_employees'),
+            ref('hr_salary_rule_pp_reduction_low_salary'),
+
+        ])]" name="rule_ids"/>
         <field name="company_id" ref="base.main_company"/>    
         <field name="parent_id" ref="hr_payroll.structure_base"/>
     </record>
     <record id="hr_payroll_salary_structure_worker" model="hr.payroll.structure">
         <field name="code">C.P.219</field>
         <field name="name">Belgian Worker</field>
-        <field eval="[(6, 0, [ref('hr_payroll_rules_maj'), ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw'),ref('hr_payroll_rules_parent_ch'),ref('hr_payroll_rules_reim_travel'),ref('hr_payroll_rules_mis_ex_onss'),ref('hr_payroll_rules_insurance'),ref('hr_payroll_rules_advantage'),ref('hr_payroll_rules_suppl_net'),ref('hr_payroll_rules_retained_net')])]" name="rule_ids"/>
+        <field eval="[(6, 0, [
+            ref('hr_payroll_rules_maj'),
+            ref('hr_payroll_rules_onss_rule'),
+            ref('hr_salary_rule_employment_bonus_workers'),
+            ref('hr_payroll_rules_bareme'),
+            ref('hr_payroll_rules_baremeII'),
+            ref('hr_payroll_rules_baremeIII'),
+            ref('hr_payroll_rules_child_alw'),
+            ref('hr_salary_rule_other_family_charges_reductions'),
+            ref('hr_payroll_rules_ch_worker'),
+            ref('hr_payroll_rules_reim_travel'),
+            ref('hr_payroll_rules_mis_ex_onss_1'),
+            ref('hr_payroll_rules_mis_ex_onss_2'),
+            ref('hr_salary_rule_representation_fees'),
+            ref('hr_payroll_rules_suppl_net'),
+            ref('hr_payroll_rules_retained_net'),
+            ref('hr_salary_rule_commission_on_target'),
+            ref('hr_salary_rule_pp_reduction_workers')
+        ])]" name="rule_ids"/>
         <field name="company_id" ref="base.main_company"/>
         <field name="parent_id" ref="hr_payroll.structure_base"/>
         </record>
+
+        <!-- Salary advantages definition -->
+        <record id="hr_contract_advantage_template_meal_voucher_amount" model="hr.contract.advantage.template">
+            <field name="name">Check Value Meal</field>
+            <field name="code">meal_voucher_amount</field>
+            <field name="default_value">7.45</field>
+        </record>
+        <record id="hr_contract_advantage_template_internet" model="hr.contract.advantage.template">
+            <field name="name">Internet</field>
+            <field name="code">internet</field>
+            <field name="default_value">38.0</field>
+        </record>
+        <record id="hr_contract_advantage_template_mobile" model="hr.contract.advantage.template">
+            <field name="name">Mobile</field>
+            <field name="code">mobile</field>
+            <field name="default_value">30.0</field>
+        </record>
+        <record id="hr_contract_advantage_template_mobile_plus" model="hr.contract.advantage.template">
+            <field name="name">Mobile +</field>
+            <field name="code">mobile_plus</field>
+            <field name="default_value">50.0</field>
+        </record>
+        <record id="hr_contract_advantage_template_additional_net_amount" model="hr.contract.advantage.template">
+            <field name="name">Net supplements</field>
+            <field name="code">additional_net_amount</field>
+        </record>
+        <record id="hr_contract_advantage_template_retained_net_amount" model="hr.contract.advantage.template">
+            <field name="name">Net retained</field>
+            <field name="code">retained_net_amount</field>
+        </record>
+        <record id="hr_contract_advantage_template_commission_on_target" model="hr.contract.advantage.template">
+            <field name="name">Commission on target</field>
+            <field name="code">commission_on_target</field>
+            <field name="default_value">1000.0</field>
+        </record>
+        <record id="hr_contract_advantage_template_fuel_card" model="hr.contract.advantage.template">
+            <field name="name">Fuel card</field>
+            <field name="code">fuel_card</field>
+            <field name="default_value">150.0</field>
+            <field name="lower_bound">0.0</field>
+            <field name="upper_bound">500.0</field>
+        </record>
+        <record id="hr_contract_advantage_template_holidays" model="hr.contract.advantage.template">
+            <field name="name">Holidays duration</field>
+            <field name="code">holidays</field>
+            <field name="default_value">20.0</field>
+            <field name="lower_bound">0.0</field>
+            <field name="upper_bound">30.0</field>
+        </record>
+        <record id="hr_contract_advantage_template_representation_fees" model="hr.contract.advantage.template">
+            <field name="name">Representation fees</field>
+            <field name="code">representation_fees</field>
+            <field name="default_value">150.0</field>
+        </record>
+        <record id="hr_contract_advantage_template_eco_checks" model="hr.contract.advantage.template">
+            <field name="name">Eco-checks</field>
+            <field name="code">eco_checks</field>
+            <field name="default_value">250.0</field>
+        </record>
+
 </odoo>
