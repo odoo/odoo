@@ -96,6 +96,69 @@
             cursor: pointer;
         }
 
+        .o_message_attachments {
+            display: block;
+            position: relative;
+            padding: 0px;
+            margin: 0px;
+
+            .o_attachment {
+                width: initial;
+                height: initial;
+
+                .o_image {
+                    position: initial;
+                    top: initial;
+                    left: initial;
+                    bottom: initial;
+                    right: initial;
+                }
+            }
+
+            .o_message_attachment {
+                display: inline-block;
+                padding: 5px;
+                border-radius: 4px;
+                margin: 5px 5px 5px 5px;
+                position: relative;
+                background-color: #cccccc;
+
+                .download_icon {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    span {
+                        background: rgba(0, 0, 0, 0.5);
+                        position: absolute;
+                        top: 37%;
+                        left: 37%;
+                        padding: 5px;
+                        border-radius: 30px;
+                        color: #fff;
+                    }
+                }
+
+                a.o_image {
+                    width: 80px;
+                    height: 60px;
+                }
+
+                img {
+                    height: 60px;
+                    width: 80px;
+                    opacity: 0.5;
+
+                    &.o_image_view {
+                        cursor: pointer;
+                        background-color: #000;
+                        object-fit: none;
+                    }
+                }
+            }
+        }
+
         .o_thread_message_core {
             .o-flex(1, 1, auto);
             min-width: 0;

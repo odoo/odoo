@@ -171,19 +171,21 @@
         .o_composer_input {
             .o-flex-display();
             .o-flex-flow(row, nowrap);
-            padding: @o-mail-chatter-gap;
 
             textarea.o_composer_text_field {
                 .o-flex(1, 1, auto);
-                padding-top: @o-mail-chatter-gap*0.5;
             }
 
             .o_chatter_composer_tools {
                 .o-flex(0, 0, auto);
             }
+            @media (max-width: @screen-xs-max) {
+                .o_composer_button_send {
+                    display: inline-block;
+                }
+            }
         }
-
-        .o_composer_button_send, .o_chatter_avatar, .o_composer_button_add_attachment, .o_composer_attachments_list {
+        .o_composer_button_send, .o_chatter_avatar {
             display: none;
         }
     }
@@ -197,8 +199,8 @@
 // Emoji
 .o_mail_emoji {
     display: inline-block;
-    width: 24px;
-    height: 24px;
+    height: 20px;
+    width: 20px;
 
     > img {
         width: 100%;
