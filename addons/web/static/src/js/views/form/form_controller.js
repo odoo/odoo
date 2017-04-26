@@ -513,6 +513,7 @@ var FormController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onOpenOne2ManyRecord: function (event) {
+        event.stopPropagation();
         var data = event.data;
         var record;
         if (data.id) {
