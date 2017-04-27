@@ -254,17 +254,6 @@ class PosConfig(models.Model):
         }
 
     @api.multi
-    def open_existing_session_cb_close(self):
-        """ open session button
-
-        If the pos is configured in cash control, set in closing control state
-        """
-        self.ensure_one()
-        if self.current_session_id.cash_control:
-            self.current_session_id.action_pos_session_closing_control()
-        return self.open_session_cb()
-
-    @api.multi
     def open_session_cb(self):
         """ new session button
 
