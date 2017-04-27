@@ -1239,6 +1239,12 @@ var ClientListScreenWidget = ScreenWidget.extend({
         fields.id           = partner.id || false;
         fields.country_id   = fields.country_id || false;
 
+        if (fields.property_product_pricelist) {
+            fields.property_product_pricelist = parseInt(fields.property_product_pricelist, 10);
+        } else {
+            fields.property_product_pricelist = false;
+        }
+
         rpc.query({
                 model: 'res.partner',
                 method: 'create_from_ui',
