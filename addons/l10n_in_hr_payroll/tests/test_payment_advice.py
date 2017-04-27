@@ -40,4 +40,4 @@ class TestPaymentAdvice(TestPaymentAdviceBase):
         # In order to test the PDF report defined on a Payment Advice, we will print a Print Advice Report when NEFT is checked
         data, format = render_report(self.env.cr, self.env.uid, payment_advice.ids, 'l10n_in_hr_payroll.report_payrolladvice', {}, {})
         if config.get('test_report_directory'):
-            file(os.path.join(config['test_report_directory'], 'l10n_in_hr_payroll_summary_report' + format), 'wb+').write(data)
+            open(os.path.join(config['test_report_directory'], 'l10n_in_hr_payroll_summary_report' + format), 'wb+').write(data)

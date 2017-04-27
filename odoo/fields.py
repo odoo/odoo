@@ -15,8 +15,7 @@ import xmlrpclib
 import psycopg2
 
 from odoo.sql_db import LazyCursor
-from odoo.tools import float_precision, float_repr, float_round, frozendict, \
-                       html_sanitize, human_size, pg_varchar, ustr, OrderedSet
+from odoo.tools import float_precision, float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, ustr, OrderedSet, pycompat
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.translate import html_translate, _
@@ -1656,7 +1655,7 @@ class Binary(Field):
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, buffer):
             return str(value)
-        if isinstance(value, (int, long)) and \
+        if isinstance(value, pycompat.integer_types) and \
                 (record._context.get('bin_size') or
                  record._context.get('bin_size_' + self.name)):
             # If the client requests only the size of the field, we return that

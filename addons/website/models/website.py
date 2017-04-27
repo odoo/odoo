@@ -19,7 +19,7 @@ except ImportError:
 
 from odoo import api, fields, models
 from odoo import tools
-from odoo.tools import ustr
+from odoo.tools import ustr, pycompat
 from odoo.http import request
 from odoo.tools.translate import _
 
@@ -421,7 +421,7 @@ class Website(models.Model):
     @api.model
     def get_template(self, template):
         View = self.env['ir.ui.view']
-        if isinstance(template, (int, long)):
+        if isinstance(template, pycompat.integer_types):
             view_id = template
         else:
             if '.' not in template:
@@ -486,7 +486,7 @@ class Website(models.Model):
                 'num': pmax
             },
             "pages": [
-                {'url': get_url(page), 'num': page} for page in xrange(pmin, pmax+1)
+                {'url': get_url(page), 'num': page} for page in pycompat.range(pmin, pmax+1)
             ]
         }
 
@@ -544,8 +544,7 @@ class Website(models.Model):
             values = [{}]
             convitems = converters.items()
             # converters with a domain are processed after the other ones
-            gd = lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]')
-            convitems.sort(lambda x, y: cmp(gd(x), gd(y)))
+            convitems.sort(key=lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]'))
             for (i, (name, converter)) in enumerate(convitems):
                 newval = []
                 for val in values:

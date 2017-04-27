@@ -22,6 +22,7 @@ from lxml import etree
 from werkzeug import url_encode
 
 from odoo import _, api, exceptions, fields, models, tools
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -1811,7 +1812,7 @@ class MailThread(models.AbstractModel):
                 partner_ids.add(partner_id[1])
             if isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
                 partner_ids |= set(partner_id[2])
-            elif isinstance(partner_id, (int, long)):
+            elif isinstance(partner_id, pycompat.integer_types):
                 partner_ids.add(partner_id)
             else:
                 pass  # we do not manage anything else

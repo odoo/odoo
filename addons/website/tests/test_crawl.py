@@ -10,6 +10,8 @@ import lxml.html
 import odoo
 import re
 
+from odoo.tools import pycompat
+
 _logger = logging.getLogger(__name__)
 
 
@@ -38,7 +40,7 @@ class Crawler(odoo.tests.HttpCase):
         _logger.info("%s %s", msg, url)
         r = self.url_open(url)
         code = r.getcode()
-        self.assertIn(code, xrange(200, 300), "%s Fetching %s returned error response (%d)" % (msg, url, code))
+        self.assertIn(code, pycompat.range(200, 300), "%s Fetching %s returned error response (%d)" % (msg, url, code))
 
         if r.info().gettype() == 'text/html':
             doc = lxml.html.fromstring(r.read())

@@ -4,6 +4,8 @@
 import babel.dates
 
 from datetime import datetime, timedelta, date, time
+
+from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
 from odoo.fields import Date, Datetime
@@ -349,13 +351,7 @@ class TestWorkDays(TestResourceCommon):
             ]
         })
 
-        self._days = [
-            date.fromordinal(o)
-            for o in xrange(
-                WAR_START.toordinal(),
-                WAR_END.toordinal() + 1
-            )
-        ]
+        self._days = [dt.date() for dt in rrule.rrule(rrule.DAILY, dtstart=WAR_START, until=WAR_END)]
 
     def test_trivial_calendar_no_leaves(self):
         """ If leaves are not involved, only calendar attendances (basic

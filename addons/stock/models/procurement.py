@@ -4,6 +4,7 @@
 from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from odoo.tools.misc import split_every
 from psycopg2 import OperationalError
 
 from odoo import api, fields, models, registry, _
@@ -239,9 +240,9 @@ class ProcurementOrder(models.Model):
 
             # Search all confirmed stock_moves and try to assign them
             confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc')
-            for x in xrange(0, len(confirmed_moves.ids), 100):
+            for moves_chunk in split_every(100, confirmed_moves.ids):
                 # TDE CLEANME: muf muf
-                self.env['stock.move'].browse(confirmed_moves.ids[x:x + 100]).action_assign()
+                self.env['stock.move'].browse(moves_chunk).action_assign()
                 if use_new_cursor:
                     self._cr.commit()
             if use_new_cursor:

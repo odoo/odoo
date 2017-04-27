@@ -634,7 +634,7 @@ class graph(object):
         self.init_order(self.start, self.result[self.start]['x'])
 
         for level in self.levels:
-            self.levels[level].sort(lambda x, y: cmp(self.result[x]['y'], self.result[y]['y']))
+            self.levels[level].sort(key=lambda x: self.result[x]['y'])
 
         self.order_heuristic()
         self.process_order()

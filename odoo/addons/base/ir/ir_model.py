@@ -10,6 +10,7 @@ from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.osv import expression
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -1055,7 +1056,7 @@ class IrModelAccess(models.Model):
         else:
             model_name = model
 
-        if isinstance(group_ids, (int, long)):
+        if isinstance(group_ids, pycompat.integer_types):
             group_ids = [group_ids]
 
         query = """ SELECT 1 FROM ir_model_access a

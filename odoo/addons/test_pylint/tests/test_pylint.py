@@ -25,6 +25,21 @@ class TestPyLint(TransactionCase):
         'E0601',  # using variable before assignment
         'W0123',  # eval used
         'W0101',  # unreachable code
+
+        'long-suffix',
+        'apply-builtin',
+        'cmp-builtin',
+        'coerce-builtin',
+        'execfile-builtin',
+        'input-builtin',
+        'intern-builtin',
+        'long-builtin',
+        'raw_input-builtin',
+        'reload-builtin',
+        'xrange-builtin',
+        # TODO: enable once report has been removed
+        # 'file-builtin',
+        # 'reduce-builtin',
     ]
 
     def _skip_test(self, reason):

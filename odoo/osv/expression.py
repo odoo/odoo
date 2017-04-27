@@ -121,6 +121,7 @@ from functools import partial
 from zlib import crc32
 
 import odoo.modules
+from odoo.tools import pycompat
 from ..models import MAGIC_COLUMNS, BaseModel
 import odoo.tools as tools
 
@@ -700,7 +701,7 @@ class expression(object):
                 names = [value]
             elif value and isinstance(value, (tuple, list)) and all(isinstance(item, basestring) for item in value):
                 names = value
-            elif isinstance(value, (int, long)):
+            elif isinstance(value, pycompat.integer_types):
                 return [value]
             if names:
                 return list({

@@ -214,9 +214,8 @@ class TestExpression(TransactionCase):
 
         # create new company with partners, and partners with no company
         company2 = self.env['res.company'].create({'name': 'Acme 2'})
-        for i in xrange(4):
+        for i in range(4):
             Partner.create({'name': 'P of Acme %s' % i, 'company_id': company2.id})
-        for i in xrange(4):
             Partner.create({'name': 'P of All %s' % i, 'company_id': False})
 
         # check if many2one works with negative empty list

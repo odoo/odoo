@@ -3,6 +3,7 @@
 
 from odoo import exceptions
 from odoo.tests.common import TransactionCase
+from odoo.tools import pycompat
 
 
 class TestResConfig(TransactionCase):
@@ -42,7 +43,7 @@ class TestResConfig(TransactionCase):
         self.assertIsInstance(res, tuple)
         self.assertEqual(len(res), 2, "The result should contain 2 elements")
         self.assertIsInstance(res[0], basestring)
-        self.assertIsInstance(res[1], (int, long))
+        self.assertIsInstance(res[1], pycompat.integer_types)
 
         # Check returned values
         self.assertEqual(res[0], self.expected_path)

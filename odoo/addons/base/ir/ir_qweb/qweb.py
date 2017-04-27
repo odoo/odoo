@@ -11,6 +11,9 @@ from werkzeug.utils import escape as _escape
 from itertools import chain, izip, tee
 import __builtin__
 from functools import reduce
+
+from odoo.tools import pycompat
+
 builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
 
 try:
@@ -160,7 +163,7 @@ def foreach_iterator(base_ctx, enum, name):
     if not enum:
         return
     if isinstance(enum, int):
-        enum = xrange(enum)
+        enum = pycompat.range(enum)
     size = None
     if isinstance(enum, Sized):
         ctx["%s_size" % name] = size = len(enum)

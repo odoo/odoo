@@ -16,11 +16,14 @@ condition/math builtins.
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 
 from opcode import HAVE_ARGUMENT, opmap
+
+import functools
 from psycopg2 import OperationalError
 from types import CodeType
 import logging
 import werkzeug
 
+from odoo.tools import pycompat
 from .misc import ustr
 
 import odoo
@@ -226,7 +229,6 @@ _BUILTINS = {
     'bool': bool,
     'int': int,
     'float': float,
-    'long': long,
     'enumerate': enumerate,
     'dict': dict,
     'list': list,
@@ -236,7 +238,7 @@ _BUILTINS = {
     'min': min,
     'max': max,
     'sum': sum,
-    'reduce': reduce,
+    'reduce': functools.reduce,
     'filter': filter,
     'round': round,
     'len': len,
@@ -246,11 +248,10 @@ _BUILTINS = {
     'any': any,
     'ord': ord,
     'chr': chr,
-    'cmp': cmp,
     'divmod': divmod,
     'isinstance': isinstance,
     'range': range,
-    'xrange': xrange,
+    'xrange': pycompat.range,
     'zip': zip,
     'Exception': Exception,
 }

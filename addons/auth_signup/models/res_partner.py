@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from urlparse import urljoin
 
 from odoo import api, fields, models, _
+from odoo.tools import pycompat
 
 
 class SignupError(Exception):
@@ -16,7 +17,7 @@ class SignupError(Exception):
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return ''.join(random.SystemRandom().choice(chars) for i in xrange(20))
+    return ''.join(random.SystemRandom().choice(chars) for _ in pycompat.range(20))
 
 def now(**kwargs):
     dt = datetime.now() + timedelta(**kwargs)

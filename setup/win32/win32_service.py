@@ -11,7 +11,7 @@ import sys
 from os.path import dirname, join, split
 
 
-execfile(join(dirname(__file__), '..', 'server', 'odoo', 'release.py'))
+exec(open(join(dirname(__file__), '..', 'server', 'odoo', 'release.py'), 'rb').read())
 
 
 class OdooService(win32serviceutil.ServiceFramework):

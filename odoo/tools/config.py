@@ -549,7 +549,7 @@ class configmanager(object):
             if not rc_exists and not os.path.exists(os.path.dirname(self.rcfile)):
                 os.makedirs(os.path.dirname(self.rcfile))
             try:
-                p.write(file(self.rcfile, 'w'))
+                p.write(open(self.rcfile, 'w'))
                 if not rc_exists:
                     os.chmod(self.rcfile, 0o600)
             except IOError:

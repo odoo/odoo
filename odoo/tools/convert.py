@@ -890,10 +890,10 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
 
     if idref is None:
         idref={}
-    if isinstance(xmlfile, file):
-        xml_filename = xmlfile.name
-    else:
+    if isinstance(xmlfile, basestring):
         xml_filename = xmlfile
+    else:
+        xml_filename = xmlfile.name
     obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate, xml_filename=xml_filename)
     obj.parse(doc.getroot(), mode=mode)
     return True

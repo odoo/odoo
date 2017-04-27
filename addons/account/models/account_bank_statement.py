@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, pycompat
 from odoo.tools import float_compare, float_round
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError, ValidationError
@@ -874,10 +874,10 @@ class AccountBankStatementLine(models.Model):
         for aml_dict in counterpart_aml_dicts:
             if aml_dict['move_line'].reconciled:
                 raise UserError(_('A selected move line was already reconciled.'))
-            if isinstance(aml_dict['move_line'], (int, long)):
+            if isinstance(aml_dict['move_line'], pycompat.integer_types):
                 aml_dict['move_line'] = aml_obj.browse(aml_dict['move_line'])
         for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
-            if aml_dict.get('tax_ids') and aml_dict['tax_ids'] and isinstance(aml_dict['tax_ids'][0], (int, long)):
+            if aml_dict.get('tax_ids') and isinstance(aml_dict['tax_ids'][0], pycompat.integer_types):
                 # Transform the value in the format required for One2many and Many2many fields
                 aml_dict['tax_ids'] = map(lambda id: (4, id, None), aml_dict['tax_ids'])
 

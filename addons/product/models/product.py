@@ -9,6 +9,8 @@ from odoo.osv import expression
 
 import odoo.addons.decimal_precision as dp
 
+from odoo.tools import pycompat
+
 
 class ProductCategory(models.Model):
     _name = "product.category"
@@ -184,7 +186,7 @@ class ProductProduct(models.Model):
                 pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_name_search:
                     pricelist = self.env['product.pricelist'].browse([pricelist_name_search[0][0]])
-            elif isinstance(pricelist_id_or_name, (int, long)):
+            elif isinstance(pricelist_id_or_name, pycompat.integer_types):
                 pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
 
             if pricelist:
