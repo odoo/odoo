@@ -202,7 +202,7 @@ var Followers = AbstractField.extend({
         }
         return $.when(def).then(function (results) {
             if (results) {
-                self.followers = self.followers.concat(results.followers);
+                self.followers = _.uniq(results.followers.concat(self.followers), 'id');
                 self.subtypes = results.subtypes;
             }
             // filter out previously fetched followers that are no longer following
