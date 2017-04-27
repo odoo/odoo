@@ -72,9 +72,7 @@
 
                                         <button t-if="record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object">Open Session</button>
 
-                                        <button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-default" name="open_existing_session_cb_close" type="object">Close</button>
-
-                                        <button t-if="record.current_session_state.raw_value === 'closing_control'" class="btn btn-default" name="open_existing_session_cb" type="object">Close</button>
+                                        <button t-if="_.contains(['opened', 'closing_control'], record.current_session_state.raw_value)" class="btn btn-default" name="open_existing_session_cb" type="object">Close</button>
                                         <button t-if="!record.current_session_id.raw_value" class="btn btn-primary" name="open_session_cb" type="object">New Session</button>
                                     </div>
                                     <div class="col-xs-6 o_kanban_primary_right">
