@@ -97,6 +97,7 @@
         <field name="model">gamification.badge</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_badge">
+                <field name="id"/>
                 <field name="name"/>
                 <field name="description"/>
                 <field name="image"/>
@@ -111,7 +112,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="o_kanban_gamification oe_kanban_global_click #{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
                             <div class="o_kanban_image">
-                                <img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value"/>
+                                <img t-att-src="kanban_image('gamification.badge', 'image', record.id.raw_value)" t-att-title="record.name.value"/>
                             </div>
                             <div class="oe_kanban_details">
                                 <strong><field name="name"/></strong>
