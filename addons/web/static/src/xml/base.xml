@@ -945,7 +945,7 @@
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </div>
 </t>
-<t t-name="FieldStatus.content.desktop">
+<t t-name="FieldStatus.content">
     <t t-if="selection_folded.length">
         <ul class="dropdown-menu o-status-more" role="menu">
             <li t-foreach="selection_folded" t-as="i">
@@ -957,16 +957,6 @@
     <t t-foreach="selection_unfolded.reverse()" t-as="i">
         <t t-call="FieldStatus.content.button"/>
     </t>
-</t>
-<t t-name="FieldStatus.content.mobile">
-    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
-        <t t-esc="value"/>
-    </button>
-    <ul class="dropdown-menu o-status-more" role="menu">
-        <li t-foreach="selection" t-as="i">
-            <t t-call="FieldStatus.content.button"/>
-        </li>
-    </ul>
 </t>
 <t t-name="FieldStatus.content.button">
     <t t-set="disabled" t-value="!clickable || i.selected"/>

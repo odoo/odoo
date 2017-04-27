@@ -1507,22 +1507,14 @@ var FieldStatus = AbstractField.extend({
      * @private
      */
     _render: function () {
-        if (config.device.size_class > config.device.SIZES.XS) {
-            var selections = _.partition(this.status_information, function (info) {
-                return (info.selected || !info.fold);
-            });
-            this.$el.html(qweb.render("FieldStatus.content.desktop", {
-                selection_unfolded: selections[0],
-                selection_folded: selections[1],
-                clickable: !!this.attrs.clickable,
-            }));
-        } else {
-            this.$el.html(qweb.render("FieldStatus.content.mobile", {
-                selection: this.status_information,
-                value: _.findWhere(this.status_information, {selected: true}).display_name,
-                clickable: !!this.attrs.clickable,
-            }));
-        }
+        var selections = _.partition(this.status_information, function (info) {
+            return (info.selected || !info.fold);
+        });
+        this.$el.html(qweb.render("FieldStatus.content", {
+            selection_unfolded: selections[0],
+            selection_folded: selections[1],
+            clickable: !!this.attrs.clickable,
+        }));
     },
 
     //--------------------------------------------------------------------------
