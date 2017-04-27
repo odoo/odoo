@@ -15,6 +15,7 @@ from openerp import _, api, fields, models, SUPERUSER_ID
 from openerp import tools
 from openerp import report as odoo_report
 from openerp.exceptions import UserError
+from openerp.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 
@@ -162,7 +163,7 @@ class MailTemplate(models.Model):
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                      help="Optional preferred server for outgoing mails. If not set, the highest "
                                           "priority one will be used.")
-    body_html = fields.Html('Body', translate=True, sanitize=False)
+    body_html = fields.Html('Body', translate=html_translate, sanitize=False)
     report_name = fields.Char('Report Filename', translate=True,
                               help="Name to use for the generated report file (may contain placeholders)\n"
                                    "The extension can be omitted and will then come from the report type.")
