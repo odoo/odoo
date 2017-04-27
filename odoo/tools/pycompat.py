@@ -3,7 +3,7 @@
 # very strongly inspired by https://github.com/pallets/werkzeug/blob/master/werkzeug/_compat.py
 import sys
 
-PY2 = sys.version_info[0]
+PY2 = sys.version_info[0] == 2
 
 if PY2:
     # pylint: disable=long-builtin,xrange-builtin
