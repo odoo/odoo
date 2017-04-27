@@ -68,23 +68,23 @@
                         <field name="kanban_state" class="oe_inline" widget="state_selection"/>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Subject"/>
+                        <label for="name" class="oe_edit_only" string="Name"/>
                         <h1>
-                            <field name="name" placeholder="Maintenance Subject"/>
+                            <field name="name" placeholder="Maintenance Request"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="owner_user_id" string="Requested By"/>
                             <field name="equipment_id"  context="{'default_category_id':category_id}"/>
-                            <field name="category_id" groups="maintenance.group_equipment_manager"/>
-                            <field name="request_date"/>
-                            <field name="close_date" groups="base.group_no_one"/>
+                            <field name="category_id" groups="maintenance.group_equipment_manager" attrs="{'invisible': [('equipment_id', '=', False)]}"/>
+                            <field name="request_date" readonly="True"/>
+                            <field name="close_date" groups="base.group_no_one" readonly="True"/>
                             <field name="archive" invisible="1"/>
                             <field name="maintenance_type" widget="radio"/>
                         </group>
                         <group>
-                            <field name="maintenance_team_id"/>
+                            <field name="maintenance_team_id" options="{'no_create': True, 'no_open': True}"/>
                             <field name="technician_user_id" string="Responsible"/>
                             <label for="schedule_date"/>
                             <div class="o_row">
@@ -145,25 +145,23 @@
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div>
                                     <b><field name="name"/></b> <br/>
-                                    <span name="owner_user_id" t-if="record.owner_user_id.raw_value"><field name="owner_user_id"/><br/></span>
+                                    <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by : <field name="owner_user_id"/><br/></span>
+                                    <span name="technician_user_id" t-if="record.technician_user_id.raw_value">Responsible : <field name="technician_user_id"/><br/></span>
                                     <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
+                                    <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:2px;">
+                                    <field name="priority" widget="priority"/>
                                     <t t-if="record.message_needaction_counter.raw_value">
                                         <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                     </t>
-                                    <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
                                     <div class="o_kanban_inline_block ml4 mr4">
                                         <field name="activity_ids" widget="kanban_activity" />
                                     </div>
                                     <field name="kanban_state" widget="state_selection"/>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
-                                    <div class="pull-left mr4 mt4">
-                                        <field name="priority" widget="priority"/>
-                                    </div>
-
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -701,7 +699,10 @@
                         <div>
                             <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
                                 <div class="o_kanban_card_header_title">
-                                    <div class="o_primary"><field name="name"/></div>
+                                    <div class="o_primary">
+                                        <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
+                                            <field name="name"/>
+                                        </a></div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
                                     <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
@@ -710,7 +711,7 @@
                             <div class="container o_kanban_card_content o_visible">
                                 <div class="row">
                                     <div class="col-xs-6 o_kanban_primary_left">
-                                        <button class="btn btn-primary" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
+                                        <button class="btn btn-primary" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
                                             <t t-esc="record.todo_request_count.value"/> To Do
                                         </button>
                                     </div>
@@ -732,7 +733,7 @@
                                             <div class="col-xs-3">
                                                 <t t-esc="record.todo_request_count_high_priority.value"/>
                                             </div>
-                                             <div class="col-xs-9">
+                                            <div class="col-xs-9">
                                                 <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_kanban_state_block': 1}">
                                                     Blocked
                                                 </a>
