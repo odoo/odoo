@@ -229,12 +229,6 @@
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                     <div name="button_box" position="inside">
-                        <button class="oe_stat_button"
-                               name="%(product_open_quants)d"
-                               icon="fa-building-o"
-                               type="action" attrs="{'invisible':[('type', '!=', 'product')]}">
-                            <field name="qty_available" widget="statinfo" string="On Hand"/>
-                        </button>
                         <button type="action"
                             name="%(stock.action_stock_level_forecast_report_product)d"
                             attrs="{'invisible':[('type', '!=', 'product')]}"

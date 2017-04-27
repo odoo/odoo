@@ -344,6 +344,13 @@ class Product(models.Model):
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()
 
+    @api.multi
+    def action_open_quants(self):
+        action = self.env.ref('stock.product_open_quants').read()[0]
+        action['domain'] = [('product_id', 'in', self.ids)]
+        action['context'] = {'search_default_locationgroup': 1, 'search_default_internal_loc': 1}
+        return action
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -493,10 +500,7 @@ class ProductTemplate(models.Model):
     @api.multi
     def action_open_quants(self):
         products = self.mapped('product_variant_ids')
-        action = self.env.ref('stock.product_open_quants').read()[0]
-        action['domain'] = [('product_id', 'in', products.ids)]
-        action['context'] = {'search_default_locationgroup': 1, 'search_default_internal_loc': 1}
-        return action
+        return products.action_open_quants()
 
     @api.multi
     def action_view_orderpoints(self):
