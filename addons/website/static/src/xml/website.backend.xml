@@ -7,11 +7,11 @@
 
     <t t-name="website.WebsiteDashboardMain">
         <div class="o_dashboards">
-                <!-- <a href="#" class="o_box_item o_dashboard_action btn btn-primary" name="website.action_website" title="Go to Website">
+                <a href="#" class="o_box_item o_dashboard_action btn btn-primary" name="website.action_website" title="Go to Website">
                     <div class="o_inner_box o_primary">
                         Go to Website
                     </div>
-                </a> -->
+                </a>
             <div class="container-fluid o_website_dashboard">
                 <t t-call="website.dashboard_header"/>
                 <div class="o_website_dashboard_content"/>
@@ -102,12 +102,5 @@
             <button class="btn btn-sm btn-default js_date_range" data-date="month">Last Month</button>
             <button class="btn btn-sm btn-default js_date_range" data-date="year">Last Year</button>
         </div>
-    </t>
-    <t t-name="website.breadcrumb_web">
-        <a href="#" class="o_dashboard_action btn btn-primary breadcrumb" name="website.action_website" title="Go to Website">
-            <div class="o_inner_box o_primary">
-                Go to Website
-            </div>
-        </a>
     </t>
 </templates>
