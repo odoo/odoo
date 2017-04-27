@@ -109,7 +109,7 @@ class website_account(http.Controller):
 
         # vat validation
         if data.get("vat") and hasattr(request.env["res.partner"], "check_vat"):
-            if request.website.company_id.vat_check_vies:
+            if request.website.company_id.sudo().vat_check_vies:
                 # force full VIES online check
                 check_func = request.env["res.partner"].vies_vat_check
             else:
