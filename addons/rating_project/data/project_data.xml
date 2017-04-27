@@ -33,7 +33,7 @@
             <field name="model_id" ref="project.model_project_task"/>
             <field name="partner_to" >${object.rating_get_partner_id().id}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
     <t t-set="access_token" t-value="record.rating_get_access_token()"/>
     <table style="width:600px;margin:5px auto;">
@@ -101,7 +101,7 @@
         </tbody>
     </table>
 </div>
-]]></field>
+</field>
         </record>
     </data>
 </odoo>
