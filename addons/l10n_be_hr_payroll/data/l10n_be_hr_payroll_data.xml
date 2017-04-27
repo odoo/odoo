@@ -99,7 +99,11 @@
         <field name="code">SALARY</field>
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = contract.wage * 1 + contract.car_atn + contract.mobile + contract.mobile_plus + contract.internet</field>
+        <field name="amount_python_compute">
+result = contract.wage + contract.mobile + contract.mobile_plus + contract.internet
+if contract.transport_mode == 'company_car':
+    result += contract.car_atn
+        </field>
         <field name="sequence">20</field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
