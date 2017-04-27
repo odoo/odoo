@@ -109,6 +109,19 @@ class Location(models.Model):
             ('view_location_id.parent_left', '<=', self.parent_left),
             ('view_location_id.parent_right', '>=', self.parent_left)], limit=1)
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        """Inherit the original `name_search` method to search by `barcode`,
+        if there aren't results it returns the default way"""
+        if args is None:
+            args = []
+        recs = self.browse()
+        if name:
+            recs = self.search([('barcode', '=', name)] + args, limit=limit)
+        res = recs.name_get() or super(Location, self).name_search(
+            name, args=args, operator=operator, limit=limit)
+        return res
+
 
 class Route(models.Model):
     _name = 'stock.location.route'
