@@ -175,10 +175,11 @@ var BasicRenderer = AbstractRenderer.extend({
      *   none was possible to activate
      */
     _activateFieldWidget: function (record, currentIndex, options) {
+        var tabindex_widgets = !_.isEmpty(this.tabindexWidgets) ? this.tabindexWidgets : this.allFieldWidgets;
         options = options || {};
         _.defaults(options, {inc: 1, wrap: true});
 
-        var recordWidgets = this.allFieldWidgets[record.id] || [];
+        var recordWidgets = tabindex_widgets[record.id] || [];
         for (var i = 0 ; i < recordWidgets.length ; i++) {
             var activated = recordWidgets[currentIndex].activate({event: options.event});
             if (activated) {
@@ -212,7 +213,8 @@ var BasicRenderer = AbstractRenderer.extend({
      * @return {integer}
      */
     _activateNextFieldWidget: function (record, currentIndex) {
-        currentIndex = (currentIndex + 1) % (this.allFieldWidgets[record.id] || []).length;
+        var tabindex_widgets = !_.isEmpty(this.tabindexWidgets) ? this.tabindexWidgets : this.allFieldWidgets;
+        currentIndex = (currentIndex + 1) % (tabindex_widgets[record.id] || []).length;
         return this._activateFieldWidget(record, currentIndex, {inc: 1});
     },
     /**
@@ -225,7 +227,8 @@ var BasicRenderer = AbstractRenderer.extend({
      * @return {integer}
      */
     _activatePreviousFieldWidget: function (record, currentIndex) {
-        currentIndex = currentIndex ? (currentIndex - 1) : ((this.allFieldWidgets[record.id] || []).length - 1);
+        var tabindex_widgets = !_.isEmpty(this.tabindexWidgets) ? this.tabindexWidgets : this.allFieldWidgets;
+        currentIndex = currentIndex ? (currentIndex - 1) : ((tabindex_widgets[record.id] || []).length - 1);
         return this._activateFieldWidget(record, currentIndex, {inc:-1});
     },
     /**
@@ -474,6 +477,8 @@ var BasicRenderer = AbstractRenderer.extend({
         var oldAllFieldWidgets = this.allFieldWidgets;
         this.allFieldWidgets = {}; // TODO maybe merging allFieldWidgets and allModifiersData into "nodesData" in some way could be great
         this.allModifiersData = [];
+        this.tabindexWidgets = {};
+        this.tabindexFieldWidgets = {};
         return this._renderView().then(function () {
             _.each(oldAllFieldWidgets, function (recordWidgets) {
                 _.each(recordWidgets, function (widget) {
@@ -517,7 +522,15 @@ var BasicRenderer = AbstractRenderer.extend({
         if (this.allFieldWidgets[record.id] === undefined) {
             this.allFieldWidgets[record.id] = [];
         }
+        if (this.tabindexFieldWidgets[record.id] === undefined) {
+            this.tabindexFieldWidgets[record.id] = [];
+        }
         this.allFieldWidgets[record.id].push(widget);
+
+        // Note: Can be moved to _render method in then callback to find tabindex widgets from allFieldWidgets
+        if (widget.tabindex != -1 && !widget.no_tabindex) {
+            this.tabindexFieldWidgets[record.id].push(widget);
+        }
 
         widget.__node = node; // TODO get rid of this if possible one day
 

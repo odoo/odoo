@@ -20,6 +20,20 @@ var FormController = BasicController.extend({
         toggle_column_order: '_onToggleColumnOrder',
     }),
     /**
+     * Called each time the form view is attached into the DOM
+     */
+    on_attach_callback: function() {
+        this.trigger('attached');
+        this.renderer.setTabindexWidgets();
+        this.autofocus();
+    },
+    /**
+     * Called each time the form view is detached from the DOM
+     */
+    on_detach_callback: function() {
+        this.trigger('detached');
+    },
+    /**
      * @override
      *
      * @param {boolean} params.hasSidebar
@@ -46,6 +60,9 @@ var FormController = BasicController.extend({
     autofocus: function () {
         if (!this.disableAutofocus) {
             this.renderer.autofocus();
+            if (this.$buttons && this.mode == 'readonly') {
+                this.$buttons.find('.o_form_button_edit').focus();
+            }
         }
     },
     /**

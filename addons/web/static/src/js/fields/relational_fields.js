@@ -859,6 +859,8 @@ var FieldX2Many = AbstractField.extend({
             });
         }
         this.$el.addClass('o_field_x2many o_field_x2many_' + viewType);
+        // To set tabindex on main div of o2m so that focus is possible on escape
+        this.$el.attr("tabindex", 0);
         return this.renderer ? this.renderer.appendTo(this.$el) : this._super();
     },
     /**
@@ -1143,6 +1145,16 @@ var FieldX2Many = AbstractField.extend({
      */
     _onToggleColumnOrder: function (ev) {
         ev.data.field = this.name;
+    },
+    activate: function() {
+        if (!this.activeActions.create || this.isReadonly) {
+            return false;
+        }
+        if (!this.isReadonly) {
+            // this._onAddRecord();
+            this.trigger_up('add_record');
+            return true;
+        }
     },
 });
 
@@ -1869,6 +1881,11 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     template: 'FieldMany2ManyCheckBoxes',
     events: _.extend({}, AbstractField.prototype.events, {
         change: '_onChange',
+        keydown: function(e) {
+            if (_.contains([$.ui.keyCode.UP, $.ui.keyCode.DOWN], e.which)) {
+                this.selectCheckbox(e);
+            }
+        }
     }),
     specialData: "_fetchSpecialRelation",
     supportedFieldTypes: ['many2many'],
@@ -1922,6 +1939,24 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
             ids: ids,
         });
     },
+    activate: function() {
+        var $inputs = this.$("input");
+        if ($inputs) {
+            $inputs.filter(":checked").length ? $inputs.filter(":checked").first().focus() : $inputs.first().focus();
+        }
+    },
+    // TODO: To test
+    selectCheckbox: function(e) {
+        e.preventDefault();
+        var direction = e.which == $.ui.keyCode.UP ? 'previous' : 'next';
+        var $inputs = this.$("input");
+        var index = $inputs.index(this.$("input:focus"));
+        if (this.$("input") && index == $inputs.length-1) {
+            $inputs.first().focus();
+        } else {
+            $inputs[index+1] && $inputs[index+1].focus();
+        }
+    }
 });
 
 //------------------------------------------------------------------------------
@@ -1929,6 +1964,7 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
 //------------------------------------------------------------------------------
 
 var FieldStatus = AbstractField.extend({
+    no_tabindex: true,
     className: 'o_statusbar_status',
     events: {
         'click button:not(.dropdown-toggle)': '_onClickStage',
@@ -2131,6 +2167,7 @@ var FieldRadio = FieldSelection.extend({
     template: null,
     className: 'o_field_radio',
     tagName: 'span',
+    no_tabindex: true,
     specialData: "_fetchSpecialMany2ones",
     supportedFieldTypes: ['selection', 'many2one'],
     events: _.extend({}, AbstractField.prototype.events, {

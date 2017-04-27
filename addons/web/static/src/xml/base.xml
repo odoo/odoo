@@ -114,6 +114,13 @@
     </ul>
 </t>
 
+<t t-name="FocusTooltip">
+    <div class='oe_tooltip_string'>
+        <p t-if="title" t-raw="title"></p>
+        <p t-if="!title &amp;&amp; getFocusTip" t-raw="getFocusTip()"></p>
+    </div>
+</t>
+
 <t t-name="Notification">
     <div t-attf-class="o_notification #{className}" t-translation="off">
         <a t-if="widget.sticky" class="fa fa-times o_close" href="#"/>
