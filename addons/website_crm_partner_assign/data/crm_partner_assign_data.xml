@@ -19,7 +19,7 @@
             <field name="email_to">${ctx['partner_id'].email|safe}</field>
             <field name="email_from">${(user.email or '')|safe}</field>
             <field name="subject">Fwd: Lead: ${ctx['partner_id'].name}</field>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <p>Hello,</p>
 
 
@@ -32,7 +32,7 @@
 </t>
 </ol>
 
-<p t-if="ctx.get('partner_in_portal')">Please connect to your <a t-att-href="record.get_portal_url()">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: "I'm interested" & "I'm not interested".</p>
+<p t-if="ctx.get('partner_in_portal')">Please connect to your <a t-att-href="record.get_portal_url()">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: "I'm interested" &amp; "I'm not interested".</p>
 <p t-if="not ctx.get('partner_in_portal')">
     You do not have yet a portal access to our database. Please contact 
     <t t-esc="ctx.get('partner_id').user_id and ctx.gwt('partner_id').user_id.email and 'your account manager %s (%s)' % (ctx.get('partner_id').user_id.name,ctx.get('partner_id').user_id.email) or 'us'"/>.
@@ -46,6 +46,6 @@
 <t t-if="not ctx['partner_id'].user_id">
 PS: It looks like you do not have an account manager assigned to you, please contact us.
 </t>
-            ]]></field>
+            </field>
         </record>
 </odoo>
