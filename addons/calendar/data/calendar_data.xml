@@ -80,19 +80,19 @@
             <field name="email_to" >${('' if object.partner_id and object.partner_id.email and object.partner_id.email==object.email else object.email|safe)}</field>
             <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <div summary="o_mail_template" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
 <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}"/>
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
             </td>
             <td valign="center" align="right" width="340" style="padding:10px 10px 10px 5px; font-size: 12px;">
                 <p>
-                    <a t-attf-href="/calendar/meeting/accept?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
-                    <a t-attf-href="/calendar/meeting/decline?db=#{'dbname' in ctx and ctx['dbname'] or '' }&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
-                    <a t-attf-href="/calendar/meeting/view?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
+                    <a t-attf-href="/calendar/meeting/accept?db=#{'dbname' in ctx and ctx['dbname'] or ''}&amp;token=#{record.access_token}&amp;action=#{'action_id' in ctx and ctx['action_id'] or ''}&amp;id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
+                    <a t-attf-href="/calendar/meeting/decline?db=#{'dbname' in ctx and ctx['dbname'] or '' }&amp;token=#{record.access_token}&amp;action=#{'action_id' in ctx and ctx['action_id'] or ''}&amp;id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
+                    <a t-attf-href="/calendar/meeting/view?db=#{'dbname' in ctx and ctx['dbname'] or ''}&amp;token=#{record.access_token}&amp;action=#{'action_id' in ctx and ctx['action_id'] or ''}&amp;id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
                 </p>
             </td>
         </tr></tbody>
@@ -101,7 +101,7 @@
         <tbody><tr>
             <td valign="top" style="width:600px; padding:10px 10px 10px 5px;">
                 <div>
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0"/>
                 </div>
             </td>
         </tr></tbody>
@@ -127,7 +127,7 @@
                         <p>Details of the event</p>
                         <ul>
                             <li t-if="record.event_id.location">Location: <t t-esc="record.event_id.location"/>
-                            (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&q=#{record.event_id.location}">View Map</a>)
+                            (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&amp;q=#{record.event_id.location}">View Map</a>)
                             </li>
                             <li t-if="record.event_id.description">Description: <t t-esc="record.event_id.description"/></li>
                             <li t-if="not record.event_id.allday and record.event_id.duration">Duration: <t t-esc="('%dH%02d' % (record.event_id.duration,(record.event_id.duration*60)%60))"/></li>
@@ -144,7 +144,7 @@
             </td>
         </tr></tbody>
     </table>
-</div>]]></field>
+</div></field>
         </record>
 
         <record id="calendar_template_meeting_changedate" model="mail.template">
@@ -155,19 +155,19 @@
             <field name="email_to" >${('' if object.partner_id and object.partner_id.email and object.partner_id.email==object.email else object.email|safe)}</field>
             <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <div summary="o_mail_template" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
 <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}"/>
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
             </td>
             <td valign="center" align="right" width="340" style="padding:10px 10px 10px 5px; font-size: 12px;">
                 <p>
-                    <a t-attf-href="/calendar/meeting/accept?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
-                    <a t-attf-href="/calendar/meeting/decline?db=#{'dbname' in ctx and ctx['dbname'] or '' }&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
-                    <a t-attf-href="/calendar/meeting/view?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
+                    <a t-attf-href="/calendar/meeting/accept?db=#{'dbname' in ctx and ctx['dbname'] or ''}&amp;token=#{record.access_token}&amp;action=#{'action_id' in ctx and ctx['action_id'] or ''}&amp;id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
+                    <a t-attf-href="/calendar/meeting/decline?db=#{'dbname' in ctx and ctx['dbname'] or '' }&amp;token=#{record.access_token}&amp;action=#{'action_id' in ctx and ctx['action_id'] or ''}&amp;id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
+                    <a t-attf-href="/calendar/meeting/view?db=#{'dbname' in ctx and ctx['dbname'] or ''}&amp;token=#{record.access_token}&amp;action=#{'action_id' in ctx and ctx['action_id'] or ''}&amp;id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
                 </p>
             </td>
         </tr></tbody>
@@ -176,7 +176,7 @@
         <tbody><tr>
             <td valign="top" style="width:600px; padding:10px 10px 10px 5px;">
                 <div>
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0"/>
                 </div>
             </td>
         </tr></tbody>
@@ -203,7 +203,7 @@
                         <p>Details of the event</p>
                         <ul>
                             <li t-if="record.event_id.location">Location: <t t-esc="record.event_id.location"/>
-                            (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&q=#{record.event_id.location}">View Map</a>)
+                            (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&amp;q=#{record.event_id.location}">View Map</a>)
                             </li>
                             <li t-if ="record.event_id.description">Description: <t t-esc="record.event_id.description"/>
                             </li>
@@ -224,7 +224,7 @@
             </td>
         </tr></tbody>
     </table>
-</div>]]></field>
+</div></field>
         </record>
 
         <record id="calendar_template_meeting_reminder" model="mail.template">
@@ -235,19 +235,19 @@
             <field name="email_to" >${('' if object.partner_id and object.partner_id.email and object.partner_id.email==object.email else object.email|safe)}</field>
             <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <div summary="o_mail_template" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
 <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}"/>
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
             </td>
             <td valign="center" align="right" width="340" style="padding:10px 10px 10px 5px; font-size: 12px;">
                 <p>
-                    <a t-attf-href="/calendar/meeting/accept?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
-                    <a t-attf-href="/calendar/meeting/decline?db=#{'dbname' in ctx and ctx['dbname'] or '' }&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
-                    <a t-attf-href="/calendar/meeting/view?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
+                    <a t-attf-href="/calendar/meeting/accept?db=#{'dbname' in ctx and ctx['dbname'] or ''}&amp;token=#{record.access_token}&amp;action=#{'action_id' in ctx and ctx['action_id'] or ''}&amp;id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
+                    <a t-attf-href="/calendar/meeting/decline?db=#{'dbname' in ctx and ctx['dbname'] or '' }&amp;token=#{record.access_token}&amp;action=#{'action_id' in ctx and ctx['action_id'] or ''}&amp;id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
+                    <a t-attf-href="/calendar/meeting/view?db=#{'dbname' in ctx and ctx['dbname'] or ''}&amp;token=#{record.access_token}&amp;action=#{'action_id' in ctx and ctx['action_id'] or ''}&amp;id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
                 </p>
             </td>
         </tr></tbody>
@@ -256,7 +256,7 @@
         <tbody><tr>
             <td valign="top" style="width:600px; padding:10px 10px 10px 5px;">
                 <div>
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0"/>
                 </div>
             </td>
         </tr></tbody>
@@ -283,7 +283,7 @@
                         <p>Details of the event</p>
                         <ul>
                             <li t-if="record.event_id.location">Location: <t t-esc="record.event_id.location"/>
-                            (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&q=#{record.event_id.location}">View Map</a>)
+                            (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&amp;q=#{record.event_id.location}">View Map</a>)
                             </li>
                             <li t-if="record.event_id.description">Description: <t t-esc="record.event_id.description"/></li>
                             <li t-if="not record.event_id.allday and record.event_id.duration">Duration: <t t-esc="('%dH%02d' % (record.event_id.duration,(record.event_id.duration*60)%60))"/></li>
@@ -303,7 +303,7 @@
             </td>
         </tr></tbody>
     </table>
-</div>]]></field>
+</div></field>
         </record>
     </data>
 </odoo>
