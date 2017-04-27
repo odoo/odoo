@@ -228,6 +228,7 @@ class MassMailingCampaign(osv.Model):
         return result
 
     _columns = {
+        # Note: This field is removed in Saas-8 to use the inheritS property from the utm.campaign
         'name': fields.char('Name', required=True),
         'stage_id': fields.many2one('mail.mass_mailing.stage', 'Stage', required=True),
         'user_id': fields.many2one(
@@ -315,6 +316,22 @@ class MassMailingCampaign(osv.Model):
     def _get_medium_id(self, cr, uid, context=None):
         return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'utm.utm_medium_email')
 
+    # To be removed in saas-8
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if context.get('utm_to_create', False) or 'campaign_id' not in vals:
+            vals['campaign_id'] = self.pool['utm.campaign'].create(cr, uid, {'name': vals['name']}, context=context)
+        mass_mailing_campaign_id = super(MassMailingCampaign, self).create(cr, uid, vals, context=context)
+        return mass_mailing_campaign_id
+
+    # To be removed in saas-8
+    def write(self, cr, uid, ids, vals, context=None):
+        campaign_ids = [mass_mailing_campaign.campaign_id.id for mass_mailing_campaign in self.browse(cr, uid, ids, context=context)]
+        if ('name' in vals) and mass_mailing_campaign.campaign_id:
+            self.pool['utm.campaign'].write(cr, uid, campaign_ids, {'name': vals['name']}, context=context)
+        return super(MassMailingCampaign, self).write(cr, uid, ids, vals, context=context)
+
     _defaults = {
         'user_id': lambda self, cr, uid, ctx=None: uid,
         'stage_id': lambda self, *args: self._get_default_stage_id(*args),
@@ -341,15 +358,12 @@ class MassMailingCampaign(osv.Model):
         return res
 
     def on_change_campaign_name(self, cr, uid, ids, name, context=None):
-        if name:
-            mass_mailing_campaign = self.browse(cr, uid, ids, context=context)
-            if mass_mailing_campaign.campaign_id:
-                utm_campaign_id = mass_mailing_campaign.campaign_id.id
-                self.pool['utm.campaign'].write(cr, uid, [utm_campaign_id], {'name': name}, context=context)
-            else:
-                utm_campaign_id = self.pool['utm.campaign'].create(cr, uid, {'name': name}, context=context)
-
-            return {'value': {'campaign_id': utm_campaign_id}}
+        if context is None:
+            context = {}
+        if self.browse(cr, uid, ids, context=context).campaign_id.id is False:
+            dict(context).update({'utm_to_create' : True})
+            return {'value': {'campaign_id': self.pool['utm.campaign'].search(cr, uid, [], limit=1)}}
+        return {'value': {}}
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         """ Override read_group to always display all states. """
