@@ -19,6 +19,7 @@
         <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="5" groups="group_account_invoice"/>
             <!-- Reporting sub-menus -->
             <menuitem id="account_reports_management_menu" name="Management" parent="account.menu_finance_reports" sequence="4" groups="group_account_user"/>
+            <menuitem id="account_reports_legal_statements_menu" name="Legal Statements" parent="account.menu_finance_reports" sequence="1" groups="account.group_account_user"/>
             <menuitem id="account_reports_business_intelligence_menu" name="Business Intelligence" parent="account.menu_finance_reports" sequence="5" groups="group_account_invoice"/>
             <menuitem id="menu_finance_legal_statement" name="PDF Reports" parent="account.menu_finance_reports" groups="group_account_user"/>
 
@@ -27,8 +28,7 @@
             <menuitem id="account_account_menu" name="Accounting" parent="account.menu_finance_configuration" sequence="2" groups="group_account_invoice"/>
             <menuitem id="account_management_menu" name="Management" parent="account.menu_finance_configuration" sequence="3" groups="group_account_manager"/>
             <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting" sequence="5"/>
-            <menuitem id="menu_config_multi_currency" name="Multi-Currencies" parent="menu_finance_configuration" sequence="9" groups="base.group_multi_currency"/>
-            <menuitem id="menu_action_currency_form" action="base.action_currency_form" name="Currencies" parent="menu_config_multi_currency" sequence="20" groups="base.group_multi_currency"/>
+            <menuitem id="menu_action_currency_form" action="base.action_currency_form" name="Currencies" parent="account_account_menu" sequence="1" groups="base.group_multi_currency"/>
             <menuitem id="menu_account_reports" name="Financial Reports" parent="menu_finance_configuration" groups="group_account_user"/>
 
 

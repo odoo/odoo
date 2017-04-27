@@ -66,13 +66,6 @@
         </record>
 
         <menuitem
-            name="Analytic Accounts"
-            parent="menu_finance_entries"
-            action="analytic.action_analytic_account_form"
-            id="menu_action_analytic_account_tree2"
-            sequence="30"
-            groups="analytic.group_analytic_accounting"/>
-        <menuitem
             name="Analytic Entries"
             parent="menu_finance_entries"
             action="analytic.account_analytic_line_action_entries"
@@ -95,18 +88,18 @@
 
         <menuitem
             name="Analytic Entries"
-            parent="account_reports_business_intelligence_menu"
+            parent="account.account_reports_management_menu"
             action="analytic_line_reporting_pivot"
             id="menu_action_analytic_lines_reporting"
-            sequence="35"
+            sequence="19"
             groups="analytic.group_analytic_accounting"/>
 
         <menuitem
             id="account_analytic_tag_menu"
-            name="Analytic Accounts Tags"
+            name="Analytic Tags"
             parent="menu_analytic_accounting"
             action="analytic.account_analytic_tag_action"
-            groups="base.group_no_one"/>
+            groups="analytic.group_analytic_accounting"/>
 
     </data>
 </odoo>
