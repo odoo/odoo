@@ -285,17 +285,17 @@
                 </div>
                 <h2>Timesheets</h2>
                 <div class="row mt16 o_settings_container">
-                    <div class="col-xs-12 col-md-6 o_setting_box" title="Create new projects &amp; tasks for sold services, record time spent and get delivered quantities updated in sales orders accordingly." id="timesheet_grid_sale">
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Sell services (e.g. project, maintenance), record time spent using Timesheets app and invoice them based on a fixed price (ordered quantity) or on the time spent (delivered quantity)" name="sale_timesheet_box">
                         <div class="o_setting_left_pane">
-                            <field name="module_timesheet_grid_sale" widget="upgrade_boolean"/>
+                            <field name="module_sale_timesheet" widget="upgrade_boolean"/>
                         </div>
                         <div class="o_setting_right_pane">
-                            <label for="module_timesheet_grid_sale"/>
+                            <label for="module_sale_timesheet"/>
                             <div class="text-muted">
                                 Record time spent on services and invoice it
                             </div>
-                            <div class="content-group" id="msg_module_timesheet_grid_sale">
-                                <div class="text-warning mt16" attrs="{'invisible': [('module_timesheet_grid_sale','=',False)]}">
+                            <div class="content-group" name="msg_module_sale_timesheet">
+                                <div class="text-warning mt16" attrs="{'invisible': [('module_sale_timesheet','=',False)]}">
                                     Save this page and come back here to set up the feature.
                                 </div>
                             </div>

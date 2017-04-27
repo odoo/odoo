@@ -23,7 +23,7 @@ class SaleConfiguration(models.TransientModel):
         implied_group='product.group_uom')
     group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
     group_stock_packaging = fields.Boolean("Packaging", implied_group='product.group_stock_packaging',
-        help="""Ability to select a package type in sales orders and 
+        help="""Ability to select a package type in sales orders and
                 to force a quantity that is a multiple of the number of units per package.""")
     module_sale_margin = fields.Boolean("Margins")
     group_sale_layout = fields.Boolean("Sections on Sales Orders", implied_group='sale.group_sale_layout')
@@ -78,7 +78,7 @@ class SaleConfiguration(models.TransientModel):
     module_delivery_ups = fields.Boolean("UPS")
     module_delivery_usps = fields.Boolean("USPS")
 
-    module_timesheet_grid_sale = fields.Boolean("Timesheets")
+    module_sale_timesheet = fields.Boolean("Timesheets")
     module_sale_ebay = fields.Boolean("eBay")
     module_print_docsaway = fields.Boolean("Docsaway")
     module_web_clearbit = fields.Boolean("Customer Autocomplete")

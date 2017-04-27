@@ -86,8 +86,10 @@ class Project(models.Model):
             ])
 
     def _compute_task_count(self):
+        task_data = self.env['project.task'].read_group([('project_id', 'in', self.ids), '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)], ['project_id'], ['project_id'])
+        result = dict((data['project_id'][0], data['project_id_count']) for data in task_data)
         for project in self:
-            project.task_count = len(project.task_ids)
+            project.task_count = result.get(project.id, 0)
 
     def _compute_task_needaction_count(self):
         projects_data = self.env['project.task'].read_group([

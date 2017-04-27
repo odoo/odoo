@@ -3,13 +3,17 @@
     <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
         <field name="name">hr.timesheet.employee.extd_form</field>
         <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="inherit_id" ref="hr_timesheet.hr_employee_view_form_inherit_timesheet"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='active_group']" position="before">
-                <group string="Timesheets">
-                    <field name="timesheet_cost"/>
-                    <field name="account_id"/>
-                </group>
+            <xpath expr="//group[@name='timesheet']" position="inside">
+                <label for="timesheet_cost"/>
+                <div>
+                    <field name="timesheet_cost" class="oe_inline"/> per hour
+                    <field name="currency_id" invisible="1"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='timesheet']" position="attributes">
+                <attribute name="invisible">0</attribute>
             </xpath>
         </field>
     </record>

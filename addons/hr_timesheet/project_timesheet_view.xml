@@ -102,7 +102,8 @@
                     <field name="timesheet_ids" context="{'default_project_id': project_id}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
-                            <field name="user_id" required="1"/>
+                            <field name="user_id" invisible="1"/>
+                            <field name="employee_id" required="1"/>
                             <field name="name"/>
                             <field name="unit_amount" string="Duration" widget="float_time"/>
                             <field name="project_id" invisible="1"/>
@@ -153,7 +154,7 @@
                         <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
                     </div>
                 </xpath>
-                <xpath expr="//div[contains(@class, 'o_project_kanban_box')]/div[last()]" position="before">
+                <xpath expr="//div[contains(@class, 'o_project_kanban_box')]/div[last()]" position="after">
                     <div attrs="{'invisible': [('allow_timesheets', '=', False)]}" class="o_project_kanban_box">
                         <a t-if="record.allow_timesheets.raw_value" name="%(act_hr_timesheet_line_by_project)d" type="action">
                             <span class="o_label">Timesheets</span>
