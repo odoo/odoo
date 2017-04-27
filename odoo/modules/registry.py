@@ -262,7 +262,7 @@ class Registry(Mapping):
             model = cls._build_model(self, cr)
             model_names.append(model._name)
 
-        return self.descendants(model_names, '_inherit')
+        return self.descendants(model_names, '_inherit', '_inherits')
 
     def setup_models(self, cr, partial=False):
         """ Complete the setup of models.

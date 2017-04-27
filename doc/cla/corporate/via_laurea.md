@@ -6,8 +6,8 @@ I declare that I am authorized and able to make this agreement and sign this dec
 
 Signed,
 
-Saulius Zilys saulius@vialaurea.lt https://github.com/realsaiko
+Saulius Zilys saulius@vialaurea.lt (up to 2017-04-24)
 
 List of contributors:
 
-Saulius Zilys saulius@vialaurea.lt https://github.com/realsaiko
+Saulius Zilys saulius@vialaurea.lt (up to 2017-04-24)
