@@ -10,7 +10,7 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="True"/>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <p>
     Dear <t t-esc="record.user_id.name"/>,
 </p>
@@ -32,7 +32,7 @@
     <li><a t-att-href="record.user_id.signup_url" t-esc="record.user_id.signup_url"/></li>
 </ul>
 <p>
-<t t-esc="record.wizard_id.welcome_message or ''"/>]]></field>
+<t t-esc="record.wizard_id.welcome_message or ''"/></p></field>
         </record>
     </data>
 </odoo>
