@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
-            <xpath expr="//div[@name='mail_button']" position="replace">
+            <!-- <xpath expr="//div[@name='mail_button']" position="replace"> -->
                 <div>
                     <form action="/website_form/" method="post" data-model_name="crm.lead" data-success_page="/page/website_crm.contactus_thanks" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data" data-editable-form="false">
                         <div class="form-group form-field o_website_form_required_custom">
@@ -48,9 +48,10 @@
                         </div>
                     </form>
                 </div>
-			</xpath>
+			<!-- </xpath> -->
 		</template>
 
+        <!-- Thanks template -->
         <template id="contactus_thanks" name="Contact us">
             <t t-call="website.layout">
               <div id="wrap">
