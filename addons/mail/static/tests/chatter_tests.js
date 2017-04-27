@@ -752,5 +752,72 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
 
     form.destroy();
 });
+
+QUnit.test('followers widget: do not display follower duplications', function (assert) {
+    assert.expect(2);
+
+    this.data.partner.records[0].message_follower_ids = [1];
+    var resID = 2;
+    var followers = [{
+        id: 1,
+        name: "Admin",
+        email: "admin@example.com",
+        res_id: resID,
+        res_model: 'partner',
+    }];
+    var def;
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form>' +
+                '<sheet></sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_follower_ids" widget="mail_followers"/>' +
+                '</div>' +
+            '</form>',
+        mockRPC: function (route, args) {
+            if (route === '/mail/read_followers') {
+                return $.when(def).then(function () {
+                    return {
+                        followers: _.filter(followers, function (follower) {
+                            return _.contains(args.follower_ids, follower.id);
+                        }),
+                        subtypes: [],
+                    };
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        res_id: resID,
+        session: {partner_id: 1},
+    });
+
+
+    followers.push({
+        id: 2,
+        is_uid: false,
+        name: "A follower",
+        email: "follower@example.com",
+        res_id: resID,
+        res_model: 'partner',
+    });
+    this.data.partner.records[0].message_follower_ids.push(2);
+
+    // simulate concurrent calls to read_followers and check that those followers
+    // are not added twice in the dropdown
+    def = $.Deferred();
+    form.reload();
+    form.reload();
+    def.resolve();
+
+    assert.strictEqual(form.$('.o_followers_count').text(), '2',
+        "should have 2 followers");
+    assert.strictEqual(form.$('.o_followers_list .o_partner').length, 2,
+        "there should be 2 followers in the follower dropdown");
+
+    form.destroy();
+});
+
 });
 });
