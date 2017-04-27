@@ -18,7 +18,7 @@
             <field name="model_id" ref="base.model_ir_module_module"/>
             <field name="auto_delete" eval="True"/>
             <field name="scheduled_date">${(datetime.datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')}</field>
-            <field name="body_html" ><![CDATA[
+            <field name="body_html" type="xml">
             <meta charset="utf-8"/>
             <div style="margin: 10px auto;">
             <table cellspacing="0" cellpadding="0" style="width:100%;">
@@ -37,9 +37,9 @@
                 <tbody>
                     <tr>
                         <td style="padding:15px 10px;font-size:20px">
-                            <p style="color:#875A7B;margin:0" >Awesome!</p><br>
+                            <p style="color:#875A7B;margin:0" >Awesome!</p><br/>
                             <p dir="ltr" style="font-size:15px;margin-top:0pt;margin-bottom:0pt;">
-                                <span>Your website is now online!</span></p><br>
+                                <span>Your website is now online!</span></p><br/>
                             <p dir="ltr" style="margin-top:0pt;margin-bottom:8pt;">
                                 <span style="font-size:13px;font-weight:bold; ">Did you know?</span></p>
                             <ul style="margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;">
@@ -53,10 +53,10 @@
                                         <span>Customize the look of your website with the Customize menu.</span>
                                     </p>
                                 </li>
-                            </ul> <br>
+                            </ul> <br/>
                             <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;">
                                 <span style="font-weight:bold;">Discover the </span>
-                                <span><a href="/web#view_type=kanban&model=project.project&action=project.open_view_project_all">
+                                <span><a href="/web#view_type=kanban&amp;model=project.project&amp;action=project.open_view_project_all">
                                     <span style="font-weight:bold; text-decoration:underline;">Website planner</span></a></span>
                                 <span> to activate extra features</span>
                                 <span style="color:#875A7B;margin:0;font-weight:bold">(<t t-esc="user.env['web.planner'].get_planner_progress('planner_website')"/>% done)</span>
@@ -88,7 +88,7 @@
                                     </p>
                                 </li>
                             </ul>
-                            <br>
+                            <br/>
                             <p dir="ltr" style="font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;">
                                 <span style="font-weight:bold;">Need Help?</span>
                                 <span style="font-style:italic;">You’re not alone</span>
@@ -99,7 +99,7 @@
                                 You can also discover how to get the best out of Odoo with our </span>
                                 <a href="https://www.odoo.com/documentation/user">
                                 <span style="text-decoration:underline;">User Documentation</span></a>
-                                </span><span> or with our </span>
+                                <span> or with our </span>
                                 <a href="https://www.odoo.com/documentation">
                                 <span style="text-decoration:underline;">API Documentation</span></a>
                             </p>
@@ -109,9 +109,9 @@
                 </tbody>
             </table>
             <div dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey">
-                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href="https://twitter.com/odoo/favorites"><span style="text-decoration:underline;">what they say about it.</span></a></span>
+                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href="https://twitter.com/odoo/favorites"><span style="text-decoration:underline;">what they say about it.</span></a>
             </div>
-        </div>]]></field>
+        </div></field>
         </record>
 
     </data>
