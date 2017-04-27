@@ -101,7 +101,7 @@ class PaymentAcquirer(osv.Model):
         return True
 
     _constraints = [
-        (_check_required_if_provider, 'Required fields not filled', ['required for this provider']),
+        (_check_required_if_provider, 'Required fields not filled', []),
     ]
 
     def get_form_action_url(self, cr, uid, id, context=None):
