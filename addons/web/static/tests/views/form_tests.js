@@ -1503,8 +1503,89 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('discard changes on a dirty form view (for date field)', function (assert) {
+        assert.expect(1);
+
+        // this test checks that the basic model properly handles date object
+        // when they are discarded and saved.  This may be an issue because
+        // dates are saved as moment object, and were at one point stringified,
+        // then parsed into string, which is wrong.
+
+        this.data.partner.fields.date.default = "2017-01-25";
+        var nbWrite = 0;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="date"></field></form>',
+            intercepts: {
+                switch_to_previous_view: function (event) {
+                    form.update({}, {reload: false});
+                }
+            },
+        });
+
+        form.$buttons.find('.o_form_button_cancel').click();
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('span:contains(2017)').length, 1,
+            "should have a span with the year somewhere");
+
+        form.destroy();
+    });
+
+    QUnit.test('discard changes on relational data on new record', function (assert) {
+        assert.expect(3);
+
+        var nbWrite = 0;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><sheet><group>' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="product_id"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</group></sheet></form>',
+            mockRPC: function (route) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    nbWrite++;
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                switch_to_previous_view: function (event) {
+                    assert.ok(true, "should have sent correct event");
+                    // simulate the response from the view manager, in the case
+                    // where we have only one active view (the form).  If there
+                    // was another view, we would have switched to that view
+                    // instead
+                    form.update({}, {reload: false});
+                }
+            },
+        });
+
+        // switch to edit mode and edit the p field
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        form.$('.o_form_field_many2one input').click();
+        var $dropdown = form.$('.o_form_field_many2one input').autocomplete('widget');
+        $dropdown.find('li:first()').click();
+
+        assert.strictEqual(form.$('.o_form_input').val(), 'xphone', 'input should contain xphone');
+
+        // click on discard and confirm
+        form.$buttons.find('.o_form_button_cancel').click();
+        $('.modal .modal-footer .btn-primary').click(); // click on confirm
+
+        assert.notOk(form.$el.prop('outerHTML').match('xphone'),
+            "the string xphone should not be present after discarding");
+        form.destroy();
+    });
+
     QUnit.test('discard changes on a new (non dirty, except for defaults) form view', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.partner.fields.foo.default = "ABC";
 
@@ -1513,6 +1594,11 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners"><field name="foo"></field></form>',
+            intercepts: {
+                switch_to_previous_view: function () {
+                    assert.ok(true, "should have sent correct event");
+                }
+            }
         });
 
         // switch to edit mode and edit the foo field
@@ -1523,6 +1609,51 @@ QUnit.module('Views', {
 
         assert.strictEqual($('.modal').length, 0,
             'there should not be a confirm modal');
+
+        form.destroy();
+    });
+
+    QUnit.test('discard changes on a new (dirty) form view', function (assert) {
+        assert.expect(8);
+
+        this.data.partner.fields.foo.default = "ABC";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="foo"></field></form>',
+            intercepts: {
+                switch_to_previous_view: function (event) {
+                    assert.ok(true, "should have sent correct event");
+                    // simulate the response from the view manager, in the case
+                    // where we have only one active view (the form).  If there
+                    // was another view, we would have switched to that view
+                    // instead
+                    form.update({}, {reload: false});
+                }
+            },
+        });
+
+        // switch to edit mode and edit the foo field
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_form_input').val(), 'ABC', 'input should contain ABC');
+        form.$('.o_form_input').val('DEF').trigger('input');
+
+        // discard the changes and check it has properly been discarded
+        form.$buttons.find('.o_form_button_cancel').click();
+        assert.strictEqual($('.modal').length, 1,
+            'there should be a confirm modal');
+        assert.strictEqual(form.$('.o_form_input').val(), 'DEF', 'input should be DEF');
+        $('.modal .modal-footer .btn-primary').click(); // click on confirm
+        assert.strictEqual(form.$('.o_form_input').val(), 'ABC', 'input should now be ABC');
+
+        // redirty and discard the field foo (to make sure initial changes haven't been lost)
+        form.$('.o_form_input').val('GHI').trigger('input');
+        form.$buttons.find('.o_form_button_cancel').click();
+        assert.strictEqual(form.$('.o_form_input').val(), 'GHI', 'input should be GHI');
+        $('.modal .modal-footer .btn-primary').click(); // click on confirm
+        assert.strictEqual(form.$('.o_form_input').val(), 'ABC', 'input should now be ABC');
 
         form.destroy();
     });

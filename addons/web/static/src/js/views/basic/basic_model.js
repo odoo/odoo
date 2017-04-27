@@ -219,8 +219,17 @@ var BasicModel = AbstractModel.extend({
     discardChanges: function (id, options) {
         options = options || {};
         var element = this.localData[id];
+        var rollback = options.rollback || this.isNew(id);
         this._visitChildren(element, function (elem) {
-            elem._changes = options.rollback && elem._savePoint || null;
+            if (rollback && elem._savePoint) {
+                if (elem._savePoint instanceof Array) {
+                    elem._changes = elem._savePoint.slice(0);
+                } else {
+                    elem._changes = _.extend({}, elem._savePoint);
+                }
+            } else {
+                elem._changes = null;
+            }
         });
     },
     /**
@@ -655,9 +664,14 @@ var BasicModel = AbstractModel.extend({
             options = options || {};
             var record = self.localData[record_id];
             if (options.savePoint) {
-                if (record._changes) {
-                    record._savePoint = _.extend(record._savePoint || {}, record._changes);
-                }
+                self._visitChildren(record, function (rec) {
+                    var newValue = rec._changes || rec.data;
+                    if (newValue instanceof Array) {
+                        rec._savePoint = newValue.slice(0);
+                    } else {
+                        rec._savePoint = _.extend({}, newValue);
+                    }
+                });
                 return $.when();
             }
             var shouldReload = 'reload' in options ? options.reload : true;
@@ -2267,6 +2281,10 @@ var BasicModel = AbstractModel.extend({
                         return self._postprocess(record);
                     })
                     .then(function () {
+                        // save initial changes, so they can be restored later,
+                        // if we need to discard.
+                        self.save(record.id, {savePoint: true})
+
                         return record.id;
                     });
             });
@@ -2658,6 +2676,10 @@ var BasicModel = AbstractModel.extend({
      * For example, isDirty need to check all relations to find out if something
      * has been modified, or not.
      *
+     * Note that this method follows all the changes, so if a record has
+     * relational sub data, it will visit the new sub records and not the old
+     * ones.
+     *
      * @param {Object} element a valid local resource
      * @param {callback} fn a function to be called on each visited element
      */
@@ -2671,8 +2693,9 @@ var BasicModel = AbstractModel.extend({
                     continue;
                 }
                 if (_.contains(['one2many', 'many2one', 'many2many'], field.type)) {
-                    var relationalElement = this.localData[element.data[fieldName]];
-
+                    var hasChange = element._changes && fieldName in element._changes;
+                    var value =  hasChange ? element._changes[fieldName] : element.data[fieldName];
+                    var relationalElement = this.localData[value];
                     // relationalElement could be empty in the case of a many2one
                     if (relationalElement) {
                         self._visitChildren(relationalElement, fn);
@@ -2681,7 +2704,8 @@ var BasicModel = AbstractModel.extend({
             }
         }
         if (element.type === 'list') {
-            _.each(element.data, function (elemId) {
+            var listData = element._changes || element.data;
+            _.each(listData, function (elemId) {
                 var elem = self.localData[elemId];
                 self._visitChildren(elem, fn);
             });

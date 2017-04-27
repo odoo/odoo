@@ -46,6 +46,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         push_state: function(event) {
             this.do_push_state(event.data);
         },
+        switch_to_previous_view: '_onSwitchToPreviousView',
     },
     /**
      * Called each time the view manager is attached into the DOM
@@ -619,6 +620,32 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         }
         return this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * This handler is probably called by a sub form view when the user discards
+     * its value.  The usual result of this is that we switch back to the
+     * previous view (the first in our action stack).  We do this in a really
+     * stupid way: we trigger a 'history_back' event, and the action manager
+     * will call this very view manager to activate the previous view.
+     * @todo: directly switch to previous view
+     *
+     * A special case is done in the case that there is no previous view.  When
+     * that happens, we simply rerender the current view.
+     *
+     * @private
+     */
+    _onSwitchToPreviousView: function () {
+        if (this.view_stack.length === 1) {
+            var currentView = this.view_stack[0].controller;
+            currentView.update({}, {reload: false});
+        } else {
+            this.do_action('history_back');
+        }
+    }
 });
 
 return ViewManager;
