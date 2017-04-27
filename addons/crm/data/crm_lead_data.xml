@@ -78,13 +78,13 @@
             <field name="email_from">admin@example.com</field>
             <field name="email_to">${(object.user_id != False and object.user_id.email)|safe}</field>
             <field name="subject">Reminder: Lead ${object.name} from ${object.partner_id != False and object.partner_id.name or object.contact_name}</field>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <p>Hello <t t-esc="record.user_id and record.user_id.name or ''"/>,</p>
 <p>The opportunity <strong t-esc="record.name"/> did not have any activity since at least 5 days.</p>
 <p t-if="record.description">Here is the description about the opportunity : </p><p><i t-field="record.description"/>
 </p>
 <p>Thank you!</p>
-]]></field>
+</field>
         </record>
 
     </data>
