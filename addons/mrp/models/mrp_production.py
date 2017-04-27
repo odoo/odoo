@@ -307,6 +307,7 @@ class MrpProduction(models.Model):
             'production_id': self.id,
             'origin': self.name,
             'group_id': self.procurement_group_id.id,
+            'propagate': self.propagate,
         })
         move.action_confirm()
         return move
