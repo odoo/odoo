@@ -344,6 +344,16 @@ class Product(models.Model):
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()
 
+    @api.multi
+    def action_view_orderpoints(self):
+        action = self.env.ref('stock.product_open_orderpoint').read()[0]
+        if self and len(self) == 1:
+            action['context'] = {'default_product_id': self.ids[0], 'search_default_product_id': self.ids[0]}
+        else:
+            action['domain'] = [('product_id', 'in', self.ids)]
+            action['context'] = {}
+        return action
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
