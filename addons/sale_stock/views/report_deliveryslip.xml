@@ -9,5 +9,15 @@
                 </div>
             </div>
         </xpath>
+        <div name="partner_header" position="attributes">
+            <attribute name="t-if">(o.sale_id and o.picking_type_id.code == 'incoming') or o.partner_id</attribute>
+        </div>
+        <div t-field="o.partner_id" position="attributes">
+            <attribute name="t-if">not (o.sale_id and o.picking_type_id.code == 'incoming')</attribute>
+        </div>
+        <div t-field="o.partner_id" position="after">
+            <div t-if="o.sale_id and o.picking_type_id.code == 'incoming'" t-field="o.sale_id.partner_id"
+                 t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+        </div>
     </template>
 </odoo>
