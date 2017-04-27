@@ -525,6 +525,68 @@ class SaleOrder(models.Model):
         res = sorted(pycompat.items(res), key=lambda l: l[0].sequence)
         res = [(l[0].name, l[1]) for l in res]
         return res
+    # ==============
+    # Payment #
+    # ==============
+
+    @api.multi
+    def _prepare_payment_acquirer(self, values=None):
+        self.ensure_one()
+        env = self.env
+        # auto-increment reference with a number suffix
+        # if the reference already exists
+        reference = env['payment.transaction'].get_next_reference('/')
+        acquirers = env['payment.acquirer'].sudo().search([
+            ('website_published', '=', True),
+            ('company_id', '=', self.company_id.id)
+        ])
+
+        payment_method = []
+        for acquirer in acquirers:
+            acquirer_button = acquirer.render(reference, self.amount_total, self.pricelist_id.currency_id.id, values=values)
+            acquirer.button = acquirer_button
+            payment_method.append(acquirer)
+        tokens = env['payment.token'].search([
+            ('partner_id', '=', self.partner_id.id),
+            ('acquirer_id', 'in', acquirers.ids)
+        ])
+
+        return {'acquirers': payment_method, 'tokens': tokens}
+
+    @api.multi
+    def _prepare_payment_transaction(self, acquirer_id, tx_type='form', transaction=None, token=None):
+        self.ensure_one()
+        Transaction = self.env['payment.transaction'].sudo()
+
+        if transaction:
+            if transaction.sale_order_id.id != self.id or transaction.state in ['error', 'cancel'] or transaction.acquirer_id.id != acquirer_id:
+                transaction = False
+            elif token and transaction.payment_token_id and token != transaction.payment_token_id.id:
+                # new or distinct token
+                transaction = False
+            elif transaction.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
+                transaction.write(dict(Transaction.on_change_partner_id(self.partner.id).get('value', {}), amount=self.amount_total, type=tx_type))
+        if not transaction:
+            tx_values = {
+                'acquirer_id': acquirer_id,
+                'type': tx_type,
+                'amount': self.amount_total,
+                'currency_id': self.pricelist_id.currency_id.id,
+                'partner_id': self.partner_id.id,
+                'partner_country_id': self.partner_id.country_id.id,
+                'reference': Transaction.get_next_reference("/"),
+                'sale_order_id': self.id,
+            }
+            if token and self.env['payment.token'].sudo().browse(int(token)).partner_id == self.partner_id:
+                tx_values['payment_token_id'] = token
+
+            transaction = Transaction.create(tx_values)
+            # update record
+            self.write({
+                'payment_acquirer_id': acquirer_id,
+                'payment_tx_id': transaction.id,
+            })
+        return transaction
 
 
 class SaleOrderLine(models.Model):

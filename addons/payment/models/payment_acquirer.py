@@ -555,6 +555,23 @@ class PaymentTransaction(models.Model):
             return res
         return super(PaymentTransaction, self).write(values)
 
+    @api.multi
+    def validate_transaction_token(self, url):
+        self.ensure_one()
+        try:
+            s2s_result = self.s2s_do_transaction()
+            valid_state = 'authorized' if self.acquirer_id.capture_manually else 'done'
+            if not s2s_result or self.state != valid_state:
+                return dict(success=False, error=_("Payment transaction failed (%s)") % self.state_message)
+            else:
+                if self.env.context.get('auto_confirm'):
+                    # Auto-confirm SO if necessary
+                    self._confirm_so()
+                return dict(success=True, url=url)
+        except Exception as e:
+            _logger.warning(_("Payment transaction (%s) failed : <%s>") % (self.id, str(e)))
+            return dict(success=False, error=_("Payment transaction failed (Contact Administrator)"))
+
     @api.model
     def get_next_reference(self, reference):
         ref_suffix = 1
