@@ -48,4 +48,4 @@ class AccountingReport(models.TransientModel):
 
     def _print_report(self, data):
         data['form'].update(self.read(['date_from_cmp', 'debit_credit', 'date_to_cmp', 'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter', 'target_move'])[0])
-        return self.env['report'].get_action(self, 'account.report_financial', data=data)
+        return self.env['report'].get_action(self, 'account.report_financial', data=data, config=False)
