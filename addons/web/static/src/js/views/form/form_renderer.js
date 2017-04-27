@@ -111,9 +111,10 @@ var FormRenderer = BasicRenderer.extend({
             var $notebook = $(this);
             var name = $notebook.data('name');
             if (name in state) {
-                $notebook.find('> ul > li > a[data-toggle="tab"]')
-                         .eq(state[name])
-                         .click();
+                var $page = $notebook.find('> ul > li').eq(state[name]);
+                if (!$page.hasClass('o_form_invisible')) {
+                    $page.find('a[data-toggle="tab"]').click();
+                }
             }
         });
     },
