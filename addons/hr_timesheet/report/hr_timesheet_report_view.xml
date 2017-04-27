@@ -38,10 +38,15 @@
             <field name="act_window_id" ref="act_hr_timesheet_report"/>
         </record>
 
+        <menuitem id="menu_timesheets_reports"
+            name="Reporting"
+            parent="timesheet_menu_root"
+            groups="hr_timesheet.group_timesheet_manager"
+            sequence="99"/>
 
-        <menuitem id="menu_timesheets_reports" name="Reporting"
-            parent="timesheet_menu_root" sequence="99" groups="hr_timesheet.group_hr_timesheet_user"/>
-        <menuitem id="menu_hr_activity_analysis" parent="menu_timesheets_reports" action="act_hr_timesheet_report"
+        <menuitem id="menu_hr_activity_analysis"
+            parent="menu_timesheets_reports"
+            action="act_hr_timesheet_report"
             name="Activity Analysis"/>
     </data>
 </odoo>
