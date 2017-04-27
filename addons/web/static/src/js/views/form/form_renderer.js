@@ -320,6 +320,21 @@ var FormRenderer = BasicRenderer.extend({
      * @param {Object} node
      * @returns {jQueryElement}
      */
+    _renderHeaderButtons: function (node) {
+        var self = this;
+        var $buttons = $('<div>', {class: 'o_statusbar_buttons'});
+        _.each(node.children, function (child) {
+            if (child.tag === 'button') {
+                $buttons.append(self._renderHeaderButton(child));
+            }
+        });
+        return $buttons;
+    },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderInnerField: function (node) {
         var self = this;
         var fieldName = node.attrs.name;
@@ -578,12 +593,9 @@ var FormRenderer = BasicRenderer.extend({
     _renderTagHeader: function (node) {
         var self = this;
         var $statusbar = $('<div>', {class: 'o_form_statusbar'});
-        var $buttons = $('<div>', {class: 'o_statusbar_buttons'});
-        $statusbar.append($buttons);
+        $statusbar.append(this._renderHeaderButtons(node));
         _.each(node.children, function (child) {
-            if (child.tag === 'button') {
-                $buttons.append(self._renderHeaderButton(child));
-            } else if (child.tag === 'field') {
+            if (child.tag === 'field') {
                 var widget = self._renderFieldWidget(child, self.state);
                 $statusbar.append(widget.$el);
             }
