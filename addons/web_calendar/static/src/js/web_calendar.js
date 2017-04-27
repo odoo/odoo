@@ -788,7 +788,7 @@ var CalendarView = View.extend({
                         return;
                     }
 
-                    if (!self.useContacts) {  // If we use all peoples displayed in the current month as filter in sidebars
+                    if (!self.useContacts && self.fields[self.color_field]) {  // If we use all peoples displayed in the current month as filter in sidebars
                         var filter_item;
 
                         self.now_filter_ids = [];
