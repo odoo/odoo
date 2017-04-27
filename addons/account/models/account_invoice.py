@@ -6,8 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.tools import float_is_zero, float_compare
-from odoo.tools.misc import formatLang
+from odoo.tools import float_is_zero, float_compare, pycompat
 
 from odoo.exceptions import UserError, RedirectWarning, ValidationError, Warning
 
@@ -1103,7 +1102,7 @@ class AccountInvoice(models.Model):
             :param date: payment date, defaults to fields.Date.context_today(self)
             :param writeoff_acc: account in which to create a writeoff if pay_amount < self.residual, so that the invoice is fully paid
         """
-        if isinstance( pay_journal, ( int, long ) ):
+        if isinstance(pay_journal, pycompat.integer_types):
             pay_journal = self.env['account.journal'].browse([pay_journal])
         assert len(self) == 1, "Can only pay one invoice at a time."
         payment_type = self.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
