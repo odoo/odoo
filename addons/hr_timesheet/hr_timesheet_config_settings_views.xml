@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <h2>Billing</h2>
-                    <div name="timesheet_billing" class="row mt16 o_settings_container">
+                    <div name="timesheet_billing" class="row mt16 o_settings_container" title="Sell services (e.g. project, maintenance), record time spent using Timesheets app and invoice them based on a fixed price (ordered quantity) or on the time spent (delivered quantity)">
                         <div class="col-xs-12 col-md-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="module_sale_timesheet"/>
@@ -56,6 +56,11 @@
                                 <label for="module_sale_timesheet"/>
                                 <div class="text-muted">
                                     Sell services and invoice time spent
+                                </div>
+                                <div class="content-group" name="msg_module_sale_timesheet">
+                                    <div class="text-warning mt16" attrs="{'invisible': [('module_sale_timesheet','=',False)]}">
+                                        Save this page and come back here to set up the feature.
+                                    </div>
                                 </div>
                             </div>
                         </div>
