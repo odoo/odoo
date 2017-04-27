@@ -19,14 +19,14 @@
             <field name="subject">New ${object.slide_type} published on ${object.channel_id.name}</field>
             <field name="model_id" ref="model_slide_slide"/>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <p>Hello,</p>
 <p>
     A new <t t-esc="record.slide_type"/> <strong t-esc="record.name"/> has been published on <t t-esc="record.channel_id.name"/> at <t t-esc="format_tz(record.write_date, tz=user.tz)"/>
 </p>
 <p style="text-align: center; margin-top: 10px;">
     <a t-att-href="record.website_url">
-        <img t-att-alt="record.name" t-attf-src="#{ctx.get('base_url') and ctx['base_url']}/web/image/slide.slide/#{record.id}/image" style="height:auto; width:150px; background-color: #cccccc; margin: 16px;">
+        <img t-att-alt="record.name" t-attf-src="#{ctx.get('base_url') and ctx['base_url']}/web/image/slide.slide/#{record.id}/image" style="height:auto; width:150px; background-color: #cccccc; margin: 16px;"/>
     </a>
 </p>
 <p style="text-align: center; margin-top: 10px;">
@@ -34,7 +34,7 @@
         View <strong t-esc="record.name"/>
     </a>
 </p>
-]]></field>
+</field>
         </record>
 
         <record id="slide_template_shared" model="mail.template">
@@ -44,14 +44,14 @@
             <field name="email_from">${(user.email or '')|safe}</field>
             <field name="email_to">${ctx['email']}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <p>Hello,</p>
 <p>
     <t t-esc="user.name"/> shared the <t t-esc="record.slide_type"/> <strong t-esc="record.name"/> with you!
 </p>
 <p style="text-align: center; margin-top: 10px;">
     <a t-att-href="record.website_url">
-        <img t-att-alt="record.name" t-attf-src="#{ctx.get('base_url') and ctx['base_url'] or ''}/web/image/slide.slide/#{record.id}/image" style="height:auto; width:150px; background-color: #cccccc; margin: 16px;">
+        <img t-att-alt="record.name" t-attf-src="#{ctx.get('base_url') and ctx['base_url'] or ''}/web/image/slide.slide/#{record.id}/image" style="height:auto; width:150px; background-color: #cccccc; margin: 16px;"/>
     </a>
 </p>
 <p style="text-align: center; margin-top: 10px;">
@@ -59,7 +59,7 @@
         View <strong t-esc="record.name"/>
     </a>
 </p>
-]]></field>
+</field>
         </record>
 
         <record model="slide.channel" id="channel_public">
