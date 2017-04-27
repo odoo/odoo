@@ -320,12 +320,9 @@ class ResPartner(models.Model):
     def _compute_issued_total(self):
         """ Returns the issued total as will be displayed on partner view """
         today = fields.Date.context_today(self)
-        for partner in self:
-            domain = partner.get_followup_lines_domain(today, overdue_only=True)
-            issued_total = 0
-            for aml in self.env['account.move.line'].search(domain):
-                issued_total += aml.amount_residual
-            partner.issued_total = issued_total
+        domain = self.get_followup_lines_domain(today, overdue_only=True)
+        for aml in self.env['account.move.line'].search(domain):
+            aml.partner_id.issued_total += aml.amount_residual
 
     @api.one
     def _compute_has_unreconciled_entries(self):
