@@ -16,12 +16,12 @@
         <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
-        <field name="body_html"><![CDATA[
+        <field name="body_html" type="xml">
 <p>Dear <t t-esc="record.partner_name or 'applicant'"/>,</p>
 <p>Thank you for your enquiry.<br />
 Unfortunately, your profile does not match with our needs</p>
 <p>If you have any questions, please let us know.</p>
-<p>Best regards,</p>]]></field>
+<p>Best regards,</p></field>
     </record>
 
     <record id="email_template_data_applicant_interest" model="mail.template">
@@ -32,20 +32,20 @@ Unfortunately, your profile does not match with our needs</p>
         <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
-        <field name="body_html"><![CDATA[
+        <field name="body_html" type="xml">
 <p>Dear <t t-esc="record.partner_name or 'applicant'"/>,</p>
 <p>Thank you for your enquiry.<br />
 Your resume got our interest. I will contact you as soon as possible to plan
 next steps of the recruitment process.</p>
 <p>If you have any questions, please let us know.</p>
-<p>Best regards,</p>]]></field>
+<p>Best regards,</p></field>
     </record>
 
     <record id="email_template_data_applicant_employee" model="mail.template">
         <field name="name">Applicant: Welcome new employee</field>
         <field name="subject">Welcome ${object.name} </field>
         <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="body_html"><![CDATA[
+        <field name="body_html" type="xml">
 <meta charset="utf-8"/>
 <p>Dear all,</p>
 <p>I’m very pleased to announce that <strong> <t t-esc="record.name"/> </strong> will be
@@ -54,7 +54,7 @@ joining us as a <t t-esc="record.job_id.name"/>
     in <t t-esc="record.department_id.name"/>.
 </t>
 .</p>
-<p>Please welcome him/her and help him/her finding his/her marks.</p>]]></field>
+<p>Please welcome him/her and help him/her finding his/her marks.</p></field>
     </record>
 
         <!--    Resource(type_id)        -->

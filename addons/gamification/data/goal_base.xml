@@ -8,19 +8,19 @@
             <field name="name">Reminder for Goal Update</field>
             <field name="model_id" ref="gamification.model_gamification_goal"/>
             <field name="lang">${object.user_id.lang}</field>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
     <p>
         <strong>Reminder <t t-value="record.name"/></strong>
     </p>
     
     <p>You have not updated your progress for the goal <t t-esc="record.definition_id.name"/> (currently reached at <t t-esc="record.completeness"/>%) for at least <t t-esc="record.remind_update_delay"/> days. Do not forget to do it.</p>
-            ]]></field>
+            </field>
         </record>
         
         <record id="simple_report_template" model="mail.template">
             <field name="name">Simple Challenge Report Progress</field>
             <field name="model_id" ref="gamification.model_gamification_challenge"/>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <p>
     <strong t-esc="record.name"/>
 </p>
@@ -72,7 +72,7 @@
 
     </t>
 </t>
-            ]]></field>
+            </field>
         </record>
 
         <!-- goal definitions -->
