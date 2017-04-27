@@ -466,7 +466,7 @@ var FormController = BasicController.extend({
             if (!self.model.isNew(self.handle)) {
                 self._toReadOnlyMode();
             } else {
-                self.do_action('history_back');
+                self.trigger_up('switch_to_previous_view');
             }
         });
     },

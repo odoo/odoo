@@ -416,7 +416,6 @@ QUnit.module('Views', {
         this.params.res_id = undefined;
         this.params.context = {active_field: 2};
 
-        var rpcCount = 0;
         var model = createModel({
             Model: BasicModel,
             data: this.data,
