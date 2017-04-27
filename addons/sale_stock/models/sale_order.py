@@ -72,7 +72,6 @@ class SaleOrder(models.Model):
         invoice_vals['incoterms_id'] = self.incoterm.id or False
         return invoice_vals
 
-    @api.model
     def _prepare_procurement_group(self):
         res = super(SaleOrder, self)._prepare_procurement_group()
         res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id, 'sale_order_id': self.id})

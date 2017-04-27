@@ -57,6 +57,7 @@ var KanbanView = BasicView.extend({
     },
     _isQuickCreateEnabled: function (viewInfo) {
         var groupBy = this.loadParams.groupBy[0];
+        groupBy = groupBy !== undefined ? groupBy.split(':')[0] : undefined;
         if(groupBy !== undefined && !_.contains(['char', 'boolean', 'many2one'], viewInfo.fields[groupBy].type)) {
             return false;
         }

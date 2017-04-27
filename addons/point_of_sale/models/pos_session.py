@@ -36,8 +36,8 @@ class PosSession(models.Model):
                             paid=order.amount_paid,
                         ))
                 order.action_pos_order_done()
-            orders = session.order_ids.filtered(lambda order: order.state == 'done')
-            orders._reconcile_payments()
+            orders = session.order_ids.filtered(lambda order: order.state in ['invoiced', 'done'])
+            orders.sudo()._reconcile_payments()
 
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
@@ -249,10 +249,6 @@ class PosSession(models.Model):
     @api.multi
     def action_pos_session_closing_control(self):
         for session in self:
-            #DO NOT FORWARD-PORT
-            if session.state == 'closing_control':
-                session.action_pos_session_close()
-                continue
             for statement in session.statement_ids:
                 if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
                     statement.write({'balance_end_real': statement.balance_end})
