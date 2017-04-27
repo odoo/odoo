@@ -21,6 +21,8 @@ import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 
+from .tools import pycompat
+
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
@@ -255,10 +257,8 @@ class Cursor(object):
             sum = 0
             if sqllogs[type]:
                 sqllogitems = sqllogs[type].items()
-                sqllogitems.sort(key=lambda k: k[1][1])
                 _logger.debug("SQL LOG %s:", type)
-                sqllogitems.sort(lambda x, y: cmp(x[1][0], y[1][0]))
-                for r in sqllogitems:
+                for r in sorted(sqllogitems, key=lambda k: k[1]):
                     delay = timedelta(microseconds=r[1][1])
                     _logger.debug("table: %s: %s/%s", r[0], delay, r[1][0])
                     sum += r[1][1]
@@ -469,7 +469,7 @@ class LazyCursor(object):
         if cr is None:
             from odoo import registry
             cr = self._cursor = registry(self.dbname).cursor()
-            for _ in xrange(self._depth):
+            for _ in pycompat.range(self._depth):
                 cr.__enter__()
         return getattr(cr, name)
 

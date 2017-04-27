@@ -5,7 +5,7 @@ import math
 
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round as round
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.exceptions import UserError, ValidationError
 from odoo import api, fields, models, _
 
@@ -383,7 +383,7 @@ class AccountJournal(models.Model):
             account_code_prefix = company.bank_account_code_prefix or ''
         else:
             account_code_prefix = company.cash_account_code_prefix or company.bank_account_code_prefix or ''
-        for num in xrange(1, 100):
+        for num in pycompat.range(1, 100):
             new_code = str(account_code_prefix.ljust(code_digits - 1, '0')) + str(num)
             rec = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
             if not rec:
@@ -412,7 +412,7 @@ class AccountJournal(models.Model):
             if not vals.get('code'):
                 journal_code_base = (vals['type'] == 'cash' and 'CSH' or 'BNK')
                 journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company_id)])
-                for num in xrange(1, 100):
+                for num in pycompat.range(1, 100):
                     # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
                     journal_code = journal_code_base + str(num)
                     if journal_code not in journals.mapped('code'):

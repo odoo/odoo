@@ -7,6 +7,7 @@ from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models, _, exceptions
 from odoo.osv import expression
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -281,7 +282,7 @@ class Goal(models.Model):
                     safe_eval(code, cxt, mode="exec", nocopy=True)
                     # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
                     result = cxt.get('result')
-                    if result is not None and isinstance(result, (float, int, long)):
+                    if result is not None and isinstance(result, (float, pycompat.integer_types)):
                         goals_to_write.update(goal._get_write_values(result))
                     else:
                         _logger.error(
@@ -322,7 +323,7 @@ class Goal(models.Model):
                         for goal in [g for g in goals if g.id in query_goals]:
                             for user_value in user_values:
                                 queried_value = field_name in user_value and user_value[field_name] or False
-                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], (int, long)):
+                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], pycompat.integer_types):
                                     queried_value = queried_value[0]
                                 if queried_value == query_goals[goal.id]:
                                     new_value = user_value.get(field_name+'_count', goal.current)

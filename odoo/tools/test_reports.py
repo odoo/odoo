@@ -11,6 +11,8 @@ import odoo
 import odoo.report
 import odoo.tools as tools
 import logging
+
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 from subprocess import Popen, PIPE
 import os
@@ -45,7 +47,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
         raise ValueError("Report %s produced an empty result!" % rname)
 
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], rname+ '.'+res_format), 'wb+').write(res_data)
+        open(os.path.join(tools.config['test_report_directory'], rname+ '.'+res_format), 'wb+').write(res_data)
 
     _logger.debug("Have a %s report for %s, will examine it", res_format, rname)
     if res_format == 'pdf':
@@ -128,7 +130,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         action = env.ref(action_id)
         act_model, act_id = action._name, action.id
     else:
-        assert isinstance(action_id, (long, int))
+        assert isinstance(action_id, pycompat.integer_types)
         act_model = 'ir.action.act_window'     # assume that
         act_id = action_id
         act_xmlid = '<%s>' % act_id

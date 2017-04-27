@@ -20,7 +20,7 @@ from babel.messages import extract
 from lxml import etree
 
 import odoo
-from odoo.tools import config
+from odoo.tools import config, pycompat
 from odoo.tools.misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
 from odoo.tools.osutil import walksymlinks
 from odoo import sql_db, SUPERUSER_ID
@@ -679,7 +679,7 @@ def trans_export(lang, modules, buffer, format, cr):
                 tmpmoddir = join(tmpdir, mod, 'i18n')
                 os.makedirs(tmpmoddir)
                 pofilename = (lang if lang else mod) + ".po" + ('t' if not lang else '')
-                buf = file(join(tmpmoddir, pofilename), 'w')
+                buf = open(join(tmpmoddir, pofilename), 'w')
                 _process('po', [mod], modrows, buf, lang)
                 buf.close()
 
@@ -1106,7 +1106,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             if not res_id:
                 return
 
-            if isinstance(res_id, (int, long)) or \
+            if isinstance(res_id, pycompat.integer_types) or \
                     (isinstance(res_id, basestring) and res_id.isdigit()):
                 dic['res_id'] = int(res_id)
                 if module_name:

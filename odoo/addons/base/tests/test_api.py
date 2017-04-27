@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, pycompat
 from odoo.tests import common
 from odoo.exceptions import AccessError
 
@@ -69,8 +69,8 @@ class TestAPI(common.TransactionCase):
         self.cr.execute("SELECT COUNT(*) FROM res_partner WHERE active")
         count1 = self.cr.fetchone()[0]
         count2 = self.env['res.partner'].search([], count=True)
-        self.assertIsInstance(count1, (int, long))
-        self.assertIsInstance(count2, (int, long))
+        self.assertIsInstance(count1, pycompat.integer_types)
+        self.assertIsInstance(count2, pycompat.integer_types)
         self.assertEqual(count1, count2)
 
     @mute_logger('odoo.models')

@@ -17,7 +17,7 @@ import uuid
 from odoo import api, fields, models
 from odoo import tools
 from odoo.tools.translate import _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -47,7 +47,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
 
 
 def get_real_ids(ids):
-    if isinstance(ids, (basestring, int, long)):
+    if isinstance(ids, (basestring, pycompat.integer_types)):
         return calendar_id2real_id(ids)
 
     if isinstance(ids, (list, tuple)):
@@ -60,6 +60,15 @@ def real_id2calendar_id(record_id, date):
 
 def is_calendar_id(record_id):
     return len(str(record_id).split('-')) != 1
+
+
+SORT_ALIASES = {
+    'start': 'sort_start',
+    'start_date': 'sort_start',
+    'start_datetime': 'sort_start',
+}
+def sort_remap(f):
+    return SORT_ALIASES.get(f, f)
 
 
 class Contacts(models.Model):
@@ -1062,23 +1071,17 @@ class Meeting(models.Model):
                     continue
                 result_data.append(meeting.get_search_fields(order_fields, r_date=r_start_date))
 
-        if order_fields:
-            uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
-
-            def comparer(left, right):
-                for fn, mult in comparers:
-                    result = cmp(fn(left), fn(right))
-                    if result:
-                        return mult * result
-                return 0
-
-            sort_params = [key.split()[0] if key[-4:].lower() != 'desc' else '-%s' % key.split()[0] for key in (order or self._order).split(',')]
-            sort_params = uniq([comp if comp not in ['start', 'start_date', 'start_datetime'] else 'sort_start' for comp in sort_params])
-            sort_params = uniq([comp if comp not in ['-start', '-start_date', '-start_datetime'] else '-sort_start' for comp in sort_params])
-            comparers = [((itemgetter(col[1:]), -1) if col[0] == '-' else (itemgetter(col), 1)) for col in sort_params]
-            ids = [r['id'] for r in sorted(result_data, cmp=comparer)]
-
-        return ids
+        # seq of (field, should_reverse)
+        sort_spec = list(tools.unique(
+            (sort_remap(key.split()[0]), key.lower().endswith(' desc'))
+            for key in (order or self._order).split(',')
+        ))
+        def key(record):
+            return [
+                tools.Reverse(record[name]) if desc else record[name]
+                for name, desc in sort_spec
+            ]
+        return [r['id'] for r in sorted(result_data, key=key)]
 
     @api.multi
     def _rrule_serialize(self):
@@ -1154,7 +1157,7 @@ class Meeting(models.Model):
         data['final_date'] = rule._until and rule._until.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         #repeat weekly
         if rule._byweekday:
-            for i in xrange(0, 7):
+            for i in pycompat.range(0, 7):
                 if i in rule._byweekday:
                     data[day_list[i]] = True
             data['rrule_type'] = 'weekly'
@@ -1466,7 +1469,7 @@ class Meeting(models.Model):
         for calendar_id, real_id in select:
             res = real_data[real_id].copy()
             ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
-            if not isinstance(ls, (basestring, int, long)) and len(ls) >= 2:
+            if not isinstance(ls, (basestring, pycompat.integer_types)) and len(ls) >= 2:
                 res['start'] = ls[1]
                 res['stop'] = ls[2]
 

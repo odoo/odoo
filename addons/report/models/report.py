@@ -577,7 +577,7 @@ class Report(models.Model):
         writer = PdfFileWriter()
         streams = []  # We have to close the streams *after* PdfFilWriter's call to write()
         for document in documents:
-            pdfreport = file(document, 'rb')
+            pdfreport = open(document, 'rb')
             streams.append(pdfreport)
             reader = PdfFileReader(pdfreport)
             for page in range(0, reader.getNumPages()):

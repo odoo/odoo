@@ -4,6 +4,7 @@ import ast
 from urlparse import urlparse
 from lxml import html
 
+from odoo.tools import pycompat
 from .qweb import QWeb, Contextifier
 from .assetsbundle import AssetsBundle
 from lxml import etree
@@ -90,7 +91,7 @@ class IrQWeb(models.AbstractModel, QWeb):
             view = self.env['ir.ui.view'].browse(view_id)
             return view.inherit_id is not None
 
-        if isinstance(name, (int, long)) or is_child_view(name):
+        if isinstance(name, pycompat.integer_types) or is_child_view(name):
             for node in etree.fromstring(template):
                 if node.get('t-name'):
                     node.set('t-name', str(name))

@@ -7,6 +7,7 @@ from lxml import etree, html
 
 from odoo.exceptions import AccessError
 from odoo import api, models
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -121,7 +122,7 @@ class IrUiView(models.Model):
     def _view_obj(self, view_id):
         if isinstance(view_id, basestring):
             return self.env.ref(view_id)
-        elif isinstance(view_id, (int, long)):
+        elif isinstance(view_id, pycompat.integer_types):
             return self.browse(view_id)
         # assume it's already a view object (WTF?)
         return view_id

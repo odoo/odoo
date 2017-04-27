@@ -165,7 +165,7 @@ class Node(object):
         for attr in ('init', 'update', 'demo'):
             if hasattr(self, attr):
                 setattr(node, attr, True)
-        self.children.sort(lambda x, y: cmp(x.name, y.name))
+        self.children.sort(key=lambda x: x.name)
         return node
 
     def __setattr__(self, name, value):

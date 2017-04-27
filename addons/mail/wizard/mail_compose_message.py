@@ -5,6 +5,7 @@ import base64
 import re
 
 from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -434,7 +435,7 @@ class MailComposer(models.TransientModel):
         """
         self.ensure_one()
         multi_mode = True
-        if isinstance(res_ids, (int, long)):
+        if isinstance(res_ids, pycompat.integer_types):
             multi_mode = False
             res_ids = [res_ids]
 
@@ -484,7 +485,7 @@ class MailComposer(models.TransientModel):
         """ Call email_template.generate_email(), get fields relevant for
             mail.compose.message, transform email_cc and email_to into partner_ids """
         multi_mode = True
-        if isinstance(res_ids, (int, long)):
+        if isinstance(res_ids, pycompat.integer_types):
             multi_mode = False
             res_ids = [res_ids]
 

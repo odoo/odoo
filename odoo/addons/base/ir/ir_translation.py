@@ -8,6 +8,7 @@ from difflib import get_close_matches
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules import get_module_path, get_module_resource
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -395,7 +396,7 @@ class IrTranslation(models.Model):
         if isinstance(types, basestring):
             types = (types,)
         if res_id:
-            if isinstance(res_id, (int, long)):
+            if isinstance(res_id, pycompat.integer_types):
                 res_id = (res_id,)
             else:
                 res_id = tuple(res_id)

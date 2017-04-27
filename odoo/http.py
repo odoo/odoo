@@ -621,10 +621,10 @@ class JsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['session_id'] = self.session.sid
             mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response),)
+            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=ustr),)
         else:
             mime = 'application/json'
-            body = json.dumps(response)
+            body = json.dumps(response, default=ustr)
 
         return Response(
                     body, headers=[('Content-Type', mime),
@@ -695,7 +695,7 @@ def serialize_exception(e):
         "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
         "debug": traceback.format_exc(),
         "message": ustr(e),
-        "arguments": to_jsonable(e.args),
+        "arguments": e.args,
         "exception_type": "internal_error"
     }
     if isinstance(e, odoo.exceptions.UserError):
@@ -715,19 +715,6 @@ def serialize_exception(e):
     elif isinstance(e, odoo.exceptions.except_orm):
         tmp["exception_type"] = "except_orm"
     return tmp
-
-def to_jsonable(o):
-    if isinstance(o, str) or isinstance(o,unicode) or isinstance(o, int) or isinstance(o, long) \
-        or isinstance(o, bool) or o is None or isinstance(o, float):
-        return o
-    if isinstance(o, list) or isinstance(o, tuple):
-        return [to_jsonable(x) for x in o]
-    if isinstance(o, dict):
-        tmp = {}
-        for k, v in o.items():
-            tmp[u"%s" % k] = to_jsonable(v)
-        return tmp
-    return ustr(o)
 
 class HttpRequest(WebRequest):
     """ Handler for the ``http`` request type.

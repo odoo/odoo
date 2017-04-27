@@ -10,6 +10,7 @@ import time
 import odoo
 from odoo.exceptions import UserError, ValidationError, QWebException
 from odoo.models import check_method_name
+from odoo.tools import pycompat
 from odoo.tools.translate import translate
 from odoo.tools.translate import _
 
@@ -63,7 +64,7 @@ def check(f):
 
 
             uid = 1
-            if args and isinstance(args[0], (long, int)):
+            if args and isinstance(args[0], pycompat.integer_types):
                 uid = args[0]
 
             lang = ctx and ctx.get('lang')
@@ -83,7 +84,7 @@ def check(f):
                     if args and len(args) > 1:
                         # TODO self doesn't exist, but was already wrong before (it was not a registry but just the object_service.
                         obj = self.get(args[1])
-                        if len(args) > 3 and isinstance(args[3], (long, int, list)):
+                        if len(args) > 3 and isinstance(args[3], (pycompat.integer_types, list)):
                             ids = args[3]
                         else:
                             ids = []

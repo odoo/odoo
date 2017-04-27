@@ -41,6 +41,7 @@ from lxml import etree
 from lxml.builder import E
 
 import odoo
+from odoo.tools import pycompat
 from . import SUPERUSER_ID
 from . import api
 from . import tools
@@ -173,7 +174,7 @@ class NewId(object):
     def __nonzero__(self):
         return False
 
-IdType = (int, long, str, unicode, NewId)
+IdType = pycompat.integer_types + (str, unicode, NewId)
 
 
 # maximum number of prefetched records
@@ -1391,7 +1392,7 @@ class BaseModel(object):
         provided domain <reference/orm/domains>`.
         """
         res = self.search(args, count=True)
-        return res if isinstance(res, (int, long)) else len(res)
+        return res if isinstance(res, pycompat.integer_types) else len(res)
 
     @api.model
     @api.returns('self',
@@ -1536,7 +1537,7 @@ class BaseModel(object):
         # override defaults with the provided values, never allow the other way around
         defaults = self.default_get(list(missing_defaults))
         for name, value in defaults.iteritems():
-            if self._fields[name].type == 'many2many' and value and isinstance(value[0], (int, long)):
+            if self._fields[name].type == 'many2many' and value and isinstance(value[0], pycompat.integer_types):
                 # convert a list of ids into a list of commands
                 defaults[name] = [(6, 0, value)]
             elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
@@ -3862,7 +3863,7 @@ class BaseModel(object):
         """
         ids, new_ids = [], []
         for i in self._ids:
-            (ids if isinstance(i, (int, long)) else new_ids).append(i)
+            (ids if isinstance(i, pycompat.integer_types) else new_ids).append(i)
         if not ids:
             return self
         query = """SELECT id FROM "%s" WHERE id IN %%s""" % self._table

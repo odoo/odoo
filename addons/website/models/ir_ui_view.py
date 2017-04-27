@@ -10,6 +10,7 @@ from odoo import tools
 
 from odoo.addons.website.models import website
 from odoo.http import request
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ class View(models.Model):
                 return views.filter_duplicate()
             else:
                 return self.env.ref(view_id)
-        elif isinstance(view_id, (int, long)):
+        elif isinstance(view_id, pycompat.integer_types):
             return self.browse(view_id)
 
         # assume it's already a view object (WTF?)
@@ -72,7 +73,7 @@ class View(models.Model):
     @api.model
     @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
-        if 'website_id' in self._context and not isinstance(xml_id, (int, long)):
+        if 'website_id' in self._context and not isinstance(xml_id, pycompat.integer_types):
             domain = [('key', '=', xml_id), '|', ('website_id', '=', self._context['website_id']), ('website_id', '=', False)]
             view = self.search(domain, order='website_id', limit=1)
             if not view:

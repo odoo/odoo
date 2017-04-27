@@ -4,6 +4,8 @@
 import logging
 import threading
 
+from odoo.tools.misc import split_every
+
 from odoo import _, api, fields, models, registry, SUPERUSER_ID
 from odoo.osv import expression
 
@@ -107,9 +109,8 @@ class Partner(models.Model):
     @api.model
     def _notify_send(self, body, subject, recipients, **mail_values):
         emails = self.env['mail.mail']
-        recipients_nbr, recipients_max = len(recipients), 50
-        email_chunks = [recipients[x:x + recipients_max] for x in xrange(0, len(recipients), recipients_max)]
-        for email_chunk in email_chunks:
+        recipients_nbr = len(recipients)
+        for email_chunk in split_every(50, recipients.ids):
             # TDE FIXME: missing message parameter. So we will find mail_message_id
             # in the mail_values and browse it. It should already be in the
             # cache so should not impact performances.
@@ -117,9 +118,9 @@ class Partner(models.Model):
             message = self.env['mail.message'].browse(mail_message_id) if mail_message_id else None
             if message and message.model and message.res_id and message.model in self.env and hasattr(self.env[message.model], 'message_get_recipient_values'):
                 tig = self.env[message.model].browse(message.res_id)
-                recipient_values = tig.message_get_recipient_values(notif_message=message, recipient_ids=email_chunk.ids)
+                recipient_values = tig.message_get_recipient_values(notif_message=message, recipient_ids=email_chunk)
             else:
-                recipient_values = self.env['mail.thread'].message_get_recipient_values(notif_message=None, recipient_ids=email_chunk.ids)
+                recipient_values = self.env['mail.thread'].message_get_recipient_values(notif_message=None, recipient_ids=email_chunk)
             create_values = {
                 'body_html': body,
                 'subject': subject,
