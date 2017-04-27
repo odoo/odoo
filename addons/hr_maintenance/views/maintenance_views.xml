@@ -65,6 +65,14 @@
         <filter name="available" position="attributes">
           <attribute name="domain">[('employee_id', '=', False), ('department_id', '=', False)]</attribute>
         </filter>
+        <field name="owner_user_id" position="after">
+          <field name="employee_id"/>
+          <field name="department_id"/>
+        </field>
+        <group position="inside">
+          <filter string="Employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+          <filter string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
+        </group>
       </field>
     </record>
 
