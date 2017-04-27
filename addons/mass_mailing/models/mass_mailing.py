@@ -348,11 +348,11 @@ class MassMailing(osv.Model):
     _mailing_model = lambda self, *args, **kwargs: self._get_mailing_model(*args, **kwargs)
 
     _columns = {
-        'name': fields.char('Subject', required=True),
+        'name': fields.char('Subject', required=True, translate=True),
         'email_from': fields.char('From', required=True),
         'create_date': fields.datetime('Creation Date'),
         'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
-        'body_html': fields.html('Body'),
+        'body_html': fields.html('Body', translate=True),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
             'mass_mailing_id', 'attachment_id', 'Attachments'
@@ -588,29 +588,41 @@ class MassMailing(osv.Model):
         return res_ids
 
     def send_mail(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         author_id = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id
         for mailing in self.browse(cr, uid, ids, context=context):
             # instantiate an email composer + send emails
             res_ids = self.get_recipients(cr, uid, mailing, context=context)
             if not res_ids:
                 raise Warning('Please select recipients.')
-            comp_ctx = dict(context, active_ids=res_ids)
-            composer_values = {
-                'author_id': author_id,
-                'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing.body_html,
-                'subject': mailing.name,
-                'model': mailing.mailing_model,
-                'email_from': mailing.email_from,
-                'record_name': False,
-                'composition_mode': 'mass_mail',
-                'mass_mailing_id': mailing.id,
-                'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
-                'no_auto_thread': mailing.reply_to_mode != 'thread',
-            }
-            if mailing.reply_to_mode == 'email':
-                composer_values['reply_to'] = mailing.reply_to
-            composer_id = self.pool['mail.compose.message'].create(cr, uid, composer_values, context=comp_ctx)
-            self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], context=comp_ctx)
-            self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
+            langs_to_res_ids = {}
+            if mailing.mailing_model in ['res.partner']:
+                records_lang = self.pool[mailing.mailing_model].read(cr, uid, res_ids, ['lang'], context=context)
+                for record in records_lang:
+                    langs_to_res_ids.setdefault(record['lang'], []).append(record['id'])
+            else:
+                langs_to_res_ids[context.get('lang')] = res_ids
+
+            for lang, res_ids in langs_to_res_ids.items():
+                translated_mailing = self.read(cr, uid, mailing.id, ['name', 'body_html'], context=dict(context, lang=lang))
+                comp_ctx = dict(context, active_ids=res_ids)
+                composer_values = {
+                    'author_id': author_id,
+                    'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
+                    'body': translated_mailing['body_html'],
+                    'subject': translated_mailing['name'],
+                    'model': mailing.mailing_model,
+                    'email_from': mailing.email_from,
+                    'record_name': False,
+                    'composition_mode': 'mass_mail',
+                    'mass_mailing_id': mailing.id,
+                    'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
+                    'no_auto_thread': mailing.reply_to_mode != 'thread',
+                }
+                if mailing.reply_to_mode == 'email':
+                    composer_values['reply_to'] = mailing.reply_to
+                composer_id = self.pool['mail.compose.message'].create(cr, uid, composer_values, context=comp_ctx)
+                self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], context=comp_ctx)
+                self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
