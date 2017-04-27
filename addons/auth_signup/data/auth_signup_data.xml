@@ -23,12 +23,12 @@
             <field name="email_from">${object.company_id.name} ${'&lt;%s&gt;' % ((object.company_id.email or user.email)|safe)}</field>
             <field name="email_to">${object.email|safe}</field>
             <field name="subject">Password reset</field>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
             </td>
         </tr></tbody>
     </table>
@@ -48,7 +48,7 @@
     <p style="font-size: 11px; margin-top: 10px;">
         <strong>Sent by <t t-esc="user.company_id.name"/> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a></strong>
     </p>
-</div>]]></field>
+</div></field>
             <field name="user_signature" eval="False"/>
         </record>
 
@@ -58,13 +58,13 @@
             <field name="model_id" ref="base.model_res_users"/>
             <field name="email_from">${object.company_id.name} ${'&lt;%s&gt;' % ((object.company_id.email or user.email)|safe)}</field>
             <field name="email_to">${object.email|safe}</field>
-            <field name="subject"><![CDATA[${object.company_id.name} invitation to connect on Odoo]]></field>
-            <field name="body_html"><![CDATA[
+            <field name="subject">${object.company_id.name} invitation to connect on Odoo</field>
+            <field name="body_html" type="xml">
 <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
             </td>
         </tr></tbody>
     </table>
@@ -87,7 +87,7 @@
     <p style="font-size: 11px; margin-top: 10px;">
         <strong>Sent by <t t-esc="user.company_id.name"/> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a></strong>
     </p>
-</div>]]></field>
+</div></field>
             <field name="user_signature" eval="False"/>
         </record>
 
