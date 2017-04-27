@@ -3778,5 +3778,53 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('do not activate an hidden tab when switching between records', function (assert) {
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="Foo" attrs=\'{"invisible": [["id", "=", 2]]}\'>' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                            '<page string="Bar">' +
+                                '<field name="bar"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            viewOptions: {
+                ids: [1, 2],
+                index: 0,
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_notebook ul li:not(.o_form_invisible)').length, 2,
+            "both tabs should be visible");
+        assert.ok(form.$('.o_notebook ul li:first').hasClass('active'),
+            "first tab should be active");
+
+        // click on the pager to switch to the next record
+        form.pager.$('.o_pager_next').click();
+        assert.strictEqual(form.$('.o_notebook ul li:not(.o_form_invisible)').length, 1,
+            "only the second tab should be visible");
+        assert.ok(form.$('.o_notebook ul li:not(.o_form_invisible)').hasClass('active'),
+            "the visible tab should be active");
+
+        // click on the pager to switch back to the previous record
+        form.pager.$('.o_pager_previous').click();
+        assert.strictEqual(form.$('.o_notebook ul li:not(.o_form_invisible)').length, 2,
+            "both tabs should be visible again");
+        assert.ok(form.$('.o_notebook ul li:nth(1)').hasClass('active'),
+            "second tab should be active");
+
+        form.destroy();
+    });
 });
 });
