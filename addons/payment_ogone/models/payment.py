@@ -344,7 +344,7 @@ class PaymentTxOgone(models.Model):
             'USERID': account.ogone_userid,
             'PSWD': account.ogone_password,
             'ORDERID': reference,
-            'AMOUNT': self.amount * 100,
+            'AMOUNT': int(self.amount * 100),
             'CURRENCY': self.currency_id.name,
             'OPERATION': 'SAL',
             'ECI': 2,   # Recurring (from MOTO)
