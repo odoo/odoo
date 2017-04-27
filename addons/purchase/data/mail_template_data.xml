@@ -13,7 +13,7 @@
             <field name="report_template" ref="report_purchase_quotation"/>
             <field name="report_name">RFQ_${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <p>Dear
     <t t-esc="record.partner_id.child_ids[0].name if (record and record.partner_id.is_company and record.partner_id.child_ids) else record.partner_id.name"/>
 ,</p><p>
@@ -33,7 +33,7 @@ from <t t-esc="record.company_id.name"/>.
 <p style="color:#888888;">
 <t t-if="record.user_id and record.user_id.signature" t-raw="record.user_id.signature"/>
 </p>
-]]></field>
+</field>
         </record>
 
 
@@ -48,7 +48,7 @@ from <t t-esc="record.company_id.name"/>.
             <field name="report_template" ref="action_report_purchase_order"/>
             <field name="report_name">PO_${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <p>Dear <t t-esc="record.partner_id.name"/>
     <t t-if="record.partner_id.parent_id">
         (<i t-esc="record.partner_id.parent_id.name"/>)
@@ -67,7 +67,7 @@ from <t t-esc="record.company_id.name"/>.
 
 <p>You can reply to this email if you have any questions.</p>
 <p>Thank you,</p>
-]]></field>
+</field>
         </record>
 
 
@@ -77,7 +77,8 @@ from <t t-esc="record.company_id.name"/>.
             <field name="subject">${object.subject}</field>
             <field name="model_id" ref="mail.model_mail_message"/>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[<html>
+            <field name="body_html" type="xml">
+              <html>
                 <head></head>
                 <body style="margin: 0; padding: 0;">
                 <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed" summary="o_mail_notification">
@@ -138,7 +139,7 @@ from <t t-esc="record.company_id.name"/>.
                 </table>
                 </body>
                 </html>
-            ]]></field>
+            </field>
         </record>
 
 
