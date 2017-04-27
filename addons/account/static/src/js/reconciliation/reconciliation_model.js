@@ -404,7 +404,7 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         var props = _.filter(line.reconciliation_proposition, {'invalid': false});
         var prop = props[0];
-        if (props.length !== 1 || Math.abs(line.st_line.amount) >= Math.abs(prop.amount)) {
+        if (props.length < 1 || Math.abs(line.st_line.amount) >= Math.abs(prop.amount)) {
             return $.Deferred().reject();
         }
         prop.partial_reconcile = !prop.partial_reconcile;
