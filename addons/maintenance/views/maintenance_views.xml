@@ -285,6 +285,17 @@
         <field name="view_id" ref="hr_equipment_view_calendar"/>
     </record>
 
+    <record id="maintenance_request_action_reports" model="ir.actions.act_window">
+        <field name="name">Maintenance Requests</field>
+        <field name="res_model">maintenance.request</field>
+        <field name="view_mode">graph,pivot,kanban,tree,form,calendar</field>
+        <field name="help" type="html">
+            <p>
+                No maintenance request.
+            </p>
+        </field>
+    </record>
+
     <!-- equiment : views -->
     <record id="hr_equipment_view_form" model="ir.ui.view">
         <field name="name">equipment.form</field>
@@ -783,6 +794,11 @@
                                         <div class="o_kanban_card_manage_title">
                                             <span>Reporting</span>
                                         </div>
+                                        <div>
+                                            <a name="%(maintenance_request_action_reports)d" type="action" context="{'search_default_maintenance_team_id': active_id}">
+                                            Maintenance Requests
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                                 <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
@@ -893,6 +909,16 @@
         parent="menu_m_reports"
         groups="group_equipment_manager,base.group_user"
         sequence="2"/>
+
+    <menuitem
+        id="maintenance_reporting"
+        name="Reporting"
+        parent="menu_maintenance_title"
+        sequence="20"/>
+    <menuitem
+        id="maintenance_request_reporting"
+        action="maintenance_request_action_reports"
+        parent="maintenance_reporting"/>
 
     <menuitem
         id="menu_maintenance_configuration"
