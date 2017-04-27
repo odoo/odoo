@@ -5756,7 +5756,7 @@ class BaseModel(object):
         for name, value in values.iteritems():
             if name in fields:
                 field = fields[name]
-                value = field.convert_to_cache(value, self, validate=False)
+                value = field.convert_to_cache(value or False, self, validate=False)
                 value = field.convert_to_record(value, self)
                 value = field.convert_to_write(value, self)
                 if not isinstance(value, NewId):
