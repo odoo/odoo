@@ -15,11 +15,11 @@
             <field name="report_template" ref="account_invoices"/>
             <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="body_html"><![CDATA[
-<p>Dear <t t-esc="record.partner_id.name"/> 
+            <field name="body_html" type="xml">
+<p>Dear <t t-esc="record.partner_id.name"/>
 <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
 <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
-<t t-set="access_url" t-value="is_online and '/mail/view?model=account.invoice&res_id=%d' % (record.id) or '/report/pdf/account.report_invoice/' + str(record.id)"/>
+<t t-set="access_url" t-value="is_online and '/mail/view?model=account.invoice&amp;res_id=%d' % (record.id) or '/report/pdf/account.report_invoice/' + str(record.id)"/>
 
 <t t-if="record.partner_id.parent_id">
     (<i t-esc="record.partner_id.parent_id.name"/>)
@@ -49,7 +49,7 @@ from <t t-esc="record.company_id.name"/>.
 <p style="color:#888888">
 <t t-if="record.user_id and record.user_id.signature" t-raw="record.user_id.signature"/>
 </p>
-]]></field>
+   </field>
         </record>
 
         <!--Default Notification Email template for invoices-->
@@ -58,7 +58,8 @@ from <t t-esc="record.company_id.name"/>.
             <field name="subject">${object.subject}</field>
             <field name="model_id" ref="mail.model_mail_message"/>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[<html>
+            <field name="body_html" type="xml">
+              <html>
                 <head></head>
                 <t t-set="company" t-value="ctx.get('record') and ctx.get('record').company_id or user.company_id"/>
                 <body style="margin: 0; padding: 0;">
@@ -76,7 +77,7 @@ from <t t-esc="record.company_id.name"/>.
                                   </span>
                               </td>
                               <td valign="middle" align="right">
-                                  <img t-attf-src="/logo.png?company=#{company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="company.name">
+                                  <img t-attf-src="/logo.png?company=#{company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="company.name"/>
                               </td>
                             </tr>
                           </table>
@@ -119,8 +120,8 @@ from <t t-esc="record.company_id.name"/>.
                     </tbody>
                 </table>
                 </body>
-                </html>
-            ]]></field>
+              </html>
+            </field>
         </record>
 
     </data>
