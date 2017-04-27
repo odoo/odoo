@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import test_paypal
+from . import test_paypal

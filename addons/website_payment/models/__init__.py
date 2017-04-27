@@ -1,2 +1,2 @@
-import payment
-import website
+from . import payment
+from . import website

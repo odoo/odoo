@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import ir_attachment
-import mrp_config_settings
-import mrp_bom
-import mrp_message
-import mrp_routing
-import mrp_workcenter
-import mrp_production
-import mrp_unbuild
-import mrp_workorder
-import procurement
-import product
-import res_company
-import stock_move
-import stock_picking
-import stock_quant
-import stock_scrap
-import stock_warehouse
+from . import ir_attachment
+from . import mrp_config_settings
+from . import mrp_bom
+from . import mrp_message
+from . import mrp_routing
+from . import mrp_workcenter
+from . import mrp_production
+from . import mrp_unbuild
+from . import mrp_workorder
+from . import procurement
+from . import product
+from . import res_company
+from . import stock_move
+from . import stock_picking
+from . import stock_quant
+from . import stock_scrap
+from . import stock_warehouse

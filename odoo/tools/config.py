@@ -10,7 +10,7 @@ import odoo.conf
 import odoo.loglevels as loglevels
 import logging
 import odoo.release as release
-import appdirs
+from . import appdirs
 
 class MyOption (optparse.Option, object):
     """ optparse Option with two additional attributes.

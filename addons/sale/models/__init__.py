@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import account_invoice
-import procurement_order
-import product_pricelist
-import product_product
-import product_template
-import res_company
-import res_partner
-import sale
-import sale_analytic
-import sale_config_settings
-import sale_layout
-import sales_team
+from . import account_invoice
+from . import procurement_order
+from . import product_pricelist
+from . import product_product
+from . import product_template
+from . import res_company
+from . import res_partner
+from . import sale
+from . import sale_analytic
+from . import sale_config_settings
+from . import sale_layout
+from . import sales_team

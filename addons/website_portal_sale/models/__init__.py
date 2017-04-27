@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import account_invoice
-import crm_team
-import sale_order
-import payment
+from . import account_invoice
+from . import crm_team
+from . import sale_order
+from . import payment

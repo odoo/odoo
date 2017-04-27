@@ -22,8 +22,8 @@ try:
 except ImportError:
     qrcode = None
 
-from constants import *
-from exceptions import *
+from .constants import *
+from .exceptions import *
 
 def utfstr(stuff):
     """ converts stuff to string and does without failing if stuff is a utf8 string """

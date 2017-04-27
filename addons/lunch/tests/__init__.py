@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-import test_lunch
+from . import test_lunch

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import account_invoice
-import sale_order
-import product
-import event
+from . import account_invoice
+from . import sale_order
+from . import product
+from . import event

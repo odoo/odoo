@@ -64,6 +64,36 @@ features whereas:
 Moved and removed
 =================
 
+Absolute Imports (:pep:`328`)
+-----------------------------
+
+.. important::
+
+    In Python 3, ``import foo`` can only import from a "top-level" library
+    (absolute path). If trying to import a sibling or sub-module you *must*
+    use an explicitly *relative import* e.g. ``from . import foo`` or
+    ``from .foo import bar``.
+
+In Python 2 ``import`` statements are ambiguous: if a file ``a.py`` contains
+``import b``, the import system will first check if there's a ``b.py`` file
+next to it before checking if there is a package called that on the
+PYTHONPATH.
+
+Furthermore if a sibling file is named the same as top-level package, the
+library becomes inaccessible to both the file itself ans siblings, this has
+actually happened in Odoo with :mod:`odoo.tools.mimetypes`.
+
+Additionally, relative imports allow navigating "up" the tree by using
+multiple leading ``.``.
+
+.. note::
+
+    Explicitly relative imports are always available in Python 2, and should
+    be used everywhere.
+
+    You can ensure you are not using any implicitly relative import by adding
+    ``from __future__ import absolute_import`` at the top of your files.
+
 Exception Handlers
 ------------------
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import res_config
-import res_users
-import res_partner
+from . import res_config
+from . import res_users
+from . import res_partner

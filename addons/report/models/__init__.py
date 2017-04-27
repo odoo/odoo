@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import abstract_report
-import base_config_settings
-import ir_actions_report_xml
-import ir_http
-import ir_qweb
-import report
-import report_paperformat
-import res_company
+from . import abstract_report
+from . import base_config_settings
+from . import ir_actions_report_xml
+from . import ir_http
+from . import ir_qweb
+from . import report
+from . import report_paperformat
+from . import res_company

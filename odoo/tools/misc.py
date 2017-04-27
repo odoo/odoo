@@ -28,7 +28,7 @@ from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
 from itertools import islice, izip, groupby, repeat
 from lxml import etree
 
-from which import which
+from .which import which
 from threading import local
 import traceback
 import csv
@@ -39,8 +39,8 @@ try:
 except ImportError:
     html2text = None
 
-from config import config
-from cache import *
+from .config import config
+from .cache import *
 from .parse_version import parse_version 
 from . import pycompat
 

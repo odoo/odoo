@@ -1,1 +1,1 @@
-import preview_report
+from . import preview_report
