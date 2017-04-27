@@ -13,13 +13,13 @@
             <field name="report_template" ref="report_sale_order"/>
             <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="xml">
 <p>Dear <t t-esc="record.partner_id.name"/>
 <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
 <t t-set="is_online"  t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
 <t t-set="doc_name" t-value="'quotation' if record.state in ('draft', 'sent') else 'order confirmation'"/>
 <t t-set="access_name" t-value="is_online and record.template_id and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name"/>
-<t t-set="access_url" t-value="is_online and '/mail/view?model=sale.order&res_id=%d' % (record.id) or ''"/>
+<t t-set="access_url" t-value="is_online and '/mail/view?model=sale.order&amp;res_id=%d' % (record.id) or ''"/>
 
 <t t-if="record.partner_id.parent_id">
     (<i t-esc="record.partner_id.parent_id.name"/>) 
@@ -56,7 +56,7 @@ from <t t-esc="record.company_id.name"/>.
 <p style="color:#888888;">
 <t t-if="record.user_id and record.user_id.signature" t-raw="record.user_id.signature"/>
 </p>
-]]></field>
+</field>
         </record>
 
         <!--Default Notification Email template for invoices-->
@@ -65,7 +65,8 @@ from <t t-esc="record.company_id.name"/>.
             <field name="subject">${object.subject}</field>
             <field name="model_id" ref="mail.model_mail_message"/>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[<html>
+            <field name="body_html" type="xml">
+              <html>
                 <head></head>
                 <t t-set="company" t-value="ctx.get('record') and ctx.get('record').company_id or user.company_id"/>
                 <body style="margin: 0; padding: 0;">
@@ -129,7 +130,7 @@ from <t t-esc="record.company_id.name"/>.
                 </table>
                 </body>
                 </html>
-            ]]></field>
+            </field>
         </record>
 
 
