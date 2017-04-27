@@ -5,12 +5,12 @@ import base64
 import copy
 import io
 import math
-import md5
 import re
 import traceback
-import xml.etree.ElementTree as ET
+from hashlib import md5
 
 from PIL import Image
+import xml.etree.ElementTree as ET
 
 try:
     import jcconv
@@ -431,7 +431,7 @@ class Escpos:
 
         print('print_b64_img')
 
-        id = md5.new(img).digest()
+        id = md5(img).digest()
 
         if id not in self.img_cache:
             print('not in cache')

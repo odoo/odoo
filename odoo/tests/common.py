@@ -16,11 +16,16 @@ import threading
 import time
 import itertools
 import unittest
-import urllib2
-import xmlrpclib
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from pprint import pformat
+try:
+    from urllib import request as urllib2
+    from xmlrpc import client as xmlrpclib
+except ImportError:
+    # pylint: disable=bad-python3-import
+    import urllib2
+    import xmlrpclib
 
 import werkzeug
 

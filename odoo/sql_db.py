@@ -12,8 +12,12 @@ from contextlib import contextmanager
 from functools import wraps
 import logging
 import time
-import urlparse
 import uuid
+try:
+    from urllib import parse as urlparse
+except ImportError:
+    #pylint: disable=bad-python3-import
+    import urlparse
 
 import psycopg2
 import psycopg2.extras

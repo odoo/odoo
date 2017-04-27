@@ -1,27 +1,32 @@
 # -*- coding: utf-8 -*-
 import ast
-from collections import OrderedDict, Sized, Mapping, defaultdict
-from lxml import etree, html
+import logging
 import re
 import traceback
-from itertools import count
+
+from collections import OrderedDict, Sized, Mapping, defaultdict
+from functools import reduce
+from itertools import chain, izip, tee, count
 from textwrap import dedent
+
+from lxml import etree, html
 import werkzeug
 from werkzeug.utils import escape as _escape
-from itertools import chain, izip, tee
-import __builtin__
-from functools import reduce
 
 from odoo.tools import pycompat
 
-builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
+try:
+    import builtins
+    builtin_defaults = {name: getattr(builtins, name) for name in dir(builtins)}
+except ImportError:
+    # pylint: disable=bad-python3-import
+    import __builtin__
+    builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
 
 try:
     import astor
 except ImportError:
     astor = None
-
-import logging
 
 unsafe_eval = eval
 

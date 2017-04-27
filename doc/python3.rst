@@ -64,6 +64,20 @@ features whereas:
 Moved and removed
 =================
 
+Standard Library Modules
+------------------------
+
+Python 3 reorganised, moved or removed a number of modules in the standard
+library:
+
+* ``StringIO`` and ``cStringIO`` were removed, you can use ``io.BytesIO`` and
+  ``io.StringIO`` to replace them in a cross-version manner (``io.BytesIO``
+  for binary data, ``io.StringIO`` for text/unicode data).
+* ``urllib``, ``urllib2`` and ``urlparse`` were redistributed across
+  ``urllib.parse`` and ``urllib.request``, you may want to use conditional
+  imports e.g. try to import the Python 3 version and fallback on the Python
+  2 version.
+
 Absolute Imports (:pep:`328`)
 -----------------------------
 
@@ -92,7 +106,8 @@ multiple leading ``.``.
     be used everywhere.
 
     You can ensure you are not using any implicitly relative import by adding
-    ``from __future__ import absolute_import`` at the top of your files.
+    ``from __future__ import absolute_import`` at the top of your files, or by
+    running the ``relative-import`` PyLint.
 
 Exception Handlers
 ------------------

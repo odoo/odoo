@@ -30,7 +30,7 @@ class TestPyLint(TransactionCase):
         'relative-import',
         'deprecated-module',
         'import-star-module-level',
-        'bad-python3-import',
+        # 'bad-python3-import', # TODO: more stuff used in report
 
         'long-suffix',
         'apply-builtin',
@@ -79,4 +79,4 @@ class TestPyLint(TransactionCase):
         else:
             out = process.communicate()[0]
             if process.returncode:
-                self.fail(msg="\n" + out)
+                self.fail("\n" + out)

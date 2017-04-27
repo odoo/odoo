@@ -6,8 +6,14 @@ import datetime
 import hashlib
 import pytz
 import threading
-import urllib2
-import urlparse
+
+try:
+    from urllib import parse as urlparse
+    from urllib.request import urlopen
+except ImportError:
+    # pylint: disable=bad-python3-import
+    import urlparse
+    from urllib2 import urlopen
 
 from email.utils import formataddr
 from lxml import etree
@@ -16,7 +22,6 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv.orm import browse_record
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock 
@@ -702,7 +707,7 @@ class Partner(models.Model):
         email_hash = hashlib.md5(email.lower()).hexdigest()
         url = "https://www.gravatar.com/avatar/" + email_hash
         try:
-            image_content = urllib2.urlopen(url + "?d=404&s=128", timeout=5).read()
+            image_content = urlopen(url + "?d=404&s=128", timeout=5).read()
             gravatar_image = base64.b64encode(image_content)
         except Exception:
             pass

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import cStringIO
+import io
 import csv
 import logging
 import os.path
@@ -848,7 +848,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     #remove folder path from model
     head, model = os.path.split(model)
 
-    input = cStringIO.StringIO(csvcontent) #FIXME
+    input = io.BytesIO(csvcontent) #FIXME
     reader = csv.reader(input, quotechar='"', delimiter=',')
     fields = next(reader)
 

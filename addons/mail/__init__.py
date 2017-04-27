@@ -3,4 +3,4 @@
 from . import models
 from . import wizard
 from . import controllers
-from . import tests.test_mail_model
+from .tests import test_mail_model
