@@ -718,11 +718,11 @@ var MockServer = Class.extend({
     _mockSearchRead: function (model, args, kwargs) {
         var result = this._mockSearchReadController({
             model: model,
-            domain: args[0],
-            fields: args[1],
-            offset: args[2],
-            limit: args[3],
-            sort: args[4],
+            domain: kwargs.domain || args[0],
+            fields: kwargs.fields || args[1],
+            offset: kwargs.offset || args[2],
+            limit: kwargs.limit || args[3],
+            order: kwargs.order || args[4],
             context: kwargs.context,
         });
         return result.records;
@@ -743,7 +743,7 @@ var MockServer = Class.extend({
      */
     _mockSearchReadController: function (args) {
         var self = this;
-        var records = this._getRecords(args.model, args.domain);
+        var records = this._getRecords(args.model, args.domain || []);
         var fields = args.fields || _.keys(this.data[args.model].fields);
         var nbRecords = records.length;
         var offset = args.offset || 0;
