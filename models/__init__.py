@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import sale_coupon_rule
-import sale_coupon_program
-import sale_order
+from . import sale_coupon_rule
+from . import sale_coupon_program
+from . import sale_order
