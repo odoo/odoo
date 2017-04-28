@@ -3361,7 +3361,7 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 if (args.method === 'search_read') {
                     count++;
-                    nb_fields_fetched = args.args[1].length;
+                    nb_fields_fetched = args.kwargs.fields.length;
                 }
                 return this._super.apply(this, arguments);
             },
@@ -3394,7 +3394,7 @@ QUnit.module('relational_fields', {
                 '</form>',
             mockRPC: function (route, args) {
                 if (args.method === 'search_read') {
-                    assert.deepEqual(args.args[0], ['|', ['id', '=', 4], ['user_id', '=', 17]],
+                    assert.deepEqual(args.kwargs.domain, ['|', ['id', '=', 4], ['user_id', '=', 17]],
                         "search_read should sent the correct domain");
                 }
                 return this._super.apply(this, arguments);
