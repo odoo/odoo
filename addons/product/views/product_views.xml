@@ -450,7 +450,7 @@
             <field name="name">product.packaging.tree.view</field>
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
-                <tree string="Product Packagings">
+                <tree string="Product Packages">
                     <field name="sequence" widget="handle"/>
                     <field name="product_id"/>
                     <field name="name"/>
@@ -485,7 +485,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_packaging_view">
-            <field name="name">Packagings</field>
+            <field name="name">Product Packages</field>
             <field name="res_model">product.packaging</field>
             <field name="domain">[('product_id', '!=', False)]</field>
             <field name="view_ids" eval="[(5, 0, 0),

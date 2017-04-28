@@ -4,7 +4,7 @@
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_config_settings" groups="stock.group_stock_manager" sequence="50"/>
 
         <record id="action_delivery_packaging_view" model="ir.actions.act_window">
-            <field name="name">Packagings</field>
+            <field name="name">Delivery Packages</field>
             <field name="res_model">product.packaging</field>
             <field name="domain">[('product_id', '=', False)]</field>
             <field name="view_ids" eval="[(5, 0, 0),

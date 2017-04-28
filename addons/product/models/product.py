@@ -138,7 +138,7 @@ class ProductProduct(models.Model):
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
 
     packaging_ids = fields.One2many(
-        'product.packaging', 'product_id', 'Packaging',
+        'product.packaging', 'product_id', 'Product Packages',
         help="Gives the different ways to package the same product.")
 
     _sql_constraints = [
@@ -550,7 +550,7 @@ class ProductPackaging(models.Model):
     _description = "Packaging"
     _order = 'sequence'
 
-    name = fields.Char('Packaging Type', required=True)
+    name = fields.Char('Package Type', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
     product_id = fields.Many2one('product.product', string='Product')
     qty = fields.Float('Quantity per Package', help="The total number of products you can have per pallet or box.")
