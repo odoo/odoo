@@ -67,7 +67,10 @@
 
                 svg {
                     padding-top: 2px;
+                    padding : 10px 10px 10px 10px;
                     float: left;
+                    //padding-left: 200px;
+                    //padding-bottom: 200px;
 
                     g.nvd3.nv-wrap.nv-lineChart {
                         .translate(45; 30) !important;
@@ -100,6 +103,7 @@
                 .nvtooltip {
                     border-radius: 0;
                     border: 1px solid @gray-lighter;
+                    
                     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 
                     .legend-color-guide > div {
@@ -107,10 +111,23 @@
                     }
                     tr:first-child .legend-color-guide > div {
                         background-color: @odoo-brand-optional !important;
+                        //padding: 0px 0px 2px 9px;
                     }
                     tr:last-child .legend-color-guide > div {
                         background-color: darken(@odoo-brand-lightsecondary, 10%) !important;
                     }
+                    tr:first-child .key {
+                        //padding-left:50px;
+                        //padding: 0px 0px 2px 9px;
+                        //font-size:40px;
+                        
+                    }
+                    tr:last-child .key {
+                        //padding-left:10px;
+                        //padding: 0px 0px 0px 0px;
+                        //font-size:20px;
+                        //padding:0px;         
+                   }
                     
                 }
             }

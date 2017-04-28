@@ -7,11 +7,6 @@
 
     <t t-name="website.WebsiteDashboardMain">
         <div class="o_dashboards">
-                <a href="#" class="o_box_item o_dashboard_action btn btn-primary" name="website.action_website" title="Go to Website">
-                    <div class="o_inner_box o_primary">
-                        Go to Website
-                    </div>
-                </a>
             <div class="container-fluid o_website_dashboard">
                 <t t-call="website.dashboard_header"/>
                 <div class="o_website_dashboard_content"/>
@@ -22,7 +17,6 @@
     <t t-name="website.dashboard_header">
         <div class="row o_dashboard_common">
             <div class="o_box">
-
                 <!-- <t t-if="widget.groups.system">
                     <t t-set="apps" t-value="{
                         'website_crm':              {'icon': 'fa-file-text-o', 'help': _('Add a contact form to your Contact Us page.')},
@@ -95,6 +89,14 @@
         Your Google Analytic Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key" style="width: 100%"></input>
         <br/>Go to our <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics.html" target="_blank">User Documentation</a> to get more information.
     </div>
+
+    <t t-name="website.GotToWebsite">
+        <a href="#" class="btn btn-primary o_box_item o_dashboard_action" name="website.action_website" title="Go to Website">
+            <div class="o_inner_box o_primary">
+                Go to Website
+            </div>
+        </a>
+    </t>
 
     <t t-name="website.DateRangeButtons">
         <div class="btn-group btn-group-sm o_date_range_buttons pull-right">

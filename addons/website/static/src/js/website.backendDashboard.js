@@ -281,10 +281,14 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                 $(this).find('button.js_date_range.active').removeClass('active');
                 $(ev.target).addClass('active');
             });
+            this.$buttons = $(QWeb.render("website.GotToWebsite", {
+                widget: this,
+            }));
         }
         this.update_control_panel({
             cp_content: {
                 $searchview: this.$searchview,
+                $buttons: this.$buttons,
             },
             breadcrumbs: this.getParent().get_breadcrumbs(),
         });
