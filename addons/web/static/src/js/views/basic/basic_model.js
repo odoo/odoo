@@ -1319,7 +1319,7 @@ var BasicModel = AbstractModel.extend({
         // find all many2one related records to be fetched
         _.each(record.getFieldNames(), function (name) {
             var field = record.fields[name];
-            if (field.type === 'many2one') {
+            if (field.type === 'many2one' && !record.fieldsInfo[record.viewType][name].__no_fetch) {
                 var localId = (record._changes && record._changes[name]) || record.data[name];
                 var relatedRecord = self.localData[localId];
                 if (!relatedRecord) {

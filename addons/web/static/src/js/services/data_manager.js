@@ -274,6 +274,24 @@ return core.Class.extend({
             field.onChange = "1";
         }
 
+        // the relational data of invisible relational fields should not be
+        // fetched (e.g. name_gets of invisible many2ones), at least those that
+        // are always invisible.
+        // the invisible attribute of a field is supposed to be static ("1" in
+        // general), but not totally as it may use keys of the context
+        // ("context.get('some_key')"). It is evaluated server-side, and the
+        // result is put inside the modifiers as a value of the '(tree_)invisible'
+        // key, and the raw value is left in the invisible attribute (it is used
+        // in debug mode for informational purposes).
+        // this should change, for instance the server might set the evaluated
+        // value in invisible, which could then be seen as static by the client,
+        // and add another key in debug mode containing the raw value.
+        // for now, we do an hack to detect if the value is static and retrieve
+        // it from the modifiers,
+        if (attrs.invisible && attrs.modifiers.match('"(?:tree_)?invisible": ?true')) {
+            attrs.__no_fetch = true;
+        }
+
         if (!_.isEmpty(field.views)) {
             // process the inner fields_view as well to find the fields they use.
             // register those fields' description directly on the view.

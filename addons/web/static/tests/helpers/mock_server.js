@@ -226,7 +226,7 @@ var MockServer = Class.extend({
             }
             _.each(modifiersNames, function (a) {
                 if (node.attrs[a]) {
-                    var v = pyeval.py_eval(node.attrs[a]);
+                    var v = pyeval.py_eval(node.attrs[a]) ? true: false;
                     if (inTreeView && a === 'invisible') {
                         modifiers['tree_invisible'] = v;
                     } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
