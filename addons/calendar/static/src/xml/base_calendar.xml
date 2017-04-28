@@ -5,6 +5,33 @@
             <span t-if="attendeesData[el_index]" t-attf-class="o_calendar_invitation #{attendeesData[el_index].status}"/>
         </t>
     </t>
+    
+    <t t-name="EventDeleteDialog">
+      <div class="row">
+        <div class="col-sm-4">
+          <button type="button" class="btn btn-primary btn-block o_delete-event" data-type="one">Delete only this event</button>
+        </div>
+        <div class="col-sm-8">
+          <p>The other events of the series will remain identical.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <button type="button" class="btn btn-primary btn-block o_delete-event" data-type="future">Delete future events</button>
+        </div>
+        <div class="col-sm-8">
+          <p>This event and all subsequent events will be deleted.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <button type="button" class="btn btn-primary btn-block o_delete-event" data-type="all">Delete all events</button>
+        </div>
+        <div class="col-sm-8">
+          <p>All events in the series will be deleted.</p>
+        </div>
+      </div>
+    </t>
 
     <t t-name="CalendarNotification" t-extend="Notification">
         <t t-jquery=".o_notification_title > t" t-operation="replace">

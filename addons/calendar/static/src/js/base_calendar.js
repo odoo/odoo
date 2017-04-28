@@ -1,7 +1,12 @@
 odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
+var core = require('web.core');
+var _t = core._t;
 var BasicModel = require('web.BasicModel');
+var CalendarController = require('web.CalendarController');
+var CalendarModel = require('web.CalendarModel');
+var Dialog = require('web.Dialog');
 var field_registry = require('web.field_registry');
 var Notification = require('web.Notification');
 var relational_fields = require('web.relational_fields');
@@ -10,6 +15,154 @@ var WebClient = require('web.WebClient');
 
 var FieldMany2ManyTags = relational_fields.FieldMany2ManyTags;
 
+/**
+ * Calendar EventDeleteDialog
+ *
+ * This is the dialog called when the user try to delete a recurring event.
+ * It displays three buttons in order to delete one/future/all events. Once the
+ * user has choose the correct action the dialog return it to the calendar controller.
+ */
+
+var EventDeleteDialog = Dialog.extend({
+    template: "EventDeleteDialog",
+    events: _.extend({}, Dialog.prototype.events, {
+        'click .o_delete-event': '_onDeleteRecurrentEvents',
+    }),
+    /**
+     * @override
+     * @param {Widget} parent
+     * @param {interger} id calendar event id
+     */
+    init: function (parent, id){
+        //Button cancel that close the modal.
+        var button_cancel = {
+            text: _t("Cancel"),
+            classes: 'btn btn-default',
+            close: true,
+        };
+        this._super(parent, {
+            title: _t('This event is linked to a recurrence.'),
+            size: "medium",
+            buttons: [button_cancel],
+        });
+        this.id = id;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Detect the action choosen by the user and return it to the CalendarController.
+     *
+     * @param {OdooEvent} event
+     */
+    _onDeleteRecurrentEvents: function (event) {
+        var type = $(event.target).attr('data-type');
+        this.trigger_up('delete_event', {type: type});
+    },
+});
+
+/**
+ * CalendarController
+ *
+ * Add some method in order to handle recurring events.
+ */
+
+CalendarController.include({
+    custom_events: _.extend({}, CalendarController.prototype.custom_events, {
+        delete_event: '_onDeleteRecurrentEvent',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Override the _onDeleteEvent function in oder to change the behavior of calendar popup
+     * delete action. It will insert a new popup in case of recurrent events asking
+     * if the user want to delete only one/future/all event(s).
+     *
+     * @override
+     * @param {integer} id The selected calendar event id
+     */
+    _onDeleteEvent: function (id) {
+        // If is a virtual event, we call the new popup.
+        if (typeof id === "string" && id.indexOf('-') >= 0) {
+            this.dialog.destroy();
+            this.dialog = new EventDeleteDialog(this, id).open();
+        // If a single event, keep the same behavior
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * This method call _deleteRecurrentEvents with the type as the action selected by
+     * the user and the calendar event id.
+     * Once the event has been deleted, it will close the modal and refresh the view.
+     *
+     * @param {OdooEvent} event
+     */
+    _onDeleteRecurrentEvent: function (event){
+        var self = this;
+        var type = event.data.type;
+        var id = event.target.id;
+        Dialog.confirm(this, _t("Are you sure you want to delete this/these record(s) ?"), {
+            confirm_callback: function () {
+                return self.model.deleteRecurrentEvents(id, type).then(function () {
+                    if(self.dialog) {
+                        self.dialog.destroy();
+                    }
+                    self.reload();
+                });
+            }
+        });
+    },
+});
+
+CalendarModel.include({
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * This method call _splitRecurrentEvents with a different python method depending of the
+     * type. It then get the id of event to delete and call the super function deleteRecords that
+     * will unlink it in the database.
+     *
+     * @param {OdooEvent} id Event id of original event.
+     * @param {OdooEvent} type The event data type represent the action selected by the user.
+     */
+    deleteRecurrentEvents : function (id, type){
+        var self = this;
+        var method;
+        switch(type){
+            case 'one':
+                method = 'action_detach_recurring_event';
+                break;
+            case 'future':
+                method = 'action_future_recurring_event';
+                break;
+            case 'all':
+                method = 'action_all_recurring_event';
+                break;
+        }
+        return this._rpc({
+            model: this.modelName,
+            method: method,
+            args: [id],
+            context: session.user_context,
+        }).then(function (r) {
+            self.deleteRecords(r.res_id, self.modelName);
+        });
+    },
+});
 
 var CalendarNotification = Notification.extend({
     template: "CalendarNotification",
