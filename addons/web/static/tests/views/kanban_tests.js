@@ -913,6 +913,72 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('no nocontent helper for grouped kanban with no records', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records = [];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 0,
+            "there should be no columns");
+        assert.strictEqual(kanban.$('.o_kanban_record').length, 0,
+            "there should be no records");
+        assert.strictEqual(kanban.$('.oe_view_nocontent').length, 0,
+            "there should be no nocontent helper");
+        assert.strictEqual(kanban.$('.o_column_quick_create').length, 1,
+            "there should be a column quick create");
+        kanban.destroy();
+    });
+
+    QUnit.test('nocontent helper for grouped kanban with no records with no group_create', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records = [];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban group_create="false">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 0,
+            "there should be no columns");
+        assert.strictEqual(kanban.$('.o_kanban_record').length, 0,
+            "there should be no records");
+        assert.strictEqual(kanban.$('.oe_view_nocontent').length, 1,
+            "there should be a nocontent helper");
+        assert.strictEqual(kanban.$('.o_column_quick_create').length, 0,
+            "there should not be a column quick create");
+        kanban.destroy();
+    });
+
     QUnit.test('buttons with modifiers', function (assert) {
         assert.expect(2);
 

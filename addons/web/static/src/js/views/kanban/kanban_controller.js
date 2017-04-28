@@ -40,8 +40,7 @@ var KanbanController = BasicController.extend({
         this.on_create = params.on_create;
         this.hasButtons = params.hasButtons;
 
-        // true iff grouped by an m2o field and group_create action enabled
-        this.create_column_enabled = false;
+        this.createColumnEnabled = this._isCreateColumnEnabled();
     },
 
     //--------------------------------------------------------------------------
@@ -60,16 +59,12 @@ var KanbanController = BasicController.extend({
         }
     },
     /**
-     * Override update method to recompute create_column_enabled.
+     * Override update method to recompute createColumnEnabled.
      *
      * @returns {Deferred}
      */
     update: function () {
-        var state = this.model.get(this.handle, {raw: true});
-        var group_by_field = state.fields[state.groupedBy[0]];
-        var grouped_by_m2o = group_by_field && (group_by_field.type === 'many2one');
-        var groupCreate = this.is_action_enabled('group_create');
-        this.create_column_enabled = grouped_by_m2o && groupCreate;
+        this.createColumnEnabled = this._isCreateColumnEnabled();
         return this._super.apply(this, arguments);
     },
 
@@ -95,8 +90,25 @@ var KanbanController = BasicController.extend({
      */
     _hasContent: function (state) {
         return this._super.apply(this, arguments) ||
-               this.create_column_enabled ||
+               this.createColumnEnabled ||
                (state.groupedBy.length && state.data.length);
+    },
+    /**
+     * The column quick create should be displayed in kanban iff grouped by an
+     * m2o field and group_create action enabled.
+     *
+     * @returns {Boolean}
+     */
+    _isCreateColumnEnabled: function () {
+        var groupCreate = this.is_action_enabled('group_create');
+        if (!groupCreate) {
+            // pre-return to avoid a lot of the following processing
+            return false;
+        }
+        var state = this.model.get(this.handle, {raw: true});
+        var groupByField = state.fields[state.groupedBy[0]];
+        var groupedByM2o = groupByField && (groupByField.type === 'many2one');
+        return groupedByM2o;
     },
     /**
      * This method calls the server to ask for a resequence.  Note that this
@@ -119,7 +131,7 @@ var KanbanController = BasicController.extend({
     _updateButtons: function () {
         if (this.$buttons) {
             var data = this.model.get(this.handle, {raw: true});
-            var create_muted = data.count === 0 && this.create_column_enabled;
+            var create_muted = data.count === 0 && this.createColumnEnabled;
             this.$buttons.find('.o-kanban-button-new')
                 .toggleClass('btn-primary', !create_muted)
                 .toggleClass('btn-default', create_muted);
