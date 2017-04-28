@@ -45,8 +45,8 @@ class PurchaseReport(models.Model):
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position', readonly=True)
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
-    weight = fields.Float('Gross Weight', readonly=True)
-    volume = fields.Float('Volume', readonly=True)
+    weight = fields.Float('Gross Weight (kg)', readonly=True)
+    volume = fields.Float('Volume (L)', readonly=True)
 
     @api.model_cr
     def init(self):

@@ -41,8 +41,8 @@ class SaleReport(models.Model):
         ('done', 'Sales Done'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True)
-    weight = fields.Float('Gross Weight', readonly=True)
-    volume = fields.Float('Volume', readonly=True)
+    weight = fields.Float('Gross Weight (kg)', readonly=True)
+    volume = fields.Float('Volume (L)', readonly=True)
 
     def _select(self):
         select_str = """
