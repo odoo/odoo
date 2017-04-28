@@ -57,7 +57,7 @@ class FleetVehicle(models.Model):
         for car in self:
             car.atn = car._get_car_atn(car.acquisition_date, car.car_value, car.fuel_type, car.co2)
 
-    @api.depends('model_id', 'license_plate', 'total_depreciated_cost', 'acquisition_date')
+    @api.depends('model_id', 'license_plate', 'log_contracts', 'total_depreciated_cost', 'acquisition_date')
     def _compute_vehicle_name(self):
         super(FleetVehicle, self)._compute_vehicle_name()
         for vehicle in self:

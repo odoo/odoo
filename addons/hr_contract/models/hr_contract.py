@@ -73,12 +73,16 @@ class Contract(models.Model):
         ('pending', 'To Renew'),
         ('close', 'Expired'),
         ('cancel', 'Cancelled')
-    ], string='Status', track_visibility='onchange', help='Status of the contract', default='draft')
+    ], string='Status', group_expand='_expand_states',
+       track_visibility='onchange', help='Status of the contract', default='draft')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id')
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no")
     visa_no = fields.Char('Visa No', related="employee_id.visa_no")
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire")
+
+    def _expand_states(self, states, domain, order):
+        return [key for key, val in type(self).state.selection]
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):

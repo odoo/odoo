@@ -36,19 +36,32 @@ class HrContract(models.Model):
     warrants_cost = fields.Monetary(compute='_compute_warrants_cost')
 
     # Advantages
-    commission_on_target = fields.Monetary(string="Commission on Target", default=1000)
-    fuel_card = fields.Monetary(string="Fuel Card", default=150)
-    internet = fields.Monetary(string="Internet", default=38, help="Your internet subscription will be paid up to this amount.")
-    representation_fees = fields.Monetary(string="Representation Fees", default=150.0)
-    mobile = fields.Monetary(string="Mobile", default=30, help="Your mobile subscription will be paid up to this amount.")
-    mobile_plus = fields.Monetary(string="International Communication", default=50, help="Your international mobile subscription will be paid up to this amount.")
-    meal_voucher_amount = fields.Monetary(string="Meal Vouchers", default=7.45)
-    holidays = fields.Float(string="Holidays", default=20)
+    commission_on_target = fields.Monetary(string="Commission on Target",
+        default=lambda self: self.get_attribute('commission_on_target', 'default_value'))
+    fuel_card = fields.Monetary(string="Fuel Card",
+        default=lambda self: self.get_attribute('fuel_card', 'default_value'))
+    internet = fields.Monetary(string="Internet",
+        default=lambda self: self.get_attribute('internet', 'default_value'),
+        help="Your internet subscription will be paid up to this amount.")
+    representation_fees = fields.Monetary(string="Representation Fees",
+        default=lambda self: self.get_attribute('representation_fees', 'default_value'))
+    mobile = fields.Monetary(string="Mobile",
+        default=lambda self: self.get_attribute('mobile', 'default_value'),
+        help="Your mobile subscription will be paid up to this amount.")
+    mobile_plus = fields.Monetary(string="International Communication",
+        default=lambda self: self.get_attribute('mobile_plus', 'default_value'),
+        help="Your international mobile subscription will be paid up to this amount.")
+    meal_voucher_amount = fields.Monetary(string="Meal Vouchers",
+        default=lambda self: self.get_attribute('meal_voucher_amount', 'default_value'))
+    holidays = fields.Float(string="Holidays",
+        default=lambda self: self.get_attribute('holidays', 'default_value'))
+    holidays_editable = fields.Boolean(string="Editable Holidays", default=True)
     holidays_compensation = fields.Monetary(compute='_compute_holidays_compensation', string="Holidays Compensation")
     wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', sting="Wage update with holidays retenues")
     additional_net_amount = fields.Monetary(string="Net Supplements")
     retained_net_amount = fields.Monetary(sting="Net Retained")
-    eco_checks = fields.Monetary("Eco Vouchers", default=250)
+    eco_checks = fields.Monetary("Eco Vouchers",
+        default=lambda self: self.get_attribute('eco_checks', 'default_value'))
 
     @api.depends('holidays', 'wage')
     def _compute_wage_with_holidays(self):
