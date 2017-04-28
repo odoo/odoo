@@ -3990,5 +3990,33 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('default_order on x2many embedded view', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].p = [1, 4];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree default_order="foo desc">' +
+                                '<field name="display_name"/>' +
+                                '<field name="foo"/>' +
+                                '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.ok(form.$('.o_form_field_one2many tbody tr:first td:contains(yop)').length,
+            "record 1 should be first");
+
+        form.destroy();
+    });
 });
 });

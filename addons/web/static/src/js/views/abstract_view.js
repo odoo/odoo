@@ -102,6 +102,17 @@ var AbstractView = Class.extend({
         if (params.modelName) {
             this.loadParams.modelName = params.modelName;
         }
+        // default_order is like:
+        //   'name,id desc'
+        // but we need it like:
+        //   [{name: 'id', asc: false}, {name: 'name', asc: true}]
+        var defaultOrder = viewInfo.arch.attrs.default_order;
+        if (defaultOrder) {
+            this.loadParams.orderedBy = _.map(defaultOrder.split(','), function (order) {
+                order = order.split(' ');
+                return {name: order[0], asc: order[1] !== 'desc'};
+            });
+        }
 
         this.userContext = params.userContext;
     },
