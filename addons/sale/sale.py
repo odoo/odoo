@@ -521,9 +521,11 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.order_id.state in ['sale', 'done']:
                 if line.product_id.invoice_policy == 'order':
-                    line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
+                    qty = line.product_uom_qty - line.qty_invoiced
+                    line.qty_to_invoice = qty if qty >= 0 else 0
                 else:
-                    line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
+                    qty = line.qty_delivered - line.qty_invoiced
+                    line.qty_to_invoice = qty if qty >= 0 else 0
             else:
                 line.qty_to_invoice = 0
 
