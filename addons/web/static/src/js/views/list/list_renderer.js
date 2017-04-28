@@ -407,7 +407,7 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $cells.unshift($('<td>'));
         }
-        var field = this.state.fields[group.groupedBy[0]];
+        var field = this.state.fields[this.state.groupedBy[groupLevel]];
         var name = this._formatValue(group.value, field);
         var $th = $('<th>')
                     .addClass('o_group_name')

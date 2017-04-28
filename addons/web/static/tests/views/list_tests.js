@@ -1254,6 +1254,43 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('grouped list on selection field at level 2', function (assert) {
+        assert.expect(4);
+
+        this.data.foo.fields.priority = {
+            string: "Priority",
+            type: "selection",
+            selection: [[1, "Low"], [2, "Medium"], [3, "High"]],
+            default: 1,
+        };
+        this.data.foo.records.push({id: 5, foo: "blip", int_field: -7, m2o: 1, priority: 2});
+        this.data.foo.records.push({id: 6, foo: "blip", int_field: 5, m2o: 1, priority: 3});
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="id"/><field name="int_field"/></tree>',
+            groupBy: ['m2o', 'priority'],
+        });
+
+        assert.strictEqual(list.$('.o_group_header').length, 2,
+            "should contain 2 groups at first level");
+
+        // open the first group
+        list.$('.o_group_header:first').click();
+
+        var $openGroup = list.$('tbody:nth(1)');
+        assert.strictEqual($openGroup.find('tr').length, 3,
+            "should have 3 subgroups");
+        assert.strictEqual($openGroup.find('tr').length, 3,
+            "should have 3 subgroups");
+        assert.strictEqual($openGroup.find('.o_group_name:first').text(), 'Low (3)',
+            "should display the selection name in the group header");
+
+        list.destroy();
+    });
+
     QUnit.test('grouped list with a pager in a group', function (assert) {
         assert.expect(6);
         this.data.foo.records[3].bar = true;
