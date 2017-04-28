@@ -30,19 +30,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" title="Put products in packages and get shipping labels per package unit thanks to shipping connectors.">
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Put your products in packs (e.g. parcels, boxes) and track them">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_tracking_lot"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="group_stock_tracking_lot"/>
                                     <div class="text-muted">
-                                        Track product packages (e.g.pallets, boxes)
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="mt16" attrs="{'invisible': [('group_stock_tracking_lot', '=', False)]}">
-                                            <button name="%(product.action_packaging_view)d" icon="fa-arrow-right" type="action" string="Package Types" class="btn-link"/>
-                                        </div>
+                                        Put your products in packs (e.g. parcels, boxes) and track them
                                     </div>
                                 </div>
                             </div>
@@ -170,14 +165,19 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" title="Select or scan the packaging used to transfer products in operations. This allows to update or check the unit # transferred (which must be a multiple of the unit # per package). Packaging types are set on product detail form.">
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Manage product packages (e.g. pack of 6 bottles, box of 10 pieces)">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_packaging"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="group_stock_packaging"/>
                                     <div class="text-muted">
-                                        Manage product packaging
+                                        Manage product packages (e.g. pack of 6 bottles, box of 10 pieces)
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16" attrs="{'invisible': [('group_stock_packaging', '=', False)]}">
+                                            <button name="%(product.action_packaging_view)d" icon="fa-arrow-right" type="action" string="Product Packages" class="btn-link"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
