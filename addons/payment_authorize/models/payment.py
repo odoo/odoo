@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from authorize_request import AuthorizeAPI
+from .authorize_request import AuthorizeAPI
 from datetime import datetime
 import hashlib
 import hmac

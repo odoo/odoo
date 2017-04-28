@@ -7,18 +7,16 @@ WSGI stack, common code.
 
 """
 
-import httplib
-import urllib
-import xmlrpclib
-import StringIO
-
-import errno
 import logging
-import platform
-import socket
 import sys
 import threading
 import traceback
+
+try:
+    from xmlrpc import client as xmlrpclib
+except ImportError:
+    # pylint: disable=bad-python3-import
+    import xmlrpclib
 
 import werkzeug.serving
 import werkzeug.contrib.fixers

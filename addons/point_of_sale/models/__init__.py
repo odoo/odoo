@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import account_bank_statement
-import account_journal
-import barcode_rule
-import pos_category
-import pos_config
-import pos_order
-import pos_session
-import product
-import res_config
-import res_partner
-import res_users
+from . import account_bank_statement
+from . import account_journal
+from . import barcode_rule
+from . import pos_category
+from . import pos_config
+from . import pos_order
+from . import pos_session
+from . import product
+from . import res_config
+from . import res_partner
+from . import res_users

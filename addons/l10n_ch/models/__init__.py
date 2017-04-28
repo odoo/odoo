@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import account_invoice
-import mail_compose_message
-import mail_template
-import res_bank
-import res_company
-import res_config
+from . import account_invoice
+from . import mail_compose_message
+from . import mail_template
+from . import res_bank
+from . import res_company
+from . import res_config

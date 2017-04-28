@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import rating
+from . import rating

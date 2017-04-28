@@ -64,6 +64,51 @@ features whereas:
 Moved and removed
 =================
 
+Standard Library Modules
+------------------------
+
+Python 3 reorganised, moved or removed a number of modules in the standard
+library:
+
+* ``StringIO`` and ``cStringIO`` were removed, you can use ``io.BytesIO`` and
+  ``io.StringIO`` to replace them in a cross-version manner (``io.BytesIO``
+  for binary data, ``io.StringIO`` for text/unicode data).
+* ``urllib``, ``urllib2`` and ``urlparse`` were redistributed across
+  ``urllib.parse`` and ``urllib.request``, you may want to use conditional
+  imports e.g. try to import the Python 3 version and fallback on the Python
+  2 version.
+
+Absolute Imports (:pep:`328`)
+-----------------------------
+
+.. important::
+
+    In Python 3, ``import foo`` can only import from a "top-level" library
+    (absolute path). If trying to import a sibling or sub-module you *must*
+    use an explicitly *relative import* e.g. ``from . import foo`` or
+    ``from .foo import bar``.
+
+In Python 2 ``import`` statements are ambiguous: if a file ``a.py`` contains
+``import b``, the import system will first check if there's a ``b.py`` file
+next to it before checking if there is a package called that on the
+PYTHONPATH.
+
+Furthermore if a sibling file is named the same as top-level package, the
+library becomes inaccessible to both the file itself ans siblings, this has
+actually happened in Odoo with :mod:`odoo.tools.mimetypes`.
+
+Additionally, relative imports allow navigating "up" the tree by using
+multiple leading ``.``.
+
+.. note::
+
+    Explicitly relative imports are always available in Python 2, and should
+    be used everywhere.
+
+    You can ensure you are not using any implicitly relative import by adding
+    ``from __future__ import absolute_import`` at the top of your files, or by
+    running the ``relative-import`` PyLint.
+
 Exception Handlers
 ------------------
 

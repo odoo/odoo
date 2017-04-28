@@ -1,7 +1,10 @@
 #odoo.loggers.handlers. -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import ConfigParser
+try:
+    import configparser as ConfigParser
+except ImportError:
+    import ConfigParser
 import optparse
 import os
 import sys
@@ -10,7 +13,7 @@ import odoo.conf
 import odoo.loglevels as loglevels
 import logging
 import odoo.release as release
-import appdirs
+from . import appdirs
 
 class MyOption (optparse.Option, object):
     """ optparse Option with two additional attributes.

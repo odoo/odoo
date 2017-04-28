@@ -10,7 +10,6 @@ import mimetypes
 import os
 import re
 import sys
-import urllib2
 
 import werkzeug
 import werkzeug.exceptions

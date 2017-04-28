@@ -9,7 +9,7 @@
 
 import os
 
-import config
+from . import config
 
 config_file_00 = os.path.join(os.path.dirname(__file__),'test-config-values-00.conf')
 

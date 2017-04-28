@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
 from collections import OrderedDict
+from io import BytesIO
 from odoo import api, fields, models, _
 from PIL import Image
-from cStringIO import StringIO
 import babel
 from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date
 from .qweb import unicodifier
@@ -269,7 +269,7 @@ class ImageConverter(models.AbstractModel):
     @api.model
     def value_to_html(self, value, options):
         try:
-            image = Image.open(StringIO(value.decode('base64')))
+            image = Image.open(BytesIO(value.decode('base64')))
             image.verify()
         except IOError:
             raise ValueError("Non-image binary fields can not be converted to HTML")

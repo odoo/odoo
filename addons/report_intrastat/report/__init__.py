@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import report_intrastat_report
+from . import report_intrastat_report

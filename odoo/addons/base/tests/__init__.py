@@ -1,34 +1,34 @@
-import test_acl
-import test_api
-import test_base
-import test_basecase
-import test_db_cursor
-import test_expression
-import test_float
-import test_func
-import test_ir_actions
-import test_ir_attachment
-import test_ir_http
-import test_ir_filters
-import test_ir_sequence
-import test_ir_sequence_date_range
-import test_ir_values
-import test_mail
-import test_menu
-import test_mimetypes
-import test_misc
-import test_orm
-import test_ormcache
-import test_osv
-import test_phase
-import test_qweb
-import test_res_config
-import test_res_lang
-import test_search
-import test_translate
+from . import test_acl
+from . import test_api
+from . import test_base
+from . import test_basecase
+from . import test_db_cursor
+from . import test_expression
+from . import test_float
+from . import test_func
+from . import test_ir_actions
+from . import test_ir_attachment
+from . import test_ir_http
+from . import test_ir_filters
+from . import test_ir_sequence
+from . import test_ir_sequence_date_range
+from . import test_ir_values
+from . import test_mail
+from . import test_menu
+from . import test_mimetypes
+from . import test_misc
+from . import test_orm
+from . import test_ormcache
+from . import test_osv
+from . import test_phase
+from . import test_qweb
+from . import test_res_config
+from . import test_res_lang
+from . import test_search
+from . import test_translate
 #import test_uninstall  # loop
-import test_user_has_group
-import test_view_validation
-import test_views
-import test_xmlrpc
-import test_res_partner_bank
+from . import test_user_has_group
+from . import test_view_validation
+from . import test_views
+from . import test_xmlrpc
+from . import test_res_partner_bank

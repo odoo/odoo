@@ -10,7 +10,11 @@ from operator import attrgetter
 from types import NoneType
 import logging
 import pytz
-import xmlrpclib
+try:
+    from xmlrpc.client import MAXINT
+except ImportError:
+    #pylint: disable=bad-python3-import
+    from xmlrpclib import MAXINT
 
 import psycopg2
 
@@ -1168,7 +1172,7 @@ class Integer(Field):
     def convert_to_read(self, value, record, use_name_get=True):
         # Integer values greater than 2^31-1 are not supported in pure XMLRPC,
         # so we have to pass them as floats :-(
-        if value and value > xmlrpclib.MAXINT:
+        if value and value > MAXINT:
             return float(value)
         return value
 

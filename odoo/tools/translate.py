@@ -20,10 +20,9 @@ from babel.messages import extract
 from lxml import etree
 
 import odoo
-from odoo.tools import config, pycompat
-from odoo.tools.misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
-from odoo.tools.osutil import walksymlinks
-from odoo import sql_db, SUPERUSER_ID
+from . import config, pycompat
+from .misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
+from .osutil import walksymlinks
 
 _logger = logging.getLogger(__name__)
 
@@ -337,7 +336,7 @@ class GettextAlias(object):
         # find current DB based on thread/worker db name (see netsvc)
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            return sql_db.db_connect(db_name)
+            return odoo.sql_db.db_connect(db_name)
 
     def _get_cr(self, frame, allow_create=True):
         # try, in order: cr, cursor, self.env.cr, self.cr,
@@ -423,7 +422,7 @@ class GettextAlias(object):
                 cr, is_new_cr = self._get_cr(frame)
                 if cr:
                     # Try to use ir.translation to benefit from global cache if possible
-                    env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+                    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
                     res = env['ir.translation']._get_source(None, ('code','sql_constraint'), lang, source)
                 else:
                     _logger.debug('no context cursor detected, skipping translation for "%r"', source)
@@ -780,7 +779,7 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
 
 
 def trans_generate(lang, modules, cr):
-    env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
     to_translate = set()
 
     def push_translation(module, type, name, id, source, comments=None):
@@ -1019,7 +1018,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     if verbose:
         _logger.info('loading translation file for language %s', lang)
 
-    env = odoo.api.Environment(cr, SUPERUSER_ID, context or {})
+    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, context or {})
     Lang = env['res.lang']
     Translation = env['ir.translation']
 
@@ -1196,6 +1195,6 @@ def load_language(cr, lang):
     :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
     :type lang: str
     """
-    env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
     installer = env['base.language.install'].create({'lang': lang})
     installer.lang_install()

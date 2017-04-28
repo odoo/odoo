@@ -6,9 +6,9 @@ import socket
 import usb.core
 import usb.util
 
-from escpos import *
-from constants import *
-from exceptions import *
+from .escpos import *
+from .constants import *
+from .exceptions import *
 from time import sleep
 
 class Usb(Escpos):

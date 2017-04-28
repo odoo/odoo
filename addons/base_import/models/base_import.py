@@ -37,7 +37,7 @@ except ImportError:
     xlrd = xlsx = None
 
 try:
-    import odf_ods_reader
+    from . import odf_ods_reader
 except ImportError:
     odf_ods_reader = None
 

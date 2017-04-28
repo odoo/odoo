@@ -3,27 +3,12 @@
 
 """ Modules dependency graph. """
 
-import os, sys, imp
-from os.path import join as opj
 import itertools
-import zipimport
+import logging
 
 import odoo
-
-import odoo.osv as osv
 import odoo.tools as tools
-import odoo.tools.osutil as osutil
-from odoo.tools.translate import _
 
-import zipfile
-import odoo.release as release
-
-import re
-import base64
-from zipfile import PyZipFile, ZIP_DEFLATED
-from cStringIO import StringIO
-
-import logging
 
 _logger = logging.getLogger(__name__)
 

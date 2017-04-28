@@ -1,23 +1,29 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 import ast
-from urlparse import urlparse
+import json
+import logging
+from collections import OrderedDict
+from time import time
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    # pylint: disable=bad-python3-import
+    from urlparse import urlparse
+
 from lxml import html
+from lxml import etree
 
 from odoo.tools import pycompat
-from .qweb import QWeb, Contextifier
-from .assetsbundle import AssetsBundle
-from lxml import etree
-from collections import OrderedDict
 
 from odoo import api, models, tools
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, _SAFE_OPCODES
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-import json
-from time import time
 
-import logging
+from .qweb import QWeb, Contextifier
+from .assetsbundle import AssetsBundle
+
 _logger = logging.getLogger(__name__)
 
 

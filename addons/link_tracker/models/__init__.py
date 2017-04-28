@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import link_tracker
+from . import link_tracker

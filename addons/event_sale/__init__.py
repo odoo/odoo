@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-import models
-import wizard
+from . import models
+from . import wizard

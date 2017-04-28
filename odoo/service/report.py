@@ -10,7 +10,7 @@ import odoo.report
 from odoo import tools
 from odoo.exceptions import UserError
 
-import security
+from . import security
 
 _logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import test_crm_lead
-import test_new_lead_notification
-import test_lead2opportunity
-import test_crm_activity
-import test_crm_ui
+from . import test_crm_lead
+from . import test_new_lead_notification
+from . import test_lead2opportunity
+from . import test_crm_activity
+from . import test_crm_ui

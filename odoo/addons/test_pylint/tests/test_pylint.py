@@ -26,6 +26,12 @@ class TestPyLint(TransactionCase):
         'W0123',  # eval used
         'W0101',  # unreachable code
 
+        'misplaced-future',
+        'relative-import',
+        'deprecated-module',
+        'import-star-module-level',
+        # 'bad-python3-import', # TODO: more stuff used in report
+
         'long-suffix',
         'apply-builtin',
         'cmp-builtin',
@@ -73,4 +79,4 @@ class TestPyLint(TransactionCase):
         else:
             out = process.communicate()[0]
             if process.returncode:
-                self.fail(msg="\n" + out)
+                self.fail("\n" + out)

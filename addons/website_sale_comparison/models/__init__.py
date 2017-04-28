@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import website_sale_comparison
+from . import website_sale_comparison

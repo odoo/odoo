@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # taken from http://code.activestate.com/recipes/252524-length-limited-o1-lru-cache-implementation/
 import threading
-from func import synchronized
+from .func import synchronized
 
 __all__ = ['LRU']
 

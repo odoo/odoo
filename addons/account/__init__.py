@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import models
+from . import models
 
-import wizard
-import report
+from . import wizard
+from . import report
 
 from odoo import api, SUPERUSER_ID
 
