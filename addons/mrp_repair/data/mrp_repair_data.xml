@@ -13,15 +13,15 @@
             <field name="report_name">${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html" type="xml">
-                <p>Dear ${object.partner_id.name}</p>
+                <p>Dear <t t-esc="record.partner_id.name"/></p>
                 <p>
-                Here is your repair order ${doc_name} <strong>${object.name}</strong>
-                % if object.origin:
-                (with reference: ${object.origin} )
-                % endif
-                % if object.invoice_method != 'none':
-                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>
-                % endif
+                Here is your repair order <t t-esc="doc_name"/> <strong t-esc="record.name"/>
+                <t t-if="record.origin">
+                (with reference: <t t-esc="record.origin"/> )
+                </t>
+                <t t-if="record.invoice_method != 'none'">
+                amounting in <strong t-esc="'%s %s' % (record.amount_total, record.pricelist_id.currency_id.name)"/><strong><t t-esc="record.amount_total"/> <t t-esc="record.pricelist_id.currency_id.name"/>.</strong>
+                </t>
                 </p>
                 <p>You can reply to this email if you have any questions.</p>
                 <p>Thank you,</p>

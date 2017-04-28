@@ -7,9 +7,9 @@
             <field name="subject">Please confirm subscription to ${object.name}</field>
             <field name="body_html" type="xml">
 <p>Hello,</p>
-<p>You have requested to be subscribed to the mailing list <strong>${object.name}</strong></p>
+<p>You have requested to be subscribed to the mailing list <strong t-esc="record.name"/></p>
 <p>To confirm, please visit the following link:</p>
-<p><strong><a href="${ctx['token_url']}">${ctx['token_url']}</a></strong></p>
+<p><strong><a t-att-href="ctx['token_url']" t-esc="ctx['token_url']"/></strong></p>
 <p>If this was a mistake or you did not requested this action, please ignore this message.</p>
 </field>
         </record>
@@ -20,9 +20,9 @@
             <field name="subject">Please confirm unsubscription to ${object.name}</field>
             <field name="body_html" type="xml">
 <p>Hello,</p>
-<p>You have requested to be unsubscribed to the mailing list <strong>${object.name}</strong></p>
+<p>You have requested to be unsubscribed to the mailing list <strong t-esc="record.name"/></p>
 <p>To confirm, please visit the following link:</p>
-<p><strong><a href="${ctx['token_url']}">${ctx['token_url']}</a></strong></p>
+<p><strong><a t-att-href="ctx['token_url']" t-esc="ctx['token_url']"/></strong></p>
 <p>If this was a mistake or you did not requested this action, please ignore this message.</p>
 </field>
         </record>

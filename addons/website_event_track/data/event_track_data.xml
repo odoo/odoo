@@ -10,13 +10,13 @@
             <field name="body_html" type="xml">
 <div>
     <p>
-        Dear <t t-esc="object.partner_name"/>
+        Dear <t t-esc="record.partner_name"/>
     </p><p>
-        We are pleased to inform you that your proposal ${object.name} has been accepted and confirmed for the event ${object.event_id.name}.
+        We are pleased to inform you that your proposal <t t-esc="record.name"/> has been accepted and confirmed for the event <t t-esc="record.event_id.name"/>.
     </p><p>
         You will find more details here:
         <div style="margin-top: 16px;">
-            <a href="/event/${object.event_id.id}/"
+            <a t-attf-href="/event/#{record.event_id.id}/"
                     style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
                 View Event
             </a>

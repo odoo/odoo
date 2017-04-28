@@ -370,12 +370,18 @@ class MailTemplate(models.Model):
         for res_id, record in res_to_rec.iteritems():
             variables['object'] = record
             try:
+                # compiling template by jinja
                 render_result = template.render(variables)
             except Exception:
                 _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
                 raise UserError(_("Failed to render template %r using values %r")% (template, variables))
             if render_result == u"False":
                 render_result = u""
+            # going to comile it by qweb
+            if render_result != u"":
+                variables['record'] = record
+                tree = lxml.html.fromstring(u'<t>%s</t>' % render_result)
+                render_result = self.env['ir.qweb'].render(tree, variables)
             results[res_id] = render_result
 
         if post_process:
