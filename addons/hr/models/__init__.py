@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hr
-import hr_config_settings
-import mail_alias
-import res_partner
-import res_users
+from . import hr
+from . import hr_config_settings
+from . import mail_alias
+from . import res_partner
+from . import res_users

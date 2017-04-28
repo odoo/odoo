@@ -3,7 +3,7 @@
 
 from odoo.exceptions import UserError, AccessError
 
-from test_sale_common import TestSale
+from .test_sale_common import TestSale
 
 
 class TestSaleOrder(TestSale):

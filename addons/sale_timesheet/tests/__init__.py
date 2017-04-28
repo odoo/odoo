@@ -1,2 +1,2 @@
-import test_sale_timesheet
-import test_sale_service
+from . import test_sale_timesheet
+from . import test_sale_service

@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import product_wishlist
+from . import product_wishlist

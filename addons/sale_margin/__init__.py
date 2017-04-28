@@ -5,8 +5,8 @@ from functools import partial
 import openerp
 from openerp import api, SUPERUSER_ID
 
-import models      # noqa
-import report      # noqa
+from . import models      # noqa
+from . import report      # noqa
 
 
 def uninstall_hook(cr, registry):

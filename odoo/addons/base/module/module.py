@@ -3,24 +3,26 @@
 from collections import defaultdict
 from operator import attrgetter
 import importlib
+import io
 import logging
 import os
 import shutil
 import tempfile
-import urllib2
-import urlparse
 import zipfile
+
+try:
+    from urllib import parse as urlparse
+    from urllib.request import urlopen
+except ImportError:
+    # pylint: disable=bad-python3-import
+    import urlparse
+    from urllib2 import urlopen
 
 from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
 import lxml.html
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO   # NOQA
 
 import odoo
 from odoo import api, fields, models, modules, tools, _
@@ -676,12 +678,12 @@ class Module(models.Model):
 
                 try:
                     _logger.info('Downloading module `%s` from OpenERP Apps', module_name)
-                    content = urllib2.urlopen(url).read()
+                    content = urlopen(url).read()
                 except Exception:
                     _logger.exception('Failed to fetch module %s', module_name)
                     raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.') % module_name)
                 else:
-                    zipfile.ZipFile(StringIO(content)).extractall(tmp)
+                    zipfile.ZipFile(io.BytesIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))
 
             # 2a. Copy/Replace module source in addons path

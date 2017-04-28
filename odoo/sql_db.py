@@ -12,8 +12,12 @@ from contextlib import contextmanager
 from functools import wraps
 import logging
 import time
-import urlparse
 import uuid
+try:
+    from urllib import parse as urlparse
+except ImportError:
+    #pylint: disable=bad-python3-import
+    import urlparse
 
 import psycopg2
 import psycopg2.extras
@@ -48,8 +52,8 @@ for name, typeoid in types_mapping.items():
 psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,), 'float', undecimalize))
 
 
-import tools
-from tools.func import frame_codeinfo
+from . import tools
+from .tools.func import frame_codeinfo
 from datetime import timedelta
 import threading
 from inspect import currentframe

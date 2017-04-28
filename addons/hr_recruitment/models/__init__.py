@@ -1,6 +1,6 @@
-import hr_department
-import hr_recruitment
-import hr_employee
-import hr_job
-import hr_recruitment_config_settings
-import calendar
+from . import hr_department
+from . import hr_recruitment
+from . import hr_employee
+from . import hr_job
+from . import hr_recruitment_config_settings
+from . import calendar

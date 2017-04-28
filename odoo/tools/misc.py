@@ -8,12 +8,10 @@ Miscellaneous tools used by OpenERP.
 
 from functools import wraps
 import babel
-import cPickle
-import cProfile
 from contextlib import contextmanager
 import datetime
 import subprocess
-import logging
+import io
 import os
 import passlib.utils
 import re
@@ -23,24 +21,35 @@ import threading
 import time
 import werkzeug.utils
 import zipfile
-from cStringIO import StringIO
 from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
 from itertools import islice, izip, groupby, repeat
 from lxml import etree
 
-from which import which
+from .which import which
 from threading import local
 import traceback
 import csv
 from operator import itemgetter
 
 try:
+    # pylint: disable=bad-python3-import
+    import cProfile
+except ImportError:
+    import profile as cProfile
+
+try:
+    # pylint: disable=bad-python3-import
+    import cPickle as pickle_
+except ImportError:
+    import pickle as pickle_
+
+try:
     from html2text import html2text
 except ImportError:
     html2text = None
 
-from config import config
-from cache import *
+from .config import config
+from .cache import *
 from .parse_version import parse_version 
 from . import pycompat
 
@@ -227,10 +236,9 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
             zipname = tail
         zpath = os.path.join(basedir, head + '.zip')
         if zipfile.is_zipfile(zpath):
-            from cStringIO import StringIO
             zfile = zipfile.ZipFile(zpath)
             try:
-                fo = StringIO()
+                fo = io.BytesIO()
                 fo.write(zfile.read(os.path.join(
                     os.path.basename(head), zipname).replace(
                         os.sep, '/')))
@@ -1122,7 +1130,7 @@ consteq = getattr(passlib.utils, 'consteq', _consteq)
 class Pickle(object):
     @classmethod
     def load(cls, stream, errors=False):
-        unpickler = cPickle.Unpickler(stream)
+        unpickler = pickle_.Unpickler(stream)
         # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
         unpickler.find_global = None
         try:
@@ -1133,9 +1141,9 @@ class Pickle(object):
 
     @classmethod
     def loads(cls, text):
-        return cls.load(StringIO(text))
+        return cls.load(io.BytesIO(text))
 
-    dumps = cPickle.dumps
-    dump = cPickle.dump
+    dumps = pickle_.dumps
+    dump = pickle_.dump
 
 pickle = Pickle
