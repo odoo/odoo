@@ -97,7 +97,7 @@ var KanbanController = BasicController.extend({
      * The column quick create should be displayed in kanban iff grouped by an
      * m2o field and group_create action enabled.
      *
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     _isCreateColumnEnabled: function () {
         var groupCreate = this.is_action_enabled('group_create');
@@ -131,10 +131,10 @@ var KanbanController = BasicController.extend({
     _updateButtons: function () {
         if (this.$buttons) {
             var data = this.model.get(this.handle, {raw: true});
-            var create_muted = data.count === 0 && this.createColumnEnabled;
+            var createMuted = data.count === 0 && this.createColumnEnabled;
             this.$buttons.find('.o-kanban-button-new')
-                .toggleClass('btn-primary', !create_muted)
-                .toggleClass('btn-default', create_muted);
+                .toggleClass('btn-primary', !createMuted)
+                .toggleClass('btn-default', createMuted);
         }
     },
     /**
@@ -236,7 +236,7 @@ var KanbanController = BasicController.extend({
     _onLoadMore: function (event) {
         var self = this;
         var column = event.target;
-        this.model.load_more(column.db_id).then(function (db_id) {
+        this.model.loadMore(column.db_id).then(function (db_id) {
             var data = self.model.get(db_id);
             self.renderer.updateColumn(db_id, data);
         });

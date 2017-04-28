@@ -1270,7 +1270,109 @@ QUnit.module('Views', {
             "there should not be partners anymore");
 
         kanban.destroy();
+    });
 
+    QUnit.test('load more records in column', function (assert) {
+        assert.expect(9);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                '</t></templates>' +
+            '</kanban>',
+            groupBy: ['bar'],
+            viewOptions: {
+                limit: 2,
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.step([args.limit, args.offset]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 2,
+            "there should be 2 records in the column");
+
+        // load more
+        kanban.$('.o_kanban_group:eq(1)').find('.o_kanban_load_more').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 3,
+            "there should now be 3 records in the column");
+
+        assert.verifySteps([[2, undefined], [2, undefined], [2, 2]],
+            "the records should be correctly fetched");
+
+        kanban.reload();
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 2,
+            "there should be 2 records in the column after reload");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('load more records in column with x2many', function (assert) {
+        assert.expect(10);
+
+        this.data.partner.records[0].category_ids = [7];
+        this.data.partner.records[1].category_ids = [];
+        this.data.partner.records[2].category_ids = [6];
+        this.data.partner.records[3].category_ids = [];
+
+        // record [2] will be loaded after
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                '<templates><t t-name="kanban-box">' +
+                    '<div>' +
+                        '<field name="category_ids"/>' +
+                        '<field name="foo"/>' +
+                    '</div>' +
+                '</t></templates>' +
+            '</kanban>',
+            groupBy: ['bar'],
+            viewOptions: {
+                limit: 2,
+            },
+            mockRPC: function (route, args) {
+                if (args.model === 'category' && args.method === 'read') {
+                    assert.step(args.args[0]);
+                }
+                if (route === '/web/dataset/search_read') {
+                    if (args.limit) {
+                        assert.strictEqual(args.limit, 2,
+                            "the limit should be correctly set");
+                    }
+                    if (args.offset) {
+                        assert.strictEqual(args.offset, 2,
+                            "the offset should be correctly set at load more");
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 2,
+            "there should be 2 records in the column");
+
+        assert.verifySteps([[7]], "only the appearing category should be fetched");
+
+        // load more
+        kanban.$('.o_kanban_group:eq(1)').find('.o_kanban_load_more').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 3,
+            "there should now be 3 records in the column");
+
+        assert.verifySteps([[7], [6]], "the other categories should not be fetched");
+
+        kanban.destroy();
     });
 
 });
