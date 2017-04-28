@@ -103,11 +103,9 @@ QUnit.module('lunch', {
                             '"8": {' +
                                 '"note": "coucou",' +
                                 '"line_id": 8,' +
-                                '"digits": [69, 2],' +
                                 '"product_id": 1,' +
-                                '"currency": "$",' +
+                                '"currency": { "symbol": "$", "position": "before", "digits": [69, 2] },' +
                                 '"supplier": "Pizza Inn",' +
-                                '"position": "before",' +
                                 '"price": 6.9,' +
                                 '"product_name": "Pizza Margherita"' +
                             '}' +
