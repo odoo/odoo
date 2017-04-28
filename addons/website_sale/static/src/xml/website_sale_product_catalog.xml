@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <t t-name="website_sale.product_catalog">
+        <div class="row s_no_resize_cols" contenteditable="false">
+            <t t-foreach="widget.products" t-as="product">
+                <div t-attf-class="col-md-#{widget.options.size} product-item" t-att-data-product-id="product.id">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <a t-attf-href="/shop/product/#{product.id}">
+                                <img t-attf-src="/web/image/product.template/#{product.id}/image/300x300" class="img img-responsive o_not_editable"/>
+                            </a>
+                        </div>
+                        <div class="product-details">
+                            <h5 class="o_text_overflow">
+                                <strong class="name">
+                                    <a t-attf-href="/shop/product/#{product.id}" t-att-title="product.name" class="o_not_editable"><t t-esc="product.name"/></a>
+                                </strong>
+                            </h5>
+                            <h6 class="text-info description mt4 mb4" t-if="product.description_sale">
+                                <t t-raw="widget._formatDescriptionValue(product.description_sale)"/>
+                            </h6>
+                            <div class="product-buttons">
+                                <span class="price">
+                                    <strong t-if="product.product_variant_count gte 1">
+                                        <span t-esc="widget._formatCurrencyValue(product.website_price, currency_symbol, currency_position, currency_decimal_places)" />
+                                    </strong>
+                                </span>
+                                <a t-if="product.product_variant_count == 1" class="btn btn-default btn-xs add_to_cart" title="Add to cart" t-att-data-product-variant-id="product.product_variant_id">
+                                    <span class="fa fa-shopping-cart"/>
+                                </a>
+                                <a t-if="product.product_variant_count gt 1" class="btn btn-default btn-xs add_to_cart" t-attf-href="/shop/product/#{product.id}" title="Add to cart">
+                                    <span class="fa fa-shopping-cart"/>
+                                </a>
+                                <span class="rating"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <div class="col-md-12 text-center btn-products-all mt16">
+                <a href="/shop/" class="btn btn-default">View All Products</a>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="product_catalog.catagorySelection">
+        <div class="form-group">
+            <div class="alert alert-info hidden">
+                Selected catagory has no saleable products. Please select another category!
+            </div>
+            <label class="col-sm-2 control-label">Select Category</label>
+            <div class="col-sm-10">
+                <input type="hidden" name="selection"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="product_catalog.manualSelection">
+        <div>
+            <div class="form-group">
+                <label for="products" class="col-sm-2 control-label">Select Products</label>
+                <div class="col-sm-10">
+                    <input type="hidden" name="selection"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="product_catalog.reorderproducts.dialog">
+        <div class="modal-body">
+            <ul class="reorder_products list-unstyled">
+                <t t-foreach="products" t-as="submenu">
+                    <li t-att-data-menu-id="submenu.id">
+                        <div class="input-group col-sm-12">
+                            <span class="input-group-addon fa fa-bars"/>
+                            <span class="form-control">
+                                <span class="js_menu_label">
+                                    <t t-esc="submenu.name"/>
+                                </span>
+                            </span>
+                        </div>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+</template>

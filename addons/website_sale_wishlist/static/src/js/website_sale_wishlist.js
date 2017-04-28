@@ -9,10 +9,6 @@ var base = require('web_editor.base');
 var website_sale_utils = require('website_sale.utils');
 var weContext = require('web_editor.context');
 
-if(!$('.oe_website_sale').length) {
-    return $.Deferred().reject("DOM doesn't contain '.oe_website_sale'");
-}
-
 var ProductWishlist = Widget.extend({
     events: {
         'click #my_wish': 'display_wishlist',
@@ -143,6 +139,12 @@ var ProductWishlist = Widget.extend({
     }
 });
 
-new ProductWishlist();
+if($('.oe_website_sale').length) {
+    new ProductWishlist();
+}
+
+return {
+    ProductWishlist: ProductWishlist,
+};
 
 });
