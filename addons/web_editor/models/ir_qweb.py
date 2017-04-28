@@ -9,7 +9,8 @@ Also, adds methods to convert values back to Odoo models.
 """
 
 import ast
-import cStringIO
+import base64
+import io
 import itertools
 import json
 import logging
@@ -374,7 +375,7 @@ class Image(models.AbstractModel):
                 image = I.open(f)
                 image.load()
                 f.seek(0)
-                return f.read().encode('base64')
+                return base64.b64encode(f.read())
         except Exception:
             logger.exception("Failed to load local image %r", url)
             return None
@@ -390,7 +391,7 @@ class Image(models.AbstractModel):
 
             req = requests.get(url, timeout=REMOTE_CONNECTION_TIMEOUT)
             # PIL needs a seekable file-like image so wrap result in IO buffer
-            image = I.open(cStringIO.StringIO(req.content))
+            image = I.open(io.BytesIO(req.content))
             # force a complete load of the image data to validate it
             image.load()
         except Exception:
@@ -399,9 +400,9 @@ class Image(models.AbstractModel):
 
         # don't use original data in case weird stuff was smuggled in, with
         # luck PIL will remove some of it?
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         image.save(out, image.format)
-        return out.getvalue().encode('base64')
+        return base64.b64encode(out.getvalue())
 
 
 class Monetary(models.AbstractModel):

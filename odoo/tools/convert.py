@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import io
 import csv
 import logging
@@ -156,7 +156,7 @@ def _eval_xml(self, node, env):
             return data
 
         if t == 'base64':
-            return data.encode('base64')
+            return base64.b64encode(data)
 
         if t == 'int':
             d = data.strip()

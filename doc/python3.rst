@@ -61,6 +61,11 @@ features whereas:
     generator delegation, pathlib, ...), you must *not* use them in Odoo
     until Python 2 support is dropped
 
+.. note::
+
+    In the *very rare* cases where you *need* to differentiate between
+    Python 2 and Python 3, use the :data:`odoo.tools.pycompat.PY2` flag.
+
 Semantics changes
 =================
 
@@ -369,8 +374,101 @@ Minor syntax changes
   error, octal literals now follow the hexadecimal convention with a ``0o``
   prefix.
 
+.. _changed-strings:
+
+Bytes/String/Text: The Big One
+==============================
+
+The most impactful Python 3 change by far is to the text model: for historical
+reasons the distinction Python 2's bytestrings (``bytes``/``str``) and text
+strings (``unicode``) is fuzzy and it will try to implicitly convert between
+one and the other using the ASCII encoding.
+
+Python 3 changes this, it removes the implicit conversions, removes APIs which
+contribute to the fuzz and tends to strictly segregate other to work on either
+bytes or text.
+
+This is fundamentally good and mostly sensible, but it means lots of breakage:
+
+the builtins
+------------
+
+Python 3 removes both ``unicode`` and ``basestring``, and ``str`` now
+corresponds to *text* strings (the old ``unicode``) with ``bytes`` being
+bytestrings in both languages [#bytes]_.
+
+Both versions have the following prefixes for string literals:
+
+* ``b'foo'`` is a bytestring (``bytes`` object).
+
+* ``'foo'`` is that version's ``str`` type, which may be either a bytestring
+  or a text string [#native-string]_.
+
+* ``u'foo'`` is that version's text string.
+
+For best cross-version compatibility you should avoid unprefixed string
+literals unless you *specifically* need a "native string" [#native-string]_.
+
+For easier type-testing, :mod:`odoo.tools.pycompat` provides the following
+constants:
+
+* :data:`~odoo.tools.pycompat.string_types` is an alias/type tuple for testing
+  string types, essentially a replacement of testing for ``basestring`` or
+  ``(str, unicode)``.
+* :data:`~odoo.tools.pycompat.text_type` is the proper *text* type for the
+  current version, it should mostly be used for converting non-bytes objects
+  to text.
+* ``bytes`` should be avoided for type conversions, though it can be used to
+  check if an object is a bytestring.
+
+``open``
+--------
+
+.. important::
+
+    the ``open`` builtin should always be explicitly used in binary mode
+    (``rb``, ``wb``, ...)
+
+    To read *text* files, use ``io.open``.
+
+On both P2 and P3, ``open`` defaults to returning *native strings* in default
+("text") mode, however in P3 that means it actually decodes the file's bytes
+using whatever encoding was set up (default: UTF-8) while on Python 2 it has
+no concept of encoding.
+
+Using ``open`` in binary mode provides bytestrings on both versions and works
+fine. To read *text* files, use ``io.open`` and provide an explicit encoding.
+
+base64
+------
+
+base64 is a bytes->bytes conversion. bytes->bytes codecs were removed from the
+"native" encoding/decoding system which is now exclusively for bytes<->text
+conversions: text is *encoded* to bytes and bytes are *decoded* to text.
+
+.. important::
+
+    both ``bytes.encode('base64')`` and ``bytes.decode('base64')`` must be
+    migrated to using ``base64.b64encode`` and ``base64.b64decode``
+    respectively.
+
 .. _hash randomisation: http://bugs.python.org/issue13703
 
 .. _requests: http://docs.python-requests.org/
 
 .. _werkzeug: http://werkzeug.pocoo.org/docs/urls/
+
+.. [#bytes]
+
+    with the caveat that Python 3 makes them less text-y and more byte-y e.g.
+    in Python 2 ``b"foo"[0]`` is ``b"f"``, but in Python 3 it's ``102`` (the
+    value of the first byte), you'll want to *slice* bytestrings for
+    compatibility.
+
+.. [#native-string]
+
+    this is important because some API/contexts take a *native string* rather
+    than either bytes or text. The ``csv`` module of the standard library is
+    one such problematic API (it is also notoriously problematic for its
+    terrible support of non-ascii-compatible encodings in Python 2).
+    ``email.message_from_string`` is an other one.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+import io
 import requests
 from lxml import etree, objectify
-from StringIO import StringIO
 from xml.etree import ElementTree as ET
 from uuid import uuid4
 
@@ -21,7 +21,7 @@ def strip_ns(xml, ns):
     :rtype: etree._Element
     :return: the parsed xml string with the namespace prefix removed
     """
-    it = ET.iterparse(StringIO(xml))
+    it = ET.iterparse(io.BytesIO(xml))
     ns_prefix = '{%s}' % XMLNS
     for _, el in it:
         if el.tag.startswith(ns_prefix):

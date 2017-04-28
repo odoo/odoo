@@ -6,7 +6,10 @@ import sys
 PY2 = sys.version_info[0] == 2
 
 if PY2:
-    # pylint: disable=long-builtin,dict-iter-method
+    # pylint: disable=long-builtin,unichr-builtin,unicode-builtin
+    unichr = unichr
+    text_type = unicode
+    string_types = (str, unicode)
     integer_types = (int, long)
 
     keys = lambda d: iter(d.iterkeys())
@@ -24,6 +27,9 @@ if PY2:
     exec ('def reraise(tp, value, tb=None):\n raise tp, value, tb')
 else:
     # pylint: disable=bad-functions
+    unichr = chr
+    text_type = str
+    string_types = (str,)
     integer_types = (int,)
 
     keys = lambda d: iter(d.keys())

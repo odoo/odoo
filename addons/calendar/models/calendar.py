@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 import babel.dates
 import collections
@@ -173,6 +174,7 @@ class Attendee(models.Model):
         mails_to_send = self.env['mail.mail']
         for attendee in self:
             if attendee.email or attendee.partner_id.email:
+                # FIXME: is ics_file text or bytes?
                 ics_file = ics_files.get(attendee.event_id.id)
                 mail_id = invitation_template.send_mail(attendee.id)
 
@@ -181,7 +183,7 @@ class Attendee(models.Model):
                     vals['attachment_ids'] = [(0, 0, {'name': 'invitation.ics',
                                                       'mimetype': 'text/calendar',
                                                       'datas_fname': 'invitation.ics',
-                                                      'datas': str(ics_file).encode('base64')})]
+                                                      'datas': base64.b64encode(ics_file)})]
                 vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
                 vals['res_id'] = False
                 current_mail = self.env['mail.mail'].browse(mail_id)

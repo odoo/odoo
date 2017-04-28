@@ -1,4 +1,5 @@
 # coding: utf-8
+import base64
 import datetime
 import logging
 import time
@@ -469,7 +470,7 @@ class PaymentTxOgone(models.Model):
             self.write({
                 'state': new_state,
                 'acquirer_reference': tree.get('PAYID'),
-                'html_3ds': str(tree.HTML_ANSWER).decode('base64')
+                'html_3ds': base64.b64decode(tree.HTML_ANSWER.decode('ascii')),
             })
         elif status in self._ogone_wait_tx_status and tries > 0:
             time.sleep(0.5)

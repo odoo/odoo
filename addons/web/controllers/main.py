@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import babel.messages.pofile
 import base64
 import csv
@@ -8,6 +9,7 @@ import functools
 import glob
 import hashlib
 import imghdr
+import io
 import itertools
 import jinja2
 import json
@@ -22,7 +24,6 @@ import werkzeug.utils
 import werkzeug.wrappers
 import zlib
 from xml.etree import ElementTree
-from cStringIO import StringIO
 from werkzeug import url_decode
 
 
@@ -1136,8 +1137,8 @@ class Binary(http.Controller):
                                    """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
-                        image_base64 = str(row[0]).decode('base64')
-                        image_data = StringIO(image_base64)
+                        image_base64 = base64.b64decode(row[0])
+                        image_data = io.BytesIO(image_base64)
                         imgext = '.' + (imghdr.what(None, h=image_base64) or 'png')
                         response = http.send_file(image_data, filename=imgname + imgext, mtime=row[1])
                     else:
@@ -1387,7 +1388,7 @@ class CSVExport(ExportFormat, http.Controller):
         return base + '.csv'
 
     def from_data(self, fields, rows):
-        fp = StringIO()
+        fp = io.BytesIO()
         writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
 
         writer.writerow([name.encode('utf-8') for name in fields])
@@ -1453,7 +1454,7 @@ class ExcelExport(ExportFormat, http.Controller):
                     cell_style = date_style
                 worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
 
-        fp = StringIO()
+        fp = io.BytesIO()
         workbook.save(fp)
         fp.seek(0)
         data = fp.read()
