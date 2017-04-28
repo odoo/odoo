@@ -784,6 +784,16 @@ class IrModelFields(models.Model):
         for field in model._fields.itervalues():
             self._reflect_field(field)
 
+        if not self.pool._init:
+            # remove ir.model.fields that are not in self._fields
+            fields_data = self._existing_field_data(model._name)
+            extra_names = set(fields_data) - set(model._fields)
+            if extra_names:
+                # add key MODULE_UNINSTALL_FLAG in context to (1) force the
+                # removal of the fields and (2) not reload the registry
+                records = self.browse([fields_data.pop(name)['id'] for name in extra_names])
+                records.with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
+
     def _instanciate_attrs(self, field_data, partial):
         """ Return the parameters for a field instance for ``field_data``. """
         attrs = {

@@ -266,15 +266,6 @@ class BaseModel(object):
         self.env['ir.model']._reflect_model(self)
         self.env['ir.model.fields']._reflect_model(self)
         self.env['ir.model.constraint']._reflect_model(self)
-        if not self.pool._init:
-            # remove ir.model.fields that are not in self._fields
-            fields = Fields.browse([col['id']
-                                    for name, col in cols.iteritems()
-                                    if name not in self._fields])
-            # add key '_force_unlink' in context to (1) force the removal of the
-            # fields and (2) not reload the registry
-            fields.with_context(_force_unlink=True).unlink()
-
         self.invalidate_cache()
 
     @api.model
