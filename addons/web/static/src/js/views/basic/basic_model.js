@@ -32,6 +32,7 @@ odoo.define('web.BasicModel', function (require) {
  *      groupedBy: {string[]},
  *      id: {integer},
  *      isOpen: {boolean},
+ *      loadMoreOffset: {integer},
  *      limit: {integer},
  *      model: {string,
  *      offset: {integer},
@@ -617,6 +618,12 @@ var BasicModel = AbstractModel.extend({
         }
         if (options.offset !== undefined) {
             this._setOffset(element.id, options.offset);
+        }
+        if (options.loadMoreOffset !== undefined) {
+            element.loadMoreOffset = options.loadMoreOffset;
+        } else {
+            // reset if not specified
+            element.loadMoreOffset = 0;
         }
         if (options.currentId !== undefined) {
             element.res_id = options.currentId;
@@ -2086,6 +2093,7 @@ var BasicModel = AbstractModel.extend({
             id: _.uniqueId(params.modelName + '_'),
             isOpen: params.isOpen,
             limit: type === 'record' ? 1 : params.limit,
+            loadMoreOffset: 0,
             model: params.modelName,
             offset: params.offset || (type === 'record' ? _.indexOf(res_ids, res_id) : 0),
             openGroupByDefault: params.openGroupByDefault,
@@ -2636,11 +2644,12 @@ var BasicModel = AbstractModel.extend({
             context: list.context,
             domain: list.domain || [],
             limit: list.limit,
-            offset: list.offset,
+            offset: list.loadMoreOffset + list.offset,
             orderBy: list.orderedBy,
         })
         .then(function (result) {
             list.count = result.length;
+            var ids = _.pluck(result.records, 'id');
             var data = _.map(result.records, function (record) {
                 var dataPoint = self._makeDataPoint({
                     data: record,
@@ -2655,8 +2664,13 @@ var BasicModel = AbstractModel.extend({
                 self._parseServerData(fieldNames, dataPoint.fields, dataPoint.data);
                 return dataPoint.id;
             });
-            list.data = data;
-            list.res_ids = _.pluck(result.records, 'id');
+            if (list.loadMoreOffset) {
+                list.data = list.data.concat(data);
+                list.res_ids = list.res_ids.concat(ids);
+            } else {
+                list.data = data;
+                list.res_ids = ids;
+            }
             return list;
         });
     },

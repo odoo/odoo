@@ -90,6 +90,19 @@ var KanbanModel = BasicModel.extend({
         return this._super(params);
     },
     /**
+     * Load more records in a group.
+     *
+     * @param {string} groupID localID of the group
+     * @returns {Deferred<string>} resolves to the localID of the group
+     */
+    loadMore: function (groupID) {
+        var group = this.localData[groupID];
+        var offset = group.loadMoreOffset + group.limit;
+        return this.reload(group.id, {
+            loadMoreOffset: offset,
+        });
+    },
+    /**
      * Moves a record from a group to another.
      *
      * @param {string} recordID localID of the record
