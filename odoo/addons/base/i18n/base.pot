@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~15+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 15:41+0000\n"
-"PO-Revision-Date: 2017-04-18 15:41+0000\n"
+"POT-Creation-Date: 2017-04-28 13:36+0000\n"
+"PO-Revision-Date: 2017-04-28 13:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -4387,7 +4387,7 @@ msgid "%y - Year without century [00,99].\""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1367
+#: code:addons/base/ir/ir_model.py:1377
 #, python-format
 msgid "'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id"
 msgstr ""
@@ -5108,6 +5108,11 @@ msgid "Add Delivery Costs to Online Sales"
 msgstr ""
 
 #. module: base
+#: selection:ir.actions.server,state:0
+msgid "Add Followers"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast_grid
 msgid "Add Grid view on Project Forecasts"
 msgstr ""
@@ -5268,9 +5273,9 @@ msgid "Administrative divisions of a country. E.g. Fed. State, Departement, Cant
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:873
-#: code:addons/base/ir/ir_model.py:985
-#: code:addons/base/ir/ir_model.py:1477
+#: code:addons/base/ir/ir_model.py:883
+#: code:addons/base/ir/ir_model.py:995
+#: code:addons/base/ir/ir_model.py:1487
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr ""
@@ -5371,11 +5376,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_account_voucher
 msgid "Allows you to create your invoices and track the payments. It is an easier version of the accounting module for managers who are not accountants."
-msgstr ""
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Also you will find here all the related documents and download it by clicking on any individual document."
 msgstr ""
 
 #. module: base
@@ -5707,6 +5707,11 @@ msgid "Auto Search"
 msgstr ""
 
 #. module: base
+#: selection:ir.actions.server,usage:0
+msgid "Automated Action"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
 msgstr ""
@@ -5815,6 +5820,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_bank_ids
 #: model:ir.ui.view,arch_db:base.view_res_bank_tree
 msgid "Banks"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_partner_barcode
+#: model:ir.model.fields,help:base.field_res_users_barcode
+msgid "BarCode"
 msgstr ""
 
 #. module: base
@@ -6518,13 +6529,13 @@ msgid "City Addresses"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_ui_view_custom
-msgid "Click here to create a customized view"
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to attach a new document."
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to create new documents."
+#: model:ir.actions.act_window,help:base.action_ui_view_custom
+msgid "Click here to create a customized view"
 msgstr ""
 
 #. module: base
@@ -7092,6 +7103,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr ""
 
@@ -7309,7 +7321,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -7629,6 +7640,18 @@ msgstr ""
 #. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Days"
+msgstr ""
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid "Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
 msgstr ""
 
 #. module: base
@@ -8012,8 +8035,8 @@ msgid "Document Management"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1140
-#: code:addons/base/ir/ir_model.py:1143
+#: code:addons/base/ir/ir_model.py:1150
+#: code:addons/base/ir/ir_model.py:1153
 #, python-format
 msgid "Document model"
 msgstr ""
@@ -8236,6 +8259,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources
+#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Employees"
 msgstr ""
 
@@ -9730,6 +9754,12 @@ msgid "ID"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
+#: model:ir.model.fields,help:base.field_ir_cron_xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr ""
@@ -11144,13 +11174,13 @@ msgid "Madam"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:472
+#: code:addons/base/ir/ir_mail_server.py:476
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:470
+#: code:addons/base/ir/ir_mail_server.py:474
 #, python-format
 msgid "Mail delivery failed via SMTP server '%s'.\n"
 "%s: %s"
@@ -12286,7 +12316,7 @@ msgid "Only applies if this view inherits from an other one (inherit_id is not F
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1140
+#: code:addons/base/ir/ir_model.py:1150
 #, python-format
 msgid "Only users with the following access level are currently allowed to do that"
 msgstr ""
@@ -12767,7 +12797,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1143
+#: code:addons/base/ir/ir_model.py:1153
 #, python-format
 msgid "Please contact your system administrator if you think this is an error."
 msgstr ""
@@ -13318,7 +13348,7 @@ msgid "Record Rules"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:234
+#: code:addons/base/ir/ir_cron.py:235
 #, python-format
 msgid "Record cannot be modified right now: This cron task is currently being executed and may not be modified Please try again in a few minutes"
 msgstr ""
@@ -14008,6 +14038,11 @@ msgid "Sell based on timesheets"
 msgstr ""
 
 #. module: base
+#: selection:ir.actions.server,state:0
+msgid "Send Email"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Send Invoices and Track Payments"
 msgstr ""
@@ -14317,25 +14352,25 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_attachment.py:338
-#: code:addons/base/ir/ir_model.py:1134
+#: code:addons/base/ir/ir_model.py:1144
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1136
+#: code:addons/base/ir/ir_model.py:1146
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1137
+#: code:addons/base/ir/ir_model.py:1147
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1135
+#: code:addons/base/ir/ir_model.py:1145
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr ""
@@ -14862,6 +14897,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr ""
 
@@ -16336,7 +16372,7 @@ msgid "Warehouse Management: Waves"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:482
+#: code:addons/base/ir/ir_mail_server.py:486
 #: code:addons/base/ir/ir_model.py:408
 #: code:addons/base/ir/ir_model.py:483
 #: code:addons/base/res/res_partner.py:338
@@ -16810,7 +16846,7 @@ msgid "Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTL
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:483
+#: code:addons/base/ir/ir_mail_server.py:487
 #, python-format
 msgid "Your server does not seem to support SSL, you may want to try STARTTLS instead"
 msgstr ""
@@ -17529,6 +17565,11 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "text"
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_user
+msgid "the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system."
 msgstr ""
 
 #. module: base
