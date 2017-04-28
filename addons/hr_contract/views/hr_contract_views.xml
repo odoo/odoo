@@ -68,6 +68,7 @@
                         <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
                         <filter string="Contract Type" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="State" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
                     </group>
                 </search>
             </field>
@@ -145,8 +146,8 @@
                 <tree string="Contracts" decoration-bf="message_needaction == True">
                     <field name="name"/>
                     <field name="employee_id"/>
-                    <field name="type_id"/>
                     <field name="job_id"/>
+                    <field name="type_id"/>
                     <field name="resource_calendar_id"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
@@ -156,13 +157,50 @@
             </field>
         </record>
 
+        <record id="hr_contract_view_kanban" model="ir.ui.view">
+            <field name="name">hr.contract.kanban</field>
+            <field name="model">hr.contract</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_small_column">
+                    <field name="employee_id"/>
+                    <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="edit">Edit Contract</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                </ul>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="text-muted">
+                                    <field name="job_id"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('hr.employee', 'image', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+         </record>
+
         <record id="action_hr_contract" model="ir.actions.act_window">
             <field name="name">Contracts</field>
             <field name="res_model">hr.contract</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-            <field name="context">{'search_default_current':1}</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('employee_id', '!=', False)]</field>
+            <field name="context">{'search_default_current':1, 'search_default_group_by_state': 1}</field>
             <field name="search_view_id" ref="hr_contract_view_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -227,5 +265,6 @@
             parent="hr.menu_hr_root"
             sequence="4"
             groups="hr.group_hr_manager"/>
+
 
 </odoo>
