@@ -97,7 +97,7 @@ class account_invoice(models.Model):
         return journal[0]
 
     @api.one
-    @api.depends('account_id', 'move_id.line_id.account_id', 'move_id.line_id.reconcile_id')
+    @api.depends('account_id', 'move_id.line_id.account_id', 'move_id.line_id.reconcile_id', 'move_id.line_id.reconcile_partial_id')
     def _compute_reconciled(self):
         self.reconciled = self.test_paid()
 
@@ -634,7 +634,11 @@ class account_invoice(models.Model):
             return False
         query = "SELECT count(*) FROM account_move_line WHERE reconcile_id IS NULL AND id IN %s"
         self._cr.execute(query, (tuple(line_ids),))
-        return self._cr.fetchone()[0] == 0
+        if self._cr.fetchone()[0] == 0:
+            return True
+
+        lines = self.env['account.move.line'].browse(line_ids)
+        return all(l.amount_residual <= 0.0 and l.amount_residual_currency <= 0.0 for l in lines)
 
     @api.multi
     def button_reset_taxes(self):
