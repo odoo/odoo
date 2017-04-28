@@ -664,6 +664,31 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('use default_order', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.strictEqual(args.sort, 'foo ASC',
+                        "should correctly set the sort attribute");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(list.$('tbody tr:first td:contains(blip)').length,
+            "record 3 should be first");
+        assert.ok(list.$('tbody tr:eq(3) td:contains(yop)').length,
+            "record 1 should be first");
+
+        list.destroy();
+    });
+
     QUnit.test('can display button in edit mode', function (assert) {
         assert.expect(1);
 
