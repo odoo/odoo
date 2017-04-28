@@ -247,6 +247,20 @@ ListRenderer.include({
         return n;
     },
     /**
+     * Move the cursor one the beginning of the next line, if possible.
+     * If there is no next line, then we create a new record.
+     *
+     * @private
+     */
+    _moveToNextLine: function () {
+        if (this.currentRow < this.state.data.length - 1) {
+            this._selectCell(this.currentRow + 1, 0);
+        } else {
+            this._unselectRow();
+            this.trigger_up('add_record');
+        }
+    },
+    /**
      * @override
      * @returns {Deferred}
      */
@@ -507,18 +521,6 @@ ListRenderer.include({
         }
     },
     /**
-     * If the list view editable, just let the event bubble. We don't want to
-     * open the record in this case anyway.
-     *
-     * @override
-     * @private
-     */
-    _onRowClicked: function () {
-        if (this.mode === 'readonly' || !this.editable) {
-            this._super.apply(this, arguments);
-        }
-    },
-    /**
      * We need to manually unselect row, because noone else would do it
      */
     _onEmptyRowClick: function (event) {
@@ -561,21 +563,17 @@ ListRenderer.include({
         ev.stopPropagation();
         if (this.currentCol + 1 < this.columns.length) {
             this._selectCell(this.currentRow, this.currentCol + 1);
-        } else if (this.currentRow < this.state.data.length - 1) {
-            this._selectCell(this.currentRow + 1, 0);
+        } else {
+            this._moveToNextLine();
         }
     },
     /**
-     * Move the cursor one the beginning of the next line, if possible. This is
-     * called when the user press the ENTER key.
+     * @private
+     * @param {OdooEvent} event
      */
-    _onMoveNextLine: function () {
-        if (this.currentRow < this.state.data.length - 1) {
-            this._selectCell(this.currentRow + 1, 0);
-        } else {
-            this._unselectRow();
-            this.trigger_up('add_record');
-        }
+    _onMoveNextLine: function (event) {
+        event.stopPropagation();
+        this._moveToNextLine();
     },
     /**
      * Move the cursor on the previous available cell, so either the previous
@@ -608,6 +606,18 @@ ListRenderer.include({
     _onMoveUp: function () {
         if (this.currentRow > 0) {
             this._selectCell(this.currentRow - 1, this.currentCol);
+        }
+    },
+    /**
+     * If the list view editable, just let the event bubble. We don't want to
+     * open the record in this case anyway.
+     *
+     * @override
+     * @private
+     */
+    _onRowClicked: function () {
+        if (this.mode === 'readonly' || !this.editable) {
+            this._super.apply(this, arguments);
         }
     },
     /**
