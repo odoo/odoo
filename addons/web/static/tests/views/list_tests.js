@@ -1584,6 +1584,39 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('pressing tab on last cell of editable list view', function (assert) {
+        assert.expect(7);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>',
+            mockRPC: function (route) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        list.$('td:contains(blip)').last().click();
+        assert.strictEqual(document.activeElement.name, "foo",
+            "focus should be on an input with name = foo");
+
+        list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: 9}); // tab
+        assert.strictEqual(document.activeElement.name, "int_field",
+            "focus should be on an input with name = int_field");
+
+        list.$('tr.o_selected_row input[name="int_field"]').trigger({type: 'keydown', which: 9}); // tab
+
+        assert.ok(list.$('tr.o_data_row:eq(4)').hasClass('o_selected_row'),
+            "5th row should be selected");
+        assert.strictEqual(document.activeElement.name, "foo",
+            "focus should be on an input with name = foo");
+
+        assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/foo/default_get']);
+        list.destroy();
+    });
+
 });
 
 });
