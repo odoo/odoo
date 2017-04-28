@@ -12,12 +12,12 @@
             <field name="auto_delete" eval="True"/>
             <field name="report_template" ref="report_event_registration_badge"/>
             <field name="report_name">badge_of_${(object.event_id.name or '').replace('/','_')}</field>
-            <field name="body_html"><![CDATA[
-<p>Dear ${object.name},</p>
+            <field name="body_html" type="html">
+<p>Dear <t t-esc="record.name"/>,</p>
 <p>Thank you for your inquiry.</p>
-<p>Here is your badge for the event ${object.event_id.name}.</p>
+<p>Here is your badge for the event <t t-esc="record.event_id.name"/>.</p>
 <p>If you have any questions, please let us know.</p>
-<p>Best regards,</p>]]></field>
+<p>Best regards,</p></field>
         </record>
 
         <record id="event_subscription" model="mail.template">
