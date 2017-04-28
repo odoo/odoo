@@ -34,6 +34,7 @@ var KanbanView = BasicView.extend({
 
         var activeActions = this.controllerParams.activeActions;
         activeActions = _.extend(activeActions, {
+            group_create: arch.attrs.group_create ? JSON.parse(arch.attrs.group_create) : true,
             group_edit: arch.attrs.group_edit ? JSON.parse(arch.attrs.group_edit) : true,
             group_delete: arch.attrs.group_delete ? JSON.parse(arch.attrs.group_delete) : true,
         });
@@ -41,7 +42,7 @@ var KanbanView = BasicView.extend({
         this.rendererParams.column_options = {
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
-            group_creatable: true,
+            group_creatable: activeActions.group_create,
             quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(viewInfo),
         };
         this.rendererParams.record_options = {
