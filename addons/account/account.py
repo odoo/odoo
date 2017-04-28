@@ -2112,8 +2112,11 @@ class account_tax(osv.osv):
         # rounding after the sum of the tax amounts of each line
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         tax_compute_precision = precision
+        tax_compute_precision_rounding = False
         if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
             tax_compute_precision += 5
+        elif taxes:
+            tax_compute_precision_rounding = taxes[0].company_id.currency_id.rounding
         totalin = totalex = round(price_unit * quantity, precision)
         tin = []
         tex = []
@@ -2122,7 +2125,7 @@ class account_tax(osv.osv):
                 tex.append(tax)
             else:
                 tin.append(tax)
-        tin = self.compute_inv(cr, uid, tin, price_unit, quantity, product=product, partner=partner, precision=tax_compute_precision)
+        tin = self._compute_inv(cr, uid, tin, price_unit, quantity, product=product, partner=partner, precision=tax_compute_precision, precision_rounding=tax_compute_precision_rounding)
         for r in tin:
             totalex -= r.get('amount', 0.0)
         totlex_qty = 0.0
@@ -2130,7 +2133,7 @@ class account_tax(osv.osv):
             totlex_qty = totalex/quantity
         except:
             pass
-        tex = self._compute(cr, uid, tex, totlex_qty, quantity, product=product, partner=partner, precision=tax_compute_precision)
+        tex = self._compute(cr, uid, tex, totlex_qty, quantity, product=product, partner=partner, precision=tax_compute_precision, precision_rounding=tax_compute_precision_rounding)
         for r in tex:
             totalin += r.get('amount', 0.0)
         return {
@@ -2149,7 +2152,7 @@ class account_tax(osv.osv):
         _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
         return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
 
-    def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
+    def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None, precision_rounding=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
 
@@ -2164,9 +2167,15 @@ class account_tax(osv.osv):
         total = 0.0
         for r in res:
             if r.get('balance',False):
-                r['amount'] = round(r.get('balance', 0.0) * quantity, precision) - total
+                if precision_rounding:
+                    r['amount'] = round(r.get('balance', 0.0) * quantity, precision_rounding=precision_rounding) - total
+                else:
+                    r['amount'] = round(r.get('balance', 0.0) * quantity, precision) - total
             else:
-                r['amount'] = round(r.get('amount', 0.0) * quantity, precision)
+                if precision_rounding:
+                    r['amount'] = round(r.get('amount', 0.0) * quantity, precision_rounding=precision_rounding)
+                else:
+                    r['amount'] = round(r.get('amount', 0.0) * quantity, precision)
                 total += r['amount']
         return res
 
@@ -2253,6 +2262,12 @@ class account_tax(osv.osv):
 
     def compute_inv(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
         """
+        Wrapper for `_compute_inv` kept for compatibility reason.
+        """
+        return self._compute_inv(cr, uid, taxes, price_unit, quantity, product=product, partner=partner, precision=precision)
+
+    def _compute_inv(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None, precision_rounding=None):
+        """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
         Price Unit is a Tax included price
 
@@ -2267,9 +2282,15 @@ class account_tax(osv.osv):
         total = 0.0
         for r in res:
             if r.get('balance',False):
-                r['amount'] = round(r['balance'] * quantity, precision) - total
+                if precision_rounding:
+                    r['amount'] = round(r['balance'] * quantity, precision_rounding=precision_rounding) - total
+                else:
+                    r['amount'] = round(r['balance'] * quantity, precision) - total
             else:
-                r['amount'] = round(r['amount'] * quantity, precision)
+                if precision_rounding:
+                    r['amount'] = round(r['amount'] * quantity, precision_rounding=precision_rounding)
+                else:
+                    r['amount'] = round(r['amount'] * quantity, precision)
                 total += r['amount']
         return res
 
