@@ -16,20 +16,20 @@
         <field name="lang">${object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
-        <field name="body_html"><![CDATA[
-          <div style="background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+        <field name="body_html" type="html">
+        <div style="background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
             <table style="width:600px;margin:10px auto;">
                 <tbody>
                     <tr>
                         <td>
                             <a href="/">
-                                <img src="/logo" alt="${object.company_id.name}" style="vertical-align:baseline;max-width:100px;" />
+                                <img src="/logo" t-att-alt="record.company_id.name" style="vertical-align:baseline;max-width:100px;" />
                             </a>
                         </td>
                         <td style="text-align:right;vertical-align:middle;">
-                            % if 'website_url' in object.job_id and object.job_id.website_url:
-                                <a href="${object.job_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">Job Description</a>
-                            % endif
+                            <t t-if="'website_url' in record.job_id and record.job_id.website_url">
+                                <a t-attf-href="#{record.job_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">Job Description</a>
+                            </t>
                         </td>
                     </tr>
                 </tbody>
@@ -41,7 +41,7 @@
                         Hi,
                     </p><p style="font-size:16px;">
                         Thank you for your interest in joining the
-                        <b>${object.company_id.name}</b> team.  We wanted to
+                        <b><t t-esc="record.company_id.name"/></b> team.  We wanted to
                         let you know that, although your resume is competitive,
                         our hiring team reviewed your application and <b>did not
                         select it for further consideration</b>.
@@ -65,14 +65,15 @@
                     </p>
 
                     <p style="color:grey;">-- <br/>
-                    % if object.user_id:
-                        <strong>${object.user_id.name}</strong><br/>
-                        Email: ${object.user_id.email or ''}<br/>
-                        Phone: ${object.user_id.phone or ''}
-                    % else:
-                        ${object.company_id.name}<br/>
+                    <t t-if="record.user_id">
+                        <strong t-esc="record.user_id.name"/><br/>
+                        Email: <t t-esc="record.user_id.email or ''"/><br/>
+                        Phone: <t t-esc="record.user_id.phone or ''"/>
+                    </t>
+                    <t t-else="">
+                        <t t-esc="record.company_id.name"/><br/>
                         The HR Team
-                    % endif
+                    </t>
                     </p>
 
                 </td>
@@ -82,19 +83,17 @@
                 <tbody>
                     <tr>
                         <td style="padding-top:10px;font-size: 12px;">
-                            <div>Sent by ${object.company_id.name}</div>
-                            % if 'website_url' in object.job_id and object.job_id.website_url:
-                            <div>
+                            <div>Sent by <t t-esc="record.company_id.name"/></div>
+                            <div t-if="'website_url' in record.job_id and record.job_id.website_url">
                                 Discover <a href="/jobs" style="text-decoration:none;color:#717188;">our others jobs</a>.
                             </div>
-                            % endif
                         </td>
                     </tr>
                 </tbody>
             </table>
 
           </div>
-        ]]></field>
+        </field>
     </record>
 
     <record id="email_template_data_applicant_interest" model="mail.template">
