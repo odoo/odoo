@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import uuid
 
 from odoo import api, fields, models, tools, _
@@ -70,7 +70,7 @@ class Rating(models.Model):
         for rating in self:
             try:
                 image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % (int(rating.rating),))
-                rating.rating_image = open(image_path, 'rb').read().encode('base64')
+                rating.rating_image = base64.b64decode(open(image_path, 'rb').read())
             except (IOError, OSError):
                 rating.rating_image = False
 

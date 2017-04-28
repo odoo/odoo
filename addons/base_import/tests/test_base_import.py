@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import csv
 import io
 import unittest
@@ -527,16 +527,16 @@ class test_failures(TransactionCase):
         Ensure big fields (e.g. b64-encoded image data) can be imported and
         we're not hitting limits of the default CSV parser config
         """
-        import csv, cStringIO
+        import csv, io
         from PIL import Image
 
         im = Image.new('RGB', (1920, 1080))
-        fout = cStringIO.StringIO()
+        fout = io.BytesIO()
 
         writer = csv.writer(fout, dialect=None)
         writer.writerows([
             ['name', 'db_datas'],
-            ['foo', im.tobytes().encode('base64')]
+            ['foo', base64.b64encode(im.tobytes())]
         ])
 
         import_wizard = self.env['base_import.import'].create({

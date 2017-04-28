@@ -17,12 +17,6 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import ustr
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-
-
 FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
 _logger = logging.getLogger(__name__)
@@ -269,7 +263,7 @@ class Import(models.TransientModel):
             csv_data = csv_data.decode(encoding).encode('utf-8')
 
         csv_iterator = csv.reader(
-            StringIO(csv_data),
+            io.BytesIO(csv_data),
             quotechar=str(options['quoting']),
             delimiter=str(options['separator']))
 

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import io
 import logging
 import PyPDF2
 import xml.dom.minidom
 import zipfile
-
-from StringIO import StringIO
 
 from odoo import api, models
 
@@ -41,7 +40,7 @@ class IrAttachment(models.Model):
     def _index_docx(self, bin_data):
         '''Index Microsoft .docx documents'''
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -57,7 +56,7 @@ class IrAttachment(models.Model):
         '''Index Microsoft .pptx documents'''
 
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -75,7 +74,7 @@ class IrAttachment(models.Model):
         '''Index Microsoft .xlsx documents'''
 
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -91,7 +90,7 @@ class IrAttachment(models.Model):
         '''Index OpenDocument documents (.odt, .ods...)'''
 
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -108,7 +107,7 @@ class IrAttachment(models.Model):
 
         buf = u""
         if bin_data.startswith('%PDF-'):
-            f = StringIO(bin_data)
+            f = io.BytesIO(bin_data)
             try:
                 pdf = PyPDF2.PdfFileReader(f, overwriteWarnings=False)
                 for page in pdf.pages:

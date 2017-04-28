@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 import re
 from collections import OrderedDict
 from io import BytesIO
@@ -269,15 +270,15 @@ class ImageConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        try:
-            image = Image.open(BytesIO(value.decode('base64')))
+        try: # FIXME: maaaaaybe it could also take raw bytes?
+            image = Image.open(BytesIO(base64.b64decode(value)))
             image.verify()
         except IOError:
             raise ValueError("Non-image binary fields can not be converted to HTML")
         except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
-        return unicodifier('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value))
+        return unicodifier(b'<img src="data:%s;base64,%s">' % (Image.MIME[image.format].encode('ascii'), value))
 
 
 class MonetaryConverter(models.AbstractModel):
@@ -427,8 +428,8 @@ class BarcodeConverter(models.AbstractModel):
         barcode = self.env['ir.actions.report'].barcode(
             barcode_type,
             value,
-            **dict((key, value) for key, value in options.items() if key in ['width', 'height', 'humanreadable']))
-        return unicodifier('<img src="data:%s;base64,%s">' % ('png', barcode.encode('base64')))
+            **{key: value for key, value in pycompat.items(options) if key in ['width', 'height', 'humanreadable']})
+        return u'<img src="data:png;base64,%s">' % base64.b64encode(barcode).decode('ascii')
 
     @api.model
     def from_html(self, model, field, element):

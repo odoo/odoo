@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 import logging
 import os
 import sys
@@ -63,8 +64,8 @@ class IrModule(models.Model):
             for root, dirs, files in os.walk(path_static):
                 for static_file in files:
                     full_path = opj(root, static_file)
-                    with open(full_path, 'r') as fp:
-                        data = fp.read().encode('base64')
+                    with open(full_path, 'rb') as fp:
+                        data = base64.b64encode(fp.read())
                     url_path = '/%s%s' % (module, full_path.split(path)[1].replace(os.path.sep, '/'))
                     url_path = url_path.decode(sys.getfilesystemencoding())
                     filename = os.path.split(url_path)[1]

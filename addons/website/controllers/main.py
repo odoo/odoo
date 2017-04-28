@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import datetime
 from itertools import islice
 import json
@@ -149,7 +149,7 @@ class Website(Home):
 
         def create_sitemap(url, content):
             return Attachment.create({
-                'datas': content.encode('base64'),
+                'datas': base64.b64encode(content),
                 'mimetype': mimetype,
                 'type': 'binary',
                 'name': url,
@@ -162,7 +162,7 @@ class Website(Home):
             create_date = fields.Datetime.from_string(sitemap.create_date)
             delta = datetime.datetime.now() - create_date
             if delta < SITEMAP_CACHE_TIME:
-                content = sitemap.datas.decode('base64')
+                content = base64.b64decode(sitemap)
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
