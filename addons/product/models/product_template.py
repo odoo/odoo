@@ -101,7 +101,7 @@ class ProductTemplate(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('product.template'), index=1)
     packaging_ids = fields.One2many(
-        'product.packaging', string="Packaging", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
+        'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")
     seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors')
 
