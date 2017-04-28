@@ -164,6 +164,31 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('do not perform extra RPC to read invisible many2one fields', function (assert) {
+        assert.expect(3);
+
+        this.data.foo.fields.m2o.default = 2;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" invisible="1"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                assert.step(_.last(route.split('/')));
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+        assert.verifySteps(['search_read', 'default_get'], "no nameget should be done");
+
+        list.destroy();
+    });
+
     QUnit.test('at least 4 rows are rendered, even if less data', function (assert) {
         assert.expect(1);
 

@@ -3819,5 +3819,61 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('do not perform extra RPC to read invisible many2one fields', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.trululu.default = 2;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="trululu" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.verifySteps(['default_get'], "only one RPC should have been done");
+
+        form.destroy();
+    });
+
+    QUnit.test('do not perform extra RPC to read invisible x2many fields', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].p = [2]; // one2many
+        this.data.partner.records[0].product_ids = [37]; // one2many
+        this.data.partner.records[0].timmy = [12]; // many2many
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p" invisible="1"/>' + // no inline view
+                        '<field name="product_ids" invisible="1">' + // inline view
+                            '<tree><field name="display_name"/></tree>' +
+                        '</field>' +
+                        '<field name="timmy" invisible="1" widget="many2many_tags"/>' + // no view
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+        });
+
+        assert.verifySteps(['read'], "only one read should have been done");
+
+        form.destroy();
+    });
 });
 });
