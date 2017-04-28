@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import cStringIO
+import base64
 import io
 import json
 import logging
@@ -14,10 +13,10 @@ from lxml import etree, html
 
 from odoo.http import request
 from odoo import http, tools
+from odoo.tools import pycompat
 from odoo.modules.module import get_resource_path, get_module_path
 
 logger = logging.getLogger(__name__)
-
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
@@ -96,7 +95,7 @@ class Web_Editor(http.Controller):
         font_obj = ImageFont.truetype(addons_path + font, size)
 
         # if received character is not a number, keep old behaviour (icon is character)
-        icon = unichr(int(icon)) if icon.isdigit() else icon
+        icon = pycompat.unichr(int(icon)) if icon.isdigit() else icon
 
         # Determine the dimensions of the icon
         image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))
@@ -165,7 +164,7 @@ class Web_Editor(http.Controller):
                 for c_file in request.httprequest.files.getlist('upload'):
                     data = c_file.read()
                     try:
-                        image = Image.open(cStringIO.StringIO(data))
+                        image = Image.open(io.BytesIO(data))
                         w, h = image.size
                         if w*h > 42e6: # Nokia Lumia 1020 photo resolution
                             raise ValueError(
@@ -178,7 +177,7 @@ class Web_Editor(http.Controller):
 
                     attachment = Attachments.create({
                         'name': c_file.filename,
-                        'datas': data.encode('base64'),
+                        'datas': base64.b64encode(data),
                         'datas_fname': c_file.filename,
                         'public': True,
                         'res_model': 'ir.ui.view',
@@ -316,7 +315,7 @@ class Web_Editor(http.Controller):
                     content = None
                     if url_info["customized"]:
                         # If the file is already customized, the content is found in the corresponding attachment
-                        content = custom_attachments.filtered(lambda a: a.url == url).datas.decode("base64")
+                        content = base64.b64decode(custom_attachments.filtered(lambda a: a.url == url).datas)
                     else:
                         # If the file is not yet customized, the content is found by reading the local less file
                         module = url_info["module"]
@@ -354,14 +353,14 @@ class Web_Editor(http.Controller):
         custom_attachment = IrAttachment.search([("url", "=", custom_url)])
         if custom_attachment:
             # If it was already modified, simply override the corresponding attachment content
-            custom_attachment.write({"datas": content.encode("utf-8").encode("base64")})
+            custom_attachment.write({"datas": base64.b64encode(content.encode("utf-8"))})
         else:
             # If not, create a new attachment to copy the original LESS file content, with its modifications
             IrAttachment.create(dict(
                 name = custom_url,
                 type = "binary",
                 mimetype = "text/less",
-                datas = content.encode("utf-8").encode("base64"),
+                datas = base64.b64encode(content.encode("utf-8")),
                 datas_fname = url.split("/")[-1],
                 url = custom_url, # Having an attachment of "binary" type with an non empty "url" field
                                   # is quite of an hack. This allows to fetch the "datas" field by adding

@@ -154,7 +154,7 @@ class IrHttp(models.AbstractModel):
                 return response
 
             response.mimetype = attach[0]['mimetype'] or 'application/octet-stream'
-            response.data = datas.decode('base64')
+            response.data = base64.b64decode(datas)
             return response
 
     @classmethod

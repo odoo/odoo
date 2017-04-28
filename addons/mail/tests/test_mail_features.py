@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 from odoo.addons.mail.tests.common import TestMail
 from odoo.addons.mail.tests.test_mail_gateway import MAIL_TEMPLATE_PLAINTEXT
@@ -89,8 +90,8 @@ class TestMessagePost(TestMail):
         _body, _body_alt = '<p>Test Body</p>', 'Test Body'
         _subject = 'Test Subject'
         _attachments = [
-            ('List1', 'My first attachment'),
-            ('List2', 'My second attachment')
+            ('List1', b'My first attachment'),
+            ('List2', b'My second attachment')
         ]
         _attach_1 = self.env['ir.attachment'].sudo(self.user_employee).create({
             'name': 'Attach1', 'datas_fname': 'Attach1',
@@ -129,7 +130,7 @@ class TestMessagePost(TestMail):
                          'message_post: all atttachments should be linked to the mail.test model')
         self.assertEqual(set(msg.attachment_ids.mapped('res_id')), set([self.test_pigs.id]),
                          'message_post: all atttachments should be linked to the pigs group')
-        self.assertEqual(set([x.decode('base64') for x in msg.attachment_ids.mapped('datas')]),
+        self.assertEqual(set([base64.b64decode(x) for x in msg.attachment_ids.mapped('datas')]),
                          set(['migration test', _attachments[0][1], _attachments[1][1]]))
         self.assertTrue(set([_attach_1.id, _attach_2.id]).issubset(msg.attachment_ids.ids),
                         'message_post: mail.message attachments duplicated')

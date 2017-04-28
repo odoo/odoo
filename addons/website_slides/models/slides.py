@@ -3,6 +3,7 @@
 import requests
 from PIL import Image
 
+import base64
 import datetime
 import io
 import json
@@ -502,7 +503,7 @@ class Slide(models.Model):
             if content_type == 'json':
                 result['values'] = json.loads(content)
             elif content_type in ('image', 'pdf'):
-                result['values'] = content.encode('base64')
+                result['values'] = base64.b64encode(content)
             else:
                 result['values'] = content
         except requests.exceptions.HTTPError as e:
@@ -565,7 +566,7 @@ class Slide(models.Model):
             # TDE FIXME: WTF ??
             slide_type = 'presentation'
             if vals.get('image'):
-                image = Image.open(io.BytesIO(vals['image'].decode('base64')))
+                image = Image.open(io.BytesIO(base64.b64decode(vals['image'])))
                 width, height = image.size
                 if height > width:
                     return 'document'

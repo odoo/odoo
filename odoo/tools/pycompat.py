@@ -6,7 +6,10 @@ import sys
 PY2 = sys.version_info[0] == 2
 
 if PY2:
-    # pylint: disable=long-builtin,dict-iter-method
+    # pylint: disable=long-builtin,unichr-builtin,unicode-builtin
+    unichr = unichr
+    text_type = unicode
+    string_types = (str, unicode)
     integer_types = (int, long)
     round = round
 
@@ -26,6 +29,9 @@ if PY2:
 else:
     import builtins, math
     # pylint: disable=bad-functions
+    unichr = chr
+    text_type = str
+    string_types = (str,)
     integer_types = (int,)
     def round(f):
         # P3's builtin round differs from P2 in the following manner:
