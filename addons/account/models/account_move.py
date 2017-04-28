@@ -595,6 +595,7 @@ class AccountMoveLine(models.Model):
                 FROM account_move_line a, account_move_line b
                 WHERE a.amount_residual = -b.amount_residual
                 AND NOT a.reconciled AND NOT b.reconciled
+                AND a.ref = b.ref
                 AND a.account_id = %(account_id)s AND b.account_id = %(account_id)s
                 {partner_id_condition}
                 ORDER BY a.date desc
