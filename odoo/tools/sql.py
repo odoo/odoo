@@ -77,12 +77,14 @@ def convert_column(cr, tablename, columnname, columntype):
                        log_exceptions=False)
     except psycopg2.NotSupportedError:
         # can't do inplace change -> use a casted temp column
-        query = 'ALTER TABLE "{0}" RENAME COLUMN "{1}" TO __temp_type_cast; ' \
-                'ALTER TABLE "{0}" ADD COLUMN "{1}" {2}; ' \
-                'UPDATE "{0}" SET "{1}"= __temp_type_cast::{2}' \
-                'ALTER TABLE "{0}" DROP COLUMN  __temp_type_cast CASCADE'
-        cr.execute(query.format(tablename, columntype, columntype))
-    _schema.debug("Table %r: column %r changed to type %s", tablename, columntype, columntype)
+        query = '''
+            ALTER TABLE "{0}" RENAME COLUMN "{1}" TO __temp_type_cast;
+            ALTER TABLE "{0}" ADD COLUMN "{1}" {2};
+            UPDATE "{0}" SET "{1}"= __temp_type_cast::{2};
+            ALTER TABLE "{0}" DROP COLUMN  __temp_type_cast CASCADE;
+        '''
+        cr.execute(query.format(tablename, columnname, columntype))
+    _schema.debug("Table %r: column %r changed to type %s", tablename, columnname, columntype)
 
 def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """
