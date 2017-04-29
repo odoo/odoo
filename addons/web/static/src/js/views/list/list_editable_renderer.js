@@ -256,8 +256,9 @@ ListRenderer.include({
         if (this.currentRow < this.state.data.length - 1) {
             this._selectCell(this.currentRow + 1, 0);
         } else {
-            this._unselectRow();
-            this.trigger_up('add_record');
+            this._unselectRow().then(
+                this.trigger_up.bind(this, 'add_record')
+            );
         }
     },
     /**
