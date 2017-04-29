@@ -6,14 +6,15 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2015
 # Antonio Trueba, 2015-2016
 # Denis Ledoux <dle@odoo.com>, 2016
-# Luis Martínez Ontalba <luismaront@gmail.com>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-12-18 17:54+0000\n"
-"Last-Translator: Luis Martínez Ontalba <luismaront@gmail.com>\n"
+"PO-Revision-Date: 2017-04-27 15:13+0000\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,12 +35,12 @@ msgstr "<strong>Empleado:</strong>"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Manager:</strong>"
-msgstr ""
+msgstr "<strong>Responsable:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>Estado:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -55,7 +56,7 @@ msgstr "Necesaria acción"
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
-msgstr ""
+msgstr "Vuelo"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
@@ -98,7 +99,7 @@ msgstr "Gastos de viajes en coche"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
-msgstr ""
+msgstr "Certifica que los datos son ciertos,<br/>(Fecha y firma).<br/><br/>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
@@ -121,7 +122,7 @@ msgstr "Haga click aquí para rechazar"
 #. module: hr_expense
 #: model:web.tip,description:hr_expense.expense_tip_2
 msgid "Click on Action to submit multiple expenses to your manager."
-msgstr ""
+msgstr "Haga clic en Acción para enviar diversos gastos a su responsable."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -306,7 +307,7 @@ msgstr "Los gastos deben tener un diario de gastos establecido para generar entr
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Expenses of Your Team Member"
-msgstr ""
+msgstr "Gastos de los miembros de su equipo"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense
@@ -350,7 +351,7 @@ msgstr "Desde aquí el contable podrá aprobar o rechazar los gastos verificados
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
 msgid "Generate Accounting Entries"
-msgstr ""
+msgstr "Generar apuntes contables"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -482,7 +483,7 @@ msgstr "Nuevo correo"
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
 "configure one."
-msgstr ""
+msgstr "No se ha encontrado una cuenta de gasto para el producto %s (o para su categoría). Por favor, configure una."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:231
@@ -494,7 +495,7 @@ msgstr "No se encontró la dirección particular para el empleado %s, por favor 
 #: code:addons/hr_expense/models/hr_expense.py:227
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
-msgstr ""
+msgstr "No se ha encontrado una cuenta de Haber para el diario %s. Por favor, configure una."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -532,7 +533,7 @@ msgstr "Cuando haya creado su gasto, remítalo a su responsable para que lo vali
 #. module: hr_expense
 #: model:ir.actions.client,name:hr_expense.action_client_expense_menu
 msgid "Open Expense Menu"
-msgstr ""
+msgstr "Menú gasto abierto"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -542,7 +543,7 @@ msgstr "Pagado"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_payment_mode
 msgid "Payment By"
-msgstr ""
+msgstr "Pago por"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:264
@@ -550,7 +551,7 @@ msgstr ""
 msgid ""
 "Please configure Default Expense account for Product expense: "
 "`property_account_expense_categ_id`."
-msgstr ""
+msgstr "Configure la cuenta de gastos por defecto para el producto: 'property_account_expense_categ'."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -618,7 +619,7 @@ msgstr "Informes"
 #. module: hr_expense
 #: model:web.tip,description:hr_expense.expense_tip_1
 msgid "Select the lines you want to submit to be reimbursed."
-msgstr ""
+msgstr "Seleccione las líneas que desea enviar para ser reembolsadas."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:73
@@ -658,7 +659,7 @@ msgstr "Enviar al responsable"
 #. module: hr_expense
 #: selection:hr.expense,state:0
 msgid "Submitted"
-msgstr ""
+msgstr "Enviado"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_untaxed_amount
@@ -749,7 +750,7 @@ msgstr "UdM"
 msgid ""
 "Use the messaging tool to log a note and attach a document to the expense. "
 "(e.g. scan of the bill)"
-msgstr ""
+msgstr "Utilice la mensajería para registrar una nota y adjuntar un documento a los gastos. (Por ejemplo la factura escaneada)."
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -773,7 +774,7 @@ msgid ""
 " It is submitted by the employee and request is sent to manager, the status is 'Submitted'.        \n"
 "If the manager approve it, the status is 'Approved'.\n"
 " If the accountant genrate the accounting entries for the expense request, the status is 'Waiting Payment'."
-msgstr ""
+msgstr "Cuando se crea la petición de gasto, se crea con el estado 'Borrador'.\nEntonces, es confirmado por el usuario y mandado al administrador, y su estado pasa a 'Esperando confirmación'.\nSi el administrador lo acepta, el estado es 'Aceptado'.\nSi se han realizado los apuntes contables de la petición de gasto, el estado es 'Esperando pago'."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:107
@@ -815,4 +816,4 @@ msgstr "o"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
 msgid "report.hr_expense.report_expense"
-msgstr ""
+msgstr "report.hr_expense.report_expense"
