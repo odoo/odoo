@@ -1617,6 +1617,57 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('navigation with tab and read completes after default_get', function (assert) {
+        assert.expect(8);
+
+        var defaultGetDef = $.Deferred();
+        var readDef = $.Deferred();
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                }
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'read') {
+                    return readDef.then(_.constant(result));
+                }
+                if (args.method === 'default_get') {
+                    return defaultGetDef.then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        list.$('td:contains(-4)').last().click();
+
+        list.$('tr.o_selected_row input[name="int_field"]').val('1234').trigger('input');
+        list.$('tr.o_selected_row input[name="int_field"]').trigger({type: 'keydown', which: 9}); // tab
+
+        defaultGetDef.resolve();
+        assert.strictEqual(list.$('tbody tr.o_data_row').length, 4,
+            "should have 4 data rows");
+        readDef.resolve();
+        assert.strictEqual(list.$('tbody tr.o_data_row').length, 5,
+            "should have 5 data rows");
+        assert.strictEqual(list.$('td:contains(1234)').length, 1,
+            "should have a cell with new value");
+
+        // we trigger a tab to move to the second cell in the current row. this
+        // operation requires that this.currentRow is properly set in the
+        // list editable renderer.
+        list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: 9}); // tab
+        assert.ok(list.$('tr.o_data_row:eq(4)').hasClass('o_selected_row'),
+            "5th row should be selected");
+
+        assert.verifySteps(['write', 'read', 'default_get']);
+        list.destroy();
+    });
+
 });
 
 });

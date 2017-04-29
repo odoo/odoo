@@ -106,7 +106,7 @@ var MockServer = Class.extend({
             if (logLevel === 1) {
                 console.log('Mock: ' + route, JSON.parse(resultString));
             } else if (logLevel === 2) {
-                console.log('%c[rpc] response:', 'color: blue; font-weight: bold;', JSON.parse(resultString));
+                console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
             }
             return JSON.parse(resultString);
         });
