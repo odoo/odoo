@@ -4,14 +4,14 @@
 # 
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2017
-# Oregional <geza.nagy@oregional.hu>, 2017
+# gezza <geza.nagy@oregional.hu>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -85,6 +85,11 @@ msgid "Add Followers"
 msgstr "Követők hozzáadása"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_is_assigned_to_admin
+msgid "Assigned to admin user"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
 msgid "Automated Action"
 msgstr ""
@@ -136,11 +141,6 @@ msgstr "Időzített feltételek alapján"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_domain
 msgid "Before Update Domain"
 msgstr "Tartomány frissítése előtt"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_id
-msgid "Before Update Filter"
-msgstr "Szűrő frissítése előtt"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -209,6 +209,11 @@ msgid "Days"
 msgstr "Napok"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_deadline
+msgid "Deadline"
+msgstr "Határidő"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
@@ -252,11 +257,6 @@ msgid "External ID"
 msgstr "Külső azonosító"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_id
-msgid "Filter"
-msgstr "Szűrő"
-
-#. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
 msgid "Hours"
 msgstr "Órák"
@@ -275,7 +275,6 @@ msgstr "Az akció azonosítója ha, meg van határozva az XML fájlban"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_domain
-#: model:ir.model.fields,help:base_automation.field_base_automation_filter_id
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
@@ -285,7 +284,6 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_domain
-#: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_id
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
@@ -437,6 +435,11 @@ msgid "Pending"
 msgstr "Függő"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_priority
+msgid "Priority"
+msgstr "Prioritás"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_link_field_id
 msgid ""
 "Provide the field used to link the newly created recordon the record on used"
@@ -472,11 +475,6 @@ msgstr "Sorszám"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_action_server_id
 msgid "Server Actions"
 msgstr "Szerver műveletek"
-
-#. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Set selection based on a search filter:"
-msgstr "Állítsa be a kiválasztást a keresési  szűrő alapján:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state

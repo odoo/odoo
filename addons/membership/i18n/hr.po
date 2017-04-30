@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * membership
-#
+# 
 # Translators:
-# Bole <bole@dajmi5.com>, 2015
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Tina Milas <tina@uvid.hr>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-05-09 07:27+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_num_invoiced
@@ -39,11 +42,11 @@ msgstr "# Na čekanju"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Član s kojim želite povezati svoje članstvo. Ono će uzeti u obzir stanje "
-"članstva pridruženog člana ."
+"Član s kojim želite povezati svoje članstvo. Uzet će se u obzir stanje "
+"članstva pridruženog člana."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -130,6 +133,11 @@ msgstr "Klikni za dodavanje novog člana"
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
 msgstr "Tvrtka"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_marketing_config_association
+msgid "Configuration"
+msgstr "Postava"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_tree
@@ -229,14 +237,10 @@ msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr "Greška! Datum završetka ne može se postaviti prije datuma početka."
 
 #. module: membership
-#: constraint:res.partner:0
+#: code:addons/membership/models/partner.py:159
+#, python-format
 msgid "Error ! You cannot create recursive associated members."
 msgstr "Greška! Ne možete kreirati rekurzivne pridružene članove."
-
-#. module: membership
-#: constraint:membership.membership_line:0
-msgid "Error, this membership product is out of date"
-msgstr "Greška, ovo članstvo je izvan datuma"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -320,8 +324,7 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -329,8 +332,7 @@ msgstr ""
 "-Nije član: Partner koji nije podnio zahtjev za članstvo.\n"
 "-Otkazano: Član koji je otkazao svoje članstvo.\n"
 "-Stari član: Član kojem je istekao datum članstva.\n"
-"-Čekajući član: Član koji je podnio zahtjev za članstvo, a račun će tek biti "
-"kreiran.\n"
+"-Čekajući član: Član koji je podnio zahtjev za članstvo, a račun će tek biti kreiran.\n"
 "- Član kojem je izdan račun: Član kojem je račun kreiran.\n"
 "- Član koji plaća: Član koji je platio članarinu."
 
@@ -338,18 +340,12 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
+"-Non Member: A member who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paid Member: A member who has paid the membership amount."
 msgstr ""
 
 #. module: membership
@@ -388,6 +384,7 @@ msgstr "Cijena članstva"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_association
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model:ir.ui.view,arch_db:membership.membership_members_tree
 msgid "Members"
@@ -485,6 +482,13 @@ msgid "Membership products"
 msgstr "Proizvodi članstva"
 
 #. module: membership
+#: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
+#: model:ir.cron,cron_name:membership.ir_cron_update_membership
+#: model:ir.cron,name:membership.ir_cron_update_membership
+msgid "Membership: update memberships"
+msgstr ""
+
+#. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Memberships"
 msgstr "Članstva"
@@ -510,8 +514,7 @@ msgstr "None/Canceled/Old/Waiting"
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                 Current Membership Status, Discussions and History of "
-"Membership, etc."
+"                 Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
 "Odoo pomaže u jednostavnom praćenju svih aktivnosti vezano za člana:\n"
 "Trenutni status članstva, rasprave i povijest članstva, itd."
@@ -537,13 +540,13 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: membership
-#: code:addons/membership/membership.py:351
+#: code:addons/membership/models/partner.py:181
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr "Parnter nema adresu za izdavanje računa."
 
 #. module: membership
-#: code:addons/membership/membership.py:349
+#: code:addons/membership/models/partner.py:179
 #, python-format
 msgid "Partner is a free Member."
 msgstr "Partner je besplatan član."
@@ -565,8 +568,8 @@ msgstr "Količina"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
-msgid "Reports"
-msgstr "Izvještaji"
+msgid "Reporting"
+msgstr "Izvještavanje"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -646,12 +649,3 @@ msgstr "Član na čekanju"
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
 msgstr "membership.membership_line"
-
-#~ msgid "Basic Membership"
-#~ msgstr "Osnovno Članstvo"
-
-#~ msgid "Gold Membership"
-#~ msgstr "Zlatno članstvo"
-
-#~ msgid "Silver Membership"
-#~ msgstr "Srebrno članstvo"

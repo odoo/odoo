@@ -16,13 +16,14 @@
 # Antonio Trueba <atgayol@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# David Arnold <blaggacao@users.noreply.github.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016\n"
+"Last-Translator: David Arnold <blaggacao@users.noreply.github.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -306,6 +307,8 @@ msgstr "Correo electrónico:"
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr ""
+"Error! No puede seleccionar un formato de papel y especificar ancho y alto "
+"de la página al mismo tiempo."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -525,12 +528,12 @@ msgstr "Imprimir"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr ""
+msgstr "Nombre del reporte impreso"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
 msgid "QWeb views"
-msgstr ""
+msgstr "Vistas QWeb"
 
 #. module: report
 #. openerp-web
@@ -618,6 +621,9 @@ msgid ""
 "change the report filename. You can use a python expression with the object "
 "and time variables."
 msgstr ""
+"Esto es el nombre del archivo cuando el reporte se descarga. Mantenlo vacío "
+"para no cambiar el nombre del archivo. Puede usar expresiones python con "
+"variables de objetos y tiempos."
 
 #. module: report
 #: code:addons/report/models/report.py:302
@@ -649,6 +655,8 @@ msgstr ""
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
+"No se ha podido encontrar Wkhtmltopdf en el sistema. El PDF no se puede "
+"crear."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_boxed
@@ -720,7 +728,7 @@ msgstr "ir.actions.report.xml"
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
-msgstr ""
+msgstr "ir.qweb.field.barcode"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.view_company_report_form

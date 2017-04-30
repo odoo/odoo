@@ -10,16 +10,16 @@
 # Olivier Dony <odo@odoo.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
 # Fabri Yohann <psn@fabri.pw>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Fabri Yohann <psn@fabri.pw>, 2016\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,6 +118,7 @@ msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
+#: model:ir.model.fields,field_description:auth_signup.field_hr_timesheet_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
 msgstr "Autorise les utilisateurs externes à se connecter"
 
@@ -141,7 +142,7 @@ msgid "Another user is already registered using this email address."
 msgstr "Un autre utilisateur est déjà enregistré avec cette adresse courriel."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:110
+#: code:addons/auth_signup/controllers/main.py:112
 #, python-format
 msgid "Authentication Failed."
 msgstr "Authentification échouée."
@@ -176,6 +177,11 @@ msgid "Confirmed"
 msgstr "Confirmée"
 
 #. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41
 #, python-format
 msgid "Could not create a new account."
@@ -194,6 +200,7 @@ msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
+#: model:ir.model.fields,field_description:auth_signup.field_hr_timesheet_config_settings_auth_signup_reset_password
 #: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
 msgid "Enable password reset from Login page"
 msgstr ""
@@ -207,7 +214,7 @@ msgstr ""
 "connecter."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:90
+#: code:addons/auth_signup/controllers/main.py:92
 #, python-format
 msgid "Invalid signup token"
 msgstr "La session d'authentification est invalide"
@@ -216,11 +223,6 @@ msgstr "La session d'authentification est invalide"
 #: selection:res.users,state:0
 msgid "Never Connected"
 msgstr "Jamais connecté"
-
-#. module: auth_signup
-#: model:ir.model,name:auth_signup.model_res_partner
-msgid "Partner"
-msgstr "Partenaire"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -303,6 +305,7 @@ msgstr "Statut"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
+#: model:ir.model.fields,field_description:auth_signup.field_hr_timesheet_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr ""
 "Utilisateur modèle pour les nouveaux utilisateurs créés à travers signup"

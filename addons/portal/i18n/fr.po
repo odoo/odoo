@@ -4,20 +4,22 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Florian Hatat <mininet@wanadoo.fr>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Kévin R. <realrom@hotmail.fr>, 2016
+# Richard Mathot <rim@odoo.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Kévin R. <realrom@hotmail.fr>, 2016\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +54,30 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"\n"
+"<p>\n"
+"    Cher ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    Un accès au portail ${object.wizard_id.portal_id.name} de la société ${user.company_id.name}\n"
+"\tvient de vous être attribué.\n"
+"</p>\n"
+"<p>\n"
+"    Vous trouverez ci-dessous vos informations de connexion :\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Identifiant : ${object.user_id.login or ''}</li>\n"
+"    <li>Adresse : <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"\t<li>Base de donnée : ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"\tVous pouvez définir ou modifier votre mot de passe à l'adresse suivante :\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -94,7 +120,7 @@ msgstr "Créé le"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
@@ -257,4 +283,4 @@ msgstr ""
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${user.company_id.name}"
-msgstr ""
+msgstr "Votre compte Odoo sur ${user.company_id.name}"

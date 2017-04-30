@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Clo <clo@odoo.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
@@ -20,13 +20,16 @@
 # Miguel Vidali <mvidali129@gmail.com>, 2016
 # Simon CARRIER <carrier.sim@gmail.com>, 2016
 # Omar Mezga <omar.mezgrane@aldaway.com>, 2017
+# Fred Gilson <fgi@odoo.com>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Omar Mezga <omar.mezgrane@aldaway.com>, 2017\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +43,8 @@ msgid ""
 "        Will be safe_eval with `self` being the current transaction. i.e.:\n"
 "            self.env['my.model'].payment_validated(self)"
 msgstr ""
+"Sera passé à safe_eval avec `self` désignant la transaction en cours. p.e. "
+"self.env['my.model'].payment_validated(self)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
@@ -109,6 +114,9 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Erreur,</i> une erreur est survenue lors de la transaction. La "
+"commande a été confirmée mais ne sera pas réglée. N'hésitez pas à nous "
+"contacter pour toute question sur le statut de la commande.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -359,7 +367,7 @@ msgstr "Détermine l'ordre d'affichage"
 #: model:ir.model.fields,field_description:payment.field_payment_token_display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_journal_use_in_payment
@@ -707,7 +715,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Tokens de Paiement"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -1070,7 +1078,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
 msgid "payment.token"
-msgstr ""
+msgstr "payment.token"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

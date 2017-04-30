@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * portal
-#
+# 
 # Translators:
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Tina Milas <tina@uvid.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-24 16:44+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
@@ -28,24 +32,21 @@ msgid ""
 "    Dear ${object.user_id.name or ''},\n"
 "</p>\n"
 "<p>\n"
-"    You have been given access to ${user.company_id.name}'s ${object."
-"wizard_id.portal_id.name}.\n"
+"    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
 "</p>\n"
 "<p>\n"
 "    Your login account data is:\n"
 "</p>\n"
 "<ul>\n"
 "    <li>Username: ${object.user_id.login or ''}</li>\n"
-"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or "
-"''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "</ul>\n"
 "<p>\n"
 "\tYou can set or change your password via the following url:\n"
 "</p>\n"
 "<ul>\n"
-"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}"
-"</a></li>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
 "</ul>\n"
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
@@ -57,19 +58,9 @@ msgid "Access Groups"
 msgstr "Grupe"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr "Postprodaja"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
 msgstr "Primjeni"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Billing"
-msgstr "Fakturiranje"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -107,7 +98,7 @@ msgstr "Naziv za prikaz"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
 msgid "Email"
-msgstr "E-mail"
+msgstr "E-pošta"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id
@@ -161,7 +152,6 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 #: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
-#: model:ir.ui.menu,name:portal.portal_menu
 msgid "Portal"
 msgstr "Portal"
 
@@ -183,39 +173,30 @@ msgid "Portal User Config"
 msgstr "Konfiguracija korisnika portala"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_projects
-msgid "Projects"
-msgstr "Projekti"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be "
-"valid and unique.\n"
-"                        If necessary, you can fix any contact's email "
-"address directly in the list."
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
 "Na donjoj listi odaberite kontakte koji bi trebali pripadati portalu.\n"
-"                        E-mail adresa svakog odabranog kontakta mora biti "
-"ispravna i jedinstvena.\n"
-"                        Ako je potrebno možete popraviti e-mail adresu "
-"izravno na listi."
+"                        E-mail adresa svakog odabranog kontakta mora biti ispravna i jedinstvena.\n"
+"                        Ako je potrebno možete popraviti e-mail adresu izravno na listi."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:114
+#: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
 msgstr "Nekoliko kontakata ima isti e-mail:"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:111
+#: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
 msgstr "Neki kontakti nemaju važeći e-mail:"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:117
+#: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr "Neki kontakti ima isti e-mail kao postojeći korisnik portala:"
@@ -237,7 +218,7 @@ msgstr ""
 "Ovaj je tekst uključen u e-mail koji se šalje novim korisnicima portala."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:120
+#: code:addons/portal/wizard/portal_wizard.py:112
 #, python-format
 msgid ""
 "To resolve this error, you can: \n"
@@ -259,15 +240,15 @@ msgid "Wizard"
 msgstr "Čarobnjak"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:189
+#: code:addons/portal/wizard/portal_wizard.py:182
 #, python-format
-msgid "You must have an email address in your User Preferences to send emails."
+msgid ""
+"You must have an email address in your User Preferences to send emails."
 msgstr ""
 "Za slanje e-mailova morate imati upisanu e-mail adresu u korisničkim "
 "postavkama."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
-#, fuzzy
 msgid "Your Odoo account at ${user.company_id.name}"
-msgstr "Vaš Odoo račun na ${user.company_id.name|safe}"
+msgstr "Vaš Odoo račun na ${user.company_id.name}"

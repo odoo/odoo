@@ -1,28 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_calendar
-#
+# 
 # Translators:
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2015-09-08 08:58+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: stock_calendar
 #: model:ir.ui.view,arch_db:stock_calendar.view_procurement_form_stock_inherit
 msgid "Calculate dates according to Orderpoint"
-msgstr ""
+msgstr "Рассчитывает сроки в соответствии с заказами"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
@@ -32,75 +33,75 @@ msgstr "Календарь"
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
 msgid ""
-"In the calendar you can define the days that the goods will be delivered.  "
+"In the calendar you can define the days that the goods will be delivered. "
 "That way the scheduler will only take into account the goods needed until "
-"the second delivery and put the procurement date as the first delivery.  "
+"the second delivery and put the procurement date as the first delivery."
 msgstr ""
+"В календаре можно определить те дни, в который товар будет доставлен. Таким "
+"образом, планировщик будет только учитывать необходимые товары до второй "
+"поставки и поставить дату закупки как первая поставка."
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_last_execution_date
 msgid "Last Execution Date"
-msgstr ""
+msgstr "Последняя дата выполнения"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_leaves
 msgid "Leave Detail"
-msgstr "Детали отгула"
+msgstr "Детали отгрузки"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Правило минимума ТМЦ"
+msgstr "Правило минимального остатка"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_delivery_date
 msgid "Next Delivery Date"
-msgstr ""
+msgstr "Следующая дата доставки"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_purchase_date
 msgid "Next Purchase Date"
-msgstr ""
-
-#. module: stock_calendar
-#: model:ir.model.fields,field_description:stock_calendar.field_resource_calendar_next_day
-msgid "Next day it should trigger"
-msgstr ""
+msgstr "Следующая дата закупки"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_procurement_order
 msgid "Procurement"
-msgstr "Снабжение"
+msgstr "Поставка"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_resource_calendar_attendance_group_id
 #: model:ir.model.fields,field_description:stock_calendar.field_resource_calendar_leaves_group_id
 msgid "Procurement Group"
-msgstr "Группа снабжения"
+msgstr "Группа поставки"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_purchase_calendar_id
 msgid "Purchase Calendar"
-msgstr ""
+msgstr "Календарь закупок"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar
 msgid "Resource Calendar"
-msgstr "Календарь ресурса"
+msgstr "Календарь ресурсов"
 
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_delivery_date
 msgid ""
-"The date of the next delivery for this procurement group, when this group is "
-"on the purchase calendar of the orderpoint"
+"The date of the next delivery for this procurement group, when this group is"
+" on the purchase calendar of the orderpoint"
 msgstr ""
+"Следующая дата доставки для этой группы поставки в случае, если группа "
+"находится в календаре закупок заказов"
 
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_purchase_date
 msgid "The date the next purchase order should be sent to the vendor"
-msgstr ""
+msgstr "Дату следующей закупки следует отправить производителю"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr "Подробности Работы"
+msgstr "Рабочие детали"

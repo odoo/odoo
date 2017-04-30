@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
 # Florian Hatat <mininet@wanadoo.fr>, 2016
 # Tony Galmiche <tony.galmiche@infosaone.com>, 2016
@@ -27,13 +27,14 @@
 # zoe <yann.hoareau@migs.re>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Richard Mathot <rim@odoo.com>, 2016\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +70,7 @@ msgstr "Nb. ordres de fabrication"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Variantes d'articles"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
@@ -89,6 +90,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    Achetez Odoo Enterprise maintenant pour obtenir plus de fournisseurs.\n"
+"                </p>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -142,6 +146,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Un produit « stockable » est un produit pour lequel vous désirez gérer le stock. L'application « Inventaire » doit être installée.\n"
+"Un produit « consommable », en revanche, est un produit non géré en stock.\n"
+"Un service est un bien immatériel que vous fournissez ou achetez.\n"
+"Un contenu numérique est un bien immatériel que vous vendez en ligne. Les fichier liés aux produits sont ceux vendu sur la boutique en ligne (livres électronique, musique, photos, …). Le module « Produits numériques » doit être installé."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -151,7 +159,7 @@ msgstr "Nécessite une action"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "Action à la validation des bons de livraison"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -431,7 +439,7 @@ msgstr "Délai de livraison au client"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Réf. client"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -483,12 +491,12 @@ msgstr "Livraison"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Transporteur pour la livraison"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "Information de livraison"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -584,7 +592,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -719,12 +727,12 @@ msgstr "Gratuit si commande totale est de plus de"
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "Obtenir le prix"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "Obtenir le prix et créer le colis"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
@@ -755,7 +763,7 @@ msgstr "Hauteur"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "La hauteur doit être positive"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_id
@@ -850,12 +858,12 @@ msgstr "Réception"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "Installer plus de fournisseurs"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Niveau d'intégration"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -950,7 +958,7 @@ msgstr "Longueur"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "La longueur doit être positive"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -960,7 +968,7 @@ msgstr "Lieu"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Manage Package Type"
-msgstr ""
+msgstr "Gérer le type de colis"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
@@ -993,17 +1001,17 @@ msgstr "Marge jusqu'à"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "La marge ne peut être inférieure à -100%"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "Poids max"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "Le poids max doit être positif"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -1013,7 +1021,7 @@ msgstr "Valeur maximum"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "Poids maximum expédiable"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
@@ -1065,7 +1073,7 @@ msgstr "Nom"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr ""
+msgstr "Aucune intégration avec un transporteur"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1142,6 +1150,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"Sur quantités commandées : facture en fonction des quantités commandées.\n"
+"Sur quantités reçues : facture en fonction des quantités reçues"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
@@ -1154,6 +1164,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Quantités commandées : facturation basée sur les quantités commandées par le client.\n"
+"Quantités livrées : facturation basée sur les quantités que le fournisseur a livré (temps passé dans le cas de prestations)."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
@@ -1175,7 +1187,7 @@ msgstr ""
 #: code:addons/delivery/models/stock_picking.py:128
 #, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "Détails du colis"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1391,7 +1403,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Re-facturer les dépenses"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
@@ -1529,7 +1541,7 @@ msgstr "Frais de port"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_shipping_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Poids d'expéditio"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1561,6 +1573,8 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
 msgstr ""
+"Code standardisé pour l'expédition international et la déclaration des "
+"marchandises"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1639,6 +1653,8 @@ msgstr "Somme de la quantité dans les factures fournisseurs"
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Champ technique. Utilisé pour la recherche sur les listes de prix, non "
+"stocké en base de données."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
@@ -1743,7 +1759,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Ce pourcentage sera ajouté au prix d'expédition"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -1821,7 +1837,7 @@ msgstr "Suivi"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Référence de suivi"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1868,7 +1884,7 @@ msgstr "Compteur de messages non lus"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Valorisatio"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1938,12 +1954,12 @@ msgstr "Poids * volume"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
 msgid "Weight Unit of Measure"
-msgstr ""
+msgstr "Unité de mesure du poids"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Poids pour l'expédition"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_input
@@ -1992,7 +2008,7 @@ msgstr "Largeur"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "La largeur doit être positive"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:187
@@ -2001,6 +2017,8 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"Vous expédiez différents types d'emballages dans le même colisage.\n"
+"Types d'emballages: %s"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:163

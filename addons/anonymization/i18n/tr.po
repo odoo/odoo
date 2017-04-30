@@ -1,32 +1,28 @@
-# #-#-#-#-#  tr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * anonymization
-#
+# 
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2015
-# #-#-#-#-#  tr.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * anonymization
-#
-# Translators:
-#, fuzzy
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Özem Sökmem <ozensokmen@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-12 12:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Özem Sökmem <ozensokmen@gmail.com>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  tr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  tr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: anonymization
@@ -67,30 +63,30 @@ msgid "Anonymized Fields"
 msgstr "Anonim Alanlar"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:434
+#: code:addons/anonymization/wizard/anonymize_wizard.py:197
 #, python-format
 msgid "Anonymized value can not be empty."
 msgstr "Anonim değeri boş olamaz."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:284
+#: code:addons/anonymization/wizard/anonymize_wizard.py:72
 #, python-format
 msgid ""
-"Before executing the anonymization process, you should make a backup of your "
-"database."
+"Before executing the anonymization process, you should make a backup of your"
+" database."
 msgstr ""
 "Anonimleştirme işlemi çalıştırmadan önce,  Veritabanı bir yedeğini almanız "
 "gerekir."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:430
+#: code:addons/anonymization/wizard/anonymize_wizard.py:194
 #, python-format
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
 msgstr ""
-"Şu tür alanlar anonim olamaz:  binary( Ikili), many2many, many2one, one2many "
-"referans."
+"Şu tür alanlar anonim olamaz:  binary( Ikili), many2many, many2one, one2many"
+" referans."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -112,7 +108,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_create_date
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_create_date
 msgid "Created on"
-msgstr "Oluşturuldu"
+msgstr "Oluşturulma zamanı"
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymize_wizard_form
@@ -140,7 +136,7 @@ msgstr "Yön"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_display_name
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_display_name
 msgid "Display Name"
-msgstr "Adı Göster"
+msgstr "Ad Görünümü"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
@@ -148,11 +144,11 @@ msgid "Done"
 msgstr "Biten"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:373
-#: code:addons/anonymization/anonymization.py:434
+#: code:addons/anonymization/wizard/anonymize_wizard.py:142
+#: code:addons/anonymization/wizard/anonymize_wizard.py:266
 #, python-format
 msgid "Error !"
-msgstr "Error !"
+msgstr "Hata !"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
@@ -202,10 +198,10 @@ msgstr "ID"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_file_import
 msgid "Import"
-msgstr "İçeaktar"
+msgstr "İçe Aktar"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:521
+#: code:addons/anonymization/wizard/anonymize_wizard.py:266
 #, python-format
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
@@ -220,7 +216,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix___last_update
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard___last_update
 msgid "Last Modified on"
-msgstr "Son değiştirme tarihi"
+msgstr "Son Güncelleme"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_write_uid
@@ -236,7 +232,7 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_write_date
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_write_date
 msgid "Last Updated on"
-msgstr "Son Güncellenen"
+msgstr "Son Güncelleme"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_msg
@@ -254,6 +250,12 @@ msgstr "Model"
 #: selection:ir.model.fields.anonymization,state:0
 msgid "New"
 msgstr "Yeni"
+
+#. module: anonymization
+#: code:addons/anonymization/wizard/anonymize_wizard.py:156
+#, python-format
+msgid "No fields are going to be anonymized."
+msgstr ""
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -293,9 +295,10 @@ msgstr "Başlanmış"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_state
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_state
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_summary
@@ -308,7 +311,7 @@ msgid "Target Version"
 msgstr "Hedef Sürüm"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:75
+#: code:addons/anonymization/models/anonymization.py:55
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -320,7 +323,7 @@ msgstr ""
 "silme'yi denemeden önce bu sorunu çözmek için çalışmalısınız."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:342
+#: code:addons/anonymization/wizard/anonymize_wizard.py:123
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -332,8 +335,8 @@ msgstr ""
 "sorunu çözmek için çalışmalısınız."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:375
-#: code:addons/anonymization/anonymization.py:514
+#: code:addons/anonymization/wizard/anonymize_wizard.py:146
+#: code:addons/anonymization/wizard/anonymize_wizard.py:262
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -345,13 +348,13 @@ msgstr ""
 "sorunu çözmek için çalışmalısınız."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:373
+#: code:addons/anonymization/wizard/anonymize_wizard.py:144
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
 msgstr "Veritabanı şu anda tekrar anonim olamaz, anonimleştirilir."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:73
+#: code:addons/anonymization/models/anonymization.py:53
 #, python-format
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
@@ -361,7 +364,7 @@ msgstr ""
 "silemezsiniz."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:512
+#: code:addons/anonymization/wizard/anonymize_wizard.py:260
 #, python-format
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
@@ -371,8 +374,8 @@ msgstr "Veritabanı şu anda anonimdir, anonimliği geri çeviremezsiniz."
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
 msgid ""
-"This is the file created by the anonymization process. It should have the '."
-"pickle' extention."
+"This is the file created by the anonymization process. It should have the "
+"'.pickle' extention."
 msgstr ""
 "Bu anonimleştirme süreç tarafından oluşturulan dosyadır. Bu '.pickle' "
 "uzantısı olması gerekir."
@@ -383,7 +386,7 @@ msgid "Unstable"
 msgstr "Kararsız"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:49
+#: code:addons/anonymization/models/anonymization.py:32
 #: sql_constraint:ir.model.fields.anonymization:0
 #, python-format
 msgid "You cannot have two fields with the same name on the same object!"
@@ -428,8 +431,3 @@ msgstr "Piton"
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
 msgstr "sql"
-
-#. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
-msgid "unknown"
-msgstr "bilinmeyen"

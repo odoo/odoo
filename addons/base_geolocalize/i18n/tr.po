@@ -1,27 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_geolocalize
-#
+# 
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Matanat Ahmadova <ahmadova.matanat01@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-04 06:53+0000\n"
-"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Matanat Ahmadova <ahmadova.matanat01@gmail.com>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span class=\"oe_inline\"> ( On  </span>"
-msgstr "<span class=\"oe_inline\"> ( Açık  </span>"
+msgstr "<span class=\"oe_inline\"> (   </span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -35,13 +39,16 @@ msgstr "<span> ;  Uzun:  </span>"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:17
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "
 "connection is up and running (%s)."
 msgstr ""
-"Coğrafi konumlandıma sunucusuna bağlanılamıyor. Lütfen internet bağlantınızı "
-"açık ve çalışmakta olduğundan emin olun (%s)."
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_res_partner
+msgid "Contact"
+msgstr "Kontak"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_latitude
@@ -60,25 +67,15 @@ msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-#, fuzzy
 msgid "Geolocation"
-msgstr "Coğrafi Konum Tarihi"
+msgstr "Coğrafi Konum"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
-#, fuzzy
 msgid "Geolocation Date"
-msgstr "Coğrafi Konum Tarihi"
-
-#. module: base_geolocalize
-#: model:ir.model,name:base_geolocalize.model_res_partner
-msgid "Partner"
-msgstr "İş Ortağı"
+msgstr "Coğrafi Konum"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignation"
 msgstr "İş Ortağı Atama"
-
-#~ msgid "Geo Localize"
-#~ msgstr "Coğrafi Konumlama"

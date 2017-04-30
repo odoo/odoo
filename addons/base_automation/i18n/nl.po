@@ -3,17 +3,17 @@
 # * base_automation
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -88,6 +88,11 @@ msgid "Add Followers"
 msgstr "Volgers toevoegen"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_is_assigned_to_admin
+msgid "Assigned to admin user"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
 msgid "Automated Action"
 msgstr "Geautomatiseerde ctie"
@@ -139,11 +144,6 @@ msgstr "Gebaseerd op tijd"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_domain
 msgid "Before Update Domain"
 msgstr "Voor domein update"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_id
-msgid "Before Update Filter"
-msgstr "Voor filter update"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -209,6 +209,11 @@ msgid "Days"
 msgstr "Dagen"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_deadline
+msgid "Deadline"
+msgstr "Deadline"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
@@ -251,11 +256,6 @@ msgid "External ID"
 msgstr "Externe ID"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_id
-msgid "Filter"
-msgstr "Filter"
-
-#. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
 msgid "Hours"
 msgstr "Uren"
@@ -274,7 +274,6 @@ msgstr "ID van de actie indien gedefinieerd in een XML bestand"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_domain
-#: model:ir.model.fields,help:base_automation.field_base_automation_filter_id
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
@@ -284,7 +283,6 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_domain
-#: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_id
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
@@ -437,6 +435,11 @@ msgid "Pending"
 msgstr "In afwachting"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_priority
+msgid "Priority"
+msgstr "Prioriteit"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_link_field_id
 msgid ""
 "Provide the field used to link the newly created recordon the record on used"
@@ -472,11 +475,6 @@ msgstr "Reeks"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_action_server_id
 msgid "Server Actions"
 msgstr "Server-acties"
-
-#. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Set selection based on a search filter:"
-msgstr "Stel selectie in gebaseerd op een zoekfilter:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state

@@ -3,9 +3,7 @@
 # * base_automation
 # 
 # Translators:
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
 # Xavier Belmere <Info@cartmeleon.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
@@ -13,21 +11,24 @@
 # Olivier Dony <odo@odoo.com>, 2017
 # Xavier Symons <xsy@openerp.com>, 2017
 # Lionel Sausin <ls@numerigraphe.com>, 2017
+# Florian Hatat <mininet@wanadoo.fr>, 2017
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 # Agathe Mollé <molleagathe@gmail.com>, 2017
 # Clo <clo@odoo.com>, 2017
 # Frédéric LIETART <stuff@tifred.fr>, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # Kévin R. <realrom@hotmail.fr>, 2017
 # Quentin THEURET <quentin@theuret.net>, 2017
 # Melanie Bernard <mbe@odoo.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Melanie Bernard <mbe@odoo.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +48,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_help
 msgid "Action Description"
-msgstr ""
+msgstr "Description de l'action"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_name
@@ -57,7 +58,7 @@ msgstr "Nom de l'action"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Action Rule Line Test"
-msgstr ""
+msgstr "Test de ligne de règle d'action"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
@@ -94,6 +95,11 @@ msgstr "Ajouter des canaux"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_partner_ids
 msgid "Add Followers"
 msgstr "Ajouter des abonnés"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_is_assigned_to_admin
+msgid "Assigned to admin user"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -149,11 +155,6 @@ msgid "Before Update Domain"
 msgstr "Domaine avant la mise-à-jour"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_id
-msgid "Before Update Filter"
-msgstr "Filtre avant la mise à jour"
-
-#. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "Cancelled"
 msgstr "Annulé"
@@ -197,7 +198,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
 msgid "Create/Write Target Model"
-msgstr ""
+msgstr "Créer/Enregistrer le modèle cible"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_create_uid
@@ -217,6 +218,11 @@ msgstr "Créé le"
 #: selection:base.automation,trg_date_range_type:0
 msgid "Days"
 msgstr "Jours"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_deadline
+msgid "Deadline"
+msgstr "Echéance"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_range
@@ -259,11 +265,6 @@ msgid "External ID"
 msgstr "ID Externe"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_id
-msgid "Filter"
-msgstr "Filtrer"
-
-#. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
 msgid "Hours"
 msgstr "Heures"
@@ -282,7 +283,6 @@ msgstr "Identifiant de l'action si elle est définie dans un fichier XML"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_domain
-#: model:ir.model.fields,help:base_automation.field_base_automation_filter_id
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
@@ -292,7 +292,6 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_domain
-#: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_id
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
@@ -446,6 +445,11 @@ msgid "Pending"
 msgstr "En attente"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_priority
+msgid "Priority"
+msgstr "Priorité"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_link_field_id
 msgid ""
 "Provide the field used to link the newly created recordon the record on used"
@@ -481,11 +485,6 @@ msgstr "Séquence"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_action_server_id
 msgid "Server Actions"
 msgstr "Actions-serveur"
-
-#. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Set selection based on a search filter:"
-msgstr "Déterminez la sélection selon un filtre de recherche :"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state

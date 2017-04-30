@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
@@ -20,13 +20,14 @@
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Melanie Bernard <mbe@odoo.com>, 2016\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +46,13 @@ msgid ""
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
+"\n"
+"    <p>\n"
+"        <strong>Rappel ${object.name}</strong>\n"
+"    </p>\n"
+"    \n"
+"    <p>Vous n'avez pas mis à jour votre progression concernant l'objectif ${object.definition_id.name} (actuellement rempli à ${object.completeness}%) depuis au moins ${object.remind_update_delay} jours. Ne l'oubliez pas.</p>\n"
+"            "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -125,13 +133,13 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:586
 #, python-format
 msgid "%s has joined the challenge"
-msgstr ""
+msgstr "%s a rejoint le défi"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:595
 #, python-format
 msgid "%s has refused the challenge"
-msgstr ""
+msgstr "%s a décliné le défi"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_badge_received
@@ -638,7 +646,7 @@ msgstr "Mode d'affichage"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display
@@ -926,7 +934,7 @@ msgstr "Comment calculer l'objectif ?"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Human Resources / Engagement"
-msgstr ""
+msgstr "Ressources humaines / Engagement"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_id
@@ -948,7 +956,7 @@ msgstr "Champ ID de l'utilisateur"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
 msgid "If a maximum is set"
-msgstr ""
+msgstr "Si un maximum est défini"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
@@ -1489,7 +1497,7 @@ msgstr "Définissez votre fuseau horaire"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Settings / Gamification Tools"
-msgstr ""
+msgstr "Paramètres / Outils d'émulation"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
@@ -1847,7 +1855,7 @@ msgstr "Utilisateurs"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Website / Forum"
-msgstr ""
+msgstr "Site web / Forum"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1959,6 +1967,8 @@ msgid ""
 "e.g. result = env['mail.followers'].search_count([('res_model', '=', "
 "'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 msgstr ""
+"Ex : result = env['mail.followers'].search_count([('res_model', '=', "
+"'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view

@@ -1,105 +1,193 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp
-#
+# 
 # Translators:
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2015
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Alex Puchkov <ap@alteco.co>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Amaro Vita <vita.amaro@gmail.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Andrey Skabelin <inactive+a.skabelin@transifex.com>, 2017
+# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Mekan Bash <tmbashimov@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-12 22:16+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Mekan Bash <tmbashimov@gmail.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:231
+#: code:addons/mrp/models/stock_warehouse.py:43
 #, python-format
 msgid " Manufacture"
-msgstr "Изготовление"
+msgstr "Производство"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_bom_count
 msgid "# Bill of Material"
-msgstr "Спецификация"
+msgstr "Ведомостей материалов"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_done_count
+msgid "# Done Work Orders"
+msgstr "Готовых производственных заданий"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
 msgid "# Manufacturing Orders"
-msgstr "Производственные заказы"
+msgstr "Производящихся заданий"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:341
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_ready_count
+msgid "# Read Work Orders"
+msgstr "Прочтённых производственных заданий"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_count
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_workorder_count
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_count
+msgid "# Work Orders"
+msgstr "Производственных заданий"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:271
 #, python-format
-msgid "%s (copy)"
-msgstr "%s (копия)"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1052
-#, python-format
-msgid "%s produced"
-msgstr "%s произведенный"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_product_produce_mode
 msgid ""
-"'Consume only' mode will only consume the products with the quantity "
-"selected.\n"
-"'Consume & Produce' mode will consume as well as produce the products with "
-"the quantity selected and it will finish the production order when total "
-"ordered quantities are produced."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        Click to upload files to your product.\n"
+"                    </p><p>\n"
+"                        Use this feature to store any files, like drawings or specifications.\n"
+"                    </p>"
 msgstr ""
-"\"Потреблять только\" режим будет потреблять только продукты с выделенным "
-"количеством.\n"
-"\"Потребление & Продукты\" режим будет потреблять, а также производить "
-"продукцию с выделенным количеством, и он будет закрывать производственный "
-"заказ, когда общее заказанное количество произведено."
+"<p class=\"oe_view_nocontent_create\">\n"
+"Кликните для загрузки файлов продукта.\n"
+"</p><p>\n"
+"Позволяет хранить любые файлы, например чертежи и спецификации.\n"
+"</p>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid ""
+"<span class=\"label label-danger\" attrs=\"{'invisible': ['|', "
+"('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
+"('confirmed','progress'))]}\">Raw materials not available!</span>"
+msgstr ""
+"<span class=\"label label-danger\" attrs=\"{'invisible': ['|', "
+"('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
+"('confirmed','progress'))]}\">Сырьё не доступно!</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "<span class=\"o_stat_text\">Lost</span>"
+msgstr "<span class=\"o_stat_text\">Потериt</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "<span class=\"o_stat_text\">OEE</span>"
+msgstr "<span class=\"o_stat_text\">ОЭО</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "<span class=\"o_stat_text\">Performance</span>"
+msgstr "<span class=\"o_stat_text\">Производительность</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "<span class=\"o_stat_text\">Scraps</span>"
+msgstr "<span class=\"o_stat_text\">Отходы</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+msgid "<span class=\"o_stat_text\">Time<br/> Analysis</span>"
+msgstr "<span class=\"o_stat_text\">Временные<br/> затраты</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "<span class=\"o_stat_text\">Work Center Load</span>"
+msgstr "<span class=\"o_stat_text\">Загрузка производственного участка</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Work Orders</span>"
+msgstr "<span class=\"o_stat_text\">Производственные задания</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "<span>Actions</span>"
+msgstr "<span>Действия</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+msgid "<span>New</span>"
+msgstr "<span>Новый</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "<span>Plan Orders</span>"
+msgstr "<span>План заданий</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "<span>Reporting</span>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+msgid "<span>View</span>"
+msgstr "<span>Вид</span>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "<span>Work Orders</span>"
+msgstr "<span>Производственные задания</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Consumed Products</strong>"
-msgstr "<strong>Потребленные ТМЦ</strong>"
+msgid "<strong>Barcode</strong>"
+msgstr "<strong>Штрих-код</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Destination Location</strong>"
-msgstr "<strong>Назначение Места Размещения</strong>"
+msgstr "<strong>Назначение местоположения</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Name</strong>"
-msgstr "<strong>Название</strong>"
+msgstr "<strong>Имя</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>No. Of Cycles</strong>"
-msgstr "<strong>Кол-во Циклов</strong>"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>No. Of Hours</strong>"
-msgstr "<strong>Кол-во Часов</strong>"
+msgid "<strong>No. Of Minutes</strong>"
+msgstr "<strong>Кол-во минут</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Partner Ref:</strong><br/>"
-msgstr "<strong>Партнер Ссылка:</strong><br/>"
+msgstr "<strong>Ссылка на партнёра:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Printing date:</strong><br/>"
-msgstr "<strong>Дата печати:</strong>:<br/>"
+msgstr "<strong>Дата печати:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -114,7 +202,7 @@ msgstr "<strong>Продукт</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Products to Consume</strong>"
-msgstr "<strong>Продукты к Потреблению</strong>"
+msgstr "<strong>Готовность продукта</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -129,105 +217,141 @@ msgstr "<strong>Количество</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>SO Number:</strong><br/>"
-msgstr "<strong>Заказ Номер:</strong><br/>"
+msgstr "<strong>№ ЗП:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Scheduled Date:</strong><br/>"
-msgstr "<strong>Запланированная Дата:</strong><br/>"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Sequence</strong>"
-msgstr "<strong>Последовательность</strong>"
+msgstr "<strong>Планируемая дата:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Source Document:</strong><br/>"
-msgstr "<strong>Документ Источник:</strong><br/>"
+msgstr "<strong>Документ-основание:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Source Location</strong>"
-msgstr "<strong>Источник Место Размещения</strong>"
+msgstr "<strong>Источник места размещения</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Work Orders</strong>"
-msgstr "<strong>Рабочие Заказы</strong>"
+msgstr "<strong>Производственные задания</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>WorkCenter</strong>"
-msgstr "<strong>Рабочий Центр</strong>"
+msgstr "<strong>Производственный участок</strong>"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_product_efficiency
-msgid "A factor of 0.9 means a loss of 10% during the production process."
-msgstr "Коэффициент 0,9 означает потерю 10% в процессе производства"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_efficiency
-msgid "A factor of 0.9 means a loss of 10% within the production process."
-msgstr "Коэффициент 0,9 означает потерю 10% в процессе производства"
+#: code:addons/mrp/models/mrp_workorder.py:429
+#, python-format
+msgid "A Manufacturing Order is already done or cancelled!"
+msgstr "Заявка на производство уже готова или отменена!"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
 msgid ""
 "A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products."
 msgstr ""
-"Заказ на изготовление, основанный на спецификации материалов, будет "
-"потреблять сырье и производить готовую продукцию."
+"Заявка на производство, основанная на ведомости материалов, будет потреблять"
+" сырьё, а в итоге произведёт готовый продукт."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_active
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_active
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_search
 msgid "Active"
-msgstr "Активен"
+msgstr "Активно"
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:51
-#, python-format
-msgid "Active Id not found"
-msgstr "Идентификатор действия не найден"
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_active_move_lot_ids
+msgid "Active Move Lot"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
+msgid "Add a description..."
+msgstr "Добавить описание…"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+msgid "All"
+msgstr "Все"
+
+#. module: mrp
+#: selection:mrp.bom,ready_to_produce:0
+msgid "All components available"
+msgstr "Все компоненты в наличии"
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
-"You should install the mrp_byproduct module if you want to manage extra "
-"products on BoMs !"
+"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
-"Все количества продукции должны быть больше, чем 0.\n"
-"Вы должны установить модуль mrp_byproduct если вы хотите управлять "
-"дополнительными продуктами в спецификациях!"
+"Все количества продукта должны быть больше 0.\n"
+"Вы должны установить модуль mrp_byproduct если хотите управлять дополнительными продуктами в ВМ!"
 
 #. module: mrp
-#: selection:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work orders"
-msgstr "Разрешить детальное планирование заказов на выполнение работ"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_rounding_efficiency
+#: model:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid ""
-"Allow to manage product rounding on quantity and product efficiency during "
-"production process"
+"An unbuild order will do a reverse bill of materials, unbuilding products\n"
+"            you produced, but you can also use it to unbuild products you purchased."
 msgstr ""
-"Разрешить управлять округлением  количества продукта и эффективности "
-"продукта в процессе производства"
+"Отмена заявки даст обратный ход ведомости материалов, отменит изготовленные "
+"продукты, а также может отменить производство уже проданных продуктов."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Apply"
-msgstr "Применить"
+msgstr "Применить "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Approve"
-msgstr "Подтвердить"
+msgstr "Одобрить"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Archived"
+msgstr "Архивировано"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:263
+#, python-format
+msgid "Attachments"
+msgstr "Вложения"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_tree
+msgid "Author"
+msgstr "Автор"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_availability
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_availability
+#: selection:mrp.workcenter.productivity.loss,loss_type:0
+msgid "Availability"
+msgstr "Наличие"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+msgid "Availability Losses"
+msgstr "Наличие потерь"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production,availability:0
+msgid "Available"
+msgstr "Доступно"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
@@ -236,70 +360,65 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
-"Средняя задержка в днях, при производстве этого продукта. В случае "
-"многоуровневой спецификации, длительность производственного цикла "
-"компонентов будет добавлена."
-
-#. module: mrp
-#: selection:mrp.production,state:0
-msgid "Awaiting Raw Materials"
-msgstr "В ожидании Сырья"
+"Средняя задержка в днях при производстве этого продукта. В случае "
+"многоуровневой ВМ, будет добавлена длительность производственного цикла "
+"компонентов."
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_price
 msgid "BOM Cost"
-msgstr "BOM Стоимость"
+msgstr "Стоимость ВМ"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
 msgid "BOM Name"
-msgstr "Наименование спецификации"
+msgstr "Наименование ВМ"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
-msgstr "Варианты Спецификации Продукта  необходимо применить эту линию."
+msgstr "Варианты ВМ продукта необходимо указать в эту строку."
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
 msgid "BOM Ref"
-msgstr "Осн. ПМ"
+msgstr "Ссылка ВМ"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
-#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
 msgid "BOM Structure"
-msgstr "Структура спецификации"
+msgstr "Структура ВМ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr "BOM линии, указанной спецификации"
+msgstr "Строки ВМ в связанной ВМ"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:25
-#, python-format
-msgid ""
-"Because the product %s requires it, you must assign a serial number to your "
-"raw material %s to proceed further in your production. Please use the "
-"'Produce' button to do so."
-msgstr ""
-"Потому что продукт %s требует, вы должны назначить серийный номер вашего "
-"сырья %s для движения дальше в производстве. Пожалуйста, используйте кнопку "
-"'' Произвести\" чтобы сделать так."
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_mode_batch
+msgid "Based on"
+msgstr "На основе"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Bill Of Material"
-msgstr "Спецификация"
+msgstr "Ведомость материалов"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_bom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_bom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_bom_id
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Bill of Material"
 msgstr "Ведомость материалов"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
+msgid "Bill of Material line"
+msgstr "Строка ведомости материалов"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -313,12 +432,12 @@ msgstr "Ведомость материалов"
 #: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Bill of Materials"
-msgstr "Спецификация"
+msgstr "Ведомость материалов"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action2
+#: model:ir.actions.act_window,name:mrp.mrp_bom_line_action_from_bom
 msgid "Bill of Materials Structure"
-msgstr "Структура спецификации"
+msgstr "Структура ведомости материалов"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_bom_id
@@ -326,173 +445,218 @@ msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
 msgstr ""
-"Спецификация материалов позволяет определить перечень необходимого сырья, "
-"чтобы сделать конечный продукт."
+"Ведомость материалов позволяет определить перечень необходимого сырья для "
+"производства конечного продукта."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid ""
 "Bills of Materials allow you to define the list of required raw\n"
-"                materials used to make a finished product; through a "
-"manufacturing\n"
+"                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
-"Спецификации материалов позволяют определить перечень необходимого сырья, "
-"материалы, используемые, чтобы сделать конечный продукт; через заказ на "
-"производство или комплект продуктов."
+"Ведомость материалов позволяют определять перечни необходимого сырья "
+"используемого для производства конечного продукта через заказ на "
+"производство или упаковку."
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "Bills of materials may produce residual products (A + B --> C + D)"
-msgstr ""
-"Спецификации материалов могут привести к побочным продуктам (A + B --> C + D)"
+msgstr "Ведомости материалов могут давать побочные продукты (A + Б → В + Г)"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
+msgid "Block"
+msgstr "Блокировка"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
+#: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter_wo
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
+msgid "Block Workcenter"
+msgstr "Блокировать участок"
+
+#. module: mrp
+#: selection:mrp.workcenter,working_state:0
+msgid "Blocked"
+msgstr "Блокировано"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_blocked_time
+msgid "Blocked Time"
+msgstr "Время блокировки"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_blocked_time
+msgid "Blocked hour(s) over the last month"
+msgstr "Часов блокировки за прошлый месяц"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_procurement_order_bom_id
 msgid "BoM"
-msgstr "Спецификация"
+msgstr "ВМ"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:316
-#, python-format
-msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
-msgstr "BoM \"%s\" содержит строку BoM с рекурсией продукта: \"%s\"."
+#: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
+msgid "BoM Components"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_bom_line_id
+msgid "BoM Line"
+msgstr "Строка ВМ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
 msgid "BoM Lines"
-msgstr "Позиции спецификации"
+msgstr "Строки ВМ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_type
 msgid "BoM Type"
-msgstr "Тип спецификации"
+msgstr "Тип ВМ"
 
 #. module: mrp
-#: selection:mrp.product.produce,tracking:0
-msgid "By Lots"
-msgstr "По Партиям"
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
+msgid "BoM details"
+msgstr "Перечень ВМ"
 
 #. module: mrp
-#: selection:mrp.product.produce,tracking:0
-msgid "By Unique Serial Number"
-msgstr "По Уникальным Серийным Номерам"
+#: code:addons/mrp/models/mrp_bom.py:68
+#, python-format
+msgid "BoM line product %s should not be same as BoM product."
+msgstr "Строка %s ВМ продукта не должна быть ВМ того же продукта."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
 msgid "By-Products"
-msgstr "По Продуктам"
+msgstr "По продуктам"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:228
+#: model:ir.model.fields,field_description:mrp.field_product_product_can_be_expensed
+msgid "Can be Expensed"
+msgstr "Может быть расходным"
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:36
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr "Не могу найти общий Производственный маршрут."
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
-#: model:ir.ui.view,arch_db:mrp.view_mrp_config
-#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
-#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
-msgid "Cancel"
-msgstr "Отмена"
+msgstr "Не могу найти любую общую производственную карту."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Cancel Production"
-msgstr "Отменить Производство"
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+msgid "Cancel"
+msgstr "Отменить"
 
 #. module: mrp
-#: selection:mrp.production,state:0
+#: selection:mrp.production,state:0 selection:mrp.workorder,state:0
 msgid "Cancelled"
-msgstr "Отменен"
+msgstr "Отменено"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:150
+#: code:addons/mrp/models/mrp_production.py:268
 #, python-format
-msgid "Cannot consume a move with negative or zero quantity."
-msgstr "Нельзя израсходовать негативное или нулевое количество."
+msgid "Cannot delete a manufacturing order not in cancel state"
+msgstr "Нельзя удалить производственную заявку без статуса отмены"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
-#, python-format
-msgid "Cannot delete a manufacturing order in state '%s'."
-msgstr "Не удается удалить производственный заказ в состоянии '%s'."
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_capacity
+msgid "Capacity"
+msgstr "Вместимость"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:719
-#, python-format
-msgid "Cannot find a bill of material for this product."
-msgstr "Не могу найти спецификацию для этого продукта."
-
-#. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:67
-#: code:addons/mrp/wizard/change_production_qty.py:72
-#, python-format
-msgid "Cannot find bill of material for this product."
-msgstr "Не могу найти спецификацию для этого продукта."
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-msgid "Capacity Information"
-msgstr "Нормирование рабочего времени"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity_per_cycle
-msgid "Capacity per Cycle"
-msgstr "Количество одновременно изготавливаемых деталей"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_change_production_qty
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Change Product Qty"
 msgstr "Изменить кол-во"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_change_production_qty
-msgid "Change Quantity of Products"
-msgstr "Изменение количества продуктов"
+#: model:ir.actions.act_window,name:mrp.action_change_production_qty
+msgid "Change Quantity To Produce"
+msgstr "Изменить количество для продукта"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_change_production_qty
+msgid "Change Quantity of Products"
+msgstr "Изменить количество продуктов"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_check_to_done
+msgid "Check Produced Qty"
+msgstr "Проверить кол-во продукта"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Check availability"
+msgstr "Доступность проверки"
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:9
+#, python-format
+msgid "Clear"
+msgstr "Очистить"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.action_work_orders
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid "Click to add a work center."
-msgstr "Нажмите, чтобы добавить рабочий центр."
+msgstr "Нажмите, чтобы добавить участок."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "Click to create a bill of material."
-msgstr "Нажмите, чтобы создать спецификацию."
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid "Click to create a group of properties."
-msgstr "Нажмите, чтобы создать группу свойств."
+msgstr "Нажмите, чтобы создать ведомость материалов."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Click to create a manufacturing order."
-msgstr "Нажмите, чтобы создать заказ на производство."
+msgstr "Нажмите, чтобы создать заявку на производство."
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid "Click to create a new property."
-msgstr "Нажмите, чтобы создать новое свойство."
+#: model:ir.actions.act_window,help:mrp.mrp_message_action_main
+msgid "Click to create a new message."
+msgstr "Нажмите для создания нового сообщения."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid "Click to create a new routing."
-msgstr "Нажмите, чтобы создать новый маршрут."
+msgstr "Нажмите, чтобы создать новую карту."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_unbuild
+msgid "Click to start a new Unbuild Order"
+msgstr "Нажмите для создания отмены заказа"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
 msgid "Click to start a new manufacturing order."
-msgstr "Нажмите, чтобы начать новый производственный заказ."
+msgstr "Нажмите, чтобы начать новую производственную заявку."
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_code
+#: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
+#: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
+#: model:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
+#: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
+msgid "Click to start a new work order."
+msgstr "Нажмите, чтобы начать новое производственное задание."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_code
 msgid "Code"
 msgstr "Код"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_color
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_color
+msgid "Color"
+msgstr "Цвет"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
@@ -501,11 +665,11 @@ msgstr "Компании"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_company_id
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_company_id
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Company"
 msgstr "Компания"
@@ -513,112 +677,108 @@ msgstr "Компания"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_component_tree_view
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Components"
 msgstr "Компоненты"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Compute Data"
-msgstr "Рассчитать данные"
+#: selection:mrp.routing.workcenter,time_mode:0
+msgid "Compute based on real time"
+msgstr "Расчёт исходя из текщего состояния"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
 msgid "Configuration"
-msgstr "Настройки"
+msgstr "Настройка"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Configure Manufacturing"
-msgstr "Настройка Производство"
+msgstr "Настроить производство"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
-msgid "Confirm"
-msgstr "Подтвердить"
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: selection:mrp.production,state:0
+msgid "Confirmed"
+msgstr "Подтверждено"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
+msgid "Consume Line"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
+msgid "Consume Unbuild Order"
+msgstr "Поглотить отменённую заявку"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Confirm Production"
-msgstr "Подтвердить производство"
+msgid "Consumed"
+msgstr "Поглощено"
 
 #. module: mrp
-#: selection:mrp.product.produce,mode:0
-msgid "Consume & Produce"
-msgstr "Потребить и Произвести"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
-msgid "Consume Lines"
-msgstr "Линии Потребления"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.move_consume
-#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
-msgid "Consume Move"
-msgstr "Перемещение потребляемого"
-
-#. module: mrp
-#: selection:mrp.product.produce,mode:0
-msgid "Consume Only"
-msgstr "Только потреблять"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_stock_move_consume
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
-msgid "Consume Products"
-msgstr "Потребляемые ТМЦ"
+msgid "Consumed Materials"
+msgstr "Поглощённые материалы"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines2
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Consumed Products"
-msgstr "Расходные"
+#: model:ir.model.fields,field_description:mrp.field_stock_quant_consumed_quant_ids
+msgid "Consumed Quant"
+msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consumed_for
-msgid "Consumed for"
-msgstr "Потребить для"
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_operation_id
+msgid "Consumed in Operation"
+msgstr "Поглощено операций"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Continue Production"
+msgstr "Продолжить производство"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Cost Structure"
-msgstr "Структура Себестоимости"
+msgstr "Структура себестоимости"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
-msgid "Cost per cycle"
-msgstr "Стоимость по циклам"
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
+msgid "Count Mo Late"
+msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_hour
-msgid "Cost per hour"
-msgstr "Стоимость за час"
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
+msgid "Count Mo Todo"
+msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-msgid "Costing Information"
-msgstr "Информация об издержках производства"
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
+msgid "Count Mo Waiting"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Create Workorders"
+msgstr "Создать производственное задание"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_create_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_create_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_create_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_create_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_create_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_create_uid
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_create_uid
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_create_uid
 msgid "Created by"
 msgstr "Создано"
 
@@ -627,24 +787,64 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_create_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_create_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_create_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_create_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_create_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_create_date
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_create_date
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_create_date
 msgid "Created on"
 msgstr "Создан"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle_account_id
-msgid "Cycle Account"
-msgstr "Счет учета Цикла"
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_final_lot_id
+msgid "Current Lot"
+msgstr "Текущая партия"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Current Production"
+msgstr "Текущее производство"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Current Qty"
+msgstr "Текущее кол-во"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_producing
+msgid "Currently Produced Quantity"
+msgstr "Текущее кол-во готового"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
+msgid "Dashboard"
+msgstr "Панель управления"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+msgid "Date"
+msgstr "Дата"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_finished
+msgid "Deadline End"
+msgstr "Конец крайнего срока"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_start
+msgid "Deadline Start"
+msgstr " Начало крайнего срока"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+msgid "Default Duration"
+msgstr "Длительность по умолчанию"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -653,83 +853,137 @@ msgid "Default Unit of Measure"
 msgstr "Единица измерения по умолчанию"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"Define specific property groups that can be assigned to your\n"
-"                bill of materials and sales orders. Properties allows Odoo\n"
-"                to automatically select the right bill of materials "
-"according\n"
-"                to properties selected in the sales order by salesperson."
-msgstr ""
-"Определить конкретные группы свойств, которые могут быть\n"
-"назначены на вашу спецификацию материалов и заказов на\n"
-"продажу. Свойства позволяют Odoo автоматически выбрать\n"
-"правильную спецификацию материалов в соответствии\n"
-"выбранным свойствам, в процессе продажи продавцом."
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_calendar_id
 msgid "Define the schedule of resource"
 msgstr "Определить график ресурса"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_description
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_description
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_note
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_note
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_note
-#: model:ir.ui.view,arch_db:mrp.mrp_property_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_property_group_form_view
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_description
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Description"
 msgstr "Описание"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_note
-msgid ""
-"Description of the Work Center. Explain here what's a cycle according to "
-"this Work Center."
-msgstr ""
-"Описание Рабочего Центра. Объясняет здесь то, что цикл соответствует этому "
-"Рабочему Центру."
+msgid "Description of the Work Center."
+msgstr "Описание производственного участка."
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Destination Loc."
-msgstr "Место назначения Размещения"
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Description of the work center..."
+msgstr "Описание производственного участка…"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_dest_id
+msgid "Destination Location"
+msgstr "Место назначения"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_lots
+msgid "Discard"
+msgstr "Отменить"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_display_name
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_display_name
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_display_name
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_display_name
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_display_name
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_display_name
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
-#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_display_name
 msgid "Display Name"
 msgstr "Отображаемое Имя"
 
 #. module: mrp
-#: selection:mrp.config.settings,module_mrp_operations:0
-msgid "Do not use a planning for the work orders "
-msgstr "Не использовать планирование для заказов на выполнение работ"
-
-#. module: mrp
-#: selection:mrp.production,state:0
+#: model:ir.model.fields,field_description:mrp.field_stock_move_is_done
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_quantity_done
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+#: selection:mrp.production,state:0 selection:mrp.unbuild,state:0
 msgid "Done"
 msgstr "Сделано"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_done_wo
+msgid "Done for Work Order"
+msgstr "Сделано для производственных заданий"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+#: selection:mrp.unbuild,state:0
+msgid "Draft"
+msgstr "Черновик"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_cycle
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_duration
+#: model:ir.ui.view,arch_db:mrp.oee_tree_view
+msgid "Duration"
+msgstr "Длительность"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.oee_tree_view
+msgid "Duration (minutes)"
+msgstr "Длительность (минуты)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_mode
+msgid "Duration Computation"
+msgstr "Вычисленная длительность"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration_percent
+msgid "Duration Deviation (%)"
+msgstr "Отклонение длительности (%)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration_unit
+msgid "Duration Per Unit"
+msgstr "Длительность на единицу"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Effective Date"
+msgstr "Срок эффективности"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_finished
+msgid "Effective End Date"
+msgstr "Конец срока эффективности"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_start
+msgid "Effective Start Date"
+msgstr "Начало срока эффективности"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_loss_type
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type
+msgid "Effectiveness Category"
+msgstr "Категория эффективности"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Efficiency"
+msgstr "Производительность"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_efficiency
@@ -738,37 +992,51 @@ msgstr "КПД"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_finished
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_date_end
 msgid "End Date"
 msgstr "Дата окончания"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Extra Information"
-msgstr "Доп. информация"
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration_expected
+msgid "Expected Duration"
+msgstr "Ожидаемая продолжительность"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle_account_id
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour_account_id
-msgid ""
-"Fill this only if you want automatic analytic accounting entries on "
-"production orders."
-msgstr ""
-"Заполните это, только если вы хотите автоматические аналитические "
-"бухгалтерские проводки для производственных заказов."
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_duration_expected
+msgid "Expected duration (in minutes)"
+msgstr "Ожидаемая продолжительность (в минутах)"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_product_id
-msgid ""
-"Fill this product to easily track your production costs in the analytic "
-"accounting."
-msgstr ""
-"Заполнив этот продукт легко отслеживать ваши производственные издержки в "
-"аналитическом учете."
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Extra Features"
+msgstr "Дополнительные возможности"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+msgid "Filters"
+msgstr "Фильтры"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Finish Order"
+msgstr "Завершить заказ"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.workorder,state:0
+msgid "Finished"
+msgstr "Завершено"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_lot_produced_id
+msgid "Finished Lot"
+msgstr "Готовая партия"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_finished_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Finished Products"
-msgstr "Конечный продукт"
+msgstr "Готовый продукт"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_dest_id
@@ -776,28 +1044,9 @@ msgid "Finished Products Location"
 msgstr "Расположение готовой продукции"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"For instance, in the property group \"Warranty\", you an have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
-"                on the propoerties selected in the sales order, Odoo will\n"
-"                schedule a production using the matching bill of materials."
-msgstr ""
-"Например, в группе свойств \"Гарантии\", вы имеете два свойства:\n"
-"1 год гарантии, 3 года гарантии. В зависимости от выбранных\n"
-"свойств в заказе клиента, Odoo будет планировать производство,\n"
-"используя соответствующую спецификацию материалов."
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Force Reservation"
-msgstr "Не ждать пополнения расходных"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_general_account_id
-msgid "General Account"
-msgstr "Базовый счет"
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+msgid "Fully Productive"
+msgstr "Полная готовность"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -808,7 +1057,7 @@ msgstr "Общая информация"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_sequence
 msgid "Gives the sequence order when displaying a list of bills of material."
 msgstr ""
-"Определяет порядок последовательности при отображении списка спецификаций "
+"Определяет порядок последовательности при отображении списка ведомостей "
 "материалов."
 
 #. module: mrp
@@ -816,15 +1065,18 @@ msgstr ""
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
 msgstr ""
-"Позволяет отображать порядок последовательности, при отображении списка "
-"маршрутизации Рабочих Центров."
+"Отображать подробности при выводе списка технологических карт "
+"производственных участков."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_sequence
-msgid "Gives the sequence order when displaying a list of work orders."
-msgstr ""
-"Позволяет отображать порядок последовательности, при отображении списка "
-"заказов на выполнение работ."
+#: model:ir.model.fields,help:mrp.field_ir_attachment_priority
+msgid "Gives the sequence order when displaying a list of tasks."
+msgstr "Позволяет отображать задания в списке задач последовательно."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_sequence
+msgid "Gives the sequence order when displaying a list of work centers."
+msgstr "Отображать подробности при выводе списка производственных участков."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
@@ -832,9 +1084,9 @@ msgid "Gives the sequence order when displaying."
 msgstr "Позволяет отображать порядок последовательности при отображении."
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировать"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
@@ -843,43 +1095,67 @@ msgstr "Группировать по"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Group By..."
-msgstr "Объединять по..."
+msgstr "Группировать…"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_hour_account_id
-msgid "Hour Account"
-msgstr "Бухгалтерский Счет Часы"
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+msgid "Group by..."
+msgstr "Группировать…"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_has_attachments
+msgid "Has Attachments"
+msgstr "Имеет приложения"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_has_moves
+msgid "Has Moves"
+msgstr ""
+
+#. module: mrp
+#: selection:ir.attachment,priority:0
+msgid "High"
+msgstr "Высокий"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_id
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_id
-#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_id
 msgid "ID"
-msgstr "ID"
+msgstr "Номер"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_id
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
-"Если вариант продукта определен, спецификация доступна только для этого "
-"продукта."
+"Если вариант продукта определён, то доступна ВМ только для этого продукта."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_propagate
+msgid ""
+"If checked, when the previous move of the move (which was generated by a "
+"next procurement) is cancelled or split, the move generated by this move "
+"will too"
+msgstr ""
+"Если отмечено, когда предыдущее движение движения (которое было произведено "
+"следующей закупкой) отменено или разделено, движение будет также "
+"сгенерированно этим движением "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_active
@@ -887,8 +1163,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
 msgstr ""
-"Если значение активного поля — Ложь, это позволит вам скрыть спецификацию "
-"материалов, не удаляя ее."
+"Если значение активного поля — «Ложь», то это позволит вам скрыть ведомость"
+"  материалов не удаляя её."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
@@ -896,8 +1172,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Если значение активного поля — Ложь, это позволит вам скрыть запись ресурса, "
-"не удаляя ее."
+"Если значение активного поля — Ложь, это позволит вам скрыть запись ресурса,"
+" не удаляя ее."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
@@ -905,106 +1181,177 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
 msgstr ""
-"Если значение активного поля — Ложь, будет возможно скрыть маршрутизацию, не "
-"удаляя её."
+"Если значение активного поля — «Ложь», будет возможно скрыть карту не удаляя"
+" её."
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-msgid "In Production"
-msgstr "В производстве"
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production,state:0 selection:mrp.workcenter,working_state:0
+#: selection:mrp.workorder,state:0
+msgid "In Progress"
+msgstr "Выполняется"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Inactive"
-msgstr "Неактивен"
+#: model:ir.model.fields,help:mrp.field_stock_move_lots_lot_produced_qty
+msgid "Informative, not used in matching"
+msgstr "Для информации, не использовать при сверке"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
-msgid "Internal Reference"
-msgstr "Внутренняя ссылка"
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
+msgid "Inventory Message"
+msgstr "Сообщение перемещения"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Inventory Moves"
+msgstr "Перемещения"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
+msgid "Inventory Post Visible"
+msgstr "Видимость сообщений перемещения"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_move_lot_ids
+msgid ""
+"Inventory moves for which you must scan a lot number at this work order"
+msgstr ""
+"Перемещения, для которых нужно отсканировать номер партии для этого задания."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
+msgid "Is Current User Working"
+msgstr "Работа данного пользователя"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
+msgid "Is Produced"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_manual
+msgid "Is a Blocking Reason"
+msgstr "Причина блокировки"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:158
+#, python-format
+msgid "It has been unblocked already. "
+msgstr "Уже разблокировано."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
-"Keep empty if you produce at the location where the finished products are "
-"needed.Set a location if you produce at a fixed location. This can be a "
+"Keep empty if you produce at the location where you find the raw "
+"materials.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
-"Оставьте пустым, если место производства совпадает с местом хранения готовой "
-"продукции. Установите место, если есть определенное место производства. Это "
-"может быть место хранения партнера если вы используете субподряд."
+"Оставьте пустым если производите в том же месте, где находится сырьё. "
+"Укажите конкретное место обработки. Это может быть также место у "
+"субподрядчика."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+msgid "Kit"
+msgstr "Комплект"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_type
+msgid ""
+"Kit (Phantom): When processing a sales order for this product, the delivery "
+"order will contain the raw materials, instead of the finished product."
+msgstr ""
+"Комплект (фантомный): При подтверждении заказа для клиента на этот продукт, "
+"отгрузочный документ будет содержать не готовый продукт, а комплект сырья."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_message___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce___last_update
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_production___last_update
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line___last_update
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line___last_update
-#: model:ir.model.fields,field_description:mrp.field_mrp_property___last_update
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost___last_update
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure___last_update
-#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume___last_update
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots___last_update
 msgid "Last Modified on"
-msgstr "Последний раз изменено"
+msgstr "Последнее изменение"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_write_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_write_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_write_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_write_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_write_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_uid
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_write_uid
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_write_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_write_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_write_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_write_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_write_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_date
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_write_date
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_write_date
 msgid "Last Updated on"
-msgstr "Последний раз обновлено"
+msgstr "Последнее обновление"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Late"
-msgstr "Поздно"
+msgstr "Позже"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_location_id
+#: code:addons/mrp/models/mrp_production.py:374
+#, python-format
+msgid ""
+"Lines need to be deleted, but can not as you still have some quantities to "
+"consume in them. "
+msgstr ""
+"Строки нужно удалить, но это невозможно  сделать пока есть части, отмеченные"
+" к потреблению."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_id
 msgid "Location"
-msgstr "Место хранения"
+msgstr "Место"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_location_src_id
@@ -1014,47 +1361,81 @@ msgstr "Место, где система будет искать компоне
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "Место хранения, где система будет хранить готовую продукцию."
+msgstr "Место, где система будет хранить готовые продукты."
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_lot_id
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Logistics"
+msgstr "Логистика"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9551
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+msgid "Loss Reason"
+msgstr "Причина потери"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_lot_id
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_restrict_lot_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_lot_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_lot_id
 msgid "Lot"
 msgstr "Партия"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_active_move_lot_ids
+#: model:ir.model.fields,field_description:mrp.field_stock_move_move_lot_ids
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_lots
+msgid "Lots"
+msgstr "Партии"
+
+#. module: mrp
+#: selection:ir.attachment,priority:0
+msgid "Low"
+msgstr "Низкий"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_maintenance
+msgid "Maintenance"
+msgstr "Обслуживание"
+
+#. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr "Управление Операциями Рабочего Центра"
+msgstr "Управление операциями производственной заявки"
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_plm:0
+msgid "Manage engineering changes, versions and documents"
+msgstr "Управление инженерными изменениями, версиями и документами."
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by manufacturing orders"
-msgstr "Управление производством по производственным заказам"
+msgstr "Управление производством по производственным заявкам"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by work orders"
-msgstr "Управление производством по нарядам/заказам/ на выполнение работ"
+msgstr "Управление производством по производственным заявкам"
 
 #. module: mrp
-#: model:res.groups,name:mrp.group_rounding_efficiency
-msgid "Manage rounding and efficiency of BoM components"
-msgstr "Управление округлением и эффективностью Компонентов BoM"
-
-#. module: mrp
-#: selection:mrp.config.settings,group_rounding_efficiency:0
-msgid "Manage rounding and efficiency of bills of materials components"
-msgstr "Управление округлением и эффективностью Компонентов BoM"
+#: selection:mrp.config.settings,module_quality_mrp:0
+msgid "Manage quality control points, checks and measures"
+msgstr "Управление точками контроля, проверками и принятыми мерами"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Manager"
-msgstr "Руководитель"
+msgstr "Менеджер"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:225
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_cycle_manual
+msgid "Manual Duration"
+msgstr "Продолжительность ручная"
+
+#. module: mrp
+#: code:addons/mrp/models/procurement.py:14
+#: code:addons/mrp/models/stock_warehouse.py:34
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
@@ -1063,12 +1444,12 @@ msgstr "Изготовление"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_pull_id
 msgid "Manufacture Rule"
-msgstr "Правило Производства"
+msgstr "Правило производства"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid "Manufacture in this Warehouse"
-msgstr "Производство на этот Склад"
+msgstr "Производство на этом склад"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1076,17 +1457,14 @@ msgid "Manufacture this product"
 msgstr "Производство этого продукта"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
+#: code:addons/mrp/models/stock_warehouse.py:64
+#: model:ir.ui.menu,name:mrp.menu_mrp_root
 #: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
+#: model:stock.picking.type,name:mrp.picking_type_manufacturing
+#, python-format
 msgid "Manufacturing"
 msgstr "Производство"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_efficiency
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_efficiency
-msgid "Manufacturing Efficiency"
-msgstr "Эффективность производства"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_produce_delay
@@ -1096,65 +1474,72 @@ msgid "Manufacturing Lead Time"
 msgstr "Время производства"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_production_id
-#: model:ir.model.fields,field_description:mrp.field_procurement_order_production_id
-#: model:ir.ui.view,arch_db:mrp.view_mrp_config
-msgid "Manufacturing Order"
-msgstr "Производственный заказ"
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_manufacturing_lead
+msgid "Manufacturing Lead Time *"
+msgstr "Время производства*"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:112
-#, python-format
-msgid "Manufacturing Order <em>%s</em> created."
-msgstr "Заказ на Производство <em>%s</em> создан."
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_mo_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_mo_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_id
+#: model:ir.model.fields,field_description:mrp.field_procurement_order_production_id
+#: model:ir.model.fields,field_description:mrp.field_stock_scrap_production_id
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+msgid "Manufacturing Order"
+msgstr "Производственная заявка"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_mrp_production
+#: model:ir.actions.act_window,name:mrp.act_product_mrp_production_workcenter
+#: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
+#: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
+#: model:ir.actions.act_window,name:mrp.mrp_production_report
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_report
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_production_calendar
 #: model:ir.ui.view,arch_db:mrp.view_production_graph
 #: model:ir.ui.view,arch_db:mrp.view_production_pivot
 msgid "Manufacturing Orders"
-msgstr "Производственные заказы"
+msgstr "Производственные заявки"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are currently in production."
-msgstr "Производственные заказы, которые в настоящее время в изготовлении."
+msgstr "Производственные заявки в процессе изготовления."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-msgid "Manufacturing Orders which are ready to start production."
-msgstr ""
-"Производственные Заказы, которые в настоящее время в готовы к производству."
+msgid "Manufacturing Orders which are in confirmed state."
+msgstr "Производственные заявки с подтверждённым статусом."
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-msgid "Manufacturing Orders which are waiting for raw materials."
-msgstr "Производственные Заказы, которые ожидают сырья."
+#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manu_type_id
+msgid "Manufacturing Picking Type"
+msgstr "Производство тип комплектации"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_ready_to_produce
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "Manufacturing Readiness"
+msgstr "Производственная готовность"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Manufacturing Reference"
-msgstr "Производство Ссылка"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:784
-#, python-format
-msgid "Manufacturing order cancelled."
-msgstr "Заказ на Производство отменен."
+msgstr "Производственная ссылка"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
 msgid ""
 "Manufacturing orders are usually proposed automatically based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule."
 msgstr ""
 "Производственные заказы обычно предлагаются автоматически\n"
@@ -1163,69 +1548,206 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Mark as Started"
-msgstr "Отметить как Начато"
+msgid "Mark as Done"
+msgstr "Отметить сделанным"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom
 msgid "Master Data"
 msgstr "Основные данные"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_mode
-msgid "Mode"
-msgstr "Режим"
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_mps
+msgid "Master Production Schedule"
+msgstr "Мастер планирования производства"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_message
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_tree
+msgid "Message"
+msgstr "Сообщение"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_message_action_main
+msgid ""
+"Messages can be configured to appear during any operation: receptions, delivery orders,\n"
+"                manufacturing orders, work orders, etc."
+msgstr ""
+"Сообщения можно настроить так, чтобы они появлялись в операциях: \n"
+"приём, заявка на отгрузку, производственная заявка, \n"
+"производственное задание и т.п."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Miscellaneous"
+msgstr "Разное"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+msgid "More <i class=\"fa fa-caret-down\"/>"
+msgstr "Подробности<i class=\"fa fa-caret-down\"/>"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_move_id
+msgid "Move"
+msgstr "Перемещение"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_done_move
+msgid "Move Done"
+msgstr "Перемещение сделано"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_move_raw_ids
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
+msgid "Moves"
+msgstr "Перемещения"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_move_lot_ids
+msgid "Moves to Track"
+msgstr "Перемещения в карту"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Mrp Workcenter"
-msgstr "Производство Рабочий Центр "
+msgstr "Управление участком"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_name
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_name
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_name
+#: model:ir.actions.server,name:mrp.production_order_server_action
+msgid "Mrp: Plan Production Orders"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "My Activities"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_search
+msgid "My Messages"
+msgstr "Мои сообщения"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_name
-#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Name"
 msgstr "Название"
 
 #. module: mrp
-#: selection:mrp.production,state:0
+#: code:addons/mrp/models/mrp_production.py:46
+#: code:addons/mrp/models/mrp_production.py:257
+#: code:addons/mrp/models/mrp_production.py:258
+#: code:addons/mrp/models/mrp_routing.py:18
+#: code:addons/mrp/models/mrp_routing.py:34
+#: code:addons/mrp/models/mrp_routing.py:35
+#: code:addons/mrp/models/mrp_unbuild.py:20
+#: code:addons/mrp/models/mrp_unbuild.py:81
+#, python-format
 msgid "New"
 msgstr "Новый"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:108
-#, python-format
-msgid "No BoM exists for this product!"
-msgstr "Не существует BoM для этого продукта!"
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch
+msgid "Next Operation"
+msgstr "Следующая операция"
 
 #. module: mrp
-#: selection:mrp.product.produce,tracking:0
-msgid "No Tracking"
-msgstr "Не Отслеживать движение"
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_next_work_order_id
+msgid "Next Work Order"
+msgstr "Следующее производственное задание"
+
+#. module: mrp
+#: code:addons/mrp/models/procurement.py:100
+#, python-format
+msgid "No BoM exists for this product!"
+msgstr "Нет ВМ для этого продукта!"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "No Routing"
+msgstr "Нет карт"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "No by-products in bills of materials (A + B --> C)"
-msgstr "Нет побочных продуктов в спецификациях (A + B --> C)"
+msgstr "Нет побочных продуктов в ведомостях материалов (A + Б → Г)"
 
 #. module: mrp
-#: selection:mrp.config.settings,group_rounding_efficiency:0
-msgid "No rounding and efficiency on bills of materials"
-msgstr "Нет управления округлением и эффективностью BoM"
+#: model:ir.actions.act_window,help:mrp.action_mrp_routing_time
+#: model:ir.actions.act_window,help:mrp.mrp_workorder_delta_report
+msgid ""
+"No data to display. You will get here statistics about the\n"
+"              work orders duration related to this routing."
+msgstr ""
+"Нет данных для просмотра. Здесь будет статистика по\n"
+"продолжительности производственных заданий этой\n"
+"технологической карты."
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_maintenance:0
+msgid "No maintenance machine and work centers"
+msgstr "Нет станков и производственных участков"
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_mps:0
+msgid ""
+"No need for Master Production Schedule as products have short lead times"
+msgstr ""
+"Нет необходимости в мастере производства, т. к. срок изготовления маленький"
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_plm:0
+msgid "No product lifecycle management"
+msgstr "Без управления жизненным циклом продукта"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_loss_action
+msgid "No productivity loss defined."
+msgstr "Нет предопределённых потерь продукта."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_blocked
+msgid "No productivity loss for this equipment."
+msgstr "Нет предопределённых потерь продукта на этом оборудовании."
+
+#. module: mrp
+#: selection:mrp.config.settings,module_quality_mrp:0
+msgid "No quality control"
+msgstr "Без контроля качества"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr "Нет вариантов на продукты"
+msgstr "Нет вариантов для товаров"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid ""
+"No workorder currently in progress. Click to mark work center as blocked."
+msgstr "Нет заказов в производстве. Отметьте участок как заблокированный."
+
+#. module: mrp
+#: selection:mrp.production,availability:0
+msgid "None"
+msgstr "Ничего"
+
+#. module: mrp
+#: selection:ir.attachment,priority:0
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: selection:mrp.production,priority:0
+#: selection:mrp.workcenter,working_state:0
 msgid "Normal"
 msgstr "Нормальный"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_scrap_workorder_id
+msgid "Not to restrict or prefer quants, but informative."
+msgstr "Без разбития на части, для информации."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1233,46 +1755,30 @@ msgid "Not urgent"
 msgstr "Не срочно"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_property_composition
-msgid "Not used in computations, for information purpose only."
-msgstr "Не используется в расчётах, только для справки."
-
-#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "Notes"
-msgstr "Примечания"
+msgstr "Заметки"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_cycle
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_cycle_nbr
-#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_cycle
-msgid "Number of Cycles"
-msgstr "Количество циклов"
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_capacity
+msgid "Number of pieces that can be produced in parallel."
+msgstr "Количество одновременно производимых штук."
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_hour
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_hour_nbr
-#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_hour
-msgid "Number of Hours"
-msgstr "Количество часов"
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "OEE"
+msgstr "ОЭО"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_cycle_nbr
-msgid ""
-"Number of iterations this work center has to do in the specified operation "
-"of the routing."
-msgstr ""
-"Количество итераций этого Рабочего Центра, которые нужно сделать в указанной "
-"операции в маршруте."
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee_target
+msgid "OEE Target"
+msgstr "Цель ОЭО"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity_per_cycle
-msgid ""
-"Number of operations this Work Center can do in parallel. If this Work "
-"Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr ""
-"Количество операций этого Рабочего Центра, которые может делать параллельно. "
-"Если этот Рабочий Центр, команда 5 работников, производительность за цикл 5."
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee_target
+msgid "OEE Target in percentage"
+msgstr "Цель ОЭО в процентах"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1280,56 +1786,181 @@ msgid ""
 "Odoo uses these BoMs to automatically propose manufacturing\n"
 "                orders according to procurement needs."
 msgstr ""
-"Odoo используя эти Спецификации, автоматически предложит\n"
-"заказы на производство, в соответствии с потребностями закупок."
+"Odoo использует ВМ для автоматического предложения\n"
+"закявок на производство в соответствии с потребностями закупок."
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
-msgid "Ok"
-msgstr "OK"
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee
+msgid "Oee"
+msgstr "ОЭО"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+#: selection:mrp.routing.workcenter,batch:0
+msgid "Once a minimum number of products is processed"
+msgstr "Минимальное кол-во продукта в производстве"
+
+#. module: mrp
+#: selection:mrp.routing.workcenter,batch:0
+msgid "Once all products are processed"
+msgstr "Кол-во всего произведённого продукта"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_operation_id
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Operation"
 msgstr "Операция"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
-msgid "Order Planning"
-msgstr "Планирование заказов"
+#: model:ir.model.fields,field_description:mrp.field_stock_move_operation_id
+msgid "Operation To Consume"
+msgstr "Готовность операции"
 
 #. module: mrp
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero!"
-msgstr "Количество заказа не может быть отрицательным или нулевым!"
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_operation_ids
+#: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
+#: model:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
+#: model:ir.ui.view,arch_db:mrp.oee_loss_search_view
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+#: model:ir.ui.view,arch_db:mrp.workcenter_line_calendar
+#: model:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
+#: model:ir.ui.view,arch_db:mrp.workcenter_line_graph
+#: model:ir.ui.view,arch_db:mrp.workcenter_line_pivot
+msgid "Operations"
+msgstr "Операции"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_order_ids
+msgid "Orders"
+msgstr "Заказы"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_production
+msgid "Original Production Quantity"
+msgstr "Исходное количество продукта"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_oee
+#: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_report
+msgid "Overall Equipment Effectiveness"
+msgstr "Полная эффективность оборудования"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee
+msgid "Overall Equipment Effectiveness, based on the last month"
+msgstr "Полная эффективность оборудования по итогам месяца"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
+msgid "Overall Equipment Effectiveness: no working or blocked time."
+msgstr "Полная эффективность оборудования без блокировок и простоев."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Overdue Activities"
+msgstr "Просроченные мероприятия"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_plm
+msgid "PLM"
+msgstr "ЖЦИ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
 msgid "Parent BoM"
-msgstr "Спецификация предка"
+msgstr "Родительская ВМ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr "Родительский Маршрут"
+msgstr "Родительская карта"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: selection:mrp.production,availability:0
+msgid "Partially Available"
+msgstr "Доступно частично"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Pause"
+msgstr "Приостановить"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.workorder,state:0
 msgid "Pending"
 msgstr "В ожидании"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_planning
-msgid "Planning"
-msgstr "Планирование"
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_performance
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+#: selection:mrp.workcenter.productivity.loss,loss_type:0
+msgid "Performance"
+msgstr "Выполнение"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:136
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+msgid "Performance Losses"
+msgstr "Потери выполнения"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_performance
+msgid "Performance over the last month"
+msgstr "Выполнение за прошлый месяц"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_picking_type_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_picking_type_id
+msgid "Picking Type"
+msgstr "Тип комплектации"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "Plan Orders"
+msgstr "План заказов"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: selection:mrp.production,state:0
+msgid "Planned"
+msgstr "Запланировано"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Planned Date"
+msgstr "Планируемая дата"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:269
 #, python-format
-msgid "Please provide proper quantity."
-msgstr "Пожалуйста введите правильное количество."
+msgid ""
+"Please set the quantity you produced in the Current Qty field. It can not be"
+" 0!"
+msgstr "Укажите текущее произведённое кол-во. Не может быть 0! "
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_plus_visible
+msgid "Plus Visible"
+msgstr "Плюс видимое"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Post Inventory"
+msgstr "Отправить перемещение"
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_maintenance:0
+msgid "Preventive and Corrective maintenance management"
+msgstr ""
+"Профилактические и корректировочные управления техническим обслуживанием"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_ir_attachment_priority
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_priority
 msgid "Priority"
 msgstr "Приоритет"
@@ -1337,89 +1968,76 @@ msgstr "Приоритет"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
-msgstr "Снабжение"
+msgstr "Поставка"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_procurement_group_id
+msgid "Procurement Group"
+msgstr "Группа поставки"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr "Правило снабжения"
+msgstr "Правило поставки"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_produce_id
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Produce"
 msgstr "Произвести"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids2
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_produce_line_ids
+msgid "Produce Line"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Produced Products"
-msgstr "Производимая продукция"
+msgid "Produced"
+msgstr "Произведено"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_quant_produced_quant_ids
+msgid "Produced Quant"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_tmpl_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_product_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_tmpl_id
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_product_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_product_id
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Product"
-msgstr "Товар"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_prod_id
-msgid "Product Move"
-msgstr "Перемещение Продукта"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_product_produce
-msgid "Product Produce"
-msgstr "Производимый продукт"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_product_produce_line
-msgid "Product Produce Consume lines"
-msgstr "Производимый Продукт линии Потребления"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
-msgid "Product Qty"
-msgstr "Кол-во продукции"
+msgstr "Продукт"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_qty
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_qty
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_qty
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
 msgid "Product Quantity"
-msgstr "Количество ТМЦ"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_rounding
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_rounding
-msgid "Product Rounding"
-msgstr "Минимальная кратность"
+msgstr "Количество продукта"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_product_tmpl_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_tmpl_id
 msgid "Product Template"
 msgstr "Шаблон продукта"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_uom
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_uom
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_uom
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_uom
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_uom
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_uom_id
 msgid "Product Unit of Measure"
-msgstr "Ед. изм. товара"
+msgstr "Ед. изм. продукта"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_id
@@ -1432,10 +2050,27 @@ msgid "Product Variants"
 msgstr "Варианты продукта"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_consume_line_ids
+msgid "Product to Track"
+msgstr "Отслеживаемый продукт"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_has_tracking
+msgid "Product with Tracking"
+msgstr "Продукт с отслеживанием"
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_production_id
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Production"
 msgstr "Производство"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_date
+msgid "Production Date"
+msgstr "Срок производства"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_location_id
@@ -1444,67 +2079,75 @@ msgid "Production Location"
 msgstr "Место производства"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_message
+msgid "Production Message"
+msgstr "Сообщение производства"
+
+#. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_production_order
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_production_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_production_id
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Production Order"
-msgstr "Заказ на производство"
+msgstr "Производственный заказ"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Production Order # :"
-msgstr "Заказ на Производство  №:"
+msgstr "Заказ на производство  №:"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
-msgid "Production Order for Produced Products"
-msgstr "Заказ на Производство для Производимой продукции"
+msgid "Production Order for finished products"
+msgstr "Производственный заказ для готовых  продуктов"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
-msgid "Production Order for Raw Materials"
-msgstr "Заказ на Производство для Сырья"
+msgid "Production Order for raw materials"
+msgstr "Производственный заказ для сырья"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production_product_line
-msgid "Production Scheduled Product"
-msgstr "Производство запланированного продукта"
-
-#. module: mrp
-#: selection:mrp.production,state:0
-msgid "Production Started"
-msgstr "Производство Начато"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Production Work Centers"
-msgstr "Рабочие центры производства"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_progress
-msgid "Production progress"
-msgstr "Производство Выполняется"
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Production Workcenter"
+msgstr "Производственный участок"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Production started late"
-msgstr "Производство начато с задержкой/опозданием/"
+msgstr "Производство с задержкой"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_production_gantt
 msgid "Productions"
-msgstr "Продукция"
+msgstr "Производство"
+
+#. module: mrp
+#: selection:mrp.workcenter.productivity.loss,loss_type:0
+msgid "Productive"
+msgstr "Продуктивность"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productive_time
+msgid "Productive Time"
+msgstr "Продуктивное время"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_productive_time
+msgid "Productive hour(s) over the last month"
+msgstr "Продуктивное время за прошедший месяц (часы)"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_loss_action
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_blocked
+#: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_loss
+msgid "Productivity Losses"
+msgstr "Потери продуктивности"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_template_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_bom
 #: model:ir.ui.menu,name:mrp.menu_mrp_product_form
 msgid "Products"
-msgstr "Продукция"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_consume_lines
-msgid "Products Consumed"
-msgstr "Потребленные Продукты"
+msgstr "Продукты"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
@@ -1516,105 +2159,134 @@ msgstr ""
 "размер, цвет, ...)"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Products to Consume"
-msgstr "Потребляемые продукты"
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_propagate
+msgid "Propagate cancel and split"
+msgstr "Отменить размножение и разделить"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Products to Finish"
-msgstr "Конечная продукция"
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_quality_mrp
+#: selection:mrp.workcenter.productivity.loss,loss_type:0
+msgid "Quality"
+msgstr "Качество"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Products to Produce"
-msgstr "Продукты к Производству"
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+msgid "Quality Losses"
+msgstr "Потеря качества"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_property_action
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_property_ids
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_property_ids
-#: model:ir.model.fields,field_description:mrp.field_procurement_order_property_ids
-#: model:ir.ui.menu,name:mrp.menu_mrp_property_action
+#: model:ir.model,name:mrp.model_stock_move_lots
+msgid "Quantities to Process by lots"
+msgstr "Количество на процесс по партиям"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_produced
+#: model:ir.model.fields,field_description:mrp.field_stock_move_quantity_done
+#: model:ir.model.fields,field_description:mrp.field_stock_move_quantity_done_store
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_property_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_property_tree_view
-msgid "Properties"
-msgstr "Свойства"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_property_group_form_view
-msgid "Properties categories"
-msgstr "Категории характеристик"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_composition
-msgid "Properties composition"
-msgstr "Составление свойств"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_property
-msgid "Property"
-msgstr "Параметр"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
-#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
-msgid "Property Group"
-msgstr "Группа свойств"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_property_group_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
-msgid "Property Groups"
-msgstr "Группа Свойств"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_qty
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Quantity"
 msgstr "Количество"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
-msgid "Quantity (in default UoM)"
-msgstr "Количество (по умолчанию в UoM)"
+#: model:ir.model.fields,field_description:mrp.field_stock_move_quantity_available
+msgid "Quantity Available"
+msgstr "Доступное количество"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_lot_produced_qty
+msgid "Quantity Finished Product"
+msgstr "Количество готового продукта"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_qty_produced
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Quantity Produced"
+msgstr "Произведённое количество"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
+msgid "Quantity To Produce"
+msgstr "Количество для производства"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch_size
+msgid "Quantity to Process"
+msgstr "Количество на процесс"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
+msgid "Quants"
+msgstr "Части"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Raw Material"
+msgstr "Сырьё"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_raw_ids
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Raw Materials"
-msgstr "Сырье"
+msgstr "Сырьё"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
 msgid "Raw Materials Location"
-msgstr "Расположение исходных материалов"
+msgstr "Расположение сырья"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.workorder,state:0
 msgid "Ready"
 msgstr "Готово"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_ready_production
-msgid "Ready for production"
-msgstr "Готов для производства"
+#. openerp-web
+#: code:addons/mrp/static/src/js/mrp.js:24
+#, python-format
+msgid "Ready to produce"
+msgstr "Готовность к производству"
 
 #. module: mrp
-#: selection:mrp.production,state:0
-msgid "Ready to Produce"
-msgstr "Готово к производству"
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration
+msgid "Real Duration"
+msgstr "Реальная продолжительность"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_name
+msgid "Reason"
+msgstr "Причина"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_product_produce
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+msgid "Record Production"
+msgstr "Запись производства"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:132
+#, python-format
+msgid ""
+"Recursion error!  A product with a Bill of Material should not have itself "
+"in its BoM or child BoMs!"
+msgstr ""
+"Ошибка рекурсии! Продукт с ведомостью материалов не должен ссылаться на свою"
+" или дочернюю ВМ!"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_code
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_code
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_name
 msgid "Reference"
 msgstr "Ссылка"
 
@@ -1625,13 +2297,25 @@ msgstr "Ссылка должна быть уникальна для каждо�
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_origin
-msgid "Reference of the document that generated this production order request."
-msgstr "Ссылка на документ, который сгенерировал этот производственный заказ."
+msgid ""
+"Reference of the document that generated this production order request."
+msgstr "Ссылка на документ, который сгенерировал эту производственную заявку."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_position
-msgid "Reference to a position in an external plan."
-msgstr "Позиция на сборочном чертеже или схеме"
+#: code:addons/mrp/models/stock_move.py:299
+#, python-format
+msgid "Register Lots"
+msgstr "Учёт партий"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Register lots"
+msgstr "Учёт партий"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_procurement_ids
+msgid "Related Procurements"
+msgstr "Связанные закупки"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_user_id
@@ -1639,19 +2323,24 @@ msgid "Related user name for the resource to manage its access."
 msgstr "Пользователь управляющий доступом к ресурсу"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Reserve"
-msgstr "Резерв"
+#: model:ir.ui.menu,name:mrp.menu_mrp_reporting
+msgid "Reporting"
+msgstr "Отчетность"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_serial
+msgid "Requires Serial"
+msgstr "Требуется серия"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
 msgid "Resource"
-msgstr "Объект"
+msgstr "Ресурс"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
 msgid "Resource Leaves"
-msgstr "Ресурсы Простой"
+msgstr "Простой ресурсов"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_type
@@ -1669,116 +2358,127 @@ msgid "Responsible"
 msgstr "Ответственный"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_rounding
-#: model:ir.model.fields,help:mrp.field_mrp_bom_product_rounding
-msgid "Rounding applied on the product quantity."
-msgstr "Округление, применяемое к количеству продукции."
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_rounding_efficiency
-msgid "Rounding efficiency"
-msgstr "Округление результата"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_routing_id
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr "Техн. маршрут"
+msgstr "Техн. карта"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_routing_line_ids
+msgid "Routing Lines"
+msgstr "Строки карты"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
+msgid "Routing Name"
+msgstr "Название карты"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
-msgstr "Маршрутизация рабочих центров"
+msgstr "Технологические карты производственных участков"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.model,name:mrp.model_mrp_routing
-#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Routings"
-msgstr "Техн. маршруты"
+msgstr "Техн. карты"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
+msgid "Routings & Planning"
+msgstr "Технологические карты и планирование"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid ""
 "Routings allow you to create and manage the manufacturing\n"
-"                operations that should be followed within your work centers "
-"in\n"
+"                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials."
 msgstr ""
-"Технологические маршруты позволяют создавать и управлять\n"
-"производственные операции, которых необходимо\n"
-"придерживаться в Рабочем центре с целью получения продукта.\n"
-"Они прикрепляются к счетам материалов, которые будут\n"
-"определять необходимое сырье."
+"Технологические карты позволяют создавать и управлять\n"
+"производственными операциями, соблюдение которых необходимо\n"
+"на производственных участках с целью получения продукта.\n"
+"Они прикрепляются к ведомостям материалов, определяющих \n"
+"необходимое сырьё."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
-msgid ""
-"Routings indicates all the Work Centers used, for how long and/or cycles.If "
-"Routings is set then,the third tab of a production order (Work Centers) will "
-"be automatically pre-completed."
-msgstr ""
-"Технологические карты/маршруты/ указывают все используемые Рабочие Центры, "
-"как долго и/или циклы. Если Технологические маршруты установлены, то третья "
-"вкладка производственного заказа (Рабочие центры) будут автоматически "
-"предварительно завершены."
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_lots
+msgid "Save"
+msgstr "Сохранить"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned
-msgid "Scheduled Date"
-msgstr "Запланированная дата"
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_planned_finished
+msgid "Scheduled Date Finished"
+msgstr "Запланированная дата окончания"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_planned_start
+msgid "Scheduled Date Start"
+msgstr "Запланированная дата начала"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Scheduled Date by Month"
-msgstr "Запланированная Дата по Месяцам"
+msgstr "Запланированная дата по месяцам"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Scheduled Month"
 msgstr "Запланированный месяц"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:547
+#: code:addons/mrp/models/mrp_workorder.py:438
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_scrap_ids
+#: model:ir.ui.menu,name:mrp.menu_mrp_scrap
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_production_product_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_production_product_tree_view
-msgid "Scheduled Products"
-msgstr "Запланированная продукция"
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#, python-format
+msgid "Scrap"
+msgstr "Брак"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_lines
-msgid "Scheduled goods"
-msgstr "Запланированные товары"
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_scrap_count
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_scrap_count
+msgid "Scrap Move"
+msgstr "Перемещение брака"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Scrap Products"
-msgstr "Бракованная продукция"
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_scrap_ids
+msgid "Scraps"
+msgstr "Брак"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_search
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Search"
-msgstr "Найти"
+msgstr "Поиск"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
-msgstr "Поиск спецификации"
+msgstr "Поиск ведомости материалов"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr "Поиск Компонентов BoM"
+msgstr "Поиск компонентов ведомости материалов"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1786,36 +2486,49 @@ msgid "Search Production"
 msgstr "Поиск продукции"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Search for mrp workcenter"
-msgstr "Поиск MRP Рабочего Центра"
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+msgid "Search Work Orders"
+msgstr "Поиск производственных заданий"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Search for mrp workcenter"
+msgstr "Поиск для управления участком"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_manufacturing_lead
 #: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
 msgid "Security days for each manufacturing operation."
 msgstr "Дни безопасности для каждой технологической операции."
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_qty
-msgid "Select Quantity"
-msgstr "Выберите количество"
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:7
+#: code:addons/mrp/static/src/xml/mrp.xml:8
+#, python-format
+msgid "Select"
+msgstr "Выбрать"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_sequence
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_sequence
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_sequence
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_sequence
 msgid "Sequence"
 msgstr "Нумерация"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_type
-msgid ""
-"Set: When processing a sales order for this product, the delivery order will "
-"contain the raw materials, instead of the finished product."
-msgstr ""
-"Набор: При обработке заказа клиента для этого продукта, заказ доставки будет "
-"содержать сырье, вместо готового продукта."
+#: selection:mrp.routing.workcenter,time_mode:0
+msgid "Set duration manually"
+msgstr "Указать продолжительность вручную"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_config
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+msgid "Settings"
+msgstr "Настройки"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1823,91 +2536,146 @@ msgid "Ship this product as a set of components (kit)"
 msgstr "Отгружать этот продукт как набор компонентов (комплект)"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:89
+#, python-format
+msgid "Should have a lot for the finished product"
+msgstr "Может иметь множество готовых продуктов"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
-msgid "Source Document"
-msgstr "Документ-источник"
+msgid "Source"
+msgstr "Источник"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle
-msgid "Specify Cost of Work Center per cycle."
-msgstr "Укажите Стоимость Рабочего Центра за цикл."
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour
-msgid "Specify Cost of Work Center per hour."
-msgstr "Укажите Стоимость Рабочего Центра за час."
+#: model:ir.model.fields,help:mrp.field_product_product_can_be_expensed
+msgid "Specify whether the product can be selected in an HR expense."
+msgstr "Определите, может ли продукт быть расходным для персонала."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_start
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_date_start
 msgid "Start Date"
 msgstr "Дата начала"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Start Working"
+msgstr "Начало работ"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_state
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_state
+msgid "State"
+msgstr "Регион"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_state
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_working_state
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_state
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_working_state
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Status"
 msgstr "Статус"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
-msgstr "Движение запасов"
+msgstr "Перемещение запасов"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_value
-msgid "Stock value"
-msgstr "Оценка запасов"
+#: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
+#: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
+msgid "Stock Moves"
+msgstr "Движения запасов"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_report_mrp_inout
-#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_form
-#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_graph
-#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_tree
-msgid "Stock value variation"
-msgstr "Изменения оценки запасов"
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_bom_id
+msgid "Sub BoM"
+msgstr "Дочерняя ВМ"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_stock_move_consumed_for
-msgid "Technical field used to make the traceability of produced products"
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+msgid "TPM Big Loss"
+msgstr "Потеря TPM"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
+msgid "TPM Big Losses"
+msgstr "Потери TPM"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_move_is_done
+#: model:ir.model.fields,help:mrp.field_stock_move_lots_done_move
+msgid "Technical Field to order moves"
+msgstr "Поле для движения заказов"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_check_to_done
+msgid "Technical Field to see if we can show 'Mark as Done' button"
 msgstr ""
-"Технические поле используется, чтобы сделать доступной прослеживаемость "
-"выпускаемой продукции"
+"Поле для просмотра возможности работы кнопки, отмечающей как сделанное"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
+#: model:ir.model.fields,help:mrp.field_stock_move_lots_done_wo
+msgid ""
+"Technical Field which is False when temporarily filled in in work order"
+msgstr "Поле, «ложь» если временно заполнены поля производственного задания "
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_is_user_working
+msgid "Technical field indicating whether the current user is working. "
+msgstr "Поле, отображающее место работы пользователя."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_post_visible
+msgid "Technical field to check when we can post"
+msgstr "Поле, указывающее что мы можем отправлять сообщения"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_production_availability
+msgid "Technical: used in views and domains only."
+msgstr "Техническое: используется в видах и доменах"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_working_state
+msgid "Technical: used in views only"
+msgstr "Техническое: только для видов"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_product_id
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_product_tracking
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_product_uom_id
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_production_state
+msgid "Technical: used in views only."
+msgstr "Техническое: только для видов."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:77 code:addons/mrp/models/mrp_bom.py:232
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
-"Единицы Измерения Продукта, вы можете выбрать другую категорию, чем "
-"указанная в форме продукта."
+"Единицы измерения выбранного продукта имеют категорию, отличную от указанной"
+" в форме продукта."
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"The Properties in Odoo are used to select the right bill of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
-"                ways of building the same product.  You can assign several\n"
-"                properties to each bill of materials.  When a salesperson\n"
-"                creates a sales order, they can relate it to several "
-"properties\n"
-"                and Odoo will automatically select the BoM to use according\n"
-"                the needs."
-msgstr ""
-"Свойства в Odoo используются, чтобы выбрать правильный BoM\n"
-"для изготовления продукта, когда вы имеете различные способы\n"
-"производства одного и того же продукта. Вы можете назначить\n"
-"различные свойства для каждого BoM. Когда продавец создает\n"
-"заказ клиента, они могут связать его с несколькими свойствами и\n"
-"Odoo будет автоматически выбирать BoM, чтобы использовать для\n"
-"производства в соответствии с потребностями."
+#: code:addons/mrp/models/mrp_workcenter.py:152
+#, python-format
+msgid "The capacity must be strictly positive."
+msgstr "Объём должен быть строго положительным."
 
 #. module: mrp
-#: constraint:mrp.workcenter:0
-msgid "The capacity per cycle must be strictly positive."
-msgstr "Производительность за цикл, должна быть строго положительной."
+#: selection:mrp.bom,ready_to_produce:0
+msgid "The components of 1st operation"
+msgstr "Компоненты 1-й операции"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
@@ -1915,116 +2683,212 @@ msgid ""
 "The list of operations (list of work centers) to produce the finished "
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
-"plannification."
+"planning."
 msgstr ""
-"Список операций (список рабочих центров), производящих готовую продукцию. "
-"Маршрутизация в основном используется для вычисления затрат рабочего центра "
-"во время операций и запланировать будущие нагрузки на рабочие центры, "
-"основанные на производственном планировании."
+"Список операций (список производственных участков) производящих готовый "
+"продукт. Карты в основном используются для вычисления затрат участка во "
+"время операций и планирования будущих нагрузок на участки в соответствии с "
+"производственным планированием."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_routing_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
 msgid ""
-"The list of operations (list of work centers) to produce the finished "
-"product. The routing is mainly used to compute work center costs during "
-"operations and to plan future loads on work centers based on production "
-"planning."
+"The list of operations to produce the finished product. The routing is "
+"mainly used to compute work center costs during operations and to plan "
+"future loads on work centers based on production planning."
 msgstr ""
-"Список операций (список рабочих центров), производящих готовую продукцию. "
-"Маршрутизация в основном используется для вычисления затрат рабочего центра "
-"во время операций и запланировать будущие нагрузки на рабочие центры, "
-"основанные на производственном планировании."
+"Список операций необходимых для производства готового продукта. Карты в "
+"основном используются для вычисления затрат участка во время операций и "
+"планирования будущих нагрузок на участки в соответствии с производственным "
+"планированием."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_operations
+#: model:ir.model.fields,help:mrp.field_mrp_workorder_qty_produced
+msgid "The number of products already handled by this work order"
+msgstr "Количество произведённых продуктов по этому заданию"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_operation_id
 msgid ""
-"This allows to add state, date_start,date_stop in production order operation "
-"lines (in the \"Work Centers\" tab).\n"
-"-This installs the module mrp_operations."
+"The operation where the components are consumed, or the finished products "
+"created."
+msgstr "Операция, при которой расходуются компоненты или готовые продукты."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
+msgid ""
+"The operations for producing this BoM.  When a routing is specified, the "
+"production orders will  be executed through work orders, otherwise "
+"everything is processed in the production order itself. "
 msgstr ""
-"Это позволяет добавлять состояние, date_start, date_stop в производственный "
-"заказ (в \"Рабочих Центрах\").\n"
-"-Это Устанавливает модуль mrp_operations."
+"Производственные операции этой ВМ. После описания карт заявки на "
+"производство будут преобразованы в производственные задания, иначе нужно "
+"руководствоваться заявкой на производство."
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_picking_type
+msgid "The picking type determines the picking view"
+msgstr "Тип комплектования определяет вид комплектования"
+
+#. module: mrp
+#: sql_constraint:mrp.production:0
+msgid "The quantity to produce must be positive!"
+msgstr "Количество  для производства только положительное!"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
+msgid ""
+"The routing contains all the Work Centers used and for how long. This will "
+"create work orders afterwardswhich alters the execution of the manufacturing"
+" order. "
+msgstr ""
+"Технологическая карта содержит список и время используемых участков. Будут "
+"созданы сообщения о готовности производственных заявок."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+msgid "This Month"
+msgstr "Этот месяц"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+msgid "This Year"
+msgstr "Этот год"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_efficiency
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"This field is used to calculate the the expected duration of a work order at"
+" this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
 msgstr ""
-"Это поле изображают эффективность ресурса для завершения задачи. например "
-"ресурс поместить в одну фазу на этап 5 дней с 5 задачами, возложенными на "
-"него, покажет нагрузку 100% в течение этой фазы, по умолчанию, но если мы "
-"ставим эффективность 200%, то его нагрузка будет только 50%."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_time_ids
+msgid "Time"
+msgstr "Время"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_ids
+msgid "Time Logs"
+msgstr "Журналы времени"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Time Tracking"
+msgstr "Трекер времени"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:367
+#, python-format
+msgid "Time Tracking: "
+msgstr "Трекер времени:"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_stop
 msgid "Time after prod."
-msgstr "Время после производства"
+msgstr "Время после произв."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_start
 msgid "Time before prod."
-msgstr "Время до производства"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_cycle
-msgid "Time for 1 cycle (hour)"
-msgstr "Время цикла (часов)"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_cycle
-msgid "Time in hours for doing one cycle."
-msgstr "Время в часах на выполнение одного цикла"
+msgstr "Время до произв."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_stop
-msgid "Time in hours for the cleaning."
-msgstr "Время в часах на сбор отходов"
+msgid "Time in minutes for the cleaning."
+msgstr "Время в минутах для очистки."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_start
-msgid "Time in hours for the setup."
-msgstr "Время наладки в часах"
+msgid "Time in minutes for the setup."
+msgstr "Время в минутах для подготовки."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_hour_nbr
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_time_cycle_manual
 msgid ""
-"Time in hours for this Work Center to achieve the operation of the specified "
-"routing."
+"Time in minutes. Is the time used in manual mode, or the first time supposed"
+" in real time when there are not any work orders yet."
 msgstr ""
-"Время в часах для этого Рабочего Центра для выполнения операции указанной в "
-"технологическом маршруте."
+"Время в минутах. Время в ручном режиме или предположительное время до тех "
+"пор, пока не появятся задания."
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "To Consume"
-msgstr "Потреблять"
+msgstr "Для поглощения"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_quantity
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "To Do"
+msgstr "Сделать"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "To Launch"
+msgstr "К запуску"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "To Produce"
+msgstr "К производству"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
+msgid ""
+"To create a new work center, Go to <b><i> Master Data/Work Centers. </i></b>"
+msgstr ""
+"Для создания нового участка запустите <b><i> Мастер производственных "
+"участков. </i></b>"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
+msgid ""
+"To manufacture or assemble products, and use raw materials and\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
+"            operations will have different impacts on the costs of\n"
+"            manufacturing and planning depending on the available workload."
+msgstr ""
+"Для производимых или собираемых продуктов, сырья и готовых\n"
+"продуктов также требуются ручные производственные операции. Производственные операции часто называют производственные \n"
+"задания. Различные операции будут иметь различные последствия \n"
+"для стоимости производства и планирования в зависимости от \n"
+"имеющейся загрузки."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+msgid "Today"
+msgstr "Сегодня"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Today Activities"
+msgstr "Сегодняшние мероприятия"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Total Cost"
-msgstr "Общая Стоимость"
+msgstr "Итоговая стоимость"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Total Cost of Raw Materials"
-msgstr "Общая Стоимость Сырья"
+msgstr "Итоговая стоимость по материалам"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
-#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-msgid "Total Cycles"
-msgstr "Всего циклов"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_hour_total
-#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-msgid "Total Hours"
-msgstr "Общее время"
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_late_count
+msgid "Total Late Orders"
+msgstr "Итого просроченных заказов"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -2032,29 +2896,90 @@ msgid "Total Qty"
 msgstr "Общее кол-во"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Type"
-msgstr "Тип"
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_pending_count
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_progress_count
+msgid "Total Running Orders"
+msgstr "Итого заказов в работе"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+#: model:ir.ui.menu,name:mrp.menu_mrp_traceability
+msgid "Traceability: Lots"
+msgstr "Отслеживание: партии"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_tracking
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_has_tracking
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_product_tracking
+msgid "Tracking"
+msgstr "Отслеживание"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Unblock"
+msgstr "Разблокировать"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
+msgid "Unbuild"
+msgstr "Разобрать"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_unbuild
+#: model:ir.model.fields,field_description:mrp.field_stock_move_unbuild_id
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
+msgid "Unbuild Order"
+msgstr "Заказ на разборку"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:76
+#, python-format
+msgid "Unbuild Order product quantity has to be strictly positive."
+msgstr ""
+"Количество продукта в заказе на разборку должно быть строго положительным."
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_unbuild
+#: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
+msgid "Unbuild Orders"
+msgstr "Заказы на разборку"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Unit Cost"
-msgstr "Себестоимость Единицы"
+msgstr "Себестоимость единицы"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.model.fields,field_description:mrp.field_stock_move_unit_factor
+msgid "Unit Factor"
+msgstr "Коэффициент единицы"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_product_uom_id
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Unit of Measure"
-msgstr "Ед. изм."
+msgstr "Единица измерения"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_uom
-#: model:ir.model.fields,help:mrp.field_mrp_bom_product_uom
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_uom_id
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
+msgstr "Единица измерения для контроля перемещений"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Unreserve"
+msgstr "Разрезервировать"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Upcoming Activities (7 days)"
 msgstr ""
-"Единица Измерения (Unit of Measure), является единицей измерения для "
-"управления запасами"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2062,53 +2987,61 @@ msgid "Update"
 msgstr "Обновить"
 
 #. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:7
+#, python-format
+msgid "Upload your file"
+msgstr "Выгрузить файл"
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:6
+#, python-format
+msgid "Uploading..."
+msgstr "Выгрузка…"
+
+#. module: mrp
 #: selection:mrp.production,priority:0
 msgid "Urgent"
 msgstr "Срочно"
 
 #. module: mrp
+#: selection:mrp.config.settings,module_mrp_mps:0
+msgid ""
+"Use Master Production Schedule in order to create procurements based on "
+"forecasts"
+msgstr ""
+"Используйте мастер планирования производства для создания закупок, "
+"основанных на прогнозах"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_message_action_main
+msgid ""
+"Use messages to warn manufacturing or inventory people about any change in the\n"
+"                products, process, or actions to take care of. (e.g; Warning, the bill of material changed,\n"
+"                check the details in new worksheet)"
+msgstr ""
+"Отправлять предупреждающие сообщения на производство или склад о наличии\n"
+"изменений в продукте, процессе или операции. (напр.: Внимание! Ведомость материалов изменена, смотрите изменения в КД.)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_user_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_user_id
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
 #: model:res.groups,name:mrp.group_mrp_user
 msgid "User"
 msgstr "Пользователь"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_start
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_date_start
-msgid "Valid From"
-msgstr "Действительно с"
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_valid_until
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_tree
+msgid "Validity Date"
+msgstr "Срок действия"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
-msgid "Valid From Date by Month"
-msgstr "Действительно С Даты по Месяцам"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
-msgid "Valid From Month"
-msgstr "Действительно с Месяца"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_stop
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_date_stop
-msgid "Valid Until"
-msgstr "Действительно до"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_start
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_stop
-msgid "Validity of component. Keep empty if it's always valid."
-msgstr ""
-"Срок действия этого компонента. Оставить пустым, если действует всегда."
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_date_start
-#: model:ir.model.fields,help:mrp.field_mrp_bom_date_stop
-msgid "Validity of this BoM. Keep empty if it's always valid."
-msgstr ""
-"Срок действия этой спецификации. Оставить пустым, если действует всегда."
+#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
+msgid "Variant"
+msgstr "Вариант"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_attribute_value_ids
@@ -2116,9 +3049,38 @@ msgid "Variants"
 msgstr "Варианты"
 
 #. module: mrp
+#: selection:ir.attachment,priority:0
+msgid "Very High"
+msgstr "Очень высокий"
+
+#. module: mrp
 #: selection:mrp.production,priority:0
 msgid "Very Urgent"
 msgstr "Очень срочно"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: selection:mrp.production,availability:0
+msgid "Waiting"
+msgstr "Ожидание"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "Waiting Availability"
+msgstr "Ожидание поступления"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_production_action_waiting
+msgid "Waiting Availability MO"
+msgstr "Ожидание доступности заявки на производство"
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/js/mrp.js:24
+#, python-format
+msgid "Waiting Materials"
+msgstr "Ожидание материалов"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -2126,129 +3088,131 @@ msgid "Warehouse"
 msgstr "Склад"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
+#: code:addons/mrp/models/mrp_bom.py:77 code:addons/mrp/models/mrp_bom.py:232
 #, python-format
 msgid "Warning"
-msgstr "Внимание"
+msgstr "Предупреждение"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_date
-#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_name
-#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_search
-msgid "Week"
-msgstr "Неделя"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
-msgid "Weekly Stock Value Variation"
-msgstr "Недельное изменения оценки запасов"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
+#: model:ir.model.fields,help:mrp.field_mrp_bom_picking_type_id
 msgid ""
-"Weekly Stock Value Variation enables you to track the stock value evolution "
-"linked to manufacturing activities, receipts of products and delivery orders."
+"When a procurement has a ‘produce’ route with a picking type set, it will "
+"try to create a Manufacturing Order for that product using a BoM of the same"
+" picking type. That allows to define procurement rules which trigger "
+"different manufacturing orders with different BoMs. "
 msgstr ""
-"Еженедельное Изменение Количество на Складе, позволяет проследить изменение "
-"количества на складе, связанному с производственной деятельностью, "
-"поступлений продуктов и доставки заказов."
+"Когда закупка отправляется в производство с указанием типа копмлектации, "
+"возникает попытка создания производственно заявки для этого продукта с "
+"использованием ВМ или соответствующего типа комплектации. Это позволяет "
+"определить правила закупки в зависимости от ВМ. "
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid ""
+"When processing a sales order for this product, the delivery order\n"
+"                                will contain the raw materials, instead of the finished product."
+msgstr ""
+"При обработке заказа продаж для этого продукта, заказ на \n"
+"поставку будет содержать сырьё вместо готового продукта."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr "Когда продукты изготовлены, они могут быть изготовлены на этот склад."
+msgstr "Производящиеся продукты могут быть изготовлены на этот склад."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_production_state
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_batch
 msgid ""
-"When the production order is created the status is set to 'Draft'.\n"
-"If the order is confirmed the status is set to 'Waiting Goods.\n"
-"If any exceptions are there, the status is set to 'Picking Exception.\n"
-"If the stock is available then the status is set to 'Ready to Produce.\n"
-"When the production gets started then the status is set to 'In Production.\n"
-"When the production is over, the status is set to 'Done'."
+"Will determine if the next work order will be planned after the previous one"
+" or after the first Quantity To Process of the previous one."
 msgstr ""
-"Когда производственный заказ создается статус устанавливается в 'Черновик'.\n"
-"Если заказ будет подтвержден статус устанавливается в 'Ожидание Материалов'\n"
-"Если какие-либо исключения есть, статус устанавливается в 'Сборка "
-"Исключение.'\n"
-"Если запас доступен, то устанавливается состояние «Готов к Производству'\n"
-"Когда производство запускается, то устанавливается состояние 'В "
-"Производстве'\n"
-"Когда производство закончено, установлено состояние \"Готово\"."
+"Будет ли следующее производственное задание запланировано после предыдущего "
+"или после первой части предыдущего."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_message_workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_workcenter_id
-#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_workcenter_id
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_tree_view
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Work Center"
-msgstr "Рабочий центр"
+msgstr "Производственный участок"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_report_workcenter_load
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workcenter_load
 msgid "Work Center Load"
-msgstr "Нагрузка Рабочего центра"
+msgstr "Нагрузка производственного участка"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_tree
+#: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_report_graph
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 msgid "Work Center Loads"
-msgstr "Загрузка Рабочего центра"
+msgstr "Нагрузки производственного участка"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Work Center Name"
+msgstr "Название производственного участка"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "Work Center Operations"
-msgstr "Операции Рабочего центра"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_product_id
-msgid "Work Center Product"
-msgstr "Продукция рабочего центра"
+msgstr "Операции производственного участка"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr "Рабочий Центр Использование"
+msgstr "Использование производственного участка"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_graph
-#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_search
+#: model:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 msgid "Work Center load"
-msgstr "Нагрузка производственного участка"
+msgstr "Загрузка производственного участка"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_lines
 #: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 msgid "Work Centers"
-msgstr "Рабочие центры"
+msgstr "Производственные участки"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_lines
-msgid "Work Centers Utilisation"
-msgstr "Использование рабочих центров"
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_kanban_action
+msgid "Work Centers Dashboard"
+msgstr "Панель управления  производственного участка"
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.action_work_orders
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid ""
 "Work Centers allow you to create and manage manufacturing\n"
 "                units. They consist of workers and/or machines, which are\n"
-"                considered as units for task assignation as well as "
-"capacity\n"
+"                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
 msgstr ""
-"Рабочие Центры позволяют создавать и управлять единицами производства. Они "
-"состоят из работников и/или машин, которые  рассматриваются как единицы для "
-"задач, а также производительности и прогноза планирования."
+"Производственные участки позволяют создавать и управлять единицами "
+"производства. Они состоят из работников и/или машин, которые  "
+"рассматриваются как единицы для задач, а также производительности и прогноза"
+" планирования."
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production_workcenter_line
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_name
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Work Instruction"
+msgstr "Производственная инструкция"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workorder
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_workorder_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_name
+#: model:ir.model.fields,field_description:mrp.field_stock_move_lots_workorder_id
+#: model:ir.model.fields,field_description:mrp.field_stock_scrap_workorder_id
 msgid "Work Order"
-msgstr "Рабочее задание"
+msgstr "Производственное задание"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_mrp_routings
@@ -2258,20 +3222,79 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
 msgstr ""
-"Наряд/заказ/ на выполнение Операций позволяет создавать и управлять "
-"операциями производства, которые должны соблюдаться в течении работы Рабочих "
-"центров для того, чтобы произвести продукт. Они связаны с Спецификациями "
-"Материалов, которые будут определять необходимые сырье."
+"Технологические операции помогут вам создавать и управлять операциями на "
+"производственных участках в соответствии с заданием на производство "
+"продукта. Их связывают с ведомостями операций, определяющими требуемое "
+"сырьё."
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_operations
-msgid "Work Order Planning"
-msgstr "Планирование Нарядов"
+#: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
+msgid "Work Order To Consume"
+msgstr "Производственное задание к расходу"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
+#: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production_specific
+#: model:ir.actions.act_window,name:mrp.action_mrp_workorder_workcenter
+#: model:ir.actions.act_window,name:mrp.action_work_orders
+#: model:ir.actions.act_window,name:mrp.mrp_workorder_todo
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_workorder_ids
+#: model:ir.ui.menu,name:mrp.menu_mrp_work_order_report
+#: model:ir.ui.menu,name:mrp.menu_mrp_workorder_todo
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_tree_view_inherit
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Work Orders"
-msgstr "Наряд-заказы"
+msgstr "Производственные задания"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workorder_delta_report
+msgid "Work Orders Deviation"
+msgstr "Отклонения производственных заданий"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workorder_report
+#: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
+msgid "Work Orders Performance"
+msgstr "Эффективность производственных заданий"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
+msgid "Work Orders Planning"
+msgstr "Планирование производственных заданий"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
+#: model:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
+#: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
+msgid ""
+"Work Orders is the list of operations to be performed for each\n"
+"            manufacturing order. Once you start the first work order of a\n"
+"            manufacturing order, the manufacturing order is automatically\n"
+"            marked as started. Once you finish the latest operation of a\n"
+"            manufacturing order, the MO is automatically done and the related\n"
+"            products are produced."
+msgstr ""
+"Производственные задания — список операций необходимых\n"
+"для каждой производственной заявки. Запуск первого задания\n"
+"заявки отмечает её как «начатую». Завершение последней операции\n"
+"задания отмечает заявку «исполненной», а продукт «готовым»."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+msgid "Work Sheet"
+msgstr "Производственный лист"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:525
+#, python-format
+msgid "Work order %s is still running"
+msgstr "Производственное задание %s всё ещё действует"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "Work orders in progress. Click to block work center."
+msgstr "Прогресс производственных заданий. Кликните для блокировки участка."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_product_variant
@@ -2283,10 +3306,56 @@ msgstr ""
 "продуктов, например, легче управлять продуктом в электронной коммерции"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.oee_search_view
+msgid "Workcenter"
+msgstr "Производственный участок"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.oee_form_view
+#: model:ir.ui.view,arch_db:mrp.oee_graph_view
+#: model:ir.ui.view,arch_db:mrp.oee_pie_view
+#: model:ir.ui.view,arch_db:mrp.oee_pivot_view
+#: model:ir.ui.view,arch_db:mrp.oee_tree_view
+msgid "Workcenter Productivity"
+msgstr "Продуктивность производственного участка"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter_productivity
+msgid "Workcenter Productivity Log"
+msgstr "Журнал продуктивности участка"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.oee_loss_form_view
+#: model:ir.ui.view,arch_db:mrp.oee_loss_tree_view
+msgid "Workcenter Productivity Loss"
+msgstr "Потери продуктивности участка"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "Workcenter blocked, click to unblock."
+msgstr "Кликните для разблокировки участка. "
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_calendar_id
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
 msgid "Working Time"
 msgstr "Рабочее время"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_messages
+msgid "Workorder Message"
+msgstr "Сообщение задания"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_message_action_main
+#: model:ir.ui.menu,name:mrp.mrp_message_menu
+msgid "Workorder Messages"
+msgstr "Сообщения производственного задания"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_worksheet
+msgid "Worksheet"
+msgstr "Производственный лист"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_byproduct
@@ -2296,13 +3365,27 @@ msgid ""
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
 msgstr ""
-"Вы можете настроить побочные продукты в BoM.\n"
-"Без этого модуля: А + В + С -> D.\n"
-"С помощью этого модуля: А + В + С -> D + E.\n"
-"Это Устанавливает модуль mrp_byproduct."
+"Вы можете настроить побочные продукты в ведомости материалов.\n"
+"Без этого модуля: А + Б + В → Г.\n"
+"С помощью этого модуля: А + Б + В → Г + Д.\n"
+"— Устанавливается модуль mrp_byproduct."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:357
+#: code:addons/mrp/models/mrp_production.py:464
+#, python-format
+msgid ""
+"You can not cancel production order, a work order is still in progress."
+msgstr ""
+"Нельзя отменить производственную заявку, т. к. задание всё ещё выполняется."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:231
+#, python-format
+msgid "You can not change the finished work order."
+msgstr "Нельзя изменить уже законченное производственное задание."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:92
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -2312,19 +3395,119 @@ msgstr ""
 "Пожалуйста, прежде закройте или отмените его."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_move.py:123
+#, python-format
+msgid "You cannot cancel a stock move having already consumed material"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/change_production_qty.py:44
+#, python-format
+msgid "You have already processed %d. Please input a quantity higher than %d "
+msgstr "Уже произведено %d. Укажите количество, превышающее %d"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:357
+#, python-format
+msgid ""
+"You need to define at least one productivity loss in the category "
+"'Performance'. Create one from the Manufacturing app, menu: Configuration / "
+"Productivity Losses."
+msgstr ""
+"Необходимо определить хотя бы одну потерю продуктивности в категории "
+"«Выполнение». Создайте её из меню производственного приложения: Настройки / "
+"Потери продуктивности"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:353
+#, python-format
+msgid ""
+"You need to define at least one productivity loss in the category "
+"'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
+" Productivity Losses."
+msgstr ""
+"Необходимо определить хотя бы одну потерю продуктивности в категории "
+"«Выполнение». Создайте её из меню производственного приложения: Настройки / "
+"Потери продуктивности"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:406
+#, python-format
+msgid ""
+"You need to define at least one unactive productivity loss in the category "
+"'Performance'. Create one from the Manufacturing app, menu: Configuration / "
+"Productivity Losses."
+msgstr ""
+"Необходимо определить хотя бы одну неактивную потерю продуктивности в "
+"категории «Выполнение». Создайте её из меню производственного приложения: "
+"Настройки / Потери продуктивности"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:107
+#, python-format
+msgid "You need to provide a lot for the finished product"
+msgstr "Вам будет нужно указать партию для готового продукта"
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:261
+#, python-format
+msgid "You need to supply a lot/serial number."
+msgstr "Вы должны указать партию или серийный номер."
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:80
+#, python-format
+msgid "You should at least produce some quantity"
+msgstr "Следует произвести хотя бы некоторое количество"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:288
+#, python-format
+msgid "You should provide a lot for a component"
+msgstr "Вам будет нужно указать партию для компонента"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:272
+#, python-format
+msgid "You should provide a lot for the final product"
+msgstr "Вам будет нужно указать партию для готового продукта"
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "дней"
 
 #. module: mrp
-#: selection:mrp.property,composition:0
-msgid "max"
-msgstr "макс."
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "from"
+msgstr "от"
 
 #. module: mrp
-#: selection:mrp.property,composition:0
-msgid "min"
-msgstr "мин."
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "hour(s)"
+msgstr "час(ов)"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+msgid "last"
+msgstr "последний"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "minute(s)"
+msgstr "минута(ы)"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "minutes"
+msgstr "минут"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
@@ -2337,83 +3520,31 @@ msgid "mrp.config.settings"
 msgstr "mrp.config.settings"
 
 #. module: mrp
-#: selection:mrp.property,composition:0
-msgid "plus"
-msgstr "плюс"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mrpbomstructure
 msgid "report.mrp.report_mrpbomstructure"
 msgstr "report.mrp.report_mrpbomstructure"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_bom_cost
-#, fuzzy
 msgid "report.mrp_bom_cost"
-msgstr "report.mrp.report_mrpbomstructure"
+msgstr "report.mrp_bom_cost"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
-msgid "unknown"
-msgstr "неизвестен"
+#: model:ir.model,name:mrp.model_stock_scrap
+msgid "stock.scrap"
+msgstr "stock.scrap"
 
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "to"
+msgstr "для"
 
-#~ msgid "Change Quantity"
-#~ msgstr "Изменить количество"
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+msgid "work orders"
+msgstr "Производственные задания"
 
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Открыть MRP Меню"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитанные"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"
-
-#~ msgid "Website Messages"
-#~ msgstr "Сообщения с сайта"
-
-#~ msgid "Website communication history"
-#~ msgstr "История общения с сайта"
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_worksheet
+msgid "worksheet"
+msgstr "производственный лист"

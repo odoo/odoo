@@ -1,22 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_customer
-#
+# 
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-04-23 11:09+0000\n"
-"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_customer
@@ -27,10 +32,10 @@ msgstr "<span class=\"fa fa-1x fa-tags\"/> Tüm"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
 msgid "Active"
-msgstr "Etkin"
+msgstr "Aktif"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:64
 #, python-format
 msgid "All Countries"
 msgstr "Tüm Ülkeler"
@@ -63,12 +68,12 @@ msgstr "Oluşturan"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_date
 msgid "Created on"
-msgstr "Oluşturuldu"
+msgstr "Oluşturulma zamanı"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
 msgid "Display Name"
-msgstr "Adı Göster"
+msgstr "Ad Görünümü"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_id
@@ -83,7 +88,7 @@ msgstr "Uygulayan"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
 msgid "Last Modified on"
-msgstr "Son değiştirme tarihi"
+msgstr "Son Güncelleme"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_uid
@@ -93,19 +98,16 @@ msgstr "Son Güncelleyen"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_date
 msgid "Last Updated on"
-msgstr "Son Güncellenen"
+msgstr "Son Güncelleme"
 
 #. module: website_customer
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
 "Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the "
-"\"Customize\" menu."
+"                    You can add the filter by tag on your website in the \"Customize\" menu."
 msgstr ""
-"Müşteri etiketlerini müşterilerinizi websiteinizde daha iyi bir şekilde "
-"sınıflandırmak için.\n"
-"kullanın. Websitenizdeki \"Özelleştir\" menüsünden etiketlere göre süzgeç "
-"ekleyebilirsiniz."
+"Müşteri etiketlerini müşterilerinizi websiteinizde daha iyi bir şekilde sınıflandırmak için.\n"
+"kullanın. Websitenizdeki \"Özelleştir\" menüsünden etiketlere göre süzgeç ekleyebilirsiniz."
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
@@ -141,7 +143,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
 msgid "Partners"
-msgstr "Partnerler"
+msgstr "İş Ortakları"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.references_block
@@ -169,6 +171,11 @@ msgid "Trusted by millions worldwide"
 msgstr "Dünya çapında milyonlarca kişi tarafından güvenilen"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
+msgid "Visible in Website"
+msgstr "Web Sitesinde Görünür"
+
+#. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
 #: model:ir.ui.menu,name:website_customer.menu_partner_tag_form
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_list
@@ -190,18 +197,3 @@ msgstr "Dünya Haritası"
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
 msgstr "referansı (lar))"
-
-#~ msgid "Partner Tags"
-#~ msgstr "Patner Etiketleri"
-
-#~ msgid "Tags"
-#~ msgstr "Etiketler"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "Belgeye web sitesinden erişim için tam adres."
-
-#~ msgid "Visible in Website"
-#~ msgstr "Web Sitesinde Görünür"
-
-#~ msgid "Website URL"
-#~ msgstr "Web sitesi URL'si"

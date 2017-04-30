@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_ldap
-#
+# 
 # Translators:
-# Harry <harrierr@mail.ru>, 2015
+# Martin Trigaux <mat@odoo.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-07 16:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_create_user
@@ -26,7 +27,7 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"Автоматически создавать локальную учетную запись для новых пользователей "
+"Автоматически создавать локальную учётную запись для новых пользователей "
 "прошедших проверку подлинности LDAP"
 
 #. module: auth_ldap
@@ -41,8 +42,8 @@ msgstr "Компания"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
-msgid "Create user"
-msgstr "Создать пользователя"
+msgid "Create User"
+msgstr "Создайте пользователя"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_uid
@@ -62,19 +63,24 @@ msgstr "Отображаемое Имя"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_id
 msgid "ID"
-msgstr "ID"
+msgstr "Номер"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.company_form_view
+#: model:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
 msgstr "Конфигурация LDAP"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_base_config_settings_ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
-#: model:ir.ui.view,arch_db:auth_ldap.company_form_view
 msgid "LDAP Parameters"
 msgstr "Параметры LDAP"
+
+#. module: auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.base_config_settings_view_form_inherit_auth_ldap
+msgid "LDAP Server"
+msgstr ""
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
@@ -109,17 +115,17 @@ msgstr "Пароль LDAP"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
 msgid "Last Modified on"
-msgstr "Последний раз изменено"
+msgstr "Последнее изменение"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_date
 msgid "Last Updated on"
-msgstr "Последний раз обновлено"
+msgstr "Последнее обновление"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -135,8 +141,8 @@ msgstr "Параметры подключения"
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
 msgid ""
 "Request secure TLS/SSL encryption when connecting to the LDAP server. This "
-"option requires a server with STARTTLS enabled, otherwise all authentication "
-"attempts will fail."
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
 msgstr ""
 "Запросить поддержку TLS/SSL шифрования при подключении к LDAP серверу. Для "
 "подключения требуется LDAP сервер с поддержкой параметра STARTTLS, в "
@@ -199,6 +205,11 @@ msgstr "Шаблон локального пользователя для соз
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
 msgstr "Пользователи"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
