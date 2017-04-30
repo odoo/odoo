@@ -1784,6 +1784,112 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('navigation with tab and readonly field', function (assert) {
+        // This test makes sure that if we have 2 cells in a row, the first in
+        // edit mode, and the second one readonly, then if we press TAB when the
+        // focus is on the first, then the focus skip the readonly cells and
+        // directly goes to the next line instead.
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/><field name="int_field" readonly="1"/></tree>',
+        });
+
+        // click on first td and press TAB
+        list.$('td:contains(yop)').last().click();
+        list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+
+        assert.ok(list.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
+            "2nd row should be selected");
+
+        // we do it again. This was broken because the this.currentRow variable
+        // was not properly set, and the second TAB could cause a crash.
+        list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+        assert.ok(list.$('tr.o_data_row:eq(2)').hasClass('o_selected_row'),
+            "3rd row should be selected");
+
+        list.destroy();
+    });
+
+    QUnit.test('edition, then navigation with tab (with a readonly field)', function (assert) {
+        // This test makes sure that if we have 2 cells in a row, the first in
+        // edit mode, and the second one readonly, then if we edit and press TAB,
+        // (before debounce), the save operation is properly done (before
+        // selecting the next row)
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/><field name="int_field" readonly="1"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                }
+                return this._super.apply(this, arguments);
+            },
+            fieldDebounce: 1,
+        });
+
+        // click on first td and press TAB
+        list.$('td:contains(yop)').click();
+        list.$('tr.o_selected_row input[name="foo"]').val('new value').trigger('input');
+        list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+
+        assert.strictEqual(list.$('tbody tr:first td:contains(new value)').length, 1,
+            "should have the new value visible in dom");
+        assert.verifySteps(["write", "read"]);
+        list.destroy();
+    });
+
+    QUnit.test('skip invisible fields when navigating list view with TAB', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="foo"/>' +
+                    '<field name="bar" invisible="1"/>' +
+                    '<field name="int_field"/>' +
+                '</tree>',
+            res_id: 1,
+        });
+
+        list.$('td:contains(gnap)').click();
+        assert.strictEqual(list.$('input[name="foo"]')[0], document.activeElement,
+            "foo should be focused");
+        list.$('input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(list.$('input[name="int_field"]')[0], document.activeElement,
+            "int_field should be focused");
+
+        list.destroy();
+    });
+
+    QUnit.test('navigation: moving down with keydown', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+        });
+
+        list.$('td:contains(yop)').click();
+        assert.ok(list.$('tr.o_data_row:eq(0)').hasClass('o_selected_row'),
+            "1st row should be selected");
+        list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
+        assert.ok(list.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
+            "2nd row should be selected");
+        list.destroy();
+    });
+
 });
 
 });

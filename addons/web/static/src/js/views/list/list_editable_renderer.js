@@ -335,22 +335,27 @@ ListRenderer.include({
      *
      * @param {integer} rowIndex
      * @param {integer} colIndex
+     * @param {boolean} [wrap=true] if true and no widget could be selected from
+     *   the colIndex to the last column, then we wrap around and try to select
+     *   a widget starting from the beginning
+     * @return {Deferred} fails if no cell could be selected
      */
-    _selectCell: function (rowIndex, colIndex) {
+    _selectCell: function (rowIndex, colIndex, wrap) {
         // Do nothing if the user tries to select current cell
         if (rowIndex === this.currentRow && colIndex === this.currentCol) {
-            return;
+            return $.when();
         }
+        wrap = wrap === undefined ? true : wrap;
 
         // Select the row then activate the widget in the correct cell
         var self = this;
-        this._selectRow(rowIndex).then(function () {
+        return this._selectRow(rowIndex).then(function () {
             var record = self.state.data[rowIndex];
-            var fieldIndex = self._activateFieldWidget(record, colIndex - getNbButtonBefore(colIndex));
+            var correctedIndex = colIndex - getNbButtonBefore(colIndex);
+            var fieldIndex = self._activateFieldWidget(record, correctedIndex, {inc: 1, wrap: wrap});
 
-            // If no widget to activate in the row, unselect the row
             if (fieldIndex < 0) {
-                return self._unselectRow();
+                return $.Deferred().reject();
             }
 
             self.currentCol = fieldIndex + getNbButtonBefore(fieldIndex);
@@ -543,7 +548,8 @@ ListRenderer.include({
         // component up there, such as a form renderer.
         ev.stopPropagation();
         if (this.currentCol + 1 < this.columns.length) {
-            this._selectCell(this.currentRow, this.currentCol + 1);
+            this._selectCell(this.currentRow, this.currentCol + 1, false)
+                .fail(this._moveToNextLine.bind(this));
         } else {
             this._moveToNextLine();
         }

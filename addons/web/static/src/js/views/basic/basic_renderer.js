@@ -147,32 +147,45 @@ var BasicRenderer = AbstractRenderer.extend({
     },
     /**
      * Activates the widget at the given index for the given record if possible
-     * or the "next" possible one.
+     * or the "next" possible one. Usually, a widget can be activated if it is
+     * in edit mode, and if it is visible.
      *
      * @private
      * @param {Object} record
      * @param {integer} currentIndex
-     * @param {integer} [inc=1] - the increment to use when searching for the
-     *                          "next" possible one
+     * @param {Object} [options]
+     * @param {integer} [options.inc=1] - the increment to use when searching for the
+     *   "next" possible one
+     * @param {boolean} [options.wrap=true] if true, when we arrive at the end of the
+     *   list of widget, we wrap around and try to activate widgets starting at
+     *   the beginning. Otherwise, we just stop trying and return -1
      * @returns {integer} the index of the widget that was activated or -1 if
-     *                    none was possible to activate
+     *   none was possible to activate
      */
-    _activateFieldWidget: function (record, currentIndex, inc) {
-        inc = inc === undefined ? 1 : inc;
+    _activateFieldWidget: function (record, currentIndex, options) {
+        options = options || {};
+        _.defaults(options, {inc: 1, wrap: true});
 
-        var activated;
         var recordWidgets = this.allFieldWidgets[record.id] || [];
         for (var i = 0 ; i < recordWidgets.length ; i++) {
-            activated = recordWidgets[currentIndex].activate();
+            var activated = recordWidgets[currentIndex].activate();
             if (activated) {
                 return currentIndex;
             }
 
-            currentIndex += inc;
+            currentIndex += options.inc;
             if (currentIndex >= recordWidgets.length) {
-                currentIndex -= recordWidgets.length;
+                if (options.wrap) {
+                    currentIndex -= recordWidgets.length;
+                } else {
+                    return -1;
+                }
             } else if (currentIndex < 0) {
-                currentIndex += recordWidgets.length;
+                if (options.wrap) {
+                    currentIndex += recordWidgets.length;
+                } else {
+                    return -1;
+                }
             }
         }
         return -1;
@@ -188,7 +201,7 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     _activateNextFieldWidget: function (record, currentIndex) {
         currentIndex = (currentIndex + 1) % (this.allFieldWidgets[record.id] || []).length;
-        return this._activateFieldWidget(record, currentIndex, +1);
+        return this._activateFieldWidget(record, currentIndex, {inc: 1});
     },
     /**
      * This is a wrapper of the {@see _activateFieldWidget} function to select
@@ -201,7 +214,7 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     _activatePreviousFieldWidget: function (record, currentIndex) {
         currentIndex = currentIndex ? (currentIndex - 1) : ((this.allFieldWidgets[record.id] || []).length - 1);
-        return this._activateFieldWidget(record, currentIndex, -1);
+        return this._activateFieldWidget(record, currentIndex, {inc:-1});
     },
     /**
      * Does the necessary DOM updates to match the given modifiers data. The

@@ -56,6 +56,23 @@ var DebouncedField = AbstractField.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Debounced fields do not notify the rest of the environment immediately of
+     * their new state, so it is necessary to actually get their value when this
+     * method is called.
+     *
+     * @override
+     */
+    commitChanges: function () {
+        if (this.mode === 'edit') {
+            this._setValue(this._getValue());
+        }
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
