@@ -492,7 +492,7 @@ msgstr "说明"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
 msgid "Description on Picking"
-msgstr "分拣说明"
+msgstr "拣货说明"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -641,6 +641,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.template,name:delivery.free_delivery_carrier_product_template
 msgid "Free delivery charges"
 msgstr "免费运输"
 
@@ -664,7 +665,7 @@ msgstr ""
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr "指定同一产品的多种包装方式。此处与分拣单并不冲突且主要用于 EDI 模块。"
+msgstr "指定同一产品的多种包装方式。此处与拣货单并不冲突且主要用于 EDI 模块。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
@@ -1013,6 +1014,7 @@ msgstr "一般成本 - 总成本"
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
+#: model:product.template,name:delivery.normal_delivery_carrier_product_template
 msgid "Normal Delivery Charges"
 msgstr "正常运输成本"
 
@@ -1310,7 +1312,7 @@ msgstr "订货最小数量"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "退货分拣"
+msgstr "退货拣货"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1532,6 +1534,7 @@ msgstr "技术: 用来计算数量."
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
+#: model:product.template,name:delivery.delivery_carrier_product_template
 msgid "The Poste"
 msgstr "邮政"
 
@@ -1600,7 +1603,7 @@ msgstr "此科目将用于评估采购价格和成本价格之间的价格差异
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "这个交货方式会用在当从分拣开发票时。"
+msgstr "这个交货方式会用在当从拣货开发票时。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_variant
