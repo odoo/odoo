@@ -3075,6 +3075,35 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('skip invisible fields when navigating with TAB', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].bar = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet><group>' +
+                        '<field name="foo"/>' +
+                        '<field name="bar" invisible="1"/>' +
+                        '<field name="product_id" attrs=\'{"invisible": [["bar", "=", true]]}\'/>' +
+                        '<field name="int_field"/>' +
+                    '</group></sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input[name="foo"]').focus();
+        form.$('input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('input[name="int_field"]')[0], document.activeElement,
+            "int_field should be focused");
+
+        form.destroy();
+    });
+
     QUnit.test('clicking on a stat button with a context', function (assert) {
         assert.expect(1);
 

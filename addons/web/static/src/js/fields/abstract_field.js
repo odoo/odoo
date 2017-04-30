@@ -344,7 +344,7 @@ var AbstractField = Widget.extend({
     _setValue: function (value) {
         // we try to avoid doing useless work, if the value given has not
         // changed.  Note that we compare the unparsed values.
-        if (this.lastSetValue === value) {
+        if (this.lastSetValue === value || (this.value === false && value === '')) {
             return;
         }
         this.lastSetValue = value;
