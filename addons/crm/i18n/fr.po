@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Clo <clo@odoo.com>, 2016
 # Christophe Dubuit <cdubuit@yahoo.com>, 2016
@@ -39,13 +39,15 @@
 # ShevAbam <shevabam@gmail.com>, 2016
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2016
+# Richard Mathot <rim@odoo.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Jeanjean Noname <monsieur.spock@gmail.com>, 2016\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,6 +170,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Bonjour ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>L'opportunité <strong>${object.name}</strong> n'a connu aucune activité depuis au moins 5 jours.</p>\n"
+"%if object.description:\n"
+"<p>Voici sa description :</p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Merci !</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -204,6 +213,8 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
 " sales cycle."
 msgstr ""
+"<b>Faites glisser les opportunités</b> d'une colonne à l'autre au fil de "
+"votre avancement au sein du processus de ventes."
 
 #. module: crm
 #. openerp-web
@@ -212,16 +223,18 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
+"<b>Inviter des collègues</b> par courriel.</br>\n"
+"<i>Saisissez une adresse par ligne.</i>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-envelope-o\"/> Ask Our Experts"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\"/> Demandez à nos experts"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "<i class=\"fa fa-envelope-o\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\"/>&amp;nbsp;"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1291,7 +1304,7 @@ msgstr "Matrice de comparaison des prix des concurrents"
 #: code:addons/crm/static/src/js/tour.js:75
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Des paramètres sont disponibles dans l'application Configuration."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1488,7 +1501,7 @@ msgstr "Créez vos modèles d'offres"
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_author_id
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Created By"
-msgstr ""
+msgstr "Créé par"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_create_uid
@@ -1593,7 +1606,7 @@ msgstr "Clients"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Customizations"
-msgstr ""
+msgstr "Personnalisations"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:84
@@ -1714,7 +1727,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

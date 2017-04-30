@@ -1,31 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * web_planner
-#
+# 
 # Translators:
-# Davor Bojkić <bole@dajmi5.com>, 2015
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
+# Bole <bole@dajmi5.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Filip Cuk <filipcuk2@gmail.com>, 2017
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-16 10:39+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_active
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
 msgid "Active"
 msgstr "Aktivan"
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:369
+#, python-format
+msgid "Cancel"
+msgstr "Odustani"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_create_uid
@@ -54,19 +64,15 @@ msgstr "ID"
 
 #. module: web_planner
 #: model:ir.model.fields,help:web_planner.field_web_planner_active
-#, fuzzy
 msgid ""
 "If the active field is set to False, it will allow you to hide the planner. "
 "This change requires a refresh of your page."
 msgstr ""
-"Ako je aktivno polje postavljeno na NE, omogućuje vam skrivanje plana. "
-"Promjena zahtjeva osvježavanje stranice."
 
 #. module: web_planner
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
-#, fuzzy
 msgid "Inactive"
-msgstr "Neaktivan"
+msgstr "Neaktivno"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner___last_update
@@ -85,7 +91,7 @@ msgstr "Vrijeme promjene"
 
 #. module: web_planner
 #. openerp-web
-#: code:addons/web_planner/static/src/xml/web_planner.xml:31
+#: code:addons/web_planner/static/src/js/web_planner_common.js:132
 #, python-format
 msgid "Mark As Done"
 msgstr "Označi kao izvršeno"
@@ -102,10 +108,17 @@ msgstr "Naziv"
 
 #. module: web_planner
 #. openerp-web
-#: code:addons/web_planner/static/src/xml/web_planner.xml:34
+#: code:addons/web_planner/static/src/js/web_planner_common.js:140
 #, python-format
-msgid "Next step"
-msgstr "Sljedeći korak"
+msgid "Next Step"
+msgstr ""
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:378
+#, python-format
+msgid "Odoo Enterprise"
+msgstr "doo Enterprise"
 
 #. module: web_planner
 #: model:ir.model,name:web_planner.model_web_planner
@@ -139,3 +152,10 @@ msgstr "Postotak napretka"
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_view_id
 msgid "Template"
 msgstr "Predložak"
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:360
+#, python-format
+msgid "Upgrade now"
+msgstr "Nadogradi sada"

@@ -1,37 +1,35 @@
-# #-#-#-#-#  hr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_crm
-#
+# 
 # Translators:
-# Davor Bojkić <bole@dajmi5.com>, 2015
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
-# #-#-#-#-#  hr.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * website_crm
-#
-# Translators:
-# Davor Bojkić <bole@dajmi5.com>, 2015
-#, fuzzy
+# Davor Bojkić <davor.bojkic@storm.hr>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-10-18 13:40+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  hr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"#-#-#-#-#  hr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:35
+#, python-format
+msgid "% Leads"
+msgstr "%  Potencijala"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
@@ -44,11 +42,42 @@ msgid ""
 "<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
 "                                <span id=\"o_website_form_result\"/>"
 msgstr ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Pošalji</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_config_settings_crm_default_team_id
+msgid "Default Sales Channel"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_team_id
+msgid "Default Sales Channels"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_config_settings_crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
+msgid "Default Salesperson"
+msgstr "Zadani prodavač"
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_website_config_settings_crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website_crm_default_team_id
+msgid ""
+"Default sales channel for new leads created through the Contact Us form."
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_website_config_settings_crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
+msgid "Default salesperson for new leads created through the Contact Us form."
+msgstr ""
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Email"
-msgstr "E-mail"
+msgstr "E-pošta"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
@@ -62,9 +91,40 @@ msgid "Lead/Opportunity"
 msgstr "Potencijal/prilika"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:34
+#, python-format
+msgid "Leads"
+msgstr "Potencijali"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:8
+#, python-format
+msgid "Leads Acquisition /"
+msgstr "Akvizicija potencijala /"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:13
+#, python-format
+msgid "Leads Analysis"
+msgstr "Analiza CRM potencijala"
+
+#. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Phone Number"
 msgstr "Broj telefona"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.website_config_settings_view_form_inherit_website_crm
+msgid "Sales Channel"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.website_config_settings_view_form_inherit_website_crm
+msgid "Salesperson"
+msgstr "Prodavač"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -77,9 +137,21 @@ msgid "Thanks!"
 msgstr "Hvala!"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:15
+#, python-format
+msgid "There is no recent lead."
+msgstr "Nema skorijih potencijala."
+
+#. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "We will get back to you shortly."
 msgstr "Brzo ćemo vam se javiti."
+
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_website
+msgid "Website"
+msgstr "Web stranica"
 
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
@@ -106,8 +178,7 @@ msgstr "Vaše pitanje"
 msgid "Your message has been sent successfully."
 msgstr "Vaša poruka je uspješno poslana"
 
-#~ msgid "Send"
-#~ msgstr "Pošalji"
-
-#~ msgid "e.g. (+32).81.81.37.00"
-#~ msgstr "npr. + 385 1 1234567"
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_website_config_settings
+msgid "website.config.settings"
+msgstr "website.config.settings"

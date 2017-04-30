@@ -1,75 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_blog
-#
+# 
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
-# Cem Uygur <cemuygur.beb@gmail.com>, 2016
-# Demenan Dersimi <dhkabayel@gmail.com>, 2016
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Esin Kandemir <esaykandemir@gmail.com>, 2017
+# dhkabayel <dhkabayel@gmail.com>, 2017
+# Thermo Dynamic <emirhanayar2004@gmail.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-07 19:07+0000\n"
-"Last-Translator: Demenan Dersimi <dhkabayel@gmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:117
-#, python-format
-msgid " Click on this button to send your blog post online."
-msgstr "Blog postanızı çevrimiçi göndermek için bu düğmeye basın."
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid ""
-"\"Finally, the leading edge is being brought to the masses.\n"
-"                    It will now be the turn of the big players to catch up "
-"to\n"
-"                    the superior technologies of the SME.\""
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid ""
-"\"Odoo now competes on many fronts, with no real\n"
-"                competition out there to knock them off the top spot.\n"
-"                With the launch of their integrated CMS and Ecommerce\n"
-"                systems,it only elevates their position as one of the "
-"leading\n"
-"                lights in the open source revolution. It will be at least 5\n"
-"                years before another ERP or CMS provider will be able to\n"
-"                compete at this level due to the technology currently\n"
-"                employed by most industry providers.\""
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid ""
-"\"Odoo's latest launch will allow a business to go from\n"
-"                zero to trading online quicker than ever before,” Stuart\n"
-"                Mackintosh, MD of Open Source specialist and Odoo\n"
-"                integration partner, OpusVL, explains. “The investment\n"
-"                required to have a fully automated business system is\n"
-"                dramatically reduced, enabling the small and medium\n"
-"                enterprise to compete at a level of functionality and\n"
-"                performance previously reserved for the big IT investors.\""
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid ""
-"\"This is another clever and highly disruptive move by\n"
-"                Odoo,which will force other technology providers to\n"
-"                take another look at the value they are providing to ensure\n"
-"                that their 'solutions' can still compete.\""
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "&amp;mdash;"
 msgstr ""
 
 #. module: website_blog
@@ -83,17 +43,50 @@ msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 msgstr ""
 
 #. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
+#: model:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 msgid ""
-"A mix of push &amp; pull: Today, people\n"
-"                    are victims of what others decide to push to them.\n"
-"                    Odoo differentiates:"
+"(Un)archiving a blog automatically (un)archives its posts. Do you want to "
+"proceed?"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:53
+#, python-format
+msgid "<b>Click on Save</b> to record your changes."
+msgstr "Değişikliklerinizi kaydetmek için <b> Kaydet'i tıklayın </b>"
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:69
+#, python-format
+msgid "<b>Publish your blog post</b> to make it visible to your visitors."
+msgstr ""
+"Ziyaretçilerinizin görebilmesi için <b> Blog yazınızı yayınlayın </b>."
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:73
+#, python-format
+msgid ""
+"<b>That's it, your blog post is published!</b> Discover more features "
+"through the <i>Customize</i> menu."
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:44
+#, python-format
+msgid ""
+"<b>Write your story here.</b> Use the top toolbar to style your text: add an"
+" image or table, set bold or italic, etc. Drag and drop building blocks for "
+"more graphical blogs."
 msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "A new post"
-msgstr ""
+msgstr "Yeni bir yazı"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_about_us
@@ -106,40 +99,21 @@ msgid "Access post"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:24
-#, python-format
-msgid "Add Content"
-msgstr "İçerik Ekle"
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_active
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_active
+msgid "Active"
+msgstr "Aktif"
 
 #. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid "Adding to industry leading technology"
-msgstr ""
+#: model:ir.ui.view,arch_db:website_blog.blog_blog_view_search
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
+msgid "Archived"
+msgstr "Arşivlenmiş"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_history
 msgid "Archives"
 msgstr "Arşivler"
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid ""
-"As it comes, there is a default website based on Bootstrap\n"
-"                3, the latest industry standard for rapid development of\n"
-"                multi-device websites backed by Twitter, so can be directly\n"
-"                integrated with many web tools and works across all devices\n"
-"                by default."
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"At Odoo, we build tools to bring productivity to\n"
-"                enterprises. As emails and information flows are one of\n"
-"                the biggest wastes of time in companies, we have to fix\n"
-"                this."
-msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -148,7 +122,6 @@ msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_author_id
-#: model:ir.model.fields,field_description:website_blog.field_blog_post_create_uid
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Author"
 msgstr "Yazan"
@@ -159,8 +132,14 @@ msgid "Avatar"
 msgstr "Avatar"
 
 #. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Black"
+msgstr "Siyah"
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_blog_id
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root
+#: model:ir.ui.view,arch_db:website_blog.blog_blog_view_search
 #: model:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #: model:website.menu,name:website_blog.menu_news
@@ -173,7 +152,7 @@ msgid "Blog Name"
 msgstr "Blog Adı"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:283
+#: code:addons/website_blog/models/website.py:23
 #: model:ir.model,name:website_blog.model_blog_post
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -182,20 +161,14 @@ msgid "Blog Post"
 msgstr "Blog Yazısı"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:287
+#: code:addons/website_blog/models/website.py:27
 #, python-format
 msgid "Blog Post <b>%s</b> seems to have a link to this page !"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:37
-#, python-format
-msgid "Blog Post Created"
-msgstr "Blog yazısı hazırlandı"
-
-#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_post_complete_read_next
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Blog Post Title"
 msgstr "Yazı Başlığı"
@@ -238,13 +211,8 @@ msgid "Blue"
 msgstr "Mavi"
 
 #. module: website_blog
-#: model:blog.post,subtitle:website_blog.blog_post_2
-msgid "Building your company's website and selling your products online easy."
-msgstr "Şirketinizin web sitesini oluşturmak ve çevrimiçi kolayca ürün satmak."
-
-#. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:58
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:29
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 #, python-format
 msgid "Change Cover"
@@ -252,119 +220,50 @@ msgstr "Kapak Resmini Değiştir"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:54
-#, python-format
-msgid "Change and customize your blog post cover."
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:108
-#, python-format
-msgid "Check Mobile Preview"
-msgstr "Mobil önizleme kontrol"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:68
-#, python-format
-msgid "Choose an image"
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:69
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:35
 #, python-format
 msgid "Choose an image from the library."
 msgstr ""
 
 #. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:30
+#, python-format
+msgid "Click here to change your post cover."
+msgstr "Yazınızı kapağını değiştirmek için buraya tıklayın."
+
+#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "Click on \"Content\" on the top menu to write your first blog post."
-msgstr "İlk blog yazısını yazmak için üst menüden içerik üzerine tıklayın."
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:94
-#, python-format
-msgid "Click on '<em>Save</em>' button to record changes on the page."
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:77
-#, python-format
-msgid "Click on '<em>Save</em>' to set the picture as cover."
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:102
-#, python-format
 msgid ""
-"Click on the mobile icon to preview how your blog post will be displayed on "
-"a mobile device."
+"Click on \"New Page\" in the top-right corner to write your first blog post."
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:40
+#, python-format
+msgid "Click on <b>Save</b> to set the picture as cover."
 msgstr ""
 
 #. module: website_blog
 #: model:ir.actions.act_window,help:website_blog.action_blog_post
 msgid "Click to create a new blog post."
-msgstr ""
+msgstr "Yeni bir blog yazısı oluşturmak için tıklayın."
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:124
-#, python-format
-msgid "Close Tutorial"
-msgstr "Yardımı Kapat"
-
-#. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.website_blog
-msgid "Color"
-msgstr "Renk"
-
-#. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_about_us
-msgid "Contact us"
-msgstr "Bizimle İletişime Geçin"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:84
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_content
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
-#, python-format
 msgid "Content"
 msgstr "İçerik"
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:39
-#, python-format
-msgid "Continue"
-msgstr "Devam Et"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:60
-#, python-format
-msgid "Cover"
-msgstr ""
-
-#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_cover_properties
 msgid "Cover Properties"
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:14
-#, python-format
-msgid "Create a blog post"
-msgstr "Blog yazısı oluşturma"
+msgstr "Kapak Özellikleri"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_create_uid
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_create_uid
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_create_uid
 msgid "Created by"
 msgstr "Oluşturan"
@@ -374,14 +273,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_create_date
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_create_date
 msgid "Created on"
-msgstr "Oluşturuldu"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:53
-#, python-format
-msgid "Customize Cover"
-msgstr ""
+msgstr "Oluşturulma zamanı"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_mail_compose_message_path
@@ -395,7 +287,7 @@ msgstr "Tartışma Yolu"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_display_name
 msgid "Display Name"
-msgstr "Adı Göster"
+msgstr "Ad Görünümü"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -403,74 +295,24 @@ msgid "Duplicate"
 msgstr "Kopyala"
 
 #. module: website_blog
-#: model:ir.model,name:website_blog.model_mail_compose_message
-msgid "Email composition wizard"
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Filter Color"
 msgstr ""
 
 #. module: website_blog
-#: model:ir.model,name:website_blog.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Filter Intensity"
 msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid "Emails are broken."
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Emails make me waste my time. But I need them.\n"
-"                Given the importance that emails have in our lives,\n"
-"                it's incredible it's still one of the only software\n"
-"                areas that did not evolve in the past 20 years!"
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Focus on the Content: Everything is\n"
-"                    stripped to emphasize on the real message. No more\n"
-"                    welcome introductions, greetings, signatures and legal\n"
-"                    notes.We standardize the layout of each message.\n"
-"                    (signatures are on the profile of a contact, not in\n"
-"                    every message)"
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Folders and mailing lists are great tools but too\n"
-"                    complex in traditional email clients. In Odoo, a\n"
-"                    group of contacts that share a discussion can be\n"
-"                    created with one click. Every group should have it's\n"
-"                    own email address."
-msgstr ""
-
-#. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_follow_us
-msgid "Follow us"
-msgstr "Bizi Takip Edin"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Full Screen"
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Get Things Done: your inbox is a\n"
-"                    todo list. You should be able to process (not only\n"
-"                    read) the inbox and easily mark messages for future\n"
-"                    actions. Every inbox should be empty after having\n"
-"                    been processed; no more overload of information."
-msgstr ""
+msgstr "Tam Ekran"
 
 #. module: website_blog
 #: model:blog.blog,subtitle:website_blog.blog_blog_1
 msgid "Get in touch with us"
-msgstr ""
+msgstr "Bizimle iletişime geçin"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -483,24 +325,9 @@ msgid "Group By"
 msgstr "Grupla"
 
 #. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid "Here are the ideas behind the Odoo communication tools:"
-msgstr ""
-
-#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "High"
 msgstr "Yüksek"
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid ""
-"However, unlike other web content management systems, it\n"
-"                fully integrates into the back-end database. This means\n"
-"                that when you edit a product description, image or price,\n"
-"                it updates the product database in real time, providing a\n"
-"                true self-service window into the business."
-msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_id
@@ -510,28 +337,9 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_blog
-#: model:blog.post,subtitle:website_blog.blog_post_1
-msgid "Ideas behind the Odoo communication tools."
-msgstr ""
-
-#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "In"
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,name:website_blog.blog_post_2
-msgid "Integrating your CMS and E-Commerce"
-msgstr "Entegre CMS ve E-Ticaret"
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Keep control of what you want to receive or don't want\n"
-"                    to receive. People should never receive spam. You\n"
-"                    should follow/unfollow any kind of information in one\n"
-"                    click."
-msgstr ""
+msgstr "İçinde"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_write_uid
@@ -545,7 +353,7 @@ msgstr "Son katılımcı"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_write_date
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag___last_update
 msgid "Last Modified on"
-msgstr "Son değiştirme tarihi"
+msgstr "Son Güncelleme"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_write_uid
@@ -557,27 +365,12 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_write_date
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_write_date
 msgid "Last Updated on"
-msgstr "Son Güncellenen"
+msgstr "Son Güncelleme"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "Latest Posts"
 msgstr "Son yazılar"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:18
-#, python-format
-msgid "Let's go through the first steps to write beautiful blog posts."
-msgstr "Güzel blog yazılarını yazmak için ilk adımları görelim."
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid ""
-"Like many modern website editors, with Odoo you can edit\n"
-"                content in-line, enabling you to see exactly what you are\n"
-"                changing and ensure your changes suit the context."
-msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -587,7 +380,7 @@ msgstr "Düşük"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Medium"
-msgstr "Orta"
+msgstr "Medya"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_mail_message
@@ -595,37 +388,14 @@ msgid "Message"
 msgstr "Mesaj"
 
 #. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Messages \"for action\": they\n"
-"                            require your immediate attention and you need\n"
-"                            to process them all. This accounts for 10%\n"
-"                            of your daily emails. Use the \"To: me\" menu\n"
-"                            for these."
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Messages \"for information\":\n"
-"                            you can pull them when you need some specific\n"
-"                            information; they are not required to be read\n"
-"                            every day.You receive only what you decided\n"
-"                            to follow.This accounts for 90% of your daily\n"
-"                            emails.Use the \"Inbox\" menu for these."
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:101
-#, python-format
-msgid "Mobile Preview"
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Mid screen"
 msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_name
 msgid "Name"
-msgstr "Ad"
+msgstr "İsim"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -634,18 +404,11 @@ msgstr "Dar"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:17
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:31
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:21
 #: model:ir.ui.view,arch_db:website_blog.content_new_blogpost
 #, python-format
 msgid "New Blog Post"
 msgstr "Yeni Blog Yazısı"
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid "New Features Launched"
-msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.header_footer_custom
@@ -655,7 +418,7 @@ msgstr "Haberler"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "No Cover"
-msgstr ""
+msgstr "Kapak Yok "
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -679,33 +442,15 @@ msgstr "Hiçbiri"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:9
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:63
 #, python-format
-msgid "Not Published"
-msgstr "Yayımlanmadı"
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid ""
-"Odoo claims to be 'the Open Source software that makes\n"
-"                building your company's website and selling your products\n"
-"                online easy'. So how true is this statement?"
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,website_meta_keywords:website_blog.blog_post_1
-msgid "Odoo, email"
-msgstr "Odoo, e-posta"
-
-#. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.website_blog
-msgid "Opacity"
+msgid "Once you have reviewed the content on mobile, close the preview."
 msgstr ""
 
 #. module: website_blog
 #: model:blog.blog,name:website_blog.blog_blog_1
 msgid "Our Blog"
-msgstr ""
+msgstr "Bizim Bloğumuz"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_blogs
@@ -715,28 +460,7 @@ msgstr "Bloglar"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_follow_us
 msgid "Participate on our social stream."
-msgstr "Bizi takip edin !"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:28
-#, python-format
-msgid "Please"
-msgstr "Lütfen"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:31
-#, python-format
-msgid "Post"
-msgstr "Blog Yazısı"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:44
-#, python-format
-msgid "Post Headline"
-msgstr ""
+msgstr "Sosyal medya akışımızda yer alın."
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_post_ids
@@ -744,26 +468,20 @@ msgid "Posts"
 msgstr "Yazılar"
 
 #. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Productivity is key: our smart user\n"
-"                    interface does not require you to click on every mail\n"
-"                    to read a thread. Reading a full thread, replying,\n"
-"                    attaching documents is super fast."
-msgstr ""
-
-#. module: website_blog
-#: code:addons/website_blog/controllers/main.py:268
+#: code:addons/website_blog/controllers/main.py:269
 #, python-format
 msgid "Public user cannot post comments on blog post."
-msgstr ""
+msgstr "Genel kullanıcı blog yazısı hakkında yorum gönderemezsiniz"
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:10
-#, python-format
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
 msgid "Published"
 msgstr "Yayımlandı"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_published_date
+msgid "Published Date"
+msgstr "Yayın Tarihi"
 
 #. module: website_blog
 #: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
@@ -772,11 +490,14 @@ msgid "Published Post"
 msgstr "Yayınlanmış"
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:116
-#, python-format
-msgid "Publishing status"
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_post_date
+msgid "Published date"
 msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
+msgid "Publishing Options"
+msgstr "Yayınlama Seçenekleri"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -789,22 +510,9 @@ msgid "Ranking"
 msgstr "Sıralama"
 
 #. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_post_complete_read_next
 msgid "Read Next <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Reading my inbox is the most unproductive task I do\n"
-"                on a daily basis. I have to spend one full hour a\n"
-"                day to process my emails. All the junk flows in the\n"
-"                same inbox; spams, information that doesn't matter,\n"
-"                quoted answers of quoted answers, etc. At the end\n"
-"                of the hour, only 10 emails actually requested an\n"
-"                answer from me. With a good tool, I could have done\n"
-"                my job in 10 minutes!"
-msgstr ""
+msgstr "Devamını Oku <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -813,79 +521,51 @@ msgstr "Kırmızı"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:76
-#, python-format
-msgid "Save"
-msgstr "Kaydet"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:93
-#, python-format
-msgid "Save your modifications once you are done"
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:109
-#, python-format
-msgid "Scroll to check rendering and then close the mobile preview."
-msgstr "İşleme denetlemek ve mobil Önizleme'yi kapatmak için ilerleyin."
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:61
-#, python-format
-msgid "Select this menu item to change blog cover."
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:32
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:15
 #, python-format
 msgid "Select this menu item to create a new blog post."
 msgstr "Yeni bir blog yazısı oluşturmak için bu menü öğesini seçin."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:29
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:26
 #, python-format
-msgid "Sign in"
-msgstr "Oturum aç"
+msgid "Set a blog post <b>cover</b>."
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Size"
-msgstr "Ebat"
+msgstr "Boyut"
+
+#. module: website_blog
+#: model:ir.model.fields,help:website_blog.field_blog_post_author_avatar
+msgid ""
+"Small-sized image of this contact. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr ""
+"Bu carinin küçük boylu resmi. Bu resim otomatik olarak 64x64 pixele en boy "
+"oranını koruyarak küçültülür. Bu alanı küçük resim gerektiğinde "
+"kullanabilirsiniz."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
-#, python-format
-msgid "Skip"
-msgstr "Atla"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
-#, python-format
-msgid "Start Tutorial"
-msgstr "Öğretici başlatın"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/models/website_blog.py:91
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:90
+#: code:addons/website_blog/models/website_blog.py:120
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:52
 #, python-format
 msgid "Start writing here..."
-msgstr ""
+msgstr "Buraya yazmaya başlayın ..."
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:85
-#, python-format
-msgid "Start writing your story here."
-msgstr ""
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
+msgid "Status"
+msgstr "Durum"
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_follow_us
+msgid "Stay updated :"
+msgstr "Güncel Kalın:"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_subtitle
@@ -894,6 +574,7 @@ msgstr "Alt Başlığı"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_post_complete_read_next
 msgid "Subtitle"
 msgstr "Altyazı"
 
@@ -919,61 +600,29 @@ msgid "Tags"
 msgstr "Etiketler"
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_teaser
+msgid "Teaser"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_teaser_manual
+msgid "Teaser Content"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Technical"
 msgstr "Teknik"
 
 #. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid "The Communication Mechanism of Odoo"
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,name:website_blog.blog_post_1
-#: model:blog.post,website_meta_description:website_blog.blog_post_1
-msgid "The Future of Emails"
-msgstr "E-postalar Geleceği"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:38
-#, python-format
-msgid "This is your new blog post. Let's edit it."
-msgstr "Bu sizin yeni blog yazınız. Düzenleyin."
-
-#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid ""
-"This page is great to improve your <strong>Search Engine Optimization</"
-"strong>;\n"
-"                   You can review titles, keywords and descriptions of all "
-"blogs at once."
+"This page is great to improve your <strong>Search Engine Optimization</strong>;\n"
+"                   You can review titles, keywords and descriptions of all blogs at once."
 msgstr ""
 "Bu sayfa <strong>Arama Motoru Optimizasyonu</strong>'nun iyiliştirilmesi "
 "için önemlidir; tüm blogların başlık, anahtar kelimeleri ve tanımlamalarını "
 "tek seferde gözden geçirebilirsin."
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid ""
-"This provides a single source of data for your company and\n"
-"                removes the need to create offline synchronisation between\n"
-"                website and product database."
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:123
-#, fuzzy, python-format
-msgid ""
-"This tutorial is over. To discover more features and improve the content of "
-"this page, go to the upper left customize menu. You can also add some cool "
-"content with your text in the edit mode with the upper right button."
-msgstr ""
-"Bu öğrenme programı burada bitiyor. Daha fazla özellikleri keşfetme ve bu "
-"sayfanın içeriğini iyileştirmek için özelleştirme menüsünde sağ üst bölüme "
-"gidiniz. Değiştirme modundayken \"Blok Yerleştir\"i tıklayarak yazdığınız "
-"hoş içerikleri kendiniz de ekleyebilirsiniz."
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_name
@@ -981,20 +630,9 @@ msgid "Title"
 msgstr "Başlık"
 
 #. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_2
-msgid ""
-"To add to an already comprehensive set of Odoo\n"
-"                    features, a website content management system (CMS\n"
-"                    or WMS) has been developed and a beta release is\n"
-"                    available from today, 31st January 2014."
-msgstr ""
-
-#. module: website_blog
-#: model:blog.post,content:website_blog.blog_post_1
-msgid ""
-"To disrupt emails, you need more than just another user\n"
-"                interface. We need to rethink the whole communication flow."
-msgstr ""
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
+msgid "Unpublished"
+msgstr "Yayınlanmayan"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1003,14 +641,10 @@ msgstr "Başlıksız Gönderimler"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:25
-#, fuzzy, python-format
-msgid ""
-"Use this button to create a new blog post like any other document (page, "
-"menu, products, event, ...)."
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:58
+#, python-format
+msgid "Use this icon to preview your blog post on <b>mobile devices</b>."
 msgstr ""
-"Başka bir belge (sayfanın menü, ürün, olay, ...) gibi yeni bir blog yazısı "
-"oluşturmak için bu içerik menüsünü kullanın."
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_tag_form
@@ -1028,15 +662,9 @@ msgstr ""
 "görüntülemek için kullanılır;"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:262
-#, python-format
-msgid "View Blog Post"
-msgstr "Blog gönderimlerine bakın"
-
-#. module: website_blog
 #: model:ir.model,name:website_blog.model_website
 msgid "Website"
-msgstr "Websitesi"
+msgstr "Web Sitesi"
 
 #. module: website_blog
 #: model:ir.actions.act_url,name:website_blog.action_open_website
@@ -1054,11 +682,9 @@ msgid "Website communication history"
 msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:26
-#, python-format
-msgid "Write a comment..."
-msgstr "Yorum Yazın..."
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "White"
+msgstr "Beyaz"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_about_us
@@ -1066,12 +692,12 @@ msgid ""
 "Write a small text here for when <b>new visitors</b> find your website\n"
 "            through your <b>blog entries</b>, referenced in Google."
 msgstr ""
-"Google tarafından refere edilen <b>blog yazılarınız</b> dolayısıyla sitenizi "
-"bulan <b>yeni ziyaretçiler</b> için buraya kısa bir yazı yazın."
+"Google tarafından refere edilen <b>blog yazılarınız</b> dolayısıyla sitenizi"
+" bulan <b>yeni ziyaretçiler</b> için buraya kısa bir yazı yazın."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:46
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:20
 #, python-format
 msgid "Write a title, the subtitle is optional."
 msgstr "Bir başlık yazınız, isterseniz alt başlık da ekleyebilirsiniz."
@@ -1084,27 +710,16 @@ msgstr "Sarı"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid ""
-"You should <strong>add a banner on the top</strong> as it is a frequent "
-"landing page for new visitors.\n"
-"                   <span class=\"text-muted\">This box will not be visible "
-"to your visitors.</span>"
+"You should <strong>add a banner on the top</strong> as it is a frequent landing page for new visitors.\n"
+"                   <span class=\"text-muted\">This box will not be visible to your visitors.</span>"
 msgstr ""
-"Yeni kullanıcılar için sık sık indirilen sayfanın üst tarafına bir banner "
-"eklemeniz gerekiyor.\n"
+"Yeni kullanıcılar için sık sık indirilen sayfanın üst tarafına bir banner eklemeniz gerekiyor.\n"
 "Bu kutucuk ziyaretçileriniz tarafından görülemeyecek."
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
-#, fuzzy
 msgid "blog. Click here to access the blog :"
-msgstr "Yazı için buraya tıklayınız."
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:14
-#, python-format
-msgid "by"
-msgstr "tarafından"
+msgstr "Blog. Bloga erişmek için burayı tıklayın:"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1120,14 +735,8 @@ msgstr "Yorumlar"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
-#, fuzzy
 msgid "has been published on the"
-msgstr "Şu yazı %s şu blogda %s yayınlandı."
-
-#. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "not published"
-msgstr "Yayınlanmadı"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1136,90 +745,16 @@ msgid "pull-right"
 msgstr "sağa-çek"
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:29
-#, python-format
-msgid "to comment."
-msgstr "yorumlamak"
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "unpublished"
+msgstr "yayınlanmayan"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "view"
-msgstr ""
+msgstr "görünüm"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "views"
 msgstr "Görüntüleme"
-
-#~ msgid "Action Needed"
-#~ msgstr "Eylem Gerekiyor"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Kayıta işlenmiş son mesajın tarihi."
-
-#~ msgid "Followers"
-#~ msgstr "İzleyiciler"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "İzleyiciler (Kanallar)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "İzleyiciler (İş ortakları)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
-
-#~ msgid "Is Follower"
-#~ msgstr "Takipçi mi"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Son Mesaj Tarihi"
-
-#~ msgid "Messages"
-#~ msgstr "Mesajlar"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Mesajlar ve iletişim geçmişi"
-
-#~ msgid "Number of Actions"
-#~ msgstr "İşlem Sayısı"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Eylem gerektiren mesaj sayısı"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Okunmamış mesaj sayısı"
-
-#~ msgid "Save Your Blog"
-#~ msgstr "Kaydet"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "Belgeye web sitesinden erişim için tam adres."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Okunmamış Mesajlar"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Okunmamış Mesaj Sayacı"
-
-#~ msgid "Visible in Website"
-#~ msgstr "Web Sitesinde Görünür"
-
-#~ msgid "Website URL"
-#~ msgstr "Web sitesi URL'si"
-
-#~ msgid "Website meta description"
-#~ msgstr "Web sitesi meta açıklaması"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Web Sitesi meta anahtar kelimeleri"
-
-#~ msgid "Website meta title"
-#~ msgstr "Web sitesi meta başlık"
-
-#~ msgid "on"
-#~ msgstr "açık"

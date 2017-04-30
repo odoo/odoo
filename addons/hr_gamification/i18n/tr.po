@@ -1,23 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_gamification
-#
+# 
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
-# Cem Uygur <cemuygur.beb@gmail.com>, 2016
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Cem Uygur <cemuygur.beb@gmail.com>, 2017
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-25 20:36+0000\n"
-"Last-Translator: Cem Uygur <cemuygur.beb@gmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_gamification
@@ -30,22 +34,25 @@ msgstr ""
 "Hedefler, yarışmalar kullanılarak otomatik olarak oluşturulabilir."
 
 #. module: hr_gamification
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_badge_ids
+msgid ""
+"All employee badges, linked to the employee either directly or through the "
+"user"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
-"                    The challenge can use a period (weekly, monthly...) for "
-"automatic creation of goals.\n"
-"                    The goals are created for the specified users or member "
-"of the group."
+"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
+"                    The goals are created for the specified users or member of the group."
 msgstr ""
-"Seçilmiş kulanıcılara, onları değerlendirmek için bir hedefler listesi "
-"atayın.\n"
-"                    Yarışma hedeflerin otomatik olarak oluşturulması için "
-"bir süre (haftalık, aylık...) kullanabilir.\n"
-"                    Hedefler belirlenmiş kullanıcılar ya da grup üyesi için "
-"oluşturulur."
+"Seçilmiş kulanıcılara, onları değerlendirmek için bir hedefler listesi atayın.\n"
+"                    Yarışma hedeflerin otomatik olarak oluşturulması için bir süre (haftalık, aylık...) kullanabilir.\n"
+"                    Hedefler belirlenmiş kullanıcılar ya da grup üyesi için oluşturulur."
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users_badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
 msgid "Badges"
 msgstr "Rozetler"
@@ -57,9 +64,14 @@ msgid ""
 msgstr "Rozetleri senin iyi iş vardır. İnsanlara onlara inanmak hak etmek o."
 
 #. module: hr_gamification
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_direct_badge_ids
+msgid "Badges directly linked to the employee"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Cancel"
-msgstr "Vazgeç"
+msgstr "İptal"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.challenge_list_action2
@@ -86,7 +98,12 @@ msgstr "Bu personele ilk rozeti vermek için tıklayın"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "Ne yaptıklarını ve neden önemli açıklar (ortak olacak)"
+msgstr "Ne yaptıklarını ve neden önemli olduğunu açıkla (public olacak)"
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_direct_badge_ids
+msgid "Direct Badge"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee
@@ -103,12 +120,12 @@ msgstr "Personel Rozetleri"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_goal_ids
 msgid "Employee HR Goals"
-msgstr "İK Personel Amaçları"
+msgstr "İK Personel Hedefleri"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification badge"
-msgstr "İK Personel Amaçları"
+msgstr "İK Personel Hedefleri"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
@@ -116,10 +133,15 @@ msgid "Gamification user badge"
 msgstr "Ödüllendirme kullanıcı rozeti"
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users_goal_ids
+msgid "Goal"
+msgstr "Hedef"
+
+#. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
 #: model:ir.ui.menu,name:hr_gamification.gamification_goal_menu_hr
 msgid "Goals History"
-msgstr "Amaç Tarihçesi"
+msgstr "Hedef Kayıtları"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
@@ -128,8 +150,13 @@ msgstr "Bir Rozet Verme"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
-msgid "Granted Employees"
-msgstr "Verilen Personeller"
+msgid "Granted"
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_granted_employees_count
+msgid "Granted Employees Count"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_has_badges
@@ -153,9 +180,15 @@ msgid "Reward Employee with"
 msgstr "İle Personel Ödüllendirme"
 
 #. module: hr_gamification
-#: constraint:gamification.badge.user:0
+#: code:addons/hr_gamification/models/gamification.py:18
+#, python-format
 msgid "The selected employee does not correspond to the selected user."
 msgstr "Seçilen personele seçilen kullanıcı uyuşmuyor."
+
+#. module: hr_gamification
+#: model:ir.model,name:hr_gamification.model_res_users
+msgid "Users"
+msgstr "Kullanıcılar"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -163,16 +196,17 @@ msgid "What are you thankful for?"
 msgstr "Ne için müteşekkirsiniz?"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/grant_badge.py:31
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:21
 #, python-format
 msgid "You can not send a badge to yourself"
 msgstr "Kendinize bir rozet gönderemezsiniz"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/grant_badge.py:28
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:18
 #, python-format
 msgid "You can send badges only to employees linked to a user."
-msgstr "Sadece bir kullanıcıya bağlı personellere rozetleri gönderebilirsiniz."
+msgstr ""
+"Sadece bir kullanıcıya bağlı personellere rozetleri gönderebilirsiniz."
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard

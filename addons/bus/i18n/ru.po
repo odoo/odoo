@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * bus
-#
+# 
 # Translators:
-# Max Belyanin <maxbelyanin@gmail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Alex Puchkov <ap@alteco.co>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-12 11:19+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Masha Koc <mariya.kos.ua@gmail.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: bus
 #: sql_constraint:bus.presence:0
@@ -34,6 +38,18 @@ msgstr "Далеко"
 #: model:ir.model.fields,field_description:bus.field_bus_bus_channel
 msgid "Channel"
 msgstr "Канал"
+
+#. module: bus
+#: model:ir.model.fields,help:bus.field_res_users_country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_city_id
+msgid "Company"
+msgstr "Компания"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
@@ -52,25 +68,40 @@ msgid "Display Name"
 msgstr "Отображаемое Имя"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number2
+msgid "Door Number"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_country_enforce_cities
+msgid "Enforce Cities"
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
 msgid "Geo Latitude"
-msgstr ""
+msgstr "Географическая широта"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
 msgid "Geo Longitude"
-msgstr ""
+msgstr "Географическая долгота"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_date_localization
 msgid "Geolocation Date"
+msgstr "Дата геолокации"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number
+msgid "House Number"
 msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_id
 #: model:ir.model.fields,field_description:bus.field_bus_presence_id
 msgid "ID"
-msgstr "ID"
+msgstr "Номер"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_status
@@ -83,7 +114,7 @@ msgstr "IM статус"
 #: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
 msgid "Last Modified on"
-msgstr "Последний раз изменено"
+msgstr "Последнее изменение"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
@@ -98,12 +129,12 @@ msgstr "Последнее присутствие"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
 msgid "Last Updated on"
-msgstr "Последний раз обновлено"
+msgstr "Последнее обновление"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_message
@@ -113,7 +144,7 @@ msgstr "Сообщение"
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Offline"
-msgstr "Оффлайн"
+msgstr "Офлайн"
 
 #. module: bus
 #: selection:bus.presence,status:0
@@ -123,7 +154,12 @@ msgstr "Онлайн"
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
 msgid "Partner"
-msgstr "Контрагент"
+msgstr "Партнёр"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_name
+msgid "Street Name"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
@@ -140,6 +176,3 @@ msgstr "Пользователи"
 #: model:ir.model,name:bus.model_bus_bus
 msgid "bus.bus"
 msgstr "bus.bus"
-
-#~ msgid "Created on"
-#~ msgstr "Создан"

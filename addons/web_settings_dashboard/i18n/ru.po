@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * web_settings_dashboard
-#
+# 
 # Translators:
-# Amaro Vita <vita.amaro@gmail.com>, 2015
-# Gennady Marchenko <gennadym@gmail.com>, 2016
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Amaro Vita <vita.amaro@gmail.com>, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-17 08:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Максим Дронь <dronmax@gmail.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: web_settings_dashboard
 #. openerp-web
@@ -32,17 +35,38 @@ msgstr "Реализация"
 
 #. module: web_settings_dashboard
 #. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:150
+#, python-format
+msgid "(Community Edition)"
+msgstr "(Общественная редакция)"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:166
+#, python-format
+msgid "Activate the developer mode"
+msgstr "Включить режим разработки"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:168
+#, python-format
+msgid "Activate the developer mode (with assets)"
+msgstr "Активируйте режим разработчика (с активами)"
+
+#. module: web_settings_dashboard
+#. openerp-web
 #: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:56
 #, python-format
 msgid "Active User"
-msgstr "Активный Пользователь"
+msgstr "Активный пользователь"
 
 #. module: web_settings_dashboard
 #. openerp-web
 #: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:57
 #, python-format
 msgid "Active Users"
-msgstr ""
+msgstr "Активные пользователи"
 
 #. module: web_settings_dashboard
 #. openerp-web
@@ -66,10 +90,24 @@ msgid "Browse the documentation."
 msgstr "Просмотр Документации"
 
 #. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:157
+#, python-format
+msgid "Copyright © 2004-2016"
+msgstr "Copyright © 2004-2016"
+
+#. module: web_settings_dashboard
 #: model:ir.actions.client,name:web_settings_dashboard.web_settings_dashboard_action
 #: model:ir.ui.menu,name:web_settings_dashboard.web_dashboard_menu
 msgid "Dashboard"
 msgstr "Панель управления"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:170
+#, python-format
+msgid "Deactivate the developer mode"
+msgstr "Отключите режим разработчика"
 
 #. module: web_settings_dashboard
 #. openerp-web
@@ -87,14 +125,21 @@ msgstr "Следуйте этим советам по реализации чт�
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:151
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:157
+#, python-format
+msgid "GNU LGPL Licensed"
+msgstr ""
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:181
 #, python-format
 msgid "Get more features with the Enterprise Edition!"
 msgstr "Получите больше возможностей с Enterprise Edition!"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:133
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:134
 #, python-format
 msgid "Help us spread the word: Share Odoo's awesomeness with your friends!"
 msgstr "Помогите нам: расскажите друзьям об Odoo!"
@@ -150,10 +195,24 @@ msgstr "Нет установленных приложений"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:150
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:149
+#, python-format
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:180
 #, python-format
 msgid "Odoo Enterprise"
 msgstr "Odoo для Предприятий"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:157
+#, python-format
+msgid "Odoo S.A."
+msgstr "Odoo S.A."
 
 #. module: web_settings_dashboard
 #. openerp-web
@@ -171,10 +230,10 @@ msgstr "Пожалуйста, укажите почтовый адрес пра�
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:131
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:132
 #, python-format
-msgid "Social Share"
-msgstr "Соцсети"
+msgid "Share the Love"
+msgstr "Делитесь любовью"
 
 #. module: web_settings_dashboard
 #. openerp-web
@@ -185,7 +244,7 @@ msgstr "Магазин Тем"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:154
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:184
 #, python-format
 msgid "Upgrade Now"
 msgstr "Обновить сейчас"

@@ -1,36 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-#
+# 
 # Translators:
-# Bole <bole@dajmi5.com>, 2015
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
-# Marko Carević <marko.carevic@live.com>, 2016
+# Marko Carević <marko.carevic@live.com>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Tina Milas <tina@uvid.hr>, 2017
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-05-10 12:04+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
 msgid "# Issues"
 msgstr "# Predmeta"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
-msgid "# Tasks"
-msgstr "# Zadaci"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
@@ -50,17 +47,16 @@ msgstr "<span class=\"o_stat_text\"> Ponuda(e) </span>"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Član s kojim želite povezati svoje članstvo. Ono će uzeti u obzir stanje "
-"članstva pridruženog člana ."
+"Član s kojim želite povezati svoje članstvo. Uzet će se u obzir stanje "
+"članstva pridruženog člana."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-#, fuzzy
 msgid "Activation"
-msgstr "Ponuda"
+msgstr "Aktivacija"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -73,9 +69,16 @@ msgid "Cancel Membership Date"
 msgstr "Otkaži datum članstva"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
-msgid "Count Payment Method"
-msgstr "Broj uvjeta plaćanja"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:16
+#, python-format
+msgid "Click here to see more options."
+msgstr "Kliknite za prikaz više opcija."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
+msgid "Count Payment Token"
+msgstr "Broj token plaćanja"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
@@ -113,26 +116,32 @@ msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
 msgstr ""
+"Vjerojatnost za dodjeljivanje prilike ovom partneru (0 = nema dodjeljivanja)"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
 msgid "Implementation References"
+msgstr "Reference implementacije"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_count
+msgid "Implemented Count"
 msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
 msgid "Implemented by"
-msgstr ""
+msgstr "Implementirao"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Račun"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
-msgid "Invoiced in Sale Orders Target"
-msgstr "Fakturirano u planu prodaje"
+msgid "Invoiced in Sales Orders Target"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
@@ -141,8 +150,7 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -150,15 +158,14 @@ msgstr ""
 "-Nije član: Partner koji nije podnio zahtjev za članstvo.\n"
 "-Otkazano: Član koji je otkazao svoje članstvo.\n"
 "-Stari član: Član kojem je istekao datum članstva.\n"
-"-Čekajući član: Član koji je podnio zahtjev za članstvo, a račun će tek biti "
-"kreiran.\n"
+"-Čekajući član: Član koji je podnio zahtjev za članstvo, a račun će tek biti kreiran.\n"
 "- Član kojem je izdan račun: Član kojem je račun kreiran.\n"
 "- Član koji plaća: Član koji je platio članarinu."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
 msgid "Latest Partner Review"
-msgstr ""
+msgstr "Posljednja ocjena partnera"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -166,14 +173,21 @@ msgid "Lead/Opportunity"
 msgstr "Potencijal/prilika"
 
 #. module: sale_crm
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:20
+#, python-format
+msgid "Let's have a look at the quotations of this sales channel."
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
 msgid "Level"
-msgstr ""
+msgstr "Razina"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
 msgid "Level Weight"
-msgstr ""
+msgstr "Razina težine"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
@@ -201,6 +215,16 @@ msgid "Membership Start Date"
 msgstr "Datum početka članstva"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
+msgid "Message for Sales Order"
+msgstr "Poruka za prodajni nalog"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr "Poruka za skladišnicu"
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Nova ponuda"
@@ -208,7 +232,7 @@ msgstr "Nova ponuda"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
 msgid "Next Partner Review"
-msgstr ""
+msgstr "Slijedeća ocjena partnera"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
@@ -227,14 +251,19 @@ msgstr "Nalozi"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
-#, fuzzy
 msgid "Partnership Date"
-msgstr "Otkaži datum članstva"
+msgstr "Datum partnerstva"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
-msgid "Payment Methods"
-msgstr "Načini plaćanja"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
+msgid "Payment Tokens"
+msgstr "Token plaćanja"
+
+#. module: sale_crm
+#: code:addons/sale_crm/models/crm_team.py:12
+#, python-format
+msgid "Pipeline"
+msgstr "Tok prodaje"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -247,8 +276,14 @@ msgid "Quotations"
 msgstr "Ponude"
 
 #. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_team
+msgid "Sales Channel"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
 msgstr "Prodajni nalog"
 
@@ -256,6 +291,28 @@ msgstr "Prodajni nalog"
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
 msgstr "Odaberite ako želite dati besplatno članstvo."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
+#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Odabirom opcije \"Upozorenje\" obavijestit ćete korisnika porukom, odabirom "
+"opcije \"Blokiranje poruke\" učinit ćete izuzetak s porukom i blokirati tok."
+" Poruku treba napisati u slijedećem polju."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_sequence
+msgid "Sequence"
+msgstr "Sekvenca"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
+msgid "Stock Picking"
+msgstr "Skladišnica"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
@@ -266,11 +323,6 @@ msgstr "Suma naloga"
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
 msgstr "Oznake"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
-msgid "Tasks"
-msgstr "Zadaci"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
@@ -304,40 +356,3 @@ msgstr "Korisnici"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr "Lokacija dobavljača"
-
-#~ msgid "# Claims"
-#~ msgstr "# Prigovori/pritužbe"
-
-#~ msgid "Campaign"
-#~ msgstr "Kampanja"
-
-#~ msgid "Geo Latitude"
-#~ msgstr "Geo Latitude"
-
-#~ msgid "Geo Localization Date"
-#~ msgstr "Datum Geo lokalizacije"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Geo dužina"
-
-#~ msgid "Medium"
-#~ msgstr "Srednji"
-
-#~ msgid "Source"
-#~ msgstr "Izvor"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Ime koje vam pomaže pratiti napore različitih kampanja, npr: "
-#~ "Jesenska_akcija, Božićni_specijal"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr "Ovo je način isporuke. Npr. razglednica, e-mail, oglas"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "To je izvor linka npr. pretraživač, druga domena ili ime sa popisa e-pošte"

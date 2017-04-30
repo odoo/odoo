@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Friderici Claude <claude@friderici.org>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Friderici Claude <claude@friderici.org>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
@@ -18,13 +18,14 @@
 # Dayssam Med <m.habou@gmail.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Henri Cornuau <hcornuau@gmail.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Henri Cornuau <hcornuau@gmail.com>, 2017\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +50,10 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Quand la fiche de paie est créée, le statut est 'Brouillon'.\n"
+"* Si la fiche de paie est à contrôler, le statut est 'En Attente'.\n"
+"* Si la fiche de paie est confirmée, le statut est 'Terminée'.\n"
+"* Quand l'utilisateur annule la fiche de paie, le statut est 'Rejetée'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -506,7 +511,7 @@ msgstr "Détails par catégorie de règle de salaire"
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0

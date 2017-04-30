@@ -3,29 +3,31 @@
 # * base_automation
 # 
 # Translators:
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ana Juaristi <ajuaristio@gmail.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Antonio Trueba <atgayol@gmail.com>, 2017
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Carles Antoli <carlesantoli@hotmail.com>, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
-# Luis Martínez Ontalba <luismaront@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Diego de la Torre <diego.delatorreh@gmail.com>, 2017
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
 # oihane <oihanecruce@gmail.com>, 2017
 # Ivan Nieto <ivan.n.s@tuta.io>, 2017
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
+# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,12 +57,12 @@ msgstr "Nombre de acción"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Action Rule Line Test"
-msgstr ""
+msgstr "Prueba de Línea de Regla de Acción"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Action Rule Test"
-msgstr ""
+msgstr "Test de reglas de acción"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_state
@@ -92,6 +94,11 @@ msgstr "Añadir canales"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_partner_ids
 msgid "Add Followers"
 msgstr "Añadir seguidores"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_is_assigned_to_admin
+msgid "Assigned to admin user"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -145,11 +152,6 @@ msgstr "Basado en una condición de tiempo"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_domain
 msgid "Before Update Domain"
 msgstr "Antes de actualizar el dominio"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_id
-msgid "Before Update Filter"
-msgstr "Filtro para antes de la actualización"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -215,12 +217,20 @@ msgid "Days"
 msgstr "Días"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_deadline
+msgid "Deadline"
+msgstr "Fecha límite"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Retraso después de fecha de activación.\n"
+"Puede colocar un número negativo si necesita un retraso ante de la \n"
+"fecha de activación, como enviar un recordatorio de 15 minutos antes de una reunión."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range
@@ -255,11 +265,6 @@ msgid "External ID"
 msgstr "ID externo"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_id
-msgid "Filter"
-msgstr "Filtro"
-
-#. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
 msgid "Hours"
 msgstr "Horas"
@@ -278,7 +283,6 @@ msgstr "ID de la acción si está definida en el archivo XML"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_domain
-#: model:ir.model.fields,help:base_automation.field_base_automation_filter_id
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
@@ -288,7 +292,6 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_domain
-#: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_id
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
@@ -399,7 +402,7 @@ msgstr "Nuevo"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Activar Campos a modificar"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -441,6 +444,11 @@ msgid "Pending"
 msgstr "Pendiente"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_priority
+msgid "Priority"
+msgstr "Prioridad"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_link_field_id
 msgid ""
 "Provide the field used to link the newly created recordon the record on used"
@@ -476,11 +484,6 @@ msgstr "Secuencia"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_action_server_id
 msgid "Server Actions"
 msgstr "Acciones de servidor"
-
-#. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Set selection based on a search filter:"
-msgstr "Establezca la selección basada en el filtro de búsqueda"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state
@@ -584,6 +587,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Cuando la condición debe ser activada.\n"
+"Si esta presente, será revisada por el programador. Si esta vacío, será revisada en la creación y actualización."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_active

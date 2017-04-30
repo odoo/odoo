@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_analytic_default
-#
+# 
 # Translators:
-# Bole <bole@dajmi5.com>, 2015
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
-# Jasmina Otročak <jasmina@uvid.hr>, 2016
+# Jasmina Otročak <jasmina@uvid.hr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Tina Milas <tina@uvid.hr>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-01 08:36+0000\n"
-"Last-Translator: Jasmina Otročak <jasmina@uvid.hr>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_product_product_rules_count
@@ -36,7 +39,7 @@ msgstr "Konta"
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
-msgstr "Konto analitike"
+msgstr "Analitički konto"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
@@ -82,6 +85,11 @@ msgid "Created on"
 msgstr "Datum kreiranja"
 
 #. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.account_config_settings_view_form_inherit_analytic_default
+msgid "Default Analytic Values"
+msgstr ""
+
+#. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
 msgid "Default end date for this Analytic Account."
 msgstr "Predodređeni datum završetka za ovaj analitički konto"
@@ -100,11 +108,6 @@ msgstr "Naziv za prikaz"
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
 msgid "End Date"
 msgstr "Završni datum"
-
-#. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
-msgid "Entries"
-msgstr "Stavke"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
@@ -183,9 +186,9 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
-"Odaberite partnera koji će koristiti predodređeni analitički konto (npr. ako "
-"prilikom kreiranja novog izlaznog računa ili prodajnog naloga odaberemo ovog "
-"partnera, automatski će se popuniti predodređeni analitički konto) "
+"Odaberite partnera koji će koristiti predodređeni analitički konto (npr. ako"
+" prilikom kreiranja novog izlaznog računa ili prodajnog naloga odaberemo "
+"ovog partnera, automatski će se popuniti predodređeni analitički konto) "
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
@@ -194,9 +197,9 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
 msgstr ""
-"Odaberite proizvod koji će koristiti predodređeni analitički konto (npr. ako "
-"prilikom kreiranja novog izlaznog računa ili prodajnog naloga odaberemo ovaj "
-"proizvod, automatski će se popuniti predodređeni analitički konto) "
+"Odaberite proizvod koji će koristiti predodređeni analitički konto (npr. ako"
+" prilikom kreiranja novog izlaznog računa ili prodajnog naloga odaberemo "
+"ovaj proizvod, automatski će se popuniti predodređeni analitički konto) "
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
@@ -219,18 +222,3 @@ msgstr "Početni datum"
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "Korisnik"
-
-#~ msgid "Expense Invoice Policy"
-#~ msgstr "Politika troška računa"
-
-#~ msgid ""
-#~ "If you invoice at cost, the expense will be invoiced on the sale order at "
-#~ "the cost of the analytic line;if you invoice at sales price, the price of "
-#~ "the product will be used instead."
-#~ msgstr ""
-#~ "Ako izdate račun po trošku, trošak će se obračuni po trošku retka "
-#~ "prodajnog naloga; ako izdate račun po prodajnoj cijeni, umjesto toga će "
-#~ "se koristiti cijena proizvoda."
-
-#~ msgid "Transfer"
-#~ msgstr "Prenos"

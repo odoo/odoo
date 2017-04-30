@@ -1,33 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website
-#
+# 
 # Translators:
-# Bole <bole@dajmi5.com>, 2016
-# Bole <bole@dajmi5.com>, 2015
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
-# Jasmina Otročak <jasmina@uvid.hr>, 2016
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
-# Marko Carević <marko.carevic@live.com>, 2016
+# Tina Milas <tina@uvid.hr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Marko Carević <marko.carevic@live.com>, 2017
+# Mario Jureša <mario.juresa@uvid.hr>, 2017
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
+# Jasmina Otročak <jasmina@uvid.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-05-16 13:46+0000\n"
-"Last-Translator: Marko Carević <marko.carevic@live.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Jasmina Otročak <jasmina@uvid.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "&amp;times;"
-msgstr "&amp;times;"
+msgstr "&amp;puta;"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.sitemap_index_xml
@@ -44,6 +47,22 @@ msgid "&times;"
 msgstr "&times;"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"(e.g. business name, location) tends to improve your ranking in search "
+"engines and consequently increases your traffic. Do it:"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid ""
+",\n"
+"                                                      the #1"
+msgstr ""
+",\n"
+"#1"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid ""
 ",\n"
@@ -51,15 +70,6 @@ msgid ""
 msgstr ""
 ",\n"
 "ažurirana:"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid ""
-",\n"
-"                the #1"
-msgstr ""
-",\n"
-"broj 1"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -75,22 +85,6 @@ msgstr ", ažurirano:"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "- The Odoo Team"
 msgstr "- Odoo tim"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"1. Add your <strong>desired languages</strong><br/>\n"
-"                                Use the link in the footer of your website "
-"(when logged in) to add\n"
-"                                languages from the available list. Also, you "
-"can change the\n"
-"                                default language in"
-msgstr ""
-"1. Dodaj svoj <strong>željeni jezik</strong><br/>\n"
-"Koristi poveznicu na podnožju vaše web stranice (kada ste prijavljeni) za "
-"dodavanje\n"
-"jezika iz dostupne liste. Također, možete promijeniti\n"
-"zadani jezik u"
 
 #. module: website
 #. openerp-web
@@ -113,11 +107,6 @@ msgstr "12"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "1s"
 msgstr "1s"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "2. <strong>Setup Gengo</strong><br/>"
-msgstr "2. <strong>Podesi Gengo</strong><br/>"
 
 #. module: website
 #. openerp-web
@@ -164,53 +153,76 @@ msgid "5s"
 msgstr "5s"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.xml:69
+#, python-format
+msgid ":&nbsp;"
+msgstr ":&nbsp;"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_big_picture
 msgid "<b>A Small Subtitle</b>"
 msgstr "<b>Mali podnaslov</b>"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "<b>Choose an image...</b>"
-msgstr "<b>Izaberi sliku...</b>"
+#. openerp-web
+#: code:addons/website/static/src/js/website.tour.banner.js:15
+#, python-format
+msgid "<b>Click Edit</b> to start designing your homepage."
+msgstr "<b>Kliknite Uredi</b> za početak dizajniranja početne stranice."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.tour.banner.js:24
+#, python-format
+msgid ""
+"<b>Click on a text</b> to start editing it. <i>It's that easy to edit your "
+"content!</i>"
+msgstr ""
+"<b>Kliknite na tekst</b> kako biste ga počeli uređivati. <i>Tako je lako "
+"uređivati sadržaj!</i>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
 msgid ""
 "<b>Great stories are for everyone even when only written for\n"
-"                        just one person.</b> If you try to write with a wide "
-"general\n"
-"                        audience in mind, your story will ring false and be "
-"bland.\n"
-"                        No one will be interested. Write for one person. If "
-"it’s genuine for the one, it’s genuine for the rest."
+"                        just one person.</b> If you try to write with a wide general\n"
+"                        audience in mind, your story will ring false and be bland.\n"
+"                        No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest."
 msgstr ""
 "<b>Velike priče su za svakoga čak i kada su pisane za\n"
 "samo jednu osobu.</b> Ako pokušate pisati sa mislima na široku\n"
 "publiku, vaša će priča lažno zvoniti i biti blaga.\n"
-"Nitko neće biti zainteresiran. Pišite za jednu osobu. Ako je prava za jednu, "
-"prava je i za ostatak čitalaca."
+"Nitko neće biti zainteresiran. Pišite za jednu osobu. Ako je prava za jednu, prava je i za ostatak čitalaca."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
-#, fuzzy
 msgid ""
 "<b>Great stories have personality.</b> Consider telling\n"
-"                        a great story that provides personality. Writing a "
-"story\n"
-"                        with personality for potential clients will asists "
-"with\n"
-"                        making a relationship connection. This shows up in "
-"small\n"
-"                        quirks like word choices or phrases. Write from your "
-"point\n"
+"                        a great story that provides personality. Writing a story\n"
+"                        with personality for potential clients will assists with\n"
+"                        making a relationship connection. This shows up in small\n"
+"                        quirks like word choices or phrases. Write from your point\n"
 "                        of view, not from someone else's experience."
 msgstr ""
-"<b>Velika priča ima osobnost.</b>Razmislite pričanje\n"
-"velike priče koja pruža osobnost. Pisanje priče\n"
-"sa osobnošću za potencijalne klijente pomaže\n"
-"u razvijanju odnosa. To se pokazuje u malim\n"
-"igrama riječima kao što su izbor riječi ili fraza. Napišite iz svog\n"
-"gledišta, a ne iz tuđeg iskustva."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.tour.banner.js:72
+#, python-format
+msgid "<b>Install a contact form</b> to improve this page."
+msgstr "<b>Instalirajte kontakt obrazac</b> za poboljšanje stranice."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.tour.banner.js:77
+#, python-format
+msgid ""
+"<b>Install new apps</b> to get more features. Let's install the <i>'Contact "
+"form'</i> app."
+msgstr ""
+"<b>Instalirajte nove aplikacije</b> za više značajki. Instalirajmo "
+"<i>'Kontakt obrazac'</i> aplikaciju."
 
 #. module: website
 #: model:ir.actions.act_window,help:website.action_module_theme
@@ -223,40 +235,93 @@ msgid "<b>No website module found!</b>"
 msgstr "<b>Modul Website nije pronađen!</b>"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<b>Set Custom Image...</b>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.show_sign_in
 msgid "<b>Sign in</b>"
 msgstr "<b>Prijavi se</b>"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_button
-msgid ""
-"<i class=\"fa fa-arrow-right\"/>\n"
-"                        Contact Us Now"
-msgstr ""
-"<i class=\"fa fa-arrow-right\"/>\n"
-"Kontaktirajte nas sada"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippets
-#, fuzzy
-msgid "<i class=\"fa fa-check-square\"/> Feature"
-msgstr "<i class=\"fa fa-th-large\"/> Web stranica<b class=\"caret\"/>"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-#, fuzzy
-msgid "<i class=\"fa fa-envelope-o\"/> Email Our Website Expert"
-msgstr "<span class=\"fa fa-comment-o\"/> Uključeno čavrljanje na web stranici"
+msgid ""
+"<br/>\n"
+"                                    Make sure the Advanced Options are set to your country and language."
+msgstr ""
+"<br/>\n"
+"Provjerite jesu li napredne mogućnosti postavljene za Vašu državu i jezik."
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-arrows\"/>Background Image Sizing"
+msgstr "<i class=\"fa fa-arrows\"/>Dimenzioniranje pozadinske slike"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-arrows-h\"/>Images spacing"
+msgstr "<i class=\"fa fa-arrows-h\"/>Razmak slika"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-clock-o\"/>Scroll Speed"
+msgstr "<i class=\"fa fa-clock-o\"/>Brzina pomicanja"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-clock-o\"/>Slideshow speed"
+msgstr "<i class=\"fa fa-clock-o\"/>Brzina slideshowa"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippets
-msgid "<i class=\"fa fa-indent\"/> Content"
+msgid "<i class=\"fa fa-diamond\"/> Feature"
+msgstr "<i class=\"fa fa-diamond\"/> Značajka"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-expand\"/>Margin"
+msgstr "<i class=\"fa fa-expand\"/>Margina"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-eyedropper\"/>Background Color"
+msgstr "<i class=\"fa fa-eyedropper\"/>Boja pozadine"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-eyedropper\"/>Overlay color"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippets
+msgid "<i class=\"fa fa-indent\"/> Inner content"
+msgstr "<i class=\"fa fa-indent\"/> Unutarnji sadržaj"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-magic icon-fix\"/> Effect"
+msgstr "<i class=\"fa fa-magic icon-fix\"/> Efekt"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-magic\"/>Mode"
+msgstr "<i class=\"fa fa-magic\"/>Način"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-magnet\"/>Float"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-paint-brush\"/>Styling"
+msgstr "<i class=\"fa fa-paint-brush\"/>Stilsko oblikovanje"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-picture-o\"/>Background Image"
+msgstr "<i class=\"fa fa-picture-o\"/>Pozadinska slika"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.language_selector
@@ -268,64 +333,79 @@ msgstr ""
 "Dodajte jezik"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-plus-circle\"/>Add Slide"
+msgstr "<i class=\"fa fa-plus-circle\"/>Dodaj slide"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-plus-circle\"/>Add images"
+msgstr "<i class=\"fa fa-plus-circle\"/>Dodaj slike"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-refresh\"/>Re-order"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-th\"/>Columns"
+msgstr "<i class=\"fa fa-th\"/>Stupci"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippets
-#, fuzzy
 msgid "<i class=\"fa fa-th-large\"/> Structure"
-msgstr "<i class=\"fa fa-th-large\"/> Web stranica<b class=\"caret\"/>"
+msgstr "<i class=\"fa fa-th-large\"/> Struktura"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "<i class=\"fa fa-th-large\"/> WEBSITE <b class=\"caret\"/>"
-msgstr "<i class=\"fa fa-th-large\"/> Web stranica<b class=\"caret\"/>"
+msgstr "<i class=\"fa fa-th-large\"/> WEB STRANICA <b class=\"caret\"/>"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-trash\"/>Remove all images"
+msgstr "<i class=\"fa fa-trash\"/>Ukloni sve slike"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-trash-o\"/>Remove Slide"
+msgstr "<i class=\"fa fa-trash-o\"/>Ukloni slide"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<i>\n"
-"                        The whole process may take a few hours, some "
-"discussions with your colleagues and\n"
-"                    several cups of coffee to go through. But don't worry, "
-"you can return to this tool at any time.</i>"
+"                        The whole process may take a few hours, some discussions with your colleagues and\n"
+"                    several cups of coffee to go through. But don't worry, you can return to this tool at any time.</i>"
 msgstr ""
 "<i>\n"
 "Proces može potrajati nekoliko sati, razgovor sa kolegama\n"
-"i koja šalica kave skratiti će vrijeme. No, ne brinite, možete se vratiti na "
-"ovaj alat u bilo kojem trenutku.</i>"
+"i koja šalica kave skratiti će vrijeme. No, ne brinite, možete se vratiti na ovaj alat u bilo kojem trenutku.</i>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<i>\n"
-"                        Whether you're a beginner or a pro, we have "
-"everything you need to plan, create,\n"
+"                        Whether you're a beginner or a pro, we have everything you need to plan, create,\n"
 "                    publish and grow your site, blog or online store.</i>"
 msgstr ""
 "<i>\n"
-"Bilo da ste početnik ili profesionalac, imamo sve što je potrebno za "
-"planiranje, izradu,\n"
+"Bilo da ste početnik ili profesionalac, imamo sve što je potrebno za planiranje, izradu,\n"
 "objavu ili rast vaše stranice, bloga ili online trgovine. </i>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<i>\n"
-"                    This Planner will help you to think about your website "
-"and provide tips and ideas to inspire you. There are examples and "
-"explanations to guide you through the process of creating a top-notch, high "
-"quality site that meets all your needs.</i>"
+"                    This Planner will help you think about your website and provide tips and ideas to inspire you. There are examples and explanations to guide you through the process of creating a top-notch, high quality website that meets all your needs.</i>"
 msgstr ""
-"<i>\n"
-"Planer će vam pomoći da razmislite o vašoj web stranici i pružiti vam "
-"savjete i ideje za inspiraciju. Postoje primjeri i objašnjenja koja će vas "
-"voditi kroz proces kreiranja vrhunske, kvalitetne stranice koja zadovoljava "
-"sve vaše potrebe.</i>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"<i>Congratulations on taking the leap and deciding to build your own website!"
-"</i>"
+"<i>Congratulations on taking the leap and deciding to build your own "
+"website!</i>"
 msgstr "<i>Čestitamo na odluci o izradi vaše vlastite web stranice!</i>"
 
 #. module: website
@@ -339,27 +419,31 @@ msgid "<i>We wish you a fun time!</i>"
 msgstr "<i>Želimo vam zabavno vrijeme!</i>"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.tour.banner.js:53
+#, python-format
+msgid ""
+"<p><b>That's it.</b> Your homepage is live.</p><p>Continue adding more pages"
+" to your site or edit this page to make it even more awesome.</p>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_image_floating
 msgid ""
 "<small class=\"text-muted\">A great way to catch your reader's attention is "
-"to tell a story. Everything you consider writing can be told as a story.</"
-"small>"
+"to tell a story. Everything you consider writing can be told as a "
+"story.</small>"
 msgstr ""
 "<small class=\"text-muted\">Odličan način zaokupljanja pažnje čitaoca je "
 "pričanje priče. Sve što pomislite može biti ispričano kao priča.</small>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
-#: model:ir.ui.view,arch_db:website.s_quote
-#: model:ir.ui.view,arch_db:website.s_quotes_slider
-#: model:ir.ui.view,arch_db:website.s_references
 msgid "<small>Author of this quote</small>"
 msgstr "<small>Autor ovog citata</small>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
-#: model:ir.ui.view,arch_db:website.s_quotes_slider
-#: model:ir.ui.view,arch_db:website.s_references
 msgid "<small>John Doe, CEO</small>"
 msgstr "<small>John Doe, CEO</small>"
 
@@ -367,11 +451,6 @@ msgstr "<small>John Doe, CEO</small>"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
 msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Instaliraj sada"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr "<span class=\"fa fa-comment-o\"/> Uključeno čavrljanje na web stranici"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -383,97 +462,41 @@ msgstr ""
 "<strong>Savjeti za dobru domenu:</strong>"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                        <span>Try to limit yourself to 1 testing variable, "
-"otherwise you won't be able to clearly interpret the results of your "
-"modifications.</span>"
-msgstr ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"<span>Pokušajte se ograničiti na testiranje 1 varijable, inače nećete moći "
-"jasno interpretirati rezultate svojih izmjena.</span>"
+#: model:ir.ui.view,arch_db:website.user_navbar
+msgid "<span class=\"fa fa-pencil\"/>Edit"
+msgstr "<span class=\"fa fa-pencil\"/>Uredi"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
-msgid "<span class=\"fa fa-pencil\"/> EDIT PAGE"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Instaliraj sada"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
-msgid "<span class=\"fa fa-plus\"/> NEW PAGE"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<span class=\"fa fa-thumbs-o-down\"/> <strong> Bad practices</strong>"
-msgstr "<span class=\"fa fa-thumbs-o-down\"/> <strong> Loše prakse</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<span class=\"fa fa-thumbs-o-up\"/> <strong> Good practices</strong>"
-msgstr "<span class=\"fa fa-thumbs-o-up\"/> <strong> Dobre prakse</strong>"
+msgid "<span class=\"fa fa-plus\"/>New"
+msgstr "<span class=\"fa fa-plus\"/>Novo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa fa-cogs\"/>\n"
-"                                        <strong>Machine translation</"
-"strong><br/>Free, but quality may vary\n"
+"                                        <span class=\"fa fa-pencil\"/>\n"
+"                                        <strong>On your own</strong><br/>\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-cogs\"/>\n"
-"<strong>Strojno prevođenje</strong><br/>Besplatno, ali kvaliteta može "
-"varirati\n"
-"</span>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa fa-user\"/>\n"
-"                                        <strong>Human translation</"
-"strong><br/>Pay for professionnal quality\n"
+"                                        <strong>External services</strong><br/>\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-user\"/>\n"
-"<strong>Ljudski prijevod</strong><br/>plati za profesionalnu kvalitetu\n"
-"</span>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-code\"/><strong> 2. "
-"Customize its appearance</strong></span>"
-msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-code\"/><strong> 2. "
-"Prilagodite svoj izgled</strong></span>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-magic\"/><strong> 1. Choose "
-"your theme</strong></span>"
-msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-magic\"/><strong>1. "
-"Odaberite svoju temu</strong></span>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout
 msgid ""
 "<span class=\"sr-only\">Toggle navigation</span>\n"
-"                                    <span class=\"icon-bar\"/>\n"
-"                                    <span class=\"icon-bar\"/>\n"
-"                                    <span class=\"icon-bar\"/>"
+"                                <span class=\"icon-bar\"/>\n"
+"                                <span class=\"icon-bar\"/>\n"
+"                                <span class=\"icon-bar\"/>"
 msgstr ""
-"<span class=\"sr-only\">Prebaci navigaciju</span>\n"
-"<span class=\"icon-bar\"/>\n"
-"<span class=\"icon-bar\"/>\n"
-"<span class=\"icon-bar\"/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -491,18 +514,25 @@ msgid "<span>$</span><b style=\"font-size: 60px\">65</b><small>.00</small>"
 msgstr "<span>$</span><b style=\"font-size: 60px\">65</b><small>.00</small>"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<span>3. Select a <strong>translation method</strong></span>"
-msgstr "<span>3. Odaberi <strong>metodu prijevoda</strong></span>"
+#: model:ir.ui.view,arch_db:website.s_button
+msgid ""
+"<span>Contact Us Now</span>\n"
+"                        <i class=\"fa fa-chevron-right\"/>"
+msgstr ""
+"<span>Kontaktirajte nas odmah</span>\n"
+"<i class=\"fa fa-chevron-right\"/>"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_share
+msgid "<span>Share</span>"
+msgstr "<span>Podijeli</span>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<strong>... and your location too!</strong><br/>\n"
-"                                Millions of people use Google Maps everyday. "
-"Whether you are a restaurant\n"
-"                                or a huge business, you have no excuse not "
-"to register your location in"
+"                                Millions of people use Google Maps everyday. Whether you are a restaurant\n"
+"                                or a huge business, you have no excuse not to register your location in"
 msgstr ""
 "<strong>...i vašu lokaciju također!</strong><br/>\n"
 "Milijuni ljuid koriste Google Karte svakodnevno. Bilo da ste restoran\n"
@@ -511,63 +541,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"<strong>1. Define what to test</strong><br/>\n"
-"                                Your choice of what to test will obviously "
-"depend on your goals, but should\n"
-"                                always be linked to one of your business "
-"objectives (don't spend energy\n"
-"                                improving something that brings you no ROI). "
-"Then, find the best page to\n"
-"                                test and the variation you think will bring "
-"the best results.Here are a\n"
-"                                few examples of good testing variables:"
+"<strong>1. Your main menu items</strong> and 2. Your secondary menu items"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>1. Your main menu items</strong> and 2. Your secondary menu items "
-"(optional):"
-msgstr ""
-"<strong>1. Glavne stavke izbornika</strong> i 2. Vaše sekundarne opcije "
-"izbornika (neobavezno):"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>2. Create the page variation</strong><br/>\n"
-"                                Once you're clear on the measurable "
-"objective, the page and the variable\n"
-"                                you want to test, duplicate the page in Odoo "
-"using the <strong>'Versions'</strong>\n"
-"                                menu and apply the modification you decided."
-msgstr ""
-"<strong>2. Napravite varijaciju stranice</strong><br/>\n"
-"Kaka su vam jasni mjerljivi ciljevi, stranice i varijable\n"
-"koje želite testirati, duplicirajte Odoo stranicu korištenjem "
-"<strong>'Verzija'</strong>\n"
-"izbornika i primijenite izmjenu za koju ste se odlučili."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>3. Configure a Google Analytics account</strong><br/>\n"
-"                                This is necessary in order to record the "
-"statistics of your test."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>3. Your footer titles</strong> and 4. Your footer links:"
-msgstr "<strong>3. Naslov podnožja</strong> i 4. Linkovi podnožja:"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>4. Create your campaign in Google Analytics</strong><br/>\n"
-"                                Simply follow the wizard by creating a new "
-"experiment in the <strong>Behavior &gt;\n"
-"                                Experiments</strong> menu of"
+msgid "<strong>3. Your footer titles</strong> and 4. Your footer links"
 msgstr ""
 
 #. module: website
@@ -577,100 +556,43 @@ msgstr "<strong>50,000+ tvrtki koriste Odoo u svojem poslovanju.</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Activate now</strong> the optional modules you'll need:"
-msgstr "<strong>Aktiviraj sada</strong>opcionalne module koje trebaš:"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<strong>Add features and content</strong><br/>\n"
-"                                You can put more content in the intermediate "
-"section of your homepage (one\n"
-"                                or two scrolls down from the visible "
-"section), but try to keep your\n"
-"                                paragraphs easy to read and avoid 'walls of "
-"text'."
+"                                You can put more content in the intermediate section of your homepage (one\n"
+"                                or two scrolls down from the visible section), but try to keep your\n"
+"                                paragraphs easy to read and avoid walls of text."
 msgstr ""
-"<strong>Dodajte značajke i sadržaj</strong><br/>\n"
-"Možete staviti više sadržaja u srednjem dijelu početne stranice (jedan\n"
-"ili dva skrola dolje sa vidljivim djelom), ali probajte\n"
-"zadržati svoje\n"
-"značajke lako čitljivima i izbjegavajte 'zidove teksta'."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"<strong>Add relevant keywords</strong><br/>\n"
-"                                Adding relevant keywords to a web page's "
-"meta data, including the title tag\n"
-"                                and meta description, will tend to improve "
-"the relevancy of a site's search\n"
-"                                listings, also increasing your traffic."
-msgstr ""
-"<strong>Dodaj relevantne ključne riječi</strong><br/>\n"
-"Dodavanje relevantnih ključnih riječi na web stranicu je meta podataka, "
-"uključujući oznaku naslova\n"
-"i opisa meta, što će poboljšati relevantnost pretrage stranice\n"
-"i povećati promet stranice."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Advertise to get the first visitors</strong><br/>\n"
-"                                If you have a small budget to allocate to "
-"advertising (around $100), you\n"
-"                                should start a Google Adwords campaign."
+"<strong>Advertise</strong><br/>\n"
+"                                If you have a small budget to advertise your website (around $100), you\n"
+"                                should start a"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<strong>Be announced on the Odoo Twitter account</strong><br/>\n"
-"                                We like to hear from people using Odoo to "
-"build their website. Tweet us"
+"                                We like to hear from people using Odoo to build their website. Tweet us"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<strong>Be linked by trusted websites</strong><br/>\n"
-"                                The more sites that link to your own site, "
-"the more Google trusts your site\n"
-"                                to be worthwhile:"
+"                                The more websites that link to your website, the more Google trusts it to be worthwhile. Here are some tips:"
 msgstr ""
-"<strong>Budite povezani sa pouzdanim web stranicama</strong><br/>\n"
-"Više mjesta koja vode na vašu stranicu, Google više vjeruje da se vaša "
-"stranica\n"
-"isplati:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Blogs</strong>"
-msgstr "<strong>Blogovi</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Community builder</strong>"
-msgstr "<strong>Graditelj zajednica</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Contact form</strong>"
-msgstr "<strong>Kontakt obrazac</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Contact us for a custom-made theme:</strong>"
-msgstr "<strong>Kontaktirajte nas za temu po narudžbi:</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Contact us now:</strong><br/>"
-msgstr "<strong>Kontaktirajte nas:</strong><br/>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Create an online Q&amp;A</strong>"
+msgid ""
+"<strong>Call-to-action</strong><br/>\n"
+"                                Add one, and only one, call-to-action to your homepage. Your homepage is\n"
+"                                the page that gets the most visitors.<br/>\n"
+"                                It's good practice to try to engage with your visitors on the homepage:\n"
+"                                Contact Us, Subscribe to Get More Information, Check the Catalog, etc."
 msgstr ""
 
 #. module: website
@@ -682,91 +604,10 @@ msgstr "<strong>Raspravite uživo</strong>"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<strong>Display social proof</strong><br/>\n"
-"                                Below your main banner or call-to-action, "
-"it's a good practice to put\n"
-"                                social proofs about your products or "
-"services; customer quotes, videos,\n"
-"                                photos of your products in actions, twitter "
-"quotes, etc."
+"                                Below your main banner or call-to-action, it's a good practice to put\n"
+"                                social proofs about your products or services; customer quotes, videos,\n"
+"                                photos of your products in actions, twitter quotes, etc."
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Do many A/B tests.</strong><br/>\n"
-"                                Chances are, your first A/B test will turn "
-"out a lemon. But don’t despair. An A/B test can have only three outcomes: no "
-"result, a negative result or a\n"
-"                                positive result. The key to optimizing "
-"conversion rates is to do a ton of A/B\n"
-"                                tests, so that all positive results add up "
-"to a huge boost to your sales and\n"
-"                                achieved goals."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Don't test versions at different time periods.</strong><br/>If you\n"
-"                                test one version one week and the second the "
-"next, your results won't be\n"
-"                                accurate, or worse, wrong!"
-msgstr ""
-"<strong>Nemojte testirati verzije u različitim vremenskim razdobljima.</"
-"strong><br/>Ako\n"
-"tesirate jednu verziju jedan tjedan, a drugu sljedeći, vaši rezultati neće "
-"biti\n"
-"točni, ili još gore, u redu!"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Don’t conclude too early.</strong><br/>\n"
-"                                Wait for your test results to be "
-"significant. Take a look at the statistical\n"
-"                                confidence in Google Analytics, it should be "
-"at least 95%."
-msgstr ""
-"<strong>Ne zaključujte prerano.</strong><br/>\n"
-"Pričekajte da rezultati vašeg ispitivanja budu značajni. Pogledajte "
-"statističko\n"
-"povjerenje u Google analitici, trebalo bi biti najmanje 95%."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Don’t surprise regular visitors.</strong><br/>\n"
-"                                If you are testing a core part of your "
-"website, include only new visitors in\n"
-"                                the test. You want to avoid shocking regular "
-"visitors, especially because the\n"
-"                                variations may not ultimately be implemented."
-msgstr ""
-"<strong>Ne iznenađujte redovite posjetitelje.</strong><br/>\n"
-"Ako testirate temeljni dio vaše web stranice, uključite samo nove "
-"posjetitelje\n"
-"u test. Želite izbjeći šokiranje redovitih posjetitelja, pogotovo jer\n"
-"varijacija na kraju možda ne bude implementirana."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Encourage to action</strong><br/>\n"
-"                                Add  one, and only one, call-to-action on "
-"your homepage. Your homepage is\n"
-"                                the page that gets the most visitors.<br/>\n"
-"                                It's good practice to try to engage with "
-"your visitors on the homepage:\n"
-"                                Contact Us, Subscribe to Get More "
-"Information, Check the Catalog, etc."
-msgstr ""
-"<strong>Potaknite na akciju</strong><br/>\n"
-"Dodaj jedan, i samo jedan poziv na akciju na početnoj stranici. Vaša početna "
-"stranica\n"
-"je stranica koja dobiva najviše posjetitelja.<br/>\n"
-"Dobra je praksa poticanja posjetitelja početne stranice:\n"
-"Kontaktirajte nas, Pretplatite se za više informacija, Pogledajte katalog, "
-"itd."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -786,49 +627,33 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<strong>Find a catchy headline</strong><br/>\n"
-"                                Make sure anyone who visits your site "
-"understands what it’s about without having to do a lot of reading.<br/>\n"
-"                                To do that, the visible section of your "
-"homepage (above the fold) needs to be simple and straightforward. For "
-"example, use pictures of your work, screenshots of your app, a short and "
-"catchy hook."
+"                                Make sure anyone who visits your site understands what it’s about without too much reading.<br/>\n"
+"                                To do that, the visible section of your homepage (above the fold) needs to be simple and straightforward. For example, use pictures of your work, screenshots of your app, a short and catchy hook."
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>How to get a custom domain name ?</strong><br/>"
+msgid "<strong>How to get a custom domain name?</strong><br/>"
 msgstr "<strong>Kako dobiti prilagođen naziv domene?</strong><br/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<strong>Initial Teaser</strong><br/>\n"
-"                                Before launching to the masses, it's good "
-"practice to tease around 100 of\n"
-"                                your contacts. Start with your friends, "
-"colleagues and family. Whether or\n"
-"                                not they're interested in your area of "
-"business, they will be ready to help\n"
-"                                you with feedback if you engage in a "
-"personal discussion with them."
+"                                Before launching to the masses, it's good practice to tease around 100 of\n"
+"                                your contacts. Start with your friends, colleagues and family. Whether or\n"
+"                                not they're interested in your business, they will provide you with some precious feedback."
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Jobs</strong>"
-msgstr "<strong>Posao</strong>"
+msgid "<strong>Launch a forum</strong>"
+msgstr "<strong>Pokreni forum</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Know how long to run a test before giving up.</strong><br/>\n"
-"                                Giving up too early can cost you because you "
-"may have gotten meaningful\n"
-"                                results had you waited a little longer. "
-"Giving up too late isn’t good either,\n"
-"                                because poorly performing variations could "
-"cost you conversions and sales."
-msgstr ""
+msgid "<strong>Next actions:</strong>"
+msgstr "<strong>Sljedeće radnje:</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -837,53 +662,35 @@ msgstr "<strong>Pokušajte zapisati strukturu podnožja:</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Optimize your content</strong><br/>\n"
-"                                Writing content that includes frequently "
-"searched-for keywords and phrases\n"
-"                                tends to increase  traffic to your website."
-msgstr ""
-"<strong>Optimizirajte sadržaj</strong><br/>\n"
-"Pisanje sadržaja koje uključuje često tražene ključne riječi i fraze\n"
-"ima tendenciju povećanja prometa vaše web stranice."
+msgid "<strong>Publish documentation</strong>"
+msgstr "<strong>Objavi dokumentaciju</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Organize physical events</strong>"
-msgstr "<strong>Organizirajte fizičke događaje</strong>"
+msgid "<strong>Publish events</strong>"
+msgstr "<strong>Objavi događaje</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<strong>Reference your images...</strong><br/>\n"
-"                                If you are an artist or a photographer, you "
-"can potentially bring in a lot\n"
-"                                of  visitors by referencing your images so "
-"they are displayed in image\n"
-"                                search engines, like Google Images. To do "
-"that, simply add an 'Alt text'\n"
-"                                containing descriptions and keywords for "
-"relevant pictures."
+"                                If you are an artist or a photographer, you can potentially bring in a lot\n"
+"                                of visitors by referencing your images so they are displayed in image\n"
+"                                search engines, like Google Images.\n"
+"                                To do that,"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "<strong>Send mass mails</strong>"
+msgstr "<strong>Pošalji grupnu poštu</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<strong>Start a blog</strong><br/>\n"
-"                                Google loves websites which are updated "
-"often or ones where new content is\n"
-"                                added regularly. This is why starting a blog "
-"is an excellent way of\n"
-"                                improving your search ranking. If you have "
-"the time and dedication to write\n"
-"                                good articles,"
+"                                Search engines loves websites that get new content regularly. An excellent way is publishing blog posts. If you have the time and dedication to write good articles,"
 msgstr ""
-"<strong>Počnite blog</strong><br/>\n"
-"Google voli web stranice koje se često ažuriraju i u kojima se novi sadržaj\n"
-"redovito dodaje. To je razlog zašto je započinjanje bloga izvrstan način\n"
-"poboljašanja vašeg rangiranja pretraživanja. Ako imate vremena i predanost "
-"pisanju\n"
-"dobrih članaka,"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -892,33 +699,32 @@ msgstr "<strong>Veliko lansiranje</strong><br/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Use Google Webmaster</strong><br/>\n"
-"                                This tool will help you understand your "
-"search traffic and learn how users\n"
-"                                are finding your site and make optimizations "
-"to help Google better\n"
-"                                understand and represent your site."
-msgstr ""
+msgid "<strong>Use Google Webmaster</strong><br/>"
+msgstr "<strong>Koristi Google Webmaster</strong><br/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Use contact forms:</strong>"
-msgstr "<strong>Koristi kontakt obrasce:</strong>"
+msgid "<strong>Use contact forms</strong>"
+msgstr "<strong>Koristi kontakt obrasce</strong>"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "<strong>Use relevant keywords</strong><br/>"
+msgstr "<strong>Koristi relevantne ključne riječi</strong><br/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"<strong>With that in mind, try to define the structure of your main menu:</"
-"strong>"
+"<strong>With that in mind, try to define the structure of your main "
+"menu:</strong>"
 msgstr ""
 "<strong>Imajući to na umu, pokušajte definirati strukturu vašeg glavnog "
 "izbornika:</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>You have your domain name ?</strong><br/>"
-msgstr "<strong>Imate vaše ime domene?</strong><br/>"
+msgid "<strong>You own your domain name?</strong><br/>"
+msgstr "<strong>Posjedujete naziv Vaše domene?</strong><br/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -927,13 +733,15 @@ msgstr "<strong>Ciljevi vaše web stranice</strong>  po prioritetu:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>e-Commerce</strong>"
-msgstr "<strong>e-Trgovina</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid "@odoo"
 msgstr "@odoo"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid ""
+"A CDN helps you serve your website’s content with high availability and high"
+" performance to any visitor wherever they are located."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
@@ -961,42 +769,15 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"A footer, as its name implies, is located at the very bottom of your "
-"website.\n"
-"                        Because of that, your visitors won't see it "
-"immediately so it's very useful for linking\n"
-"                        pages you don't want in your main menu e.g. social "
-"media, terms and conditions, privacy\n"
-"                        terms, etc."
-msgstr ""
-"Podnožje, kako i samo ime implicira, se nalazi na samom dnu web stranice.\n"
-"Zbog toga ga posjetitelji neće vidjeti odmah tako da je vrlo korisno "
-"porijeliti linkove\n"
-"stranica koje ne želite u svom glavnom meniju, npr. društveni mediji, "
-"uvjeti, privatnost itd."
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
 msgid "A good subtitle"
 msgstr "Neki podnaslov"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"A good way to start is to use machine translation then apply corrections "
-"yourself."
-msgstr ""
-"Najbolji način za početak je korištenje automatskih prijevoda na kojima ćete "
-"sami napraviti korekcije."
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
 msgid ""
 "A great way to catch your reader's attention is to tell a story.\n"
-"                        Everything you consider writing can be told as a "
-"story."
+"                        Everything you consider writing can be told as a story."
 msgstr ""
 "Odličan način zaokupljanja pažnje čitaoca je pričanje priče. \n"
 "Sve što pomislite može biti ispričano kao priča."
@@ -1007,33 +788,14 @@ msgid "A small explanation of this great<br/>feature, in clear words."
 msgstr "Malo objašnjenje ove velike<br/>značajke, jasnim riječima."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_version
 msgid "A/B Testing"
 msgstr "A/B testiranje"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_version
-msgid "A/B testing and versioning"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"A/B testing is the process of testing two versions of a page to see which "
-"one performs\n"
-"                        better in reaching your business objectives. For "
-"example, imagine you have an existing\n"
-"                        page (A) where you ask your customers to subscribe "
-"to your mailing list.\n"
-"                        You create a variation (B) of this page with a "
-"slightly different subscription message.\n"
-"                        Then your randomly display this page to half the "
-"visitors of your website, and after a\n"
-"                        while, you analyze the subscription statistics and "
-"see that page B performs 10% better\n"
-"                        than page A. Of course, you now decide to make B "
-"your new current page!"
-msgstr ""
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "API Key"
+msgstr "API ključ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
@@ -1049,7 +811,7 @@ msgstr "Account &amp; Upravljanje prodajom"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_cdn_activated
 msgid "Activate CDN for assets"
-msgstr ""
+msgstr "Aktiviraj CDN za sadržaj"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
@@ -1068,7 +830,7 @@ msgstr "Dodaj"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.gallery.js:248
+#: code:addons/website/static/src/js/website.snippets.gallery.js:247
 #: model:ir.ui.view,arch_db:website.s_image_gallery
 #, python-format
 msgid "Add Images from the 'Customize' menu"
@@ -1076,15 +838,15 @@ msgstr "Dodaj slike iz izbornika 'Prilagodi' "
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:55
+#: code:addons/website/static/src/xml/website.contentMenu.xml:49
 #, python-format
 msgid "Add Menu Entry"
 msgstr "Dodaj stavku izbornika"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Add Slide"
-msgstr "Dodaj slide"
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Add a contact form in the"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1094,7 +856,6 @@ msgstr "Dodaj slogan"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.gallery.xml:18
-#: model:ir.ui.view,arch_db:website.snippet_options
 #, python-format
 msgid "Add images"
 msgstr "Dodaj slike"
@@ -1108,29 +869,35 @@ msgstr "Dodaj ključnu riječ"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:111
-#, fuzzy, python-format
-msgid "Add new pages"
-msgstr "Dodaj nove stranice i izbornike"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:68
+#: code:addons/website/static/src/js/website.contentMenu.js:72
 #, python-format
 msgid "Add page in menu"
 msgstr "Dodaj stranicu u izbornik"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
-msgid "Advanced"
-msgstr "Napredno"
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Adding relevant and popular keywords"
+msgstr "Dodavanje relevantnih i popularnih ključnih riječi"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"Advertise a keyword if you answer YES to the three following questions:"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.tour.banner.js:49
+#, python-format
+msgid "After having checked how it looks on mobile, <b>close the preview</b>."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "After working on this step, you may want to go back and refine your "
 "objectives or modify your visitors interests. Those 3 first steps are "
-"essentially linked, and the more time your spend on polishing them, the "
+"essentially linked, and the more time your spend on refining them, the "
 "better your website will be!"
 msgstr ""
 
@@ -1142,43 +909,25 @@ msgstr "Ciljajte .com i/ili ekstenziju vaše zemlje"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid ""
-"All these icons are licensed under creative commons so that you can use them."
+"All these icons are licensed under creative commons so that you can use "
+"them."
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Allows your customers and the whole community to ask and answer questions "
-"about their interests."
+"Allows your community to ask and answer questions about their interests"
 msgstr ""
-"Omogućuje vašim klijentima i cijeloj zajednici da pitaju i odgovaraju na "
-"pitanja o svojim interesima."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Also, don't hesitate to post on other people blogs, forums, websites, but "
-"don't go overboard and post everywhere without considering whether it's a "
-"good place for you to be."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Alternatively, you can write a good article about your business and publish "
-"it on an article database websites (ex: squidoo.com) or send it to a press "
-"website and your local newspapers."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Amount of text on the page (short vs. long)."
-msgstr "Količina teksta na stranici (kratak vs. dug)."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "An error occured while rendering the template"
 msgstr "Greška pri renderiranju predloška"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Analytics Key"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_title
@@ -1188,41 +937,24 @@ msgstr "I uočljiv podnaslov"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Announce it on social media (and update your profiles): Twitter,Facebook, "
-"LinkedIn, Youtube, etc."
+"Announce it on social media: Twitter, Facebook, LinkedIn, Youtube, etc."
 msgstr ""
-"Objavite na društvenim medijima (i ažurirajte svoje profile): Twitter, "
-"Facebook, Linkedln, Youtube itd."
+"Objavite na društvenim mrežama: Twitter, Facebook, LinkedIn, Youtube itd."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Apply"
 msgstr "Primjeni"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Aqua"
-msgstr "Aqua"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"As you add more pages to your website, your main menu will begin to feel "
-"overcrowded.\n"
-"                            You can regroup similar pages into a sub-menu, "
-"so they will appear under a unique drop-down menu."
+msgid "Apply it to your website from your database admin page"
 msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_attachment_website_url
 msgid "Attachment URL"
 msgstr "URL priloga"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Attract more leads with a winning content marketing strategy."
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1240,37 +972,17 @@ msgid "Avoid special characters"
 msgstr "Izbjegavaj specijalne znakove"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Baby Blue"
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"Avoid using a mass survey, it's way more efficient to have\n"
+"                                personal discussions with everyone. If you engage with them in the\n"
+"                                reviewing process, they will even help you promote your website."
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "Back"
 msgstr "Natrag"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-#, fuzzy
-msgid "Background Color"
-msgstr "Pozadina"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-#, fuzzy
-msgid "Background Image"
-msgstr "Pozadinska slika"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-#, fuzzy
-msgid "Background Image Options"
-msgstr "Pozadinska slika"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Background image"
-msgstr "Pozadinska slika"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_banner
@@ -1283,34 +995,9 @@ msgid "Basic sales &amp; marketing for up to 2 users"
 msgstr ""
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.xml:70
-#, python-format
-msgid "Be careful !"
-msgstr "Budite oprezni!"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Be mobile"
 msgstr "Budite mobilni"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Before starting to work on your website, make sure you have all the right "
-"applications installed.\n"
-"                        It will be much easier for you to organize and "
-"create your content if you have all the options activated from the start."
-msgstr ""
-"Prije početka rada na vašoj web stranici, pobrinite se da imate instalirane "
-"prave aplikacije.\n"
-"Biti će vam puno lakše organizirati i kreirati sadržaj ako imate sve opcije "
-"aktivirane od početka."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Before starting,"
-msgstr "Prije početka,"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1320,8 +1007,13 @@ msgstr "Početnik"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Being clear on why you're creating your site and your goals is an essential "
-"first step to ensure your content and structure meet business objectives."
+"Being clear on why you're creating your site is an essential first step to "
+"ensure your content and structure meet business objectives."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Best if you have language skills"
 msgstr ""
 
 #. module: website
@@ -1330,30 +1022,13 @@ msgid "Big"
 msgstr "Velik "
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Bigger Text"
-msgstr "Veći tekst"
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_blog
+msgid "Blogs"
+msgstr "Blogovi"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Black"
-msgstr "Crna"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Boost your online sales with sleek product pages."
-msgstr "Povećajte svoju online prodaju elegantnom stranicom proizvoda."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:14
-#, python-format
-msgid "Build a page"
-msgstr "Napravi stranicu"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Build and engage with communities with forums, Q&amp;A, mailing lists."
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Boost your online sales with sleek product pages"
 msgstr ""
 
 #. module: website
@@ -1362,8 +1037,30 @@ msgid "Build awareness and credibility"
 msgstr "Izgradite svijest i vjerodostojnost"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Build up a community with an efficient content strategy"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Build up customized forms on your website"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid ""
+"Build up your own forms and get requests as emails, leads or issues. You can"
+" also edit the fields of the Extra Step page in eCommerce checkout."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Business Guy"
+msgid "Building Profile"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Buy it at a provider:"
 msgstr ""
 
 #. module: website
@@ -1380,7 +1077,7 @@ msgstr "CDN Filteri"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Can I afford to advertise on the keyword?"
+msgid "Can I afford for advertising on the keyword?"
 msgstr ""
 
 #. module: website
@@ -1390,10 +1087,11 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.xml:63
+#: code:addons/website/static/src/js/website.backendDashboard.js:86
+#: code:addons/website/static/src/xml/website.xml:57
 #: model:ir.ui.view,arch_db:website.500
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #: model:ir.ui.view,arch_db:website.view_website_form
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 #, python-format
 msgid "Cancel"
 msgstr "Odustani"
@@ -1409,11 +1107,9 @@ msgid "Change Icons"
 msgstr "Promijeni ikone"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:96
-#, python-format
-msgid "Check Mobile Preview"
-msgstr "Provjeri izgled na mobilnim uređajima"
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Chat with your visitors in real time"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1434,8 +1130,7 @@ msgstr "Podizbornici"
 #: model:ir.ui.view,arch_db:website.s_big_picture
 msgid ""
 "Choose a vibrant image and write an inspiring paragraph\n"
-"                        about it. It does not have to be long, but it "
-"should\n"
+"                        about it. It does not have to be long, but it should\n"
 "                        reinforce your image."
 msgstr ""
 "Odaberite živu sliku i napišite nadahnjujuću točku\n"
@@ -1448,16 +1143,19 @@ msgid "Circle"
 msgstr "Krug"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:43
-#, python-format
-msgid "Click in the text and start editing it."
-msgstr "Kliknite na tekst za uređivanje"
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "City"
+msgstr "Grad"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Click on 'Translate' on the menu bar"
-msgstr "Klikni na 'Prevesti' na traci izbornika"
+msgid "Click here to unfold a Good Footer"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Click here to unfold a Good Homepage"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1465,17 +1163,22 @@ msgid "Click on the icon to adapt it to your feature"
 msgstr "Kliknite na ikonu da ju prilagodite vašim potrebama"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
-#: model:ir.ui.view,arch_db:website.website2_homepage
-#, python-format
 msgid "Click to customize this text"
 msgstr "Kliknite za uređivanje teksta"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Client ID"
+msgstr "ID klijenta"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Client Secret"
+msgstr "Tajni klijent"
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.ace.xml:14
 #: code:addons/website/static/src/xml/website.gallery.xml:97
 #: code:addons/website/static/src/xml/website.translator.xml:13
 #, python-format
@@ -1483,31 +1186,21 @@ msgid "Close"
 msgstr "Zatvori"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:113
-#, python-format
-msgid "Close Tutorial"
-msgstr "Zatvori tutorial"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Color Splash"
-msgstr "Raspon boja"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Colors palette"
-msgstr "Paleta boja"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Columns"
-msgstr "Kolone"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Communicate"
 msgstr "Komunicirajte"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Communication"
+msgstr "Veza"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"Community &amp; Enterprise users: apply a redirection from your Domain "
+"Manager platform"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_res_company
@@ -1530,47 +1223,25 @@ msgid "Complete CRM for any size team"
 msgstr "Kompletan CRM za sve veličine timova"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_compress_html
-msgid "Compress HTML"
-msgstr "Compress HTML"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_config_settings_compress_html
-msgid "Compress rendered HTML for a better Google PageSpeed result"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
 msgid "Configuration"
 msgstr "Postava"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "Configure Website"
 msgstr "POstavke webstranica"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Configure all your social media (Twitter, Facebook, LinkedIn) so that the "
-"address of your website appears on them."
-msgstr ""
-"Konfigurirajte sve vaše društvene medije (Twitter, Facebook, Linkedln) tako "
-"da se adresa vaše web stranice pojavljuje na njima."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
-msgid "Configure website menus"
-msgstr "Postavke izbornika webstranica"
+#. openerp-web
+#: code:addons/website/static/src/js/website.snippets.editor.js:32
+#, python-format
+msgid "Confirmation"
+msgstr "Potvrda"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Configure your Gengo API key in"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Congratulations, you're done !"
+msgid "Congratulations, you're done!"
 msgstr "Čestitamo, završili ste!"
 
 #. module: website
@@ -1579,14 +1250,15 @@ msgid "Connect with us"
 msgstr "Povežite se s nama"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
-msgid "Contact Us"
-msgstr "Kontaktirajte nas"
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_crm
+msgid "Contact Form"
+msgstr "Forma kontakta"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Contact a Domain Manager in your country to buy it"
-msgstr ""
+#: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Contact Us"
+msgstr "Kontaktirajte nas"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
@@ -1594,10 +1266,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
-#: model:ir.ui.view,arch_db:website.website2_homepage
-#: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
-#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Kontaktirajte nas"
 
@@ -1613,9 +1282,13 @@ msgstr "Kontaktirajte nas"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Content"
-msgstr "Nastavi"
+msgstr "Sadržaj"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Content Delivery Network (CDN)"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -1626,11 +1299,8 @@ msgstr "Sadržaj za prevođenje"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:61
-#: code:addons/website/static/src/js/website.tour.banner.js:83
-#: code:addons/website/static/src/js/website.tour.banner.js:105
-#: code:addons/website/static/src/xml/website.contentMenu.xml:28
-#: code:addons/website/static/src/xml/website.xml:62
+#: code:addons/website/static/src/js/website.contentMenu.js:185
+#: code:addons/website/static/src/xml/website.xml:56
 #, python-format
 msgid "Continue"
 msgstr "Nastavi"
@@ -1646,21 +1316,26 @@ msgid "Create Page"
 msgstr "Kreiraj stranicu"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Create a Google Project and Get a Key"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Create a community"
 msgstr "Stvori zajednicu"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Create a new project (this may take some time)"
-msgstr "Napravi novi projekt (može potrajati neko vrijeme)"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:133
+#: code:addons/website/static/src/js/website.editor.js:137
 #, python-format
 msgid "Create page '%s'"
 msgstr "Kreiraj stranicu '%s'"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Create several versions of your website pages"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_create_uid
@@ -1677,23 +1352,20 @@ msgid "Created on"
 msgstr "Datum kreiranja"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Creating your main menu is an important and difficult stage in building your "
-"website.<br/>\n"
-"                        It needs to be organized, so that your visitors can "
-"see all the main content you offer at a glance.<br/>\n"
-"                        It needs to be clear, so that when they click on an "
-"item, they get the content they expected.<br/>\n"
-"                        In fact, you need to build your navigation menu for "
-"your visitors and not for your own purposes or objectives."
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Cubes"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_form_editor
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Custom Forms"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Customize"
-msgstr "Prilagodite temu"
+msgstr "Prilagodi"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1702,7 +1374,7 @@ msgstr "Prilagodite temu"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:60
+#: code:addons/website/static/src/js/website.tour.banner.js:31
 #, python-format
 msgid ""
 "Customize any block through this menu. Try to change the background of the "
@@ -1712,22 +1384,22 @@ msgstr ""
 "ovog banera."
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:42
-#, python-format
-msgid "Customize banner's text"
-msgstr "Prilagodi tekst banera"
+#: model:ir.ui.menu,name:website.menu_dashboard
+msgid "Dashboard"
+msgstr "Kontrolna ploča"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:59
-#, python-format
-msgid "Customize the banner"
-msgstr "Prilagodi baner"
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Default"
+msgstr "Zadano"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_default_lang_id
+msgid "Default Language"
+msgstr "Zadani jezik"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_default_lang_id
-#: model:ir.model.fields,field_description:website.field_website_default_lang_id
 msgid "Default language"
 msgstr "Zadani jezik"
 
@@ -1744,7 +1416,7 @@ msgstr "Izbriši blokove"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:129
+#: code:addons/website/static/src/js/website.contentMenu.js:133
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Delete Page"
@@ -1754,19 +1426,21 @@ msgstr "Obriši stranicu"
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid ""
 "Delete the above image or replace it with a picture\n"
-"                        that illustrates your message. Click on the picture "
-"to\n"
+"                        that illustrates your message. Click on the picture to\n"
 "                        change it's <em>rounded corner</em> style."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_references
+msgid "Demo Logo"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid ""
 "Deploy new stores with just an internet connection: no\n"
-"                                installation, no specific hardware required. "
-"It works with any\n"
-"                                iPad, Tablet PC, laptop or industrial POS "
-"machine."
+"                                installation, no specific hardware required. It works with any\n"
+"                                iPad, Tablet PC, laptop or industrial POS machine."
 msgstr ""
 
 #. module: website
@@ -1801,16 +1475,6 @@ msgid "Discard"
 msgstr "Odbaci"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Discuss and Comments"
-msgstr "Raspravite i komentirajte"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Discuss with propects for a face-to-face sales pitch."
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_display_name
 #: model:ir.model.fields,field_description:website.field_website_display_name
 #: model:ir.model.fields,field_description:website.field_website_menu_display_name
@@ -1820,6 +1484,11 @@ msgid "Display Name"
 msgstr "Naziv za prikaz"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Display a Twitter wall on your website"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.translator.xml:43
 #, python-format
@@ -1827,20 +1496,44 @@ msgid "Do not show this dialog later."
 msgstr "Ne prikazuj kasnije dijaloški okvir."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.snippets.editor.js:79
+#, python-format
+msgid "Do you want to edit the company data ?"
+msgstr "Želite li urediti podatke tvrtke?"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Does it works offline?"
 msgstr "Da li radi offline?"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Domain"
 msgstr "Domena"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Don't hesitate to"
-msgstr "Nemojte se ustručavati da"
+msgid "Domain Name"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.xml:64
+#, python-format
+msgid "Don't forget to update all links referring to this page:"
+msgstr "Ne zaboravite ažurirati sve poveznice koje vode do ove stranice:"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"Don't go over 6 items, otherwise your main menu will be difficult to use."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Don't hesitate in"
+msgstr "Nemojte se ustručavati"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1848,38 +1541,29 @@ msgid "Download the technical documentation of a product"
 msgstr "Preuzmite tehničku dokumentaciju o proizvodu"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:67
-#, python-format
-msgid "Drag & Drop This Block"
-msgstr "Povuci i pusti ovaj blok"
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Downtown"
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:34
-#, python-format
-msgid "Drag & Drop a Banner"
-msgstr "Povuci i spusti banner"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:50
+#: code:addons/website/static/src/xml/website.contentMenu.xml:44
 #, python-format
 msgid "Drag a menu to the right to create a sub-menu"
 msgstr "Povucite izbornik na desno kako biste kreirali podizbornik"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:68
+#: code:addons/website/static/src/js/website.tour.banner.js:35
 #, python-format
-msgid "Drag the <em>'Features'</em> block and drop it below the banner."
+msgid "Drag another block in your page, below the cover."
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:35
+#: code:addons/website/static/src/js/website.tour.banner.js:19
 #, python-format
-msgid "Drag the Banner block and drop it in your page."
+msgid "Drag the <i>Cover</i> block and drop it in your page."
 msgstr ""
 
 #. module: website
@@ -1904,7 +1588,7 @@ msgstr "Uredi"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:38
+#: code:addons/website/static/src/js/website.contentMenu.js:207
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Edit Menu"
@@ -1912,14 +1596,20 @@ msgstr "Uredi izbornik"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Edit Top Menu"
-msgstr "Uredi izbornik"
+msgstr "Uredi gornji izbornik"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.publish_management
 msgid "Edit in backend"
 msgstr "Uredi u pozadini"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:21
+#, python-format
+msgid "Edit my Analytics Client ID"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.page_404
@@ -1930,10 +1620,15 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:27
+#: code:addons/website/static/src/js/website.snippets.editor.js:36
 #, python-format
-msgid "Edit this page"
-msgstr "Uredi ovu stranicu"
+msgid "Edit the menu"
+msgstr "Uredi izbornik"
+
+#. module: website
+#: model:res.groups,name:website.group_website_designer
+msgid "Editor and Designer"
+msgstr "Urednik i dizajner"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1956,28 +1651,9 @@ msgid "Error"
 msgstr "Greška"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:28
-#, python-format
-msgid ""
-"Every page of your website can be modified through the <i>Edit</i> button."
-msgstr ""
-"Svaka stranica vaše web stranice se može mijenjati kroz <i>Uredi</i> gumb."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Example of Good Footer"
-msgstr "Primjer dobrog podnožja"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Example of Good Homepage"
-msgstr "Primjer dobre početne stranice"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Example of Good Menu"
-msgstr "Primjer dobrog izbornika"
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_event_sale
+msgid "Event Tickets"
+msgstr "Ulaznice za događaj"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1999,37 +1675,16 @@ msgstr ""
 "uslugama ovdje, pišite o rješenjima."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Explain to them why you launched your new website and ask them for their\n"
-"                                    views on it. Avoid using a mass survey, "
-"it's a lot more efficient to have\n"
-"                                    personal discussions with everyone. If "
-"you efficiently engage them in the\n"
-"                                    reviewing process, they will even help "
-"you promote your website when it's\n"
-"                                    ready for the big launch."
-msgstr ""
-"Objasnite im zašto ste lansirali novu web stranicu i pitajte ih\n"
-"za njihove stavove o tome. Izbjegavajte masovne ankete, mnogo je "
-"učinkovitiji\n"
-"osobni razgovor sa svima. Ako ih učinkovito uključite u\n"
-" proces pregleda, čak i oni će vam pomoći promovirati web stranicu kada "
-"bude\n"
-"spremna za veliko lansiranje."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
-msgid "Extra Features"
-msgstr "Dodatne mogućnosti"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Extra-Large"
 msgstr "Ekstra veliko"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_social_facebook
+msgid "Facebook"
+msgstr "Facebook"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_facebook
 msgid "Facebook Account"
 msgstr "Facebook račun"
@@ -2038,6 +1693,11 @@ msgstr "Facebook račun"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Fast"
 msgstr "Brzo"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_favicon
+msgid "Favicon"
+msgstr "Favicon"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
@@ -2060,23 +1720,21 @@ msgid "Feature Two"
 msgstr "Značajka dva"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Features"
+msgstr "Mogućnosti"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Finally don't try to make all your content accessible from the main menu or "
-"the footer.\n"
-"                            Indeed, a page can also be accessible through a "
-"direct link or button, from any other page of your website."
+"Finally don't try to make all your content accessible from the main menu or the footer.\n"
+"                            Indeed, a page can also be accessible through a direct link or button, from any other page of your website."
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Find Inspiration"
 msgstr "Pronađi nadahnuće"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Find a good domain name (see tips on the right)"
-msgstr "Pronađite dobar naziv domente (pogledajte savjete na desnoj strani)"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
@@ -2095,37 +1753,26 @@ msgstr "Decimalni"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Flowers Field"
-msgstr "Cvjetna polja"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Folded list"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:22
+#, python-format
+msgid "Follow all the"
+msgstr "Prati sve"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Fonts"
-msgstr "Fontovi"
+msgid "Footer"
+msgstr "Podnožje"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"For example, use photos to help break up large areas of text by altering\n"
-"                                    Text-Image and Image-Text blocks. Or if "
-"you prefer to use icons, use the Features or Feature Grid blocks."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"For example, you'll want your company name, your country/city and a few\n"
-"                                    words describing your business in your "
-"homepage title so that potential\n"
-"                                    customers near your location will find "
-"your website easily.\n"
-"                                    WIth Odoo, this can be done easily by "
-"using the Promote menu."
+"For example, use pictures to help break up large areas of text by altering\n"
+"                                    Text-Image and Image-Text blocks. If you prefer icons, use the Features or Feature Grid blocks."
 msgstr ""
 
 #. module: website
@@ -2138,34 +1785,28 @@ msgstr ""
 "Fabien Pinckaers, Osnivač"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_form_editor
-msgid "Form builder: create and customize forms"
-msgstr "Kreator obrasca: kreirajte i prilagodite obrasce"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.ace.xml:13
-#, python-format
-msgid "Format"
-msgstr "Format"
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_forum
+msgid "Forum"
+msgstr "Forum"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Form’s length and types of fields,"
-msgstr "Dužina obrasca i vrsta polja,"
+msgid "Free"
+msgstr "Slobodan"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid ""
-"From the main container, you can change the background to highlight features."
+"From the main container, you can change the background to highlight "
+"features."
 msgstr ""
 "Iz glavnog izbornika, možete promijeniti pozadinu kako biste istaknuli "
 "značajke."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Gengo module"
-msgstr "Gengo modul"
+msgid "Gengo"
+msgstr "Gengo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -2184,13 +1825,6 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:52
-#, python-format
-msgid "Get banner properties"
-msgstr "Nabavite svojstva bannera"
-
-#. module: website
-#. openerp-web
 #: code:addons/website/static/src/js/website.seo.js:361
 #, python-format
 msgid ""
@@ -2198,22 +1832,62 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_config_settings_social_github
-#: model:ir.model.fields,field_description:website.field_website_social_github
-msgid "GitHub Account"
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Get your opportunities filled up in our integrated CRM application"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Go to the page you want to translate"
-msgstr "Odi na stranicu koju želiš prevesti"
+#: model:ir.model.fields,field_description:website.field_website_config_settings_social_github
+msgid "GitHub"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_social_github
+msgid "GitHub Account"
+msgstr "GitHub račun"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:81
+#: code:addons/website/static/src/js/website.snippets.editor.js:35
 #, python-format
-msgid "Good Job!"
-msgstr "Dobar posao!"
+msgid "Go to Link"
+msgstr "Idi na poveznicu"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:45
+#, python-format
+msgid "Go to our"
+msgstr "Idi na"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "GoDaddy"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.tour.banner.js:45
+#, python-format
+msgid ""
+"Good Job! You created your first page. Let's check how this page looks like "
+"on <b>mobile devices</b>."
+msgstr ""
+"Odlično! Kreirali ste svoju prvu stranicu. Pogledajmo kako ova stranica "
+"izgleda na <b>mobilnim uređajima</b>."
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Google Adwords"
+msgstr "Google Adwords"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:73
+#: model:ir.model.fields,field_description:website.field_website_config_settings_has_google_analytics
+#, python-format
+msgid "Google Analytics"
+msgstr "Google Analytics"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_google_analytics_key
@@ -2222,9 +1896,9 @@ msgid "Google Analytics Key"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Google Analytics."
-msgstr "Google Analytics."
+#: model:ir.model.fields,field_description:website.field_website_config_settings_has_google_analytics_dashboard
+msgid "Google Analytics in Dashboard"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2232,12 +1906,39 @@ msgid "Google Business"
 msgstr "Google Business"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_google_management_client_id
+#: model:ir.model.fields,field_description:website.field_website_google_management_client_id
+msgid "Google Client ID"
+msgstr "ID google klijenta"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_google_management_client_secret
+#: model:ir.model.fields,field_description:website.field_website_google_management_client_secret
+msgid "Google Client Secret"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_has_google_maps
+#: model:ir.ui.view,arch_db:website.company_description
+msgid "Google Maps"
+msgstr "Google Mape"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_google_maps_api_key
+msgid "Google Maps API Key"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Google's developer console"
+msgid "Google Webmaster"
 msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_social_googleplus
+msgid "Google+"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_googleplus
 msgid "Google+ Account"
 msgstr "Google+ račun"
@@ -2251,11 +1952,6 @@ msgstr "Velika vrijednost"
 #: model:ir.ui.view,arch_db:website.aboutus
 msgid "Great products for great people"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Greenfields"
-msgstr "Zelena polja"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2274,11 +1970,6 @@ msgstr "Rast"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-msgid "HELP &amp; TUTORIALS"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
 msgid "HTML Editor"
 msgstr "HTML uređivač"
 
@@ -2288,14 +1979,9 @@ msgid "HTTP routing"
 msgstr "HTTP usmjeravanje"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Headline or product description,"
-msgstr "Naslov ili opis proizvoda,"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
-msgid "Help"
-msgstr ""
+#: model:ir.ui.view,arch_db:website.s_cover
+msgid "Headline"
+msgstr "Naslov"
 
 #. module: website
 #. openerp-web
@@ -2306,31 +1992,30 @@ msgstr "Vizuali koji se koriste za učinkovito prevođenje:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Here is a basic guide for your first A/B testing:"
+msgid ""
+"Here is a checklist of actions to help you launch a new website efficiently:"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
-#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Naslovna"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:20
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
 #: model:ir.ui.view,arch_db:website.footer_custom
+#: model:ir.ui.view,arch_db:website.website_planner
+#, python-format
 msgid "Homepage"
 msgstr "Početna stranica"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website2_homepage
-msgid "Homepage 0.0.0.0"
-msgstr "Homepage 0.0.0.0"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.xml:110
+#: code:addons/website/static/src/xml/website.xml:92
 #, python-format
 msgid "I'm sure, I want to delete this page definitively"
 msgstr "Siguran sam, definitivno želim obrisati ovu stranicu"
@@ -2338,7 +2023,7 @@ msgstr "Siguran sam, definitivno želim obrisati ovu stranicu"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_id
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_2055
+#: model:ir.model.fields,field_description:website.field_website_menu_id_1796
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_id
 msgid "ID"
@@ -2354,49 +2039,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"If you answer yes to these 3 questions, then go ahead and position your "
-"website on these keywords."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"If you have a lot of pages in your website, you can create a small top-menu "
-"to focus\n"
-"                            on the main six pages and make all secondary "
-"pages accessible from a footer. You can\n"
-"                            have a look at the Odoo.com website, it's a "
-"great example of this type of structure."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Images on landing and product pages,"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Images spacing"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Improve your conversion from visitor to customer."
-msgstr "Poboljšajte pretvorbu iz posjetitelja u kupca."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"In the left-side menu of the project, go to <strong>APIs and auth &gt; APIs</"
-"strong> and activate <strong>Analytics API</strong> by clicking on the"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"In the pop-up window, simply enter your domain name in the first textbox "
-"(the second will complete automatically)"
+msgid "Improve your conversion from visitors to customers"
 msgstr ""
 
 #. module: website
@@ -2405,20 +2048,18 @@ msgstr ""
 #, python-format
 msgid ""
 "In this mode, you can only translate texts.  To\n"
-"                            change the structure of the page, you must edit "
-"the\n"
-"                            master page. Each modification on the master "
-"page\n"
+"                            change the structure of the page, you must edit the\n"
+"                            master page. Each modification on the master page\n"
 "                            is automatically applied to all translated\n"
 "                            versions."
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.ace.xml:10
+#: code:addons/website/static/src/js/website.backendDashboard.js:96
 #, python-format
-msgid "Include Asset Bundles"
-msgstr ""
+msgid "Incorrect Client ID"
+msgstr "Neispravan ID klijenta"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2427,9 +2068,13 @@ msgstr "Informacije o"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid "Install Apps"
 msgstr "Instaliraj aplikacije"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Install Gengo Translator app"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_base_language_install
@@ -2437,9 +2082,14 @@ msgid "Install Language"
 msgstr "Instalacija jezika"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Install new language"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Install the"
-msgstr "Instaliraj"
+msgid "Install new languages"
+msgstr "Instaliraj nove jezike"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2453,91 +2103,47 @@ msgstr "Instalirani moduli"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Integrate a contact form that automatically creates leads."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.500
-msgid "Internal Server Error"
-msgstr "Greška na poslužitelju"
+msgid "Is the keyword popular in Google?"
+msgstr "Je li ključna riječ popularna na Googleu?"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Is the keyword searched for in Google? If there is no search volume,\n"
-"                                    then that tells you no one is typing "
-"that phrase into Google. There is no\n"
-"                                    point in advertising on keywords no one "
-"is searching for."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Is the person searching with this keyword likely to buy my product or\n"
-"                                    service? Or is the person more likely to "
-"be just carrying out research\n"
-"                                    with no intention of making a purchase? "
-"In other words, what is the\n"
-"                                    intent of the keyword? When starting "
-"out, you’ll want to advertise on\n"
-"                                    what we call “buying intent” keywords - "
-"that is, ones where the person\n"
-"                                    is clearly looking to buy."
+"Is the person searching for it likely to buy my product or\n"
+"                                    service? When starting out, you want to advertise on\n"
+"                                    “buying intent” keywords (i.e. when people are clearly looking to buy)."
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.xml:19
-#, fuzzy, python-format
+#: code:addons/website/static/src/xml/website.xml:13
+#, python-format
 msgid "It might be possible to edit the relevant items or fix the issue in"
 msgstr ""
-"Moguće je urediti relevantne stavke\n"
-"ili popraviti problem u"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"It's difficult to change your theme after creating your website, so take the "
-"time to look at all the themes, and be sure that you're happy with your "
-"choice!"
+"It's often much easier not to start with a blank page. Take a look at your competitors\n"
+"                        and similar companies around the world. They probably have the same objectives and\n"
+"                        visitors that you do. How did they transform that into a website?<br/>\n"
+"                        Try to find 3 websites that have remarkable characteristics."
 msgstr ""
-"Teško je promijeniti temu nakon izrade web stranice, tako da je potrebno "
-"odvojiti vrijeme i pregledati sve teme i biti siguran da ste zadovoljni sa "
-"svojim izborom!"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"It's often much easier not to start with a blank page. Take a look at your "
-"competitors\n"
-"                        and similar companies around the world. They "
-"probably have the same objectives and\n"
-"                        visitors that you do. How did they transform that "
-"into a website?<br/>\n"
-"                        Try to find 3 websites that have remarkable "
-"characteristics:"
-msgstr ""
-"To je lakše nego početi sa praznom stranicom. Bacite pogled na vašu "
-"konkurenciju\n"
-"i slične organizacije širom svijeta. Vjerojatno imaju iste ciljeve i\n"
-"posjetitelje kao i vi. Kako su primijenili to na web stranici?<br/>\n"
-"Pokušajte pronaći 3 web stranice koje imaju izvanredne karakteristike:"
+msgid "It’s time to grow your traffic!"
+msgstr "Vrijeme je za porast prometa!"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_hr_recruitment
+msgid "Jobs"
+msgstr "Radna mjesta"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_button
 msgid "Join us and make your company a better place."
 msgstr "Pridružite nam se i učinite vaše poduzeće boljim mjestom."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Landscape"
-msgstr "Pejzažno"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
-msgid "Language"
-msgstr "Jezik"
 
 #. module: website
 #. openerp-web
@@ -2551,6 +2157,11 @@ msgstr "Jezik:"
 #: model:ir.model.fields,field_description:website.field_website_language_ids
 msgid "Languages"
 msgstr "Jezici"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Languages available on your website"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2587,23 +2198,9 @@ msgstr "Pokreni"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Launching your website is an important step.<br/>\n"
-"                        Here is a checklist of actions to help you launch a "
-"new website efficiently:"
+msgid "Learn what question your customers have, what problems they encounter"
 msgstr ""
-"Pokretanje web stranice je važan korak.<br/>\n"
-"Ovdje je popis aktivnosti koje će vam pomoći da učinkovito pokrenete novu "
-"web stranicu:"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Learn what your visitors are thinking, what question they have, what "
-"problems they encounter."
-msgstr ""
-"Saznajte o čemu razmišljaju vaši posjetitelji, koja pitanja imaju, s kojim "
-"se problemima susreću."
+"Saznajte koja su pitanja Vaših kupaca, koji su problemi s kojima se susreću"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2612,10 +2209,10 @@ msgstr "Lijevo"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:90
+#: code:addons/website/static/src/xml/website.editor.xml:21
 #, python-format
-msgid "Let's check how your homepage looks like on mobile devices."
-msgstr "Pogledajmo kako vaša stranica izgleda na mobilnim uređajima."
+msgid "Let's start designing."
+msgstr "Započnimo s dizajniranjem."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -2623,7 +2220,18 @@ msgid "Limited customization"
 msgstr "Ograničena prilagodba"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:29
+#, python-format
+msgid "Link my Analytics Account"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_social_linkedin
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_linkedin
 msgid "LinkedIn Account"
 msgstr "LinkedIn račun"
@@ -2634,16 +2242,16 @@ msgid "List of Features"
 msgstr "Popis značajki"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_livechat
+msgid "Live Chat"
+msgstr "Čavrljanje"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.seo.js:83
 #, python-format
 msgid "Loading..."
 msgstr "Učitavanje..."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_references
-msgid "Logo"
-msgstr "Znak"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout
@@ -2652,23 +2260,19 @@ msgstr "Odjava"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_id
+#: model:ir.ui.view,arch_db:website.website_planner
 msgid "Main Menu"
 msgstr "Glavni izbornik"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Mango"
-msgstr "Mango"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Margin"
-msgstr "RUC"
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Manage channels to structure your content"
+msgstr "Upravljajte kanalima kako biste strukturirali svoj sadržaj"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Masonry"
-msgstr ""
+msgstr "Masonry"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
@@ -2678,31 +2282,14 @@ msgstr "Možda ste tražili jednu od onih popularnih stranica?"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Medium"
-msgstr "Srednji"
+msgstr "Medij"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Meet your existing customers and encourage them to 'repeat buy'."
-msgstr "Upoznajte svoje postojeće kupce i potaknite ih na 'ponovljenu kupnju'."
-
-#. module: website
-#: code:addons/website/models/website.py:320
+#: code:addons/website/models/website.py:323
 #: model:ir.model.fields,field_description:website.field_website_menu_name
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #, python-format
 msgid "Menu"
 msgstr "Izbornik"
-
-#. module: website
-#: code:addons/website/models/website.py:324
-#, python-format
-msgid "Menu <b>%s</b> seems to have a link to this page !"
-msgstr "Izbornik <b>%s</b> kao da ima link na ovu stranicu!"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Message"
-msgstr "Poruka"
 
 #. module: website
 #. openerp-web
@@ -2712,19 +2299,11 @@ msgid "Mobile preview"
 msgstr "Mobilni izgled"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Mode"
-msgstr "Način"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "More info on pricing:"
-msgstr "Više informacija o cijenama:"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_references
-msgid "More than 500 happy customers."
-msgstr "Više od 500 zadovoljnih korisnika"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:51
+#, python-format
+msgid "Month"
+msgstr "Mjesec"
 
 #. module: website
 #. openerp-web
@@ -2732,11 +2311,7 @@ msgstr "Više od 500 zadovoljnih korisnika"
 #, python-format
 msgid "Most searched topics related to your keywords, ordered by importance:"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Mountains"
-msgstr "Planine"
+"Najtraženije teme vezane uz Vaše ključne riječi, posložene po važnosti:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2764,20 +2339,18 @@ msgid "My Website"
 msgstr "Moja web stranica"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Narrow"
-msgstr "Uzak"
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Name and favicon of your website"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Namecheap"
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.xml:125
-#, python-format
-msgid "New Name"
-msgstr "Novi naziv"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:60
+#: code:addons/website/static/src/js/website.contentMenu.js:64
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "New Page"
@@ -2786,18 +2359,17 @@ msgstr "Nova stranica"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_new_window
 msgid "New Window"
-msgstr "Novi ekran"
+msgstr "Novi prozor"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid ""
+"New incoming messages are managed as leads or opportunities in your CRM app."
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.xml:123
-#, python-format
-msgid "New name"
-msgstr "Novi naziv"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:118
+#: code:addons/website/static/src/js/website.editor.js:122
 #, python-format
 msgid "New or existing page"
 msgstr "Nova ili postojeća stranica"
@@ -2820,17 +2392,13 @@ msgstr "Nema podrške"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-msgid "None"
-msgstr "Ništa"
+msgid "No-scroll"
+msgstr ""
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.backend.js:22
-#: model:ir.ui.view,arch_db:website.publish_management
-#: model:ir.ui.view,arch_db:website.publish_short
-#, python-format
-msgid "Not Published"
-msgstr "Nije objavljeno"
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "None"
+msgstr "Ništa"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2840,9 +2408,19 @@ msgstr ""
 "Prilagodba."
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_language_count
+msgid "Number of languages"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Note: To use those features, you need to install the"
-msgstr "Napomena: Za korištenje tih značajki, morate instalirati"
+msgid "OVH"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Objectives"
+msgstr "Objekti"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
@@ -2882,34 +2460,13 @@ msgstr "Odoo verzija"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
 msgid "Odoo image and text block"
-msgstr ""
+msgstr "Odoo slika i tekst blok"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
 msgid ""
 "Odoo provides essential platform for our project management.\n"
-"                                                Things are better organized "
-"and more visible with it."
-msgstr ""
-"Odoo pruža bitne platforme za naš projekt management.\n"
-"S njim su stvari bolje organizirane i vidljivije."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_quotes_slider
-msgid ""
-"Odoo provides essential platform for our project management.\n"
-"                                        Things are better organized and more "
-"visible with it."
-msgstr ""
-"Odoo pruža bitne platforme za naš projekt management.\n"
-"S njim su stvari bolje organizirane i vidljivije."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_references
-msgid ""
-"Odoo provides essential platform for our project management.\n"
-"                            Things are better organized and more visible "
-"with it."
+"                                                Things are better organized and more visible with it."
 msgstr ""
 "Odoo pruža bitne platforme za naš projekt management.\n"
 "S njim su stvari bolje organizirane i vidljivije."
@@ -2917,32 +2474,21 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_image
 msgid "Odoo text and image block"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Odoo's Google Analytics settings"
-msgstr ""
+msgstr "Odoo tekst i slika blok"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid ""
 "Odoo's POS is a web application that can run on any device that\n"
-"                                can display websites with little to no setup "
-"required."
+"                                can display websites with little to no setup required."
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Off"
-msgstr "Uključeno"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.translator.xml:46
 #, python-format
 msgid "Ok"
-msgstr "Ok"
+msgstr "U redu"
 
 #. module: website
 #. openerp-web
@@ -2953,8 +2499,17 @@ msgstr "Na web stranici"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Once you’ve launched your website, it’s time to grow your traffic."
-msgstr "Nakon pokretanja web stranice, vrijeme je za porast prometa."
+msgid ""
+"One way is by optimizing your indexing on search engines like Google "
+"naturally, without paying anything. The earliest you show up in the search, "
+"the more visitors you get. This strategy called <strong>SEO</strong> "
+"involves several actions."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Online users:"
+msgstr "Online korisnici:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2967,28 +2522,8 @@ msgid "Open Source eCommerce"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
-msgid "Optimization"
-msgstr "Optimizacija"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
-msgid "Optimize AdWords Campaign"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Optimize SEO"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
-msgid "Optimize your AdWords account"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Orange Red"
 msgstr ""
 
 #. module: website
@@ -2998,7 +2533,13 @@ msgstr "Naruči sada"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Organize your job board and promote your job announces easily."
+msgid "Organize and publish events to meet your prospects and customers"
+msgstr ""
+"Organizirajte i objavite događaje za susret s mogućim klijentima i kupcima"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Organize events and sell tickets online"
 msgstr ""
 
 #. module: website
@@ -3013,7 +2554,6 @@ msgstr "Naša ponuda"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_default
-#, fuzzy
 msgid "Our Products &amp; Services"
 msgstr "Naši proizvodi i usluge"
 
@@ -3030,52 +2570,46 @@ msgstr "Naš tim"
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
 msgid ""
-"Our products are designed for small to medium size companies willing to "
-"optimize\n"
+"Our products are designed for small to medium size companies willing to optimize\n"
 "                                      their performance."
 msgstr ""
-"Naši proizvodi su dizajnirani za mala i srednje velika poduzeća koja su "
-"spremna optimizirati\n"
+"Naši proizvodi su dizajnirani za mala i srednje velika poduzeća koja su spremna optimizirati\n"
 "svoj učinak."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_default
 msgid ""
-"Our products are designed for small to medium size companies willing to "
-"optimize\n"
+"Our products are designed for small to medium size companies willing to optimize\n"
 "                            their performance."
 msgstr ""
-"Naši proizvodi su dizajnirani za mala i srednje velika poduzeća koja su "
-"spremna optimizirati\n"
+"Naši proizvodi su dizajnirani za mala i srednje velika poduzeća koja su spremna optimizirati\n"
 "svoj učinak."
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:298
-#: code:addons/website/static/src/xml/website.editor.xml:11
+#: code:addons/website/models/website.py:302
+#: code:addons/website/static/src/xml/website.editor.xml:10
 #, python-format
 msgid "Page"
 msgstr "Page"
 
 #. module: website
-#: code:addons/website/models/website.py:303
+#: code:addons/website/models/website.py:308
 #, python-format
-msgid "Page <b>%s</b> seems to have a link to this page !"
-msgstr "Stranica <b>%s</b> kao da ima link na ovu stranicu!"
+msgid "Page <b>%s</b> contains a link to this page"
+msgstr "Stranica <b>%s</b> sadrži poveznicu za ovu stranicu"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:61
+#: code:addons/website/static/src/js/website.contentMenu.js:65
 #, python-format
 msgid "Page Title"
 msgstr "Naslov stranice"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:103
-#, fuzzy, python-format
-msgid "Pages and menus"
-msgstr "Dodaj nove stranice i izbornike"
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Panama Sky"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_panel
@@ -3098,8 +2632,8 @@ msgstr "Nadređeni izbornik"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_parent_right
-msgid "Parent Right"
-msgstr "Roditelj desno"
+msgid "Parent Rigth"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_res_partner
@@ -3107,14 +2641,29 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_post
-msgid "Partner Detail"
-msgstr "Podaci partnera"
+#: model:ir.model.fields,help:website.field_website_partner_id
+msgid "Partner-related data of the user"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Partners"
-msgstr "Partneri"
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Pay services like"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Peak"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "People"
+msgstr "Osobe"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Performance Optimization"
+msgstr "Optimizacija učinkovitosti"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3148,33 +2697,27 @@ msgid "Please install or update node-less"
 msgstr "Molimo instalirajte ili nadogradite node-less"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Please note that you'll need an Odoo Standard or Business subscriptions for "
-"that"
-msgstr ""
-"Imajte na umu da ćete trebati Odoo standard ili poslovnu pretplatu za to"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Point of Sale Questions <small>v7</small>"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"Post content on other people blogs, forums, websites, that are related to "
+"your environment."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
 msgid "Powered by"
-msgstr "Powered by"
+msgstr "Podržano od "
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
 #: model:ir.ui.view,arch_db:website.pager
 msgid "Prev"
 msgstr "Prethodna"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Product pricing and promotional offers,"
-msgstr "Cijene proizvoda i promotivne ponude,"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -3211,13 +2754,15 @@ msgid "Promote your catalog of services"
 msgstr "Promovirajte svoj katalog usluga"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Provide fast, professional and accurate information to your visitors and "
-"customers."
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Promote your job announces and attract new talents"
 msgstr ""
-"Osigurajte brze, profesionalne i točne informacije za svoje posjetitelje i "
-"kupce."
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Provide fast, professional and accurate information to your visitors"
+msgstr ""
+"Omogućite svojim posjetiteljima brze, profesionalne i točne informacije"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_partner_id
@@ -3230,11 +2775,25 @@ msgid "Public User"
 msgstr "Javni korisnik"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Publish multimedias to document your products/services"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"Publish the link of your website through your social media channels "
+"(Twitter, Facebook, LinkedIn)."
+msgstr ""
+"Objavite poveznicu Vaše stranice preko društvenih mreža (Twitter, Facebook, "
+"LinkedIn)."
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:76
+#: code:addons/website/static/src/js/website.tour.banner.js:41
 #, python-format
-msgid "Publish your page by clicking on the <em>'Save'</em> button."
-msgstr "Objavi stranicu klikom na <em>'Spremi'</em>  gumb."
+msgid "Publish your page by clicking on the <b>Save</b> button."
+msgstr "Objavi stranicu klikom na <b>Spremi</b> gumb."
 
 #. module: website
 #. openerp-web
@@ -3246,24 +2805,20 @@ msgid "Published"
 msgstr "Objavljeno"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Purple"
-msgstr "Ljubičasta"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "QWeb"
 msgstr "QWeb"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Quote"
-msgstr "Citat"
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"Qualify your visitors in order to reach them out with marketing campaigns"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Re-order"
-msgstr "Ponovna narudžba"
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Reach your customers and prospects on a recurring basis"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3272,48 +2827,44 @@ msgstr "Spreman za lansiranje!"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Real professional translators will translate all your contents"
-msgstr "Pravi profesionalni prevoditelj će prevesti sav vaš sadržaj"
+msgid "Redeem a $75 coupon code to start your campaign."
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Recipient"
-msgstr "Primatelj"
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Reduce resources spent on support with a website forum"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Reduce the time and resources spent on support."
-msgstr "Smanjite vrijeme i resurse potrošene na podršku."
+msgid "Reduce the time and resources spent on support"
+msgstr "Smanjite vrijeme i resurse potrošene na podršku"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.xml:96
-#, python-format
-msgid "Reference(s) found:"
-msgstr "Referenca(e) pronađena:"
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"Regroup similar pages into a sub-menu, so they will appear under a unique "
+"drop-down menu."
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Remove Slide"
-msgstr "Ukloni slide"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Remove all images"
-msgstr "Ukloni sve slike"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Remove from gallery"
-msgstr "Ukloni iz galerije"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:95
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, python-format
 msgid "Rename Page"
 msgstr "Preimenuj stranicu"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.xml:105
+#, python-format
+msgid "Rename Page To:"
+msgstr "Preimenuj stranicu u:"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.contentMenu.js:99
+#, python-format
+msgid "Rename This Page"
+msgstr "Preimenuj ovu stranicu"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -3324,6 +2875,11 @@ msgstr "Reset odabranog predloška"
 #: model:ir.ui.view,arch_db:website.500
 msgid "Reset templates"
 msgstr "Reset predloška"
+
+#. module: website
+#: model:res.groups,name:website.group_website_publisher
+msgid "Restricted Editor"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -3341,35 +2897,27 @@ msgid "SEO metadata"
 msgstr "SEO metapodaci"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Sails"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Sample images"
 msgstr "Uzorak slike"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:77
 #: code:addons/website/static/src/js/website.seo.js:363
-#: code:addons/website/static/src/xml/website.ace.xml:12
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 #, python-format
 msgid "Save"
 msgstr "Spremi"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:75
-#, python-format
-msgid "Save your modifications"
-msgstr "Spremi izmjene"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Scroll Speed"
-msgstr "Brzina pomicanja"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:97
-#, python-format
-msgid "Scroll to check rendering and then close the mobile preview."
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Save this page and come back here to set up the feature."
 msgstr ""
 
 #. module: website
@@ -3393,13 +2941,23 @@ msgid "Second List"
 msgstr "Drugi popis"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "See Google Analytics data on your Website Dashboard"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "See and buy your products"
 msgstr "Pogledajte i kupite vaše proizvode"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "See how to translate on your own"
+msgstr "Pogledajte kako možete sami prevoditi"
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:27
+#: code:addons/website/static/src/js/website.contentMenu.js:184
 #, python-format
 msgid "Select a Menu"
 msgstr "Odaberi izbornik"
@@ -3408,18 +2966,6 @@ msgstr "Odaberi izbornik"
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Select and delete blocks to remove some features."
 msgstr "Odaberite i uklonite blokove da bi uklonisi neke značajke"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:53
-#, python-format
-msgid "Select the parent container to get the global options of the banner."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Select the untranslated language"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_message
@@ -3432,14 +2978,9 @@ msgid "Sell more online"
 msgstr "Prodaj više online"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Pošalji <span class=\"fa fa-long-arrow-right\"/>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Send a Message to our Partners"
-msgstr "Pošalji poruku našim partnerima"
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Sell recurring services with automated billing and payments"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3457,9 +2998,9 @@ msgid "Sequence"
 msgstr "Sekvenca"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Settings &gt; Website"
-msgstr ""
+#: model:ir.ui.menu,name:website.menu_website_website_settings
+msgid "Settings"
+msgstr "Postave"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -3467,18 +3008,23 @@ msgid "Shadows"
 msgstr "Sjene"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_share
-msgid "Share"
-msgstr "Podjeli"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Share experience on similar projects"
 msgstr "Podijeli iskustvo na sličnim projektima"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Share videos, presentations and documents"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view_customize_show
 msgid "Show As Optional Inherit"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Show a map in the"
 msgstr ""
 
 #. module: website
@@ -3487,21 +3033,14 @@ msgid "Simple and obvious"
 msgstr "Jednostavno i očito"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:21
-#, python-format
-msgid "Skip It"
-msgstr "Preskoči"
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_slides
+msgid "Slides"
+msgstr "Prezentacije"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Slideshow"
 msgstr "Slideshow"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Slideshow speed"
-msgstr "Brzina slideshowa"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -3514,46 +3053,25 @@ msgid "Small"
 msgstr "Malo"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #: model:ir.ui.view,arch_db:website.view_website_form
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "Social Media"
 msgstr "Društveni mediji"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.xml:70
-#, python-format
-msgid "Some dependencies can exist ..."
-msgstr "Može postojati neka ovisnost...."
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Social Media Links"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Special effects and animations"
-msgstr "Specijalni efekti i animacije"
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Social media links in your website footer"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Square"
 msgstr "Četvrtast"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:21
-#, python-format
-msgid "Start Tutorial"
-msgstr "Pokreni vodič"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Start by looking how often people search phrases related to your business,\n"
-"                                    how competitive the keywords are in "
-"AdWords, and how much it’ll cost to\n"
-"                                    advertise on each keyword. All of this "
-"information will  help you determine\n"
-"                                    which keywords you want to use in your "
-"first campaign."
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
@@ -3571,26 +3089,16 @@ msgid "Starter package"
 msgstr "Početni paket"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Static"
-msgstr "Statično"
+#. openerp-web
+#: code:addons/website/static/src/js/website.snippets.editor.js:44
+#, python-format
+msgid "Stay on this page"
+msgstr "Ostani na ovoj stranici"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Still in the left-side menu, go to <strong>APIs and auth &gt; Credentials</"
-"strong> and click on <strong>'Create New Client ID'</strong>"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Style"
-msgstr "Stil"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Styling"
-msgstr "Stil"
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_contract
+msgid "Subscriptions"
+msgstr "Pretplate"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_custom
@@ -3608,14 +3116,9 @@ msgid "Subtitle 3"
 msgstr "Podnaslov 3"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Sunflower"
-msgstr "Suncokret"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "TRANSLATE"
-msgstr ""
+msgstr "PRIJEVOD"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -3635,44 +3138,15 @@ msgid "Tell what's the value for the<br/>customer for this feature."
 msgstr "Reci što je vrijednosti za kupca<br/>za ovu značajku."
 
 #. module: website
-#: code:addons/website/models/website.py:308
+#: code:addons/website/models/website.py:313
 #, python-format
-msgid "Template <b>%s (id:%s)</b> seems to have a link to this page !"
-msgstr "Predložak <b>%s (id:%s)</b> kao da ima link na ovu stranicu!"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.ace.js:246
-#, python-format
-msgid "Template ID: %s"
-msgstr "ID predloška: %s"
+msgid "Template <b>%s (id:%s)</b> contains a link to this page"
+msgstr "Poveznica <b>%s (id:%s)</b> sadrži poveznicu na ovu stranicu"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "Template fallback"
-msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:89
-#, python-format
-msgid "Test Your Mobile Version"
-msgstr "Testirajte mobilnu verziju"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_post
-msgid "Thank you for posting a message !"
-msgstr "Zahvaljujemo na ostavljenoj poruci!"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:104
-#, fuzzy, python-format
-msgid ""
-"The 'Content' menu allows you to rename and delete pages or add them to the "
-"top menu."
-msgstr ""
-"Izbornik 'Sadžaj' vam omogućuje dodavanje stranice ili gornjeg izbornika."
+msgstr "Rezervni predložak"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3680,44 +3154,18 @@ msgid "The Banner or Big Picture building blocks are good choices for that."
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:96
+#, python-format
+msgid "The Google Analytics Client ID you have entered seems incorrect."
+msgstr "ID klijenta Google Analyticsa koji ste unijeli je pogrešan."
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid ""
 "The Point of Sale works perfectly on any kind of touch enabled\n"
-"                                device, whether it's multi-touch tablets "
-"like an iPad or\n"
+"                                device, whether it's multi-touch tablets like an iPad or\n"
 "                                keyboardless resistive touchscreen terminals."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"The best and simplest way to start is to create a few pages and link them "
-"directly from the main menu.\n"
-"                            Just try not to go over 6 items, otherwise your "
-"main menu will be difficult to use."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "The building blocks"
-msgstr "Građevni blokovi"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"The call to action’s (i.e. the button’s) wording, size, color and placement,"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "The colors palettes"
-msgstr "Palete boja"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"The cost is from $0.05 to $0.15 per word, depending on the translator's "
-"level of expertise"
 msgstr ""
 
 #. module: website
@@ -3728,7 +3176,7 @@ msgstr "Došlo je do pogreške u pružanju predloška"
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "The following error was raised in the website controller"
-msgstr ""
+msgstr "Sljedeća greška je napravljena u website controlleru"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_blog_post_website_url
@@ -3758,26 +3206,20 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.403
 msgid "The page you were looking for could not be authorized."
-msgstr ""
+msgstr "Stranica koju tražite nemože biti odobrena."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.404
 msgid ""
 "The page you were looking for could not be found; it is possible you have\n"
-"                        typed the address incorrectly, but it has most "
-"probably been removed due\n"
+"                        typed the address incorrectly, but it has most probably been removed due\n"
 "                        to the recent website reorganisation."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "The pre-loaded images"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "The selected templates will be reset to their factory settings."
-msgstr ""
+msgstr "Odabrani predlošci bit će resetirani na tvorničke postavke."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3785,16 +3227,8 @@ msgid "The shorter the better"
 msgstr "Što kraće to bolje"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"The theme you choose sets the tone for the overall look and feel of your "
-"site design."
-msgstr ""
-"Odabrana tema daje ton na cjelokupan izgled i dojam o dizajnu vaše stranice."
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.xml:18
+#: code:addons/website/static/src/xml/website.xml:12
 #, python-format
 msgid "The web site has encountered an error."
 msgstr "Web stranica je naišla na pogrešku."
@@ -3804,43 +3238,22 @@ msgstr "Web stranica je naišla na pogrešku."
 #: code:addons/website/static/src/js/website.theme.js:280
 #, python-format
 msgid "Theme Error"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Theme Selection"
-msgstr "Tema za odabir"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Then simply"
-msgstr "Zatim jednostavno"
+msgstr "Greška teme"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Then, copy the <strong>Client ID</strong> and <strong>Client Secret</strong> "
-"codes and paste them in"
+"There are so many ways to communicate with your customers, visitors and\n"
+"                        prospects that it's sometimes difficult to know what to put your energy into. Here are\n"
+"                        some advices on what to focus on next."
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Then, go to"
-msgstr "Zatim idite na"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"There are three questions you should ask before deciding whether or not to "
-"advertise on a particular keyword:"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"They allow a detailed qualification of the visitor, which is perfect to link "
-"them later to marketing campaigns."
-msgstr ""
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:28
+#, python-format
+msgid "There is no data currently available."
+msgstr "Trenutno nema dostupnih podataka."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
@@ -3848,33 +3261,47 @@ msgid "Third Feature"
 msgstr "Treća značajka"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_website_config_settings_favicon
+#: model:ir.model.fields,help:website.field_website_favicon
+msgid "This field holds the image used to display a favicon on the website."
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website_config_settings_default_lang_code
+#: model:ir.model.fields,help:website.field_website_default_lang_code
+msgid "This field is used to set/get locales for user"
+msgstr "Ovo polje postavlja jezik korisnika"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.page_404
 msgid ""
-"This page does not exists, but you can create it as you are administrator of "
-"this site."
+"This page does not exists, but you can create it as you are administrator of"
+" this site."
 msgstr ""
 "Stranica ne postoji, ali možete ju kreirati jer ste administrator stranice."
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:20
+#: code:addons/website/models/website.py:327
 #, python-format
-msgid ""
-"This tutorial will guide you to build your home page. We will start by "
-"adding a banner."
-msgstr ""
+msgid "This page is in the menu <b>%s</b>"
+msgstr "Ova stranice je u izborniku <b>%s</b>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Thumbnails"
-msgstr ""
+msgstr "Mini slike"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Time-consuming"
+msgstr "Dugotrajan"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:48
 #, python-format
 msgid "Title"
-msgstr "Titula"
+msgstr "Naslov"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
@@ -3887,27 +3314,14 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "To do that, simply use the Promote menu on each page of your website."
-msgstr ""
-"Da biste to postigli, jednostavno koristite izbornik promoviraj na svakoj "
-"stranici vaše web stranice."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "To get an external assessment of your website, you can also submit it to"
 msgstr "Da biste dobili vanjsku ocjenu vaše web stranice, možete ju dostaviti"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "To learn more, take a look at their"
-msgstr "Kako biste saznali više, pogledajte njihove"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:175
+#: code:addons/website/static/src/js/website.contentMenu.js:179
 #: model:website.menu,name:website.main_menu
-#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Glavni izbornik"
@@ -3915,11 +3329,16 @@ msgstr "Glavni izbornik"
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "Traceback"
+msgstr "Povijest"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Track visits in Google Analytics"
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:487
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -3927,7 +3346,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Translate"
-msgstr "Prijevodi"
+msgstr "Prevoditi"
 
 #. module: website
 #. openerp-web
@@ -3946,33 +3365,36 @@ msgstr "Prevedeni sadržaj"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Translated versions are updated automatically after 32 hours on average."
-msgstr "Prevedene verzije se u prosjeku ažuriraju nakon 32 sata."
+"Translating your website into other languages is the best way to broaden its"
+" audience."
+msgstr ""
+"Prevođenje Vaše web stranice na druge jezike najbolji je način proširivanja "
+"publike."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Translating your website into other languages is the best way to broaden its "
-"audience.\n"
-"                        In Odoo, you can either manually translate your "
-"pages as they are displayed, use an\n"
-"                        automatic machine translation service for free or "
-"pay professional translators to do\n"
-"                        it for you."
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Tutorial"
 msgstr ""
-"Prevođenje vaše web stranice na druge jezike najbolji je način za širenje "
-"publike.\n"
-"U Odoo-u, možete ili ručno prevesti stranice kao što su one prikazane ili "
-"koristiti\n"
-"automat za besplatno prevođenje ili možete platiti profesionalnim "
-"prevoditeljima da to\n"
-"odrade za vas."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_social_twitter
+msgid "Twitter"
+msgstr "Twitter"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_twitter
 msgid "Twitter Account"
 msgstr "Račun na Twitteru"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_twitter
+msgid "Twitter Roller"
+msgstr "Twitter Roller"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Type"
+msgstr "Vrsta"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -3983,35 +3405,45 @@ msgstr ""
 "Upiši '<i class=\"confirm_word\">da</i>' u okvir ispod ako želiš potvrditi."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #: model:ir.ui.view,arch_db:website.view_website_form
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "UA-XXXXXXXX-Y"
 msgstr "UA-XXXXXXXX-Y"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_cdn_filters
+#: model:ir.model.fields,help:website.field_website_config_settings_cdn_filters
 msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Ultimate package"
-msgstr ""
+msgstr "Krajni paket"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Unlimited CRM power and support"
-msgstr ""
+msgstr "Neograničena CRM snaga u podrška"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Unlimited customization"
-msgstr ""
+msgstr "Neograničena prilagodba"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.backend.js:22
+#: model:ir.ui.view,arch_db:website.publish_management
+#: model:ir.ui.view,arch_db:website.publish_short
+#, python-format
+msgid "Unpublished"
+msgstr "Neobjavljeno"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Update your internal documents: footer of sales order, contracts,invoices, "
+"Update your internal documents: footer of sales order, contracts, invoices, "
 "business cards, etc."
 msgstr ""
 
@@ -4023,6 +3455,8 @@ msgid ""
 "Upload failed, some images might not have been uploaded. Check your network "
 "connectivity."
 msgstr ""
+"Učitavanje nije uspjelo, neke se slike možda nisu učitale. Provjerite svoju "
+"mrežnu povezanost."
 
 #. module: website
 #. openerp-web
@@ -4037,10 +3471,9 @@ msgid "Url"
 msgstr "Url"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-#, fuzzy
-msgid "Use Google Adwords"
-msgstr "Koristi Google Adword"
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Use a CDN to optimize the availability of your website's content"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_cdn_activated
@@ -4050,28 +3483,16 @@ msgstr "Koristi Content Delivery Network (CDN)"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Use a free, automatic machine translation (quality will vary depending on "
-"languages)"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Use the <i>Customize</i> menu to change the look of your theme:"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Use the Newsletter subscription (from mass mailing application) or the Big "
-"button building block for that."
+"Use the Button block or the Newsletter subscription one (if Mass Mailing "
+"installed)."
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:112
+#: code:addons/website/static/src/xml/website.backend.xml:45
 #, python-format
-msgid "Use this button to add pages"
-msgstr ""
+msgid "User Documentation"
+msgstr "Dokumentacija korisnika"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.robots
@@ -4079,11 +3500,8 @@ msgid ""
 "User-agent: *\n"
 "Sitemap:"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Velour"
-msgstr "Velur"
+"User-agent: *\n"
+"Sitemap:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -4096,21 +3514,13 @@ msgid "Very Slow"
 msgstr "Vrlo polako"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "View our themes selection"
-msgstr "Pogledajte naš izbor teme"
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_blog_post_website_published
-#: model:ir.model.fields,field_description:website.field_delivery_carrier_website_published
 #: model:ir.model.fields,field_description:website.field_event_track_website_published
 #: model:ir.model.fields,field_description:website.field_hr_employee_website_published
 #: model:ir.model.fields,field_description:website.field_hr_job_website_published
 #: model:ir.model.fields,field_description:website.field_im_livechat_channel_website_published
 #: model:ir.model.fields,field_description:website.field_product_template_website_published
 #: model:ir.model.fields,field_description:website.field_project_project_website_published
-#: model:ir.model.fields,field_description:website.field_res_partner_grade_website_published
-#: model:ir.model.fields,field_description:website.field_res_partner_tag_website_published
 #: model:ir.model.fields,field_description:website.field_res_partner_website_published
 #: model:ir.model.fields,field_description:website.field_slide_channel_website_published
 #: model:ir.model.fields,field_description:website.field_slide_slide_website_published
@@ -4121,18 +3531,31 @@ msgstr "Vidljivo na web stranicama"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Visitors might not be interested in your products or services when they come "
-"to your site. They could want to learn something, improve their life, grow "
+"Visitors might not be interested in your products or services when they come"
+" to your site. They could want to learn something, improve their life, grow "
 "their business, find out more about you, etc. What great content can you "
 "offer your visitors? Why should they stay on your website?"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:18
+#, python-format
+msgid "Visits"
+msgstr "Posjeti"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.xml:64
+#, python-format
+msgid "Warning!"
+msgstr "Upozorenje!"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
 msgid ""
 "We are a team of passionate people whose goal is to improve everyone's\n"
-"                                      life through disruptive products. We "
-"build great products to solve your\n"
+"                                      life through disruptive products. We build great products to solve your\n"
 "                                      business problems."
 msgstr ""
 
@@ -4140,16 +3563,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.footer_default
 msgid ""
 "We are a team of passionate people whose goal is to improve everyone's\n"
-"                            life through disruptive products. We build great "
-"products to solve your\n"
+"                            life through disruptive products. We build great products to solve your\n"
 "                            business problems."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"We can create a customized theme for you with your company colors, logo and "
-"images from your library."
 msgstr ""
 
 #. module: website
@@ -4170,8 +3585,9 @@ msgstr "Potruditi ćemo se da vam se javimo u najkraćem  mogućem roku."
 #: model:ir.ui.menu,name:website.menu_website
 #: model:ir.ui.view,arch_db:website.user_navbar
 #: model:ir.ui.view,arch_db:website.view_server_action_search_website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "Website"
-msgstr "Web stranice"
+msgstr "Web stranica"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_configuration
@@ -4184,9 +3600,19 @@ msgid "Website Apps"
 msgstr "Website aplikacije"
 
 #. module: website
+#: model:ir.actions.client,name:website.backend_dashboard
+msgid "Website Dashboard"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_domain
 msgid "Website Domain"
 msgstr "Domena web stranice"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_favicon
+msgid "Website Favicon"
+msgstr ""
 
 #. module: website
 #: model:ir.actions.act_url,name:website.action_website_homepage
@@ -4206,24 +3632,9 @@ msgid "Website Name"
 msgstr "Website naziv"
 
 #. module: website
-#: model:ir.actions.server,name:website.action_partner_post
-msgid "Website Partner Post and Thanks Demo"
-msgstr ""
-
-#. module: website
-#: model:ir.actions.server,name:website.action_partner_comment
-msgid "Website Partners Comment Form"
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
 msgid "Website Path"
 msgstr "Website putanja"
-
-#. module: website
-#: model:crm.team,name:website.salesteam_website_sales
-msgid "Website Sales"
-msgstr "Website prodaja"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
@@ -4237,6 +3648,11 @@ msgid "Website Theme"
 msgstr "Tema web stranice"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "Website Title"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_blog_post_website_url
 #: model:ir.model.fields,field_description:website.field_delivery_carrier_website_url
 #: model:ir.model.fields,field_description:website.field_event_event_website_url
@@ -4244,7 +3660,6 @@ msgstr "Tema web stranice"
 #: model:ir.model.fields,field_description:website.field_hr_employee_website_url
 #: model:ir.model.fields,field_description:website.field_hr_job_website_url
 #: model:ir.model.fields,field_description:website.field_im_livechat_channel_website_url
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
 #: model:ir.model.fields,field_description:website.field_payment_acquirer_website_url
 #: model:ir.model.fields,field_description:website.field_product_template_website_url
 #: model:ir.model.fields,field_description:website.field_project_project_website_url
@@ -4258,19 +3673,14 @@ msgid "Website URL"
 msgstr "URL web stranice"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Website Versioning."
-msgstr "Verzioniranje web stranica."
-
-#. module: website
-#: model:ir.actions.act_url,name:website.action_website_tutorial
-msgid "Website With Tutorial"
-msgstr ""
+#: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
+msgid "Website Url"
+msgstr "Url web stranice"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_tree
 msgid "Website menu"
-msgstr ""
+msgstr "Website izbornik"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_description
@@ -4346,23 +3756,30 @@ msgid "Websites to translate"
 msgstr "Webstranice za prijevod"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:50
+#, python-format
+msgid "Week"
+msgstr "Tjedan"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Welcome"
 msgstr "Dobrodošli"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:19
+#: code:addons/website/static/src/xml/website.editor.xml:20
 #, python-format
-msgid "Welcome to your website!"
-msgstr "Dobrodošli na naše webstranice"
+msgid "Welcome to your"
+msgstr "Dobrodošli na"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:82
+#: code:addons/website/static/src/xml/website.editor.xml:26
 #, python-format
-msgid "Well done, you created your homepage."
-msgstr "Odlično, kreirali ste svoju naslovnu webstranicu"
+msgid "What do you want to do?"
+msgstr "Što želite učiniti?"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4377,64 +3794,33 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Which hardware does Odoo POS support?"
-msgstr ""
+msgstr "Koji hardware podržava Odoo POS?"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid ""
 "While an internet connection is required to start the Point of\n"
-"                                Sale, it will stay operational even after a "
-"complete disconnection."
+"                                Sale, it will stay operational even after a complete disconnection."
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_cover
+msgid "With a great subtitle"
+msgstr "S velikim podnaslovom"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"With Odoo, you can automatically check which keywords are ranked best for a\n"
-"                                    specific query, then add them in the "
-"content of your page."
+"Write a good article about your business and publish it on article database "
+"websites (e.g. squidoo.com). Send it to press websites and to your local "
+"newspapers."
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Wood"
-msgstr "Drvo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
 msgid ""
 "Write a quote here from one of your customers. Quotes are a\n"
-"                                                great way to build "
-"confidence in your products or services."
-msgstr ""
-"Napišite ponudu jednom od svojih klijenata. Ponude su\n"
-"odličan način izgradnje povjerenja u vaš proizvod ili usluge."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_quotes_slider
-msgid ""
-"Write a quote here from one of your customers. Quotes are a\n"
-"                                        great way to build confidence in "
-"your products or services."
-msgstr ""
-"Napišite ponudu jednom od svojih klijenata. Ponude su\n"
-"odličan način izgradnje povjerenja u vaš proizvod ili usluge."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_references
-msgid ""
-"Write a quote here from one of your customers. Quotes are a\n"
-"                            great way to build confidence in your products "
-"or services."
-msgstr ""
-"Napišite ponudu jednom od svojih klijenata. Ponude su\n"
-"odličan način izgradnje povjerenja u vaš proizvod ili usluge."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_quote
-msgid ""
-"Write a quote here from one of your customers. Quotes are a\n"
-"            great way to build confidence in your products or services."
+"                                                great way to build confidence in your products or services."
 msgstr ""
 "Napišite ponudu jednom od svojih klijenata. Ponude su\n"
 "odličan način izgradnje povjerenja u vaš proizvod ili usluge."
@@ -4443,12 +3829,9 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_text_image
 msgid ""
 "Write one or two paragraphs describing your product or\n"
-"                        services. To be successful your content needs to be\n"
+"                        services.<br/>To be successful your content needs to be\n"
 "                        useful to your readers."
 msgstr ""
-"Napišite jednu ili dvije točke koje opisuju vaš proizvod ili\n"
-"usluge. Da bi bili uspješni vaš sadržaj\n"
-"treba biti koristan čitateljima."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
@@ -4462,9 +3845,16 @@ msgstr ""
 "treba biti koristan čitateljima."
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.s_cover
+msgid ""
+"Write one or two paragraphs describing your product, services or a specific "
+"feature. To be successful your content needs to be useful to your readers."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_big_message
 msgid "Write one sentence to convince visitor about your message."
-msgstr ""
+msgstr "Napišite jednu rečenicu da uvjerite posjetitelja u vašu poruku."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
@@ -4473,9 +3863,11 @@ msgid ""
 msgstr "Napišite ono što kupac želi znati,<br/>ne ono što želite pokazati."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Yellow Green"
-msgstr ""
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:52
+#, python-format
+msgid "Year"
+msgstr "Godina"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -4492,105 +3884,66 @@ msgstr "Ulazite u način rada za prevođenje"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"You can also place online advertisements on web pages that show results from "
-"search\n"
-"                        engine queries: this is called SEA."
+"You can also pay for a sponsored indexing and place advertisements on web pages that show results from search\n"
+"                        engine queries. This is called <strong>SEA</strong>."
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"You can also use the <i>integrated HTML Editor(from the Customize menu)</i> "
-"to modify the code directly."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"You can do this by optimizing your referencing by search engines like "
-"Google: it's\n"
-"                        called SEO. This  is the process of increasing the "
-"visibility of a website or a web\n"
-"                        page in a search engine's natural and unpaid "
-"(\"organic\") search results. In general,\n"
-"                        the earlier (or higher ranked on the search results "
-"page), and more frequently a site\n"
-"                        appears in the search results list, the more "
-"visitors it will receive from the search\n"
-"                        engine."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "You can retrieve a 75$ coupon code to start your campaign here:"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"You can set Odoo on a custom domain name (e.g. yourcompany.com) for both the "
-"website\n"
-"                        and your emails. Because your website address is as "
-"important to your branding as the\n"
-"                        name of your business or organization, you’ll want "
-"to put some thought into changing it\n"
-"                        for a proper domain, or change it to one you already "
-"own."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"You have a lot of choices for that: the References, Quotes Slider, Twitter "
-"Scroller,..."
-msgstr ""
-
-#. module: website
-#: model:ir.actions.act_window,help:website.action_module_theme
-#: model:ir.actions.act_window,help:website.action_module_website
-#, fuzzy
-msgid "You should try other search criteria."
-msgstr "Probajte drugi kriterij pretrage."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"You will get your leads filled up automatically in our integrated CRM "
-"application."
+"You can set a custom domain name (e.g. yourcompany.com) for both the website\n"
+"                        and your emails. Your website address is as important to your branding as the\n"
+"                        name of your business or organization, so put some thought into changing it\n"
+"                        for a proper domain."
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.tour.banner.js:48
-#: model:ir.ui.view,arch_db:website.s_banner
+#: code:addons/website/static/src/xml/website.backend.xml:30
 #, python-format
+msgid ""
+"You do not have sufficient access rights to configure the Google Analytics "
+"account."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:40
+#, python-format
+msgid "You do not seem to have access to this Analytics Account."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"You have many blocks available: References, Quotes Slider, Twitter "
+"Scroller,etc."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:39
+#, python-format
+msgid "You need to log in to your Google Account before:"
+msgstr "Trebate se prijaviti na Google račun prije:"
+
+#. module: website
+#: model:ir.actions.act_window,help:website.action_module_theme
+#: model:ir.actions.act_window,help:website.action_module_website
+msgid "You should try other search criteria."
+msgstr "Probajte druge kriterije pretrage."
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_banner
 msgid "Your Banner Title"
 msgstr "Naslov vašeg banera"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Your Domain Name"
-msgstr "Vaše ime domene"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Your Footer"
-msgstr "Vaše podnožje"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Your Homepage"
-msgstr "Vaša početna stranica"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Your Main Menu"
-msgstr "Vaš glavni izbornik"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Your Objectives"
-msgstr "Vaši objekti"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:43
+#, python-format
+msgid "Your Google Analytic Client ID:"
+msgstr "Vaš Google Analytic ID klijenta:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_title
@@ -4598,34 +3951,41 @@ msgid "Your Website Title"
 msgstr "Naslov vaše webstranice"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:27
+#, python-format
+msgid "Your current changes will be saved automatically."
+msgstr "Vaše trenutne promjene bit će automatski spremljene."
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Your homepage is the most important page of your website. This is where "
-"visitors get their first impressions of you. An excellent homepage will "
-"encourage them to stay on your site, guide them towards your content, "
-"reinforce your company's branding and more.<br/>\n"
+"Your homepage is the most important page of your website. This is where visitors get their first impressions of you. An efficient homepage will prompt them to stay on your site, guide them towards your content, strengthen your company's branding and more.<br/>\n"
 "                        Here are some pointers to help you get started."
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Your theme selection will define:"
-msgstr "Vaš odabir tema će odrediti:"
+msgid ""
+"Your menu must be built for your visitors and not for your own purposes or objectives.<br/>\n"
+"                        It needs to be organized, so that they see all the main content at a glance.<br/>\n"
+"                        It needs to be clear, so that they get the content they expect when clicking an item."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Your website is an important part of your online business strategy, but it "
-"shouldn't be\n"
-"                        the only one. There are so many ways to communicate "
-"with your customers, visitors and\n"
-"                        prospects that it's sometimes difficult to know what "
-"to put your energy into. Here is\n"
-"                        some advice on what to focus on next."
+"Your visitors won't see the footer immediately. Use it for links you don't "
+"want in your main menu (e.g. social media, terms and conditions, privacy "
+"terms, etc.)."
 msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_social_youtube
+msgid "Youtube"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_youtube
 msgid "Youtube Account"
 msgstr "Youtube račun"
@@ -4639,8 +3999,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "and connect with the Google account you created"
-msgstr "i poveži se sa kreiranim Google računom "
+msgid "add keywords in picture's description."
+msgstr "dodaj ključne riječi u opis slike."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -4649,23 +4009,13 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "and we'll configure your website and/or email for you."
-msgstr "a mi ćemo konfigurirati web stranicu i/ili e-mail za vas."
+msgid "campaign."
+msgstr "kampanja."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "button."
-msgstr "gumb."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "check out our blog application"
+msgid "check out our Blog application"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "create a Google Analytics account"
-msgstr "Izradi Google Analytics račun"
 
 #. module: website
 #. openerp-web
@@ -4675,9 +4025,26 @@ msgid "describing your page content"
 msgstr "opisivati sadržaj vaše stranice"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.xml:107
+#, python-format
+msgid "e.g. About Us"
+msgstr "npr. O nama"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_sale
+msgid "eCommerce"
+msgstr "eTrgovina"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "etc."
+msgstr "itd."
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "ex: About us"
-msgstr ""
+msgstr "npr. O nama"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4688,15 +4055,24 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "ex: Contact us, Our Customers, Privacy Policy, Events, Blog, Jobs"
 msgstr ""
+"npr.: Kontaktirajte nas, Naši kupci, Pravila o privatnosti, Događaji, Blog, "
+"Poslovi"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "ex: interesting contents, texts and articles"
-msgstr ""
+msgstr "npr: zanimljiv sadržaj, tekst i članci"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "for a free evaluation of the usability of your homepage."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.xml:70
+#, python-format
+msgid "found(s)"
 msgstr ""
 
 #. module: website
@@ -4707,34 +4083,19 @@ msgid "how your page will be listed on Google"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "http://gengo.com/pricing-languages/"
-msgstr "http://gengo.com/pricing-languages/"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "http://www.google.com/ads/adwords-coupon.html"
-msgstr "http://www.google.com/ads/adwords-coupon.html"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "http://www.google.com/webmasters/tools/"
-msgstr "http://www.google.com/webmasters/tools/"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #: model:ir.ui.view,arch_db:website.view_website_form
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "https://plus.google.com/+Odooapps"
 msgstr "https://plus.google.com/+Odooapps"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #: model:ir.ui.view,arch_db:website.view_website_form
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "https://twitter.com/Odoo"
 msgstr "https://twitter.com/Odoo"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "https://www.facebook.com/Odoo"
 msgstr "https://www.facebook.com/Odoo"
 
@@ -4744,32 +4105,27 @@ msgid "https://www.facebook.com/odoo"
 msgstr "https://www.facebook.com/odoo"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #: model:ir.ui.view,arch_db:website.view_website_form
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "https://www.linkedin.com/company/odoo"
 msgstr "https://www.linkedin.com/company/odoo"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #: model:ir.ui.view,arch_db:website.view_website_form
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "https://www.youtube.com/user/OpenERPonline"
 msgstr "https://www.youtube.com/user/OpenERPonline"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
 #: model:ir.ui.view,arch_db:website.view_website_form
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "https://youraccount.github.io"
 msgstr "https://youraccount.github.io"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "if you don't have one yet."
-msgstr "ako nemate još jedan."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "in Odoo"
-msgstr "u Odoo-u"
+msgid "in their SEO metadata, including tags, title and description."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -4797,14 +4153,19 @@ msgid "ir.ui.view"
 msgstr "ir.ui.view"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.menu_search
-msgid "name"
-msgstr "naziv"
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "learn how people find your website,"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "online help"
-msgstr "online pomoć"
+msgid "make optimizations for Google referencing."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.menu_search
+msgid "name"
+msgstr "naziv"
 
 #. module: website
 #. openerp-web
@@ -4815,9 +4176,9 @@ msgid "or Edit Master"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "or see who currently owns it"
-msgstr "ili vidjeti tko ga trenutno posjeduje"
+#: model:ir.ui.view,arch_db:website.website_config_settings_view_form
+msgid "page"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4826,8 +4187,15 @@ msgstr "peek.usertesting.com"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "send us an email"
-msgstr "pošaljite nam e-mail"
+msgid "sending us an email"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:22
+#, python-format
+msgid "signs to get your website ready in no time."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.robots
@@ -4836,33 +4204,48 @@ msgstr "sitemap.xml"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.xml:19
+#: code:addons/website/static/src/xml/website.xml:13
 #, python-format
 msgid "the classic Odoo interface"
 msgstr "klasično Odoo sučelje"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"to describe\n"
-"                    <br/> your experience or to suggest improvements !"
-msgstr ""
-"opiši\n"
-"<br/>  svoje iskustvo ili predloži poboljšanja!"
+msgid "through the content of your pages;"
+msgstr "kroz sadržaj Vaših stranica;"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"to do that (make sure the Advanced Options are set to your country and\n"
-"                                    language)."
+"to describe\n"
+"                    <br/> your experience or to suggest improvements!"
 msgstr ""
-"za to (da li su napredne opcije postavljene na vašu zemlju i\n"
-"jezik)."
+"za opisivanje\n"
+"<br/> Vašeg iskustva ili predlaganje poboljšanja!"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:45
+#, python-format
+msgid "to get more information."
+msgstr "za više informacija."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "to get started."
 msgstr "za početak."
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"to get your content translated by real professional translators. Quality may"
+" vary."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "understand your search traffic,"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
@@ -4898,110 +4281,11 @@ msgid "website.published.mixin"
 msgstr "website.published.mixin"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "will help you:"
+msgstr "pomoći će Vam:"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "yes"
 msgstr "da"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "your Company details form"
-msgstr ""
-
-#~ msgid "&lt;!DOCTYPE html&gt;"
-#~ msgstr "&lt;!DOCTYPE html&gt;"
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-justify fa-stack-1x\"/>\n"
-#~ "        </span> Content"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "<i class=\"fa fa-align-justify fa-stack-1x\"/>\n"
-#~ "</span>  Zadovoljan"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-paper-plane fa-stack-1x\"/>\n"
-#~ "        </span> Effect"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "<i class=\"fa fa-paper-plane fa-stack-1x\"/>\n"
-#~ "</span> Posljedica"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-pie-chart fa-stack-1x\"/>\n"
-#~ "        </span> Feature"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "<i class=\"fa fa-pie-chart fa-stack-1x\"/>\n"
-#~ "</span> Značajka"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-th-large fa-stack-1x\"/>\n"
-#~ "        </span> Structure"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "<i class=\"fa fa-th-large fa-stack-1x\"/>\n"
-#~ "</span> Struktura"
-
-#~ msgid "<span title=\"Edit Top Menu\">Edit Menu</span>"
-#~ msgstr "<span title=\"Edit Top Menu\">Uredi izbornik</span>"
-
-#~ msgid "<strong>Click Here</strong>"
-#~ msgstr "<strong>Klikni ovdje</strong>"
-
-#~ msgid "Check now and discover more today!"
-#~ msgstr "Provjeri sada i otkrij više danas!"
-
-#~ msgid "Color"
-#~ msgstr "Boja"
-
-#~ msgid "Content <span class=\"caret\"/>"
-#~ msgstr "Zadovoljan <span class=\"caret\"/>"
-
-#~ msgid "Customize <span class=\"caret\"/>"
-#~ msgstr "Prilagodite <span class=\"caret\"/>"
-
-#~ msgid "Discover more about Odoo"
-#~ msgstr "Otkrij više o Odoo"
-
-#~ msgid "Edit Menu Entry"
-#~ msgstr "Uredi stavku izbornika"
-
-#~ msgid "Help <span class=\"caret\"/>"
-#~ msgstr "Pomoć <span class=\"caret\"/>"
-
-#~ msgid "Hide link"
-#~ msgstr "Sakrij poveznicu"
-
-#~ msgid "Menu Label"
-#~ msgstr "Tekst izbornika"
-
-#~ msgid "Odoo Members"
-#~ msgstr "Odoo članovi"
-
-#~ msgid "Press The Top-Left Edit Button"
-#~ msgstr "Pritisnite gornji lijevi gumb Uredi"
-
-#~ msgid "Promote <span class=\"caret\"/>"
-#~ msgstr "Promicati <span class=\"caret\"/>"
-
-#~ msgid "Reset Transformation"
-#~ msgstr "Poništi transformaciju"
-
-#~ msgid "Transform"
-#~ msgstr "Transformacija"
-
-#~ msgid "What a day it was yesterday - such a big day for us!"
-#~ msgstr "Kakav je dan bio jučer - veliki dan za sve nas!"
-
-#~ msgid "Yes."
-#~ msgstr "Da"
-
-#~ msgid "or"
-#~ msgstr "ili"
