@@ -399,5 +399,17 @@
             <field name="url">/website/static/src/img/snippets_demo/s_references_5.png</field>
         </record>
 
+        <!--configuration step actions-->
+
+        <record id="action_domain_name" model="ir.actions.act_url">
+            <field name="name">Domain Name</field>
+            <field name="url">http://www.odoo.com/documentation/user/online/website/publish/domain_name.html</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="planner_website" model="web.planner">
+            <field name="name">Website Configuration planner</field>
+        </record>
+
     </data>
 </odoo>

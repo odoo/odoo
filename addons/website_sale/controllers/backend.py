@@ -146,3 +146,19 @@ class WebsiteSaleBackend(WebsiteBackend):
         } for d in date_list]
 
         return sales_graph
+
+    def _on_action_products(self, step):
+        action = request.env.ref('website_sale.product_template_action_website').read()[0]
+        action['context'] = {'search_default_published': 1, 'default_website_published': True, 'website_config_step': True}
+        return action
+
+    def _on_action_payment_methods(self, step):
+        self._mark_step_complete(step)
+        return 'payment.action_payment_acquirer'
+
+    def _on_action_delivery_methods(self, step):
+        self._mark_step_complete(step)
+        action = request.env.ref('base.open_module_tree').read()[0]
+        action['domain'] = ['|', ('name', 'like', 'delivery_'), ('name', '=', 'website_sale_delivery')]
+        action['context'] = {}
+        return action

@@ -8,8 +8,43 @@
     <t t-name="website.WebsiteDashboardMain">
         <div class="o_dashboards">
             <div class="container-fluid o_website_dashboard">
+                <div class="o_website_config_step"/>
                 <t t-call="website.dashboard_header"/>
                 <div class="o_website_dashboard_content"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="WebsiteConfigStep">
+        <div class="o_config_step row o_form_view hidden-xs hidden-sm">
+            <div class="o_form_statusbar">
+                <div class="o_dashboard_status o_statusbar_status">
+                    <t t-set="steps" t-value="widget.steps"/>
+
+                    <button t-attf-class="btn btn-sm o_arrow_button btn-default o_action_finish">
+                        <span><i class="fa fa-smile-o icon fa-2x"/></span>
+                    </button>
+                    <button t-attf-class="btn btn-sm o_arrow_button o_dashboard_step #{steps.domain ? 'btn-primary disabled' : 'btn-default'}" data-step="domain">
+                        <span t-if="steps.domain"><i class="fa fa-check"/></span>
+                        <span class="ml4">Domain Name</span>
+                    </button>
+                    <button t-attf-class="btn btn-sm o_arrow_button o_dashboard_step #{steps.website_feature ? 'btn-primary disabled' : 'btn-default'}" data-step="website_feature">
+                        <span t-if="steps.website_feature"><i class="fa fa-check"/></span>
+                        <span class="ml4">Website Features</span>
+                    </button>
+                    <button t-attf-class="btn btn-sm o_arrow_button o_dashboard_step #{steps.company_data ? 'btn-primary disabled' : 'btn-default'}" data-step="company_data">
+                        <span t-if="steps.company_data"><i class="fa fa-check"/></span>
+                        <span class="ml4">Company Data</span>
+                    </button>
+                    <button t-attf-class="btn btn-sm o_arrow_button o_dashboard_step #{steps.homepage ? 'btn-primary disabled' : 'btn-default'}" data-step="homepage">
+                        <span t-if="steps.homepage"><i class="fa fa-check"/></span>
+                        <span class="ml4">Homepage</span>
+                    </button>
+
+                </div>
+                <div class="pull-right">
+                    <button class="close ml4 mr4 o_dashboard_step" data-step="close">×</button>
+                </div>
             </div>
         </div>
     </t>

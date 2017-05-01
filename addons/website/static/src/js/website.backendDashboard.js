@@ -53,6 +53,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             self.render_dashboards();
             self.render_graphs();
             self.$el.parent().addClass('oe_background_grey');
+            if (self.data.website_step) new WebsiteConfigStep(self).replace(self.$('.o_website_config_step'));
         });
     },
 
@@ -588,6 +589,38 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             }
         }
         return formatted_value;
+    },
+
+});
+
+
+var WebsiteConfigStep = Widget.extend({
+    template: 'WebsiteConfigStep',
+    events: {
+        'click .o_dashboard_step': 'on_click_website_config_step',
+        'click .o_action_finish': 'on_click_action_finish',
+    },
+    init: function(parent) {
+        this.steps = parent.data.website_step;
+        return this._super.apply(this, arguments);
+    },
+    on_click_website_config_step: function(ev) {
+        var self = this;
+        var step = $(ev.currentTarget).data('step');
+
+        return ajax.jsonRpc('/website/dashboard/config/step', 'call', {
+                'step': step,
+            })
+            .done(function(action) {
+                self.do_action(action);
+            });
+    },
+    on_click_action_finish: function(ev) {
+        var self = this;
+        this.$('.o_form_statusbar').addClass('o_wow_thumbs');
+        _.delay(function() {
+            self.$('.o_form_statusbar').removeClass('o_wow_thumbs');
+        }, 1000);
     },
 
 });

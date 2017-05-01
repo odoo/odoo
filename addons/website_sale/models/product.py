@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
+
 from odoo import api, fields, models, tools, _
 import odoo.addons.decimal_precision as dp
 
@@ -181,6 +183,16 @@ class ProductTemplate(models.Model):
         super(ProductTemplate, self)._compute_website_url()
         for product in self:
             product.website_url = "/shop/product/%s" % (product.id,)
+
+    @api.model
+    def create(self, vals):
+        if self.env.context.get('website_config_step'):
+            #mark website configuration step 'Products' to complete
+            website_planner = self.env.ref('website.planner_website')
+            data = json.loads(website_planner.data)
+            data['products'] = True
+            website_planner.data = json.dumps(data)
+        return super(ProductTemplate, self).create(vals)
 
 
 class Product(models.Model):
