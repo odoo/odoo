@@ -20,7 +20,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     template: "website.WebsiteDashboardMain",
     events: {
         'click .js_link_analytics_settings': 'on_link_analytics_settings',
-        'click .o_dashboard_action': 'on_dashboard_action',
+        //'click .o_dashboard_action': 'on_dashboard_action',
         'click .o_dashboard_action_form': 'on_dashboard_action_form',
         'click .o_dashboard_hide_panel': 'on_dashboard_hide_panel',
     },
@@ -284,6 +284,15 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             this.$buttons = $(QWeb.render("website.GotToWebsite", {
                 widget: this,
             }));
+            // Testing 
+            //  this.$buttons.click('button.btn_gotowebsite" ', function(ev) {
+            //     console.log('Hellooooo');
+            //     self.on_dashboard_action();
+            // });
+            this.$buttons.click('a.o_dashboard_action', function(ev) {
+                console.log('Hellooooo');
+                //self.on_dashboard_action();
+            });
         }
         this.update_control_panel({
             cp_content: {
