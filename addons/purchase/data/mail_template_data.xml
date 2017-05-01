@@ -40,7 +40,7 @@ from <t t-esc="record.company_id.name"/>.
         <!--Email template -->
         <record id="email_template_edi_purchase_done" model="mail.template">
             <field name="name">Purchase Order - Send by Email</field>
-            <field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')|safe}</field>
+            <field name="email_from">${object.create_uid.name} ${('&lt;%s&gt;' % ((object.create_uid.email) if object.create_uid.email else '')|safe)}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -48,27 +48,27 @@ from <t t-esc="record.company_id.name"/>.
             <field name="report_template" ref="action_report_purchase_order"/>
             <field name="report_name">PO_${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_id.name} 
-% if object.partner_id.parent_id:
-    (<i>${object.partner_id.parent_id.name}</i>)
-% endif
+            <field name="body_html" type="html">
+<p>Dear <t t-esc="record.partner_id.name"/>
+<t t-if="record.partner_id.parent_id">
+    (<i t-esc="record.partner_id.parent_id.name"/>)
+</t>
 ,</p>
 <p>
-Please find in attachment a <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>
-% if object.partner_ref:
-    with reference: ${object.partner_ref}
-% endif
-% if object.origin:
-    (RFQ origin: ${object.origin})
-% endif
-amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>
-from ${object.company_id.name}.
+Please find in attachment a <strong t-esc="'%s %s' % (record.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation', record.name)"/>
+<t t-if="record.partner_ref">
+    with reference: <t t-esc="record.partner_ref"/>
+</t>
+<t t-if="record.origin">
+    (RFQ origin: <t t-esc="record.origin"/>)
+</t>
+amounting <strong t-esc="'%s %s' % (record.amount_total, record.currency_id.name)"/>
+from <t t-esc="record.company_id.name"/>.
 </p>
 
 <p>You can reply to this email if you have any questions.</p>
 <p>Thank you,</p>
-]]></field>
+</field>
         </record>
 
 
