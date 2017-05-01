@@ -19,11 +19,11 @@
             <field name="subject">Congratulations! You are now a Silver Partner!</field>
             <field name="email_to">${(object.email or '')|safe}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="html">
 <p>Hello,</p>
 <p>We are delighted to welcome you among our Silver Partners as of today!</p>
 <p>Thank you,</p>
-]]></field>
+</field>
         </record>
 
         <record id="email_template_3" model="mail.template">
