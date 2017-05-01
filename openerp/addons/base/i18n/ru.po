@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2017-04-07 20:50+0000\n"
+"PO-Revision-Date: 2017-04-21 03:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -904,7 +904,7 @@ msgid ""
 "- Council Implementing Regulation (EU) No 1042/2013\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nЕС Мини-Стоп-Магазин (MOSS) НДС для телекоммуникаций, радиовещания и электронных услуг\n=============================================================== =================================================\n\nПо состоянию на 1 января 2015 года телекоммуникации, вещание\nи электронных услуг, продаваемых в рамках Европейского Союза\nдолжны всегда облагаться налогом в стране, для клиентов\nкоторые принадлежат этой стране. Для упрощения применения этого ЕС\nдиректива, схема регистрации мини-стоп-шоп (MOSS)\nпозволяет предприятиям составлять уникальную налоговую декларацию.\n\nЭтот модуль позволяет, помогать с созданием\nнеобходимых фискальных позиций и налогов ЕС для\nавтоматического применения и регистрации необходимых налогов.\n\nВ этом модуле устанавливается мастер настройки бюджетных позиций.\nИ налоги за продажу электронных услуг внутри ЕС.\n\nМастер позволяет вам выбрать:\n - страны ЕС, в которые вы продаете\n   услуги\n - ваш национальный налог на добавленную стоимость за услуги, подлежащий сопоставлению\n   к налогу на целевую страну\n - необязательно: шаблонная финансовая позиция, чтобы\n   для копирования сопоставления учетных записей. Должна быть ваша\n   существующая бюджетная позиция B2C Intra-EU. (По умолчанию\n   к отсутствию сопоставления учетных записей)\n - необязательно: учетная запись для сбора\n   (по умолчанию используется учетная запись, используемая\n   национального НДС для услуг)\n\nОн создает соответствующие налоговые позиции и налоги,\nавтоматически применяется для продажи в ЕС у клиента\nв отдельных странах.\nМастер можно запустить снова, чтобы добавить больше стран.\n\nМастер создает отдельную Таблицу налогов для сбора\nсуммы НДС декларации MOSS, поэтому извлечение MOSS\nданных должно быть легким.\nПосмотрите на диаграмму налогов под названием \"Карта НДС ЕС МОСС\" в\nменю \"Отчет по налогам\" (общий отчет по учету).\n\nРекомендации\n++++++++++\n- Директива 2008/8 / EC\n- Регламент Совета о внедрении (ЕС) № 1042/2013\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -978,7 +978,7 @@ msgid ""
 "by the ``auth_signup`` module (signup for new users does not\n"
 "necessarily have to be enabled).\n"
 "\n"
-msgstr ""
+msgstr "\nЗашифрованные пароли\n===================\n\nЗаменяет хранилище паролей по умолчанию сильным криптографическим\nхэшем.\n\nВ настоящее время используется функция деривации ключей - RSA Security LLC\nпромышленный стандарт ``PKDF2``, в сочетании с ``SHA512``.\nЭто включает в себя засоление и растягивание ключей с несколькими тысячами\nраундов.\n\nВсе пароли шифруются сразу после установки модуля.\nЭто может занять несколько минут, если есть тысячи пользователей.\n\nПредыдущие версии зашифрованных паролей будут автоматически обновлены\nпри текущей аутентификации пользователя\n(``auth_crypt`` ранее использовал более слабый ключ ``md5crypt``\nдеривационная функция).\n\nПримечание. Установка этого модуля навсегда предотвращает пароль пользователя.\nвосстановления и не может быть отменено. Поэтому рекомендуется включить\nнекоторый механизм сброса пароля для пользователей, например, тот, который предоставляется\nпо модулю `` auth_signup`` (регистрация для новых пользователей не\nобязательно должны быть включены).\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_asset
@@ -2409,7 +2409,7 @@ msgid ""
 "\n"
 "``l10n_ch`` is located in the core Odoo modules. The other modules are in:\n"
 "https://github.com/OCA/l10n-switzerland\n"
-msgstr ""
+msgstr "\nШвейцарская локализация\n==================\n\n**Multilang Swiss PME/KMU 2015 account chart and taxes**\n\n**Author:** Camptocamp SA\n\n**Financial contributors:** Prisme Solutions Informatique SA, Quod SA\n\n**Translation contributors:** brain-tec AG, Agile Business Group\n\nThe swiss localization addons are organized this way:\n\n``l10n_ch``\n  Multilang Swiss PME/KMU 2015 account chart and taxes (official addon)\n``l10n_ch_base_bank``\n  Technical module that introduces a new and simplified version of bank\n  type management\n``l10n_ch_bank``\n  List of swiss banks\n``l10n_ch_zip``\n  List of swiss postal zip\n``l10n_ch_dta``\n  Support of the DTA payment protocol (will be deprecated by the end of 2014)\n``l10n_ch_payment_slip``\n  Support of ESR/BVR payment slip report and reconciliation.\n\n``l10n_ch`` is located in the core Odoo modules. The other modules are in:\nhttps://github.com/OCA/l10n-switzerland\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet
