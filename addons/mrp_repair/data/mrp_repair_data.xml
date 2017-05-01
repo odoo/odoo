@@ -5,23 +5,23 @@
         <!--Email template -->
         <record id="mail_template_mrp_repair_quotation" model="mail.template">
             <field name="name">Mrp Repair Quotation - Send by Email</field>
-            <field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')|safe}</field>
+            <field name="email_from">${object.create_uid.name} ${('&lt;%s&gt;' % ((object.create_uid.email) if object.create_uid.email else '')|safe)}</field>            
             <field name="subject">${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="mrp_repair.model_mrp_repair"/>
             <field name="report_template" ref="action_report_mrp_repair_order"/>
             <field name="report_name">${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="body_html" type="xml">
-                <p>Dear ${object.partner_id.name}</p>
+            <field name="body_html" type="html">
+                <p>Dear <t t-esc="record.partner_id.name"/></p>
                 <p>
-                Here is your repair order ${doc_name} <strong>${object.name}</strong>
-                % if object.origin:
-                (with reference: ${object.origin} )
-                % endif
-                % if object.invoice_method != 'none':
-                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>
-                % endif
+                Here is your repair order <t t-esc="doc_name"/> <strong t-esc="record.name"/>
+                <t t-if="record.origin">
+                (with reference: <t t-esc="record.origin"/> )
+                </t>
+                <t t-if="record.invoice_method != 'none'">
+                amounting in <strong><t t-esc="record.amount_total"/> <t t-esc="record.pricelist_id.currency_id.name"/>.</strong>
+                </t>
                 </p>
                 <p>You can reply to this email if you have any questions.</p>
                 <p>Thank you,</p>
