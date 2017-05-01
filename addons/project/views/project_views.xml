@@ -28,6 +28,7 @@
                     <field name="user_id"/>
                     <field name="stage_id"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_id','=',uid)]"/>
+                    <filter string="My Followed Tasks" domain="[('message_is_follower', '=', True)]" />
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
                     <filter string="Starred" name="starred" domain="[('priority','=',1)]"/>
