@@ -52,7 +52,10 @@ var KanbanController = BasicController.extend({
      */
     renderButtons: function ($node) {
         if (this.hasButtons && this.is_action_enabled('create')) {
-            this.$buttons = $(qweb.render('KanbanView.buttons', {widget: this}));
+            this.$buttons = $(qweb.render('KanbanView.buttons', {
+                btnClass: 'btn-primary',
+                widget: this,
+            }));
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onButtonNew.bind(this));
             this.$buttons.on('keydown',this._onButtonsKeyDown.bind(this));
             this._updateButtons();
