@@ -76,7 +76,3 @@ class BaseModuleUpgrade(models.TransientModel):
         odoo.modules.registry.Registry.new(self._cr.dbname, update_module=True)
 
         return {'type': 'ir.actions.act_window_close'}
-
-    @api.multi
-    def config(self):
-        return self.env['res.config'].next()

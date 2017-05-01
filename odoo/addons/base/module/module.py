@@ -410,9 +410,9 @@ class Module(models.Model):
     @api.multi
     def button_immediate_install(self):
         """ Installs the selected module(s) immediately and fully,
-        returns the next res.config action to execute
+        returns the next action to execute
 
-        :returns: next res.config item to execute
+        :returns: next item to execute
         :rtype: dict[str, object]
         """
         return self._button_immediate_function(type(self).button_install)
@@ -493,9 +493,6 @@ class Module(models.Model):
 
         self._cr.commit()
         env = api.Environment(self._cr, self._uid, self._context)
-        config = env['res.config'].next() or {}
-        if config.get('type') not in ('ir.actions.act_window_close',):
-            return config
 
         # reload the client; open the first available root menu
         menu = env['ir.ui.menu'].search([('parent_id', '=', False)])[:1]
@@ -509,7 +506,7 @@ class Module(models.Model):
     def button_immediate_uninstall(self):
         """
         Uninstall the selected module(s) immediately and fully,
-        returns the next res.config action to execute
+        returns the next action to execute
         """
         return self._button_immediate_function(type(self).button_uninstall)
 
@@ -530,7 +527,7 @@ class Module(models.Model):
     def button_immediate_upgrade(self):
         """
         Upgrade the selected module(s) immediately and fully,
-        return the next res.config action to execute
+        return the next action to execute
         """
         return self._button_immediate_function(type(self).button_upgrade)
 
