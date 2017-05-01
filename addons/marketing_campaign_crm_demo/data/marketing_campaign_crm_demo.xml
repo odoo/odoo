@@ -33,11 +33,11 @@ Odoo Discovery Day on May 2015.</p>
     <record id="email_template_3" model="mail.template">
         <field name="subject">Lead Automation: Thanks for subscribing to the Odoo Discovery Day</field>
         <field name="model_id" ref="crm.model_crm_lead"/>
-        <field name="body_html"><![CDATA[
+        <field name="body_html" type="html">
 <p>Hello,</p>
 <p>Thanks for showing interest and for subscribing to the Odoo Discovery Day.</p>
 <p>If any further information is required, do not hesitate to reply to this message.</p>
-<p>Regards,</p>]]></field>
+<p>Regards,</p></field>
         <field name="name">For Odoo Discovery Day</field>
     </record>
 
