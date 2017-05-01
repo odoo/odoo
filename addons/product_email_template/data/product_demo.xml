@@ -5,7 +5,8 @@
             <field name="subject">Online Training</field>
             <field name="model_id" ref="product.model_product_template"/>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[ 
+            <field name="body_html" type="html">
+            <meta charset="utf-8"/>
     <div style="height:auto;text-align: center;font-size : 40px;color: #333333;margin-top:30px;font-weight: 300;">
             Online Training
     </div>
@@ -38,7 +39,7 @@
                     <ul>
                         <li>Videos with detailed demos</li>
                         <li>Hands-on exercises and their solutions</li>
-                        <li>Live Q&A sessions with a trainer</li>
+                        <li>Live Q&amp;A sessions with a trainer</li>
                     </ul>
                 </td>
             </tr>
@@ -48,16 +49,16 @@
         The 5-day training is modular, which means that you can choose to participate in the full training or to just 1 or 2 modules.
         Nevertheless, <b>the first day of the training is compulsory</b> for everyone. The Monday is compulsory because the
         introduction of Odoo is important before going through the other modules.<br/><br/>
-        Each day of the week starts from 9 AM (CEST/PST) to 12 PM (CEST/PST). A Q&A session will be hosted by an Odoo trainer.
-        Each day, the participants are expected to have done the following <b>BEFORE</b> attending the Q&A session:
+        Each day of the week starts from 9 AM (CEST/PST) to 12 PM (CEST/PST). A Q&amp;A session will be hosted by an Odoo trainer.
+        Each day, the participants are expected to have done the following <b>BEFORE</b> attending the Q&amp;A session:
         <ul>
             <li>Watch the videos for this day</li>
             <li>Do the related exercises (written solutions will be provided upfront as well)</li>
             <li>Send their questions by email before 5PM (CEST/PST) on the previous business day</li>
         </ul><br/>
-        The Q&A session will be hosted on a web conference service.<b> A stable internet connection is required.</b> The trainer will
+        The Q&amp;A session will be hosted on a web conference service.<b> A stable internet connection is required.</b> The trainer will
         screen the questions for the day and select the most relevant ones to be answered during the session. The purpose of the
-        <b>Q&A session is not to cover questions related to a specific implementation project </b>or company-specific business
+        <b>Q&amp;A session is not to cover questions related to a specific implementation project </b>or company-specific business
         workflows. The <b>questions should be about the material covered in the videos </b>and the exercises and should benefit
         the other participants of the training as well.<br/>
         Each day of the week is dedicated to specific applications in Odoo as per the following planning:
@@ -90,7 +91,7 @@
     </div>
     <div style="height:auto;text-align: center;font-size : 24px;color: #646464;margin-top:30px;">
         <hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-right: 25px;" />Monday<hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-left: 25px;" /><br/><br/>
-        Introduction, CRM & Sales
+        Introduction, CRM &amp; Sales
         <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Introduction: Get familiar with the V7.</div>
         <table cellspacing="5">
             <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
@@ -124,9 +125,9 @@
             <tr style="text-align: left;font-size : 16px;color: #646464;">
                 <td style="width:50%;">
                     <ul>
-                        <li>Manage Lead & Opportunities</li>
+                        <li>Manage Lead &amp; Opportunities</li>
                         <li>Call, Meeting</li>
-                        <li>Partners & contacts</li>
+                        <li>Partners &amp; contacts</li>
                         <li>Automated actions</li>
                     </ul>
                 </td>
@@ -156,7 +157,7 @@
                         <li>Products to sell</li>
                         <li>Manual discounts</li>
                         <li>Margins</li>
-                        <li>Sales & Warehouse: Invoicing control (On demand / On
+                        <li>Sales &amp; Warehouse: Invoicing control (On demand / On
                         Delivery Order), Shipping policy (At once / Each product
                         when available)</li>
                     </ul>
@@ -171,7 +172,7 @@
             </tr>
             <tr style="text-align: left;font-size : 16px;color: #646464;">
                 <td style="width:50%;">
-                    <strong>CRM & Sales management:</strong>
+                    <strong>CRM &amp; Sales management:</strong>
                     <ul>
                         <li>From an opportunity to a sales order</li>
                         <li>Claims</li>
@@ -188,7 +189,7 @@
     </div>
     <div style="height:auto;text-align: center;font-size : 24px;color: #646464;margin-top:30px;">
         <hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-right: 25px;" />Tuesday<hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-left: 25px;" /><br/><br/>
-        Access rights, Sales & Purchase, Financial accounting
+        Access rights, Sales &amp; Purchase, Financial accounting
         <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Access rights</div>
         <table cellspacing="5">
             <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
@@ -222,7 +223,7 @@
                         <li>Products</li>
                         <li>Request for Quotation</li>
                         <li>Purchase order</li>
-                        <li>Invoicing & Invoice control</li>
+                        <li>Invoicing &amp; Invoice control</li>
                         <li>Incoming order (Complete/partial receipt)</li>
                         <li>Purchase requisition</li>
                     </ul>
@@ -238,7 +239,7 @@
             </tr>
             <tr style="text-align: left;font-size : 16px;color: #646464;">
                 <td style="width:50%;">
-                    <strong>Sales & Purchase management</strong>
+                    <strong>Sales &amp; Purchase management</strong>
                     <ul>
                         <li>Make to order product</li>
                         <li>Retailer process: buy a product and sell it without any customization/manufacturing</li>
@@ -260,7 +261,7 @@
                     <ul>
                         <li>Invoices</li>
                         <li>Refunds</li>
-                        <li>Journal Entries & Reconciliations</li>
+                        <li>Journal Entries &amp; Reconciliations</li>
                         <li>Reports / Closing of fiscal year</li>
                         <li>Accounts</li>
                     </ul>
@@ -271,7 +272,7 @@
                         <li>Carry out payments easily and adequately reconcile these payments with invoices</li>
                         <li>Quick creation of invoices with pre-set defaults on debtor/creditor and income/expense accounts</li>
                         <li>Multiple manners to reconcile</li>
-                        <li>Configuration of accounts to ensure correct display in balance sheet and profit & loss statement</li>
+                        <li>Configuration of accounts to ensure correct display in balance sheet and profit &amp; loss statement</li>
                         <li>Apply correct deferral methods to ensure the close of the fiscal year</li>
                     </ul>
                 </td>
@@ -300,7 +301,7 @@
                         <li>Manage and follow your projects, tasks and issues</li>
                         <li>Discover the Kanban view to quickly operate some actions and to quickly detect any bottlenecks in your projects flows</li>
                         <li>Discover the Gantt view to see how your project has been planned and adapt it according to new elements or to the people agenda</li>
-                        <li>Define project members & delegate tasks</li>
+                        <li>Define project members &amp; delegate tasks</li>
                         <li>Create automatically timesheet lines in the Human Resources menu from recorded work activities</li>
                         <li>Track and invoice (to customers) the costs associated to a project</li>
                         <li>Manage a support ticket system</li>
@@ -370,7 +371,7 @@
     </div>
     <div style="height:auto;text-align: center;font-size : 24px;color: #646464;margin-top:30px;">
         <hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-right: 25px;" />Thursday<hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-left: 25px;" /><br/><br/>
-        Warehouse management, Manufacturing (MRP) & Sales, Import/Export
+        Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export
         <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Warehouse management</div>
         <table cellspacing="5">
             <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
@@ -422,7 +423,7 @@
             </tr>
             <tr style="text-align: left;font-size : 16px;color: #646464;">
                 <td style="width:50%;">
-                    <strong>MRP & Sales</strong>
+                    <strong>MRP &amp; Sales</strong>
                     <ul>
                         <li>Product configuration Make to Stock / to Order</li>
                         <li>Commercial BoM (kit)</li>
@@ -549,13 +550,13 @@
             </tr>
             <tr style="font-size : 10px;color: #646464;">
                 <td>Europe</td>
-                <td>USA & Canada</td>
-                <td>USA & Latin America</td>
+                <td>USA &amp; Canada</td>
+                <td>USA &amp; Latin America</td>
             </tr>
             <tr style="font-size : 10px;color: #FFFFFF;background-color:#8b5bdd;">
-                <td><a href="http://onlinetrainingencet.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
-                <td><a href="http://onlinetrainingenpst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
-                <td><a href="http://onlinetrainingespst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
+                <td><a href="http://onlinetrainingencet.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target="_new">Register</a></td>
+                <td><a href="http://onlinetrainingenpst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target="_new">Register</a></td>
+                <td><a href="http://onlinetrainingespst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target="_new">Register</a></td>
             </tr>
         </table>
     </div>
@@ -593,8 +594,6 @@
             </tr>
         </table>
     </div>
-</div>
-            ]]>
             </field>
         </record>
 
