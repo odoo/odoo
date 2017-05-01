@@ -7,11 +7,11 @@
             <field name="subject">Welcome to the Odoo Partner Channel!</field>
             <field name="email_to">${(object.email or '')|safe}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body_html"><![CDATA[
+            <field name="body_html" type="html">
 <p>Hello,</p>
 <p>You will receive your welcome pack via email shortly.</p>
 <p>Thank you,</p>
-]]></field>
+</field>
         </record>
         <record id="email_template_2" model="mail.template">
             <field name="name">congrats silver partner</field>
