@@ -4087,7 +4087,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many kanban: edition', function (assert) {
-        assert.expect(15);
+        assert.expect(16);
 
         this.data.partner.records[0].p = [2];
         var form = createView({
@@ -4137,6 +4137,8 @@ QUnit.module('relational_fields', {
             'delete icon should be visible in edit');
         assert.ok(form.$('.o_field_one2many .o-kanban-button-new').length,
             '"Create" button should be visible in edit');
+        assert.ok(form.$('.o_field_one2many .o-kanban-button-new').hasClass('btn-default'),
+            "'Create' button should have className 'btn-default'");
         assert.strictEqual(form.$('.o_field_one2many .o-kanban-button-new').text().trim(), "Add",
             'Create button should have "Add" label');
 
