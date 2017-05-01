@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2017-03-19 12:40+0000\n"
+"PO-Revision-Date: 2017-04-19 12:22+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,7 @@ msgstr "(*)正数表示员工工作时间小于记录的时间"
 #. module: hr_attendance
 #: selection:hr.employee,state:0
 msgid "Absent"
-msgstr "缺勤"
+msgstr "未打卡"
 
 #. module: hr_attendance
 #: field:hr.attendance,action:0 selection:hr.attendance,action:0
@@ -193,12 +193,12 @@ msgstr "结束日期"
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr "错误！登录（或注销）动作必须在注销（或登录）动作之后。"
+msgstr "错误！当前考勤状态必须是相对的。例如上班 (打卡) 之后必须下班(打卡)，反之亦然。"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
 msgid "Group By"
-msgstr "分组于"
+msgstr "分组"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter

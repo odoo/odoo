@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-04-11 05:14+0000\n"
+"PO-Revision-Date: 2017-04-19 12:40+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -155,7 +155,7 @@ msgid ""
 "            another call, a meeting or an opportunity.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n            单击来新建来电记录。 \n          </p><p>\n            Odoo 支持快速记录来电并跟踪\n            与某个客户的沟通历史，用来提醒其他\n            团队成员。\n          </p><p>\n            为了对这个来电继续跟进, 您可以安排一次\n            回电、会面或者新建一个商机。\n          </p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            单击来新建通话记录。 \n          </p><p>\n            Odoo 支持快速记录通话并跟踪\n            与某个客户的沟通历史，用来提醒其他\n            团队成员。\n          </p><p>\n            为了对这个通话继续跟进, 您可以安排一次\n            电话回访、面谈或者新建一个商机。\n          </p>\n        "
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_categ_phone_outgoing0
@@ -1169,7 +1169,7 @@ msgstr "完整抄送"
 #: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
 #: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 msgid "Group By"
-msgstr "分组于"
+msgstr "分组"
 
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,number_group:0
@@ -1191,7 +1191,7 @@ msgstr "在CRM向导中处理业务伙伴的绑定或生成。"
 #: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 #: selection:crm.phonecall.report,state:0
 msgid "Held"
-msgstr "挂掉"
+msgstr "挂断"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
@@ -1508,7 +1508,7 @@ msgstr "链接的业务伙伴(可选), 通常用于在线索转换时自动创�
 #. module: crm
 #: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
 msgid "Log Call"
-msgstr "记录通话"
+msgstr "通话记录"
 
 #. module: crm
 #: selection:crm.phonecall2phonecall,action:0
@@ -1519,7 +1519,7 @@ msgstr "记录一个通话"
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_incoming0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone_inbound
 msgid "Logged Calls"
-msgstr "记录的通话"
+msgstr "通话记录"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1058
@@ -1862,7 +1862,7 @@ msgstr "普通"
 #. module: crm
 #: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 msgid "Not Held"
-msgstr "未挂掉"
+msgstr "保持"
 
 #. module: crm
 #: selection:crm.segmentation,state:0
@@ -2458,7 +2458,7 @@ msgstr "安排"
 #. module: crm
 #: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
 msgid "Schedule Call"
-msgstr "安排的通话"
+msgstr "通话安排"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_kanban_view_leads
@@ -2496,7 +2496,7 @@ msgstr "安排/记录一个通话"
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
 msgid "Scheduled Calls"
-msgstr "安排的通话"
+msgstr "通话安排"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1060
@@ -2583,7 +2583,7 @@ msgid ""
 "                            duplicated records. If you select several fields,\n"
 "                            Odoo will propose you to merge only those having\n"
 "                            all these fields in common. (not one of the fields)."
-msgstr "选择用于搜索相同记录的字段。\n                            如果选择多个字段,\n                            Odoo会建议您合并这些字段都相同的记录。\n                           （而不是只有一个字段相同的记录）。"
+msgstr "选择用于搜索相同记录的字段。\n                            如果选择多个字段,\n                            Odoo会建议您合并这些字段都相同的记录。\n                           (而不是只有一个字段相同的记录)。"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -2823,7 +2823,7 @@ msgid ""
 "The status is set to Confirmed, when a case is created.\n"
 "When the call is over, the status is set to Held.\n"
 "If the callis not applicable anymore, the status can be set to Cancelled."
-msgstr "当一个案件创建时，其状态被设置为确认。\n当电话结束后，其状态被设置为挂掉。\n如果电话不再适用了，其状态可以设置为已取消。"
+msgstr "当一个项目立项创建后，其状态被设置为已确认。\n当电话结束后，其状态被设置为挂断。\n如果已经不再需要电话回访了，那么其状态可以设置为已取消。"
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
@@ -2876,7 +2876,7 @@ msgstr "这里是交付的方式。例如： 明信片、 电子邮件、 或横
 msgid ""
 "This is the source of the link Ex: Search Engine, another domain, or name of"
 " email list"
-msgstr "这是链接的来源，例如：搜索引擎，其他领域，或者邮件列表名称"
+msgstr "这是链接的来源，例如：搜索引擎，其他域，或者邮件列表名称"
 
 #. module: crm
 #: help:crm.case.stage,probability:0
