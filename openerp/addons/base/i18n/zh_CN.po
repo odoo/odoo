@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2017-04-06 11:02+0000\n"
+"PO-Revision-Date: 2017-04-25 22:52+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -122,7 +122,7 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
-msgstr "\n概览:\n---------\n\n* 日本公司会计科目表和税务模板。\n* 本模板大概不会设置到一个公司所有必须的科目。基于模板，您需要自行增加/删除/修改科目。\n\n备注:\n-----\n\n* 财政状况 '内税' 和 '外税'，用来处理POS实施中可能会碰到的一些问题。 [1] 正常情况下您不会用到这些。\n\n[1] 访问 https://github.com/odoo/odoo/pull/6470 查看更多细节。"
+msgstr "\n概览:\n---------\n\n* 日本公司会计科目表和税务模板。\n* 本模板大概不会设置到一个公司所有必须的科目。基于模板，您需要自行增加/删除/修改科目。\n\n备注:\n-----\n\n* 财税结构分为 '内税' 和 '外税'，用来处理POS实施中可能会碰到的一些问题。 [1] 正常情况下您不会用到这些。\n\n[1] 访问 https://github.com/odoo/odoo/pull/6470 查看更多细节。"
 
 #. module: base
 #: code:addons/base/res/res_config.py:379
@@ -178,7 +178,7 @@ msgid ""
 "        - Copy translations for COA, Tax, Tax Code and Fiscal Position from\n"
 "          templates to target objects.\n"
 "    "
-msgstr "\n    * 科目表、税、税项、分类账、记账模版、分析科目表和成本分类账的多语言支持。\n    * 设置向导变更\n        - 从模版复制科目表、税、税项和财政状况的翻译到目标对象。\n    "
+msgstr "\n    * 科目表、税、税项、分类账、记账模版、分析科目表和成本分类账的多语言支持。\n    * 设置向导变更\n        - 从模版复制科目表、税、税项和财税结构的翻译到目标对象。\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -1505,7 +1505,7 @@ msgid ""
 "* My Quotations\n"
 "* Monthly Turnover (Graph)\n"
 "    "
-msgstr "\n报价单和销售订单管理\n==================================\n此模块用来有效记录和跟踪所有销售订单及其历史，从而有效管理您的销售目标。\n\n整个销售流程包括：\n\n* **报价单** -> **销售订单** -> **发票**\n\n参数设置（仅在安装了仓库管理模块的情况下）：\n------------------------------------------------------\n\n如果安装了仓库管理模块，您可以设置以下参数：\n\n* 发货：选择一次性发货或部分发货\n* 发票：选择发票是如何被支付\n* Incoterms：选择所使用的国际贸易术语\n\n您可以选择灵活的开票方式：\n\n* *按需开具*：需要时，手动从销售订单开具发票\n* *按发货单*：按发货单自动生成发票\n* *发运前*：先创建发票草稿，待支付后发货\n\n\n销售经理的控制面板（Dashboard）包括：\n------------------------------------------------\n* 我的报价单\n* 月成交量（图表）\n    "
+msgstr "\n报价单和销售订单管理\n==================================\n\n此模块用来有效记录和跟踪所有销售订单及其历史，从而有效管理您的销售目标。\n\n整个销售流程包括：\n\n* **报价单** -> **销售订单** -> **发票**\n\n参数设置(仅在安装了仓库管理模块的情况下)：\n------------------------------------------------------\n\n如果安装了仓库管理模块，您可以设置以下参数：\n\n* 发货：选择一次性发货或部分发货\n* 发票：选择发票是如何被支付\n* 贸易条款：选择所使用的贸易条款\n\n您可以选择灵活的开票方式：\n\n* *按需开具*: 需要时，手动从销售订单开具发票\n* *按发货单*: 按发货单自动生成发票 (交货)\n* *在发货之前*: 先创建发票草稿，待支付后发货\n\n\n销售经理的管理面板包括：\n------------------------------------------------\n* 我的报价单\n* 月成交量 (图表)\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -1527,7 +1527,7 @@ msgid ""
 "* *On Demand*: Invoices are created manually from Sales Orders when needed\n"
 "* *On Delivery Order*: Invoices are generated from picking (delivery)\n"
 "* *Before Delivery*: A Draft invoice is created and must be paid before delivery\n"
-msgstr "\n管理销售报价单和订单\n==================================\n\n这个模块关联了销售和仓库管理程序。\n\n选项参数\n-----------\n* 运输: 交货或分批交货的选择\n* 开票: 选择如何开票\n* 国际贸易术语: 国际贸易术语\n\n您可以选择灵活的开票方式：\n\n* *按需求开票*: 在手动创建销售订单时按需开票\n* *按订单交期*: 按(交货)装箱清单开票\n* *交货前开票*: 是必须在交货前就得开好的\n"
+msgstr "\n管理销售报价单和订单\n==================================\n\n这个模块关联了销售和仓库管理程序。\n\n选项参数\n-----------\n* 运输: 交货或分批交货的选择\n* 开票: 选择如何开票\n* 贸易条款: 贸易条款\n\n您可以选择灵活的开票方式：\n\n* *按需求开票*: 在手动创建销售订单时按需开票\n* *按订单交期*: 按(交货)装箱清单开票\n* *交货前开票*: 是必须在交货前就得开好的\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp
@@ -4528,7 +4528,7 @@ msgstr "动作目标"
 #. module: base
 #: field:ir.actions.server,state:0
 msgid "Action To Do"
-msgstr "待办的行动"
+msgstr "待执行的动作"
 
 #. module: base
 #: field:ir.actions.act_url,type:0 field:ir.actions.act_window,type:0
@@ -4789,7 +4789,7 @@ msgstr "阿富汗伊斯兰国"
 #. module: base
 #: selection:res.currency,position:0
 msgid "After Amount"
-msgstr "在金额后面"
+msgstr "金额后"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_aftersale
@@ -5366,7 +5366,7 @@ msgstr "Basque / Euskara"
 #. module: base
 #: selection:res.currency,position:0
 msgid "Before Amount"
-msgstr "在金额前"
+msgstr "金额前"
 
 #. module: base
 #: model:res.country,name:base.by
@@ -6132,7 +6132,7 @@ msgstr "公司属性"
 #. module: base
 #: field:res.company,company_registry:0
 msgid "Company Registry"
-msgstr "公司注册"
+msgstr "企业营业执照注册号"
 
 #. module: base
 #: field:res.company,rml_header1:0
@@ -6944,7 +6944,7 @@ msgstr "日期格式"
 #. module: base
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
-msgstr "日期已修改"
+msgstr "修改日期"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -7137,7 +7137,7 @@ msgstr "目的实例"
 #. module: base
 #: field:ir.actions.act_window,res_model:0 field:ir.actions.client,res_model:0
 msgid "Destination Model"
-msgstr "目的模型"
+msgstr "目标模型"
 
 #. module: base
 #: view:ir.rule:base.view_rule_form
@@ -7277,12 +7277,12 @@ msgstr "文档实例测试"
 #: field:ir.rule,domain:0 field:ir.rule,domain_force:0
 #: field:res.partner.title,domain:0
 msgid "Domain"
-msgstr "领域"
+msgstr "域"
 
 #. module: base
 #: field:ir.actions.act_window,domain:0
 msgid "Domain Value"
-msgstr "领域值"
+msgstr "Domain值"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -8021,7 +8021,7 @@ msgid ""
 "  - client_action_relate\n"
 "  - tree_but_open\n"
 "For defaults, an optional condition"
-msgstr "此参数用于动作，可选值有：\n- client_action_multi\n- client_print_multi\n- client_action_relate\n- tree_but_open\n默认非必输参数"
+msgstr "此参数用于动作，可选值有：\n- client_action_multi\n- client_print_multi\n- client_action_relate\n- tree_but_open\n默认留空可不填此参数"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -8392,7 +8392,7 @@ msgstr "群组"
 #: view:res.partner:base.view_res_partner_filter
 #: view:workflow.activity:base.view_workflow_activity_search
 msgid "Group By"
-msgstr "分组于"
+msgstr "分组"
 
 #. module: base
 #: field:res.groups,full_name:0
@@ -10567,7 +10567,7 @@ msgstr "没有找到模型: %(model)s"
 #. module: base
 #: help:ir.values,model:0
 msgid "Model to which this entry applies"
-msgstr "这分录适用的模型"
+msgstr "该分录适用的模型"
 
 #. module: base
 #: help:ir.values,model_id:0
@@ -11349,7 +11349,7 @@ msgstr "商机到报价单"
 #: help:ir.actions.act_window,domain:0
 msgid ""
 "Optional domain filtering of the destination data, as a Python expression"
-msgstr "一个可选的目标数据过滤条件，使用 Python 表达式表示"
+msgstr "此参数可填可不填，如填写则必须填写的是Python 表达式"
 
 #. module: base
 #: help:ir.actions.act_url,help:0 help:ir.actions.act_window,help:0
@@ -12209,7 +12209,7 @@ msgstr "卡塔尔"
 #. module: base
 #: field:ir.values,key2:0
 msgid "Qualifier"
-msgstr "限定"
+msgstr "限定条件"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock
@@ -12598,7 +12598,7 @@ msgstr "限制"
 #. module: base
 #: field:ir.actions.act_window,multi:0
 msgid "Restrict to lists"
-msgstr "限定列表"
+msgstr "限定条件列表"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
@@ -12908,7 +12908,7 @@ msgstr "搜索视图"
 #. module: base
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
-msgstr "搜索视图参照."
+msgstr "参考视图搜索"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_applicant_document
@@ -15257,7 +15257,7 @@ msgstr "视图名称"
 #. module: base
 #: field:ir.actions.act_window,view_id:0
 msgid "View Ref."
-msgstr "视图参照"
+msgstr "参考视图"
 
 #. module: base
 #: view:ir.actions.act_window:base.view_window_action_search

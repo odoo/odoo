@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-03-19 12:38+0000\n"
+"PO-Revision-Date: 2017-04-19 12:22+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -71,7 +71,7 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n待审批的新计工单。\n</p
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Absent"
-msgstr "缺勤"
+msgstr "未打卡"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -276,7 +276,7 @@ msgstr "员工"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr "错误！登录（或注销）动作必须在注销（或登录）动作之后。"
+msgstr "错误！当前考勤状态必须是相对的。例如上班 (打卡) 之后必须下班(打卡)，反之亦然。"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
@@ -306,7 +306,7 @@ msgstr "关注者"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
-msgstr "分组于"
+msgstr "分组"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_summary:0

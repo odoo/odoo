@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2017-04-12 16:23+0000\n"
+"PO-Revision-Date: 2017-04-25 22:58+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -590,7 +590,7 @@ msgstr "选择的分录行早已调节"
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr "一个税金财政状况在相同的税金上面只能定义一次。"
+msgstr "财务税务结构构成在相同的税金上面只能定义一次。"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -1112,7 +1112,7 @@ msgstr "允许的科目(留空为不限制)"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr "会计财政状况"
+msgstr "会计财税结构"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -1412,7 +1412,7 @@ msgstr "总额类型"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr "财政状况只能在一个科目上定义一次。"
+msgstr "财税结构只能在一个科目上定义一次。"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -2053,7 +2053,7 @@ msgstr "销售员"
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr "如不勾选该项，可以隐藏而不删除此财政状况。"
+msgstr "如不勾选该项，可以隐藏而不删除此财税结构。"
 
 #. module: account
 #: field:account.chart.template,visible:0
@@ -3811,7 +3811,7 @@ msgstr "文档:客户科目报告"
 #. module: account
 #: field:account.tax,domain:0 field:account.tax.template,domain:0
 msgid "Domain"
-msgstr "领域"
+msgstr "域"
 
 #. module: account
 #: selection:account.invoice.report,state:0
@@ -3951,7 +3951,7 @@ msgstr "电子邮件撰写向导"
 #. module: account
 #: field:account.analytic.balance,empty_acc:0
 msgid "Empty Accounts ? "
-msgstr "空白科目？ "
+msgstr "科目留空吗？ "
 
 #. module: account
 #: field:accounting.report,enable_filter:0
@@ -4464,31 +4464,31 @@ msgstr "财政映射"
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
 msgid "Fiscal Position"
-msgstr "财政状况"
+msgstr "财税结构"
 
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Fiscal Position Remark:"
-msgstr "财政状况备注:"
+msgstr "财税结构备注:"
 
 #. module: account
 #: view:account.fiscal.position.template:account.view_account_position_template_form
 #: view:account.fiscal.position.template:account.view_account_position_template_search
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr "财政状况模版"
+msgstr "财税结构模版"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
-msgstr "财政状况模板"
+msgstr "财税结构模板"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "财政状况"
+msgstr "财税结构"
 
 #. module: account
 #: field:account.aged.trial.balance,fiscalyear_id:0
@@ -4895,7 +4895,7 @@ msgstr "做得好！"
 #: view:account.treasury.report:account.view_account_treasury_report_search
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 msgid "Group By"
-msgstr "分组于"
+msgstr "分组"
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
@@ -5205,7 +5205,7 @@ msgstr "导入发票"
 #. module: account
 #: view:website:account.report_partnerbalance
 msgid "In dispute"
-msgstr "有异议"
+msgstr "有争议"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close_state.py:54
@@ -9470,7 +9470,7 @@ msgstr "税金"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr "税金财政状况"
+msgstr "财务税务结构"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -9516,12 +9516,12 @@ msgstr "科目模版财政映射"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr "模板税金财政状况"
+msgstr "财务税务结构模板"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "财政状况模板"
+msgstr "财税结构模板"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_template_folder
@@ -9579,7 +9579,7 @@ msgstr "纳税申报的计税基准科目"
 #: code:addons/account/account_bank_statement.py:333
 #, python-format
 msgid "The account entries lines are not in valid state."
-msgstr "这分录行不是在有效的状态"
+msgstr "该分录行不是在有效的状态"
 
 #. module: account
 #: code:addons/account/account_move_line.py:969
@@ -9709,7 +9709,7 @@ msgstr "调节的分录应属于同一公司。"
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "财政状况将确定用于业务伙伴的税金和科目。"
+msgstr "财税结构将确定用于业务伙伴的税金和科目。"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -10101,7 +10101,7 @@ msgid ""
 "This allows you to manage the assets owned by a company or a person.\n"
 "It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "这允许您管理属于公司或者个人的资产.\n                跟踪资产折旧的发生，创建折旧明细账户。.\n                要安装account_asset模块. 如果不检查box, 可以处理发票和付款,\n                但不能处理账记(分类账项, 科目表, ...)"
+msgstr "这允许您管理属于公司或者个人的资产.\n                跟踪资产折旧的发生，创建折旧明细账户。.\n                要安装account_asset模块. 如果不勾选此选项,则允许可以处理发票和付款,\n                但不能处理账记(分类账项, 科目表, ...)"
 
 #. module: account
 #: help:account.chart.template,complete_tax_set:0
@@ -10683,7 +10683,7 @@ msgstr "货币的单元"
 #: field:account.invoice.line,uos_id:0
 #: field:account.move.line,product_uom_id:0
 msgid "Unit of Measure"
-msgstr "计量单位"
+msgstr "单位"
 
 #. module: account
 #: code:addons/account/report/account_partner_balance.py:125
