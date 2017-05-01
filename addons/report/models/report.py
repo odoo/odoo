@@ -420,7 +420,9 @@ class Report(models.Model):
             pass
 
         # Wkhtmltopdf arguments
-        command_args.extend(['--quiet'])  # Less verbose error messages
+        # --quiet: Less verbose error messages
+        # --print-media-type: Use stylesheets for printers defined using @media print
+        command_args.extend(['--print-media-type', '--quiet'])
         if paperformat:
             # Convert the paperformat record into arguments
             command_args.extend(self._build_wkhtmltopdf_args(paperformat, spec_paperformat_args))

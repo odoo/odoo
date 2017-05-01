@@ -742,7 +742,7 @@ class AccountInvoice(models.Model):
             move_line_dict = {
                 'invl_id': line.id,
                 'type': 'src',
-                'name': line.name.split('\n')[0][:64],
+                'name': line.name,
                 'price_unit': line.price_unit,
                 'quantity': line.quantity,
                 'price': line.price_subtotal,
@@ -945,7 +945,7 @@ class AccountInvoice(models.Model):
         return {
             'date_maturity': line.get('date_maturity', False),
             'partner_id': part,
-            'name': line['name'][:64],
+            'name': line['name'],
             'debit': line['price'] > 0 and line['price'],
             'credit': line['price'] < 0 and -line['price'],
             'account_id': line['account_id'],
