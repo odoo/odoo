@@ -11,6 +11,30 @@
             <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
             <field name="user_signature" eval="False"/>
             <field name="body_html"><![CDATA[
+    <table cellspacing="0" cellpadding="0" width="100%" style="font-family: 'Helvetica'; border-collapse: collapse;">
+        <tr>
+            <td valign="top">
+                <table cellspacing="0" cellpadding="0" width="600" style="width: 600px;">
+                    <tr>
+                        <td>
+                            <!-- Header -->
+                            <table cellspacing="0" cellpadding="0" width="100%">
+                                <tr>
+                                    <td valign="middle" align="left" style="padding:15px">
+                                        % if object.company_id.name:
+                                            <img src="/web/image?model=res.company&field=logo&id=${object.company_id.id}" />
+                                        % else:
+                                            <span style="font-size:12px;color:#AAAAAA">${ object.company_id.name },</span>
+                                        % endif
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
     <p>Dear ${object.partner_name or 'applicant'},</p>
     <p>Thank you for your enquiry.<br />
     Unfortunately, your profile does not match with our needs</p>
