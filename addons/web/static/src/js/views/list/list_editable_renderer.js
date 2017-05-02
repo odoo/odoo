@@ -425,6 +425,10 @@ ListRenderer.include({
      * in edit mode. This is the moment we save all accumulated changes on that
      * row, if needed (@see BasicController.saveRecord).
      *
+     * Note that we have to disable the focusable elements (inputs, ...) to
+     * prevent subsequent editions. These edits would be lost, because the list
+     * view only saves records when unselecting a row.
+     *
      * @returns {Deferred} The deferred resolves if the row was unselected (and
      *   possibly removed). If may be rejected, when the row is dirty and the
      *   user refuses to discard its changes.
@@ -436,13 +440,23 @@ ListRenderer.include({
         }
 
         var record = this.state.data[this.currentRow];
+        var recordWidgets = this.allFieldWidgets[record.id];
+        toggleWidgets(true);
+
         var def = $.Deferred();
         this.trigger_up('save_line', {
             recordID: record.id,
             onSuccess: def.resolve.bind(def),
             onFailure: def.reject.bind(def),
         });
-        return def;
+        return def.fail(toggleWidgets.bind(null, false));
+
+        function toggleWidgets(disabled) {
+            _.each(recordWidgets, function (widget) {
+                var $el = widget.getFocusableElement();
+                $el.prop('disabled', disabled);
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
