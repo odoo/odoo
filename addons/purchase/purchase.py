@@ -30,7 +30,7 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record_list, browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
-from openerp.tools.float_utils import float_compare
+from openerp.tools.float_utils import float_compare, float_is_zero
 from openerp.exceptions import UserError
 
 class purchase_order(osv.osv):
@@ -817,7 +817,8 @@ class purchase_order(osv.osv):
                 'propagate': procurement.rule_id.propagate,
             })
             diff_quantity -= min(procurement_qty, diff_quantity)
-            res.append(tmp)
+            if not float_is_zero(tmp['product_uom_qty'], precision_rounding=order_line.product_uom.rounding):
+                res.append(tmp)
         #if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
         #split the future stock move in two because the route followed may be different.
         if float_compare(diff_quantity, 0.0, precision_rounding=order_line.product_uom.rounding) > 0:
