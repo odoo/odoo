@@ -138,7 +138,7 @@
         <record id="validation_email" model="mail.template">
             <field name="name">Email Verification</field>
             <field name="model_id" ref="base.model_res_users"/>
-            <field name="email_from"><![CDATA[${object.company_id.name} <${(object.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_from"><![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.email|safe}</field>
             <field name="subject"><![CDATA[${object.company_id.name} Forums validation]]></field>
             <field name="body_html"><![CDATA[

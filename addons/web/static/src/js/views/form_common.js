@@ -274,7 +274,7 @@ var CompletionFieldMixin = {
     // all search/create popup handling
     _search_create_popup: function(view, ids, context) {
         var self = this;
-        new SelectCreateDialog(this, {
+        new SelectCreateDialog(this, _.extend({}, (this.options || {}), {
             res_model: self.field.relation,
             domain: self.build_domain(),
             context: new data.CompoundContext(self.build_context(), context || {}),
@@ -286,7 +286,7 @@ var CompletionFieldMixin = {
                 self.add_id(element_ids[0]);
                 self.focus();
             }
-        }).open();
+        })).open();
     },
     /**
      * To implement.
