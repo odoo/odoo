@@ -1031,7 +1031,7 @@ QUnit.module('Views', {
                     '<templates><t t-name="kanban-box">' +
                         '<div>' +
                         '<button t-if="!record.product_id.raw_value" class="btn_a">A</button>' +
-                        '<button t-if="!record.category_ids.raw_value" class="btn_b">B</button>' +
+                        '<button t-if="!record.category_ids.raw_value.length" class="btn_b">B</button>' +
                         '</div>' +
                     '</t></templates>' +
                 '</kanban>',
