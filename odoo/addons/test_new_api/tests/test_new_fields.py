@@ -5,7 +5,7 @@ from datetime import date, datetime
 
 from odoo.exceptions import AccessError, except_orm
 from odoo.tests import common
-from odoo.tools import mute_logger, float_repr
+from odoo.tools import mute_logger, float_repr, pycompat
 
 
 class TestFields(common.TransactionCase):
@@ -16,8 +16,8 @@ class TestFields(common.TransactionCase):
         discussion = self.env.ref('test_new_api.discussion_0')
 
         # read field as a record attribute or as a record item
-        self.assertIsInstance(discussion.name, basestring)
-        self.assertIsInstance(discussion['name'], basestring)
+        self.assertIsInstance(discussion.name, pycompat.string_types)
+        self.assertIsInstance(discussion['name'], pycompat.string_types)
         self.assertEqual(discussion['name'], discussion.name)
 
         # read it with method read()

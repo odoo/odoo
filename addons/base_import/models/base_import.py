@@ -208,9 +208,9 @@ class Import(models.TransientModel):
                 if cell.ctype is xlrd.XL_CELL_NUMBER:
                     is_float = cell.value % 1 != 0.0
                     values.append(
-                        unicode(cell.value)
+                        pycompat.text_type(cell.value)
                         if is_float
-                        else unicode(int(cell.value))
+                        else pycompat.text_type(int(cell.value))
                     )
                 elif cell.ctype is xlrd.XL_CELL_DATE:
                     is_datetime = cell.value % 1 != 0.0
@@ -653,7 +653,7 @@ class Import(models.TransientModel):
         except ValueError as error:
             return [{
                 'type': 'error',
-                'message': unicode(error),
+                'message': pycompat.text_type(error),
                 'record': False,
             }]
 

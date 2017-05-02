@@ -1396,7 +1396,7 @@ class CSVExport(ExportFormat, http.Controller):
         for data in rows:
             row = []
             for d in data:
-                if isinstance(d, unicode):
+                if type(d) != str and isinstance(d, pycompat.string_types):
                     try:
                         d = d.encode('utf-8')
                     except UnicodeError:
@@ -1446,7 +1446,7 @@ class ExcelExport(ExportFormat, http.Controller):
         for row_index, row in enumerate(rows):
             for cell_index, cell_value in enumerate(row):
                 cell_style = base_style
-                if isinstance(cell_value, basestring):
+                if isinstance(cell_value, pycompat.string_types):
                     cell_value = re.sub("\r", " ", cell_value)
                 elif isinstance(cell_value, datetime.datetime):
                     cell_style = datetime_style

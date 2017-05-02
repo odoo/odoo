@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.tools import pycompat
 
 
 class Board(models.AbstractModel):
@@ -45,7 +46,7 @@ class Board(models.AbstractModel):
             return node
 
         def encode(s):
-            if isinstance(s, unicode):
+            if isinstance(s, pycompat.text_type):
                 return s.encode('utf8')
             return s
 

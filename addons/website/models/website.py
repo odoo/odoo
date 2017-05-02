@@ -37,11 +37,8 @@ DEFAULT_CDN_FILTERS = [
 
 
 def url_for(path_or_uri, lang=None):
-    if isinstance(path_or_uri, unicode):
-        path_or_uri = path_or_uri.encode('utf-8')
-    current_path = request.httprequest.path
-    if isinstance(current_path, unicode):
-        current_path = current_path.encode('utf-8')
+    path_or_uri = pycompat.to_native(path_or_uri)
+    current_path = pycompat.to_native(request.httprequest.path)
     location = path_or_uri.strip()
     force_lang = lang is not None
     url = urls.url_parse(location)
@@ -667,7 +664,7 @@ class Menu(models.Model):
             self.browse(to_delete).unlink()
         for menu in data['data']:
             mid = menu['id']
-            if isinstance(mid, basestring):
+            if isinstance(mid, pycompat.string_types):
                 new_menu = self.create({'name': menu['name']})
                 replace_id(mid, new_menu.id)
         for menu in data['data']:

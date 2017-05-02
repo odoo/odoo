@@ -211,8 +211,8 @@ class IrValues(models.Model):
                                     match)
            :return: the newly created ir.values entry
         """
-        if isinstance(value, unicode):
-            value = value.encode('utf8')
+        if isinstance(value, pycompat.string_types):
+            value = pycompat.to_native(value)
         if company_id is True:
             # should be company-specific, need to get company id
             company_id = self.env.user.company_id.id
@@ -347,7 +347,7 @@ class IrValues(models.Model):
                               specific record of the model, not all records.
            :return: the newly created ir.values entry
         """
-        assert isinstance(action, basestring) and ',' in action, \
+        assert isinstance(action, pycompat.string_types) and ',' in action, \
                'Action definition must be an action reference, e.g. "ir.actions.act_window,42"'
         assert action_slot in ACTION_SLOTS, \
                'Action slot (%s) must be one of: %r' % (action_slot, ACTION_SLOTS)

@@ -69,7 +69,7 @@ class test_integer_field(CreatorCase):
     def test_huge(self):
         self.assertEqual(
             self.export(2**31-1),
-            [[unicode(2**31-1)]])
+            [[pycompat.text_type(2**31-1)]])
 
 
 class test_float_field(CreatorCase):
@@ -319,7 +319,7 @@ class test_m2o(CreatorCase):
         record = self.env['export.integer'].create({'value': 42})
         self.assertEqual(
             self.export(record.id, fields=['value/.id', 'value/value']),
-            [[unicode(record.id), u'42']])
+            [[pycompat.text_type(record.id), u'42']])
 
     def test_external_id(self):
         record = self.env['export.integer'].create({'value': 42})

@@ -20,12 +20,11 @@ except ImportError:
 
 import psycopg2
 
-from odoo.sql_db import LazyCursor
-from odoo.tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, ustr, OrderedSet, pycompat
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
-from odoo.tools.translate import html_translate, _
-import odoo.tools.sql as sql
+from .sql_db import LazyCursor
+from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, ustr, OrderedSet, pycompat, sql
+from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
+from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
+from .tools.translate import html_translate, _
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -499,7 +498,7 @@ class Field(MetaField('DummyField', (object,), {})):
         def make_depends(deps):
             return tuple(deps(model) if callable(deps) else deps)
 
-        if isinstance(self.compute, basestring):
+        if isinstance(self.compute, pycompat.string_types):
             # if the compute method has been overridden, concatenate all their _depends
             self.depends = ()
             for method in resolve_mro(model, self.compute, callable):
@@ -518,7 +517,7 @@ class Field(MetaField('DummyField', (object,), {})):
     def _setup_related_full(self, model):
         """ Setup the attributes of a related field. """
         # fix the type of self.related if necessary
-        if isinstance(self.related, basestring):
+        if isinstance(self.related, pycompat.string_types):
             self.related = tuple(self.related.split('.'))
 
         # determine the chain of fields, and make sure they are all set up
@@ -746,9 +745,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Convert ``value`` from the ``write`` format to the SQL format. """
         if value is None or value is False:
             return None
-        if isinstance(value, unicode):
-            return value.encode('utf8')
-        return str(value)
+        return pycompat.to_native(value)
 
     def convert_to_cache(self, value, record, validate=True):
         """ Convert ``value`` to the cache format; ``value`` may come from an
@@ -974,7 +971,7 @@ class Field(MetaField('DummyField', (object,), {})):
         for field in fields:
             for record in records:
                 record._cache[field] = field.convert_to_cache(False, record, validate=False)
-        if isinstance(self.compute, basestring):
+        if isinstance(self.compute, pycompat.string_types):
             getattr(records, self.compute)()
         else:
             self.compute(records)
@@ -1048,14 +1045,14 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
-        if isinstance(self.inverse, basestring):
+        if isinstance(self.inverse, pycompat.string_types):
             getattr(records, self.inverse)()
         else:
             self.inverse(records)
 
     def determine_domain(self, records, operator, value):
         """ Return a domain representing a condition on ``self``. """
-        if isinstance(self.search, basestring):
+        if isinstance(self.search, pycompat.string_types):
             return getattr(records, self.search)(operator, value)
         else:
             return self.search(records, operator, value)
@@ -1510,7 +1507,7 @@ class Date(Field):
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
-        if isinstance(value, basestring):
+        if isinstance(value, pycompat.string_types):
             if validate:
                 # force parsing for validation
                 self.from_string(value)
@@ -1580,7 +1577,7 @@ class Datetime(Field):
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
-        if isinstance(value, basestring):
+        if isinstance(value, pycompat.string_types):
             if validate:
                 # force parsing for validation
                 self.from_string(value)
@@ -1736,7 +1733,7 @@ class Selection(Field):
             translated according to context language
         """
         selection = self.selection
-        if isinstance(selection, basestring):
+        if isinstance(selection, pycompat.string_types):
             return getattr(env[self.model_name], selection)()
         if callable(selection):
             return selection(env[self.model_name])
@@ -1753,7 +1750,7 @@ class Selection(Field):
     def get_values(self, env):
         """ return a list of the possible values """
         selection = self.selection
-        if isinstance(selection, basestring):
+        if isinstance(selection, pycompat.string_types):
             selection = getattr(env[self.model_name], selection)()
         elif callable(selection):
             selection = selection(env[self.model_name])
@@ -1777,14 +1774,6 @@ class Selection(Field):
                 return item[1]
         return False
 
-    def convert_to_column(self, value, record, values=None):
-        """ Convert ``value`` from the ``write`` format to the SQL format. """
-        if value is None or value is False:
-            return None
-        if isinstance(value, unicode):
-            return value.encode('utf8')
-        return str(value)
-
 
 class Reference(Selection):
     type = 'reference'
@@ -1802,7 +1791,7 @@ class Reference(Selection):
         if isinstance(value, BaseModel):
             if not validate or (value._name in self.get_values(record.env) and len(value) <= 1):
                 return process(value._name, value.id) if value else False
-        elif isinstance(value, basestring):
+        elif isinstance(value, pycompat.string_types):
             res_model, res_id = value.split(',')
             if record.env[res_model].browse(int(res_id)).exists():
                 return process(res_model, int(res_id))
@@ -2122,7 +2111,7 @@ class _RelationalMulti(_Relational):
             self.depends += tuple(
                 self.name + '.' + arg[0]
                 for arg in self.domain
-                if isinstance(arg, (tuple, list)) and isinstance(arg[0], basestring)
+                if isinstance(arg, (tuple, list)) and isinstance(arg[0], pycompat.string_types)
             )
 
 

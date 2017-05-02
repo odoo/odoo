@@ -645,7 +645,7 @@ class Module(models.Model):
                 updated_values = {}
                 for key in values:
                     old = getattr(mod, key)
-                    updated = tools.ustr(values[key]) if isinstance(values[key], basestring) else values[key]
+                    updated = tools.ustr(values[key]) if isinstance(values[key], pycompat.string_types) else values[key]
                     if (old or updated) and updated != old:
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':

@@ -38,9 +38,9 @@ class IrFieldsConverter(models.AbstractModel):
     @api.model
     def _format_import_error(self, error_type, error_msg, error_params=(), error_args=None):
         # sanitize error params for later formatting by the import system
-        sanitize = lambda p: p.replace('%', '%%') if isinstance(p, basestring) else p
+        sanitize = lambda p: p.replace('%', '%%') if isinstance(p, pycompat.string_types) else p
         if error_params:
-            if isinstance(error_params, basestring):
+            if isinstance(error_params, pycompat.string_types):
                 error_params = sanitize(error_params)
             elif isinstance(error_params, dict):
                 error_params = {k: sanitize(v) for k, v in pycompat.items(error_params)}
@@ -78,7 +78,7 @@ class IrFieldsConverter(models.AbstractModel):
                 try:
                     converted[field], ws = converters[field](value)
                     for w in ws:
-                        if isinstance(w, basestring):
+                        if isinstance(w, pycompat.string_types):
                             # wrap warning string in an ImportWarning for
                             # uniform handling
                             w = ImportWarning(w)
@@ -269,14 +269,14 @@ class IrFieldsConverter(models.AbstractModel):
         for item, label in selection:
             label = ustr(label)
             labels = [label] + self._get_translations(('selection', 'model', 'code'), label)
-            if value == unicode(item) or value in labels:
+            if value == pycompat.text_type(item) or value in labels:
                 return item, []
 
         raise self._format_import_error(
             ValueError,
             _(u"Value '%s' not found in selection field '%%(field)s'"),
             value,
-            {'moreinfo': [_label or unicode(item) for item, _label in selection if _label or item]}
+            {'moreinfo': [_label or pycompat.text_type(item) for item, _label in selection if _label or item]}
         )
 
     @api.model
