@@ -1759,6 +1759,31 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('inputs are disabled when unselecting rows', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual($input.prop('disabled'), true,
+                        "input should be disabled");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        list.$('td:contains(gnap)').click();
+        var $input = list.$('tr.o_selected_row input[name="foo"]');
+        $input.val('lemon').trigger('input');
+        $input.trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
+        list.destroy();
+    });
+
 });
 
 });
