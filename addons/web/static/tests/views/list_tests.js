@@ -1693,6 +1693,34 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('edit list line after line deletion', function (assert) {
+        assert.expect(5);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/><field name="int_field"/></tree>',
+        });
+
+        list.$('.o_data_row:nth(2) > td:not(.o_list_record_selector)').first().click();
+        assert.ok(list.$('.o_data_row:nth(2)').is('.o_selected_row'),
+            "third row should be in edition");
+        list.$buttons.find('.o_list_button_discard').click();
+        list.$buttons.find('.o_list_button_add').click();
+        assert.ok(list.$('.o_data_row:nth(0)').is('.o_selected_row'),
+            "first row should be in edition (creation)");
+        list.$buttons.find('.o_list_button_discard').click();
+        assert.strictEqual(list.$('.o_selected_row').length, 0,
+            "no row should be selected");
+        list.$('.o_data_row:nth(2) > td:not(.o_list_record_selector)').first().click();
+        assert.ok(list.$('.o_data_row:nth(2)').is('.o_selected_row'),
+            "third row should be in edition");
+        assert.strictEqual(list.$('.o_selected_row').length, 1,
+            "no other row should be selected");
+
+        list.destroy();
+    });
 });
 
 });

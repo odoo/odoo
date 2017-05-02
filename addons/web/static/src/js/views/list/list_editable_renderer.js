@@ -25,7 +25,7 @@ ListRenderer.include({
         move_next_line: '_onMoveNextLine',
     }),
     events: _.extend({}, ListRenderer.prototype.events, {
-        'click tbody td': '_onCellClick',
+        'click tbody td.o_data_cell': '_onCellClick',
         'click tbody tr:not(.o_data_row)': '_onEmptyRowClick',
         'click tfoot': '_onFooterClick',
         'click tr .o_list_record_delete': '_onTrashIconClick',
@@ -161,8 +161,8 @@ ListRenderer.include({
         if (rowIndex === this.currentRow) {
             this.currentRow = null;
         }
-        var $row = this.$('tbody > tr:nth(' + rowIndex + ')');
-        $row.remove(); // FIXME row indexes are not updated... let's remove data('index') and check index dynamically ?
+        var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
+        $row.remove();
 
         this.state = state;
     },
@@ -184,14 +184,15 @@ ListRenderer.include({
         var record = this.state.data[rowIndex];
 
         this.currentRow = editMode ? rowIndex : null;
-        var $row = this.$('tbody > tr:nth(' + rowIndex + ')');
+        var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
         $row.toggleClass('o_selected_row', editMode);
 
         if (editMode) {
             // Instantiate column widgets and destroy potential readonly ones
             var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
+            var $tds = $row.children('.o_data_cell');
             _.each(this.columns, function (node, colIndex) {
-                var $td = self._findTd($row, colIndex);
+                var $td = $tds.eq(colIndex);
                 var $newTd = self._renderBodyCell(record, node, colIndex, {
                     renderInvisible: true,
                     renderWidgets: true,
@@ -220,18 +221,6 @@ ListRenderer.include({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Find the td in a row corresponding the a field with a given index. The
-     * main problem is that in some cases, we have a 'selector' checkbox, so the
-     * correct td is sometimes at position i, sometimes at i+1
-     *
-     * @param {jQueryElement} $row the $tr for the row we are interested in
-     * @param {number} index the index of the field/column
-     * @returns {jQueryElement} the $td for the index-th field
-     */
-    _findTd: function ($row, index) {
-        return $row.children(':nth(' + (index + (this.hasSelectors ? 1 : 0)) + ')');
-    },
     /**
      * Returns the current number of columns.  The editable renderer may add a
      * trash icon on the right of a record, so we need to take this into account
@@ -291,27 +280,8 @@ ListRenderer.include({
         return $body;
     },
     /**
-     * Add all the necessary styling classes to displayed cells.  Also, we need
-     * to add the current index to each cell data attribute, so we can get it
-     * back when we need to select a cell.
-     *
-     * @override
-     * @param {Object} record
-     * @param {Object} node
-     * @param {integer} index
-     * @param {Object} [options]
-     * @returns {jQueryElement}
-     */
-    _renderBodyCell: function (record, node, index, options) {
-        var $cell = this._super.apply(this, arguments);
-        if (this.mode === 'readonly') {
-            return $cell;
-        }
-        return $cell.data('index', index);
-    },
-    /**
-     * Editable rows are extended with their index, and possibly a trash icon on
-     * their right, to allow deleting the corresponding record.
+     * Editable rows are possibly extended with a trash icon on their right, to
+     * allow deleting the corresponding record.
      *
      * @override
      * @param {any} record
@@ -320,12 +290,9 @@ ListRenderer.include({
      */
     _renderRow: function (record, index) {
         var $row = this._super.apply(this, arguments);
-        if (this.mode === 'edit') {
-            $row.data('index', index);
-        }
         if (this.addTrashIcon) {
-            var $icon = $('<span>').addClass('fa fa-trash-o').attr('name', 'delete');
-            var $td = $('<td>').addClass('o_list_record_delete').append($icon);
+            var $icon = $('<span>', {class: 'fa fa-trash-o', name: 'delete'});
+            var $td = $('<td>', {class: 'o_list_record_delete'}).append($icon);
             $row.append($td);
         }
         return $row;
@@ -432,7 +399,7 @@ ListRenderer.include({
         var record = this.state.data[rowIndex];
         var node = this.columns[colIndex];
 
-        var $oldTd = this._findTd(this.$('tbody > tr:nth(' + rowIndex + ')'), colIndex);
+        var $oldTd = this.$('.o_data_row:nth(' + rowIndex + ') > .o_data_cell:nth(' + colIndex + ')');
         var $newTd = this._renderBodyCell(record, node, colIndex, {mode: 'readonly'});
         if (keepDirtyFlag && $oldTd.hasClass('o_field_dirty')) {
             $newTd.addClass('o_field_dirty');
@@ -515,11 +482,10 @@ ListRenderer.include({
             return;
         }
         var $td = $(event.currentTarget);
-        var rowIndex = $td.parent().data('index');
-        var colIndex = $td.data('index');
-        if (colIndex !== undefined && rowIndex !== undefined) {
-            this._selectCell(rowIndex, colIndex);
-        }
+        var $tr = $td.parent();
+        var rowIndex = this.$('.o_data_row').index($tr);
+        var colIndex = $tr.find('.o_data_cell').index($td);
+        this._selectCell(rowIndex, colIndex);
     },
     /**
      * We need to manually unselect row, because noone else would do it
