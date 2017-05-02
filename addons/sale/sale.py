@@ -964,7 +964,7 @@ class AccountInvoiceLine(models.Model):
 
     sale_line_ids = fields.Many2many('sale.order.line', 'sale_order_line_invoice_rel', 'invoice_line_id', 'order_line_id', string='Sale Order Lines', readonly=True, copy=False)
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    layout_category_sequence = fields.Integer(related='layout_category_id.sequence', string='Layout Sequence', store=True, default=0)
+    layout_category_sequence = fields.Integer(related='layout_category_id.sequence', string='Layout Sequence', store=True)
 
 
 class ProcurementOrder(models.Model):
