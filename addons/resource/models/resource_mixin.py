@@ -57,6 +57,10 @@ class ResourceMixin(models.AbstractModel):
         calendar = calendar or self.resource_calendar_id
         return calendar._iter_work_intervals(from_datetime, to_datetime, self.resource_id.id)
 
+    def iter_work_hours_count(self, from_datetime, to_datetime, calendar=None):
+        calendar = calendar or self.resource_calendar_id
+        return calendar._iter_work_hours_count(from_datetime, to_datetime, self.resource_id.id)
+
     def get_leaves_day_count(self, from_datetime, to_datetime, calendar=None):
         """ Return the number of leave days for the resource, taking into account
         attendances. An optional calendar can be given in case multiple calendars
