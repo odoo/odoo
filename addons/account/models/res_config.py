@@ -14,6 +14,12 @@ class AccountConfigSettings(models.TransientModel):
         default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True,
         string='Currency', help="Main currency of the company.")
+    currency_exchange_journal_id = fields.Many2one(
+        'account.journal',
+        related='company_id.currency_exchange_journal_id',
+        string="Exchange Gain or Loss Journal",
+        domain=[('type', '=', 'general')],
+        help='The accounting journal where automatic exchange differences will be registered')
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
