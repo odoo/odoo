@@ -260,15 +260,17 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement} a <td> element
      */
     _renderBodyCell: function (record, node, colIndex, options) {
-        var tdClassName;
+        var tdClassName = 'o_data_cell';
         if (node.tag === 'button') {
-            tdClassName = 'o_list_button';
-        } else if (node.attrs.widget){
-            tdClassName = ('o_' + node.attrs.widget + '_cell');
+            tdClassName += ' o_list_button';
         } else {
-            tdClassName = FIELD_CLASSES[this.state.fields[node.attrs.name].type];
+            if (node.attrs.widget){
+                tdClassName += (' o_' + node.attrs.widget + '_cell');
+            } else {
+                tdClassName += (' ' + FIELD_CLASSES[this.state.fields[node.attrs.name].type]);
+            }
         }
-        var $td = $('<td>', { class: tdClassName });
+        var $td = $('<td>', {class: tdClassName});
 
         // We register modifiers on the <td> element so that it gets the correct
         // modifiers classes (for styling)
@@ -550,14 +552,17 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement} a <tr> element
      */
     _renderRow: function (record) {
-        var decorations = this._computeDecorationClassNames(record);
         var self = this;
         var $cells = _.map(this.columns, function (node, index) {
             return self._renderBodyCell(record, node, index, {mode: 'readonly'});
         });
-        var $tr = $('<tr class="o_data_row">')
+        var className = 'o_data_row';
+        var decorations = this._computeDecorationClassNames(record);
+        if (decorations.length) {
+            className += (' ' + decorations.join(' '));
+        }
+        var $tr = $('<tr/>', {class: className})
                     .data('id', record.id)
-                    .addClass(decorations.length && decorations.join(' '))
                     .append($cells);
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td'));
