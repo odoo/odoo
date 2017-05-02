@@ -133,6 +133,7 @@
             <t t-call-assets="website.assets_frontend" t-js="false"/>
             <t t-call-assets="web.assets_common" t-css="false"/>
             <t t-call-assets="website.assets_frontend" t-css="false"/>
+            <t t-call-assets="web_editor.summernote"/>
             <script type="text/javascript">
                 odoo.define('web.csrf', function (require) {
                     var token = "<t t-esc="request.csrf_token(None)"/>";
@@ -202,7 +203,6 @@
 
 <template id="layout_editor" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
     <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css="false"]' position="before">
-        <t groups="base.group_website_designer" t-call-assets="web_editor.summernote"/>
         <t groups="base.group_website_designer" t-call-assets="web_editor.editor"/>
     </xpath>
     <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css="false"]' position="after">
