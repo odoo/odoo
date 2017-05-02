@@ -2005,11 +2005,11 @@ var BasicModel = AbstractModel.extend({
         var isValid = true;
         var element = this.get(id, {raw: true});
         _.each(element.data, function (rec) {
-            for (var fieldName in rec.fields) {
+            _.each(rec.getFieldNames(), function (fieldName) {
                 if (rec.fields[fieldName].required && !rec.data[fieldName]) {
                     isValid = false;
                 }
-            }
+            });
         });
         return isValid;
     },

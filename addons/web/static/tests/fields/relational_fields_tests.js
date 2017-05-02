@@ -2949,6 +2949,58 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list editable: trigger when row is valid', function (assert) {
+        // should omit require fields that aren't in the view as they (obviously)
+        // have no value, when checking the validity of required fields
+        assert.expect(7);
+
+        this.data.turtle.fields.turtle_foo.required = true;
+        this.data.turtle.fields.turtle_qux.required = true; // required field not in the view
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.int_field = obj.turtles.length;
+            },
+        };
+        this.data.partner.records[0].int_field = 0;
+        this.data.partner.records[0].turtles = [];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="int_field"/>' +
+                    '<field name="turtles"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            archs: {
+                'turtle,false,list' : '<tree editable="top">' +
+                        '<field name="turtle_int"/>' +
+                        '<field name="turtle_foo"/>' +
+                    '</tree>',
+            },
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_form_field[name="int_field"]').val(), "0",
+            "int_field should start with value 0");
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('.o_form_field[name="int_field"]').val(), "0",
+            "int_field should still be 0 (no onchange should have been done yet");
+
+        assert.verifySteps(['read', 'default_get'], "no onchange should have been applied");
+
+        form.$('.o_field_widget[name="turtle_foo"]').val("some text").trigger('input');
+        assert.strictEqual(form.$('.o_form_field[name="int_field"]').val(), "1",
+            "int_field should now be 1 (the onchange should have been done");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
