@@ -185,7 +185,7 @@ class AccountMove(models.Model):
     def _post_validate(self):
         for move in self:
             if move.line_ids:
-                if not all([x.company_id.id == move.company_id.id for x in move.line_ids]):
+                if not all([line.company_id.id == move.company_id.id for line in move.line_ids]):
                     raise UserError(_("Cannot create moves for different companies."))
         self.assert_balanced()
         return self._check_lock_date()
