@@ -455,16 +455,4 @@ env["res.partner"].create({"name": partner_name})
             <field name="help">The configuration wizards are used to help you configure a new instance of Odoo. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
         <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="base.next_id_6"/>
-        <record id="action_run_ir_action_todo" model="ir.actions.server">
-            <field name="name">Config: Run Remaining Action Todo</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_res_config"/>
-            <field name="state">code</field>
-            <field name="code">
-config = model.next() or {}
-if config.get('type') not in ('ir.actions.act_window_close',):
-    action = config
-</field>
-        </record>
-
 </odoo>

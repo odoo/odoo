@@ -44,16 +44,6 @@ class ResConfigModuleInstallationMixin(object):
         return result
 
 
-class ResConfigConfigurable(models.TransientModel):
-    ''' Base classes for new-style configuration items
-
-    Configuration items should inherit from this class, implement
-    the execute method (and optionally the cancel one) and have
-    their view inherit from the related res_config_view_base view.
-    '''
-    _name = 'res.config'
-
-
 class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin):
     """ New-style configuration base specialized for addons selection
     and installation.
@@ -146,7 +136,6 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
            your hooks accordingly.
     """
     _name = 'res.config.installer'
-    _inherit = 'res.config'
 
     _install_if = {}
 
