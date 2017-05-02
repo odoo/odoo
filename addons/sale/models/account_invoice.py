@@ -101,4 +101,4 @@ class AccountInvoiceLine(models.Model):
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(
         related='layout_category_id.sequence',
-        string='Layout Sequence', store=True, default=0)
+        string='Layout Sequence', store=True)

@@ -392,7 +392,7 @@ function parseInteger(value) {
     value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
     var parsed = Number(value);
     // do not accept not numbers or float values
-    if (isNaN(parsed) || parsed % 1) {
+    if (isNaN(parsed) || parsed % 1 || parsed < -2147483648 || parsed > 2147483647) {
         throw new Error(_.str.sprintf(core._t("'%s' is not a correct integer"), value));
     }
     return parsed;
