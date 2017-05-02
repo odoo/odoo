@@ -8,6 +8,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 emails_split = re.compile(r"[;,\n\r]+")
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
@@ -119,7 +120,7 @@ class SurveyMailComposeMessage(models.TransientModel):
             if wizard.public != 'email_private':
                 return None
             else:
-                token = uuid.uuid4().__str__()
+                token = pycompat.text_type(uuid.uuid4())
                 # create response with token
                 survey_user_input = SurveyUserInput.create({
                     'survey_id': wizard.survey_id.id,

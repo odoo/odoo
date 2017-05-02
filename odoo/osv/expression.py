@@ -377,7 +377,7 @@ def normalize_leaf(element):
 
 def is_operator(element):
     """ Test whether an object is a valid domain operator. """
-    return isinstance(element, basestring) and element in DOMAIN_OPERATORS
+    return isinstance(element, pycompat.string_types) and element in DOMAIN_OPERATORS
 
 
 def is_leaf(element, internal=False):
@@ -398,7 +398,7 @@ def is_leaf(element, internal=False):
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
-        and ((isinstance(element[0], basestring) and element[0])
+        and ((isinstance(element[0], pycompat.string_types) and element[0])
              or tuple(element) in (TRUE_LEAF, FALSE_LEAF))
 
 
@@ -697,9 +697,9 @@ class expression(object):
                         return the list of related ids
             """
             names = []
-            if isinstance(value, basestring):
+            if isinstance(value, pycompat.string_types):
                 names = [value]
-            elif value and isinstance(value, (tuple, list)) and all(isinstance(item, basestring) for item in value):
+            elif value and isinstance(value, (tuple, list)) and all(isinstance(item, pycompat.string_types) for item in value):
                 names = value
             elif isinstance(value, pycompat.integer_types):
                 return [value]
@@ -925,7 +925,7 @@ class expression(object):
                     domain = domain(model)
                 is_integer_m2o = comodel._fields[field.inverse_name].type == 'integer'
                 if right is not False:
-                    if isinstance(right, basestring):
+                    if isinstance(right, pycompat.string_types):
                         op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
                         ids2 = [x[0] for x in comodel.name_search(right, domain or [], op, limit=None)]
                         if ids2:
@@ -993,7 +993,7 @@ class expression(object):
                 else:
                     call_null_m2m = True
                     if right is not False:
-                        if isinstance(right, basestring):
+                        if isinstance(right, pycompat.string_types):
                             op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
                             domain = field.domain
                             if callable(domain):
@@ -1051,8 +1051,8 @@ class expression(object):
                             res_ids.append(False)  # TODO this should not be appended if False was in 'right'
                         return left, 'in', res_ids
                     # resolve string-based m2o criterion into IDs
-                    if isinstance(right, basestring) or \
-                            right and isinstance(right, (tuple, list)) and all(isinstance(item, basestring) for item in right):
+                    if isinstance(right, pycompat.string_types) or \
+                            right and isinstance(right, (tuple, list)) and all(isinstance(item, pycompat.string_types) for item in right):
                         push(create_substitution_leaf(leaf, _get_expression(comodel, left, right, operator), model))
                     else:
                         # right == [] or right == False and all other cases are handled by __leaf_to_sql()
@@ -1263,21 +1263,16 @@ class expression(object):
 
             add_null = False
             if need_wildcard:
-                if isinstance(right, str):
-                    str_utf8 = right
-                elif isinstance(right, unicode):
-                    str_utf8 = right.encode('utf-8')
-                else:
-                    str_utf8 = str(right)
-                params = '%%%s%%' % str_utf8
-                add_null = not str_utf8
+                native_str = pycompat.to_native(right)
+                params = '%%%s%%' % native_str
+                add_null = not native_str
             elif left in model:
                 params = model._fields[left].convert_to_column(right, model)
 
             if add_null:
                 query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
 
-        if isinstance(params, basestring):
+        if isinstance(params, pycompat.string_types):
             params = [params]
         return query, params
 

@@ -16,7 +16,6 @@ import pytz
 from lxml import etree, builder
 
 import odoo
-import odoo.release
 from . import assertion_report, pycompat
 from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
@@ -683,7 +682,7 @@ form: module.record_id""" % (xml_id,)
                         f_val = int(f_val)
                     elif model._fields[f_name].type in ['float', 'monetary']:
                         f_val = float(f_val)
-                    elif model._fields[f_name].type == 'boolean' and isinstance(f_val, basestring):
+                    elif model._fields[f_name].type == 'boolean' and isinstance(f_val, pycompat.string_types):
                         f_val = str2bool(f_val)
             res[f_name] = f_val
 
@@ -893,7 +892,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
 
     if idref is None:
         idref={}
-    if isinstance(xmlfile, basestring):
+    if isinstance(xmlfile, pycompat.string_types):
         xml_filename = xmlfile
     else:
         xml_filename = xmlfile.name

@@ -34,7 +34,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
         :param with_date: if a value is passed to this param it will return dates based on value of withdate + calendar_id
         :return: real event id
     """
-    if calendar_id and isinstance(calendar_id, (basestring)):
+    if calendar_id and isinstance(calendar_id, pycompat.string_types):
         res = [bit for bit in calendar_id.split('-') if bit]
         if len(res) == 2:
             real_id = res[0]
@@ -48,7 +48,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
 
 
 def get_real_ids(ids):
-    if isinstance(ids, (basestring, pycompat.integer_types)):
+    if isinstance(ids, (pycompat.string_types, pycompat.integer_types)):
         return calendar_id2real_id(ids)
 
     if isinstance(ids, (list, tuple)):
@@ -1060,7 +1060,7 @@ class Meeting(models.Model):
                 pile.reverse()
                 new_pile = []
                 for item in pile:
-                    if not isinstance(item, basestring):
+                    if not isinstance(item, pycompat.string_types):
                         res = item
                     elif str(item) == str('&'):
                         first = new_pile.pop()
@@ -1209,7 +1209,7 @@ class Meeting(models.Model):
 
         if interval == 'day':
             # Day number (1-31)
-            result = unicode(date.day)
+            result = pycompat.text_type(date.day)
 
         elif interval == 'month':
             # Localized month name and year
@@ -1221,6 +1221,7 @@ class Meeting(models.Model):
 
         elif interval == 'time':
             # Localized time
+            # FIXME: formats are specifically encoded to bytes, maybe use babel?
             dummy, format_time = self._get_date_formats()
             result = tools.ustr(date.strftime(format_time + " %Z"))
 
@@ -1316,7 +1317,7 @@ class Meeting(models.Model):
     @api.returns('self', lambda value: value.id)
     def message_post(self, **kwargs):
         thread_id = self.id
-        if isinstance(self.id, basestring):
+        if isinstance(self.id, pycompat.string_types):
             thread_id = get_real_ids(self.id)
         if self.env.context.get('default_date'):
             context = dict(self.env.context)
@@ -1352,7 +1353,7 @@ class Meeting(models.Model):
         for arg in args:
             if arg[0] == 'id':
                 for n, calendar_id in enumerate(arg[2]):
-                    if isinstance(calendar_id, basestring):
+                    if isinstance(calendar_id, pycompat.string_types):
                         arg[2][n] = calendar_id.split('-')[0]
         return super(Meeting, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
@@ -1390,7 +1391,7 @@ class Meeting(models.Model):
             # set end_date for calendar searching
             if any(field in values for field in ['recurrency', 'end_type', 'count', 'rrule_type', 'start', 'stop']):
                 for real_meeting in real_meetings:
-                    if real_meeting.recurrency and real_meeting.end_type in ('count', unicode('count')):
+                    if real_meeting.recurrency and real_meeting.end_type == u'count':
                         final_date = real_meeting._get_recurrency_end_date()
                         super(Meeting, real_meeting).write({'final_date': final_date})
 
@@ -1474,7 +1475,7 @@ class Meeting(models.Model):
         for calendar_id, real_id in select:
             res = real_data[real_id].copy()
             ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
-            if not isinstance(ls, (basestring, pycompat.integer_types)) and len(ls) >= 2:
+            if not isinstance(ls, (pycompat.string_types, pycompat.integer_types)) and len(ls) >= 2:
                 res['start'] = ls[1]
                 res['stop'] = ls[2]
 

@@ -127,9 +127,7 @@ class UNIX_LINE_TERMINATOR(csv.excel):
 csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
 
-#
-# Helper functions for translating fields
-#
+# FIXME: holy shit this whole thing needs to be cleaned up hard it's a mess
 def encode(s):
     if isinstance(s, unicode):
         return s.encode('utf8')
@@ -280,18 +278,18 @@ def translate_xml_node(node, callback, parse, serialize):
 
 
 def parse_xml(text):
-    return etree.fromstring(encode(text))
+    return etree.fromstring(text)
 
 def serialize_xml(node):
-    return etree.tostring(node, method='xml', encoding='utf8').decode('utf8')
+    return etree.tostring(node, method='xml', encoding='unicode')
 
 _HTML_PARSER = etree.HTMLParser(encoding='utf8')
 
 def parse_html(text):
-    return html.fragment_fromstring(encode(text), parser=_HTML_PARSER)
+    return html.fragment_fromstring(text, parser=_HTML_PARSER)
 
 def serialize_html(node):
-    return etree.tostring(node, method='html', encoding='utf8').decode('utf8')
+    return etree.tostring(node, method='html', encoding='unicode')
 
 
 def xml_translate(callback, value):
@@ -307,7 +305,7 @@ def xml_translate(callback, value):
         return serialize_xml(result)
     except etree.ParseError:
         # fallback for translated terms: use an HTML parser and wrap the term
-        root = parse_html("<div>%s</div>" % value)
+        root = parse_html(u"<div>%s</div>" % value)
         result = translate_xml_node(root, callback, parse_xml, serialize_xml)
         # remove tags <div> and </div> from result
         return serialize_xml(result)[5:-6]
@@ -643,14 +641,13 @@ class PoFile(object):
             # only strings in python code are python formated
             self.buffer.write(u"#, python-format\n")
 
-        if not isinstance(trad, unicode):
-            trad = unicode(trad, 'utf8')
-        if not isinstance(source, unicode):
-            source = unicode(source, 'utf8')
-
-        msg = u"msgid %s\n"      \
-              u"msgstr %s\n\n"   \
-                  % (quote(source), quote(trad))
+        msg = (
+            u"msgid %s\n"
+            u"msgstr %s\n\n"
+        ) % (
+            quote(pycompat.text_type(source)), 
+            quote(pycompat.text_type(trad))
+        )
         self.buffer.write(msg)
 
 
@@ -1109,7 +1106,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 return
 
             if isinstance(res_id, pycompat.integer_types) or \
-                    (isinstance(res_id, basestring) and res_id.isdigit()):
+                    (isinstance(res_id, pycompat.string_types) and res_id.isdigit()):
                 dic['res_id'] = int(res_id)
                 if module_name:
                     dic['module'] = module_name

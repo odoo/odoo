@@ -5,12 +5,11 @@ import xlrd
 from odoo.tools import pycompat
 
 def _e(s):
-    if type(s) is unicode:
-        return s.encode('utf8')
-    elif s is None:
+    if s is None:
         return ''
-    else:
-        return str(s)
+    if pycompat.PY2 and type(s) == pycompat.text_type:
+        return s.encode('utf8')
+    return str(s)
 
 
 def _is_true(s):

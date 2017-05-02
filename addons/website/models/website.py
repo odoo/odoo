@@ -494,7 +494,7 @@ class Menu(models.Model):
             self.browse(to_delete).unlink()
         for menu in data['data']:
             mid = menu['id']
-            if isinstance(mid, basestring):
+            if isinstance(mid, pycompat.string_types):
                 new_menu = self.create({'name': menu['name']})
                 replace_id(mid, new_menu.id)
         for menu in data['data']:

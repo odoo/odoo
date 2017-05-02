@@ -4,7 +4,6 @@ import logging
 import os
 import re
 import unicodedata
-import werkzeug
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -12,11 +11,15 @@ try:
 except ImportError:
     slugify_lib = None
 
+import werkzeug.exceptions
+import werkzeug.urls
+import werkzeug.utils
+
 import odoo
 from odoo import api, models
 from odoo.addons.base.ir.ir_http import RequestUID, ModelConverter
 from odoo.http import request
-from odoo.tools import config, ustr
+from odoo.tools import config, ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -97,11 +100,8 @@ def unslug_url(s):
 # ------------------------------------------------------------
 
 def url_for(path_or_uri, lang=None):
-    if isinstance(path_or_uri, unicode):
-        path_or_uri = path_or_uri.encode('utf-8')
-    current_path = request.httprequest.path
-    if isinstance(current_path, unicode):
-        current_path = current_path.encode('utf-8')
+    path_or_uri = pycompat.to_native(path_or_uri)
+    current_path = pycompat.to_native(request.httprequest.path)
     location = path_or_uri.strip()
     force_lang = lang is not None
     url = werkzeug.urls.url_parse(location)
@@ -402,8 +402,8 @@ class IrHttp(models.AbstractModel):
             return cls._handle_exception(e)
 
         if getattr(request, 'is_frontend_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
-            generated_path = werkzeug.url_unquote_plus(path)
-            current_path = werkzeug.url_unquote_plus(request.httprequest.path)
+            generated_path = werkzeug.urls.url_unquote_plus(path)
+            current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
             if generated_path != current_path:
                 if request.lang != cls._get_default_lang().code:
                     path = '/' + request.lang + path
