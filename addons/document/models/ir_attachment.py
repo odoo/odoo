@@ -11,19 +11,6 @@ from odoo import api, models
 _logger = logging.getLogger(__name__)
 FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc', 'pdf']
 
-# Keep function in case it is necessary to do toUnicode(buf.encode('ascii', 'replace'))
-def toUnicode(s):
-    try:
-        return s.decode('utf-8')
-    except UnicodeError:
-        try:
-            return s.decode('latin')
-        except UnicodeError:
-            try:
-                return s.encode('ascii')
-            except UnicodeError:
-                return s
-
 def textToString(element):
     buff = u""
     for node in element.childNodes:

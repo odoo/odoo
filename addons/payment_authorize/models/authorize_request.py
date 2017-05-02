@@ -58,7 +58,7 @@ class AuthorizeAPI():
 
         :param etree._Element data: etree data to process
         """
-        data = etree.tostring(data, xml_declaration=True, encoding='utf-8')
+        data = etree.tostring(data, encoding='utf-8')
         r = requests.post(self.url, data=data, headers={'Content-Type': 'text/xml'})
         r.raise_for_status()
         response = strip_ns(r.content, XMLNS)

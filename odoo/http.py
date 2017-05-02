@@ -44,12 +44,12 @@ except ImportError:
     psutil = None
 
 import odoo
-from odoo.service.server import memory_info
-from odoo.service import security, model as service_model
-from odoo.tools.func import lazy_property
-from odoo.tools import ustr, consteq, frozendict, pycompat, unique
+from .service.server import memory_info
+from .service import security, model as service_model
+from .tools.func import lazy_property
+from .tools import ustr, consteq, frozendict, pycompat, unique
 
-from odoo.modules.module import module_manifest
+from .modules.module import module_manifest
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -510,7 +510,7 @@ def route(route=None, **kw):
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
 
-            if isinstance(response, basestring):
+            if isinstance(response, pycompat.string_types):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
@@ -1386,7 +1386,7 @@ class Root(object):
                 else:
                     raise
 
-        if isinstance(result, basestring):
+        if isinstance(result, pycompat.string_types):
             response = Response(result, mimetype='text/html')
         else:
             response = result
@@ -1554,7 +1554,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
     :param cache_timeout: the timeout in seconds for the headers.
     """
-    if isinstance(filepath_or_fp, (str, unicode)):
+    if isinstance(filepath_or_fp, pycompat.string_types):
         if not filename:
             filename = os.path.basename(filepath_or_fp)
         file = open(filepath_or_fp, 'rb')
@@ -1604,7 +1604,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
             mtime,
             size,
             adler32(
-                filename.encode('utf-8') if isinstance(filename, unicode)
+                filename.encode('utf-8') if isinstance(filename, pycompat.text_type)
                 else filename
             ) & 0xffffffff
         ))

@@ -95,7 +95,7 @@ class AuthorizeForm(AuthorizeCommon):
             if values[1] in ['submit', 'x_fp_hash', 'return_url', 'x_state', 'x_ship_to_state']:
                 continue
             self.assertEqual(
-                unicode(values[2], "utf-8"),
+                values[2],
                 form_values[values[1]],
                 'Authorize: wrong value for input %s: received %s instead of %s' % (values[1], values[2], form_values[values[1]])
             )

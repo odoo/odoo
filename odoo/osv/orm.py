@@ -125,7 +125,7 @@ def setup_modifiers(node, field=None, context=None, in_tree_view=False):
 
 def test_modifiers(what, expected):
     modifiers = {}
-    if isinstance(what, basestring):
+    if isinstance(what, pycompat.string_types):
         node = etree.fromstring(what)
         transfer_node_to_modifiers(node, modifiers)
         simplify_modifiers(modifiers)

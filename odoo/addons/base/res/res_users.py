@@ -107,7 +107,7 @@ class Groups(models.Model):
                 return expression.AND(domains)
             else:
                 return expression.OR(domains)
-        if isinstance(operand, basestring):
+        if isinstance(operand, pycompat.string_types):
             lst = False
             operand = [operand]
         where = []
@@ -306,7 +306,7 @@ class Users(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        groupby_fields = set([groupby] if isinstance(groupby, basestring) else groupby)
+        groupby_fields = set([groupby] if isinstance(groupby, pycompat.string_types) else groupby)
         if groupby_fields.intersection(USER_PRIVATE_FIELDS):
             raise AccessError(_("Invalid 'group by' parameter"))
         return super(Users, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
@@ -739,7 +739,7 @@ class GroupsView(models.Model):
             xml2.append({'class': "o_label_nowrap"})
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
-            xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
+            xml_content = etree.tostring(xml, pretty_print=True, encoding="utf-8")
             view.with_context(lang=None).write({'arch': xml_content, 'arch_fs': False})
 
     def get_application_groups(self, domain):

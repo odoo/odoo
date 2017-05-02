@@ -18,11 +18,6 @@ _logger = logging.getLogger(__name__)
 MODULE_UNINSTALL_FLAG = '_force_unlink'
 
 
-def encode(s):
-    """ Return an UTF8-encoded version of ``s``. """
-    return s.encode('utf8') if isinstance(s, unicode) else s
-
-
 # base environment for doing a safe_eval
 SAFE_EVAL_BASE = {
     'datetime': datetime,
@@ -272,7 +267,7 @@ class IrModel(models.Model):
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
-            _name = encode(model_data['model'])
+            _name = pycompat.to_native(model_data['model'])
             _description = model_data['name']
             _module = False
             _custom = True
@@ -1134,7 +1129,7 @@ class IrModelAccess(models.Model):
             # User root have all accesses
             return True
 
-        assert isinstance(model, basestring), 'Not a model name: %s' % (model,)
+        assert isinstance(model, pycompat.string_types), 'Not a model name: %s' % (model,)
         assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
 
         # TransientModel records have no access rights, only an implicit access rule

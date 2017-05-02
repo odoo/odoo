@@ -465,7 +465,7 @@ def human_size(sz):
     if not sz:
         return False
     units = ('bytes', 'Kb', 'Mb', 'Gb')
-    if isinstance(sz,basestring):
+    if isinstance(sz,pycompat.string_types):
         sz=len(sz)
     s, i = float(sz), 0
     while s >= 1024 and i < len(units)-1:
@@ -798,7 +798,7 @@ class mute_logger(object):
 
     def __enter__(self):
         for logger in self.loggers:
-            assert isinstance(logger, basestring),\
+            assert isinstance(logger, pycompat.string_types),\
                 "A logger name must be a string, got %s" % type(logger)
             logging.getLogger(logger).addFilter(self)
 
@@ -1073,7 +1073,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
                 if not digits and digits is not 0:
                     digits = DEFAULT_DIGITS
 
-    if isinstance(value, (str, unicode)) and not value:
+    if isinstance(value, pycompat.string_types) and not value:
         return ''
 
     lang = env.user.company_id.partner_id.lang or 'en_US'
@@ -1108,7 +1108,7 @@ def format_date(env, value, lang_code=False, date_format=False):
         return ''
     if isinstance(value, datetime.datetime):
         value = value.date()
-    elif isinstance(value, basestring):
+    elif isinstance(value, pycompat.string_types):
         if len(value) < DATE_LENGTH:
             return ''
         value = value[:DATE_LENGTH]

@@ -39,7 +39,7 @@ class Web_Editor(http.Controller):
             debug=request.debug)
 
         for k in kwargs:
-            if isinstance(kwargs[k], basestring) and kwargs[k].isdigit():
+            if isinstance(kwargs[k], pycompat.string_types) and kwargs[k].isdigit():
                 kwargs[k] = int(kwargs[k])
 
         trans = dict(
@@ -186,7 +186,7 @@ class Web_Editor(http.Controller):
                 uploads += attachments.read(['name', 'mimetype', 'checksum', 'url'])
             except Exception as e:
                 logger.exception("Failed to upload image to attachment")
-                message = unicode(e)
+                message = pycompat.text_type(e)
 
         return """<script type='text/javascript'>
             window.parent['%s'](%s, %s);

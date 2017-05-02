@@ -161,7 +161,7 @@ class Product(models.Model):
         if self.env.context.get('location', False):
             if isinstance(self.env.context['location'], pycompat.integer_types):
                 location_ids = [self.env.context['location']]
-            elif isinstance(self.env.context['location'], basestring):
+            elif isinstance(self.env.context['location'], pycompat.string_types):
                 domain = [('complete_name', 'ilike', self.env.context['location'])]
                 if self.env.context.get('force_company', False):
                     domain += [('company_id', '=', self.env.context['force_company'])]
@@ -172,7 +172,7 @@ class Product(models.Model):
             if self.env.context.get('warehouse', False):
                 if isinstance(self.env.context['warehouse'], pycompat.integer_types):
                     wids = [self.env.context['warehouse']]
-                elif isinstance(self.env.context['warehouse'], basestring):
+                elif isinstance(self.env.context['warehouse'], pycompat.string_types):
                     domain = [('name', 'ilike', self.env.context['warehouse'])]
                     if self.env.context.get('force_company', False):
                         domain += [('company_id', '=', self.env.context['force_company'])]

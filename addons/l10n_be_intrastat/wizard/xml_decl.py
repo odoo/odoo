@@ -6,6 +6,7 @@ from xml.etree import ElementTree as ET
 from collections import namedtuple
 
 from odoo import api, exceptions, fields, models, _
+from odoo.tools.pycompat import text_type
 
 INTRASTAT_XMLNS = 'http://www.onegate.eu/2010-01-01'
 
@@ -264,18 +265,18 @@ class XmlDeclaration(models.TransientModel):
                 continue
             numlgn += 1
             item = ET.SubElement(datas, 'Item')
-            self._set_Dim(item, 'EXSEQCODE', unicode(numlgn))
-            self._set_Dim(item, 'EXTRF', unicode(linekey.EXTRF))
-            self._set_Dim(item, 'EXCNT', unicode(linekey.EXCNT))
-            self._set_Dim(item, 'EXTTA', unicode(linekey.EXTTA))
-            self._set_Dim(item, 'EXREG', unicode(linekey.EXREG))
-            self._set_Dim(item, 'EXTGO', unicode(linekey.EXGO))
+            self._set_Dim(item, 'EXSEQCODE', text_type(numlgn))
+            self._set_Dim(item, 'EXTRF', text_type(linekey.EXTRF))
+            self._set_Dim(item, 'EXCNT', text_type(linekey.EXCNT))
+            self._set_Dim(item, 'EXTTA', text_type(linekey.EXTTA))
+            self._set_Dim(item, 'EXREG', text_type(linekey.EXREG))
+            self._set_Dim(item, 'EXTGO', text_type(linekey.EXGO))
             if extendedmode:
-                self._set_Dim(item, 'EXTPC', unicode(linekey.EXTPC))
-                self._set_Dim(item, 'EXDELTRM', unicode(linekey.EXDELTRM))
-            self._set_Dim(item, 'EXTXVAL', unicode(round(amounts[0], 0)).replace(".", ","))
-            self._set_Dim(item, 'EXWEIGHT', unicode(round(amounts[1], 0)).replace(".", ","))
-            self._set_Dim(item, 'EXUNITS', unicode(round(amounts[2], 0)).replace(".", ","))
+                self._set_Dim(item, 'EXTPC', text_type(linekey.EXTPC))
+                self._set_Dim(item, 'EXDELTRM', text_type(linekey.EXDELTRM))
+            self._set_Dim(item, 'EXTXVAL', text_type(round(amounts[0], 0)).replace(".", ","))
+            self._set_Dim(item, 'EXWEIGHT', text_type(round(amounts[1], 0)).replace(".", ","))
+            self._set_Dim(item, 'EXUNITS', text_type(round(amounts[2], 0)).replace(".", ","))
 
         if numlgn == 0:
             #no datas

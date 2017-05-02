@@ -127,7 +127,7 @@ class IrUiView(models.Model):
 
     @api.model
     def _view_obj(self, view_id):
-        if isinstance(view_id, basestring):
+        if isinstance(view_id, pycompat.string_types):
             return self.env.ref(view_id)
         elif isinstance(view_id, pycompat.integer_types):
             return self.browse(view_id)

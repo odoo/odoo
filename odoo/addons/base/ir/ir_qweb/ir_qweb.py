@@ -218,7 +218,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         files = []
         remains = []
         for el in html.fragments_fromstring(template):
-            if isinstance(el, basestring):
+            if isinstance(el, pycompat.string_types):
                 remains.append(el)
             elif isinstance(el, html.HtmlElement):
                 href = el.get('href', '')
