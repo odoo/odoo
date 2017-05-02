@@ -247,135 +247,105 @@
         <field name="lang">${object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
-        <field name="body_html"><![CDATA[
-          <div style="background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
-            <table style="width:600px;margin:10px auto;">
-                <tbody>
-                    <tr>
-                        <td>
-                            <a href="/">
-                                <img src="/logo" alt="${object.company_id.name}" style="vertical-align:baseline;max-width:100px;" />
-                            </a>
-                        </td>
-                        <td style="text-align:right;vertical-align:middle;">
-                            % if 'website_url' in object.job_id and object.job_id.website_url:
-                                <a href="${object.job_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">Job Description</a>
-                            % endif
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table style="width:600px;margin:0px auto;background-color:white;padding:8px;border:1px solid #e1e1e1;">
-            <tr>
-                <td style="font-size:16px; font-weight:300;">
-                    <p style="font-size:16px;">
-                        Hi,
-                    </p><p style="font-size:16px;">
-                        We confirm we successfully received your application to the job
-
-                        "<a href="${object.job_id.website_url or ''}" style="color:#9A6C8E;"><strong>${object.job_id.name}</strong></a>"
-                        at <strong>${object.company_id.name}</strong>.
-                    </p>
-                    <p style="font-size:16px;">
-                        We will come back to you shortly.
-                    </p>
-
-                    <hr style="margin: 30px 0"/>
-                    % if object.user_id:
-                    <h3 style="color:#9A6C8E;"><strong>Your Contact:</strong></h3>
-                    <table style="width:100%; border:0px solid white;">
-                    <tr>
-                        <td width="75">
-                            <img src="/web/image/res.users/${object.user_id.id}/image_small" alt="Avatar" style="vertical-align:baseline;max-width:64px;" />
-                        </td><td style="font-size:15px;">
-                            <strong>${object.user_id.name}</strong><br/>
-                            <span>Email: ${object.user_id.email or ''}</span><br/>
-                            <span>Phone: ${object.user_id.phone or ''}</span>
-                        </td>
-                    </tr>
+        <field name="body_html" type="html">
+        <table cellspacing="0" cellpadding="0" width="100%" style="font-family: 'Helvetica'; background-color: #EEE; color:#666666; border-collapse: collapse;">
+        <tr><td valign="top" align="center">
+            <table cellspacing="0" cellpadding="0" width="600" style="margin: 0 auto; width: 600px;">
+                <tr><td>
+                    <table cellspacing="0" cellpadding="0" width="100%">
+                        <tr><td valign="middle" align="left" style="padding:15px">
+                            <img width="90" src="/logo.png" style="width:80px;" />
+                        </td></tr>
                     </table>
-                    % endif
+                    <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#fff" style="background-color:#fff;">
+                        <tr><td width="100%" style="padding: 15px;">
+                            <table>
+                                <tr><td>
+                                    <p style="font-size:24px;">Congratulations!</p>
+                                    <p style="padding:30px 0;">You've applied for the <span style="color:#9A6C8E;"><strong t-esc="record.job_id.name"/></span> position at <span style="color:#9A6C8E;"><strong t-esc="record.company_id.name"/></span>.
+                                    </p>
+                                </td></tr>
+                            </table>
+                            <table t-if="record.user_id" width="100%">
+                                <tr><td colspan="4" width="100%" style="height:1px;background-color:#9A6C8E;"></td></tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <h3 style="margin: 25px 0;">Your contact:</h3>
+                                    </td>
+                                </tr>
+                                <tr style="vertical-align:middle;">
+                                    <td width="50%" style="font-size:12px;padding:0 0 30px 0;">
+                                        <span style="font-size:20px;" t-esc="record.user_id.name"/><br/>
+                                        <span t-esc="record.user_id.job_id or ''"/><br/>
+                                        <span>TEL: <t t-esc="record.user_id.phone or ''"/></span><br/>
+                                    </td>
+                                    <td width="20%"></td>
+                                </tr>
+                                <tr><td colspan="4" width="100%" style="height:1px;background-color:#9A6C8E;"></td></tr>
+                            </table>
+                            <table width="100%">
+                                <tr><td>
+                                    <h3 style="margin:30px 0;color:#9A6C8E;"><strong>WHAT IS THE NEXT STEP?</strong></h3>
+                                    <p style="padding-bottom: 20px;">We usually <strong>answer applications within a week.</strong></p>
+                                    <p>
+                                        Feel free to <strong>contact us if you want a faster feedback</strong> or if you don't get news from us quickly enough (just reply to this email).
+                                    </p>
+                                </td></tr>
+                                <tr><td>
+                                    <h3 style="margin:30px 0;color:#9A6C8E;"><strong>WANT TO LEARN MORE?</strong></h3>
+                                    <ol style="color:#1CC5A9">
+                                        <li><a style="color:#1CC5A9" href="https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56">Founders' story</a></li>
+                                        <li><a style="color:#1CC5A9" href="https://www.slideshare.net/openobject/the-odoo-culture">The Odoo Culture</a></li>
+                                        <li><a style="color:#1CC5A9" href="https://www.odoo.com/page/about-us">Our managers</a></li>
+                                    </ol>
+                                </td></tr>
+                            </table>
+                            <table width="100%">
+                                <tr><td>
+                                    <p style="padding-top:30px;">See you soon,</p>
+                                    <p><strong><t t-esc="record.company_id.name"/> HR Department</strong></p>
+                                    <a t-if="record.company_id.website" style="color:#1CC5A9;font-size:12px;" t-att-href="record.company_id.website" t-esc="record.company_id.website"/>
+                                </td></tr>
+                            </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table cellspacing="0" cellpadding="0" width="100%" style="padding: 15px;">
+                        <tr><td align="center" style="padding: 30px 15px;">
+                            <span style="font-size:12px;color:#AAAAAA"><t t-esc="record.company_id.name or ''"/>,</span>
+                            <span t-if="record.company_id.street" style="font-size:12px;color:#AAAAAA"><t t-esc="record.company_id.street"/>,</span>
+                            <span t-if="record.company_id.street2" style="font-size:12px;color:#AAAAAA"><t t-esc="record.company_id.street2"/>,</span>
+                            <span t-if="record.company_id.city" style="font-size:12px;color:#AAAAAA"><t t-esc="record.company_id.city"/>,</span>
+                            <span t-if="record.company_id.state_id.name" style="font-size:12px;color:#AAAAAA"><t t-esc="record.company_id.state_id.name"/>,</span>
+                            <span t-if="record.company_id.zip" style="font-size:12px;color:#AAAAAA"><t t-esc=" record.company_id.zip"/>,</span>
+                            <span t-if="record.company_id.country_id.name" style="font-size:12px;color:#AAAAAA"><t t-esc="record.company_id.country_id.name"/></span>
+                        </td></tr>
+                    </table>
 
-                    <hr style="margin: 30px 0"/>
-
-                    <h3 style="color:#9A6C8E;"><strong>What is the next step?</strong></h3>
-                    <p>We usually <strong>answer applications within 3 days.</strong></p>
-                    <p>
-                        Feel free to <strong>contact us if you want a faster
-                        feedback</strong> or if you don't get news from us
-                        quickly enough (just reply to this email).
-                    </p>
-                    <hr style="margin: 30px 0"/>
-
-                    <h3 style="color:#9A6C8E;"><strong>Want to learn more?</strong></h3>
-                    <ol>
-                        <li><a style="color:#1CC5A9" href="https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56">Founders' story</a></li>
-                        <li><a style="color:#1CC5A9" href="https://www.slideshare.net/openobject/the-odoo-culture">The Odoo Culture</a></li>
-                        <li><a style="color:#1CC5A9" href="https://www.odoo.com/page/about-us">About us</a></li>
-                    </ol>
-
-                    <hr style="margin: 30px 0"/>
-
-                    % set location = ''
-                    % if object.job_id.address_id.name:
-                        <p style="margin:0px 0px 0px 0px;"><strong>${object.job_id.address_id.name}</strong></p>
-                    % endif
-                    % if object.job_id.address_id.street:
-                        <p style="margin:0px 0px 0px 0px;">${object.job_id.address_id.street}</p>
-                        % set location = object.job_id.address_id.street
-                    % endif
-                    % if object.job_id.address_id.street2:
-                        <p style="margin:0px 0px 0px 0px;">${object.job_id.address_id.street2}</p>
-                        % set location = '%s, %s' % (location, object.job_id.address_id.street2)
-                    % endif
-                    <p style="margin:0px 0px 0px 0px;">
-                    % if object.job_id.address_id.city:
-                        ${object.job_id.address_id.city},
-                        % set location = '%s, %s' % (location, object.job_id.address_id.city)
-                    % endif
-                    % if object.job_id.address_id.state_id.name:
-                        ${object.job_id.address_id.state_id.name},
-                        % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)
-                    % endif
-                    % if object.job_id.address_id.zip:
-                        ${object.job_id.address_id.zip}
-                        % set location = '%s, %s' % (location, object.job_id.address_id.zip)
-                    % endif
-                    </p>
-                    % if object.job_id.address_id.country_id.name:
-                        <p style="margin:0px 0px 0px 0px;">${object.job_id.address_id.country_id.name}</p>
-                        % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
-                    % endif
-
-                </td>
-            </tr>
+                    <t t-if="record.job_id.address_id">
+                    <div style="width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
+                        <a t-attf-href="https://maps.google.com/maps?q=#{location}" target="new">
+                            <img t-attf-src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C#{location}" style="vertical-align:bottom;"/>
+                        </a>
+                    </div>
+                    </t>
+                    <table style="width:600px;margin:0px auto;text-align:center;">
+                        <tbody>
+                            <tr>
+                                <td style="padding-top:10px;font-size: 12px;">
+                                    <div>Sent by <t t-esc="record.company_id.name"/></div>
+                                    <div t-if="'website_url' in record.job_id and record.job_id.website_url">
+                                        Discover <a href="/jobs" style="text-decoration:none;color:#717188;">all our jobs</a>.
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td></tr>
             </table>
-
-            % if object.job_id.address_id:
-            <div style="width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
-                <a href="https://maps.google.com/maps?q=${location}" target="new">
-                    <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;"/>
-                </a>
-            </div>
-            % endif
-            <table style="width:600px;margin:0px auto;text-align:center;">
-                <tbody>
-                    <tr>
-                        <td style="padding-top:10px;font-size: 12px;">
-                            <div>Sent by ${object.company_id.name}</div>
-                            % if 'website_url' in object.job_id and object.job_id.website_url:
-                            <div>
-                                Discover <a href="/jobs" style="text-decoration:none;color:#717188;">all our jobs</a>.
-                            </div>
-                            % endif
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-
-          </div>
-        ]]></field>
+        </td></tr>
+        </table>
+        </field>
     </record>
 
     <record id="email_template_data_applicant_employee" model="mail.template">

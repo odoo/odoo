@@ -124,7 +124,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         this.$textarea.summernote(this._getSummernoteConfig());
         this.$content = this.$('.note-editable:first');
         this.$content.html(this._textToHtml(this.value));
+        this.$content.find('.o_t_expression').remove();
         this.tansform_t_tag({readonly:false});
+
         // trigger a mouseup to refresh the editor toolbar
         this.$content.trigger('mouseup');
         if (this.nodeOptions['style-inline']) {
@@ -150,6 +152,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             $iframe.on('load', function () {
                 self.$content = $($iframe.contents()[0]).find("body");
                 self.$content.html(self._textToHtml(self.value));
+                self.$content.find('.o_t_expression').remove();
                 self.tansform_t_tag({readonly:true});
                 self._resize();
             });
@@ -157,9 +160,11 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         } else {
             this.$content = $('<div class="o_readonly"/>');
             this.$content.html(this._textToHtml(this.value));
+            this.$content.find('.o_t_expression').remove();
             this.tansform_t_tag({readonly:true});
             this.$content.appendTo(this.$el);
         }
+
     },
     /**
      * Sets the height of the iframe.
