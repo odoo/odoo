@@ -284,10 +284,15 @@
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                     <field name="categ_ids"/>
-                                    <t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>
-                                    <i><field name="name"/></i><br/>
-                                    <field name="job_id"/><br/>
-                                    <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
+                                    <b t-if="record.partner_name.raw_value">
+                                        <field name="partner_name"/>
+                                    </b><t t-else="1">
+                                        <i><field name="name"/></i><br/>
+                                    </t><br/>
+                                    <div invisible="context.get('search_default_job_id', False)">
+                                        <field name="job_id"/>
+                                    </div>
+                                    <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile fa-fw"/><field name="partner_mobile"/><br/></t>
                                 <div class="oe_kanban_bottom_right">
                                     <div class="o_kanban_inline_block ml4">
                                         <field name="activity_ids" widget="kanban_activity"/>
