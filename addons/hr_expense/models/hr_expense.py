@@ -550,3 +550,11 @@ class HrExpenseSheet(models.Model):
         res['domain'] = [('id', 'in', self.mapped('account_move_id').ids)]
         res['context'] = {}
         return res
+
+
+    @api.one
+    @api.constrains('expense_line_ids')
+    def _check_employee(self):
+        employee_ids = self.expense_line_ids.mapped('employee_id')
+        if len(employee_ids) > 1 or (len(employee_ids) == 1 and employee_ids != self.employee_id):
+            raise ValidationError(_('You cannot add expense lines of another employee.'))
