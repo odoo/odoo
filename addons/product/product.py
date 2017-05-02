@@ -311,7 +311,7 @@ class product_category(osv.osv):
     ]
 
 
-class produce_price_history(osv.osv):
+class product_price_history(osv.osv):
     """
     Keep track of the ``product.template`` standard prices as they are changed.
     """
