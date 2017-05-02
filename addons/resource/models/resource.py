@@ -457,6 +457,16 @@ class ResourceCalendar(models.Model):
             if intervals:
                 yield intervals
 
+    def _iter_work_hours_count(self, from_datetime, to_datetime, resource_id):
+        """ Lists the current resource's work hours count between the two provided
+        datetime expressed in naive UTC. """
+
+        for interval in self._iter_work_intervals(from_datetime, to_datetime, resource_id):
+            td = timedelta()
+            for work_interval in interval:
+                td += work_interval[1] - work_interval[0]
+            yield (interval[0][0].date(), td.total_seconds() / 3600.0)
+
     def _iter_work_days(self, from_date, to_date, resource_id):
         """ Lists the current resource's work days between the two provided
         dates (inclusive) expressed in naive UTC.
