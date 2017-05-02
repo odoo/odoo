@@ -14,6 +14,7 @@ from openerp.addons.web import http
 from openerp.addons.web.controllers.main import binary_content
 from openerp.addons.web.http import request
 from openerp.addons.website.models.website import slug
+from openerp.modules import get_module_resource
 
 
 class WebsiteForum(http.Controller):
@@ -573,6 +574,9 @@ class WebsiteForum(http.Controller):
             content = image.encode('base64')
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
+        if not content:
+            image_path = get_module_resource('base', 'static/src/img', 'avatar.png')
+            content = tools.file_open(image_path, 'r').read().encode('base64')
         image_base64 = base64.b64decode(content)
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
@@ -699,6 +703,13 @@ class WebsiteForum(http.Controller):
             'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
             'website_description': kwargs.get('description'),
         }
+
+        if 'clear_image' in kwargs:
+            values['image'] = False
+        elif kwargs.get('ufile'):
+            image = kwargs.get('ufile').read()
+            values['image'] = image.encode('base64')
+
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published') == 'True'
         user.write(values)
