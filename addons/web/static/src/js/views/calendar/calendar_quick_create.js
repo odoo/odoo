@@ -45,7 +45,7 @@ var QuickCreate = Dialog.extend({
                     }
                 }},
                 {text: _t("Edit"), click: function () {
-                    dataCalendar.disable_quick_create = true;
+                    dataCalendar.disableQuickCreate = true;
                     dataCalendar.title = self.$input.val().trim();
                     dataCalendar.on_save = self.destroy.bind(self);
                     self.trigger_up('openCreate', dataCalendar);
@@ -62,7 +62,7 @@ var QuickCreate = Dialog.extend({
     start: function () {
         var self = this;
 
-        if (this.options.disable_quick_create) {
+        if (this.options.disableQuickCreate) {
             this.slow_create();
             return;
         }

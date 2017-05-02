@@ -181,13 +181,13 @@ return AbstractModel.extend({
         // Check whether the date field is editable (i.e. if the events can be
         // dragged and dropped)
         this.editable = params.editable;
-        this.creatable = params.creatable;
+        this.creatable = this.editable;
 
         // display more button when there are too much event on one day
         this.eventLimit = params.eventLimit;
 
         // fields to display color, e.g.: user_id.partner_id
-        this.field_color = params.field_color;
+        this.fieldColor = params.fieldColor;
         if (!this.preload_def) {
             this.preload_def = $.Deferred();
             $.when(
@@ -207,7 +207,7 @@ return AbstractModel.extend({
             filters: params.filters,
         };
 
-        // Use scale_zoom attribute in xml file to specify zoom timeline (day,week,month)
+        // Use mode attribute in xml file to specify zoom timeline (day,week,month)
         // by default month.
         this.setDate(params.initialDate, true);
         this.setScale(params.mode);
@@ -417,8 +417,8 @@ return AbstractModel.extend({
      * @returns {Deferred}
      */
     _loadColors: function (element, events) {
-        if (this.field_color) {
-            var fieldName = this.field_color;
+        if (this.fieldColor) {
+            var fieldName = this.fieldColor;
             _.each(events, function (event) {
                 var value = event.record[fieldName];
                 event.color_index = _.isArray(value) ? value[0] : value;

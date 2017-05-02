@@ -151,7 +151,7 @@ QUnit.module('Views', {
             data: this.data,
             arch:
             '<calendar class="o_calendar_test" '+
-                'scale_zoom="week" '+
+                'event_open_popup="true" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
                 'all_day="allday" '+
@@ -225,7 +225,7 @@ QUnit.module('Views', {
             arch:
             '<calendar class="o_calendar_test" '+
                 'string="Events" ' +
-                'scale_zoom="week" '+
+                'event_open_popup="true" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
                 'all_day="allday" '+
@@ -360,7 +360,7 @@ QUnit.module('Views', {
             data: this.data,
             arch:
             '<calendar class="o_calendar_test" '+
-                'scale_zoom="week" '+
+                'event_open_popup="true" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
                 'all_day="allday" '+
@@ -454,7 +454,7 @@ QUnit.module('Views', {
             data: this.data,
             arch:
             '<calendar class="o_calendar_test" '+
-                'scale_zoom="week" '+
+                'event_open_popup="true" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
                 'all_day="allday" '+
@@ -571,7 +571,7 @@ QUnit.module('Views', {
             data: this.data,
             arch:
             '<calendar class="o_calendar_test" '+
-                'scale_zoom="week" '+
+                'event_open_popup="true" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
                 'all_day="allday" '+
@@ -629,7 +629,7 @@ QUnit.module('Views', {
             data: this.data,
             arch:
             '<calendar class="o_calendar_test" '+
-                'scale_zoom="week" '+
+                'event_open_popup="true" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
                 'all_day="allday" '+
@@ -664,6 +664,7 @@ QUnit.module('Views', {
             data: this.data,
             arch:
             '<calendar class="o_calendar_test" '+
+                'event_open_popup="true" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
                 'all_day="allday"> '+
@@ -677,6 +678,74 @@ QUnit.module('Views', {
 
         assert.strictEqual(calendar.$('.o_calendar_filter_items .o_cal_avatar').length, 3,
             "should have 3 avatars in the side bar");
+
+        calendar.destroy();
+    });
+
+    QUnit.test('open form view', function (assert) {
+        assert.expect(2);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        // click on an existing event to open the form view
+
+        testUtils.intercept(calendar, 'do_action', function (event) {
+            assert.deepEqual(event.data.action,
+                {
+                    type: "ir.actions.act_window",
+                    res_id: 4,
+                    res_model: "event",
+                    views: [[false, "form"]],
+                    target: "current",
+                    context: {}
+                },
+                "should open the form view");
+        });
+        calendar.$('.fc-event:contains(event 4) .fc-content').trigger('click');
+
+        // create a new event and edit it
+
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(4) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+        $('.modal-body input:first').val('coucou').trigger('input');
+
+        testUtils.intercept(calendar, 'do_action', function (event) {
+            assert.deepEqual(event.data.action,
+                {
+                    type: "ir.actions.act_window",
+                    res_model: "event",
+                    views: [[false, "form"]],
+                    target: "current",
+                    context: {
+                        "default_name": "coucou",
+                        "default_start": "2016-12-27 00:00:00",
+                        "default_stop": "2016-12-27 00:00:00",
+                        "default_allday": true
+                    }
+                },
+                "should open the form view with the context default values");
+        });
+
+        $('.modal button.btn:contains(Edit)').trigger('click');
 
         calendar.destroy();
     });
