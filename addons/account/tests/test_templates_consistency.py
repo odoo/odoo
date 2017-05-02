@@ -41,3 +41,22 @@ class AccountingTestTemplConsistency(HttpCase):
         '''
         self.check_fields_consistency('account.tax.template', 'account.tax', exceptions=['chart_template_id'])
         self.check_fields_consistency('account.tax', 'account.tax.template')
+
+    def test_fiscal_position_fields(self):
+        '''Test fields consistency for ('account.fiscal.position', 'account.fiscal.position.template')
+        '''
+        #main
+        self.check_fields_consistency('account.fiscal.position.template', 'account.fiscal.position', exceptions=['chart_template_id'])
+        self.check_fields_consistency('account.fiscal.position', 'account.fiscal.position.template', exceptions=['active', 'company_id', 'states_count'])
+        #taxes
+        self.check_fields_consistency('account.fiscal.position.tax.template', 'account.fiscal.position.tax')
+        self.check_fields_consistency('account.fiscal.position.tax', 'account.fiscal.position.tax.template')
+        #accounts
+        self.check_fields_consistency('account.fiscal.position.account.template', 'account.fiscal.position.account')
+        self.check_fields_consistency('account.fiscal.position.account', 'account.fiscal.position.account.template')
+
+    def test_reconcile_model_fields(self):
+        '''Test fields consistency for ('account.reconcile.model', 'account.reconcile.model.template')
+        '''
+        self.check_fields_consistency('account.reconcile.model.template', 'account.reconcile.model', exceptions=['chart_template_id'])
+        self.check_fields_consistency('account.reconcile.model', 'account.reconcile.model.template', exceptions=['company_id', 'journal_id', 'analytic_account_id', 'second_journal_id', 'second_analytic_account_id'])
