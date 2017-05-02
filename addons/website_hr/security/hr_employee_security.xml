@@ -10,4 +10,14 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
+    <record id="hr_employee_portal" model="ir.rule">
+        <field name="name">hr_employee: Portal</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
 </odoo>
