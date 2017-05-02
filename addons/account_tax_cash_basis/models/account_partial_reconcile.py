@@ -35,6 +35,8 @@ class AccountPartialReconcileCashBasis(models.Model):
                             tax_group[acc] = amount
                         # Group by cash basis account and tax
                         acc = line.tax_line_id.cash_basis_account.id
+                        if not acc:
+                            raise UserError(_('Please configure a Tax Received Account for tax %s') % line.tax_line_id.name)
                         key = (acc, line.tax_line_id.id)
                         if key in total_by_cash_basis_account:
                             total_by_cash_basis_account[key] += amount
