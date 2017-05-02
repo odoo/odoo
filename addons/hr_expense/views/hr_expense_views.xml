@@ -132,7 +132,7 @@
             <field name="arch" type="xml">
                 <pivot string="Expenses Analysis">
                     <field name="employee_id" type="row"/>
-                    <field name="create_date" interval="month" type="col"/>
+                    <field name="date" interval="month" type="col"/>
                     <field name="total_amount" type="measure"/>
                 </pivot>
             </field>
@@ -143,8 +143,8 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <graph string="Expenses Analysis">
-                    <field name="employee_id" type="col"/>
-                    <field name="create_date" interval="month" type="row"/>
+                    <field name="date" type="col"/>
+                    <field name="employee_id" type="row"/>
                     <field name="total_amount" type="measure"/>
                 </graph>
             </field>
