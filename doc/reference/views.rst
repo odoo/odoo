@@ -963,6 +963,10 @@ calendar view are:
     view to open in readonly mode
 ``form_view_id``
     view to open when the user create or edit an event
+``event_open_popup``
+    If the option 'event_open_popup' is set to true, then the calendar view will
+    open events (or records) in a FormViewDialog. Otherwise, it will open events
+    in a new form view (with a do_action)
 ``quick_add``
     enables quick-event creation on click: only asks the user for a ``name``
     and tries to create a new event with just that and the clicked event

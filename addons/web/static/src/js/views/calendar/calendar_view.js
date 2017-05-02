@@ -108,12 +108,12 @@ var CalendarView = AbstractView.extend({
         //if quick_add = False, we don't allow quick_add
         //if quick_add = not specified in view, we use the default widgets.QuickCreate
         //if quick_add = is NOT False and IS specified in view, we this one for widgets.QuickCreate'   
-        this.controllerParams.quick_add_pop = (!('quick_add' in attrs) || utils.toBoolElse(attrs.quick_add+'', true));
-        this.controllerParams.disable_quick_create =  params.disable_quick_create || !this.controllerParams.quick_add_pop;
-        this.controllerParams.confirm_on_delete = true;
+        this.controllerParams.quickAddPop = (!('quick_add' in attrs) || utils.toBoolElse(attrs.quick_add+'', true));
+        this.controllerParams.disableQuickCreate =  params.disable_quick_create || !this.controllerParams.quickAddPop;
         // If this field is set ot true, we don't open the event in form view, but in a popup with the view_id passed by this parameter
         this.controllerParams.formViewId = !attrs.form_view_id || !utils.toBoolElse(attrs.form_view_id, true) ? false : attrs.form_view_id;
         this.controllerParams.readonlyFormViewId = !attrs.readonly_form_view_id || !utils.toBoolElse(attrs.readonly_form_view_id, true) ? false : attrs.readonly_form_view_id;
+        this.controllerParams.eventOpenPopup = utils.toBoolElse(attrs.event_open_popup || '', false);
         this.controllerParams.mapping = mapping;
         this.controllerParams.context = params.context || {};
 
@@ -124,14 +124,12 @@ var CalendarView = AbstractView.extend({
         this.loadParams.mapping = mapping;
         this.loadParams.fields = fields;
         this.loadParams.fieldsInfo = viewInfo.fieldsInfo;
-        this.loadParams.editable = !this.controllerParams.read_only_mode && !fields[mapping.date_start].readonly;
-        this.loadParams.creatable = !this.controllerParams.read_only_mode;
+        this.loadParams.editable = !fields[mapping.date_start].readonly;
         this.loadParams.eventLimit = eventLimit;
-        this.loadParams.field_color = attrs.color;
+        this.loadParams.fieldColor = attrs.color;
 
         this.loadParams.filters = filters;
         this.loadParams.mode = attrs.mode;
-        this.loadParams.scale_zoom = attrs.scale_zoom;
         this.loadParams.initialDate = moment(params.initialDate || new Date());
     },
 });
