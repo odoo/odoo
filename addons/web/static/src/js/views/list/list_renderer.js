@@ -173,24 +173,6 @@ var ListRenderer = BasicRenderer.extend({
             }).value();
     },
     /**
-     * When a list view is grouped, we need to display the name of each group in
-     * the 'title' row.  This is the purpose of this method.
-     *
-     * @private
-     * @param {any} value
-     * @param {Object} field a field description
-     * @returns {string}
-     */
-    _formatValue: function (value, field) {
-        if (field && field.type === 'selection') {
-            var choice = _.find(field.selection, function (c) {
-                return c[0] === value;
-            });
-            return choice[1];
-        }
-        return value || _t('Undefined');
-    },
-    /**
      * return the number of visible columns.  Note that this number depends on
      * the state of the renderer.  For example, in editable mode, it could be
      * one more that in non editable mode, because there may be a visible 'trash
@@ -409,8 +391,7 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $cells.unshift($('<td>'));
         }
-        var field = this.state.fields[this.state.groupedBy[groupLevel]];
-        var name = this._formatValue(group.value, field);
+        var name = group.value === undefined ? _t('Undefined') : group.value;
         var $th = $('<th>')
                     .addClass('o_group_name')
                     .text(name + ' (' + group.count + ')');

@@ -2470,6 +2470,15 @@ var BasicModel = AbstractModel.extend({
                             aggregateValues[key] = value;
                         }
                     });
+                    // When a view is grouped, we need to display the name of each group in
+                    // the 'title'.
+                    var value = group[rawGroupBy];
+                    if (list.fields[rawGroupBy].type === "selection") {
+                        var choice = _.find(list.fields[rawGroupBy].selection, function (c) {
+                            return c[0] === value;
+                        });
+                        value = choice[1];
+                    }
                     var newGroup = self._makeDataPoint({
                         modelName: list.model,
                         count: group[rawGroupBy + '_count'],
@@ -2477,7 +2486,7 @@ var BasicModel = AbstractModel.extend({
                         context: list.context,
                         fields: list.fields,
                         fieldsInfo: list.fieldsInfo,
-                        value: group[rawGroupBy],
+                        value: value,
                         aggregateValues: aggregateValues,
                         groupedBy: list.groupedBy.slice(1),
                         orderedBy: list.orderedBy,

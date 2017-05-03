@@ -39,12 +39,8 @@ var KanbanColumn = Widget.extend({
 
         var value = data.value;
         this.id = data.res_id || value;
-        var field = data.fields[data.groupedBy[0]]; // fixme: grouped by field might not be in the fvg
-        if (field && field.type === "selection") {
-            value = _.find(field.selection, function (s) { return s[0] === data.value; })[1]; // fixme: same process done in list_renderer
-        }
         // todo: handle group_by_m2o (nameget)
-        this.title = value || _t('Undefined');
+        this.title = value === undefined ? _t('Undefined') : value;
         this.folded = !data.isOpen;
         this.has_active_field = 'active' in data.fields;
         this.size = data.count;
