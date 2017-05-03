@@ -71,6 +71,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         // we need to clean the warning to have maximum one alert
         this.$el.last().filter('.o_tz_warning').remove();
         this.$el = this.$el.first();
+        var value = this.$el.val();
 
         if (this.$option) {
             this.$option.html(this.$option.html().split(' ')[0]);
@@ -78,7 +79,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
 
         var userOffset = this.recordData.tz_offset;
         this.mismatch = false;
-        if (userOffset) {
+        if (userOffset && value !== "" && value !== "false") {
             var offset = -(new Date().getTimezoneOffset());
             var browserOffset = (offset < 0) ? "-" : "+";
             browserOffset += _.str.sprintf("%02d", Math.abs(offset / 60));
@@ -92,7 +93,6 @@ var FieldTimezoneMismatch = FieldSelection.extend({
             $span.attr('title', _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Odoo is displayed according to your field timezone."));
             this.$el = this.$el.add($span);
 
-            var value = this.$el.val();
             this.$option = this.$('option').filter(function () {
                 return $(this).attr('value') === value;
             });
