@@ -144,13 +144,13 @@
 
 <template id="products_add_to_cart" inherit_id="website_sale.products_add_to_cart">
   <xpath expr="//a[@class='btn btn-default btn-xs a-submit']" position="attributes">
-   <attribute name="t-attf-data-has_optional">#{product.optional_product_ids and 1 or 0}</attribute>
+   <attribute name="t-attf-data-has-optional-product">#{product.optional_product_ids and 1 or 0}</attribute>
  </xpath>
 </template>
 
 <template id="product" inherit_id="website_sale.product">
   <xpath expr="//a[@id='add_to_cart']" position="attributes">
-   <attribute name="t-attf-data-has_optional">#{product.optional_product_ids and 1 or 0}</attribute>
+   <attribute name="t-attf-data-has-optional-product">#{product.optional_product_ids and 1 or 0}</attribute>
  </xpath>
 </template>
 

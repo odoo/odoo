@@ -31,12 +31,12 @@ tour.register('shop_customize', {
             trigger: "#customize-menu a:contains(Add to Cart)",
         },
         {
-            content: "Add to card single product on shop page",
-            trigger: 'a[data-has_optional=0]:eq(0)',
+            content: "Add single product to cart on shop page",
+            trigger: 'a[data-has-optional-product=0]:eq(0)',
         },
         {
-            content: "Add to card optional product on shop page",
-            trigger: 'a[data-has_optional=1]:eq(0)',
+            content: "Add optional product to cart on shop page",
+            trigger: 'a[data-has-optional-product=1]:eq(0)',
         },
         {
             content: "Back to shopping page",
