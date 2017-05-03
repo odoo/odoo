@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <!--
+        Definition des Tax Codes
+        
+      -->
+
+    <!--
+        Tax Code Configuration (version generique)
+      -->
+	  
+    <record id="vat_code_chart_root" model="account.tax.code.template">
+        <field name="name">Plan de Taxes Tunisie</field>
+    </record>
+<!-- ******************H.T. TVA collectee**************************** -->
+    <record model="account.tax.code.template" id="tax_col_ht">
+      <field name="name">Base H.T. TVA collectee</field>
+      <field name="code">a)</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_code_chart_root"/>
+    </record> 
+    <record model="account.tax.code.template" id="tax_col_29_ht">
+      <field name="name">Base H.T. 29.0%</field>
+      <field name="code">TVA collectee 29.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_col_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_col_18_ht">
+      <field name="name">Base H.T. 18.0%</field>
+      <field name="code">TVA collectee 18.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_col_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_col_12_ht">
+      <field name="name">Base H.T. 12.0%</field>
+      <field name="code">TVA collectee 12.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_col_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_col_6_ht">
+      <field name="name">Base H.T. 6.0%</field>
+      <field name="code">TVA collectee 6.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_col_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+  <!-- ****************** TVA collectee**************************** -->
+   <record model="account.tax.code.template" id="tax_col">
+      <field name="name">TVA collectee</field>
+      <field name="code">b)</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_code_chart_root"/>
+    </record> 
+    <record model="account.tax.code.template" id="tax_col_29">
+      <field name="name">TVA 29%</field>
+      <field name="code">TVA collectee 29.0%</field>
+      <field name="parent_id" ref="tax_col"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_col_18">
+      <field name="name">TVA 18.0%</field>
+      <field name="code">TVA collectee 18.0%</field>
+      <field name="parent_id" ref="tax_col"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_col_12">
+      <field name="name">TVA 12.0%</field>
+      <field name="code">TVA collectee 12.0%</field>
+      <field name="parent_id" ref="tax_col"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_col_6">
+      <field name="name">TVA 6.0%</field>
+      <field name="code">TVA collectee 6.0%</field>
+      <field name="parent_id" ref="tax_col"/>
+      <field name="sign">1.00</field>
+    </record>
+	
+	<!--  ***************H.T. TVA acquittee**************** -->
+	<record model="account.tax.code.template" id="tax_acq_ht">
+      <field name="name">Base H.T. TVA acquittee</field>
+      <field name="code">c)</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_code_chart_root"/>
+    </record> 
+    <record model="account.tax.code.template" id="tax_acq_29_ht">
+      <field name="name">Base H.T. 29.0%</field>
+      <field name="code">TVA acquittee 29.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_acq_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_acq_18_ht">
+      <field name="name">Base H.T. 18.0%</field>
+      <field name="code">TVA acquittee 18.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_acq_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_acq_12_ht">
+      <field name="name">Base H.T. 12.0%</field>
+      <field name="code">TVA acquittee 12.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_acq_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_acq_6_ht">
+      <field name="name">Base H.T. 6.0%</field>
+      <field name="code">TVA acquittee 6.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_acq_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+	<!--  *************** TVA acquittee**************** -->
+	<record model="account.tax.code.template" id="tax_acq">
+      <field name="name">TVA acquittee</field>
+      <field name="code">d)</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_code_chart_root"/>
+    </record> 
+    <record model="account.tax.code.template" id="tax_acq_29">
+      <field name="name">TVA 29.0%</field>
+      <field name="code">TVA acquittee 29.0%</field>
+      <field name="parent_id" ref="tax_acq"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_acq_18">
+      <field name="name">TVA 18.0%</field>
+      <field name="code">TVA acquittee 18.0%</field>
+      <field name="parent_id" ref="tax_acq"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_acq_12">
+      <field name="name">TVA 12.0%</field>
+      <field name="code">TVA acquittee 12.0%</field>
+      <field name="parent_id" ref="tax_acq"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_acq_6">
+      <field name="name">TVA 6.0%</field>
+      <field name="code">TVA acquittee 6.0%</field>
+      <field name="parent_id" ref="tax_acq"/>
+      <field name="sign">1.00</field>
+    </record>
+    <!--  ***************H.T. TVA acquittee pour immobilisations**************** -->
+    <record model="account.tax.code.template" id="tax_imm_ht">
+      <field name="name">Base H.T. TVA acquittee pour immobilisations</field>
+      <field name="code">e)</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_code_chart_root"/>
+    </record> 
+    <record model="account.tax.code.template" id="tax_imm_29_ht">
+      <field name="name">Base H.T. 29.0%</field>
+      <field name="code">TVA acquittee sur immobilisations 29.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_imm_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_imm_18_ht">
+      <field name="name">Base H.T. 18.0%</field>
+      <field name="code">TVA acquittee sur immobilisations 18.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_imm_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_imm_12_ht">
+      <field name="name">Base H.T. 12.0%</field>
+      <field name="code">TVA acquittee sur immobilisations 12.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_imm_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_imm_6_ht">
+      <field name="name">Base H.T. 6.0%</field>
+      <field name="code">TVA acquittee sur immobilisations 6.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_imm_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    
+
+   <!--  ***************TVA acquittee pour immobilisations**************** -->
+    <record model="account.tax.code.template" id="tax_imm">
+      <field name="name">TVA acquittee pour immobilisations</field>
+      <field name="code">f)</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_code_chart_root"/>
+    </record> 
+    <record model="account.tax.code.template" id="tax_imm_29">
+      <field name="name">TVA 29%</field>
+      <field name="code">TVA acquittee sur immobilisations 29%</field>
+      <field name="parent_id" ref="tax_imm"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_imm_18">
+      <field name="name">TVA 18%</field>
+      <field name="code">TVA acquittee sur immobilisations 18%</field>
+      <field name="parent_id" ref="tax_imm"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_imm_12">
+      <field name="name">TVA 12.0%</field>
+      <field name="code">TVA acquittee sur immobilisations 12.0%</field>
+      <field name="parent_id" ref="tax_imm"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_imm_6">
+      <field name="name">TVA 6.0%</field>
+      <field name="code">TVA acquittee sur immobilisations 6.0%</field>
+      <field name="parent_id" ref="tax_imm"/>
+      <field name="sign">1.00</field>
+    </record>
+    
+	<!--
+    #Configuration des parametres par defaut plan comptable
+	 -->	
+	
+	<record id="l10n_tn_pcg_chart_template" model="account.chart.template">
+            <field name="name">Plan Comptable General (Tunisie)</field>
+            <field name="account_root_id" ref="pcg_0"/>
+            <field name="tax_code_root_id" ref="vat_code_chart_root"/>
+            <field name="bank_account_view_id" ref="account5321"/>
+            <field name="property_account_receivable" ref="account4111"/>
+            <field name="property_account_payable" ref="account4011"/>
+			<field name="currency_id" ref="base.TND"/>
+			<!--
+            <field name="property_account_expense_categ" ref="account5321"/>
+            <field name="property_account_income_categ" ref="pcg_7071"/>
+			 -->
+        </record>
+ </data> 
+</openerp>
