@@ -3390,6 +3390,79 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many list with x2many: add a record', function (assert) {
+        assert.expect(18);
+
+        this.data.partner_type.fields.m2m = {
+            string: "M2M", type: "many2many", relation: 'turtle',
+        };
+        this.data.partner_type.records[0].m2m = [1, 2];
+        this.data.partner_type.records[1].m2m = [2, 3];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy"/>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'partner_type,false,list': '<tree>' +
+                        '<field name="display_name"/>' +
+                        '<field name="m2m" widget="many2many_tags"/>' +
+                    '</tree>',
+                'partner_type,false,search': '<search>' +
+                        '<field name="display_name" string="Name"/>' +
+                    '</search>',
+            },
+            mockRPC: function (route, args) {
+                assert.step(_.last(route.split('/')) + ' on ' + args.model);
+                if (args.model === 'turtle') {
+                    assert.step(args.args[0]); // the read ids
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        $('.modal .o_data_row:first').click(); // add a first record to the relation
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "the record should have been added to the relation");
+        assert.strictEqual(form.$('.o_data_row:first .o_badge_text').text(), 'leonardodonatello',
+            "inner m2m should have been fetched and correctly displayed");
+
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        $('.modal .o_data_row:first').click(); // add a second record to the relation
+
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            "the second record should have been added to the relation");
+        assert.strictEqual(form.$('.o_data_row:nth(1) .o_badge_text').text(), 'donatelloraphael',
+            "inner m2m should have been fetched and correctly displayed");
+
+        assert.verifySteps([
+            'read on partner',
+            'search_read on partner_type',
+            'read on turtle',
+            [1, 2, 3],
+            'read on partner_type',
+            'read on turtle',
+            [1, 2],
+            'search_read on partner_type',
+            'read on turtle',
+            [2, 3],
+            'read on partner_type',
+            'read on turtle',
+            [2, 3],
+        ]);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldStatus');
 
     QUnit.test('static statusbar widget on many2one field', function (assert) {
