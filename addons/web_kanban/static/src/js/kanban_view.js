@@ -553,7 +553,7 @@ var KanbanView = View.extend({
         }
     },
 
-    open_action: function (event) {
+    open_action: _.debounce(function (event) {
         var self = this;
         if (event.data.context) {
             event.data.context = new data.CompoundContext(event.data.context)
@@ -564,7 +564,7 @@ var KanbanView = View.extend({
                 });
         }
         this.do_execute_action(event.data, this.dataset, event.target.id, _.bind(self.reload_record, this, event.target));
-    },
+    }, 200, true),
 
     /*
     *  postprocessing of fields type many2many
