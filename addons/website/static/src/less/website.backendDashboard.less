@@ -77,12 +77,19 @@
                     }
 
                     [class*="nv-series-"] {
-                        stroke-width: 3 !important;
+                        //Display Line
+                        stroke-width: 3!important;
                         fill: @odoo-main-color-muted !important;
+                        position:absolute;
+                        background-color:red;
+                        z-index:auto;
+                        
                     }
 
                     .nv-groups .nv-point, g circle {
-                        fill: @odoo-brand-optional;                        
+                        //Display Point
+                        fill: @odoo-brand-optional; 
+                        //stroke-width: 20 !important;                       
                     }
 
                     .nv-groups .nv-point {
