@@ -1436,6 +1436,18 @@ exports.Orderline = Backbone.Model.extend({
         this.price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
         this.trigger('change',this);
     },
+    set_unit_price_manual(price){
+        var tax_amt = 0;
+        _.each(this.get_applicable_taxes(), function(tax) {
+            if (tax.amount_type === 'percent' && !tax.price_include) {
+                tax_amt += tax.amount;
+            }
+        });
+        if (this.pos.config.iface_tax_included) {
+            price = price / (1 + tax_amt / 100);
+        }
+        this.set_unit_price(price);
+    },
     get_unit_price: function(){
         var digits = this.pos.dp['Product Price'];
         // round and truncate to mimic _sybmbol_set behavior
