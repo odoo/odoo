@@ -1370,6 +1370,7 @@ class AccountPaymentTerm(models.Model):
         else:
             currency = self.env.user.company_id.currency_id
         prec = currency.decimal_places
+        next_date = fields.Date.from_string(date_ref)
         for line in self.line_ids:
             if line.value == 'fixed':
                 amt = round(line.value_amount, prec)
@@ -1377,8 +1378,8 @@ class AccountPaymentTerm(models.Model):
                 amt = round(value * (line.value_amount / 100.0), prec)
             elif line.value == 'balance':
                 amt = round(amount, prec)
-            if amt:
-                next_date = fields.Date.from_string(date_ref)
+
+            if line.value != 'balance' or amt:
                 if line.option == 'day_after_invoice_date':
                     next_date += relativedelta(days=line.days)
                 elif line.option == 'fix_day_following_month':

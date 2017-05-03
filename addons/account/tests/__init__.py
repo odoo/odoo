@@ -1,6 +1,7 @@
 #Accounting tests written in python should extend the class AccountingTestCase.
 #See its doc for more info.
 
+from . import test_invoice_due_date
 from . import test_account_customer_invoice
 from . import test_account_move_closed_period
 from . import test_account_supplier_invoice
