@@ -73,10 +73,10 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             if line.balance == 0:
                 continue
             for partial_line in line.matched_debit_ids:
-                if partial_line.create_date[:10] <= date_from:
+                if partial_line.debit_move_id.date <= date_from:
                     line_amount += partial_line.amount
             for partial_line in line.matched_credit_ids:
-                if partial_line.create_date[:10] <= date_from:
+                if partial_line.credit_move_id.date <= date_from:
                     line_amount -= partial_line.amount
             future_past[line.partner_id.id] += line_amount
 
@@ -118,10 +118,10 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 if line.balance == 0:
                     continue
                 for partial_line in line.matched_debit_ids:
-                    if partial_line.create_date[:10] <= date_from:
+                    if partial_line.debit_move_id.date <= date_from:
                         line_amount += partial_line.amount
                 for partial_line in line.matched_credit_ids:
-                    if partial_line.create_date[:10] <= date_from:
+                    if partial_line.credit_move_id.date <= date_from:
                         line_amount -= partial_line.amount
 
                 partners_amount[line.partner_id.id] += line_amount
