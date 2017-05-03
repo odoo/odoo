@@ -1119,6 +1119,7 @@ var BasicModel = AbstractModel.extend({
                             list_records[record.id].data = record;
                             self._parseServerData(fieldNames, list.fields, record);
                         });
+                        return self._fetchX2ManysBatched(list);
                     });
                     defs.push(def);
                 }
@@ -1645,11 +1646,21 @@ var BasicModel = AbstractModel.extend({
         var fieldsInfo = view ? view.fieldsInfo : fieldInfo.fieldsInfo;
         var fields = view ? view.fields : fieldInfo.relatedFields;
         var viewType = view ? view.type : fieldInfo.viewType;
+        var data = list._changes || list.data;
+        var x2mRecords = [];
 
         // step 1: collect ids
         var ids = [];
-        _.each(list.data, function (dataPoint) {
+        _.each(data, function (dataPoint) {
             var record = self.localData[dataPoint];
+            if (typeof record.data[fieldName] === 'string') {
+                // in this case, the value is a local ID, which means that the
+                // record has already been processed. It can happen for example
+                // when a user adds a record in a m2m relation, or loads more
+                // records in a kanban column
+                return;
+            }
+            x2mRecords.push(record);
             ids = _.unique(ids.concat(record.data[fieldName] || []));
             var m2mList = self._makeDataPoint({
                 fieldsInfo: fieldsInfo,
@@ -1696,8 +1707,7 @@ var BasicModel = AbstractModel.extend({
                 });
             });
 
-            _.each(list.data, function (dataPoint) {
-                var record = self.localData[dataPoint];
+            _.each(x2mRecords, function (record) {
                 var m2mList = self.localData[record.data[fieldName]];
 
                 m2mList.data = [];
