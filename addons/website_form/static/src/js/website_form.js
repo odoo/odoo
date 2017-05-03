@@ -108,10 +108,14 @@ odoo.define('website_form.animation', function (require) {
                 }
             }
 
+            console.log(form_values);
+            debugger;
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action')||this.$target.data('model_name')), form_values)
             .then(function(result_data) {
                 result_data = $.parseJSON(result_data);
+                console.log(result_data.id);
+                debugger;
                 if(!result_data.id) {
                     // Failure, the server didn't return the created record ID
                     self.update_status('error');
