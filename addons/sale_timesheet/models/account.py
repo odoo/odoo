@@ -55,7 +55,7 @@ class AccountAnalyticLine(models.Model):
             unit_amount = values.get('unit_amount', 0.0) or self.unit_amount
 
             # find the employee
-            employee_id = values.get('employee_id') or self.employee_id.id or self._default_employee_id().id
+            employee_id = values.get('employee_id') or self.employee_id.id or (self.env.user.employee_ids and self.env.user.employee_ids[0].id or False)
             employee = self.env['hr.employee'].browse(employee_id) if employee_id else self.env['hr.employee']
             if not employee:
                 user_id = values.get('user_id') or self.user_id.id or self._default_user()
