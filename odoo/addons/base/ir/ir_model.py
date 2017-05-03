@@ -371,15 +371,8 @@ class IrModelFields(models.Model):
                 msg = _("Field names can only contain characters, digits and underscores (up to 63).")
                 raise ValidationError(msg)
 
-    @api.constrains('model', 'name')
-    def _unique_name(self):
-        # fix on stable branch (to be converted into an SQL constraint)
-        for field in self:
-            count = self.search_count([('model', '=', field.model), ('name', '=', field.name)])
-            if count > 1:
-                raise ValidationError(_("Field names must be unique per model."))
-
     _sql_constraints = [
+        ('name_unique', 'UNIQUE(model, name)', "Field names must be unique per model."),
         ('size_gt_zero', 'CHECK (size>=0)', 'Size of the field cannot be negative.'),
     ]
 
