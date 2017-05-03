@@ -260,6 +260,20 @@ var AbstractField = Widget.extend({
         return field_utils.format[this.field.type](value, this.field, options);
     },
     /**
+     * This method check if a value is the same as the current value of the
+     * field.  For example, a fieldDate widget might want to use the moment
+     * specific value isSame instead of ===.
+     *
+     * This method is used by the _setValue method.
+     *
+     * @private
+     * @param {any} value
+     * @returns {boolean}
+     */
+    _isSameValue: function (value) {
+        return this.value === value;
+    },
+    /**
      * convert a string representation to a valid value, depending on the field
      * type.
      *
@@ -330,7 +344,7 @@ var AbstractField = Widget.extend({
     _setValue: function (value) {
         // we try to avoid doing useless work, if the value given has not
         // changed.  Note that we compare the unparsed values.
-        if (this.lastSetValue === value || (value !== false && value === this.value)) {
+        if (this.lastSetValue === value) {
             return;
         }
         this.lastSetValue = value;
@@ -339,6 +353,9 @@ var AbstractField = Widget.extend({
             this._isValid = true;
         } catch (e) {
             this._isValid = false;
+            return;
+        }
+        if (this._isSameValue(value)) {
             return;
         }
         var changes = {};

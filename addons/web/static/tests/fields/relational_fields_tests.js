@@ -1614,6 +1614,86 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many and onchange (with integer)', function (assert) {
+        assert.expect(4);
+
+        this.data.turtle.onchanges = {
+            turtle_int: function (obj) {}
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_int"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('td:contains(9)').click();
+        form.$('td input[name="turtle_int"]').val("3").trigger('input');
+
+        // the 'change' event is triggered on the input when we focus somewhere
+        // else, for example by clicking in the body.  However, if we try to
+        // programmatically click in the body, it does not trigger a change
+        // event, so we simply trigger it directly instead.
+        form.$('td input[name="turtle_int"]').trigger('change');
+
+        assert.verifySteps(['read', 'read', 'onchange']);
+        form.destroy();
+    });
+
+    QUnit.test('one2many and onchange (with date)', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.onchanges = {
+            date: function (obj) {}
+        };
+        this.data.partner.records[0].p = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="date"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('td:contains(01/25/2017)').click();
+        form.$('.o_datepicker_input').click();
+        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        form.$('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
+        form.$('.day:contains(22)').click(); // select the 22 February
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.verifySteps(['read', 'read', 'onchange', 'write', 'read']);
+        form.destroy();
+    });
+
     QUnit.test('one2many list (editable): readonly domain is evaluated', function (assert) {
         assert.expect(2);
 
