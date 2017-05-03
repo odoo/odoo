@@ -40,6 +40,10 @@ class PickingType(models.Model):
     use_existing_lots = fields.Boolean(
         'Use Existing Lots/Serial Numbers', default=True,
         help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
+    show_operations = fields.Boolean(
+        'Show Operations', default=False)
+    show_reserved = fields.Boolean(
+        'Show Reserved', default=True)
 
     # Statistics for the kanban view
     last_done_picking = fields.Char('Last 10 Done Pickings', compute='_compute_last_done_picking')
@@ -263,7 +267,7 @@ class Picking(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     pack_operation_ids = fields.One2many(
-        'stock.pack.operation', 'picking_id', 'Related Packing Operations',
+        'stock.pack.operation', 'picking_id', 'Operations',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     pack_operation_exist = fields.Boolean(
@@ -296,7 +300,6 @@ class Picking(models.Model):
           - one of the move is assigned or partially available: partially available
           - otherwise in waiting or confirmed state
         '''
-        # FIXME: goes in 3 times at each write?
         if not self.move_lines:
             self.state = 'draft'
         elif any(move.state == 'draft' for move in self.move_lines):  # TDE FIXME: should be all ?
@@ -514,7 +517,6 @@ class Picking(models.Model):
             #                                    'picking_id': pick.id
             #                                    }) # Might change first element
             # # Link existing moves or add moves when no one is related
-
             for ops in pick.pack_operation_ids.filtered(lambda x: not x.move_id):
                 # Search move with this product
                 moves = pick.move_lines.filtered(lambda x: x.product_id == ops.product_id) 

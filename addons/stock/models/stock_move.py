@@ -50,7 +50,7 @@ class StockMove(models.Model):
         digits=0, store=True,
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(
-        'Quantity',
+        'Initial Demand',
         digits=dp.get_precision('Product Unit of Measure'),
         default=1.0, required=True, states={'done': [('readonly', True)]},
         help="This is the quantity of products from an inventory "
@@ -121,10 +121,6 @@ class StockMove(models.Model):
              "its current stock) to gather products. If we want to chain moves and have this one to wait for the previous,"
              "this second option should be chosen.")
     scrapped = fields.Boolean('Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
-    remaining_qty = fields.Float(
-        'Remaining Quantity', compute='_get_remaining_qty',
-        digits=0, states={'done': [('readonly', True)]},
-        help="Remaining Quantity in default UoM according to operations matched with this move")
     procurement_id = fields.Many2one('procurement.order', 'Procurement')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
     rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', ondelete='restrict', help='The procurement rule that created this stock move')
@@ -135,10 +131,12 @@ class StockMove(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
     pack_operation_ids = fields.One2many('stock.pack.operation', 'move_id')
+    pack_operation_nosuggest_ids = fields.One2many('stock.pack.operation', 'move_id', domain=[('product_qty', '=', 0.0)])
     origin_returned_move_id = fields.Many2one('stock.move', 'Origin return move', copy=False, help='Move that created the return move')
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
     reserved_availability = fields.Float(
         'Quantity Reserved', compute='_compute_reserved_availability',
+        digits=dp.get_precision('Product Unit of Measure'),
         readonly=True, help='Quantity that has already been reserved for this move')
     availability = fields.Float(
         'Forecasted Quantity', compute='_compute_product_availability',
@@ -151,7 +149,63 @@ class StockMove(models.Model):
     route_ids = fields.Many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
-    quantity_done = fields.Float('Quantity', compute='_qty_done_compute', digits=dp.get_precision('Product Unit of Measure'))
+    quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits=dp.get_precision('Product Unit of Measure'), inverse='_quantity_done_set',
+                                 states={'done': [('readonly', True)]})
+    show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
+    show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
+    show_reserved_availability = fields.Boolean('From Supplier', compute='_compute_show_reserved_availability')
+    picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
+    product_type = fields.Selection(related='product_id.type', readonly=True)
+    additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
+    is_editable = fields.Boolean('Is editable when done', compute='_compute_is_editable')
+    is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
+
+    @api.multi
+    @api.depends('has_tracking', 'pack_operation_ids', 'location_id', 'location_dest_id', 'is_editable')
+    def _compute_show_details_visible(self):
+        """ According to this field, the button that calls `action_show_details` will be displayed
+        to work on a move from its picking form view, or not.
+        """
+        for move in self:
+            if not move.product_id:
+                move.show_details_visible = False
+                continue
+
+            if move.is_editable:
+                move.show_details_visible = True
+                continue
+
+            multi_locations_enabled = False
+            if self.user_has_groups('stock.group_stock_multi_locations'):
+                multi_locations_enabled = move.location_id.child_ids or move.location_dest_id.child_ids
+
+            if move.picking_id.picking_type_id.show_operations is False\
+                    and move.state not in ['cancel', 'draft', 'confirmed']\
+                    and (multi_locations_enabled or move.has_tracking != 'none' or len(move.pack_operation_ids) > 1):
+                move.show_details_visible = True
+            else:
+                move.show_details_visible = False
+
+    @api.multi
+    def _compute_show_reserved_availability(self):
+        """ This field is only of use in an attrs in the picking view, in order to hide the
+        "available" column if the move is coming from a supplier.
+        """
+        for move in self:
+            move.show_reserved_availability = not move.location_id.usage == 'supplier'
+
+    @api.multi
+    def _compute_is_editable(self):
+        """ This field is only of use in an attrs in the picking view, in order to show
+        the button to edit move when they're done.
+        """
+        for move in self:
+            move.is_editable = move.state == 'done' and self.user_has_groups('stock.group_stock_manager')
+
+    @api.multi
+    def _compute_is_initial_demand_editable(self):
+        for move in self:
+            move.is_initial_demand_editable = move.state not in ['done', 'cancel'] and self.user_has_groups('stock.group_stock_manager')
 
     @api.one
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -193,11 +247,6 @@ class StockMove(models.Model):
         for `product_qty`, where the same write should set the `product_uom_qty` field instead, in order to
         detect errors. """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
-
-    @api.one
-    def _get_remaining_qty(self):
-        # TODO: sle jco
-        pass
 
 
     @api.one
@@ -257,6 +306,20 @@ class StockMove(models.Model):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_move_product_location_index',))
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX stock_move_product_location_index ON stock_move (product_id, location_id, location_dest_id, company_id, state)')
+
+    @api.model
+    def default_get(self, fields_list):
+        # We override the default_get to make stock moves created after the picking was confirmed
+        # directly as available (like a force_assign). This allows to create extra move lines in
+        # the fp view.
+        defaults = super(StockMove, self).default_get(fields_list)
+        if self.env.context.get('default_picking_id'):
+            picking_id = self.env['stock.picking'].browse(self.env.context['default_picking_id'])
+            if picking_id.state not in ['draft', 'confirmed']:
+                defaults['state'] = 'assigned'
+                defaults['product_uom_qty'] = 0.0
+                defaults['additional'] = True
+        return defaults
 
     @api.multi
     def name_get(self):
@@ -387,10 +450,6 @@ class StockMove(models.Model):
         forgot some of them, use this tool instead. """
         return self.filtered(lambda move: move.state not in ('done', 'cancel'))
 
-
-    # Main actions
-    # ------------------------------------------------------------
-
     @api.multi
     def do_unreserve(self):
         if any(move.state in ('done', 'cancel') for move in self):
@@ -443,7 +502,8 @@ class StockMove(models.Model):
         product = self.product_id.with_context(lang=self.partner_id.lang or self.env.user.lang)
         self.name = product.partner_ref
         self.product_uom = product.uom_id.id
-        self.product_uom_qty = 1.0
+        if self.product_uom_qty:
+            self.product_uom_qty = 1.0
         return {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
 
     @api.onchange('date')
@@ -945,4 +1005,3 @@ class StockMove(models.Model):
             'target': 'new',
             'res_id': self.id}
     show_picking = action_show_picking
-

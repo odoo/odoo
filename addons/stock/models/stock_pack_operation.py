@@ -10,7 +10,7 @@ from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 
 
 class PackOperation(models.Model):
-    _name = "stock.pack.operation"
+    _name = "stock.pack.operation" #TODO: change to stock.move.operation
     _description = "Packing Operation"
     _order = "result_package_id desc, id"
 
@@ -30,11 +30,12 @@ class PackOperation(models.Model):
     ordered_qty = fields.Float('Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'))
     qty_done = fields.Float('Done', default=0.0, digits=dp.get_precision('Product Unit of Measure'), copy=False)
     package_id = fields.Many2one('stock.quant.package', 'Source Package')
+    lot_id = fields.Many2one('stock.production.lot', 'Lot')
+    lot_name = fields.Char('Lot/Serial Number')
     result_package_id = fields.Many2one(
         'stock.quant.package', 'Destination Package',
         ondelete='cascade', required=False,
         help="If set, the operations are packed into this package")
-    lot_id = fields.Many2one('stock.production.lot', 'Lot')
     date = fields.Datetime('Date', default=fields.Datetime.now(), required=True)
     owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
     location_id = fields.Many2one('stock.location', 'From', required=True)
@@ -54,9 +55,10 @@ class PackOperation(models.Model):
             operation.to_loc = '%s%s' % (operation_sudo.location_dest_id.name, operation_sudo.result_package_id.name or '')
 
     @api.one
+    @api.depends('picking_id.picking_type_id', 'product_id.tracking')
     def _compute_lots_visible(self):
-        if self.picking_id.picking_type_id and self.product_id.tracking != 'none':  # TDE FIXME: not sure correctly migrated
-            picking = self.picking_id
+        picking = self.picking_id
+        if picking.picking_type_id and self.product_id.tracking != 'none':  # TDE FIXME: not sure correctly migrated
             self.lots_visible = picking.picking_type_id.use_existing_lots or picking.picking_type_id.use_create_lots
         else:
             self.lots_visible = self.product_id.tracking != 'none'
