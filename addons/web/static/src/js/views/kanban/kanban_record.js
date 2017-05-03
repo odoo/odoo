@@ -90,7 +90,7 @@ var KanbanRecord = Widget.extend({
      * @returns {boolean} the domain evaluted with the current values
      */
     _computeDomain: function (d) {
-        return new Domain(d).compute(this.state.getEvalContext());
+        return new Domain(d).compute(this.state.evalContext);
     },
     /**
      * Generates the color classname from a given variable
