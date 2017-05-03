@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.misc import formatLang
-from odoo.tools import float_is_zero, float_compare
+from odoo.tools import float_is_zero, float_compare, pycompat
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons import decimal_precision as dp
 from lxml import etree
@@ -122,6 +122,12 @@ class AccountMove(models.Model):
 
     @api.multi
     def write(self, vals):
+        values = []
+        if 'date' in vals:
+            for line in self.mapped('line_ids').filtered(lambda l: l.amount_currency and l.currency_id):
+                values.append((1, line.id, line.onchange_amount_currency(line.amount_currency, line.currency_id, vals['date'])))
+            if values:
+                vals['line_ids'] = values
         if 'line_ids' in vals:
             res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
             self.assert_balanced()
@@ -492,6 +498,17 @@ class AccountMoveLine(models.Model):
             if line.amount_currency:
                 if (line.amount_currency > 0.0 and line.credit > 0.0) or (line.amount_currency < 0.0 and line.debit > 0.0):
                     raise ValidationError(_('The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.'))
+
+    @api.onchange('amount_currency', 'currency_id')
+    def _onchange_amount_currency(self):
+        for k, v in pycompat.items(self.onchange_amount_currency(self.amount_currency, self.currency_id, self.move_id.date)):
+            setattr(self, k, v)
+
+    @api.multi
+    def onchange_amount_currency(self, amount, currency, date):
+        if currency and currency != self.company_currency_id:
+            amount = currency.with_context(date=date).compute(amount, self.company_currency_id)
+        return {'debit': amount > 0 and amount or 0.0, 'credit': amount < 0 and -amount or 0.0}
 
     ####################################################
     # Reconciliation interface methods
