@@ -945,7 +945,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('button executes action and reloads', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var kanban = createView({
             View: KanbanView,
@@ -974,6 +974,9 @@ QUnit.module('Views', {
         });
         $('button[data-name="a1"]').first().click();
         assert.strictEqual(count, 1, "should have triggered a execute action");
+
+        $('button[data-name="a1"]').first().click();
+        assert.strictEqual(count, 1, "double-click on kanban actions should be debounced");
 
         assert.verifySteps([
             '/web/dataset/search_read',
