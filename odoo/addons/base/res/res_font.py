@@ -91,7 +91,7 @@ class ResFont(models.Model):
         # Remove inexistent fonts
         self.search([('name', 'not in', existing_font_names), ('path', '!=', '/dev/null')]).unlink()
 
-        self.pool.signal_caches_change()
+        self.pool.cache_invalidated = True
         return self._sync()
 
     def _sync(self):

@@ -32,8 +32,8 @@ def dispatch(method, params):
     security.check(db,uid,passwd)
     registry = odoo.registry(db).check_signaling()
     fn = globals()['exp_' + method]
-    res = fn(db, uid, *params)
-    registry.signal_caches_change()
+    with registry.manage_changes():
+        res = fn(db, uid, *params)
     return res
 
 def exp_render_report(db, uid, object, ids, datas=None, context=None):

@@ -278,6 +278,9 @@ class WebRequest(object):
         if self._cr:
             if exc_type is None and not self._failed:
                 self._cr.commit()
+                self.registry.signal_changes()
+            else:
+                self.registry.reset_changes()
             self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
@@ -1467,7 +1470,6 @@ class Root(object):
                             result = _dispatch_nodb()
                     else:
                         result = ir_http._dispatch()
-                        ir_http.pool.signal_caches_change()
                 else:
                     result = _dispatch_nodb()
 

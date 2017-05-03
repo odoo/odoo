@@ -114,7 +114,7 @@ class BaseAutomation(models.Model):
             self._cr.commit()
             self.env.reset()
             registry = Registry.new(self._cr.dbname)
-            registry.signal_registry_change()
+            registry.registry_invalidated = True
 
     def _get_actions(self, records, triggers):
         """ Return the actions of the given triggers for records' model. The

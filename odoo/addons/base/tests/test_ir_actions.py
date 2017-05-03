@@ -188,21 +188,18 @@ class TestCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
 
     def setUp(self):
-        # use a test cursor instead of a real cursor
+        # check that the registry is properly reset
         registry = odoo.registry()
-        registry.enter_test_mode()
         fnames = set(registry[self.MODEL]._fields)
-
         @self.addCleanup
-        def callback():
-            registry.leave_test_mode()
-            # the tests may have modified the registry, reset it
-            with registry.cursor() as cr:
-                registry.clear_caches()
-                registry.setup_models(cr)
-                assert set(registry[self.MODEL]._fields) == fnames
+        def check_registry():
+            assert set(registry[self.MODEL]._fields) == fnames
 
         super(TestCustomFields, self).setUp()
+
+        # use a test cursor instead of a real cursor
+        self.registry.enter_test_mode()
+        self.addCleanup(self.registry.leave_test_mode)
 
         # do not reload the registry after removing a field
         self.env = self.env(context={'_force_unlink': True})

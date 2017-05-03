@@ -95,8 +95,9 @@ class ir_cron(models.Model):
             if start_time and _logger.isEnabledFor(logging.DEBUG):
                 end_time = time.time()
                 _logger.debug('%.3fs (cron %s, server action %d with uid %d)', end_time - start_time, cron_name, server_action_id, self.env.uid)
-            self.pool.signal_caches_change()
+            self.pool.signal_changes()
         except Exception as e:
+            self.pool.reset_changes()
             self._handle_callback_exception(cron_name, server_action_id, job_id, e)
 
     @classmethod

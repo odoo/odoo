@@ -5,7 +5,7 @@
 
 """
 from collections import Mapping, defaultdict, deque
-from contextlib import closing
+from contextlib import closing, contextmanager
 from functools import partial
 from operator import attrgetter
 from weakref import WeakValueDictionary
@@ -98,10 +98,8 @@ class Registry(Mapping):
                     cr.commit()
 
         registry.ready = True
+        registry.registry_invalidated = bool(update_module)
 
-        if update_module:
-            # only in case of update, otherwise we'll have an infinite reload loop!
-            registry.signal_registry_change()
         return registry
 
     def init(self, db_name):
@@ -135,10 +133,9 @@ class Registry(Mapping):
         self.registry_sequence = None
         self.cache_sequence = None
 
-        self.cache = LRU(8192)
-        # Flag indicating if at least one model cache has been cleared.
-        # Useful only in a multi-process context.
-        self.cache_cleared = False
+        # Flags indicating invalidation of the registry or the cache.
+        self.registry_invalidated = False
+        self.cache_invalidated = False
 
         with closing(self.cursor()) as cr:
             has_unaccent = odoo.modules.db.has_unaccent(cr)
@@ -151,8 +148,9 @@ class Registry(Mapping):
         """ Delete the registry linked to a given database. """
         with cls._lock:
             if db_name in cls.registries:
-                cls.registries[db_name].clear_caches()
-                del cls.registries[db_name]
+                registry = cls.registries.pop(db_name)
+                registry.clear_caches()
+                registry.registry_invalidated = True
 
     @classmethod
     def delete_all(cls):
@@ -278,6 +276,8 @@ class Registry(Mapping):
         for model in models:
             model._setup_complete()
 
+        self.registry_invalidated = True
+
     def post_init(self, func, *args, **kwargs):
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
@@ -307,7 +307,6 @@ class Registry(Mapping):
 
         if models:
             models[0].recompute()
-        cr.commit()
 
         # make sure all tables are present
         missing = [name
@@ -321,17 +320,26 @@ class Registry(Mapping):
                 if name in missing:
                     _logger.info("Recreate table of model %s.", name)
                     env[name].init()
-            cr.commit()
             # check again, and log errors if tables are still missing
             for name, model in env.items():
                 if not model._abstract and not table_exists(cr, model._table):
                     _logger.error("Model %s has no table.", name)
 
+    @lazy_property
+    def cache(self):
+        """ A cache for model methods. """
+        # this lazy_property is automatically reset by lazy_property.reset_all()
+        return LRU(8192)
+
+    def _clear_cache(self):
+        """ Clear the cache and mark it as invalidated. """
+        self.cache.clear()
+        self.cache_invalidated = True
+
     def clear_caches(self):
         """ Clear the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
         """
-        self.cache.clear()
         for model in self.models.itervalues():
             model.clear_caches()
 
@@ -381,29 +389,50 @@ class Registry(Mapping):
             elif self.cache_sequence != c:
                 _logger.info("Invalidating all model caches after database signaling.")
                 self.clear_caches()
-                self.cache_cleared = False
+                self.cache_invalidated = False
             self.registry_sequence = r
             self.cache_sequence = c
 
         return self
 
-    def signal_registry_change(self):
-        """ Notifies other processes that the registry has changed. """
-        if odoo.multi_process:
+    def signal_changes(self):
+        """ Notifies other processes if registry or cache has been invalidated. """
+        if odoo.multi_process and self.registry_invalidated:
             _logger.info("Registry changed, signaling through the database")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_registry_signaling')")
                 self.registry_sequence = cr.fetchone()[0]
 
-    def signal_caches_change(self):
-        """ Notifies other processes if caches have been invalidated. """
-        if odoo.multi_process and self.cache_cleared:
-            # signal it through the database to other processes
+        # no need to notify cache invalidation in case of registry invalidation,
+        # because reloading the registry implies starting with an empty cache
+        elif odoo.multi_process and self.cache_invalidated:
             _logger.info("At least one model cache has been invalidated, signaling through the database.")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_cache_signaling')")
                 self.cache_sequence = cr.fetchone()[0]
-                self.cache_cleared = False
+
+        self.registry_invalidated = False
+        self.cache_invalidated = False
+
+    def reset_changes(self):
+        """ Reset the registry and cancel all invalidations. """
+        if self.registry_invalidated:
+            with closing(self.cursor()) as cr:
+                self.setup_models(cr)
+                self.registry_invalidated = False
+        if self.cache_invalidated:
+            self.cache.clear()
+            self.cache_invalidated = False
+
+    @contextmanager
+    def manage_changes(self):
+        """ Context manager to signal/discard registry and cache invalidations. """
+        try:
+            yield self
+            self.signal_changes()
+        except Exception:
+            self.reset_changes()
+            raise
 
     def in_test_mode(self):
         """ Test whether the registry is in 'test' mode. """

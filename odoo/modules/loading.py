@@ -133,6 +133,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             registry.setup_models(cr)
             registry.init_models(cr, model_names, {'module': package.name})
+            cr.commit()
 
         idref = {}
 
