@@ -39,6 +39,8 @@ var KanbanRecord = Widget.extend({
         this.subWidgets = {};
 
         this._setState(state);
+        // avoid quick multiple clicks
+        this._onKanbanActionClicked = _.debounce(this._onKanbanActionClicked, 300, true);
     },
     start: function () {
         return this._super.apply(this, arguments).then(this._render.bind(this));
