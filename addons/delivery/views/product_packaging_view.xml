@@ -4,6 +4,7 @@
 <record model="ir.ui.view" id="product_packaging_delivery_form">
     <field name="name">product.packaging.form.delivery</field>
     <field name="model">product.packaging</field>
+    <field name="inherit_id" eval="False"/>
     <field name="arch" type="xml">
         <form string="Delivery Packaging">
             <sheet>
@@ -28,6 +29,7 @@
 <record model="ir.ui.view" id="product_packaging_delivery_tree">
     <field name="name">product.packaging.tree.delivery</field>
     <field name="model">product.packaging</field>
+    <field name="inherit_id" eval="False"/>
     <field name="arch" type="xml">
         <tree string="Delivery Packagings">
             <field name="sequence" widget="handle"/>
