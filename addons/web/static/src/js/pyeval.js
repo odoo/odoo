@@ -1027,7 +1027,7 @@
                                 instance.web._t("Local evaluation failure\n%s\n\n%s"),
                                 e.message, JSON.stringify(source))
                     }
-                }};
+                }};                
             }
             d.resolve(result);
         }, 0); });
