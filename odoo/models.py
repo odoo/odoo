@@ -3300,10 +3300,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _create(self, vals):
-        # low-level implementation of create()
-        if self.is_transient():
-            self._transient_vacuum()
-
         # data of parent records to create or update, by model
         tocreate = {
             parent_model: {'id': vals.pop(parent_field, None)}
