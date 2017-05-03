@@ -1,207 +1,496 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
 <!-- Note : I set a sequence of 10 on all VAT taxes, because it is then
      easier to create an eco-tax with a lower sequence (VAT applies on the
      amount of the eco-tax)
 -->
 
     <!-- Account Tags -->
+    <record id="tag_fr_01" model="account.account.tag">
+        <field name="name">Base H.T. TVA collectée</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH-20_0" model="account.account.tag">
-            <field name="name">ACH-20.0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_02" model="account.account.tag">
+        <field name="name">Base H.T. 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_20_0" model="account.account.tag">
-            <field name="name">20.0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_03" model="account.account.tag">
+        <field name="name">Base H.T. 19.6%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_10_0" model="account.account.tag">
-            <field name="name">10.0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_04" model="account.account.tag">
+        <field name="name">Base H.T. 8.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_5_5" model="account.account.tag">
-            <field name="name">5.5</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_05" model="account.account.tag">
+        <field name="name">Base H.T. 10.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_2_1" model="account.account.tag">
-            <field name="name">2.1</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_06" model="account.account.tag">
+        <field name="name">Base H.T. 7.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_20_0_TTC" model="account.account.tag">
-            <field name="name">20.0-TTC</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_07" model="account.account.tag">
+        <field name="name">Base H.T. 5.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_10_0_TTC" model="account.account.tag">
-            <field name="name">10.0-TTC</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_08" model="account.account.tag">
+        <field name="name">Base H.T. 5.5.0%</field>
+        <field name="applicability">taxes</field>
+     </record>
 
-        <record id="tax_8_5_TTC" model="account.account.tag">
-            <field name="name">8.5-TTC</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_09" model="account.account.tag">
+        <field name="name">Base H.T. 2.1%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_5_5_TTC" model="account.account.tag">
-            <field name="name">5.5-TTC</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_10" model="account.account.tag">
+        <field name="name">TVA collectée</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_2_1_TTC" model="account.account.tag">
-            <field name="name">2.1-TTC</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_11" model="account.account.tag">
+        <field name="name">TVA 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH-8_5" model="account.account.tag">
-            <field name="name">ACH-8_5</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_12" model="account.account.tag">
+        <field name="name">TVA 19.6%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH-10_0" model="account.account.tag">
-            <field name="name">ACH-10_0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_13" model="account.account.tag">
+        <field name="name">TVA 8.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH-5_5" model="account.account.tag">
-            <field name="name">ACH-5.5</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_14" model="account.account.tag">
+        <field name="name">TVA 10.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH-2_1" model="account.account.tag">
-            <field name="name">ACH-2.1</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_15" model="account.account.tag">
+        <field name="name">TVA 7.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH-20_0_TTC" model="account.account.tag">
-            <field name="name">ACH-20.0-TTC</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_16" model="account.account.tag">
+        <field name="name">TVA 5.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH-8_5_TTC" model="account.account.tag">
-            <field name="name">ACH-8_5_TTC</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_17" model="account.account.tag">
+        <field name="name">TVA 5.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH-10_0_TTC" model="account.account.tag">
-            <field name="name">ACH-10.0-TTC</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_18" model="account.account.tag">
+        <field name="name">TVA 2.1%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH-5_5_TTC" model="account.account.tag">
-            <field name="name">ACH-5.5-TTC</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_19" model="account.account.tag">
+        <field name="name">Base H.T. TVA acquittée</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH-2_1_TTC" model="account.account.tag">
-            <field name="name">ACH-2.1-TTC</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_20" model="account.account.tag">
+        <field name="name">Base H.T. 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_IMMO_20_0" model="account.account.tag">
-            <field name="name">IMMO-20.0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_21" model="account.account.tag">
+        <field name="name">Base H.T. 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_IMMO_8_5" model="account.account.tag">
-            <field name="name">IMMO_8_5</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_22" model="account.account.tag">
+        <field name="name">Base H.T. 19.6%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_IMMO-10_0" model="account.account.tag">
-            <field name="name">IMMO-10.0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_23" model="account.account.tag">
+        <field name="name">Base H.T. 8.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_IMMO_5_5" model="account.account.tag">
-            <field name="name">IMMO-5.5</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_24" model="account.account.tag">
+        <field name="name">Base H.T. 10.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_IMMO-2_1" model="account.account.tag">
-            <field name="name">IMMO-2.1</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_25" model="account.account.tag">
+        <field name="name">Base H.T. 7.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH_UE_due_20_0" model="account.account.tag">
-            <field name="name">ACH_UE_due-20.0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_26" model="account.account.tag">
+        <field name="name">Base H.T. 5.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH_UE_due_8_5" model="account.account.tag">
-            <field name="name">ACH_UE_due-8.5</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_27" model="account.account.tag">
+        <field name="name">Base H.T. 5.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH_UE_due_10_0" model="account.account.tag">
-            <field name="name">ACH_UE_due-10.0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_28" model="account.account.tag">
+        <field name="name">Base H.T. 2.1%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH_UE_due_5_5" model="account.account.tag">
-            <field name="name">ACH_UE_due-5.5</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_29" model="account.account.tag">
+        <field name="name">TVA acquittée</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH_UE_due_2_1" model="account.account.tag">
-            <field name="name">ACH_UE_due-2.1</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_30" model="account.account.tag">
+        <field name="name">TVA 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH_UE_ded_20_0" model="account.account.tag">
-            <field name="name">ACH_UE_ded.-20.0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_31" model="account.account.tag">
+        <field name="name">TVA 19.6%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH_UE_ded_8_5" model="account.account.tag">
-            <field name="name">ACH_UE_ded.-8.5</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_32" model="account.account.tag">
+        <field name="name">TVA 8.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH_UE_ded_10_0" model="account.account.tag">
-            <field name="name">ACH_UE_ded.-10.0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_33" model="account.account.tag">
+        <field name="name">TVA 10.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH_UE_ded_5_5" model="account.account.tag">
-            <field name="name">ACH_UE_ded.-5.5</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_34" model="account.account.tag">
+        <field name="name">TVA 7.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_ACH_UE_ded_2_1" model="account.account.tag">
-            <field name="name">ACH_UE_ded.-2.1</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_35" model="account.account.tag">
+        <field name="name">TVA 5.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_EXO_0" model="account.account.tag">
-            <field name="name">EXO-0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_36" model="account.account.tag">
+        <field name="name">TVA 5.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_EXPORT_0" model="account.account.tag">
-            <field name="name">EXPORT-0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_37" model="account.account.tag">
+        <field name="name">TVA 2.1%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_UE_0" model="account.account.tag">
-            <field name="name">UE-0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_38" model="account.account.tag">
+        <field name="name">Base H.T. TVA acquittée pour immobilisations</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_IMPORT_0" model="account.account.tag">
-            <field name="name">IMPORT-0</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_39" model="account.account.tag">
+        <field name="name">Base H.T. 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
-        <record id="tax_8_5" model="account.account.tag">
-            <field name="name">8.5</field>
-            <field name="applicability">taxes</field>
-        </record>
+    <record id="tag_fr_40" model="account.account.tag">
+        <field name="name">Base H.T. 19.6%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
+    <record id="tag_fr_41" model="account.account.tag">
+        <field name="name">Base H.T. 8.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_42" model="account.account.tag">
+        <field name="name">Base H.T. 10.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_43" model="account.account.tag">
+        <field name="name">Base H.T. 7.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_44" model="account.account.tag">
+        <field name="name">Base H.T. 5.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_45" model="account.account.tag">
+        <field name="name">Base H.T. 5.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_46" model="account.account.tag">
+        <field name="name">Base H.T. 2.1%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_47" model="account.account.tag">
+        <field name="name">TVA acquittée pour immobilisations</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_48" model="account.account.tag">
+        <field name="name">TVA 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_49" model="account.account.tag">
+        <field name="name">TVA 19.6%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_50" model="account.account.tag">
+        <field name="name">TVA 8.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_51" model="account.account.tag">
+        <field name="name">TVA 10.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_52" model="account.account.tag">
+        <field name="name">TVA 7.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_53" model="account.account.tag">
+        <field name="name">TVA 5.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_54" model="account.account.tag">
+        <field name="name">TVA 5.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_55" model="account.account.tag">
+        <field name="name">TVA 2.1%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_56" model="account.account.tag">
+        <field name="name">Base H.T. TVA due intracommunautaire</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_57" model="account.account.tag">
+        <field name="name">Base H.T. 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_58" model="account.account.tag">
+        <field name="name">Base H.T. 19.6%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_59" model="account.account.tag">
+        <field name="name">Base H.T. 8.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_60" model="account.account.tag">
+        <field name="name">Base H.T. 10.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_61" model="account.account.tag">
+        <field name="name">Base H.T. 7.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_62" model="account.account.tag">
+        <field name="name">Base H.T. 5.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_63" model="account.account.tag">
+        <field name="name">Base H.T. 5.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_64" model="account.account.tag">
+        <field name="name">Base H.T. 2.1%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_65" model="account.account.tag">
+        <field name="name">TVA due intracommunautaire</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_66" model="account.account.tag">
+        <field name="name">TVA 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_67" model="account.account.tag">
+        <field name="name">TVA 19.6%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_68" model="account.account.tag">
+        <field name="name">TVA 8.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_69" model="account.account.tag">
+        <field name="name">TVA 10.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_70" model="account.account.tag">
+        <field name="name">TVA 7.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_71" model="account.account.tag">
+        <field name="name">TVA 5.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_72" model="account.account.tag">
+        <field name="name">TVA 5.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_73" model="account.account.tag">
+        <field name="name">TVA 2.1%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_74" model="account.account.tag">
+        <field name="name">Base H.T. TVA déductible intracommunautaire</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_75" model="account.account.tag">
+        <field name="name">Base H.T. 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_76" model="account.account.tag">
+        <field name="name">Base H.T. 19.6%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_77" model="account.account.tag">
+        <field name="name">Base H.T. 8.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_78" model="account.account.tag">
+        <field name="name">Base H.T. 10.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_79" model="account.account.tag">
+        <field name="name">Base H.T. 7.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_80" model="account.account.tag">
+        <field name="name">Base H.T. 5.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_81" model="account.account.tag">
+        <field name="name">Base H.T. 5.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_82" model="account.account.tag">
+        <field name="name">Base H.T. 2.1%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_83" model="account.account.tag">
+        <field name="name">TVA déductible intracommunautaire</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_84" model="account.account.tag">
+        <field name="name">TVA 20.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_85" model="account.account.tag">
+        <field name="name">TVA 19.6%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_86" model="account.account.tag">
+        <field name="name">TVA 8.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_87" model="account.account.tag">
+        <field name="name">TVA 10.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_88" model="account.account.tag">
+        <field name="name">TVA 7.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_89" model="account.account.tag">
+        <field name="name">TVA 5.0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_90" model="account.account.tag">
+        <field name="name">TVA 5.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_91" model="account.account.tag">
+        <field name="name">TVA 2.1%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_92" model="account.account.tag">
+        <field name="name">Base H.T. Opérations non imposables</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_93" model="account.account.tag">
+        <field name="name">Exportations hors U.E.</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_94" model="account.account.tag">
+        <field name="name">Livraisons intracommunautaires</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_95" model="account.account.tag">
+        <field name="name">Autres opérations non imposables</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_96" model="account.account.tag">
+        <field name="name">Base H.T. Non présent sur la CA3</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_fr_97" model="account.account.tag">
+        <field name="name">Achats import</field>
+        <field name="applicability">taxes</field>
+    </record>
 
 
 <!-- VENTES Tax excluded from price -->
@@ -218,7 +507,7 @@
       "Set Your Accounting Options" (wizard.multi.charts.accounts) -->
       <field name="sequence" eval="9"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_20_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_02'),ref('l10n_fr.tag_fr_11')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_specifique">
@@ -231,7 +520,7 @@
       <field name="account_id" ref="pcg_445713"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_8_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_04'),ref('l10n_fr.tag_fr_13')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_intermediaire">
@@ -244,7 +533,7 @@
       <field name="account_id" ref="pcg_445712"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_10_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_05'),ref('l10n_fr.tag_fr_14')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_reduite">
@@ -257,7 +546,7 @@
       <field name="account_id" ref="pcg_445713"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_5_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_08'),ref('l10n_fr.tag_fr_17')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_super_reduite">
@@ -270,7 +559,7 @@
       <field name="account_id" ref="pcg_445713"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_2_1')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_09'),ref('l10n_fr.tag_fr_18')])]"/>
     </record>
 
 
@@ -286,7 +575,7 @@
       <field name="account_id" ref="pcg_445711"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_20_0_TTC')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_02'),ref('l10n_fr.tag_fr_11')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_specifique_ttc">
@@ -300,7 +589,7 @@
       <field name="account_id" ref="pcg_445713"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_8_5_TTC')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_04'),ref('l10n_fr.tag_fr_13')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_intermediaire_ttc">
@@ -314,7 +603,7 @@
       <field name="account_id" ref="pcg_445712"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_10_0_TTC')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_05'),ref('l10n_fr.tag_fr_14')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_reduite_ttc">
@@ -328,7 +617,7 @@
       <field name="account_id" ref="pcg_445713"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_5_5_TTC')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_08'),ref('l10n_fr.tag_fr_17')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_super_reduite_ttc">
@@ -342,7 +631,7 @@
       <field name="account_id" ref="pcg_445713"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_2_1_TTC')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_09'),ref('l10n_fr.tag_fr_18')])]"/>
     </record>
 
 <!-- ACHATS Tax excluded from price -->
@@ -359,7 +648,7 @@
       "Set Your Accounting Options" (wizard.multi.charts.accounts) -->
       <field name="sequence" eval="9"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-20_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_20'),ref('l10n_fr.tag_fr_30')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_specifique">
@@ -372,7 +661,7 @@
       <field name="account_id" ref="pcg_44566"/> 
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-8_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_23'),ref('l10n_fr.tag_fr_32')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intermediaire">
@@ -385,7 +674,7 @@
       <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-10_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_24'),ref('l10n_fr.tag_fr_33')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_reduite">
@@ -398,7 +687,7 @@
       <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-5_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_27'),ref('l10n_fr.tag_fr_36')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_super_reduite">
@@ -411,7 +700,7 @@
       <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-2_1')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_28'),ref('l10n_fr.tag_fr_37')])]"/>
     </record>
 
 
@@ -427,7 +716,7 @@
       <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-20_0_TTC')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_20'),ref('l10n_fr.tag_fr_30')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_specifique_TTC">
@@ -441,7 +730,7 @@
       <field name="account_id" ref="pcg_44566"/> 
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-8_5_TTC')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_23'),ref('l10n_fr.tag_fr_32')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intermediaire_TTC">
@@ -455,7 +744,7 @@
       <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-10_0_TTC')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_24'),ref('l10n_fr.tag_fr_33')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_reduite_TTC">
@@ -469,7 +758,7 @@
       <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_5_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_08'),ref('l10n_fr.tag_fr_17')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_super_reduite_TTC">
@@ -483,7 +772,7 @@
       <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-2_1_TTC')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_28'),ref('l10n_fr.tag_fr_37')])]"/>
     </record>
 
 
@@ -499,7 +788,7 @@
       <field name="account_id" ref="pcg_44562"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMMO_20_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_39'),ref('l10n_fr.tag_fr_48')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_imm_specifique">
@@ -512,7 +801,7 @@
       <field name="account_id" ref="pcg_44562"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMMO_8_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_41'),ref('l10n_fr.tag_fr_50')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_imm_intermediaire">
@@ -525,7 +814,7 @@
       <field name="account_id" ref="pcg_44562"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMMO-10_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_42'),ref('l10n_fr.tag_fr_51')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_imm_reduite">
@@ -538,7 +827,7 @@
       <field name="account_id" ref="pcg_44562"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMMO_5_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_45'),ref('l10n_fr.tag_fr_54')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_imm_super_reduite">
@@ -551,7 +840,7 @@
       <field name="account_id" ref="pcg_44562"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMMO-2_1')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_46'),ref('l10n_fr.tag_fr_55')])]"/>
     </record>
 
 
@@ -566,7 +855,7 @@
       <field name="account_id" ref="pcg_445201"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_20_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_57'),ref('l10n_fr.tag_fr_66')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_specifique">
@@ -579,7 +868,7 @@
       <field name="account_id" ref="pcg_445203"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_8_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_59'),ref('l10n_fr.tag_fr_68')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_intermediaire">
@@ -592,7 +881,7 @@
       <field name="account_id" ref="pcg_445202"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_10_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_60'),ref('l10n_fr.tag_fr_69')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_reduite">
@@ -605,7 +894,7 @@
       <field name="account_id" ref="pcg_445203"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_5_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_63'),ref('l10n_fr.tag_fr_72')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_super_reduite">
@@ -618,7 +907,7 @@
       <field name="account_id" ref="pcg_445203"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_2_1')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_73'),ref('l10n_fr.tag_fr_82')])]"/>
     </record>
 
 
@@ -633,7 +922,7 @@
       <field name="account_id" ref="pcg_445662"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_ded_20_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_84')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intra_specifique">
@@ -646,7 +935,7 @@
       <field name="account_id" ref="pcg_445662"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_ded_8_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_86')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intra_intermediaire">
@@ -659,7 +948,7 @@
       <field name="account_id" ref="pcg_445662"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_ded_10_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_87')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intra_reduite">
@@ -672,7 +961,7 @@
       <field name="account_id" ref="pcg_445662"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_ded_5_5')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_90')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intra_super_reduite">
@@ -685,7 +974,7 @@
       <field name="account_id" ref="pcg_445662"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_ded_2_1')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_91')])]"/>
     </record>
 
 
@@ -700,7 +989,7 @@
       <field name="account_id" eval="False"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_EXO_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_95')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_export_0">
@@ -713,7 +1002,7 @@
       <field name="account_id" eval="False"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_EXPORT_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_93')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_0">
@@ -726,7 +1015,7 @@
       <field name="account_id" ref="pcg_445201"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_UE_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_94')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_import_0">
@@ -739,7 +1028,7 @@
         <field name="account_id" ref="pcg_44566"/>
         <field name="sequence" eval="10"/>
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMPORT_0')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_97')])]"/>
     </record>
 
 <!--
@@ -1024,4 +1313,5 @@
     <record id="pcg_7072" model="account.account.template">
       <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
     </record>
+
 </odoo>
