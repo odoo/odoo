@@ -961,7 +961,7 @@ calendar view are:
 
     .. todo:: what's the unit? Does it allow moving the record?
 
-``color`` (required)
+``color``
     name of a record field to use for *color segmentation*. Records in the
     same color segment are allocated the same highlight color in the calendar,
     colors are allocated semi-randomly.
