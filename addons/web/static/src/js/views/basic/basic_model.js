@@ -360,6 +360,13 @@ var BasicModel = AbstractModel.extend({
             if (this.isNew(element.id)) {
                 delete element.res_id;
             }
+            var evalContext;
+            Object.defineProperty(element, 'evalContext', {
+                get: function () {
+                    evalContext = evalContext || self._getEvalContext(record);
+                    return evalContext;
+                },
+            });
         }
         if (element.type === 'list') {
             // apply changes if any

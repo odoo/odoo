@@ -282,7 +282,7 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} record
      */
     _computeModifiers: function (modifiersData, record) {
-        var evalContext = record.getEvalContext();
+        var evalContext = record.evalContext;
         modifiersData.evaluatedModifiers[record.id]
             = _.mapObject(modifiersData.modifiers, function (modifier) {
                 return new Domain(modifier, evalContext).compute(evalContext);
