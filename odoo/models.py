@@ -1541,11 +1541,7 @@ class BaseModel(object):
         This clears the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
-        try:
-            cls.pool.cache.clear()
-            cls.pool.cache_cleared = True
-        except AttributeError:
-            pass
+        cls.pool._clear_cache()
 
     @api.model
     def _read_group_fill_results(self, domain, groupby, remaining_groupbys,

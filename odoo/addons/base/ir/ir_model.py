@@ -180,10 +180,8 @@ class IrModel(models.Model):
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
         if not self._context.get(MODULE_UNINSTALL_FLAG):
-            self._cr.commit()  # must be committed before reloading registry in new cursor
-            api.Environment.reset()
-            registry = Registry.new(self._cr.dbname)
-            registry.signal_registry_change()
+            # setup models; this automatically removes model from registry
+            self.pool.setup_models(self._cr)
 
         return res
 
@@ -211,7 +209,6 @@ class IrModel(models.Model):
             self.pool.setup_models(self._cr)
             # update database schema
             self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
-            self.pool.signal_registry_change()
         return res
 
     @api.model
@@ -275,6 +272,11 @@ class IrModel(models.Model):
 
     def _add_manual_models(self):
         """ Add extra models to the registry. """
+        # clean up registry first
+        for name, model_class in self.pool.items():
+            if model_class._custom:
+                del self.pool.models[name]
+        # add manual models
         cr = self.env.cr
         cr.execute('SELECT * FROM ir_model WHERE state=%s', ['manual'])
         for model_data in cr.dictfetchall():
@@ -591,12 +593,11 @@ class IrModelFields(models.Model):
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
         if not self._context.get(MODULE_UNINSTALL_FLAG):
-            self._cr.commit()
-            api.Environment.reset()
-            registry = Registry.new(self._cr.dbname)
-            models = registry.descendants(model_names, '_inherits')
-            registry.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
-            registry.signal_registry_change()
+            # setup models; this re-initializes models in registry
+            self.pool.setup_models(self._cr)
+            # update database schema of model and its descendant models
+            models = self.pool.descendants(model_names, '_inherits')
+            self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
 
         return res
 
@@ -628,7 +629,6 @@ class IrModelFields(models.Model):
                 # update database schema of model and its descendant models
                 models = self.pool.descendants([vals['model']], '_inherits')
                 self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
-                self.pool.signal_registry_change()
 
         return res
 
@@ -697,9 +697,6 @@ class IrModelFields(models.Model):
             # update the database schema of the models to patch
             models = self.pool.descendants(patched_models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
-
-        if column_rename or patched_models:
-            self.pool.signal_registry_change()
 
         return res
 
