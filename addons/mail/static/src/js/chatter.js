@@ -58,6 +58,7 @@ var Chatter = Widget.extend(chat_mixin, {
             this.fields.thread = new ThreadField(this, mailFields.mail_thread, record, options);
             var nodeOptions = this.record.fieldsInfo.form[mailFields.mail_thread].options;
             this.hasLogButton = nodeOptions.display_log_button;
+            this.postRefresh = nodeOptions.post_refresh || 'never';
         }
     },
     start: function () {
@@ -158,7 +159,12 @@ var Chatter = Widget.extend(chat_mixin, {
                 self.composer.focus();
             }
             self.composer.on('post_message', self, function (message) {
-                self.fields.thread.postMessage(message).then(self._closeComposer.bind(self, true));
+                self.fields.thread.postMessage(message).then(function () {
+                    self._closeComposer(true);
+                    if (self.postRefresh === 'always' || (self.postRefresh === 'recipients' && message.partner_ids.length)) {
+                        self.trigger_up('reload');
+                    }
+                });
             });
             self.composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
             self.composer.on('close_composer', null, self._closeComposer.bind(self, true));
