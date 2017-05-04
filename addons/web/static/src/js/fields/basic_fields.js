@@ -1801,6 +1801,13 @@ var JournalDashboardGraph = AbstractField.extend({
                     });
                     self.chart.yAxis.tickFormat(d3.format(',.2f'));
 
+                    self.chart.tooltip.contentGenerator(function (key) {
+                        return qweb.render('GraphCustomTooltip', {
+                            'color': key.point.color,
+                            'key': self.data[0].key,
+                            'value': d3.format(',.2f')(key.point.y)
+                        });
+                    });
                     break;
 
                 case "bar":
@@ -1816,6 +1823,13 @@ var JournalDashboardGraph = AbstractField.extend({
                     self.chart.xAxis.axisLabel(self.data[0].title);
                     self.chart.yAxis.tickFormat(d3.format(',.2f'));
 
+                    self.chart.tooltip.contentGenerator(function (key) {
+                        return qweb.render('GraphCustomTooltip', {
+                            'color': key.color,
+                            'key': self.data[0].key,
+                            'value': d3.format(',.2f')(key.data.value)
+                        });
+                    });
                     break;
             }
             d3.select(self.$('svg')[0])
