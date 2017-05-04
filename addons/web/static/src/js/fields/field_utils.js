@@ -401,14 +401,6 @@ function parseInteger(value) {
     return parsed;
 }
 
-function parseMonetary(formatted_value) {
-    var l10n = core._t.database.parameters;
-    var value = formatted_value.replace(l10n.thousands_sep, '')
-        .replace(l10n.decimal_point, '.')
-        .match(/([0-9]+(\.[0-9]*)?)/)[1];
-    return parseFloat(value);
-}
-
 /**
  * Creates an object with id and display_name.
  *
@@ -468,7 +460,7 @@ return {
         integer: parseInteger,
         many2many: _.identity, // todo
         many2one: parseMany2one,
-        monetary: parseMonetary,
+        monetary: parseFloat,
         one2many: _.identity,
         reference: _.identity, // todo
         selection: _.identity, // todo

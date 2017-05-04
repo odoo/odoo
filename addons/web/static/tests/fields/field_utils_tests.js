@@ -92,5 +92,27 @@ QUnit.test('format one2many', function(assert) {
     assert.strictEqual(fieldUtils.format.one2many({data: [1]}), '1 record');
     assert.strictEqual(fieldUtils.format.one2many({data: [1, 2]}), '2 records');
 });
+
+QUnit.test('parse float', function(assert) {
+    assert.expect(6);
+
+    assert.strictEqual(fieldUtils.parse.float(""), 0);
+    assert.strictEqual(fieldUtils.parse.float("0"), 0);
+    assert.strictEqual(fieldUtils.parse.float("100.00"), 100);
+    assert.strictEqual(fieldUtils.parse.float("-100.00"), -100);
+    assert.strictEqual(fieldUtils.parse.float("1,000.00"), 1000);
+    assert.strictEqual(fieldUtils.parse.float("1,000,000.00"), 1000000);
+});
+
+QUnit.test('parse monetary', function(assert) {
+    assert.expect(6);
+
+    assert.strictEqual(fieldUtils.parse.monetary(""), 0);
+    assert.strictEqual(fieldUtils.parse.monetary("0"), 0);
+    assert.strictEqual(fieldUtils.parse.monetary("100.00"), 100);
+    assert.strictEqual(fieldUtils.parse.monetary("-100.00"), -100);
+    assert.strictEqual(fieldUtils.parse.monetary("1,000.00"), 1000);
+    assert.strictEqual(fieldUtils.parse.monetary("1,000,000.00"), 1000000);
+});
 });
 });
