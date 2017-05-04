@@ -29,8 +29,7 @@ class StockMove(osv.osv):
         @param move: Stock moves
         @return: True
         """
-        if context is None:
-            context = {}
+        context = dict(context or {})
         bom_obj = self.pool.get('mrp.bom')
         move_obj = self.pool.get('stock.move')
         prod_obj = self.pool.get("product.product")
@@ -38,7 +37,10 @@ class StockMove(osv.osv):
         uom_obj = self.pool.get("product.uom")
         to_explode_again_ids = []
         property_ids = context.get('property_ids') or []
-        bis = bom_obj._bom_find(cr, SUPERUSER_ID, product_id=move.product_id.id, properties=property_ids)
+        if not context.get('company_id'):
+            context['company_id'] = self.pool['res.users']._get_company(
+                cr, uid, context=context)
+        bis = bom_obj._bom_find(cr, SUPERUSER_ID, product_id=move.product_id.id, properties=property_ids, context=context)
         bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis, context=context)
         if bis and bom_point.type == 'phantom':
             processed_ids = []
