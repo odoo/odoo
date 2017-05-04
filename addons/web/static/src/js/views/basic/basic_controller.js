@@ -118,13 +118,18 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var self = this;
         recordID = recordID || this.handle;
         return this.canBeDiscarded(recordID).then(function (needDiscard) {
-            if (needDiscard) { // Just some optimization
-                self.model.discardChanges(recordID);
-            }
             if (options && options.readonlyIfRealDiscard && !needDiscard) {
                 return;
             }
-            self._setMode('readonly', recordID);
+
+            if (needDiscard) { // Just some optimization
+                self.model.discardChanges(recordID);
+            }
+            if (self.model.isNew(recordID)) {
+                self._abandonRecord(recordID);
+                return;
+            }
+            return self._confirmSave(recordID);
         });
     },
     /**
@@ -386,7 +391,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         if (options.stayInEdit) {
             return def;
         } else {
-            return def.then(this._setMode.bind(this, 'readonly', recordID));
+            return def.then(this._confirmSave.bind(this, recordID));
         }
     },
     /**
@@ -397,17 +402,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      * @param {string} mode - 'readonly' or 'edit'
      * @param {string} [recordID]
+     * @returns {Deferred}
      */
     _setMode: function (mode, recordID) {
-        recordID = recordID || this.handle;
-        // If trying to make a temporary record readonly, discard the record
-        if (mode === 'readonly' && this.model.isNew(recordID)) {
-            this._abandonRecord(recordID);
-            return;
+        if ((recordID || this.handle) === this.handle) {
+            return this.update({mode: mode}, {reload: false});
         }
-        if (recordID === this.handle) {
-            this.update({mode: mode}, {reload: false});
-        }
+        return $.when();
     },
     /**
      * Helper method, to get the current environment variables from the model

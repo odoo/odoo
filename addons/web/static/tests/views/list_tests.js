@@ -2036,6 +2036,35 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('discarding changes in a row properly updates the rendering', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:first').text(), "yop",
+            "first cell should contain 'yop'");
+
+        list.$('.o_data_cell:first').click();
+        list.$('input[name="foo"]').val("hello").trigger('input');
+        list.$buttons.find('.o_list_button_discard').click();
+        assert.strictEqual($('.modal:visible').length, 1,
+            "a modal to ask for discard should be visible");
+
+        $('.modal:visible .btn-primary').click();
+        assert.strictEqual(list.$('.o_data_cell:first').text(), "yop",
+            "first cell should still contain 'yop'");
+
+        list.destroy();
+    });
 });
 
 });

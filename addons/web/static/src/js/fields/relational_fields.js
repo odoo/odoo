@@ -638,7 +638,7 @@ var FieldX2Many = AbstractField.extend({
             return this._super();
         }
         if (this.renderer) {
-            this.renderer.updateState(this.value);
+            this.renderer.updateState(this.value, {});
             this.pager.updateState({ size: this.value.count });
             return $.when();
         }
@@ -746,8 +746,8 @@ var FieldX2Many = AbstractField.extend({
                     onFailure: def.reject.bind(def),
                 });
             } else {
-                self.renderer.setRowMode(recordID, 'readonly');
-                def.resolve();
+                self.renderer.setRowMode(recordID, 'readonly')
+                    .done(def.resolve.bind(def));
             }
         });
         return def;
@@ -791,7 +791,8 @@ var FieldX2Many = AbstractField.extend({
      */
     _onEditLine: function (ev) {
         ev.stopPropagation();
-        this.renderer.setRowMode(ev.data.recordID, 'edit');
+        this.renderer.setRowMode(ev.data.recordID, 'edit')
+            .done(ev.data.onSuccess);
     },
     /**
      * Updates the given record with the changes.

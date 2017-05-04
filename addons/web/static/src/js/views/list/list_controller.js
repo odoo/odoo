@@ -200,7 +200,7 @@ var ListController = BasicController.extend({
         this.model.addDefaultRecord(this.handle, {position: this.editable}).then(function (recordID) {
             self._toggleNoContentHelper(false);
             var state = self.model.get(self.handle);
-            self.renderer.updateState(state);
+            self.renderer.updateState(state, {});
             self.renderer.editRecord(recordID);
         });
     },
@@ -231,13 +231,14 @@ var ListController = BasicController.extend({
      */
     _confirmSave: function (id) {
         var state = this.model.get(this.handle);
-        return this.renderer.confirmSave(state, id);
+        return this.renderer.updateState(state, {noRender: true})
+            .then(this._setMode.bind(this, 'readonly', id));
     },
     /**
      * @override
      * @private
      */
-    _getSidebarEnv: function() {
+    _getSidebarEnv: function () {
         var env = this._super.apply(this, arguments);
         var record = this.model.get(this.handle);
         return _.extend(env, {domain: record.getDomain()});
@@ -249,12 +250,14 @@ var ListController = BasicController.extend({
      * @private
      * @param {string} mode
      * @param {string} [recordID] - default to main recordID
+     * @returns {Deferred}
      */
     _setMode: function (mode, recordID) {
-        this._super.apply(this, arguments);
         if ((recordID || this.handle) !== this.handle) {
-            this.renderer.setRowMode(recordID, mode);
             this._updateButtons(mode);
+            return this.renderer.setRowMode(recordID, mode);
+        } else {
+            return this._super.apply(this, arguments);
         }
     },
     /**
@@ -356,7 +359,8 @@ var ListController = BasicController.extend({
      */
     _onEditLine: function (ev) {
         ev.stopPropagation();
-        this._setMode('edit', ev.data.recordID);
+        this._setMode('edit', ev.data.recordID)
+            .done(ev.data.onSuccess);
     },
     /**
      * Opens the Export Dialog

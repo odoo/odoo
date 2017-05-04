@@ -86,20 +86,6 @@ ListRenderer.include({
         return this._super(recordID);
     },
     /**
-     * This method is called by the controller when the user has clicked 'save',
-     * and the model as actually saved the current changes.  We then need to
-     * set the correct values for each cell. The difference with confirmChange
-     * is that the edited line is now in readonly mode, so we can just set its
-     * new value.
-     *
-     * @param {Object} state the new full state for the list
-     * @param {string} savedRecordID the id for the saved record
-     */
-    confirmSave: function (state, savedRecordID) {
-        this.state = state;
-        this.setRowMode(savedRecordID, 'readonly');
-    },
-    /**
      * Edit a given record in the list
      *
      * @param {string} recordID
@@ -143,6 +129,7 @@ ListRenderer.include({
      *
      * @param {string} recordID
      * @param {string} mode
+     * @returns {Deferred}
      */
     setRowMode: function (recordID, mode) {
         var self = this;
@@ -155,40 +142,67 @@ ListRenderer.include({
 
         this.currentRow = editMode ? rowIndex : null;
         var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
+        var $tds = $row.children('.o_data_cell');
+        var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
 
+        // When switching to edit mode, force the dimensions of all cells to
+        // their current value so that they won't change if their content
+        // changes, to prevent the view from flickering.
         if (editMode) {
-            // Instantiate column widgets and destroy potential readonly ones
-            var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
-            var $tds = $row.children('.o_data_cell');
-            // Force the size of each cell to its current value so that it
-            // won't change if its content changes, to prevent the view from
-            // flickering
             $tds.each(function () {
                 var $td = $(this);
                 $td.css({width: $td.outerWidth()});
             });
-            _.each(this.columns, function (node, colIndex) {
-                var $td = $tds.eq(colIndex);
-                var $newTd = self._renderBodyCell(record, node, colIndex, {
-                    renderInvisible: true,
-                    renderWidgets: true,
-                });
-
-                // TODO this is ugly...
-                if ($td.hasClass('o_list_button')) {
-                    self._unregisterModifiersElement(node, record, $td.children());
-                }
-
-                $td.empty().append($newTd.contents());
-            });
-            _.each(oldWidgets, this._destroyFieldWidget.bind(this, record));
-        } else {
-            for (var colIndex = 0; colIndex < this.columns.length; colIndex++) {
-                this._setCellValue(rowIndex, colIndex);
-            }
         }
 
-        $row.toggleClass('o_selected_row', editMode); // Toggle here so that style is applied at the end
+        // Prepare options for cell rendering (this depends on the mode)
+        var options = {
+            renderInvisible: editMode,
+            renderWidgets: editMode,
+        };
+        if (!editMode) {
+            // Force 'readonly' mode for widgets in readonly rows as
+            // otherwise they default to the view mode which is 'edit' for
+            // an editable list view
+            options.mode = 'readonly';
+        }
+
+        // Switch each cell to the new mode; note: the '_renderBodyCell'
+        // function might fill the 'this.defs' variables with multiple deferred
+        // so we create the array and delete it after the rendering.
+        var defs = [];
+        this.defs = defs;
+        _.each(this.columns, function (node, colIndex) {
+            var $td = $tds.eq(colIndex);
+            var $newTd = self._renderBodyCell(record, node, colIndex, options);
+
+            // Widgets are unregistered of modifiers data when they are
+            // destroyed. This is not the case for simple buttons so we have to
+            // do it here.
+            if ($td.hasClass('o_list_button')) {
+                self._unregisterModifiersElement(node, record, $td.children());
+            }
+
+            // For edit mode we only replace the content of the cell with its
+            // new content (invisible fields, editable fields, ...).
+            // For readonly mode, we replace the whole cell so that the
+            // dimensions of the cell are not forced anymore.
+            if (editMode) {
+                $td.empty().append($newTd.contents());
+            } else {
+                self._unregisterModifiersElement(node, record, $td);
+                $td.replaceWith($newTd);
+            }
+        });
+        delete this.defs;
+
+        // Destroy old field widgets
+        _.each(oldWidgets, this._destroyFieldWidget.bind(this, record));
+
+        // Toggle selected class here so that style is applied at the end
+        $row.toggleClass('o_selected_row', editMode);
+
+        return $.when.apply($, defs);
     },
 
     //--------------------------------------------------------------------------
@@ -360,6 +374,7 @@ ListRenderer.include({
      * Activates the row at the given row index.
      *
      * @param {integer} rowIndex
+     * @returns {Deferred}
      */
     _selectRow: function (rowIndex) {
         // Do nothing if already selected
@@ -372,39 +387,13 @@ ListRenderer.include({
         return this._unselectRow().then(function () {
             // Notify the controller we want to make a record editable
             var record = self.state.data[rowIndex];
+            var def = $.Deferred();
             self.trigger_up('edit_line', {
                 recordID: record.id,
+                onSuccess: def.resolve.bind(def),
             });
+            return def;
         });
-    },
-    /**
-     * Set the value of a cell.  This method can be called when the value of a
-     * cell was modified, for example after an onchange.
-     *
-     * @param {integer} rowIndex
-     * @param {integer} colIndex
-     */
-    _setCellValue: function (rowIndex, colIndex) {
-        var record = this.state.data[rowIndex];
-        var node = this.columns[colIndex];
-
-        var $oldTd = this.$('.o_data_row:nth(' + rowIndex + ') > .o_data_cell:nth(' + colIndex + ')');
-        var $newTd = this._renderBodyCell(record, node, colIndex, {mode: 'readonly'});
-        this._unregisterModifiersElement(node, record, $oldTd);
-        $oldTd.replaceWith($newTd);
-
-        // Destroy old cell field widget if any
-        // TODO this is very inefficient O(n^3) instead of O(n) on row update
-        // because this method is called for each cell (O(n)), each time we have
-        // to find the associated record widget (O(n)) and once found, the
-        // search is performed again by the _destroyFieldWidget function
-        if (node.tag === 'field') {
-            var recordWidgets = this.allFieldWidgets[record.id];
-            var w = _.findWhere(recordWidgets, {name: node.attrs.name}); //
-            if (w) {
-                this._destroyFieldWidget(record, w);
-            }
-        }
     },
     /**
      * This method is called whenever we click/move outside of a row that was
