@@ -44,4 +44,19 @@
     <record id="sales_team.group_sale_manager" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('website.group_website_publisher'))]"/>
     </record>
+
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('sale.group_delivery_invoice_address'))]"/>
+    </record>
+
+    <record id="base.group_public" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('sale.group_delivery_invoice_address'))]"/>
+    </record>
+
+    <record id="base.group_portal" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('sale.group_delivery_invoice_address'))]"/>
+    </record>
+
+
+
 </odoo>
