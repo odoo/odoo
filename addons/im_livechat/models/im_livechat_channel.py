@@ -144,7 +144,13 @@ class ImLivechatChannel(models.Model):
             :retuns : return the res.users having their im_status online
         """
         self.ensure_one()
-        return self.sudo().user_ids.filtered(lambda user: user.im_status == 'online')
+        available_users = self.sudo().user_ids.filtered(lambda user: user.im_status == 'online')
+        if self.env.context.get('disable_limit'):
+            return available_users
+        for user in available_users:
+            if user.enable_chat_limit and len(self.sudo().channel_ids.mapped('channel_last_seen_partner_ids').filtered(lambda x: x.is_pinned and x.partner_id == user.partner_id)) >= user.chat_limit:
+                available_users = available_users - user
+        return available_users
 
     @api.model
     def get_mail_channel(self, livechat_channel_id, anonymous_name):
@@ -193,7 +199,7 @@ class ImLivechatChannel(models.Model):
     @api.model
     def get_livechat_info(self, channel_id, username='Visitor'):
         info = {}
-        info['available'] = len(self.browse(channel_id).get_available_users()) > 0
+        info['available'] = len(self.browse(channel_id).with_context(disable_limit=True).get_available_users()) > 0
         info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if info['available']:
             info['options'] = self.sudo().get_channel_infos(channel_id)

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_users_form_simple_modif_inherit_im_livechat" model="ir.ui.view">
+        <field name="name">res.users.preferences.im_livechat</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <group name="preference_contact" position="inside">
+                <field name="enable_chat_limit" readonly="0"/>
+                <field name="chat_limit" attrs="{'invisible': [('enable_chat_limit', '!=', True)]}" readonly="0"/>
+            </group>
+        </field>
+    </record>
+
+    <!-- Update user form !-->
+    <record id="view_users_form_inherit_im_livechat" model="ir.ui.view">
+        <field name="name">res.users.form.im_livechat</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="mail.view_users_form_mail"/>
+        <field name="arch" type="xml">
+            <field name="notification_type" position="before">
+                <field name="enable_chat_limit"/>
+                <field name="chat_limit" attrs="{'invisible': [('enable_chat_limit', '!=', True)]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
