@@ -121,9 +121,19 @@ class Message(models.Model):
 
     @api.model
     def _search_needaction(self, operator, operand):
-        if operator == '=' and operand:
-            return [('needaction_partner_ids', 'in', self.env.user.partner_id.id)]
-        return [('needaction_partner_ids', 'not in', self.env.user.partner_id.id)]
+        if (operator not in expression.NEGATIVE_TERM_OPERATORS and operand) or \
+                (operator in expression.NEGATIVE_TERM_OPERATORS and not operand):
+            operator = '='
+        else:
+            operator = '!='
+        # done in SQL to match get_needaction_count
+        self.env.cr.execute("""
+            SELECT mail_message_id
+            FROM mail_message_res_partner_needaction_rel
+            WHERE res_partner_id %s %%s
+        """ % operator, (self.env.user.partner_id.id,))
+        message_ids = [message_id[0] for message_id in self.env.cr.fetchall()]
+        return [('id', 'in', message_ids)]
 
     @api.depends('starred_partner_ids')
     def _get_starred(self):
