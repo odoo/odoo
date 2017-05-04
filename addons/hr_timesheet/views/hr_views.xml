@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='active_group']" position="before">
                 <!-- Empty invisible group to be filled by timesheet_grid and sale_timesheet -->
-                <group string="Timesheets" name="timesheet" invisible="1">
+                <group string="Timesheets" name="timesheet" invisible="1" groups="hr_timesheet.group_timesheet_manager">
                 </group>
             </xpath>
             <xpath expr="//button[@name='toggle_active']" position="before">
