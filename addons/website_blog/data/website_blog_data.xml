@@ -36,17 +36,6 @@
 
     <data>
 
-        <!-- jump to blog at install -->
-        <record id="action_open_website" model="ir.actions.act_url">
-            <field name="name">Website Blogs</field>
-            <field name="target">self</field>
-            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_open_website"/>
-            <field name="state">open</field>
-        </record>
-
         <!-- Blog-related subtypes for messaging / Chatter -->
         <record id="mt_blog_blog_published" model="mail.message.subtype">
             <field name="name">Published Post</field>
