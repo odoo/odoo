@@ -3733,11 +3733,19 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-
+        // The toolbar displayed changes if the module 'document' is installed.
+        // So if the module is installed, the assertion checks for 3 dropdowns
+        // if not only 2 dropdowns are displayed.
         var $dropdowns = $('.o_web_client .o_control_panel .btn-group .o_dropdown_toggler_btn');
-        assert.strictEqual($dropdowns.length, 3,
-            "there should be 3 dropdowns (print, attachment, action) in the toolbar.");
-        var $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[2].children;
+        var $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[1].children;
+        if ('document.document' in odoo.__DEBUG__.services) {
+            assert.strictEqual($dropdowns.length, 3,
+                "there should be 3 dropdowns (print, attachment, action) in the toolbar.");
+            $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[2].children;
+        } else {
+            assert.strictEqual($dropdowns.length, 2,
+                "there should be 2 dropdowns (print, action) in the toolbar.");
+        }
         assert.strictEqual($actions.length, 3,
             "there should be 3 actions");
         var $customAction = $('.o_web_client .o_control_panel .btn-group .dropdown-menu li a')[2];
