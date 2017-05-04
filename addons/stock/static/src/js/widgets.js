@@ -267,7 +267,7 @@ function openerp_picking_widgets(instance){
                 if (value>=0){
                     self.getParent().set_operation_quantity(value, op_id);
                 }
-                
+
                 self.getParent().barcode_scanner.connect(function(ean){
                     self.getParent().scan(ean);
                 });
@@ -335,7 +335,7 @@ function openerp_picking_widgets(instance){
                     $('.container_head[data-package-id="'+pack_id+'"]').data('ulid', ul_id);
                 }
             });
-            
+
             //remove navigtion bar from default openerp GUI
             $('td.navbar').html('<div></div>');
         },
