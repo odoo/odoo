@@ -257,18 +257,17 @@ var ManualAction = StatementAction.extend({
         var handle = event.target.handle;
         var method = event.name.indexOf('auto_reconciliation') === -1 ? 'validate' : 'autoReconciliation';
         this.model[method](handle).then(function (result) {
-            self.renderer.update({
-                'valuenow': self.model.valuenow,
-                'valuemax': self.model.valuemax,
-                'title': self.title,
-                'time': Date.now()-self.time,
-                'notifications': result.notifications,
-            });
             _.each(result.reconciled, function (handle) {
                 self._getWidget(handle).destroy();
             });
             _.each(result.updated, function (handle) {
                 self._getWidget(handle).update(self.model.getLine(handle));
+            });
+            self.renderer.update({
+                valuenow: _.compact(_.invoke(self.widgets, 'isDestroyed')).length,
+                valuemax: self.widgets.length,
+                title: self.title,
+                time: Date.now()-self.time,
             });
             self._openFirstLine();
         });

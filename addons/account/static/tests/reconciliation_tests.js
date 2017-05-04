@@ -909,7 +909,7 @@ QUnit.module('account', {
 
 
     QUnit.test('Reconciliation manual', function (assert) {
-        assert.expect(9);
+        assert.expect(8);
 
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
 
@@ -928,8 +928,6 @@ QUnit.module('account', {
 
         clientAction.$('.accounting_view:first .o_reconcile:visible').trigger('click');
 
-        assert.strictEqual(clientAction.$('.progress .progress-bar').attr('aria-valuenow'), "1", "should display a progress bar with 1 reconciled line");
-
         assert.strictEqual(clientAction.$('.accounting_view:first thead').text().replace(/[\n\r\s]+/g, ' '),
             " Agrolait 101200 ",
             "should display the partner and the account code as title");
@@ -940,35 +938,6 @@ QUnit.module('account', {
             "10,222.00 €", "sould display the monetary information in €");
 
         assert.strictEqual(clientAction.$('.accounting_view:first .o_no_valid:visible').length, 1, "should display the skip button");
-
-        clientAction.destroy();
-    });
-
-
-    QUnit.test('Reconciliation manual validate all', function (assert) {
-        assert.expect(6);
-
-        var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
-
-        testUtils.addMockEnvironment(clientAction, {
-            'data': this.params.data,
-            session: this.params.session,
-        });
-
-        clientAction.prependTo($('#qunit-fixture'));
-
-        assert.strictEqual(clientAction.$('.o_reconciliation_line[data-mode="match"]').length, 0, "should have every widgets in 'inactive' mode");
-        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 5, "should have 5 widgets to reconciled");
-        assert.strictEqual(clientAction.$('.o_reconciliation_line button.o_reconcile:visible').length, 3, "should have 3 widgets who display 'reconcile' button");
-
-        var e = $.Event("keyup");
-        e.which = 13;       // # Enter code value
-        e.ctrlKey = true;     // Ctrl key pressed
-        $("body").trigger(e);
-
-        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 3, "should have 2 already reconciled widgets");
-        assert.strictEqual(clientAction.$('.progress .progress-bar').attr('aria-valuenow'), "2", "should display a progress bar with 2 reconciled line");
-        assert.strictEqual(clientAction.$('.o_reconciliation_line[data-mode="match"]').length, 1, "should display the 'match' mode for the first line");
 
         clientAction.destroy();
     });
