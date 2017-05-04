@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
+from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools.misc import formatLang
 
@@ -29,6 +30,16 @@ class account_journal(models.Model):
     def toggle_favorite(self):
         self.write({'show_on_dashboard': False if self.show_on_dashboard else True})
         return False
+
+    def _graph_title_and_key(self):
+        if self.type == 'sale':
+            return ['', _('Sales: Untaxed Total')]
+        elif self.type == 'purchase':
+            return ['', _('Purchase: Untaxed Total')]
+        elif self.type == 'cash':
+            return ['', _('Cash: Balance')]
+        elif self.type == 'bank':
+            return ['', _('Bank: Balance')]
 
     @api.multi
     def get_line_graph_datas(self):
@@ -87,7 +98,9 @@ class account_journal(models.Model):
                 short_name = format_date(show_date, 'd MMM', locale=locale)
                 data.append({'x': short_name, 'y':last_balance, 'name': name})
 
-        return [{'values': data, 'area': True}]
+        [graph_title, graph_key] = self._graph_title_and_key()
+        color = '#875A7B' if '+e' in version else '#7c7bad'
+        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color}]
 
     @api.multi
     def get_bar_graph_datas(self):
@@ -130,7 +143,8 @@ class account_journal(models.Model):
             if query_results[index].get('aggr_date') != None:
                 data[index]['value'] = query_results[index].get('total')
 
-        return [{'values': data}]
+        [graph_title, graph_key] = self._graph_title_and_key()
+        return [{'values': data, 'title': graph_title, 'key': graph_key}]
 
     @api.multi
     def get_journal_dashboard_datas(self):
