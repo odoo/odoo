@@ -683,7 +683,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('open form view', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var calendar = createView({
             View: CalendarView,
@@ -748,6 +748,8 @@ QUnit.module('Views', {
         $('.modal button.btn:contains(Edit)').trigger('click');
 
         calendar.destroy();
+
+        assert.strictEqual($('#ui-datepicker-div:empty').length, 0, "should have a clean body");
     });
 });
 

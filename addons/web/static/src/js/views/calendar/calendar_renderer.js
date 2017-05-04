@@ -190,6 +190,7 @@ return AbstractRenderer.extend({
         }
         if (this.$small_calendar) {
             this.$small_calendar.datepicker('destroy');
+            $('#ui-datepicker-div:empty').remove();
         }
         this._super.apply(this, arguments);
     },
