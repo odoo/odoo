@@ -19,7 +19,8 @@ var _t = core._t;
 var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         reload: '_onReload',
-        sidebar_data_asked: '_onSidebarDataAsked'
+        sidebar_data_asked: '_onSidebarDataAsked',
+        translate: '_onTranslate',
     }),
     /**
      * @override
@@ -169,6 +170,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {string} [recordID] - default to main recordID
      * @param {Object} [options]
      * @returns {Deferred}
+     *        Resolved with the list of field names (whose value has been modified)
+     *        Rejected if the record can't be saved
      */
     saveRecord: function (recordID, options) {
         // Some field widgets can't detect (all) their changes immediately or
@@ -367,6 +370,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *        if true, the record will only be 'locally' saved: its changes
      *        will move from the _changes key to the data key
      * @returns {Deferred}
+     *        Resolved with the list of field names (whose value has been modified)
+     *        Rejected if the record can't be saved
      */
     _saveRecord: function (recordID, options) {
         recordID = recordID || this.handle;
@@ -376,22 +381,24 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             savePoint: false,
         });
 
-        var def = $.Deferred();
         // Check if the view is in a valid state for saving
         // Note: it is the model's job to do nothing if there is nothing to save
         if (this.canBeSaved(recordID)) {
-            def = this.model.save(recordID, { // Save then leave edit mode
+            var self = this;
+            var def = this.model.save(recordID, { // Save then leave edit mode
                 reload: options.reload,
                 savePoint: options.savePoint,
             });
-        } else {
-            def.reject(); // Cannot be saved, do nothing at all
-        }
-
-        if (options.stayInEdit) {
+            if (!options.stayInEdit) {
+                def = def.then(function (fieldNames) {
+                    return self._confirmSave(recordID).then(function () {
+                        return fieldNames;
+                    });
+                });
+            }
             return def;
         } else {
-            return def.then(this._confirmSave.bind(this, recordID));
+            return $.Deferred().reject(); // Cannot be saved
         }
     },
     /**
@@ -497,6 +504,23 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     _onSidebarDataAsked: function (event) {
         var sidebarEnv = this._getSidebarEnv();
         event.data.callback(sidebarEnv);
+    },
+    /**
+     * open the translation view for the current field
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onTranslate: function (event) {
+        var record = this.model.get(event.data.id, {raw: true});
+        this._rpc({
+            route: '/web/dataset/call_button',
+            params: {
+                model: 'ir.translation',
+                method: 'translate_fields',
+                args: [record.model, record.res_id, event.data.fieldName, record.getContext()],
+            }
+        }).then(this.do_action.bind(this));
     },
 });
 

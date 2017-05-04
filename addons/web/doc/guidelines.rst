@@ -123,6 +123,7 @@ you should use:
      *
      * @override method from field manager mixin
      * @param {string} id
+     * @returns {Deferred}
      */
     _confirmSave: function (id) {
 

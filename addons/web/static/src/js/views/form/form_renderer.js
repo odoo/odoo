@@ -10,6 +10,9 @@ var qweb = core.qweb;
 
 var FormRenderer = BasicRenderer.extend({
     className: "o_form_view",
+    events: _.extend({}, BasicRenderer.prototype.events, {
+        'click .o_notification_box .oe_field_translate': '_onTranslate',
+    }),
     /**
      * @override
      */
@@ -47,6 +50,25 @@ var FormRenderer = BasicRenderer.extend({
             }
         });
         return fieldNames;
+    },
+    /**
+     * Show a warning message if the user modified a translated field.  For each
+     * field, the notification provides a link to edit the field's translations.
+     *
+     * @param {Object[]} alertFields: field list
+     */
+    displayTranslationAlert: function (alertFields) {
+        this.$('.o_notification_box').remove();
+        var $notification = $(qweb.render('notification-box', {type: 'info'}))
+            .append(qweb.render('translation-alert', {
+                fields: alertFields,
+                lang: _t.database.parameters.name
+            }));
+        if (this.$('.o_form_statusbar').length) {
+            this.$('.o_form_statusbar').after($notification);
+        } else {
+            this.$el.prepend($notification);
+        }
     },
     /**
      * @see BasicRenderer.confirmChange
@@ -770,6 +792,16 @@ var FormRenderer = BasicRenderer.extend({
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
             this._activatePreviousFieldWidget(this.state, index);
         }
+    },
+    /**
+     * open the translation view for the current field
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onTranslate: function (event) {
+        event.preventDefault();
+        this.trigger_up('translate', {fieldName: event.target.name, id: this.state.id});
     },
 });
 

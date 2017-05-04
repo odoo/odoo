@@ -168,6 +168,35 @@ var FormController = BasicController.extend({
             this._updateSidebar();
         }
     },
+    /**
+     * Show a warning message if the user modified a translated field.  For each
+     * field, the notification provides a link to edit the field's translations.
+     *
+     * @override
+     */
+    saveRecord: function () {
+        var result = this._super.apply(this, arguments);
+        if (_t.database.multi_lang) {
+            var self = this;
+            result.then(function (changedFields) {
+                if (!changedFields.length) {
+                    return changedFields;
+                }
+                var fields = self.renderer.state.fields;
+                var alertFields = [];
+                for (var k = 0; k < changedFields.length; k++) {
+                    var field = fields[changedFields[k]];
+                    if (field.translate) {
+                        alertFields.push(field);
+                    }
+                }
+                if (alertFields.length) {
+                    self.renderer.displayTranslationAlert(alertFields);
+                }
+            });
+        }
+        return result;
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -180,6 +209,7 @@ var FormController = BasicController.extend({
      * @private
      * @override method from field manager mixin
      * @param {string} id
+     * @returns {Deferred}
      */
     _confirmSave: function (id) {
         if (id === this.handle) {

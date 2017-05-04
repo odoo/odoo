@@ -1219,7 +1219,7 @@
 </t>
 
 <t t-name="notification-box">
-    <div t-att-class="'alert alert-dismissible alert-' + type" role="alert">
+    <div t-attf-class="o_notification_box alert alert-dismissible alert-{{type}}" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true" class="fa fa-times"></span>
         </button>
