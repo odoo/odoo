@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_timesheet_from_invoice" model="ir.actions.act_window">
+        <field name="name">Timesheet</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="context">{'search_default_timesheet_invoice_id': active_id}</field>
+    </record>
+
+    <record id="account_invoice_view_form_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">account.invoice.form.inherit.timesheet</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label" position="before">
+                <div class="oe_button_box" name="button_box" groups="base.group_user">
+                    <button name="%(sale_timesheet.action_timesheet_from_invoice)d" type="action" class="oe_stat_button" icon="fa-calendar">
+                        <field name="timesheet_count" widget="statinfo" string="Timesheets"/>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

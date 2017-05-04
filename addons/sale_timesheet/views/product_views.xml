@@ -16,4 +16,34 @@
             </field>
         </field>
     </record>
+
+    <record id="product_template_search_view_sale_timesheet" model="ir.ui.view">
+        <field name="name">product.template.search.timesheet</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='consumable']" position="after">
+                <separator/>
+                <filter string="Time-based services" name="product_time_based" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'delivery')]"/>
+                <filter string="Fixed price services" name="product_service_fixed" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'order')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_action_time_based" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_product_time_based':1, 'default_type': 'service', 'default_invoice_policy': 'delivery'}</field>
+    </record>
+
+    <record id="product_template_action_fixed" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_product_service_fixed':1, 'default_type': 'service', 'default_invoice_policy': 'order'}</field>
+    </record>
+
 </odoo>
