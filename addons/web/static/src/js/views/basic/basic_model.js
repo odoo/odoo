@@ -2002,7 +2002,7 @@ var BasicModel = AbstractModel.extend({
             }
             _.extend(evalContext, {parent: parent.data});
         }
-        return _.extend({}, session.user_context, evalContext);
+        return _.extend({}, session.user_context, element.context, evalContext);
     },
     /**
      * Returns the list of field names of the given element according to its
