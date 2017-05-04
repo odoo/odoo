@@ -1217,11 +1217,11 @@ class AccountInvoiceLine(models.Model):
         string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', string='Company',
-        related='invoice_id.company_id', store=True, readonly=True)
+        related='invoice_id.company_id', store=True, readonly=True, related_sudo=False)
     partner_id = fields.Many2one('res.partner', string='Partner',
-        related='invoice_id.partner_id', store=True, readonly=True)
-    currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True)
-    company_currency_id = fields.Many2one('res.currency', related='invoice_id.company_currency_id', readonly=True)
+        related='invoice_id.partner_id', store=True, readonly=True, related_sudo=False)
+    currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, related_sudo=False)
+    company_currency_id = fields.Many2one('res.currency', related='invoice_id.company_currency_id', readonly=True, related_sudo=False)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
