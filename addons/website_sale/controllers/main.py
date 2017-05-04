@@ -599,6 +599,7 @@ class WebsiteSale(http.Controller):
         country = 'country_id' in values and values['country_id'] != '' and request.env['res.country'].browse(int(values['country_id']))
         country = country and country.exists() or def_country_id
         render_values = {
+            'website_sale_order': order,
             'partner_id': partner_id,
             'mode': mode,
             'checkout': values,
@@ -626,6 +627,8 @@ class WebsiteSale(http.Controller):
                 return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
 
         values = self.checkout_values(**post)
+
+        values.update({'website_sale_order': order})
 
         # Avoid useless rendering if called in ajax
         if post.get('xhr'):
