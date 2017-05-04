@@ -1894,7 +1894,13 @@ class MailThread(models.AbstractModel):
                 self.sudo().write({'message_last_post': fields.Datetime.now()})
         if new_message.author_id and model and self.ids and message_type != 'notification' and not self._context.get('mail_create_nosubscribe'):
             self.message_subscribe([new_message.author_id.id], force=False)
+
+        self._message_post_after_hook(new_message)
+
         return new_message
+
+    def _message_post_after_hook(self, message):
+        pass
 
     @api.multi
     def message_post_with_view(self, views_or_xmlid, **kwargs):
