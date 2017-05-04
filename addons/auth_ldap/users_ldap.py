@@ -36,7 +36,7 @@ class CompanyLDAP(osv.osv):
         cr.execute("""
             SELECT id, company, ldap_server, ldap_server_port, ldap_binddn,
                    ldap_password, ldap_filter, ldap_base, "user", create_user,
-                   ldap_tls
+                   ldap_tls, ldap_ssl
             FROM res_company_ldap
             WHERE ldap_server != '' """ + id_clause + """ ORDER BY sequence
         """, args)
@@ -51,7 +51,11 @@ class CompanyLDAP(osv.osv):
         :return: an LDAP object
         """
 
-        uri = 'ldap://%s:%d' % (conf['ldap_server'],
+        if conf['ldap_ssl']:
+            protocol = 'ldaps'
+        else:
+            protocol = 'ldap'
+        uri = '%s://%s:%d' % (protocol, conf['ldap_server'],
                                 conf['ldap_server_port'])
 
         connection = ldap.initialize(uri)
@@ -207,8 +211,12 @@ class CompanyLDAP(osv.osv):
         'create_user': fields.boolean('Create user',
             help="Automatically create local user accounts for new users authenticating via LDAP"),
         'ldap_tls': fields.boolean('Use TLS',
-            help="Request secure TLS/SSL encryption when connecting to the LDAP server. "
+            help="Request secure TLS encryption when connecting to the LDAP server. "
                  "This option requires a server with STARTTLS enabled, "
+                 "otherwise all authentication attempts will fail."),
+        'ldap_ssl': fields.boolean('Use SSL',
+            help="Use SSL encryption when connecting to the LDAP server. "
+                 "This option requires a server with SSL connections enabled, "
                  "otherwise all authentication attempts will fail."),
     }
     _defaults = {
