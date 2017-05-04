@@ -17,8 +17,8 @@
                 <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
                 <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                 <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
-                <span t-if="o.type == 'out_refund'">Refund</span>
-                <span t-if="o.type == 'in_refund'">Vendor Refund</span>
+                <span t-if="o.type == 'out_refund'">Credit Note</span>
+                <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
                 <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
                 <span t-field="o.number"/>
             </h2>
@@ -175,7 +175,7 @@
     <xpath expr="//h2" position="replace">
         <h2>
             <span>Duplicate</span>
-            <span t-if="o.type == 'out_refund'">refund</span>
+            <span t-if="o.type == 'out_refund'">credit note</span>
             <span t-if="o.type == 'out_invoice'">invoice</span>
             <span t-field="o.number"/>
         </h2>

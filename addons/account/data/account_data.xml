@@ -106,7 +106,7 @@
             <field name="padding">4</field>
         </record>
         <record id="sequence_payment_customer_refund" model="ir.sequence">
-            <field name="name">Payments customer refunds sequence</field>
+            <field name="name">Payments customer credit notes sequence</field>
             <field name="code">account.payment.customer.refund</field>
             <field name="prefix">CUST.OUT/%(range_year)s/</field>
             <field eval="1" name="number_next"/>
@@ -126,7 +126,7 @@
             <field name="padding">4</field>
         </record>
         <record id="sequence_payment_supplier_refund" model="ir.sequence">
-            <field name="name">Payments supplier refunds sequence</field>
+            <field name="name">Payments supplier credit notes sequence</field>
             <field name="code">account.payment.supplier.refund</field>
             <field name="prefix">SUPP.IN/%(range_year)s/</field>
             <field eval="1" name="number_next"/>

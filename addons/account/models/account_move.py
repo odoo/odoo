@@ -148,7 +148,7 @@ class AccountMove(models.Model):
                         sequence = journal.sequence_id
                         if invoice and invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
                             if not journal.refund_sequence_id:
-                                raise UserError(_('Please define a sequence for the refunds'))
+                                raise UserError(_('Please define a sequence for the credit notes'))
                             sequence = journal.refund_sequence_id
                                                             
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
