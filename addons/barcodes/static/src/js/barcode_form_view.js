@@ -2,6 +2,7 @@ odoo.define('barcodes.FormView', function (require) {
 "use strict";
 
 var BarcodeEvents = require('barcodes.BarcodeEvents'); // handle to trigger barcode on bus
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var FormController = require('web.FormController');
@@ -34,6 +35,8 @@ FormController.include({
                 }
             }
         };
+
+        this.barcodeMutex = new concurrency.Mutex();
         this._barcodeStartListening();
     },
     destroy: function () {
@@ -202,34 +205,36 @@ FormController.include({
      * @returns {Deferred}
      */
     _barcodeScanned: function (barcode, target) {
-        var prefixed = _.any(BarcodeEvents.ReservedBarcodePrefixes,
-                function (reserved) {return barcode.indexOf(reserved) === 0;});
-        var hasCommand = false;
         var self = this;
-        var defs = [];
-        for (var k in this.activeBarcode) {
-            var activeBarcode = this.activeBarcode[k];
-            // Handle the case where there are several barcode widgets on the same page. Since the
-            // event is global on the page, all barcode widgets will be triggered. However, we only
-            // want to keep the event on the target widget.
-            if (self.target && !$.contains(target, self.target.el)) {
-                continue;
-            }
-
-            var methods = this.activeBarcode[k].commands;
-            var method = prefixed ? methods[barcode] : methods.barcode;
-            if (method) {
-                if (prefixed) {
-                    hasCommand = true;
+        return this.barcodeMutex.exec(function () {
+            var prefixed = _.any(BarcodeEvents.ReservedBarcodePrefixes,
+                    function (reserved) {return barcode.indexOf(reserved) === 0;});
+            var hasCommand = false;
+            var defs = [];
+            for (var k in self.activeBarcode) {
+                var activeBarcode = self.activeBarcode[k];
+                // Handle the case where there are several barcode widgets on the same page. Since the
+                // event is global on the page, all barcode widgets will be triggered. However, we only
+                // want to keep the event on the target widget.
+                if (self.target && !$.contains(target, self.target.el)) {
+                    continue;
                 }
-                defs.push(this._barcodeActiveScanned(method, barcode, activeBarcode));
+
+                var methods = self.activeBarcode[k].commands;
+                var method = prefixed ? methods[barcode] : methods.barcode;
+                if (method) {
+                    if (prefixed) {
+                        hasCommand = true;
+                    }
+                    defs.push(self._barcodeActiveScanned(method, barcode, activeBarcode));
+                }
             }
-        }
-        if (prefixed && !hasCommand) {
-            return this.do_warn(_t('Error : Barcode command is undefined'), barcode);
-        }
-        return $.when.apply($, defs).then(function () {
-            self.update({}, {reload: false});
+            if (prefixed && !hasCommand) {
+                self.do_warn(_t('Error : Barcode command is undefined'), barcode);
+            }
+            return $.when.apply($, defs).then(function () {
+                self.update({}, {reload: false});
+            });
         });
     },
     /**
@@ -314,6 +319,8 @@ FormRenderer.include({
         commands['O-BTN.' + node.attrs.barcode_trigger] = function () {
             if (!$button.hasClass('o_invisible_modifier')) {
                 $button.click();
+            } else {
+                this.do_warn(_t('Action currently unavailable'));
             }
             return $.when();
         };
