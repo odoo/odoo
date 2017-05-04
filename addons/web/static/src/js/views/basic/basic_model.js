@@ -2009,6 +2009,25 @@ var BasicModel = AbstractModel.extend({
         return Object.keys(fieldsInfo && fieldsInfo[element.viewType] || {});
     },
     /**
+     * Returns true iff value is considered to be set for the given field's type.
+     *
+     * @private
+     * @param {any} value a value for the field
+     * @param {string} fieldType a type of field
+     * @returns {boolean}
+     */
+    _isFieldSet: function (value, fieldType) {
+        switch (fieldType) {
+            case 'boolean':
+                return true;
+            case 'one2many':
+            case 'many2many':
+                return value.count > 0;
+            default:
+                return value !== false;
+        }
+    },
+    /**
      * return true if a list element is 'valid'. Such an element is valid if it
      * has no sub record with an unset required field.
      *
@@ -2020,11 +2039,13 @@ var BasicModel = AbstractModel.extend({
      * @returns {boolean}
      */
     _isX2ManyValid: function (id) {
+        var self = this;
         var isValid = true;
         var element = this.get(id, {raw: true});
-        _.each(element.data, function (rec) {
-            _.each(rec.getFieldNames(), function (fieldName) {
-                if (rec.fields[fieldName].required && !rec.data[fieldName]) {
+        _.each(element.getFieldNames(), function (fieldName) {
+            var field = element.fields[fieldName];
+            _.each(element.data, function (rec) {
+                if (field.required && !self._isFieldSet(rec.data[fieldName], field.type)) {
                     isValid = false;
                 }
             });
