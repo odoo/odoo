@@ -48,4 +48,23 @@
             action="timesheet_action_billing_report"
             name="Billing Rate Analysis"/>
 
+    <!--
+        Plan
+    -->
+    <record id="timesheet_action_plan_pivot" model="ir.actions.act_window">
+        <field name="name">Timesheet</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">pivot,tree,form</field>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+    </record>
+
+    <record id="timesheet_action_from_plan" model="ir.actions.act_window">
+        <field name="name">Timesheet</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+    </record>
+
 </odoo>
