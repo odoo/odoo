@@ -27,8 +27,8 @@ TYPE2JOURNAL = {
 TYPE2REFUND = {
     'out_invoice': 'out_refund',        # Customer Invoice
     'in_invoice': 'in_refund',          # Vendor Bill
-    'out_refund': 'out_invoice',        # Customer Refund
-    'in_refund': 'in_invoice',          # Vendor Refund
+    'out_refund': 'out_invoice',        # Customer Credit Note
+    'in_refund': 'in_invoice',          # Vendor Credit Note
 }
 
 MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
@@ -206,13 +206,13 @@ class AccountInvoice(models.Model):
     type = fields.Selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Vendor Bill'),
-            ('out_refund','Customer Refund'),
-            ('in_refund','Vendor Refund'),
+            ('out_refund','Customer Credit Note'),
+            ('in_refund','Vendor Credit Note'),
         ], readonly=True, index=True, change_default=True,
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
 
-    refund_invoice_id = fields.Many2one('account.invoice', string="Invoice for which this invoice is the refund")
+    refund_invoice_id = fields.Many2one('account.invoice', string="Invoice for which this invoice is the credit note")
     number = fields.Char(related='move_id.name', store=True, readonly=True, copy=False)
     move_name = fields.Char(string='Journal Entry Name', readonly=False,
         default=False, copy=False,
@@ -282,10 +282,10 @@ class AccountInvoice(models.Model):
         store=True, readonly=True, compute='_compute_amount')
     amount_total_signed = fields.Monetary(string='Total in Invoice Currency', currency_field='currency_id',
         store=True, readonly=True, compute='_compute_amount',
-        help="Total amount in the currency of the invoice, negative for refunds.")
+        help="Total amount in the currency of the invoice, negative for credit notes.")
     amount_total_company_signed = fields.Monetary(string='Total in Company Currency', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_amount',
-        help="Total amount in the currency of the company, negative for refunds.")
+        help="Total amount in the currency of the company, negative for credit notes.")
     currency_id = fields.Many2one('res.currency', string='Currency',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=_default_currency, track_visibility='always')
@@ -301,7 +301,7 @@ class AccountInvoice(models.Model):
     reconciled = fields.Boolean(string='Paid/Reconciled', store=True, readonly=True, compute='_compute_residual',
         help="It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment.")
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',
-        help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Refund, otherwise a Partner bank account number.',
+        help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         readonly=True, states={'draft': [('readonly', False)]}) #Default value computed in default_get for out_invoices
 
     residual = fields.Monetary(string='Amount Due',
@@ -466,7 +466,7 @@ class AccountInvoice(models.Model):
     def unlink(self):
         for invoice in self:
             if invoice.state not in ('draft', 'cancel'):
-                raise UserError(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
+                raise UserError(_('You cannot delete an invoice which is not draft or cancelled. You should create a credit note instead.'))
             elif invoice.move_name:
                 raise UserError(_('You cannot delete an invoice after it has been validated (and received a number). You can set it back to "Draft" state and modify its content, then re-confirm it.'))
         return super(AccountInvoice, self).unlink()
@@ -927,11 +927,11 @@ class AccountInvoice(models.Model):
     @api.multi
     def _check_duplicate_supplier_reference(self):
         for invoice in self:
-            #refuse to validate a vendor bill/refund if there already exists one with the same reference for the same partner,
-            #because it's probably a double encoding of the same bill/refund
+            # refuse to validate a vendor bill/credit note if there already exists one with the same reference for the same partner,
+            # because it's probably a double encoding of the same bill/credit note
             if invoice.type in ('in_invoice', 'in_refund') and invoice.reference:
                 if self.search([('type', '=', invoice.type), ('reference', '=', invoice.reference), ('company_id', '=', invoice.company_id.id), ('commercial_partner_id', '=', invoice.commercial_partner_id.id), ('id', '!=', invoice.id)]):
-                    raise UserError(_("Duplicated vendor reference detected. You probably encoded twice the same vendor bill/refund."))
+                    raise UserError(_("Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note."))
 
     @api.multi
     def invoice_validate(self):
@@ -989,8 +989,8 @@ class AccountInvoice(models.Model):
         TYPES = {
             'out_invoice': _('Invoice'),
             'in_invoice': _('Vendor Bill'),
-            'out_refund': _('Refund'),
-            'in_refund': _('Vendor Refund'),
+            'out_refund': _('Credit Note'),
+            'in_refund': _('Vendor Credit note'),
         }
         result = []
         for inv in self:
@@ -1031,17 +1031,17 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):
-        """ Prepare the dict of values to create the new refund from the invoice.
+        """ Prepare the dict of values to create the new credit note from the invoice.
             This method may be overridden to implement custom
-            refund generation (making sure to call super() to establish
+            credit note generation (making sure to call super() to establish
             a clean extension chain).
 
-            :param record invoice: invoice to refund
-            :param string date_invoice: refund creation date from the wizard
+            :param record invoice: invoice as credit note
+            :param string date_invoice: credit note creation date from the wizard
             :param integer date: force date from the wizard
-            :param string description: description of the refund from the wizard
+            :param string description: description of the credit note from the wizard
             :param integer journal_id: account.journal from the wizard
-            :return: dict of value to create() the refund
+            :return: dict of value to create() the credit note
         """
         values = {}
         for field in ['name', 'reference', 'comment', 'date_due', 'partner_id', 'company_id',
@@ -1086,8 +1086,8 @@ class AccountInvoice(models.Model):
             values = self._prepare_refund(invoice, date_invoice=date_invoice, date=date,
                                     description=description, journal_id=journal_id)
             refund_invoice = self.create(values)
-            invoice_type = {'out_invoice': ('customer invoices refund'),
-                'in_invoice': ('vendor bill refund')}
+            invoice_type = {'out_invoice': ('customer invoices credit note'),
+                'in_invoice': ('vendor bill credit note')}
             message = _("This %s has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a>") % (invoice_type[invoice.type], invoice.id, invoice.number)
             refund_invoice.message_post(body=message)
             new_invoices += refund_invoice
@@ -1224,7 +1224,7 @@ class AccountInvoiceLine(models.Model):
         store=True, readonly=True, compute='_compute_price')
     price_subtotal_signed = fields.Monetary(string='Amount Signed', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_price',
-        help="Total amount in the currency of the company, negative for refunds.")
+        help="Total amount in the currency of the company, negative for credit note.")
     quantity = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'),

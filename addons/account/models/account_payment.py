@@ -531,10 +531,10 @@ class account_payment(models.Model):
                 if self.payment_type == 'inbound':
                     name += _("Customer Payment")
                 elif self.payment_type == 'outbound':
-                    name += _("Customer Refund")
+                    name += _("Customer Credit Note")
             elif self.partner_type == 'supplier':
                 if self.payment_type == 'inbound':
-                    name += _("Vendor Refund")
+                    name += _("Vendor Credit Note")
                 elif self.payment_type == 'outbound':
                     name += _("Vendor Payment")
             if invoice:
