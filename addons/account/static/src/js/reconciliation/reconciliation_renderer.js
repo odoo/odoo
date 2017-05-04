@@ -311,7 +311,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 var text;
                 if (line.partial_reconcile) {
                     text = _t("Undo the partial reconciliation.");
-                    $cell.text(state.st_line.amount_str);
+                    $cell.html(state.st_line.amount_str);
                 } else {
                     text = _t("This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.");
                 }

@@ -404,6 +404,9 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         var props = _.filter(line.reconciliation_proposition, {'invalid': false});
         var prop = props[0];
+        var format_options = {
+            currency_id: line.st_line.currency_id,
+        };
         if (props.length < 1 || Math.abs(line.st_line.amount) >= Math.abs(prop.amount)) {
             return $.Deferred().reject();
         }
@@ -411,6 +414,8 @@ var StatementModel = BasicModel.extend({
         if (!prop.partial_reconcile) {
             return this._computeLine(line);
         }
+        line.st_line.amount = prop.amount - Math.abs(line.balance.amount);
+        line.st_line.amount_str = field_utils.format.monetary(Math.abs(line.st_line.amount), {}, format_options);
         return this._computeLine(line).then(function () {
             if (prop.partial_reconcile) {
                 line.balance.amount = 0;
