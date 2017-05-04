@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 from odoo.addons import decimal_precision as dp
 
 
@@ -275,7 +275,8 @@ class MrpWorkorder(models.Model):
         raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
         for move in raw_moves:
             if move.unit_factor:
-                move.quantity_done += self.qty_producing * move.unit_factor
+                rounding = move.product_uom.rounding
+                move.quantity_done += float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
 
         # Transfer quantities from temporary to final move lots or make them final
         for move_lot in self.active_move_lot_ids:
@@ -341,6 +342,7 @@ class MrpWorkorder(models.Model):
         self.final_lot_id = False
         if self.qty_produced >= self.production_id.product_qty:
             self.button_finish()
+        return True
 
     @api.multi
     def button_start(self):
@@ -368,7 +370,7 @@ class MrpWorkorder(models.Model):
                 'date_start': datetime.now(),
                 'user_id': self.env.user.id
             })
-        self.write({'state': 'progress',
+        return self.write({'state': 'progress',
                     'date_start': datetime.now(),
         })
 
@@ -376,9 +378,7 @@ class MrpWorkorder(models.Model):
     def button_finish(self):
         self.ensure_one()
         self.end_all()
-        self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
-        if not self.production_id.workorder_ids.filtered(lambda x: x.state not in ('done','cancel')):
-            self.production_id.post_inventory() # User should put it to done manually
+        return self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
 
     @api.multi
     def end_previous(self, doall=False):
@@ -406,6 +406,7 @@ class MrpWorkorder(models.Model):
                     if not len(loss_id):
                         raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
                     timeline.copy({'date_start': maxdate, 'date_end': enddate, 'loss_id': loss_id.id})
+        return True
 
     @api.multi
     def end_all(self):
@@ -414,22 +415,24 @@ class MrpWorkorder(models.Model):
     @api.multi
     def button_pending(self):
         self.end_previous()
+        return True
 
     @api.multi
     def button_unblock(self):
         for order in self:
             order.workcenter_id.unblock()
+        return True
 
     @api.multi
     def action_cancel(self):
-        self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def button_done(self):
         if any([x.state in ('done', 'cancel') for x in self]):
             raise UserError(_('A Manufacturing Order is already done or cancelled!'))
         self.end_all()
-        self.write({'state': 'done',
+        return self.write({'state': 'done',
                     'date_finished': datetime.now()})
 
     @api.multi

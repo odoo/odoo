@@ -19,21 +19,20 @@
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Clo <clo@odoo.com>, 2016
 # Florian Hatat <mininet@wanadoo.fr>, 2016
-# Miguel Vidali <mvidali129@gmail.com>, 2016
 # Nicolas Seinlet <nicolas@seinlet.com>, 2016
 # Hubert TETARD <htetard@apik-conseils.com>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Henri Cornuau <hcornuau@gmail.com>, 2016
-# Martin Malorni <mm@microcom.ca>, 2016
+# Martin Malorni <mmalorni@gmail.com>, 2016
 # ShevAbam <shevabam@gmail.com>, 2016
-# Olivier Dony <odo@odoo.com>, 2016
+# Alexis de Lattre <alexis@via.ecp.fr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:42+0000\n"
 "PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: Olivier Dony <odo@odoo.com>, 2016\n"
+"Last-Translator: Alexis de Lattre <alexis@via.ecp.fr>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -551,7 +550,9 @@ msgstr "Détails de la nomenclature"
 #: code:addons/mrp/models/mrp_bom.py:67
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
-msgstr "La nomenclature de %s ne devrait pas contenir %s comme élément."
+msgstr ""
+"Le produit %s sélectionné sur une ligne de nomenclature ne peut pas être "
+"identique au produit de la nomenclature."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -947,7 +948,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_is_done
@@ -1904,7 +1905,7 @@ msgstr "Opérations"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_order_ids
 msgid "Orders"
-msgstr "Tri"
+msgstr "Commandes"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_production
@@ -2677,7 +2678,7 @@ msgstr "État"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Status"
-msgstr "Statut"
+msgstr "État"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
@@ -3511,11 +3512,23 @@ msgstr ""
 " concernés d'abord."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:123
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You can only produce 1.0 %s for products with unique serial number."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
 msgstr ""
 "Vous ne pouvez pas annuler un mouvement ayant déjà consommé des matériaux."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You cannot use the same serial number in two different lines."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44

@@ -499,7 +499,7 @@
 
     <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Activate Magnify">
         <xpath expr='//div[contains(@class, "js_sale")]' position='attributes'>
-            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
+            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-hover" />
         </xpath>
     </template>
 
@@ -574,7 +574,7 @@
             <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
                 <i class="fa fa-minus"></i>
             </a>
-            <input type="text" class="form-control" data-min="1" name="add_qty" value="1"/>
+            <input type="text" class="form-control quantity" data-min="1" name="add_qty" value="1"/>
             <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
                 <i class="fa fa-plus"></i>
             </a>
@@ -874,7 +874,7 @@
                                 <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json" data-no-instant="">
                                     <i class="fa fa-minus"></i>
                                 </a>
-                                <input type="text" class="js_quantity form-control" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
+                                <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
                                 <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json" data-no-instant="">
                                     <i class="fa fa-plus"></i>
                                 </a>
@@ -1258,7 +1258,7 @@
                                         <a t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-default mb32">
                                             <span class="fa fa-long-arrow-left" /> Back
                                         </a>
-                                        <a class="btn btn-default btn-primary pull-right mb32 a-submit">
+                                        <a class="btn btn-default btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
                                             <span>Next </span><span class="fa fa-long-arrow-right" />
                                         </a>
                                     </div>
@@ -1710,14 +1710,14 @@
         <div class="panel panel-info">
           <div class="panel-heading">Bill To:</div>
           <div class="panel-body">
-            <div t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
+            <div class='o_div_text_overflow' t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
           </div>
         </div>
         <t t-if="not order.only_services">
             <div class="panel panel-info">
               <div class="panel-heading">Ship To:</div>
               <div class="panel-body">
-                <div t-field="order.partner_shipping_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone']}" />
+                <div class='o_div_text_overflow' t-field="order.partner_shipping_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone']}" />
               </div>
             </div>
         </t>

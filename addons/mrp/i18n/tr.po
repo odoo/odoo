@@ -23,13 +23,14 @@
 # Mehmet Demirel <mdemirell@gmail.com>, 2016
 # Tolga Han Duyuler <peccavi01@hotmail.com>, 2016
 # Alexander B. <road2monstercat@gmail.com>, 2016
+# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:42+0000\n"
 "PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: Alexander B. <road2monstercat@gmail.com>, 2016\n"
+"Last-Translator: Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2016\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -579,7 +580,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_capacity
 msgid "Capacity"
-msgstr ""
+msgstr "Kapasite"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -1043,7 +1044,7 @@ msgstr "Emri Bitir"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.workorder,state:0
 msgid "Finished"
-msgstr "Biten"
+msgstr "Tamamlandı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_lot_produced_id
@@ -1425,7 +1426,7 @@ msgstr "Düşük"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_maintenance
 msgid "Maintenance"
-msgstr ""
+msgstr "Bakım"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -1711,7 +1712,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_maintenance:0
 msgid "No maintenance machine and work centers"
-msgstr ""
+msgstr "Bakım makine ve iş merkezleri yok"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_mps:0
@@ -1974,7 +1975,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_maintenance:0
 msgid "Preventive and Corrective maintenance management"
-msgstr ""
+msgstr "Önleyici ve Düzeltici bakım yönetimi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_ir_attachment_priority
@@ -3400,9 +3401,21 @@ msgstr ""
 "ilgili üretim emrini kapatın ya da iptal edin."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:123
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You can only produce 1.0 %s for products with unique serial number."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You cannot use the same serial number in two different lines."
 msgstr ""
 
 #. module: mrp

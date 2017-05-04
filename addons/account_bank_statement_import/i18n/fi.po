@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
 # Tommi Rintala <tommi.rintala@gmail.com>, 2016
 msgid ""
@@ -34,7 +35,7 @@ msgstr "%d tapatumaa on jo aiemmin luettu sisään ja ohitettiin"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr "Yksi (1) tapahtuma on aiemmin tuotu  ja ohitettin."
+msgstr "1 tapahtuma on aiemmin tuotu ja ohitettiin."
 
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
@@ -82,7 +83,7 @@ msgstr "Vähintään yksi lähtevä"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_id
 #, python-format
 msgid "Bank"
-msgstr "Banco"
+msgstr "Pankki"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_account_id
@@ -118,7 +119,7 @@ msgstr "Kuuluu käyttäjän nykyiseen yritykseen"
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Peru"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
@@ -431,6 +432,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Valitse 'Myynti' asiakaslaskujen päiväkirjoille. \n"
+"Valitse 'Osto' ostolaskujen päiväkirjoille. \n"
+"Valitse 'Käteinen' tai 'Pankki' päiväkirjoille, joilla käsitellään asiakkaiden ja toimittajien maksuja.\n"
+"Valitse 'Yleinen' muille päiväkirjatapahtumille. "
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

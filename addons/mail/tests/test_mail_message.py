@@ -268,3 +268,8 @@ class TestMailMessage(TestMail):
         msg.toggle_message_starred()
         self.assertFalse(msg.starred)
         self.assertTrue(msg_emp.starred)
+
+    def test_60_cache_invalidation(self):
+        msg_cnt = len(self.group_pigs.message_ids)
+        self.group_pigs.message_post(body='Hi!', subject='test')
+        self.assertEqual(len(self.group_pigs.message_ids), msg_cnt + 1)

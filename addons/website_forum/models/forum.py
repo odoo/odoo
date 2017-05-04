@@ -799,6 +799,7 @@ class Post(models.Model):
         return groups
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def message_post(self, message_type='notification', subtype=None, **kwargs):
         question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma

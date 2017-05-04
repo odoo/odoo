@@ -7,7 +7,7 @@ var web_client = require('web.web_client');
 
 
 function send_notification(title, content) {
-    if (Notification && Notification.permission === "granted") {
+    if (window.Notification && Notification.permission === "granted") {
         if (bus.is_master) {
             _send_native_notification(title, content);
         }
@@ -59,8 +59,9 @@ function _parse_and_transform(nodes, transform_function) {
     }).join("");
 }
 
-// suggested regexp (gruber url matching regexp, adapted to js, see https://gist.github.com/gruber/8891611)
-var url_regexp = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
+// Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
+// Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
+var url_regexp = /\b(?:https?:\/\/|(www\.))[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,13}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
 function linkify(text, attrs) {
     attrs = attrs || {};
     if (attrs.target === undefined) {
@@ -130,7 +131,6 @@ var accented_letters_mapping = {
     'oe': 'œ',
     'u': '[ùúûűü]',
     'y': '[ýÿ]',
-    ' ': '[()\\[\\]]',
 };
 function unaccent (str) {
     _.each(accented_letters_mapping, function (value, key) {

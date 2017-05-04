@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-11-14 15:54+0000\n"
 "PO-Revision-Date: 2016-04-14 22:38+0000\n"
 "Last-Translator: Juliano Henriquez <juliano@consultoriahenca.com>\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
@@ -19,26 +19,26 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:223
+#: code:addons/barcodes/models/barcodes.py:202
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr ""
 "'*' no es un patrón de código de barras válido de Regex. ¿Quiso decir '. *'?"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:221
+#: code:addons/barcodes/models/barcodes.py:200
 #, python-format
 msgid ": a rule can only contain one pair of braces."
 msgstr ": una regla sólo puede contener un par de corchetes."
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:217
+#: code:addons/barcodes/models/barcodes.py:196
 #, python-format
 msgid ": braces can only contain N's followed by D's."
 msgstr ": los corchetes sólo pueden contener N's seguidas de D's"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:219
+#: code:addons/barcodes/models/barcodes.py:198
 #, python-format
 msgid ": empty braces."
 msgstr ": corchetes vacíos."
@@ -74,7 +74,7 @@ msgstr ""
 "identifica e interpreta códigos de barras"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:191
+#: code:addons/barcodes/models/barcodes.py:183 selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_alias
 #, python-format
 msgid "Alias"
@@ -98,7 +98,8 @@ msgid "An internal identification of the barcode nomenclature"
 msgstr "Una identificación interna de la nomenclatura de código de barras"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:183
+#: code:addons/barcodes/models/barcodes.py:177
+#: selection:barcode.rule,encoding:0
 #, python-format
 msgid "Any"
 msgstr "Cualquiera"
@@ -166,14 +167,14 @@ msgstr "Codificación"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
 #, python-format
 msgid "Error : Document not editable"
 msgstr "Error: Documento no editable"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:60
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
 #, python-format
 msgid "Error : No last scanned barcode"
 msgstr "Error: No hay último código de barras escaneado"
@@ -258,7 +259,7 @@ msgstr "Secuencia"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:77
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:85
 #, python-format
 msgid "Set quantity"
 msgstr "Ajustar cantidad"
@@ -284,8 +285,9 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "El patron coincidente sera alias para este código de barras"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:217 code:addons/barcodes/barcodes.py:219
-#: code:addons/barcodes/barcodes.py:221
+#: code:addons/barcodes/models/barcodes.py:196
+#: code:addons/barcodes/models/barcodes.py:198
+#: code:addons/barcodes/models/barcodes.py:200
 #, python-format
 msgid "There is a syntax error in the barcode pattern "
 msgstr "Hay un error de sintaxis en el patrón de código de barras"
@@ -301,14 +303,14 @@ msgstr ""
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
 #, python-format
 msgid "To modify this document, please first start edition."
 msgstr "Para modificar este documento, por favor empezar la edición."
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:60
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
 #, python-format
 msgid "To set the quantity please scan a barcode first."
 msgstr "Para ajustar la cantidad por favor escanear un código de barras."
@@ -341,7 +343,7 @@ msgid "UPC/EAN Conversion"
 msgstr "Conversión de UPC/EAN"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:191
+#: code:addons/barcodes/models/barcodes.py:184 selection:barcode.rule,type:0
 #, python-format
 msgid "Unit Product"
 msgstr "Unidad producto"

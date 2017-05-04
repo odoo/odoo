@@ -25,3 +25,30 @@ class ResCompany(models.Model):
             'fields_id': field.id
         })
         return new_company
+
+    @api.multi
+    def write(self, values):
+        # When we modify the currency of the company, we reflect the change on the list0 pricelist, if
+        # that pricelist is not used by another company. Otherwise, we create a new pricelist for the
+        # given currency.
+        ProductPricelist = self.env['product.pricelist']
+        currency_id = values.get('currency_id')
+        main_pricelist = self.env.ref('product.list0', False)
+        if currency_id and main_pricelist:
+            nb_companies = self.search_count([])
+            for company in self:
+                if main_pricelist.company_id == company or (main_pricelist.company_id.id is False and nb_companies == 1):
+                    main_pricelist.write({'currency_id': currency_id})
+                else:
+                    pricelist = ProductPricelist.create({
+                        'name': company.name,
+                        'currency_id': currency_id,
+                    })
+                    field = self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_product_pricelist')])
+                    self.env['ir.property'].create({
+                        'name': 'property_product_pricelist',
+                        'company_id': company.id,
+                        'value_reference': 'product.pricelist,%s' % pricelist.id,
+                        'fields_id': field.id
+                    })
+        return super(ResCompany, self).write(values)

@@ -111,8 +111,6 @@ class OAuthLogin(Home):
     @http.route()
     def web_auth_signup(self, *args, **kw):
         providers = self.list_providers()
-        if len(providers) == 1:
-            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
         response = super(OAuthLogin, self).web_auth_signup(*args, **kw)
         response.qcontext.update(providers=providers)
         return response

@@ -9,7 +9,7 @@
             <div class="text-center">
                 <h2>Sale Details</h2>
 
-                <strong><t t-esc="date_start"/> - <t t-esc="date_stop"/></strong>
+                <strong><t t-esc="date_start" t-options="{'widget': 'datetime'}"/> - <t t-esc="date_stop" t-options="{'widget': 'datetime'}"/></strong>
             </div>
 
             <!-- Orderlines -->

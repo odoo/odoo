@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-05-23 20:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -24,41 +24,47 @@ msgstr ""
 #: model:mail.template,body_html:account.email_template_edi_invoice
 msgid ""
 "\n"
+"<p>Dear ${object.partner_id.name}\n"
 "% set access_action = object.get_access_action()\n"
-"% set access_name = 'View invoice' if access_action and "
-"access_action['type'] == 'ir.actions.act_url' else 'See invoice'\n"
 "% set access_url = access_action['type'] == 'ir.actions.act_url' and "
 "access_action['url'] or '/report/pdf/account.report_invoice/' + str(object."
 "id)\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions."
+"act_url'\n"
 "\n"
-"<p>Dear\n"
-"% if object.partner_id.is_company and object.child_ids:\n"
-"    ${object.partner_id.child_ids[0].name}\n"
-"% else :\n"
-"    ${object.partner_id.name}\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
 ",</p>\n"
-"<p>Thank you for your inquiry. Here is your invoice <strong>${object.number}"
-"</strong>\n"
+"<p>Here is your invoice <strong>${object.number}</strong>\n"
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</"
+"amounting in <strong>${object.amount_total} ${object.currency_id.name}</"
 "strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
-"<p style=\"margin-left: 30px;\">\n"
-"    <a href=\"${access_url}\" style=\"padding: 5px 10px; font-size: 12px; "
-"line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: "
-"none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-"
-"align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; "
-"background-image: none; background-color: #a24689; border: 1px solid "
-"#a24689; border-radius:3px\" class=\"o_default_snippet_text\">${access_name}"
-"</a>\n"
-"</p>\n"
-"<p>If you have any question, do not hesitate to contact us.</p>\n"
-"<p>Best regards,</p>\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: "
+"20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: "
+"16px;\" class=\"o_default_snippet_text\">View Invoice</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>This invoice is already paid.</p>\n"
+"% else:\n"
+"    <p>Please remit payment at your earliest convenience.</p>\n"
+"% endif\n"
+"\n"
+"<p>Thank you,</p>\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
 msgstr ""
 
 #. module: account
@@ -77,23 +83,21 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1502
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1521
 #, python-format
 msgid " seconds"
 msgstr "sekundi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
-#: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_code_digits
 msgid "# of Digits"
 msgstr "# cifara"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
-#, fuzzy
-msgid "# of Lines"
-msgstr "# faktura"
+#: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
+msgid "# of Digits *"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -106,21 +110,26 @@ msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:322
+#: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
+msgid "${object.subject}"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:467
 #, python-format
 msgid "%d transactions were automatically reconciled."
 msgstr "%d transakcija je automatski poravnato"
 
 #. module: account
-#: code:addons/account/models/account.py:575
+#: code:addons/account/models/account.py:610
 #, python-format
 msgid "%s (Copy)"
 msgstr "%s (Kopija)"
 
 #. module: account
-#: code:addons/account/models/account.py:152
-#: code:addons/account/models/account.py:310
-#: code:addons/account/models/account.py:311
+#: code:addons/account/models/account.py:170
+#: code:addons/account/models/account.py:342
+#: code:addons/account/models/account.py:343
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -136,19 +145,7 @@ msgid ", if accounting or purchase is installed"
 msgstr ", ako je računovodstvo ili nabavke instalirano"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
-msgid "-> Reconcile"
-msgstr "Poravnaj"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_move_line_form
-#, fuzzy
-msgid "-> View partially reconciled entries"
-msgstr "Ima neporavnate unose"
-
-#. module: account
-#: code:addons/account/models/account_bank_statement.py:323
+#: code:addons/account/models/account_bank_statement.py:468
 #, python-format
 msgid "1 transaction was automatically reconciled."
 msgstr "1 transakcija je automatski poravnata"
@@ -182,6 +179,99 @@ msgstr ": Glavna knjiga"
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid ": Trial Balance"
 msgstr ": Bruto bilans"
+
+#. module: account
+#: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
+msgid ""
+"<html>\n"
+"                <head></head>\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor="
+"\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary="
+"\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding="
+"\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: "
+"rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; "
+"font-weight: bold;\">\n"
+"                                      Invoice ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png\" style=\"padding: "
+"0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id."
+"name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding="
+"\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: "
+"rgb(255, 255, 255); padding: 20px;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,"
+"Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding="
+"\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: "
+"rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style="
+"\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${user.company_id.name}<br/>\n"
+"                                ${user.company_id.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style="
+"\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if user.company_id.email:\n"
+"                                <a href=\"mailto:${user.company_id.email}\" "
+"style=\"text-decoration:none; color: white;\">${user.company_id.email}</"
+"a><br/>\n"
+"                                % endif\n"
+"                                % if user.company_id.website:\n"
+"                                    <a href=\"${user.company_id.website}\" "
+"style=\"text-decoration:none; color: white;\">\n"
+"                                        ${user.company_id.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Powered by <a href=\"https://www.odoo.com"
+"\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -361,12 +451,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
-msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr "<span title=\"Balance in Odoo\">Stanje u Odoo sistemu</span>"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
 msgstr "<span title=\"Latest Statement\">Zadnji izvod</span>"
 
@@ -379,6 +463,13 @@ msgstr "<span> Od </span>"
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> To </span>"
 msgstr "<span> Do </span>"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid ""
+"<span>(*) This configuration is related to the company you're logged into.</"
+"span>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
@@ -461,7 +552,7 @@ msgstr "<strong>Saldo :</strong>"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Banking interface:</strong> with live bank feed synchronization and "
-"bank statement importation."
+"bank statement import."
 msgstr ""
 
 #. module: account
@@ -494,13 +585,6 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Comment:</strong>"
-msgstr "<strong>Komentar:</strong>"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.report_journal
-#: model:ir.ui.view,arch_db:account.report_partnerledger
-#, fuzzy
-msgid "<strong>Company:</strong>"
 msgstr "<strong>Komentar:</strong>"
 
 #. module: account
@@ -575,12 +659,6 @@ msgid "<strong>Due Date:</strong>"
 msgstr "<strong>Valuta:</strong>"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
-msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>Sortirano po:</strong>"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Expenses</strong>"
 msgstr "<strong>Troškovi</strong>"
@@ -594,12 +672,6 @@ msgstr "<strong>Fiskalna pozicija:</strong>"
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
 msgstr "<strong>Fakturisano dana:</strong>"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
-msgid "<strong>Journal:</strong>"
-msgstr "<strong>Dnevnici:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -739,8 +811,8 @@ msgstr "<strong>Početni datum:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
-msgid "<strong>Sub-Total :</strong>"
-msgstr "<strong>Ukupno :</strong>"
+msgid "<strong>Subtotal :</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -806,22 +878,16 @@ msgstr ""
 "novac ulazi i izlazi iz kase."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1312
+#: code:addons/account/models/account_invoice.py:1399
 #, python-format
 msgid "A Payment Term should have its last line of type Balance."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1315
+#: code:addons/account/models/account_invoice.py:1402
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
 msgstr ""
-
-#. module: account
-#: code:addons/account/models/account.py:502
-#, fuzzy, python-format
-msgid "A bank account can only belong to one journal."
-msgstr "Bankovni račun može pripadati samo jednom dnevniku."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -865,12 +931,6 @@ msgstr "Lista uobičajenih poreza i njihovih vrijednosti."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-#, fuzzy
-msgid "A list of your customer and supplier payment terms."
-msgstr "Lista uobičajenih poreza i njihovih vrijednosti."
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "A product in Odoo is something you sell or buy \n"
 "                        whether or not it is goods, consumables, or "
@@ -879,20 +939,20 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:732
+#: code:addons/account/models/account_move.py:731
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
 msgstr "Poravnanje mora sadržati bar 2 stavke knjiženja."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:836
-#: code:addons/account/models/account_bank_statement.py:839
+#: code:addons/account/models/account_bank_statement.py:867
+#: code:addons/account/models/account_bank_statement.py:870
 #, python-format
 msgid "A selected move line was already reconciled."
 msgstr "Odabrana stavka knjiženja je već poravnata."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:226
+#: code:addons/account/models/account_bank_statement.py:218
 #, python-format
 msgid "A statement cannot be canceled when its lines are reconciled."
 msgstr "Bankovni izvod ne može biti poništen ako su mu stavke poravnate."
@@ -904,7 +964,7 @@ msgstr ""
 "Porezna fiskalna pozicija bi trebala biti označena samo jednom za isti porez."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:388
+#: code:addons/account/models/account_bank_statement.py:380
 #, python-format
 msgid "A transaction can't have a 0 amount."
 msgstr "Transakcija ne može imati iznos 0."
@@ -922,24 +982,30 @@ msgstr ""
 "prodaje i jedan za razna ostala knjiženja."
 
 #. module: account
+#: model:res.groups,name:account.group_warning_account
+msgid "A warning can be set on a partner (Account)"
+msgstr ""
+
+#. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:100
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:105
-#: code:addons/account/static/src/xml/account_reconciliation.xml:140
-#: code:addons/account/static/src/xml/account_reconciliation.xml:266
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:94
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:99
+#: code:addons/account/static/src/xml/account_reconciliation.xml:141
+#: code:addons/account/static/src/xml/account_reconciliation.xml:267
 #: model:ir.model,name:account.model_account_account
 #: model:ir.model.fields,field_description:account.field_account_invoice_account_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_account_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_account_id
 #: model:ir.model.fields,field_description:account.field_account_move_dummy_account_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_account_id
-#: model:ir.model.fields,field_description:account.field_account_operation_template_account_id
-#: model:ir.model.fields,field_description:account.field_account_operation_template_second_account_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_account_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_account_id
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 #: model:ir.ui.view,arch_db:account.view_account_form
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Account"
@@ -969,12 +1035,6 @@ msgstr ""
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
 msgstr ""
-
-#. module: account
-#: model:ir.model,name:account.model_account_common_journal_report
-#, fuzzy
-msgid "Account Common Journal Report"
-msgstr "Dnevnik knjiženja"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
@@ -1040,21 +1100,9 @@ msgid "Account Number"
 msgstr "Broj bankovnog računa"
 
 #. module: account
-#: model:ir.model,name:account.model_account_report_partner_ledger
-#, fuzzy
-msgid "Account Partner Ledger"
-msgstr "Osobine konta"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_payable_id
 msgid "Account Payable"
 msgstr "Konto obaveza"
-
-#. module: account
-#: model:ir.model,name:account.model_account_print_journal
-#, fuzzy
-msgid "Account Print Journal"
-msgstr "Dnevnik knjiženja"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_category_property_form
@@ -1241,7 +1289,6 @@ msgstr "Računovodstveni radnik"
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance
-#: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting"
 msgstr "Računovodstvo"
@@ -1301,6 +1348,7 @@ msgstr ""
 #: selection:account.account.tag,applicability:0
 #: selection:account.financial.report,type:0
 #: model:ir.model.fields,field_description:account.field_account_financial_report_account_ids
+#: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 #: model:ir.ui.view,arch_db:account.view_account_search
 msgid "Accounts"
 msgstr "Konta"
@@ -1319,6 +1367,12 @@ msgstr "Fiskalna pozicija"
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Accounts Mapping"
 msgstr "Mapiranje Konta"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_tag_action
+#: model:ir.ui.menu,name:account.account_tag_menu
+msgid "Accounts Tags"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1341,8 +1395,9 @@ msgid "Add"
 msgstr "Dodaj"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_operation_template_has_second_line
-#: model:ir.ui.view,arch_db:account.view_account_operation_template_form
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_has_second_line
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_has_second_line
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Add a second line"
 msgstr "Dodaj drugu liniju"
 
@@ -1366,6 +1421,11 @@ msgstr "Dodatne zabilješke..."
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Address"
 msgstr "Adrese"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
+msgid "Adjustment Tax"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1399,6 +1459,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.action_report_aged_partner_balance
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
+#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Aged Partner Balance"
 msgstr ""
 
@@ -1412,16 +1473,11 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
-msgid "Aged Trial Balance"
-msgstr ""
-
-#. module: account
 #. openerp-web
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
-#: code:addons/account/static/src/xml/account_reconciliation.xml:297
+#: code:addons/account/static/src/xml/account_reconciliation.xml:298
 #, python-format
 msgid "All"
 msgstr "Sve"
@@ -1478,8 +1534,8 @@ msgstr "Sva konta"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:309
-#: code:addons/account/static/src/xml/account_reconciliation.xml:316
+#: code:addons/account/static/src/xml/account_reconciliation.xml:310
+#: code:addons/account/static/src/xml/account_reconciliation.xml:317
 #, python-format
 msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
@@ -1511,12 +1567,17 @@ msgstr ""
 "promijeniti nakon toga."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:248
+#: code:addons/account/models/account_bank_statement.py:240
 #, python-format
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
 msgstr "Sve stavke knjiženja moraju biti obrađene da bi se zatvorio izvod."
+
+#. module: account
+#: selection:account.config.settings,group_warning_account:0
+msgid "All the partners can be used in invoices"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_update_posted
@@ -1554,12 +1615,6 @@ msgid "Allow pro-forma invoices"
 msgstr "Omogući izradu predračuna"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_config_settings_group_multi_currency
-#, fuzzy
-msgid "Allows to work in a multi currency environment"
-msgstr "Omogućava ti rad sa više od jedne valute"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
 msgid "Allows you to put invoices in pro-forma state."
 msgstr "Omogućava da fakture imaju status \"predračun\"."
@@ -1571,22 +1626,25 @@ msgstr "Omogućava ti korištenje analitičkog računovodstva."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:140
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:144
-#: code:addons/account/static/src/xml/account_reconciliation.xml:149
-#: code:addons/account/static/src/xml/account_reconciliation.xml:265
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:134
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:138
+#: code:addons/account/static/src/xml/account_reconciliation.xml:150
+#: code:addons/account/static/src/xml/account_reconciliation.xml:266
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_move_amount
-#: model:ir.model.fields,field_description:account.field_account_operation_template_amount
-#: model:ir.model.fields,field_description:account.field_account_operation_template_second_amount
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_amount
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_amount
 #: model:ir.model.fields,field_description:account.field_account_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
-#: model:ir.ui.view,arch_db:account.report_invoice_document
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_amount
+#: model:ir.ui.view,arch_db:account.view_account_payment_tree
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+#: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
@@ -1594,9 +1652,18 @@ msgstr "Iznos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
-#: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
-#: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
+#: model:ir.ui.view,arch_db:account.invoice_tree
 msgid "Amount Due"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
+msgid "Amount Due in Company Currency"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
+msgid "Amount Due in Invoice Currency"
 msgstr ""
 
 #. module: account
@@ -1622,8 +1689,9 @@ msgid "Amount in Currency"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_operation_template_amount_type
-#: model:ir.model.fields,field_description:account.field_account_operation_template_second_amount_type
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_amount_type
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_amount_type
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Amount type"
 msgstr ""
 
@@ -1666,14 +1734,19 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: selection:account.config.settings,group_warning_account:0
+msgid "An informative or blocking warning can be set on a partner"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic"
 msgstr "Analitika"
 
 #. module: account
 #. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:146
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:152
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:158
 #, python-format
 msgid "Analytic Acc."
 msgstr "Analitički konto"
@@ -1682,13 +1755,14 @@ msgstr "Analitički konto"
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_account_analytic_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_account_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_analytic_id
-#: model:ir.model.fields,field_description:account.field_account_operation_template_analytic_account_id
-#: model:ir.model.fields,field_description:account.field_account_operation_template_second_analytic_account_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_analytic_account_id
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Analytic Account"
 msgstr "Analitički konto"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Analytic Accounting"
 msgstr "Analitičko računovodstvo"
 
@@ -1701,20 +1775,37 @@ msgid "Analytic Accounts"
 msgstr "Analitička konta"
 
 #. module: account
+#: model:ir.ui.menu,name:account.account_analytic_tag_menu
+msgid "Analytic Accounts Tags"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_analytic
 msgid "Analytic Cost"
 msgstr "Analitički trošak"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.analytic_line_reporting_pivot
+#: model:ir.ui.menu,name:account.menu_action_analytic_lines_reporting
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Entries"
 msgstr "Analitički unosi"
+
+#. module: account
+#: model:ir.model,name:account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analiticki red"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
 msgid "Analytic Lines"
 msgstr "Analitički redovi"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_analytic_tag_ids
+msgid "Analytic Tags"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_account_analytic_id
@@ -1730,6 +1821,16 @@ msgstr "Analitičko računovodstvo"
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_line_ids
 msgid "Analytic lines"
 msgstr "Analitički redovi"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_analytic_tag_ids
+msgid "Analytic tags"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_tax_exigible
+msgid "Appears in VAT report"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_applicability
@@ -1827,7 +1928,14 @@ msgid "Automatic formatting"
 msgstr "Automatsko formatiranje"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:328
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:15
+#, python-format
+msgid "Automatic reconciliation"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:473
 #, python-format
 msgid "Automatically reconciled items"
 msgstr "Automatski poravnate stavke"
@@ -1844,7 +1952,7 @@ msgid "Awaiting payments"
 msgstr "Plaćanja u isčekivanju"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:178
+#: code:addons/account/models/chart_template.py:183
 #, python-format
 msgid "BILL"
 msgstr "Faktura"
@@ -1885,7 +1993,7 @@ msgstr ""
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.journal,type:0
-#: code:addons/account/models/chart_template.py:643
+#: code:addons/account/models/chart_template.py:687
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_id
 #: model:ir.model.fields,field_description:account.field_res_partner_bank_account_count
 #, python-format
@@ -1924,10 +2032,14 @@ msgid "Bank Accounts"
 msgstr "Bankovni računi"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_config_settings_bank_account_code_prefix
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_code_prefix
 msgid "Bank Accounts Prefix"
 msgstr "Prefiks bankovnih računa"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_bank_account_code_prefix
+msgid "Bank Accounts Prefix *"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
@@ -1951,18 +2063,18 @@ msgstr "Bankovne operacije"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1118
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1115
 #, python-format
 msgid "Bank Reconciliation"
 msgstr "Poravnanje bankovnih izvoda"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_operation_template_tree
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
 msgstr "Šeme poravnanja izvoda"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_operation_template_search
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
 msgstr "Šema poravnanja izvoda"
 
@@ -2022,22 +2134,15 @@ msgstr "Bankovni izvodi"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:204
+#: code:addons/account/static/src/xml/account_reconciliation.xml:205
 #, python-format
 msgid "Bank statements are fully reconciled."
 msgstr "Bankovni izvodi su u potpunosti poravnati"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
-#: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Base"
 msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
-msgid "Base Amount"
-msgstr "Iznos plaćanja"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2080,12 +2185,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
-msgid "Bills"
-msgstr "Faktura"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills Analysis"
 msgstr "Analiza faktura"
 
@@ -2094,6 +2193,11 @@ msgstr "Analiza faktura"
 #, python-format
 msgid "Bills to pay"
 msgstr "Fakture za platiti"
+
+#. module: account
+#: selection:res.partner,invoice_warn:0
+msgid "Blocking Message"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
@@ -2116,7 +2220,8 @@ msgid "Business Intelligence"
 msgstr "Business Intelligence"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_operation_template_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_name
 msgid "Button Label"
 msgstr "Natpis na dugmetu"
 
@@ -2166,6 +2271,7 @@ msgstr "Može biti vidljiv?"
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
 #: model:ir.ui.view,arch_db:account.cash_box_in_form
 #: model:ir.ui.view,arch_db:account.cash_box_out_form
+#: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -2230,28 +2336,19 @@ msgid "Cancelled Invoice"
 msgstr "Stornirana faktura"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1045
-#, python-format
-msgid ""
-"Cannot create an automatic sequence for this piece.\n"
-"Put a sequence in the journal definition for automatic numbering or create a "
-"sequence manually for this piece."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_move.py:167
+#: code:addons/account/models/account_move.py:173
 #, python-format
 msgid "Cannot create moves for different companies."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:199
+#: code:addons/account/models/account_move.py:205
 #, python-format
 msgid "Cannot create unbalanced journal entry."
 msgstr "Zabranjeno kreiranje disbalansiranog naloga"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:464
+#: code:addons/account/models/account_invoice.py:477
 #, python-format
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
@@ -2259,25 +2356,13 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:314
-#, python-format
-msgid ""
-"Cannot find any account journal of \"%s\" type for this company, You should "
-"create one.\n"
-" Please go to Journal Configuration"
-msgstr ""
-"Ne postoji ni jedan dnevnik knjiženja \"%s\" tipa za ovo preduzeće, trebali "
-"bi napraviti jedan.\n"
-"Otidjite na podešavanje dnevnika"
-
-#. module: account
-#: code:addons/account/models/account.py:393
+#: code:addons/account/models/account.py:425
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:422
+#: code:addons/account/models/account.py:455
 #, python-format
 msgid ""
 "Cannot generate an unused journal code. Please fill the 'Shortcode' field."
@@ -2301,19 +2386,23 @@ msgstr ""
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.journal,type:0
-#: code:addons/account/models/chart_template.py:643
+#: code:addons/account/models/chart_template.py:687
 #, python-format
 msgid "Cash"
 msgstr "Gotovina"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_config_settings_cash_account_code_prefix
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_cash_account_code_prefix
 msgid "Cash Accounts Prefix"
 msgstr "Prefiks konta blagane"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:211
+#: model:ir.model.fields,field_description:account.field_account_config_settings_cash_account_code_prefix
+msgid "Cash Accounts Prefix *"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:203
 #: model:ir.actions.act_window,name:account.action_view_account_bnk_stmt_cashbox
 #, python-format
 msgid "Cash Control"
@@ -2490,7 +2579,7 @@ msgid "Children Taxes"
 msgstr "Podređeni porezi"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:141
+#: code:addons/account/models/chart_template.py:146
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
 #, python-format
 msgid "Choose Accounting Template"
@@ -2498,7 +2587,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1867
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1890
 #, python-format
 msgid "Choose counterpart"
 msgstr "Odaberi suprotnu stranu"
@@ -2512,6 +2601,11 @@ msgstr "Klikni da dodaš bankovni račun."
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Click to add a journal."
 msgstr "Klikni da dodaš dnevnik knjiženja."
+
+#. module: account
+#: model:ir.actions.act_window,help:account.account_tag_action
+msgid "Click to add a new tag."
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -2539,7 +2633,7 @@ msgid "Click to create a new cash log."
 msgstr "Klikni za unos novog pregleda blagajne."
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_account_operation_template
+#: model:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Click to create a reconciliation model."
 msgstr "Klikni za kreiranje šeme poravnanja."
 
@@ -2566,14 +2660,14 @@ msgstr "Klikni za unos plaćanja"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:40
+#: code:addons/account/static/src/xml/account_reconciliation.xml:41
 #, python-format
 msgid "Close"
 msgstr "Zatvori"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:226
+#: code:addons/account/static/src/xml/account_reconciliation.xml:227
 #, python-format
 msgid "Close the statement"
 msgstr "Zatvori"
@@ -2663,10 +2757,10 @@ msgstr "Preduzeća koja se vežu sa partnerom"
 #: model:ir.model.fields,field_description:account.field_account_move_company_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_company_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_company_id
-#: model:ir.model.fields,field_description:account.field_account_operation_template_company_id
 #: model:ir.model.fields,field_description:account.field_account_payment_company_id
 #: model:ir.model.fields,field_description:account.field_account_payment_term_company_id
 #: model:ir.model.fields,field_description:account.field_account_print_journal_company_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_company_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_company_id
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_company_id
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_company_id
@@ -2680,6 +2774,18 @@ msgstr "Preduzeća koja se vežu sa partnerom"
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Company"
 msgstr "Preduzeće"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_company_currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_company_currency_id
+#: model:ir.model.fields,field_description:account.field_account_move_line_company_currency_id
+msgid "Company Currency"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_company_currency_id
+msgid "Company currency id"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_has_chart_of_accounts
@@ -2714,7 +2820,7 @@ msgid "Complete set of taxes"
 msgstr "Kompletan set poreza"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:397
+#: code:addons/account/models/account_invoice.py:414
 #, python-format
 msgid "Compose Email"
 msgstr "Sastavi e-mail"
@@ -2738,14 +2844,14 @@ msgid "Configuration"
 msgstr "Podešavanja"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:450
-#: code:addons/account/models/account_payment.py:452
+#: code:addons/account/models/account_payment.py:455
+#: code:addons/account/models/account_payment.py:457
 #, python-format
 msgid "Configuration Error !"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:338
+#: code:addons/account/models/account_invoice.py:343
 #, python-format
 msgid ""
 "Configuration error!\n"
@@ -2754,7 +2860,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:270
+#: code:addons/account/models/account.py:301
 #, python-format
 msgid ""
 "Configuration error!\n"
@@ -2763,7 +2869,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:272
+#: code:addons/account/models/account.py:303
 #, python-format
 msgid ""
 "Configuration error!\n"
@@ -2829,7 +2935,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1506
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1525
 #, python-format
 msgid "Congrats, you're all done !"
 msgstr "Čestitamo, sve ste završili !"
@@ -2862,7 +2968,7 @@ msgid "Cost of Revenue"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:388
+#: code:addons/account/models/account_payment.py:393
 #: model:ir.model.fields,field_description:account.field_account_move_line_counterpart
 #, python-format
 msgid "Counterpart"
@@ -2905,7 +3011,7 @@ msgstr "Kreiraj dobavljače"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1864
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1887
 #, python-format
 msgid "Create Write-off"
 msgstr "Kreiraj otpis"
@@ -2916,20 +3022,32 @@ msgid "Create a draft refund"
 msgstr "Kreiraj povrat u nacrtu"
 
 #. module: account
-#: code:addons/account/models/account_journal_dashboard.py:247
+#: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
+msgid "Create and post move"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_journal_dashboard.py:248
 #, python-format
 msgid "Create cash statement"
 msgstr "Kreiraj blagajnički zapis"
 
 #. module: account
-#: code:addons/account/models/account_journal_dashboard.py:233
+#: code:addons/account/models/account_journal_dashboard.py:234
 #, python-format
 msgid "Create invoice/bill"
 msgstr "Kreiraj fakturu"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2466
+#: code:addons/account/static/src/xml/account_reconciliation.xml:81
+#, python-format
+msgid "Create model"
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2493
 #, python-format
 msgid "Create writeoff"
 msgstr "Kreiraj otpis"
@@ -2978,13 +3096,14 @@ msgstr "Kreiraj proizvode"
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_create_uid
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_create_uid
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_create_uid
-#: model:ir.model.fields,field_description:account.field_account_operation_template_create_uid
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_create_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_create_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_method_create_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_term_create_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_create_uid
 #: model:ir.model.fields,field_description:account.field_account_print_journal_create_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_create_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_create_uid
 #: model:ir.model.fields,field_description:account.field_account_register_payments_create_uid
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_create_uid
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_create_uid
@@ -2995,6 +3114,7 @@ msgstr "Kreiraj proizvode"
 #: model:ir.model.fields,field_description:account.field_accounting_report_create_uid
 #: model:ir.model.fields,field_description:account.field_cash_box_in_create_uid
 #: model:ir.model.fields,field_description:account.field_cash_box_out_create_uid
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_create_uid
 #: model:ir.model.fields,field_description:account.field_validate_account_move_create_uid
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_create_uid
 msgid "Created by"
@@ -3039,13 +3159,14 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_create_date
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_create_date
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_create_date
-#: model:ir.model.fields,field_description:account.field_account_operation_template_create_date
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_create_date
 #: model:ir.model.fields,field_description:account.field_account_payment_create_date
 #: model:ir.model.fields,field_description:account.field_account_payment_method_create_date
 #: model:ir.model.fields,field_description:account.field_account_payment_term_create_date
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_create_date
 #: model:ir.model.fields,field_description:account.field_account_print_journal_create_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_create_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_create_date
 #: model:ir.model.fields,field_description:account.field_account_register_payments_create_date
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_create_date
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_create_date
@@ -3056,6 +3177,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:account.field_accounting_report_create_date
 #: model:ir.model.fields,field_description:account.field_cash_box_in_create_date
 #: model:ir.model.fields,field_description:account.field_cash_box_out_create_date
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_create_date
 #: model:ir.model.fields,field_description:account.field_validate_account_move_create_date
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_create_date
 msgid "Created on"
@@ -3072,8 +3194,18 @@ msgid "Credit"
 msgstr "Potražuje"
 
 #. module: account
+#: model:account.account.type,name:account.data_account_type_credit_card
+msgid "Credit Card"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Credit Note"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
+msgid "Credit account"
 msgstr ""
 
 #. module: account
@@ -3098,21 +3230,23 @@ msgid "Credit move id"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_action_currency_form
+msgid "Currencies"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_currency_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template_currency_id
-#: model:ir.model.fields,field_description:account.field_account_invoice_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_currency_id
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal_currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_currency_id
-#: model:ir.model.fields,field_description:account.field_account_move_line_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_currency_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_company_id
@@ -3140,8 +3274,8 @@ msgid "Currency as per company's country."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1337
-#: code:addons/account/models/account_move.py:1347
+#: code:addons/account/models/account_move.py:1329
+#: code:addons/account/models/account_move.py:1339
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr ""
@@ -3185,7 +3319,7 @@ msgid "Customer Invoice"
 msgstr "Faktura kupca"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:177
+#: code:addons/account/models/chart_template.py:182
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3194,19 +3328,19 @@ msgid "Customer Invoices"
 msgstr "Fakture kupca"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:481
+#: code:addons/account/models/account_payment.py:486
 #, python-format
 msgid "Customer Payment"
 msgstr "Plaćanje kupca"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_payment_term_id
-msgid "Customer Payment Term"
-msgstr "Uslovi plaćanja kupca"
+msgid "Customer Payment Terms"
+msgstr ""
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_payment.py:483
+#: code:addons/account/models/account_payment.py:488
 #, python-format
 msgid "Customer Refund"
 msgstr "Povrat kupca"
@@ -3223,7 +3357,7 @@ msgstr "Oznaka kupca:"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:294
+#: code:addons/account/static/src/xml/account_reconciliation.xml:295
 #: model:ir.ui.menu,name:account.menu_account_customer
 #, python-format
 msgid "Customers"
@@ -3239,14 +3373,15 @@ msgstr "Kontrolna ploča"
 #: selection:account.print.journal,sort_selection:0
 #: selection:account.report.general.ledger,sortby:0
 #: selection:accounting.report,filter_cmp:0
-#: code:addons/account/static/src/xml/account_reconciliation.xml:142
-#: code:addons/account/static/src/xml/account_reconciliation.xml:261
+#: code:addons/account/static/src/xml/account_reconciliation.xml:143
+#: code:addons/account/static/src/xml/account_reconciliation.xml:262
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_date
 #: model:ir.model.fields,field_description:account.field_account_move_date
 #: model:ir.model.fields,field_description:account.field_account_move_line_date
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_date_p
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_date
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -3274,12 +3409,6 @@ msgstr "Datumi"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
-#, fuzzy
-msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr "Dan(a) nakon fakturisanja"
-
-#. module: account
-#: selection:account.payment.term.line,option:0
 msgid "Day(s) after the invoice date"
 msgstr "Dan(a) nakon fakturisanja"
 
@@ -3296,6 +3425,11 @@ msgstr "Duguje"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
 msgid "Debit Methods"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_debit_account_id
+msgid "Debit account"
 msgstr ""
 
 #. module: account
@@ -3417,7 +3551,7 @@ msgstr "Opiši zbog čega si uzeo novac iz kase:"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:264
+#: code:addons/account/static/src/xml/account_reconciliation.xml:265
 #: model:ir.model.fields,field_description:account.field_account_account_type_note
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_name
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -3535,13 +3669,14 @@ msgstr "Prikaži duguje/potražuje kolone"
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_display_name
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_display_name
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_display_name
-#: model:ir.model.fields,field_description:account.field_account_operation_template_display_name
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment_method_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment_term_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_display_name
 #: model:ir.model.fields,field_description:account.field_account_print_journal_display_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_display_name
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_display_name
 #: model:ir.model.fields,field_description:account.field_account_register_payments_display_name
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_display_name
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_display_name
@@ -3552,13 +3687,14 @@ msgstr "Prikaži duguje/potražuje kolone"
 #: model:ir.model.fields,field_description:account.field_accounting_report_display_name
 #: model:ir.model.fields,field_description:account.field_cash_box_in_display_name
 #: model:ir.model.fields,field_description:account.field_cash_box_out_display_name
-#: model:ir.model.fields,field_description:account.field_report_account_extra_reports_report_journal_display_name
-#: model:ir.model.fields,field_description:account.field_report_account_extra_reports_report_partnerledger_display_name
 #: model:ir.model.fields,field_description:account.field_report_account_report_agedpartnerbalance_display_name
 #: model:ir.model.fields,field_description:account.field_report_account_report_financial_display_name
 #: model:ir.model.fields,field_description:account.field_report_account_report_generalledger_display_name
+#: model:ir.model.fields,field_description:account.field_report_account_report_journal_display_name
 #: model:ir.model.fields,field_description:account.field_report_account_report_overdue_display_name
+#: model:ir.model.fields,field_description:account.field_report_account_report_partnerledger_display_name
 #: model:ir.model.fields,field_description:account.field_report_account_report_trialbalance_display_name
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_display_name
 #: model:ir.model.fields,field_description:account.field_validate_account_move_display_name
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_display_name
 msgid "Display Name"
@@ -3608,10 +3744,7 @@ msgid "Don't hesitate to"
 msgstr ""
 
 #. module: account
-#. openerp-web
 #: selection:account.invoice.report,state:0
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2453
-#, python-format
 msgid "Done"
 msgstr "Završeno"
 
@@ -3668,7 +3801,7 @@ msgstr "Rok"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:143
+#: code:addons/account/static/src/xml/account_reconciliation.xml:144
 #: model:ir.model.fields,field_description:account.field_account_invoice_date_due
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_date_due
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -3703,7 +3836,7 @@ msgid "Due date"
 msgstr "Datum isteka valute"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:821
+#: code:addons/account/models/account_invoice.py:906
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -3718,22 +3851,22 @@ msgid "Duplicates"
 msgstr "Duplikati"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:157
-#: code:addons/account/models/chart_template.py:170
-#: code:addons/account/models/chart_template.py:180
+#: code:addons/account/models/chart_template.py:162
+#: code:addons/account/models/chart_template.py:175
+#: code:addons/account/models/chart_template.py:185
 #, python-format
 msgid "EXCH"
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1510
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1529
 #, python-format
 msgid "Efficiency at its finest"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:885
+#: code:addons/account/models/account_move.py:884
 #, python-format
 msgid "Either pass both debit and credit or none."
 msgstr ""
@@ -3804,13 +3937,7 @@ msgid "Entries"
 msgstr "Stavke"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_print_journal_sort_selection
-#, fuzzy
-msgid "Entries Sorted by"
-msgstr "Stavke:"
-
-#. module: account
-#: code:addons/account/models/account_move.py:850
+#: code:addons/account/models/account_move.py:849
 #, python-format
 msgid "Entries are not of the same account!"
 msgstr ""
@@ -3821,7 +3948,7 @@ msgid "Entries to Review"
 msgstr "Stavke koje treba pregledati"
 
 #. module: account
-#: code:addons/account/models/account_analytic_line.py:58
+#: code:addons/account/models/account_analytic_line.py:52
 #, python-format
 msgid "Entries: "
 msgstr "Stavke:"
@@ -3859,7 +3986,7 @@ msgid "Excel template"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:180
+#: code:addons/account/models/chart_template.py:185
 #, python-format
 msgid "Exchange Difference"
 msgstr ""
@@ -3916,19 +4043,13 @@ msgid "Expenses"
 msgstr "Troškovi"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
-#, fuzzy
-msgid "External Reference"
-msgstr "Oznaka partnera"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Extra Features"
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1517
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1536
 #, python-format
 msgid "Fast reconciler"
 msgstr ""
@@ -3975,7 +4096,7 @@ msgstr "Filtriraj po"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:68
+#: code:addons/account/static/src/xml/account_reconciliation.xml:69
 #, python-format
 msgid "Filter..."
 msgstr "Filtar"
@@ -4081,8 +4202,10 @@ msgid "Fiscalyear last month"
 msgstr "Zadnji mjesec fiskalne godine"
 
 #. module: account
-#: selection:account.operation.template,amount_type:0
-#: selection:account.operation.template,second_amount_type:0
+#: selection:account.reconcile.model,amount_type:0
+#: selection:account.reconcile.model,second_amount_type:0
+#: selection:account.reconcile.model.template,amount_type:0
+#: selection:account.reconcile.model.template,second_amount_type:0
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Fixed"
@@ -4099,8 +4222,10 @@ msgid "Fixed Assets"
 msgstr "Fiksna sredstva"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_operation_template_amount
-#: model:ir.model.fields,help:account.field_account_operation_template_second_amount
+#: model:ir.model.fields,help:account.field_account_reconcile_model_amount
+#: model:ir.model.fields,help:account.field_account_reconcile_model_second_amount
+#: model:ir.model.fields,help:account.field_account_reconcile_model_template_amount
+#: model:ir.model.fields,help:account.field_account_reconcile_model_template_second_amount
 msgid ""
 "Fixed amount will count as a debit if it is negative, as a credit if it is "
 "positive."
@@ -4140,22 +4265,10 @@ msgid "Forces all moves for this account to have this secondary currency."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:77
+#: code:addons/account/models/account_invoice.py:81
 #, python-format
 msgid "Free Reference"
 msgstr "Slobodna oznaka"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
-#, fuzzy
-msgid "From Payable accounts"
-msgstr "Konta obaveza"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
-#, fuzzy
-msgid "From Receivable accounts"
-msgstr "Konta potraživanja"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -4178,13 +4291,6 @@ msgstr ""
 "Ovaj izvještaj pruža pregled fakturisanog iznosa prema kupcima. Alat za "
 "pretražvanje takođe može biti iskorišten za personalizaciju izvještaja o "
 "fakturama, tako da složite analizu po svojim potrebama."
-
-#. module: account
-#: model:ir.model,name:account.model_account_full_reconcile
-#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_full_reconcile_id
-#, fuzzy
-msgid "Full Reconcile"
-msgstr "Poravnaj"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_accountant
@@ -4249,6 +4355,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_csv
+msgid ""
+"Get your bank statements from your bank and import them in Odoo in the .CSV "
+"format.\n"
+"-This installs the module account_bank_statement_import_csv."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .OFX "
@@ -4294,29 +4408,22 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:225
+#: code:addons/account/static/src/xml/account_reconciliation.xml:226
 #, python-format
 msgid "Go to bank statements"
 msgstr "Prikaži bankovne izvode"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:465
-#: code:addons/account/models/account_move.py:315
+#: code:addons/account/models/account_invoice.py:478
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Prikaži panel za podešavanje"
 
 #. module: account
-#: selection:res.partner,trust:0
-#, fuzzy
-msgid "Good Debtor"
-msgstr "Odličan posao!"
-
-#. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:204
-#: code:addons/account/static/src/xml/account_reconciliation.xml:308
-#: code:addons/account/static/src/xml/account_reconciliation.xml:315
+#: code:addons/account/static/src/xml/account_reconciliation.xml:205
+#: code:addons/account/static/src/xml/account_reconciliation.xml:309
+#: code:addons/account/static/src/xml/account_reconciliation.xml:316
 #, python-format
 msgid "Good Job!"
 msgstr "Odličan posao!"
@@ -4424,13 +4531,14 @@ msgstr "Kako tipovi konta utiču na tvoje izvještaje?"
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_id
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_id
-#: model:ir.model.fields,field_description:account.field_account_operation_template_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_id
 #: model:ir.model.fields,field_description:account.field_account_payment_id
 #: model:ir.model.fields,field_description:account.field_account_payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_payment_term_id
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_id
 #: model:ir.model.fields,field_description:account.field_account_print_journal_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_id
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_id
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_id
@@ -4441,26 +4549,27 @@ msgstr "Kako tipovi konta utiču na tvoje izvještaje?"
 #: model:ir.model.fields,field_description:account.field_accounting_report_id
 #: model:ir.model.fields,field_description:account.field_cash_box_in_id
 #: model:ir.model.fields,field_description:account.field_cash_box_out_id
-#: model:ir.model.fields,field_description:account.field_report_account_extra_reports_report_journal_id
-#: model:ir.model.fields,field_description:account.field_report_account_extra_reports_report_partnerledger_id
 #: model:ir.model.fields,field_description:account.field_report_account_report_agedpartnerbalance_id
 #: model:ir.model.fields,field_description:account.field_report_account_report_financial_id
 #: model:ir.model.fields,field_description:account.field_report_account_report_generalledger_id
+#: model:ir.model.fields,field_description:account.field_report_account_report_journal_id
 #: model:ir.model.fields,field_description:account.field_report_account_report_overdue_id
+#: model:ir.model.fields,field_description:account.field_report_account_report_partnerledger_id
 #: model:ir.model.fields,field_description:account.field_report_account_report_trialbalance_id
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_id
 #: model:ir.model.fields,field_description:account.field_validate_account_move_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_id
 msgid "ID"
 msgstr "ID"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:177
+#: code:addons/account/models/chart_template.py:182
 #, python-format
 msgid "INV"
 msgstr "FAK"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:394
+#: code:addons/account/models/account_bank_statement.py:386
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
 msgstr ""
@@ -4623,6 +4732,11 @@ msgid "Import .qif files"
 msgstr "Importuj .qif fajlove"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_csv
+msgid "Import in .csv format"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_ofx
 msgid "Import in .ofx format"
 msgstr "Importuj u .ofx formatu"
@@ -4645,7 +4759,7 @@ msgid "In Odoo,"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:414
+#: code:addons/account/models/account_bank_statement.py:406
 #, python-format
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete "
@@ -4655,7 +4769,7 @@ msgstr ""
 "povezane stavke knjiženja."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:200
+#: code:addons/account/models/account_bank_statement.py:192
 #, python-format
 msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
@@ -4727,7 +4841,7 @@ msgstr "Konto prihoda na templejtu proizvoda"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1790
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1809
 #, python-format
 msgid "Incorrect Operation"
 msgstr "Operacija nije dozvoljena"
@@ -4777,7 +4891,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line_narration
 #: model:ir.model.fields,field_description:account.field_account_move_narration
 msgid "Internal Note"
 msgstr "Lična zabilješka"
@@ -4792,6 +4905,11 @@ msgstr "Lične zabilješke"
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfer"
 msgstr "Unutrašnji transfer"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_internal_type
+msgid "Internal Type"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_template_form
@@ -4810,9 +4928,10 @@ msgid "Invite Users"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:870
+#: code:addons/account/models/account_invoice.py:956
 #: model:ir.model,name:account.model_account_invoice
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_invoice_id
+#: model:ir.model.fields,field_description:account.field_res_partner_invoice_warn
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -4876,9 +4995,51 @@ msgid "Invoice Tax"
 msgstr "Porezi fakture"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_id
+msgid "Invoice for which this invoice is the refund"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_invoice_id
 msgid "Invoice id"
 msgstr "ID fakture"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:555
+#, python-format
+msgid "Invoice must be a draft in order to set it to Pro-forma."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:535
+#, python-format
+msgid "Invoice must be cancelled in order to reset it to draft."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:563
+#, python-format
+msgid "Invoice must be in draft or Pro-forma state in order to validate it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:587
+#, python-format
+msgid ""
+"Invoice must be in draft,Pro-forma or open state in order to be cancelled."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:581
+#, python-format
+msgid "Invoice must be paid in order to set it to register payemnt."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:573
+#, python-format
+msgid "Invoice must be validated in order to set it to register payemnt."
+msgstr ""
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -4886,13 +5047,13 @@ msgid "Invoice paid"
 msgstr "Faktura plaćena"
 
 #. module: account
-#: code:addons/account/wizard/account_invoice_refund.py:115
+#: code:addons/account/wizard/account_invoice_refund.py:114
 #, python-format
 msgid "Invoice refund"
 msgstr "Povrat"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1401
+#: code:addons/account/models/account_invoice.py:1488
 #, python-format
 msgid "Invoice sent"
 msgstr "Faktura poslata"
@@ -4933,7 +5094,7 @@ msgstr "Fakture"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2099
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2126
 #, python-format
 msgid "Invoices & Payments Matching"
 msgstr "Spajanje faktura i plaćanja"
@@ -4963,6 +5124,11 @@ msgstr "Fakture koje pripadaju tebi"
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to validate"
 msgstr "Fakture koje treba odobriti"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.product_template_form_view
+msgid "Invoicing"
+msgstr "Fakturisanje"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -5006,15 +5172,33 @@ msgid "It indicates that the invoice has been sent."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:883
+#: code:addons/account/models/account_move.py:882
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
 msgstr "Obavezno je da unesete konto i dnevnik da biste mogli kreirati otpis."
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:408
+#, python-format
+msgid ""
+"It is not allowed to delete a bank statement line that already created a "
+"journal entry since it would create a gap in the numbering. You should "
+"create the journal entry again and cancel it thanks to a regular revert."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_payment.py:322
+#, python-format
+msgid ""
+"It is not allowed to delete a payment that already created a journal entry "
+"since it would create a gap in the numbering. You should create the journal "
+"entry again and cancel it thanks to a regular revert."
+msgstr ""
+
+#. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:212
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
 #, python-format
 msgid "It took you"
 msgstr "Trebalo je"
@@ -5065,9 +5249,9 @@ msgstr "Januar"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2135
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2140
-#: code:addons/account/static/src/xml/account_reconciliation.xml:141
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2162
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2167
+#: code:addons/account/static/src/xml/account_reconciliation.xml:142
 #: model:ir.model,name:account.model_account_journal
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_id
@@ -5075,13 +5259,14 @@ msgstr "Januar"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_journal_id
 #: model:ir.model.fields,field_description:account.field_account_move_journal_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_journal_id
-#: model:ir.model.fields,field_description:account.field_account_operation_template_journal_id
-#: model:ir.model.fields,field_description:account.field_account_operation_template_second_journal_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_journal_id
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_journal_id
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 #, python-format
 msgid "Journal"
@@ -5093,13 +5278,16 @@ msgid "Journal & Partner"
 msgstr "Dnevnik & partner"
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:253
 #: model:ir.actions.act_window,name:account.action_move_journal_line
 #: model:ir.actions.act_window,name:account.action_move_select
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_entry_ids
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
+#: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model:ir.ui.view,arch_db:account.view_move_tree
+#, python-format
 msgid "Journal Entries"
 msgstr "Nalozi za knjiženje"
 
@@ -5110,18 +5298,17 @@ msgstr "Nalozi po mjesecima"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_id
-#: model:ir.model.fields,field_description:account.field_account_invoice_move_name
 #: model:ir.model.fields,field_description:account.field_account_move_line_move_id
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Journal Entry"
 msgstr "Sadrzaj dnevnika"
 
 #. module: account
-#: selection:account.print.journal,sort_selection:0
-#: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
-msgid "Journal Entry Number"
-msgstr "Sadrzaj dnevnika"
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_move_name
+#: model:ir.model.fields,field_description:account.field_account_invoice_move_name
+#: model:ir.model.fields,field_description:account.field_account_payment_move_name
+msgid "Journal Entry Name"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -5131,14 +5318,14 @@ msgid "Journal Item"
 msgstr "Stavka knjiženja"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_operation_template_label
-#: model:ir.model.fields,field_description:account.field_account_operation_template_second_label
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_label
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_label
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Journal Item Label"
 msgstr "Natpis stavke"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:261
-#: code:addons/account/models/account_payment.py:268
+#: code:addons/account/models/account_payment.py:271
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
 #: model:ir.actions.act_window,name:account.act_account_move_to_account_move_line_open
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
@@ -5150,15 +5337,14 @@ msgstr "Natpis stavke"
 #: model:ir.actions.act_window,name:account.action_move_line_select
 #: model:ir.actions.act_window,name:account.action_move_line_select_by_partner
 #: model:ir.actions.act_window,name:account.action_move_line_select_by_type
-#: model:ir.actions.act_window,name:account.action_move_line_select_posted
 #: model:ir.model.fields,field_description:account.field_account_move_line_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_issued_total
 #: model:ir.model.fields,field_description:account.field_res_partner_journal_item_count
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
-#: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.ui.view,arch_db:account.view_move_line_pivot
 #: model:ir.ui.view,arch_db:account.view_move_line_tree
 #, python-format
 msgid "Journal Items"
@@ -5166,7 +5352,7 @@ msgstr "Stavke knjiženja"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2098
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2125
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
@@ -5186,6 +5372,11 @@ msgstr "Dnevnik i partner"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Journal invoices with period in current year"
 msgstr "Fakture u dnevniku koje pripadaju periodu iz tekuće godine"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
+msgid "Journal items where matching number isn't set"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -5212,6 +5403,11 @@ msgstr "Jul"
 #: selection:res.company,fiscalyear_last_month:0
 msgid "June"
 msgstr "Jun"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_reason
+msgid "Justification"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
@@ -5245,8 +5441,9 @@ msgstr "Ostavi otvoreno"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:114
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:118
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:108
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:112
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_name
 #: model:ir.model.fields,field_description:account.field_account_move_line_name
 #: model:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -5299,13 +5496,14 @@ msgstr "Natpis na fakturama"
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile___last_update
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff___last_update
 #: model:ir.model.fields,field_description:account.field_account_move_reversal___last_update
-#: model:ir.model.fields,field_description:account.field_account_operation_template___last_update
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile___last_update
 #: model:ir.model.fields,field_description:account.field_account_payment___last_update
 #: model:ir.model.fields,field_description:account.field_account_payment_method___last_update
 #: model:ir.model.fields,field_description:account.field_account_payment_term___last_update
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line___last_update
 #: model:ir.model.fields,field_description:account.field_account_print_journal___last_update
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model___last_update
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template___last_update
 #: model:ir.model.fields,field_description:account.field_account_register_payments___last_update
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger___last_update
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger___last_update
@@ -5316,13 +5514,14 @@ msgstr "Natpis na fakturama"
 #: model:ir.model.fields,field_description:account.field_accounting_report___last_update
 #: model:ir.model.fields,field_description:account.field_cash_box_in___last_update
 #: model:ir.model.fields,field_description:account.field_cash_box_out___last_update
-#: model:ir.model.fields,field_description:account.field_report_account_extra_reports_report_journal___last_update
-#: model:ir.model.fields,field_description:account.field_report_account_extra_reports_report_partnerledger___last_update
 #: model:ir.model.fields,field_description:account.field_report_account_report_agedpartnerbalance___last_update
 #: model:ir.model.fields,field_description:account.field_report_account_report_financial___last_update
 #: model:ir.model.fields,field_description:account.field_report_account_report_generalledger___last_update
+#: model:ir.model.fields,field_description:account.field_report_account_report_journal___last_update
 #: model:ir.model.fields,field_description:account.field_report_account_report_overdue___last_update
+#: model:ir.model.fields,field_description:account.field_report_account_report_partnerledger___last_update
 #: model:ir.model.fields,field_description:account.field_report_account_report_trialbalance___last_update
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard___last_update
 #: model:ir.model.fields,field_description:account.field_validate_account_move___last_update
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts___last_update
 msgid "Last Modified on"
@@ -5330,7 +5529,7 @@ msgstr "Zadnja izmjena"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:329
+#: code:addons/account/static/src/xml/account_reconciliation.xml:330
 #, python-format
 msgid "Last Reconciliation :"
 msgstr "Zadnje poravnanje:"
@@ -5374,13 +5573,14 @@ msgstr "Zadnje poravnanje:"
 #: model:ir.model.fields,field_description:account.field_account_move_line_write_uid
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_write_uid
 #: model:ir.model.fields,field_description:account.field_account_move_write_uid
-#: model:ir.model.fields,field_description:account.field_account_operation_template_write_uid
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_write_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_method_write_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_write_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_term_write_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_write_uid
 #: model:ir.model.fields,field_description:account.field_account_print_journal_write_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_write_uid
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_write_uid
 #: model:ir.model.fields,field_description:account.field_account_register_payments_write_uid
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_write_uid
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_write_uid
@@ -5391,6 +5591,7 @@ msgstr "Zadnje poravnanje:"
 #: model:ir.model.fields,field_description:account.field_accounting_report_write_uid
 #: model:ir.model.fields,field_description:account.field_cash_box_in_write_uid
 #: model:ir.model.fields,field_description:account.field_cash_box_out_write_uid
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_write_uid
 #: model:ir.model.fields,field_description:account.field_validate_account_move_write_uid
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_uid
 msgid "Last Updated by"
@@ -5435,13 +5636,14 @@ msgstr "Zadnja izmjena"
 #: model:ir.model.fields,field_description:account.field_account_move_line_write_date
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_write_date
 #: model:ir.model.fields,field_description:account.field_account_move_write_date
-#: model:ir.model.fields,field_description:account.field_account_operation_template_write_date
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_write_date
 #: model:ir.model.fields,field_description:account.field_account_payment_method_write_date
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_write_date
 #: model:ir.model.fields,field_description:account.field_account_payment_term_write_date
 #: model:ir.model.fields,field_description:account.field_account_payment_write_date
 #: model:ir.model.fields,field_description:account.field_account_print_journal_write_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_write_date
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_write_date
 #: model:ir.model.fields,field_description:account.field_account_register_payments_write_date
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_write_date
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_write_date
@@ -5452,6 +5654,7 @@ msgstr "Zadnja izmjena"
 #: model:ir.model.fields,field_description:account.field_accounting_report_write_date
 #: model:ir.model.fields,field_description:account.field_cash_box_in_write_date
 #: model:ir.model.fields,field_description:account.field_cash_box_out_write_date
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_write_date
 #: model:ir.model.fields,field_description:account.field_validate_account_move_write_date
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_date
 msgid "Last Updated on"
@@ -5495,21 +5698,16 @@ msgid "Legal Name"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_position_form
-#, fuzzy
-msgid "Legal Notes..."
-msgstr "Lične zabilješke..."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_fiscal_position_note
-#, fuzzy
-msgid "Legal mentions that have to be printed on the invoices."
-msgstr "Lista svih poreza koji trebaju biti instalirani od strane čarobnjaka"
-
-#. module: account
-#: code:addons/account/models/account_invoice.py:145
+#: code:addons/account/models/account_invoice.py:149
 #, python-format
 msgid "Less Payment"
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:15
+#, python-format
+msgid "Let odoo try to reconcile entries for the user"
 msgstr ""
 
 #. module: account
@@ -5584,7 +5782,7 @@ msgid "Loss Exchange Rate Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:179
+#: code:addons/account/models/chart_template.py:184
 #, python-format
 msgid "MISC"
 msgstr "RAZNO"
@@ -5602,6 +5800,12 @@ msgstr "Glavni naslov 1 (bold, podvučeno)"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_currency_id
 msgid "Main currency of the company."
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.tax_adjustments_form
+#: model:ir.ui.menu,name:account.menu_action_tax_adjustment
+msgid "Make Manual Tax Adjustments"
 msgstr ""
 
 #. module: account
@@ -5646,6 +5850,16 @@ msgid "Manual Invoice Taxes"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_action_manual_reconciliation
+msgid "Manual Payments & Invoices Matching"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.client,name:account.action_manual_reconciliation
+msgid "Manual Reconciliation"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Manually enter your transactions using our"
 msgstr ""
@@ -5661,13 +5875,6 @@ msgid "Mark invoice as fully paid"
 msgstr "Označi fakturu kao potpuno plaćenu"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_full_reconcile_reconciled_line_ids
-#: model:ir.ui.view,arch_db:account.view_full_reconcile_form
-#, fuzzy
-msgid "Matched Journal Items"
-msgstr "Upisane stavke knjiženja"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_credit_ids
 msgid "Matched credit ids"
 msgstr ""
@@ -5676,19 +5883,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_debit_ids
 msgid "Matched debit ids"
 msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_full_reconcile_form
-#: model:ir.ui.view,arch_db:account.view_move_line_form
-#, fuzzy
-msgid "Matching"
-msgstr "Spajanje plaćanja"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line_full_reconcile_id
-#, fuzzy
-msgid "Matching Number"
-msgstr "Broj bankovnog računa"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -5713,7 +5907,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_communication
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_name
 #: model:ir.model.fields,field_description:account.field_account_payment_communication
 #: model:ir.model.fields,field_description:account.field_account_register_payments_communication
 msgid "Memo"
@@ -5727,33 +5920,19 @@ msgid "Memo:"
 msgstr "Nazv:"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
 msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
-msgid "Minus Current Liabilities"
-msgstr "Trenutna pasiva"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
-msgid "Minus Expenses"
-msgstr "Troškovi"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
-msgid "Minus Non-Current Liabilities"
-msgstr "Trenutna pasiva"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
-msgid "Minus Payable Accounts"
-msgstr "Konta obaveza"
+msgid "Minus Credit Card Accounts"
+msgstr ""
 
 #. module: account
 #: selection:account.journal,type:0
@@ -5763,7 +5942,7 @@ msgid "Miscellaneous"
 msgstr "Razno"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:179
+#: code:addons/account/models/chart_template.py:184
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #, python-format
 msgid "Miscellaneous Operations"
@@ -5771,10 +5950,10 @@ msgstr "Razne operacije"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:81
+#: code:addons/account/static/src/xml/account_reconciliation.xml:82
 #, python-format
-msgid "Modify presets"
-msgstr "Izmjeni šeme"
+msgid "Modify models"
+msgstr ""
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -5788,7 +5967,7 @@ msgstr "Mjesečni obrt"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:104
+#: code:addons/account/static/src/xml/account_reconciliation.xml:105
 #, python-format
 msgid "More"
 msgstr "Više"
@@ -5797,6 +5976,11 @@ msgstr "Više"
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Više <i class=\"fa fa-caret-down\"/>"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "More Info"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5826,10 +6010,15 @@ msgid "Move line ids"
 msgstr "Stavke unosa"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1172
+#: code:addons/account/models/account_move.py:1155
 #, python-format
 msgid "Move name (id): %s (%s)"
 msgstr "Naziv unosa (id): %s (%s)"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "Multi Currencies"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5877,6 +6066,11 @@ msgid "Name:"
 msgstr "Naziv:"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_narration
+msgid "Narration"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.act_account_tax_net
 #: model:ir.actions.act_window,name:account.act_account_tax_net_posted
 msgid "Net Tax Lines"
@@ -5886,13 +6080,6 @@ msgstr ""
 #: selection:account.bank.statement,state:0
 msgid "New"
 msgstr "Novi"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:88
-#, python-format
-msgid "New Operation"
-msgstr "Nova operacija"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5905,17 +6092,10 @@ msgid "New Transactions"
 msgstr "Nove transakcije"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1149
+#: code:addons/account/models/account_move.py:1132
 #, python-format
 msgid "New expected payment date: "
 msgstr "Novi datum kad se očekuje plaćanje:"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:80
-#, python-format
-msgid "New preset"
-msgstr "Nova šema poravnanja"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5933,7 +6113,12 @@ msgid "No Follow-up"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:988
+#: selection:res.partner,invoice_warn:0
+msgid "No Message"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1080
 #, python-format
 msgid "No appropriate payment method enabled on journal %s"
 msgstr "Ne postoji prikladan način plaćanja omogućen na ovom dnevniku %s"
@@ -5945,7 +6130,7 @@ msgstr "Bez detalja"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:123
+#: code:addons/account/static/src/xml/account_reconciliation.xml:124
 #, python-format
 msgid "No result matching '"
 msgstr "Nema rezultata koji se poklapaju sa '"
@@ -5986,12 +6171,6 @@ msgid "None"
 msgstr "Prazno"
 
 #. module: account
-#: selection:res.partner,trust:0
-#, fuzzy
-msgid "Normal Debtor"
-msgstr "Normalni tekst"
-
-#. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Normal Text"
 msgstr "Normalni tekst"
@@ -6009,7 +6188,7 @@ msgstr "Nije implementirano."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:267
+#: code:addons/account/static/src/xml/account_reconciliation.xml:268
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
 #, python-format
 msgid "Note"
@@ -6062,7 +6241,7 @@ msgstr "Broj cifara koji se koriste za konto"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:192
+#: code:addons/account/static/src/xml/account_reconciliation.xml:193
 #, python-format
 msgid "OK"
 msgstr "OK"
@@ -6184,21 +6363,21 @@ msgid "Only One Chart Template Available"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:331
+#: code:addons/account/models/account_payment.py:336
 #, python-format
 msgid ""
 "Only a draft payment can be posted. Trying to post a payment in state %s."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:736
+#: code:addons/account/models/chart_template.py:780
 #, python-format
 msgid "Only administrators can change the settings"
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1511
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1530
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
 msgstr "Koristi samo CTRL+Enter prečicu za potvrdjivanje poravnanja"
@@ -6226,9 +6405,9 @@ msgstr "Otvoreno plaćanje"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1870
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1902
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2037
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1893
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1925
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2060
 #, python-format
 msgid "Open balance"
 msgstr "Otvoreni saldo"
@@ -6239,9 +6418,19 @@ msgid "Opening Unit Numbers"
 msgstr "Količina na otvaranju"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_operation_template_form
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Operation Templates"
 msgstr "Šeme operacija"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:1000
+#, python-format
+msgid ""
+"Operation not allowed. Since your statement line already received a number, "
+"you cannot reconcile it entirely with existing journal entries otherwise it "
+"would make a gap in the numbering. You should book an entry and make a "
+"regular revert of it in case you want to cancel it."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:66
@@ -6274,6 +6463,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_option
+#: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Options"
 msgstr "Opcije"
@@ -6301,7 +6491,7 @@ msgstr "Ostale informacije"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
+#: code:addons/account/static/src/xml/account_reconciliation.xml:297
 #, python-format
 msgid "OtherAccounts"
 msgstr "Ostala konta"
@@ -6323,7 +6513,7 @@ msgid "Outstanding Transactions"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:112
+#: code:addons/account/models/account_invoice.py:116
 #, python-format
 msgid "Outstanding credits"
 msgstr ""
@@ -6334,7 +6524,7 @@ msgid "Outstanding credits debits widget"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:115
+#: code:addons/account/models/account_invoice.py:119
 #, python-format
 msgid "Outstanding debits"
 msgstr ""
@@ -6345,15 +6535,19 @@ msgid "Overdue"
 msgstr "Van valute"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_company_inherit_form
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Overdue Payments"
 msgstr "Prekoračena plaćanja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_overdue_msg
-#: model:ir.ui.view,arch_db:account.view_company_inherit_form
 msgid "Overdue Payments Message"
 msgstr "Poruka kod prekoračenja roka plaćanja"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_overdue_msg
+msgid "Overdue Payments Message *"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6379,7 +6573,7 @@ msgid "Paid"
 msgstr "Plaćeno"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:280
+#: code:addons/account/models/account_payment.py:283
 #, python-format
 msgid "Paid Invoices"
 msgstr "Plaćene fakture"
@@ -6419,8 +6613,8 @@ msgstr "Djelimično poravnanje"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1731
-#: code:addons/account/static/src/xml/account_reconciliation.xml:262
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1750
+#: code:addons/account/static/src/xml/account_reconciliation.xml:263
 #: model:ir.model,name:account.model_res_partner
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_partner_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_id
@@ -6447,32 +6641,6 @@ msgstr "Partner"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_commercial_partner_id
 msgid "Partner Company"
 msgstr ""
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_account_partner_ledger_menu
-#: model:ir.actions.report.xml,name:account.action_report_partnerledger
-#: model:ir.ui.menu,name:account.menu_partner_ledger
-#: model:ir.ui.view,arch_db:account.report_partnerledger
-#, fuzzy
-msgid "Partner Ledger"
-msgstr "Glavna knjiga"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable
-#, fuzzy
-msgid "Partner Ledger: Payable"
-msgstr "Oznaka partnera"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.act_account_partner_ledger_receivable
-#, fuzzy
-msgid "Partner Ledger: Receivable"
-msgstr "Oznaka partnera"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line_ref
-msgid "Partner Reference"
-msgstr "Oznaka partnera"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
@@ -6555,9 +6723,20 @@ msgstr "Razlika u plaćanju"
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_journal_id
 #: model:ir.model.fields,field_description:account.field_account_payment_journal_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_journal_id
+msgid "Payment Journal"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payment Method"
 msgstr "Metod plaćanja"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_method_id
+#: model:ir.model.fields,field_description:account.field_account_payment_payment_method_id
+#: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_id
+msgid "Payment Method Type"
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -6573,20 +6752,17 @@ msgid "Payment Methods"
 msgstr "Metodi plaćanja"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_payment_move_line_ids
+msgid "Payment Move Lines"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference_type
 msgid "Payment Reference"
 msgstr "Oznaka plaćanja"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term
-#: model:ir.model.fields,field_description:account.field_account_invoice_payment_term_id
-#: model:ir.model.fields,field_description:account.field_account_invoice_report_payment_term_id
-#: model:ir.model.fields,field_description:account.field_account_payment_term_line_payment_id
-#: model:ir.model.fields,field_description:account.field_account_payment_term_name
-#: model:ir.ui.view,arch_db:account.view_payment_term_form
-#: model:ir.ui.view,arch_db:account.view_payment_term_line_form
-#: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
-#: model:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Payment Term"
 msgstr "Uslov plaćanja"
 
@@ -6597,17 +6773,22 @@ msgstr "Stavke uslova plaćanja"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
+#: model:ir.model.fields,field_description:account.field_account_invoice_payment_term_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_payment_term_id
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line_payment_id
+#: model:ir.model.fields,field_description:account.field_account_payment_term_name
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 #: model:ir.ui.view,arch_db:account.account_planner
+#: model:ir.ui.view,arch_db:account.view_payment_term_form
+#: model:ir.ui.view,arch_db:account.view_payment_term_line_form
+#: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
+#: model:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Payment Terms"
 msgstr "Uslovi plaćanja"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_type
-#: model:ir.model.fields,field_description:account.field_account_payment_payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_type
-#: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_type
 msgid "Payment Type"
 msgstr "Tip plaćanja"
@@ -6667,7 +6848,6 @@ msgstr "Tip plaćanja"
 #: model:ir.actions.act_window,name:account.action_account_payments_payable
 #: model:ir.model,name:account.model_account_payment
 #: model:ir.model.fields,field_description:account.field_account_invoice_payment_ids
-#: model:ir.model.fields,field_description:account.field_account_invoice_payment_move_line_ids
 #: model:ir.ui.menu,name:account.menu_action_account_payments_payable
 #: model:ir.ui.menu,name:account.menu_action_account_payments_receivable
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -6702,31 +6882,6 @@ msgid "Payments widget"
 msgstr "Dodatak za plaćanja"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_company_paypal_account
-msgid "Paypal Account"
-msgstr "Paypal nalog"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_config_settings_paypal_account
-msgid "Paypal account"
-msgstr "Paypal nalog"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_config_settings_paypal_account
-msgid ""
-"Paypal account (email) for receiving online payments (credit card, etc.)\n"
-"             If you set a paypal account, the customer  will be able to pay "
-"your invoices or quotations\n"
-"             with a button \"Pay with  Paypal\" in automated emails or "
-"through the Odoo portal."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,help:account.field_res_company_paypal_account
-msgid "Paypal username (usually email) for receiving online payments."
-msgstr ""
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
 msgid "Pending Invoice"
 msgstr "Fakture na čekanju"
@@ -6754,19 +6909,21 @@ msgid "Percentage of Price Tax Included"
 msgstr ""
 
 #. module: account
-#: selection:account.operation.template,second_amount_type:0
+#: selection:account.reconcile.model,second_amount_type:0
+#: selection:account.reconcile.model.template,second_amount_type:0
 msgid "Percentage of amount"
 msgstr "Procenat iznosa"
 
 #. module: account
-#: selection:account.operation.template,amount_type:0
+#: selection:account.reconcile.model,amount_type:0
+#: selection:account.reconcile.model.template,amount_type:0
 msgid "Percentage of balance"
 msgstr "Procenat salda"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1383
+#: code:addons/account/models/account_invoice.py:1470
 #, python-format
-msgid "Percentages for Payment Term Line must be between 0 and 100."
+msgid "Percentages for Payment Terms Line must be between 0 and 100."
 msgstr ""
 
 #. module: account
@@ -6802,19 +6959,25 @@ msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:725
+#: code:addons/account/models/account_invoice.py:811
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "Molimo kreirajte neke stavke fakture"
 
 #. module: account
-#: code:addons/account/models/account_move.py:136
+#: code:addons/account/models/account_move.py:140
+#, python-format
+msgid "Please define a sequence for the refunds"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:141
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Molimo kreirajte brojevni krug za dnevnik knjiženja."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:723
+#: code:addons/account/models/account_invoice.py:809
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr ""
@@ -6912,16 +7075,11 @@ msgid "Preserve balance sign"
 msgstr "Održi znak salda"
 
 #. module: account
-#: model:ir.model,name:account.model_account_operation_template
+#: model:ir.model,name:account.model_account_reconcile_model
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
 "Šema za kreiranje naloga za knjiženje tokom spajanja faktura sa plaćanjima"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "Price"
-msgstr "Cijena"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -7019,14 +7177,6 @@ msgid "Proforma"
 msgstr "Predračun"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:593
-#, python-format
-msgid ""
-"Programmation error : domain_maker_move_line_amount requires comparator '=' "
-"or '<'"
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_payment.py:123
 #, python-format
 msgid ""
@@ -7049,6 +7199,7 @@ msgstr "Osobine"
 
 #. module: account
 #: selection:account.journal,type:0
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -7111,6 +7262,11 @@ msgid "Reason"
 msgstr "Razlog"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
+msgid "Reason..."
+msgstr ""
+
+#. module: account
 #: model:account.account.type,name:account.data_account_type_receivable
 #: selection:account.account.type,type:0
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -7152,9 +7308,9 @@ msgstr "Primi novac"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1852
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2450
-#: code:addons/account/static/src/xml/account_reconciliation.xml:322
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1871
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2477
+#: code:addons/account/static/src/xml/account_reconciliation.xml:323
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -7194,10 +7350,9 @@ msgid "Reconciled"
 msgstr "Poravnato"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_reconciled
-#, fuzzy
-msgid "Reconciled Entries"
-msgstr "Poravnaj unose"
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Reconciled entries"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -7205,16 +7360,10 @@ msgid "Reconciliation"
 msgstr "Poravnanje"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_operation_template
+#: model:ir.actions.act_window,name:account.action_account_reconcile_model
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
 msgstr "Šeme poravnanja"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_full_reconcile_partial_reconcile_ids
-#, fuzzy
-msgid "Reconciliation Parts"
-msgstr "Poravnanje"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -7229,7 +7378,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2163
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2190
 #, python-format
 msgid "Reconciling "
 msgstr "Poravnanje"
@@ -7263,6 +7412,7 @@ msgstr "Oznaka"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_ref
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_name
+#: model:ir.model.fields,field_description:account.field_account_move_line_ref
 #: model:ir.model.fields,field_description:account.field_account_move_ref
 #: model:ir.model.fields,field_description:account.field_cash_box_in_ref
 msgid "Reference"
@@ -7297,7 +7447,7 @@ msgid "Reference/Description"
 msgstr "Oznaka/opis"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:872
+#: code:addons/account/models/account_invoice.py:958
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -7429,12 +7579,8 @@ msgid "Report Value"
 msgstr "Vrijednost izvještaja"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_finance_reports
-msgid "Reporting"
-msgstr "Izvještavanje"
-
-#. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
+#: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reports"
 msgstr "Izvještaji"
 
@@ -7445,7 +7591,7 @@ msgstr "Vrati u izradu"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:149
+#: code:addons/account/static/src/xml/account_reconciliation.xml:150
 #, python-format
 msgid "Residual"
 msgstr "Preostalo"
@@ -7465,6 +7611,11 @@ msgstr "Preostali iznos u valuti"
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Responsible"
 msgstr "Odgovoran"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_deferred_revenue
+msgid "Revenue Recognition"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_date
@@ -7526,6 +7677,7 @@ msgstr "Zaokruži na nivou stavke"
 
 #. module: account
 #: selection:account.journal,type:0
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -7537,14 +7689,6 @@ msgstr "Prodaja"
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
 msgid "Sale Tax"
 msgstr "Prodajni porez"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report.xml,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-#, fuzzy
-msgid "Sale/Purchase Journal"
-msgstr "Pretraži stavke knjiženja"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -7571,6 +7715,13 @@ msgstr "Prodajni porez (%)"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Salesperson"
 msgstr "Prodavač"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:89
+#, python-format
+msgid "Save and New"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
@@ -7628,6 +7779,46 @@ msgid "Search Taxes"
 msgstr "Pretraži poreze"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_account_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_account_id
+msgid "Second Account"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_amount
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_amount
+msgid "Second Amount"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_amount_type
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_amount_type
+msgid "Second Amount type"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_analytic_account_id
+msgid "Second Analytic Account"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_journal_id
+msgid "Second Journal"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_label
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_label
+msgid "Second Journal Item Label"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_tax_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_tax_id
+msgid "Second Tax"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal_type
 msgid ""
 "Select 'Sale' for customer invoices journals.\n"
@@ -7639,14 +7830,14 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1759
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1778
 #, python-format
 msgid "Select Partner"
 msgstr "Odaberi partnera"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:234
+#: code:addons/account/static/src/xml/account_reconciliation.xml:235
 #, python-format
 msgid "Select a partner or choose a counterpart"
 msgstr "Odaberi partnera ili odaberi suprotnu stranu"
@@ -7674,6 +7865,19 @@ msgid ""
 msgstr ""
 "Odabrane faktura(e) ne mogu biti potvrđene ako nisu u nacrtu ili ako nemaju "
 "status predračun."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_partner_invoice_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_product_template_action
+msgid "Sellable Products"
+msgstr ""
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -7714,8 +7918,9 @@ msgstr "Septembar"
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_sequence
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_sequence
 #: model:ir.model.fields,field_description:account.field_account_journal_sequence
-#: model:ir.model.fields,field_description:account.field_account_operation_template_sequence
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_sequence
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_sequence
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_group_sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_template_sequence
@@ -7731,6 +7936,13 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Set the default Sales and Purchase taxes"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_tax_tax_adjustment
+msgid ""
+"Set this field to true if this tax can be used in the tax adjustment wizard, "
+"used to manually fill some data in the tax declaration"
 msgstr ""
 
 #. module: account
@@ -7765,7 +7977,7 @@ msgstr "Kratki naziv"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:289
+#: code:addons/account/static/src/xml/account_reconciliation.xml:290
 #, python-format
 msgid "Show"
 msgstr "Prikaži"
@@ -7782,7 +7994,7 @@ msgstr "Prikaži dnevnik na kontrolnoj ploči"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:19
+#: code:addons/account/static/src/xml/account_reconciliation.xml:20
 #, python-format
 msgid "Show more... ("
 msgstr "Prikaži više... ("
@@ -7797,6 +8009,13 @@ msgstr "Potpiši izvještaje"
 msgid ""
 "Simplify your cash, checks, or credit cards deposits with an integrated "
 "batch payment function."
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2480
+#, python-format
+msgid "Skip"
 msgstr ""
 
 #. module: account
@@ -7853,7 +8072,7 @@ msgid "Statement"
 msgstr "Dokument"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:252
+#: code:addons/account/models/account_bank_statement.py:244
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
 msgstr "Bankovni izvod %s je potvrđen, stavke knjiženja su kreirane."
@@ -7887,6 +8106,7 @@ msgid "States count"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line_state
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_state
 #: model:ir.model.fields,field_description:account.field_account_invoice_state
 #: model:ir.model.fields,field_description:account.field_account_move_state
@@ -7921,6 +8141,7 @@ msgstr "UKUPNI KAPITAL"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_tag_ids
+#: model:ir.ui.view,arch_db:account.account_tag_view_form
 msgid "Tags"
 msgstr "Oznake"
 
@@ -7932,7 +8153,7 @@ msgstr "Podigni novac"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1518
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1537
 #, python-format
 msgid "Take on average less than 5 seconds to reconcile a transaction."
 msgstr "Potrebno je manje od 5 sekundi za poravnanje jedne transakcije."
@@ -7953,22 +8174,22 @@ msgstr "Ciljna knjiženja"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:126
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:131
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:120
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:125
 #: model:ir.model,name:account.model_account_tax
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_tax
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
-#: model:ir.model.fields,field_description:account.field_account_operation_template_second_tax_id
-#: model:ir.model.fields,field_description:account.field_account_operation_template_tax_id
-#: model:ir.ui.view,arch_db:account.report_invoice_document
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_tax_id
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_tax_id
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
 msgstr "Porez"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:717
-#: code:addons/account/models/chart_template.py:720
+#: code:addons/account/models/chart_template.py:761
+#: code:addons/account/models/chart_template.py:764
 #, python-format
 msgid "Tax %.2f%%"
 msgstr "Porez %.2f%%"
@@ -7987,12 +8208,6 @@ msgid "Tax Account on Refunds"
 msgstr "Konto poreza na povratima"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
-msgid "Tax Amount"
-msgstr "Konto poreza"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Application"
 msgstr "Primjena poreza"
@@ -8009,15 +8224,14 @@ msgid "Tax Computation"
 msgstr "Računanje poreza"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
-msgid "Tax Declaration"
-msgstr "Opis poreza"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_name
 msgid "Tax Description"
 msgstr "Opis poreza"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Tax Excluded Price"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
@@ -8027,7 +8241,7 @@ msgstr "Grupa poreza"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "Tax ID (VAT)"
+msgid "Tax ID"
 msgstr ""
 
 #. module: account
@@ -8077,9 +8291,15 @@ msgid "Tax Templates"
 msgstr "Šeme poreza"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_tax_adjustment
+#: model:ir.model.fields,field_description:account.field_account_tax_template_tax_adjustment
+msgid "Tax adjustment"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_tax_calculation_rounding_method
-msgid "Tax calculation rounding method"
-msgstr "Metoda zaokruživanja kod izračuna poreza"
+msgid "Tax calculation rounding method *"
+msgstr ""
 
 #. module: account
 #: sql_constraint:account.tax:0 sql_constraint:account.tax.template:0
@@ -8155,6 +8375,15 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line_move_name
+#: model:ir.model.fields,help:account.field_account_payment_move_name
+msgid ""
+"Technical field holding the number given to the journal entry, automatically "
+"set when the statement line is reconciled then stored to set the same number "
+"again if the line is cancelled, set to draft and re-processed again."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_refund_only
 msgid "Technical field to hide filter_refund in case invoice is partially paid"
 msgstr ""
@@ -8185,6 +8414,15 @@ msgstr ""
 msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_move_line_tax_exigible
+msgid ""
+"Technical field used to mark a tax line as exigible in the vat report or not "
+"(only exigible journal items are displayed). By default all new journal "
+"items are directly exigible, but with the module account_tax_cash_basis, "
+"some will become exigible only when the payment is recorded."
 msgstr ""
 
 #. module: account
@@ -8250,7 +8488,7 @@ msgstr "Dogovori i uslovi"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:212
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
 #, python-format
 msgid "That's on average"
 msgstr "To je u prosjeku"
@@ -8280,7 +8518,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:852
+#: code:addons/account/models/account_move.py:851
 #, python-format
 msgid "The account %s (%s) is not marked as reconciliable !"
 msgstr "Na odabranom kontu %s (%s) nije omogućeno poravnavanje!"
@@ -8306,7 +8544,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:421
+#: code:addons/account/models/account_move.py:426
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account "
@@ -8314,7 +8552,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:571
+#: code:addons/account/models/account.py:605
 #, python-format
 msgid ""
 "The application scope of taxes in a group must be either the same as the "
@@ -8323,7 +8561,7 @@ msgstr ""
 "Domen primjene poreza u grupi mora biti ili isti kao grupa ili \"Ništa\"."
 
 #. module: account
-#: code:addons/account/models/account.py:279
+#: code:addons/account/models/account.py:310
 #, python-format
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
@@ -8387,8 +8625,8 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
-"The first step is to set up your company information. This is mostly used "
-"for invoicing."
+"The first step is to set up your company's information. This is mostly used "
+"in printed business documents like orders and invoices."
 msgstr ""
 
 #. module: account
@@ -8398,7 +8636,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:283
+#: code:addons/account/models/account.py:314
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr ""
@@ -8409,7 +8647,7 @@ msgid "The income or expense account related to the selected product."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:450
+#: code:addons/account/models/account_payment.py:455
 #, python-format
 msgid "The journal %s does not have a sequence, please specify one."
 msgstr "Dnevnik %s ne posjeduje brojevni krug, podesite jedan."
@@ -8473,7 +8711,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:854
+#: code:addons/account/models/account_move.py:853
 #, python-format
 msgid ""
 "The partner has to be the same on all lines for receivable and payable "
@@ -8486,7 +8724,7 @@ msgid "The partner reference of this invoice."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:334
+#: code:addons/account/models/account_payment.py:339
 #, python-format
 msgid "The payment cannot be processed because the invoice is not open!"
 msgstr "Plaćanje ne može biti obradjeno jer faktura nije potvrđena!"
@@ -8505,7 +8743,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:406
+#: code:addons/account/models/account_move.py:411
 #, python-format
 msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
@@ -8513,7 +8751,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1245
+#: code:addons/account/models/account_invoice.py:1325
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -8529,7 +8767,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:452
+#: code:addons/account/models/account_payment.py:457
 #, python-format
 msgid "The sequence of journal %s is deactivated."
 msgstr "Brojevni krug dnevnika %s je deaktiviran."
@@ -8550,15 +8788,15 @@ msgstr "Ne postoje stavke knjiženja u stanju pripreme koje se mogu potvrditi."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:308
-#: code:addons/account/static/src/xml/account_reconciliation.xml:315
+#: code:addons/account/static/src/xml/account_reconciliation.xml:309
+#: code:addons/account/static/src/xml/account_reconciliation.xml:316
 #, python-format
 msgid "There is nothing to reconcile."
 msgstr "Sve je poravnato."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1494
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1513
 #, python-format
 msgid "There you go, it's all done !"
 msgstr "Svaka čast, sve je završeno !"
@@ -8573,6 +8811,14 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "These users handle billing specifically."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1057
+#, python-format
+msgid ""
+"This %s has been created from: <a href=# data-oe-model=account.invoice data-"
+"oe-id=%d>%s</a>"
 msgstr ""
 
 #. module: account
@@ -8650,6 +8896,15 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_module_account_deferred_revenue
+msgid ""
+"This allows you to manage the revenue recognition on selling products. It "
+"keeps track of the installments occurred on those revenue recognitions, and "
+"creates account moves for those installment lines\n"
+"-This installs the module account_deferred_revenue."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
 msgid ""
 "This boolean helps you to choose if you want to propose to the user to "
@@ -8696,8 +8951,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_operation_template_journal_id
-#: model:ir.model.fields,help:account.field_account_operation_template_second_journal_id
+#: model:ir.model.fields,help:account.field_account_reconcile_model_journal_id
+#: model:ir.model.fields,help:account.field_account_reconcile_model_second_journal_id
 msgid "This field is ignored in a bank statement reconciliation."
 msgstr ""
 
@@ -8731,7 +8986,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:319
+#: code:addons/account/models/account.py:351
 #, python-format
 msgid ""
 "This journal already contains items, therefore you cannot modify its company."
@@ -8740,7 +8995,7 @@ msgstr ""
 "kojoj pripada."
 
 #. module: account
-#: code:addons/account/models/account.py:322
+#: code:addons/account/models/account.py:354
 #, python-format
 msgid ""
 "This journal already contains items, therefore you cannot modify its short "
@@ -8776,7 +9031,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:205
+#: code:addons/account/static/src/xml/account_reconciliation.xml:206
 #, python-format
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
@@ -8787,7 +9042,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:153
+#: code:addons/account/static/src/xml/account_reconciliation.xml:154
 #, python-format
 msgid "This payment is registered but not reconciled."
 msgstr "Ovo plaćanje je registrovano ali nije poravnato."
@@ -8840,7 +9095,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_account_operation_template
+#: model:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
@@ -8848,13 +9103,6 @@ msgstr ""
 "Mogu biti iskorištene za brzinsko kreiranje stavki knjiženja kod "
 "poravnavanja\n"
 "bankovnog izvoda ili nekog konta."
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:20
-#, fuzzy, python-format
-msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
-msgstr "Savjet: Koristi CTRL + Enter da poravnaš sve izbalansirane stavke."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -8885,7 +9133,12 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:848
+#: model:ir.ui.view,arch_db:account.invoice_supplier_tree
+msgid "To pay"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:847
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
 msgstr ""
@@ -8897,10 +9150,10 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:145
+#: code:addons/account/static/src/xml/account_reconciliation.xml:146
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total
-#: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_company_signed
-#: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_signed
+#: model:ir.ui.view,arch_db:account.invoice_supplier_tree
+#: model:ir.ui.view,arch_db:account.invoice_tree
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
 #, python-format
@@ -8973,13 +9226,23 @@ msgid "Total amount you have to pay to this vendor."
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_company_signed
+msgid "Total in Company Currency"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_signed
+msgid "Total in Invoice Currency"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_total_entry_encoding
 msgid "Total of transaction lines."
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:263
+#: code:addons/account/static/src/xml/account_reconciliation.xml:264
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Transaction"
@@ -9007,19 +9270,19 @@ msgid "Transfer To"
 msgstr "Prebaci na"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:218
+#: code:addons/account/models/account_payment.py:221
 #, python-format
 msgid "Transfer account not defined on the company."
 msgstr "Konto transfera nije definisan za preduzeće."
 
 #. module: account
-#: code:addons/account/models/account_payment.py:423
+#: code:addons/account/models/account_payment.py:428
 #, python-format
 msgid "Transfer from %s"
 msgstr "Prebaci sa %s"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:506
+#: code:addons/account/models/account_payment.py:511
 #, python-format
 msgid "Transfer to %s"
 msgstr "Prebaci na %s"
@@ -9042,7 +9305,6 @@ msgid "Trial Balance Report"
 msgstr "Izvještaj bruto bilansa"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_internal_type
 #: model:ir.model.fields,field_description:account.field_account_account_template_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type_type
 #: model:ir.model.fields,field_description:account.field_account_account_user_type_id
@@ -9057,7 +9319,7 @@ msgid "Type"
 msgstr "Tip"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:775
+#: code:addons/account/models/chart_template.py:819
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Nerasporedjena dobit/trošak"
@@ -9076,10 +9338,10 @@ msgid "Unit of Measure"
 msgstr "Jedinica mjere"
 
 #. module: account
-#: code:addons/account/report/account_aged_partner_balance.py:264
-#, fuzzy, python-format
-msgid "Unknown Partner"
-msgstr "Partner"
+#: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable_no_partner
+#: model:ir.actions.act_window,name:account.act_account_partner_ledger_receivable_no_partner
+msgid "Unknown Partner Ledger"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9139,15 +9401,14 @@ msgid "Unreconciled Entries"
 msgstr "Neporavnati unosi"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
-msgid "Unreconciled Journal Items"
-msgstr "Neporavnati unosi"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed
-#: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount"
 msgstr "Neoporezivan iznos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
+msgid "Untaxed Amount in Company Currency"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9155,9 +9416,13 @@ msgid "Use"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_config_settings_use_anglo_saxon
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_use_anglo_saxon
 msgid "Use Anglo-Saxon Accounting"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_use_anglo_saxon
+msgid "Use Anglo-Saxon Accounting *"
 msgstr ""
 
 #. module: account
@@ -9264,7 +9529,7 @@ msgstr "PDV obavezan"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1869
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1892
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
@@ -9308,7 +9573,7 @@ msgstr "Dobavljač"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:871
+#: code:addons/account/models/account_invoice.py:957
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
@@ -9316,7 +9581,7 @@ msgid "Vendor Bill"
 msgstr "Faktura dobavljača"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:178
+#: code:addons/account/models/chart_template.py:183
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree2
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9330,15 +9595,15 @@ msgid "Vendor Flow"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:488
+#: code:addons/account/models/account_payment.py:493
 #, python-format
 msgid "Vendor Payment"
 msgstr "Plaćanje dobavljaču"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
-msgid "Vendor Payment Term"
-msgstr "Uslovi plaćanja prema dobavljačima"
+msgid "Vendor Payment Terms"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
@@ -9348,8 +9613,8 @@ msgstr "Oznaka dobavljača"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:873
-#: code:addons/account/models/account_payment.py:486
+#: code:addons/account/models/account_invoice.py:959
+#: code:addons/account/models/account_payment.py:491
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Refund"
@@ -9362,7 +9627,7 @@ msgstr "Porezi dobavljača"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:295
+#: code:addons/account/static/src/xml/account_reconciliation.xml:296
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #, python-format
 msgid "Vendors"
@@ -9372,12 +9637,6 @@ msgstr "Dobavljači"
 #: selection:account.financial.report,type:0
 msgid "View"
 msgstr "View"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
-msgid "View reconciled entries"
-msgstr "Ima neporavnate unose"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -9390,8 +9649,25 @@ msgid "Volume"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1183
-#: code:addons/account/models/account_invoice.py:1244
+#: model:ir.model.fields,field_description:account.field_account_config_settings_group_warning_account
+#: selection:res.partner,invoice_warn:0
+msgid "Warning"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:499
+#, python-format
+msgid "Warning for %s"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.partner_view_buttons
+msgid "Warning on the Invoice"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1265
+#: code:addons/account/models/account_invoice.py:1324
 #, python-format
 msgid "Warning!"
 msgstr "Upozorenje!"
@@ -9443,18 +9719,10 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1505
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1524
 #, python-format
 msgid "Whew, that was fast !"
 msgstr "Vauuu, to je bilo brzo !"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_common_journal_report_amount_currency
-#: model:ir.model.fields,field_description:account.field_account_print_journal_amount_currency
-#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_amount_currency
-#, fuzzy
-msgid "With Currency"
-msgstr "Glavna valuta"
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -9479,12 +9747,17 @@ msgid "With movements"
 msgstr "Sa transakcijama"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_operation_template_search
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "With tax"
 msgstr "Sa porezom"
 
 #. module: account
-#: code:addons/account/models/account_move.py:889
+#: model:ir.model,name:account.model_tax_adjustments_wizard
+msgid "Wizard for Tax Adjustments"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:888
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 #, python-format
 msgid "Write-Off"
@@ -9516,7 +9789,7 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Pogrešan iznos sa potražne ili dugovne strane u unosu !"
 
 #. module: account
-#: code:addons/account/models/account_move.py:846
+#: code:addons/account/models/account_move.py:845
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled!"
 msgstr "Pokušavaš poravnati neke unose koji su već poravnati!"
@@ -9538,7 +9811,7 @@ msgstr ""
 "šta je kupljeno ili je pristiglo."
 
 #. module: account
-#: code:addons/account/models/res_config.py:238
+#: code:addons/account/models/res_config.py:246
 #, python-format
 msgid ""
 "You can not change a company chart of account once it has been installed"
@@ -9554,7 +9827,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:317
+#: code:addons/account/models/account_payment.py:320
 #, python-format
 msgid "You can not delete a payment that is already posted"
 msgstr "Nije moguće brisanje plaćanja koje je već proknjiženo"
@@ -9574,14 +9847,14 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:179
+#: code:addons/account/models/account_move.py:185
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:181
+#: code:addons/account/models/account_move.py:187
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
@@ -9589,7 +9862,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:852
+#: code:addons/account/models/account_invoice.py:938
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -9597,7 +9870,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:162
+#: code:addons/account/models/account.py:180
 #, python-format
 msgid ""
 "You cannot change the owner company of an account that already contains "
@@ -9605,13 +9878,15 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1138
+#: code:addons/account/models/account.py:187
 #, python-format
-msgid "You cannot change the tax, you should remove and recreate lines."
+msgid ""
+"You cannot change the value of the reconciliation on this account as it "
+"already has some moves"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:413
+#: code:addons/account/models/account_move.py:418
 #, python-format
 msgid ""
 "You cannot create journal items with a secondary currency without filling "
@@ -9621,7 +9896,7 @@ msgstr ""
 "i polja \"valuta\" i polja \"iznos\""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:438
+#: code:addons/account/models/account_invoice.py:451
 #, python-format
 msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
@@ -9630,7 +9905,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:436
+#: code:addons/account/models/account_invoice.py:449
 #, python-format
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
@@ -9638,13 +9913,13 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:168
+#: code:addons/account/models/account.py:193
 #, python-format
 msgid "You cannot do that on an account that contains journal items."
 msgstr "Nije moguće izvršiti nad kontom koji sadrži stavke knjiženja."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1174
+#: code:addons/account/models/account_move.py:1157
 #, python-format
 msgid ""
 "You cannot do this modification on a posted journal entry, you can just "
@@ -9654,7 +9929,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1176
+#: code:addons/account/models/account_move.py:1159
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change "
@@ -9663,7 +9938,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:334
+#: code:addons/account/models/account.py:366
 #, python-format
 msgid ""
 "You cannot empty the account number once set.\n"
@@ -9687,13 +9962,13 @@ msgstr "Zabranjeno je mješanje faktura kupaca i dobavljača u jednom plaćanju.
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1791
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1810
 #, python-format
 msgid "You cannot mix items from receivable and payable accounts."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:146
+#: code:addons/account/models/account_move.py:151
 #, python-format
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
@@ -9703,27 +9978,35 @@ msgstr ""
 "Prvo je potrebno omogućiti poništavanje naloga u sklopu dnevnika."
 
 #. module: account
+#: code:addons/account/models/account_invoice.py:575
+#, python-format
+msgid ""
+"You cannot pay an invoice which is partially paid. You need to reconcile "
+"payment entries first."
+msgstr ""
+
+#. module: account
 #: code:addons/account/wizard/pos_box.py:36
 #, python-format
 msgid "You cannot put/take money in/out for a bank statement which is closed."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:173
+#: code:addons/account/models/account.py:198
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or vendor."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1013
-#: code:addons/account/models/account_move.py:1140
+#: code:addons/account/models/account_move.py:1014
+#: code:addons/account/models/account_move.py:1123
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1069
+#: code:addons/account/models/account_move.py:1055
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -9743,7 +10026,7 @@ msgid "You must define a Start Date"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1184
+#: code:addons/account/models/account_invoice.py:1266
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Morate prvo odabrati partnera!"
@@ -9761,7 +10044,7 @@ msgid "You must set a start date."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1321
+#: code:addons/account/models/account_move.py:1313
 #, python-format
 msgid ""
 "You should configure the 'Exchange Rate Journal' in the accounting settings, "
@@ -9770,7 +10053,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1323
+#: code:addons/account/models/account_move.py:1315
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -9779,7 +10062,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1325
+#: code:addons/account/models/account_move.py:1317
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -9798,7 +10081,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:214
+#: code:addons/account/static/src/xml/account_reconciliation.xml:215
 #, python-format
 msgid "You validated"
 msgstr "Potvrdili ste"
@@ -9863,12 +10146,6 @@ msgid "Zip Range To"
 msgstr "Do"
 
 #. module: account
-#: model:ir.model,name:account.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Analitički redovi"
-
-#. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
 msgid "account.bank.accounts.wizard"
 msgstr ""
@@ -9877,6 +10154,11 @@ msgstr ""
 #: model:ir.model,name:account.model_account_config_settings
 msgid "account.config.settings"
 msgstr "account.config.settings"
+
+#. module: account
+#: model:ir.model,name:account.model_account_reconcile_model_template
+msgid "account.reconcile.model.template"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group
@@ -9895,7 +10177,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:297
+#: code:addons/account/static/src/xml/account_reconciliation.xml:298
 #, python-format
 msgid "all"
 msgstr ""
@@ -9906,11 +10188,6 @@ msgstr ""
 #, python-format
 msgid "assign to invoice"
 msgstr "dodjeli fakturi"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_bank_statement_form
-msgid "auto..."
-msgstr "Broj izvoda..."
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
@@ -9934,20 +10211,20 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:294
+#: code:addons/account/static/src/xml/account_reconciliation.xml:295
 #, python-format
 msgid "customers"
 msgstr "kupci"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_operation_template_form
-msgid "e.g. Bank Fees"
-msgstr "npr. provizije banke"
+#: model:ir.ui.view,arch_db:account.view_payment_term_line_form
+msgid "days"
+msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_config_settings
-msgid "e.g. sales@odoo.com"
-msgstr ""
+#: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+msgid "e.g. Bank Fees"
+msgstr "npr. provizije banke"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9973,12 +10250,13 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
 #: model:ir.ui.view,arch_db:account.account_common_report_view
+#: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "or"
 msgstr "ili"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
+#: code:addons/account/static/src/xml/account_reconciliation.xml:297
 #, python-format
 msgid "others"
 msgstr "ostalo"
@@ -9995,14 +10273,14 @@ msgstr "zaostala plaćanja"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:214
+#: code:addons/account/static/src/xml/account_reconciliation.xml:215
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
 msgstr "poravnanja sa prečicom CTRL + Enter."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:19
+#: code:addons/account/static/src/xml/account_reconciliation.xml:20
 #, python-format
 msgid "remaining)"
 msgstr "preostalo)"
@@ -10023,8 +10301,18 @@ msgid "report.account.report_generalledger"
 msgstr ""
 
 #. module: account
+#: model:ir.model,name:account.model_report_account_report_journal
+msgid "report.account.report_journal"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_report_account_report_overdue
 msgid "report.account.report_overdue"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_report_account_report_partnerledger
+msgid "report.account.report_partnerledger"
 msgstr ""
 
 #. module: account
@@ -10033,24 +10321,14 @@ msgid "report.account.report_trialbalance"
 msgstr ""
 
 #. module: account
-#: model:ir.model,name:account.model_report_account_extra_reports_report_journal
-msgid "report.account_extra_reports.report_journal"
-msgstr ""
-
-#. module: account
-#: model:ir.model,name:account.model_report_account_extra_reports_report_partnerledger
-msgid "report.account_extra_reports.report_partnerledger"
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_move.py:209
+#: code:addons/account/models/account_move.py:215
 #, python-format
 msgid "reversal of: "
 msgstr "poništenje:"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:212
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
 #, python-format
 msgid "seconds per transaction."
 msgstr "sekundi po transakciji."
@@ -10072,7 +10350,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:295
+#: code:addons/account/static/src/xml/account_reconciliation.xml:296
 #, python-format
 msgid "suppliers"
 msgstr "dobavljači"
@@ -10099,7 +10377,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:212
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
 #, python-format
 msgid "to reconcile"
 msgstr "za poravnati"
@@ -10111,7 +10389,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:212
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
 #, python-format
 msgid "transactions."
 msgstr "transakcija."
@@ -10125,81 +10403,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Prebroj"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna akcija"
-
-#~ msgid "Analytic Line"
-#~ msgstr "Analiticki red"
-
-#~ msgid "Bank Synchronization"
-#~ msgstr "Sinhronizacija sa bankom"
-
-#~ msgid "Bills &amp; Refunds"
-#~ msgstr "Fakture &amp; povrati"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnje poslate poruke na slog."
-
-#~ msgid "Direct Costs"
-#~ msgstr "Direktni troškovi"
-
-#~ msgid "Fixed day of the following month"
-#~ msgstr "Fiksni dan narednog mjeseca"
-
-#~ msgid "Followers"
-#~ msgstr "Pratioci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratioci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratioci (partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "Invoices &amp; Refunds"
-#~ msgstr "Fakture &amp; povrati"
-
-#~ msgid "Invoicing"
-#~ msgstr "Fakturisanje"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratioc"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Broj poruka koje zahtjevaju akciju"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Sales Team"
-#~ msgstr "Prodajni tim"
-
-#~ msgid "The bank statement line was already reconciled."
-#~ msgstr "Odabrana stavka izvoda je već poravnata."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepročitane poruke"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid "Website Messages"
-#~ msgstr "Poruke sa web stranice"
-
-#~ msgid "Website communication history"
-#~ msgstr "Istorija komunikacije sa web sajta"

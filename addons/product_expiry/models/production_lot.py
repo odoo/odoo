@@ -37,7 +37,10 @@ class StockProductionLot(models.Model):
     # Assign dates according to products data
     @api.model
     def create(self, vals):
-        vals.update(self._get_dates(vals.get('product_id')))
+        dates = self._get_dates(vals.get('product_id'))
+        for d in dates.keys():
+            if not vals.get(d):
+                vals[d] = dates[d]
         return super(StockProductionLot, self).create(vals)
 
     @api.onchange('product_id')

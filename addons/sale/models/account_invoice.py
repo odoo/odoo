@@ -84,6 +84,10 @@ class AccountInvoice(models.Model):
 
         return report_pages
 
+    @api.multi
+    def get_delivery_partner_id(self):
+        self.ensure_one()
+        return self.partner_shipping_id.id or super(AccountInvoice, self).get_delivery_partner_id()
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
@@ -97,4 +101,4 @@ class AccountInvoiceLine(models.Model):
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(
         related='layout_category_id.sequence',
-        string='Layout Sequence', store=True, default=0)
+        string='Layout Sequence', store=True)

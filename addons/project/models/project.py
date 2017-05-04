@@ -394,7 +394,6 @@ class Task(models.Model):
             self.partner_id = self.project_id.partner_id
             self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
-            self.partner_id = False
             self.stage_id = False
 
     @api.onchange('user_id')

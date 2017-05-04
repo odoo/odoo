@@ -16,10 +16,10 @@
 # Jonathan S <jonathan.c.strom@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
+"POT-Creation-Date: 2017-04-26 13:35+0000\n"
+"PO-Revision-Date: 2017-04-26 13:35+0000\n"
 "Last-Translator: Jonathan S <jonathan.c.strom@gmail.com>, 2016\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -196,6 +196,8 @@ msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
 msgstr ""
+"An kategori av vy-typ är en virtuell kategori som används som förälder till "
+"andra kategorier för att skapa en hierarkisk struktur."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_sale
@@ -228,6 +230,7 @@ msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
 msgstr ""
+"En genomgripande beskrivning av produkten avsedd för intern användning."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -450,7 +453,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
 msgid "Big-sized image"
-msgstr ""
+msgstr "Stora bilder"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor_inv
@@ -651,6 +654,7 @@ msgid "Companies"
 msgstr "Bolag"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
 #: model:ir.model.fields,field_description:product.field_product_product_company_id
@@ -658,11 +662,6 @@ msgstr "Bolag"
 #: model:ir.model.fields,field_description:product.field_product_template_company_id
 msgid "Company"
 msgstr "Företag"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
-msgid "Company id"
-msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -699,6 +698,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Omräkning av enheter kan endast ske om de tillhör samma kategori. "
+"Omräkningen baseras på angiven ratio."
 
 #. module: product
 #: code:addons/product/models/product_uom.py:89
@@ -879,7 +880,7 @@ msgstr "Beskrivning"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Quotations"
-msgstr ""
+msgstr "Offerbeskrivning"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -918,7 +919,7 @@ msgstr "Visa namn"
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen(s)"
-msgstr ""
+msgstr "Dussin"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_03
@@ -982,7 +983,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist.py:419
 #, python-format
 msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "Fel! Minimimarginal måste vara lägre än största marginalen."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:413
@@ -991,6 +992,8 @@ msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
 msgstr ""
+"Fel! Du kan inte tilldela huvudprislistan som alternativ prislista på ett "
+"prislistesegment."
 
 #. module: product
 #: code:addons/product/models/product_template.py:252
@@ -1294,6 +1297,7 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
 msgstr ""
+"Om icke ikryssat, tillåter dig att gömma prislistan utan att radera den."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_active
@@ -1301,6 +1305,7 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
 msgstr ""
+"Om icke ikryssat, tillåter dig att gömma produkten utan att radera den."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_image
@@ -1365,7 +1370,7 @@ msgstr "Intern kategori"
 #: model:ir.model.fields,field_description:product.field_product_product_default_code
 #: model:ir.model.fields,field_description:product.field_product_template_default_code
 msgid "Internal Reference"
-msgstr ""
+msgstr "Intern referens"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_barcode
@@ -1986,7 +1991,7 @@ msgstr "Produktetiketter"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
-msgstr ""
+msgstr "Produktpris"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -2022,6 +2027,11 @@ msgstr "Produkter: "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Publikt pris"
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Publik prislista"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
@@ -2263,7 +2273,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_image_small
 #: model:ir.model.fields,field_description:product.field_product_template_image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "Småbilder"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image_small
@@ -2316,7 +2326,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
 #: model:ir.model.fields,help:product.field_product_template_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
-msgstr ""
+msgstr "Ange om produkten kan väljas på en kundorderrad."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_surcharge
@@ -2328,12 +2338,12 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
-msgstr ""
+msgstr "Ange största marginal ovanpå baspriset."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
-msgstr ""
+msgstr "Ange minsta möjliga marginal ovanpå baspriset."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
@@ -2433,7 +2443,7 @@ msgstr ""
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr ""
+msgstr "Det beräknade priset är uttryckt i standardenheten för produkten."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_rounding
@@ -2618,7 +2628,7 @@ msgstr ""
 #. module: product
 #: sql_constraint:product.attribute.value:0
 msgid "This attribute value already exists !"
-msgstr ""
+msgstr "Detta attributvärde existerar redan!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_uom
@@ -2642,7 +2652,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "Summan av tillägg för alla attribut"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2689,11 +2699,6 @@ msgstr "Typ"
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
-msgstr ""
-
-#. module: product
-#: model:product.pricelist,name:product.list0
-msgid "USD"
 msgstr ""
 
 #. module: product
@@ -2899,7 +2904,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_warranty
 #: model:ir.model.fields,field_description:product.field_product_template_warranty
 msgid "Warranty"
-msgstr ""
+msgstr "Garanti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_weight
@@ -2931,7 +2936,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
-msgstr ""
+msgstr "Vit"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -3072,12 +3077,12 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "t ex: 1 * (referensenheten) = ratio * (denna enhet)"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "t ex: 1 * (denna enhet) = ratio * (referensenheten)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_floz
@@ -3190,7 +3195,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
 msgid "qt"
-msgstr ""
+msgstr "antal"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02

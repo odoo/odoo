@@ -11,13 +11,14 @@
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
 # Paolo Valier <paolo.valier@hotmail.it>, 2016
 # Leonardo Donelli <learts92@gmail.com>, 2016
+# Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Leonardo Donelli <learts92@gmail.com>, 2016\n"
+"Last-Translator: Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2017\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,9 @@ msgid ""
 "* The 'Waiting Approval' status is used to confirm the timesheet by user. \n"
 "* The 'Approved' status is used when the users timesheet is accepted by his/her senior."
 msgstr ""
+"* Lo stato 'Aperto' è usato quando un utente sta preparando un nuovo timesheet. \n"
+"* Lo stato 'Attesa Approvazione' è usato per chiedere ad un utente di confermare il timesheet. \n"
+"* Lo stato 'Approvato' è usato quando il timesheet dell'utente è approvato dal suo revisore."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -65,7 +69,7 @@ msgstr "Approvato"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:140
 #, python-format
 msgid "Cannot approve a non-submitted timesheet."
-msgstr ""
+msgstr "Non puoi approvare un timesheet non inviato all'approvazione"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -185,6 +189,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a"
 " user."
 msgstr ""
+"Per generare un timesheet per questo dipendente, devi collegarlo ad un "
+"utente"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -250,7 +256,7 @@ msgstr "Nota"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:138
 #, python-format
 msgid "Only an HR Officer or Manager can approve timesheets."
-msgstr ""
+msgstr "Solo un Responsabile HR o un Manager piò approvare i timesheet."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:123
@@ -258,6 +264,7 @@ msgstr ""
 msgid ""
 "Only an HR Officer or Manager can refuse timesheets or reset them to draft."
 msgstr ""
+"Solo un Responsabile HR o un Manager può rimandare indietro i timesheet."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -347,7 +354,7 @@ msgstr "Periodo Timesheet"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
 msgid "Timesheet app for Chrome/Android/iOS"
-msgstr ""
+msgstr "Timesheet app per Chrome/Android/iOS"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
@@ -373,7 +380,7 @@ msgstr "Range timesheet"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_timesheet_range
 msgid "Timesheet range *"
-msgstr ""
+msgstr "Intervallo timesheet *"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count
@@ -407,6 +414,8 @@ msgid ""
 "Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract."
 msgstr ""
+"I timesheet possono anche essere fatturati ai clienti, in funzione della "
+"configurazione del contratto relativo a ciascun progetto."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form

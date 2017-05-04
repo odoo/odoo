@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-06-06 08:04+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -23,11 +23,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_nbr_channel
-msgid "# of channel"
-msgstr "# de canales"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_speaker
 msgid "# of speakers"
 msgstr "# de participantes"
@@ -37,22 +32,6 @@ msgstr "# de participantes"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
 msgstr "% Feliz"
-
-#. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
-msgid ""
-"* Select 'Display the button' to simply display the chat button on the "
-"pages.\n"
-"* Select 'Auto popup' for to display the button, and automatically open the "
-"conversation window.\n"
-"* Select 'Hide the button' to hide the chat button on the pages."
-msgstr ""
-"* Seleccione 'Mostrar el botón' para mostar el boton de chat en las "
-"páginas.\n"
-"* Seleccione 'Ventana emergente' para mostrar el botón y automáticamente "
-"abrir la ventana de conversación.\n"
-"* Seleccione 'Esconder el botón' para esconder el boton de chat en las "
-"páginas."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -255,17 +234,6 @@ msgid "Default text displayed on the Livechat Support Button"
 msgstr "Texto por defecto mostrado en el botón de Soporte en Vivo"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
-msgid ""
-"Delay (in seconds) to automatically open the converssation window. Note : "
-"the selected action must be 'Auto popup', otherwise this parameter will not "
-"be take into account."
-msgstr ""
-"Tiempo (en segundos) para abrir automáticamente la ventana de conversación. "
-"Observación: la acción seleccionada debe ser 'Ventana emergente automática', "
-"de lo contrario este parámetro será ignorado."
-
-#. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:7
 #, python-format
@@ -353,7 +321,6 @@ msgstr "Esconder el botón"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action
-#: model:ir.ui.menu,name:im_livechat.session_history
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "History"
@@ -459,25 +426,6 @@ msgstr "Chat en vivo"
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
 msgstr "Canal de chat en vivo"
-
-#. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
-#: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
-#, fuzzy
-msgid ""
-"Livechat Support Channel Statistics allows you to easily check and analyse "
-"your company livechat session performance. Extract information about the "
-"missed sessions, the audiance, the duration of a session, etc."
-msgstr ""
-"Las Estadísticas de Canales de Soporte de Chat en Vivo le permiten revisar y "
-"analizar fácilmente el despempeño de las sesiones de chat en vivo. Extraer "
-"información sobre las sesiones perdidas, la audiencia, la duración de una "
-"sesión, etc."
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Livechat Support Page"
-msgstr "Página de la charla en vivo de soporte"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -608,11 +556,6 @@ msgid "Percentage of happy ratings over the past 7 days"
 msgstr "Porcentaje de calificaciones positivas en los pasados 7 días"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Quit"
-msgstr "Salir"
-
-#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
 msgid "Rating"
 msgstr "Clasificación"
@@ -623,15 +566,6 @@ msgstr "Clasificación"
 #, python-format
 msgid "Rating: :rating_%d"
 msgstr "Calificación: :rating_%d"
-
-#. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
-msgid ""
-"Regular expression identifying the web page on which the rules will be "
-"applied."
-msgstr ""
-"Expresión regular que identifica la página web en la que las reglas serán "
-"aplicadas."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -713,19 +647,6 @@ msgid "Text of the Button"
 msgstr "Texto del botón"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_country_ids
-msgid ""
-"The actual rule will match only for this country. So if you set select "
-"'Belgium' and 'France' and you set the action to 'Hide Buttun', this 2 "
-"country will not be see the support button for the specified URL. This "
-"feature requires GeoIP installed on your server."
-msgstr ""
-"La regla actual coincidirá sólo para este país. Así que si establece "
-"seleccione 'Bélgica' y 'Francia' y se establece la acción de 'Ocultar "
-"botón', estos 2 países no se verán el botón de soporte para la dirección URL "
-"especificada. Esta función requiere GeoIP instalado en su servidor."
-
-#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_channel_id
 msgid "The channel of the rule"
 msgstr "El canal de la regla"
@@ -804,7 +725,7 @@ msgstr "Usuario"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/controllers/main.py:30
+#: code:addons/im_livechat/controllers/main.py:37
 #: code:addons/im_livechat/static/src/js/im_livechat.js:28
 #, python-format
 msgid "Visitor"
@@ -816,37 +737,14 @@ msgid "Web Page"
 msgstr "Página web"
 
 #. module: im_livechat
-#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
-msgid "Website Live Chat"
-msgstr "Chat en vivo sitio web"
-
-#. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
 msgstr "Canales de Chat en Vivo del Sitio"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Website Live Chat Powered by <strong>Odoo</strong>."
-msgstr " Chat en vivo por sitio web con tecnología <strong>Odoo</strong>."
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_default_message
 msgid "Welcome Message"
 msgstr "Mensaje de bienvenida"
-
-#. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
-#, fuzzy
-msgid ""
-"You can create channels for each website on which you want\n"
-"                to integrate the website live chat widget, allowing your "
-"website\n"
-"                visitors to talk in real time with your operators."
-msgstr ""
-"Puede crear canales para cada sitio web en el que desea\n"
-"integrar en el sitio web el botón de chat en vivo, lo que permite a los\n"
-"visitantes hablar en tiempo real con sus operadores."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -869,12 +767,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "seconds"
 msgstr "segundos"
-
-#~ msgid "My sessions"
-#~ msgstr "Mis sesiones"
-
-#~ msgid "Open Livechat Channel Menu"
-#~ msgstr "Abrir el Menu del Canal de Chat en Vivo"
-
-#~ msgid "Opertor"
-#~ msgstr "Operador"

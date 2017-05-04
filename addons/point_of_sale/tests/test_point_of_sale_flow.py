@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
-import datetime
 import time
-import os
 
 import odoo
-from odoo import tools, report as odoo_report
-from odoo.tools import float_compare, test_reports
-
+from odoo import fields
+from odoo.tools import float_compare, mute_logger
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
-
 
 @odoo.tests.common.at_install(False)
 @odoo.tests.common.post_install(True)
@@ -411,3 +407,150 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I confirm the bank statement using Confirm button
 
         self.AccountBankStatement.button_confirm_bank()
+
+    def test_create_from_ui(self):
+        """
+        Simulation of sales coming from the interface, even after closing the session
+        """
+        FROMPRODUCT = object()
+
+        def compute_tax(product, price, taxes=FROMPRODUCT, qty=1):
+            if taxes is FROMPRODUCT:
+                taxes = product.taxes_id
+            currency = self.pos_config.pricelist_id.currency_id
+            taxes = taxes.compute_all(price, currency, qty, product=product)['taxes']
+            untax = price * qty
+            return untax, sum(tax.get('amount', 0.0) for tax in taxes)
+
+        # I click on create a new session button
+        self.pos_config.open_session_cb()
+
+        current_session = self.pos_config.current_session_id
+        num_starting_orders = len(current_session.order_ids)
+
+        untax, atax = compute_tax(self.carotte, 0.9)
+        carrot_order = {'data':
+          {'amount_paid': untax + atax,
+           'amount_return': 0,
+           'amount_tax': atax,
+           'amount_total': untax + atax,
+           'creation_date': fields.Datetime.now(),
+           'fiscal_position_id': False,
+           'lines': [[0,
+             0,
+             {'discount': 0,
+              'id': 42,
+              'pack_lot_ids': [],
+              'price_unit': 0.9,
+              'product_id': self.carotte.id,
+              'qty': 1,
+              'tax_ids': [(6, 0, self.carotte.taxes_id.ids)]}]],
+           'name': 'Order 00042-003-0014',
+           'partner_id': False,
+           'pos_session_id': current_session.id,
+           'sequence_number': 2,
+           'statement_ids': [[0,
+             0,
+             {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
+              'amount': untax + atax,
+              'journal_id': self.pos_config.journal_ids[0].id,
+              'name': fields.Datetime.now(),
+              'statement_id': current_session.statement_ids[0].id}]],
+           'uid': '00042-003-0014',
+           'user_id': self.env.uid},
+          'id': '00042-003-0014',
+          'to_invoice': False}
+
+        untax, atax = compute_tax(self.courgette, 1.2)
+        zucchini_order = {'data':
+          {'amount_paid': untax + atax,
+           'amount_return': 0,
+           'amount_tax': atax,
+           'amount_total': untax + atax,
+           'creation_date': fields.Datetime.now(),
+           'fiscal_position_id': False,
+           'lines': [[0,
+             0,
+             {'discount': 0,
+              'id': 3,
+              'pack_lot_ids': [],
+              'price_unit': 1.2,
+              'product_id': self.courgette.id,
+              'qty': 1,
+              'tax_ids': [(6, 0, self.courgette.taxes_id.ids)]}]],
+           'name': 'Order 00043-003-0014',
+           'partner_id': False,
+           'pos_session_id': current_session.id,
+           'sequence_number': self.pos_config.journal_id.id,
+           'statement_ids': [[0,
+             0,
+             {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
+              'amount': untax + atax,
+              'journal_id': self.pos_config.journal_ids[0].id,
+              'name': fields.Datetime.now(),
+              'statement_id': current_session.statement_ids[0].id}]],
+           'uid': '00043-003-0014',
+           'user_id': self.env.uid},
+          'id': '00043-003-0014',
+          'to_invoice': False}
+
+        untax, atax = compute_tax(self.onions, 1.28)
+        onions_order = {'data':
+          {'amount_paid': untax + atax,
+           'amount_return': 0,
+           'amount_tax': atax,
+           'amount_total': untax + atax,
+           'creation_date': fields.Datetime.now(),
+           'fiscal_position_id': False,
+           'lines': [[0,
+             0,
+             {'discount': 0,
+              'id': 3,
+              'pack_lot_ids': [],
+              'price_unit': 1.28,
+              'product_id': self.onions.id,
+              'qty': 1,
+              'tax_ids': [[6, False, self.onions.taxes_id.ids]]}]],
+           'name': 'Order 00044-003-0014',
+           'partner_id': False,
+           'pos_session_id': current_session.id,
+           'sequence_number': self.pos_config.journal_id.id,
+           'statement_ids': [[0,
+             0,
+             {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
+              'amount': untax + atax,
+              'journal_id': self.pos_config.journal_ids[0].id,
+              'name': fields.Datetime.now(),
+              'statement_id': current_session.statement_ids[0].id}]],
+           'uid': '00044-003-0014',
+           'user_id': self.env.uid},
+          'id': '00044-003-0014',
+          'to_invoice': False}
+
+        # I create an order on an open session
+        self.PosOrder.create_from_ui([carrot_order])
+        self.assertEqual(num_starting_orders + 1, len(current_session.order_ids), "Submitted order not encoded")
+
+        # I resubmit the same order
+        self.PosOrder.create_from_ui([carrot_order])
+        self.assertEqual(num_starting_orders + 1, len(current_session.order_ids), "Resubmitted order was not skipped")
+
+        # I close the session
+        current_session.action_pos_session_closing_control()
+        self.assertEqual(current_session.state, 'closed', "Session was not properly closed")
+        self.assertFalse(self.pos_config.current_session_id, "Current session not properly recomputed")
+
+        # I keep selling after the session is closed
+        with mute_logger('odoo.addons.point_of_sale.models.pos_order'):
+            self.PosOrder.create_from_ui([zucchini_order, onions_order])
+        rescue_session = self.PosSession.search([
+            ('config_id', '=', self.pos_config.id),
+            ('state', '=', 'opened'),
+        ])
+        self.assertEqual(len(rescue_session), 1, "One (and only one) rescue session should be created for orphan orders")
+        self.assertIn("(RESCUE FOR %s)" % current_session.name, rescue_session.name, "Rescue session is not linked to the previous one")
+        self.assertEqual(len(rescue_session.order_ids), 2, "Rescue session does not contain both orders")
+
+        # I close the rescue session
+        rescue_session.action_pos_session_closing_control()
+        self.assertEqual(rescue_session.state, 'closed', "Rescue session was not properly closed")

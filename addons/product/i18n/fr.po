@@ -11,6 +11,7 @@
 # zoe <yann.hoareau@migs.re>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
 # Clo <clo@odoo.com>, 2016
+# zeroheure <xavier@alternatif.org>, 2016
 # François Honoré <chiendesenfers@outlook.be>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2016
@@ -34,13 +35,14 @@
 # Léa Geffroy <geffroylea@gmail.com>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
 # Fabien Bourgeois <fabien@yaltik.com>, 2016
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
-"Last-Translator: Fabien Bourgeois <fabien@yaltik.com>, 2016\n"
+"POT-Creation-Date: 2017-04-26 13:35+0000\n"
+"PO-Revision-Date: 2017-04-26 13:35+0000\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,12 +59,12 @@ msgstr "Catégorie d'articles"
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Variantes d'articles"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "Nb. produits"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:438
@@ -235,9 +237,8 @@ msgid ""
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
-"Une description du produit que vous voulez communiquer à vos clients. Cette "
-"description sera inscrites sur tous les bons de commande, les bons de "
-"livraison et les factures/avoirs client."
+"La description transmise à vos clients. Elle apparaîtra sur chacun des bons "
+"de commande, bons de livraison et factures/avoirs destinés à vos clients."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -247,9 +248,9 @@ msgid ""
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
 msgstr ""
-"Une description de l'article que vous souhaitez communiquer à vos "
-"fournisseurs. Cette description sera copiée dans chaque bon de commande, "
-"réception et facture/avoir fournisseur."
+"La description du produit communiquée à vos fournisseurs. Elle sera copiée "
+"dans chaque bon de commande, réception et facture/avoir destinés à vos "
+"fournisseur."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
@@ -289,6 +290,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Un produit « stockable » est un produit pour lequel vous désirez gérer le stock. L'application « Inventaire » doit être installée.\n"
+"Un produit « consommable », en revanche, est un produit non géré en stock.\n"
+"Un service est un bien immatériel que vous fournissez ou achetez.\n"
+"Un contenu numérique est un bien immatériel que vous vendez en ligne. Les fichier liés aux produits sont ceux vendu sur la boutique en ligne (livres électronique, musique, photos, …). Le module « Produits numériques » doit être installé."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -710,6 +715,7 @@ msgid "Companies"
 msgstr "Sociétés"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
 #: model:ir.model.fields,field_description:product.field_product_product_company_id
@@ -717,11 +723,6 @@ msgstr "Sociétés"
 #: model:ir.model.fields,field_description:product.field_product_template_company_id
 msgid "Company"
 msgstr "Société"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
-msgid "Company id"
-msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -904,7 +905,7 @@ msgstr "Ordinateur personnalisable envoyé en kit. "
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Réf. client"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -2146,6 +2147,11 @@ msgid "Public Price"
 msgstr "Prix public"
 
 #. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Liste de prix publique"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template_description_purchase
 msgid "Purchase Description"
@@ -2534,6 +2540,8 @@ msgstr ""
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Champ technique. Utilisé pour la recherche sur les listes de prix, non "
+"stocké en base de données."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2853,11 +2861,6 @@ msgid ""
 msgstr ""
 "Port USB de la mise à jour logiciel pour assurer une compatibilité de "
 "l'appareil Bluetooth utilisé."
-
-#. module: product
-#: model:product.pricelist,name:product.list0
-msgid "USD"
-msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6

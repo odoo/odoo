@@ -23,5 +23,15 @@
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
 
+        <record id="calendar_event_rule_private" model="ir.rule">
+            <field ref="model_calendar_event" name="model_id"/>
+            <field name="name">Private events</field>
+            <field name="domain_force">['|', ('privacy', '!=', 'private'), '&amp;', ('privacy', '=', 'private'), ('partner_ids', 'in', user.partner_id.id)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
     </data>
 </odoo>

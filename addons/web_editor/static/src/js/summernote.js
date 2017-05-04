@@ -134,7 +134,7 @@ dom.hasProgrammaticStyle = function (node) {
 };
 dom.mergeFilter = function (prev, cur, parent) {
     // merge text nodes
-    if (prev && (dom.isText(prev) || ("H1 H2 H3 H4 H5 H6 LI P".indexOf(prev.tagName) !== -1 && prev !== cur.parentNode)) && dom.isText(cur)) {
+    if (prev && (dom.isText(prev) || (['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'P'].indexOf(prev.tagName) !== -1 && prev !== cur.parentNode)) && dom.isText(cur)) {
         return true;
     }
     if (prev && prev.tagName === "P" && dom.isText(cur)) {
@@ -2313,11 +2313,19 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
 eventHandler.modules.clipboard.attach = function(layoutInfo) {
     var $editable = layoutInfo.editable();
     $editable.on('paste', function(e) {
-        e.preventDefault();
-        $editable.data('NoteHistory').recordUndo($editable);
-        var pastedText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-        var formattedText = pastedText.replace(/([^.!?:;])\r?\n/g, "$1").trim(); // Remove linebreaks which are not at the end of a sentence
-        document.execCommand("insertText", false, formattedText);
+        var clipboardData = ((e.originalEvent || e).clipboardData || window.clipboardData);
+        // Change nothing if pasting html (copy from text editor / web / ...) or
+        // if clipboardData is not available (IE / ...)
+        if (clipboardData && clipboardData.types && clipboardData.types.length === 1 && clipboardData.types[0] === "text/plain") {
+            e.preventDefault();
+            $editable.data('NoteHistory').recordUndo($editable); // FIXME
+            var pastedText = clipboardData.getData("text/plain");
+            // Try removing linebreaks which are not really linebreaks (in a PDF,
+            // when a sentence goes over the next line, copying it considers it
+            // a linebreak for example).
+            var formattedText = pastedText.replace(/([\w-])\r?\n([\w-])/g, "$1 $2").trim();
+            document.execCommand("insertText", false, formattedText);
+        }
     });
 };
 

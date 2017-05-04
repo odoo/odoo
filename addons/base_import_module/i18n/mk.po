@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2015-09-07 16:38+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -41,6 +41,12 @@ msgid "Close"
 msgstr "Затвори"
 
 #. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
 msgstr "Креирано од"
@@ -56,13 +62,13 @@ msgid "Display Name"
 msgstr "Прикажи име"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:94
+#: code:addons/base_import_module/models/ir_module.py:96
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Датотеката '%s' ја пречекорува максимално дозволената големина"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
+#: code:addons/base_import_module/models/ir_module.py:88
 #, python-format
 msgid "File is not a zip file!"
 msgstr "Датотеката не е zip архива!"
@@ -136,6 +142,18 @@ msgid "Module .ZIP file"
 msgstr ".ZIP Датотека на модулот"
 
 #. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:86
+#, python-format
+msgid "No file sent."
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
 msgstr "Отвори модули"
@@ -151,7 +169,7 @@ msgid "Status"
 msgstr "Статус"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:33
+#: code:addons/base_import_module/models/ir_module.py:35
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr "Зависности на модулот кои не се исполнети: %s"

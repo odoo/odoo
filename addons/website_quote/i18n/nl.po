@@ -74,6 +74,54 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Beste ${object.partner_id.name},</p><br/>\n"
+"                <p>Uw order <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> is gevalideerd!</p><br/>\n"
+"                \n"
+"                % if object.partner_id.user_ids\n"
+"                <p>You can view your quotes, sales orders and invoices online by going to our <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online Portal</a>.</p><br/>\n"
+"                % endif\n"
+"\n"
+"                <p>Als u nog vragen heeft, aarzel dan niet om contact met ons op.</p><br/>\n"
+"                <p>Bedankt voor het kiezen van ${object.company_id.name or \"us\"}!</p>\n"
+"            </td>\n"
+"        </tr><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                % if user.signature\n"
+"                <p style=\"font-size: 14px;\">${user.signature | safe}\n"
+"                </p>\n"
+"                % endif\n"
+"                <p style=\"font-size: 11px;\"><strong>Sent by\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"                    <strong>${user.company_id.name}</strong>\n"
+"                </a> using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
+"                </strong></p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -424,6 +472,9 @@ msgid ""
 "                                       we know that success is all about the\n"
 "                                       commitment we put on strong services."
 msgstr ""
+"Als een toonaangevend professionele services bedrijf,\n"
+"weten we dat het succes sterk afhangt van de\n"
+"toeweiding die we hebben voor onze sterk services."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
@@ -501,6 +552,8 @@ msgid ""
 "Change the look and feel from the front-end (GUI) rather than a need of "
 "technical knowledge."
 msgstr ""
+"Wijzig de look en feel van de voorkant (GUI) in plaats van technische kennis"
+" nodig te hebben."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.opt_quotation_signature
@@ -786,6 +839,11 @@ msgid ""
 "                                your references, your methodology or\n"
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
+"Geweldige offerte sjablonen zullen significant helpen\n"
+"bij het<strong>vergroten van uw succes</strong>. Het \n"
+"eerste deel is meestal over uw bedrijf,\n"
+"uw referenties, uw methode/garanties, \n"
+"uw team, SLA, voorwaarden, etc."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -839,6 +897,10 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+"Wanneer een offerte wordt bewerkt in de 'Preview' van een offerte, kunt u\n"
+"de offerte bijwerken voor alleen deze klant. Wanneer u een offerte sjabloon\n"
+"bewerkt (vanuit het Configuratie menu), zullen alle toekomstige offerte \n"
+"het aangepaste sjabloon gebruiken."
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:76
@@ -866,7 +928,7 @@ msgstr "Direct na de website order validatie en sla token op "
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Incl. tax)"
-msgstr "Incl. belastingen)"
+msgstr "Incl. BTW)"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1267,7 +1329,7 @@ msgstr "Product"
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Product Category &amp; product Configuration with Order point"
-msgstr "Productcategorie &amp; Productconfiguratie met orderpunt"
+msgstr "Productcategorie &amp; Productconfiguratie met aanvulregel"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1286,6 +1348,9 @@ msgid ""
 "                                       stand on; we build it with a relentless\n"
 "                                       focus on fabric, performance and craftsmanship."
 msgstr ""
+"Productkwaliteit is het fundament waar wij\n"
+"op staan; we bouwen het met een genadeloze\n"
+"focus op stof, performantie en vakmanschap."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -1505,12 +1570,12 @@ msgstr "Voorgestelde producten"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Taxes"
-msgstr "Belastingen"
+msgstr "BTW"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Taxes:"
-msgstr "Belastingen:"
+msgstr "BTW:"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_2
@@ -1554,6 +1619,10 @@ msgid ""
 "cloud-based labs. Many of our online learning courses also include dozens of"
 " recorded webinars and live sessions by our senior instructors."
 msgstr ""
+"Deze trainingen bieden dezelfde hoge inhoud kwaliteit zoals in onze "
+"traditionele klastrainingen, aangevuld met modulaire sessies en cloud-"
+"gebaseerde labs. Veel van onze online trainingen bevatten ook dozijnen "
+"opgenomen webinars en live sessies van onze senior instructoren."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_mail_template_id
@@ -1572,6 +1641,10 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"Dit is een <strong>voorbeeld offertesjabloon</strong>. U zou het moeten\n"
+"personaliseren naar uw eigen nodig vanuit de <i>Verkoopbeheer</i>\n"
+"installatie, door het menu Configuratie /\n"
+"Offertesjablonen te gebruiken."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1688,6 +1761,9 @@ msgid ""
 "                                       set at a fair price so that you will be\n"
 "                                       happy to buy them."
 msgstr ""
+"We verzekeren ons er altijd van dat onze producten\n"
+"een eerlijke prijs hebben zodat u\n"
+"ze met plezier koopt."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1735,6 +1811,11 @@ msgid ""
 "                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
+"U kunt <strong>een omschrijving instellen per product</strong>. Odoo zal\n"
+"automatisch een offerte te maken met behulp van de omschrijvingen\n"
+"van alle producten in het voorstel. De inhoudsopgave\n"
+"aan de linkerkant wordt automatisch gegenereerd met behulp van de stijlen die u\n"
+"gebruikt in uw beschrijving (rubriek 1, rubriek 2, ...)"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:134

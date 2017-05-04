@@ -705,6 +705,7 @@ class Field(object):
                 model._field_triggers.add(field, (self, path_str))
             elif path:
                 self.recursive = True
+                model._field_triggers.add(field, (self, '.'.join(path)))
 
     ############################################################################
     #
@@ -1219,13 +1220,14 @@ class Monetary(Field):
     _description_currency_field = property(attrgetter('currency_field'))
     _description_group_operator = property(attrgetter('group_operator'))
 
-    def _setup_regular_base(self, model):
-        super(Monetary, self)._setup_regular_base(model)
-        if not self.currency_field:
-            self.currency_field = 'currency_id'
-
     def _setup_regular_full(self, model):
         super(Monetary, self)._setup_regular_full(model)
+        if not self.currency_field:
+            # pick a default, trying in order: 'currency_id', 'x_currency_id'
+            if 'currency_id' in model._fields:
+                self.currency_field = 'currency_id'
+            elif 'x_currency_id' in model._fields:
+                self.currency_field = 'x_currency_id'
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
@@ -1575,6 +1577,7 @@ class Datetime(Field):
 class Binary(Field):
     type = 'binary'
     _slots = {
+        'prefetch': False,              # not prefetched by default
         'attachment': False,            # whether value is stored in attachment
     }
 
@@ -2131,9 +2134,8 @@ class One2many(_RelationalMulti):
     _description_relation_field = property(attrgetter('inverse_name'))
 
     def convert_to_onchange(self, value, record, fnames=()):
-        if fnames:
-            # do not serialize self's inverse field
-            fnames = [name for name in fnames if name != self.inverse_name]
+        fnames = set(fnames or ())
+        fnames.discard(self.inverse_name)
         return super(One2many, self).convert_to_onchange(value, record, fnames)
 
     def check_schema(self, model):
@@ -2403,6 +2405,9 @@ class Many2many(_RelationalMulti):
 class Serialized(Field):
     """ Serialized fields provide the storage for sparse fields. """
     type = 'serialized'
+    _slots = {
+        'prefetch': False,              # not prefetched by default
+    }
     column_type = ('text', 'text')
 
     def convert_to_column(self, value, record):

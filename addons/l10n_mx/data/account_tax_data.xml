@@ -46,25 +46,27 @@
     <record id="tax9" model="account.tax.template">
         <field name="chart_template_id" ref="mx_coa"/>
         <field name="name">IVA(0%) VENTAS</field>
-        <field name="description">ITAX_010-IN</field>
+        <field name="description">IVA</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="cuenta209_01"/>
         <field name="refund_account_id" ref="cuenta209_01"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_01')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva"/>
     </record>
 
     <record id="tax12" model="account.tax.template">
         <field name="chart_template_id" ref="mx_coa"/>
         <field name="name">IVA(16%) VENTAS</field>
-        <field name="description">ITAX_160-IN</field>
+        <field name="description">IVA</field>
         <field name="amount">16</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="cuenta209_01"/>
         <field name="refund_account_id" ref="cuenta209_01"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_03')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva"/>
     </record>
 
     <record id="tax1" model="account.tax.template">
@@ -77,6 +79,7 @@
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_04')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_ret"/>
     </record>
 
     <record id="tax2" model="account.tax.template">
@@ -89,6 +92,7 @@
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_05')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_ret"/>
     </record>
 
     <record id="tax3" model="account.tax.template">
@@ -101,6 +105,7 @@
         <field name="account_id" ref="cuenta216_03"/>
         <field name="refund_account_id" ref="cuenta216_03"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_06')])]"/>
+        <field name="tax_group_id" ref="tax_group_isr_ret"/>
     </record>
 
     <record id="tax5" model="account.tax.template">
@@ -113,6 +118,7 @@
         <field name="account_id" ref="cuenta216_04"/>
         <field name="refund_account_id" ref="cuenta216_04"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_07')])]"/>
+        <field name="tax_group_id" ref="tax_group_isr_ret"/>
     </record>
 
     <record id="tax7" model="account.tax.template">
@@ -125,6 +131,7 @@
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_08')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_ret"/>
     </record>
 
     <record id="tax8" model="account.tax.template">
@@ -137,6 +144,7 @@
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_09')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_ret"/>
     </record>
 
     <record id="tax13" model="account.tax.template">
@@ -149,6 +157,7 @@
         <field name="account_id" ref="cuenta119_01"/>
         <field name="refund_account_id" ref="cuenta119_01"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_10')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva"/>
     </record>
 
     <record id="tax14" model="account.tax.template">
@@ -161,6 +170,7 @@
         <field name="account_id" ref="cuenta119_01"/>
         <field name="refund_account_id" ref="cuenta119_01"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_12')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva"/>
     </record>
   </data>
 </odoo>

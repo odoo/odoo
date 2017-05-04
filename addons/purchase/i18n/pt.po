@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
+# Manuela Silva <manuela.silva@sky.com>, 2016
 # Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
 # Nuno Dias <ngalvesdias@mail.com>, 2016
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
@@ -125,6 +126,8 @@ msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
 msgstr ""
+"<span>(*) Esta configuração está relacionada com a empresa onde iniciou a "
+"sessão.</span>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -236,7 +239,8 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_costing_method
 msgid "Allows you to compute product cost price based on average cost."
-msgstr "Permite calcular o preço de custo do produto com base no custo médio."
+msgstr ""
+"Permite-lhe calcular o preço de custo do produto com base no custo médio."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_uom
@@ -257,8 +261,8 @@ msgid ""
 "An administrator can set up default Terms and conditions in your Company "
 "settings."
 msgstr ""
-"Um administrador pode definir Termos e condições por defeito nas suas "
-"configurações da Empresa."
+"Um administrador pode configurar os Termos e condições predefinidos nas suas"
+" configurações da Empresa."
 
 #. module: purchase
 #: selection:purchase.config.settings,group_warning_purchase:0
@@ -305,7 +309,7 @@ msgstr "Aprovar Ordem"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_procurement_ids
 msgid "Associated Procurements"
-msgstr "Compras associadas"
+msgstr "Aquisições Associadas"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_line_purchase_id
@@ -339,12 +343,12 @@ msgstr "Qtd Faturada"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
 msgid "Billing Status"
-msgstr ""
+msgstr "Estado da Faturação"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_ids
 msgid "Bills"
-msgstr ""
+msgstr "Faturas"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -369,7 +373,7 @@ msgstr "Comprar"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_pull_id
 msgid "Buy rule"
-msgstr "Regra de Compra"
+msgstr "Regra de compra"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -395,8 +399,8 @@ msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
 "purchase order first."
 msgstr ""
-"Não é possível cancelar uma aquisição relacionada com um pedido de compra. "
-"Por favor, cancele a ordem de compra primeiro ."
+"Não é possível cancelar uma aquisição relacionada com uma encomenda de "
+"compra. Por favor, cancele primeiro a encomenda de compra."
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:84
@@ -677,12 +681,12 @@ msgstr "Posição Fiscal"
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr "Obter 2 níveis de aprovações para confirmar uma ordem de compra"
+msgstr "Obter 2 níveis de aprovações para confirmar uma encomenda de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr "Peso bruto"
+msgstr "Peso Bruto"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -709,12 +713,12 @@ msgstr "Id."
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr ""
-"A fim de eliminar um pedido de compra, deve cancelá-lo em primeiro lugar."
+"Para poder eliminar uma encomenda de compra, deve cancelá-la primeiro."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
-msgstr "Produtos a Entrar"
+msgstr "Produtos a Receber"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -785,7 +789,7 @@ msgstr "Níveis de Aprovação"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_double_validation
 msgid "Levels of Approvals *"
-msgstr ""
+msgstr "Níveis de Aprovação *"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -810,7 +814,7 @@ msgstr "Losgisticas"
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
 msgid "Manage Vendor Price"
-msgstr "Gerir Preço do Fornecedor"
+msgstr "Gerir Preços do Fornecedor"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_manage_vendor_price:0
@@ -1030,12 +1034,12 @@ msgstr "Aquisição"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_group_id
 msgid "Procurement Group"
-msgstr "Grupo de Aprovisionamento"
+msgstr "Grupo de Aquisição"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
 msgid "Procurement Rule"
-msgstr "Regras de Compra"
+msgstr "Regra de Aquisição"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -1673,7 +1677,7 @@ msgstr "Isso vai determinar o tipo de recolha de expedição recebida"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
-msgstr "Por aprovar"
+msgstr "Para Aprovar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_total

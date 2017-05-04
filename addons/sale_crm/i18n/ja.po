@@ -34,7 +34,7 @@ msgstr "販売注文数"
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> 注文</span>"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -46,7 +46,7 @@ msgstr "<span class=\"o_stat_text\"> 見積 </span>"
 msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
-msgstr ""
+msgstr "メンバーシップを関連付ける会員。 関連する会員のメンバーシップ状態を検討します。"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -56,14 +56,14 @@ msgstr "関連会員"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "会員のキャンセル日"
 
 #. module: sale_crm
 #. openerp-web
 #: code:addons/sale_crm/static/src/js/tour.js:16
 #, python-format
 msgid "Click here to see more options."
-msgstr ""
+msgstr "その他のオプションについては、こちらをクリックしてください。"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
@@ -121,6 +121,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"メンバーシップの状態を示します。\n"
+"- 非会員：いかなる会員資格も申請していないパートナー。\n"
+"- キャンセル済会員：メンバーシップをキャンセルした会員。\n"
+"- 古い会員：会員期限が切れた会員。\n"
+"- 入会待ち会員：メンバーシップを申請し、請求書を作成する会員。\n"
+"- 請求済会員：請求書が作成された会員。\n"
+"- 支払い会員：会費を支払った会員。"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -137,7 +144,7 @@ msgstr "この販売チームの見積を見てみましょう。"
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
+msgstr "注文が起きる可能性のあるチャットにログインする"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -177,7 +184,7 @@ msgstr "新規見積"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
-msgstr ""
+msgstr "見積数"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
@@ -234,7 +241,7 @@ msgstr "在庫ピッキング"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
-msgstr ""
+msgstr "注文合計"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids

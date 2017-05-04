@@ -12,15 +12,14 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
 # Hüseyin Cem Aras <hcemaras@gmail.com>, 2016
-# selim kartal <kartalselim37@gmail.com>, 2016
 # Azar Huseynli <azerbay1984@gmail.com>, 2016
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-02-03 14:29+0000\n"
+"PO-Revision-Date: 2017-02-03 14:29+0000\n"
 "Last-Translator: Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -362,7 +361,7 @@ msgstr "Adı Göstermek"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Done"
-msgstr "Ok"
+msgstr "Biten"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
@@ -378,6 +377,11 @@ msgstr "Taslak"
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
 msgstr "E-mail"
+
+#. module: payment
+#: model:account.payment.method,name:payment.account_payment_method_electronic_in
+msgid "Electronic"
+msgstr "Elektronik"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -529,7 +533,7 @@ msgstr "Bu ödeme alıcısını uygun yap (Müşteri faturaları, vb.)"
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "Manuel Yapılandırma"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
@@ -670,7 +674,7 @@ msgstr "Ödeme Alıcısı"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "Ödeme Yevmiyesi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
@@ -706,7 +710,7 @@ msgstr "Ödeme İşlemleri"
 #: code:addons/payment/models/account_payment.py:60
 #, python-format
 msgid "Payment transaction failed (%s)"
-msgstr ""
+msgstr "Ödeme işlemi başarısız oldu (%s)"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -889,7 +893,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
 msgid "Type"
-msgstr "tip"
+msgstr "Tür"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate

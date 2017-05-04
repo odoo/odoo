@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <!-- Account Tax -->
+        <record id="tag1" model="account.account.tag">
+            <field name="name">增值税17%销项税</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag2" model="account.account.tag">
+            <field name="name">增值税17%进项税</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="vats_standard_business" model="account.tax.template">
+            <field name="name">增值税17%销项税 - 中国会计科目表-企业会计准则</field>
+            <field name="amount_type">percent</field>
+            <field name="amount" eval="17" />
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="account_2221_1_5" />
+            <field name="refund_account_id" ref="account_2221_1_5" />
+            <field name="tag_ids" eval="[(6, 0, [ref('tag1')])]" />
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business" />
+        </record>
+        <record id="vatp_standard_business" model="account.tax.template">
+            <field name="name">增值税17%进项税 - 中国会计科目表-企业会计准则</field>
+            <field name="amount" eval="17" />
+            <field name="type_tax_use">purchase</field>
+            <field name="amount_type">percent</field>
+            <field name="account_id" ref="account_2221_1_1" />
+            <field name="refund_account_id" ref="account_2221_1_1" />
+            <field name="tag_ids" eval="[(6, 0, [ref('tag2')])]" />
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business" />
+        </record>
+    </data>
+</odoo>

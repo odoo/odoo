@@ -55,19 +55,18 @@ odoo.define('payment_stripe.stripe', function(require) {
                     amount: $("input[name='amount']").val(),
                     currency_id: $("input[name='currency_id']").val(),
                     acquirer_id: acquirer_id
-                }).then(function (data) {
+                })
                 handler.open({
                     name: $("input[name='merchant']").val(),
                     description: $("input[name='invoice_num']").val(),
                     currency: $("input[name='currency']").val(),
                     amount: $("input[name='amount']").val()*100
                 });
-            });
         } else {
             ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {
                     so_id: so_id,
                     so_token: so_token
-                }).then(function (data) {
+                }, {'async': false}).then(function (data) {
                 $form.html(data);
                 handler.open({
                     name: $("input[name='merchant']").val(),

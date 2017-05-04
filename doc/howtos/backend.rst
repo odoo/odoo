@@ -643,7 +643,7 @@ instead of a single view its ``arch`` field is composed of any number of
     ``inside``
         appends ``xpath``'s body at the end of the matched element
     ``replace``
-        replaces the matched element with the ``xpath``'s body, replacing any `$0` node occurrence
+        replaces the matched element with the ``xpath``'s body, replacing any ``$0`` node occurrence
         in the new body with the original element
     ``before``
         inserts the ``xpath``'s body as a sibling before the matched element
@@ -1345,7 +1345,7 @@ rights are usually created by a CSV file named after its model:
     access_idea_idea,idea.idea,model_idea_idea,base.group_user,1,1,1,0
     access_idea_vote,idea.vote,model_idea_vote,base.group_user,1,1,1,0
 
-.. exercise:: Add access control through the OpenERP interface
+.. exercise:: Add access control through the Odoo interface
 
     Create a new user "John Smith". Then create a group
     "OpenAcademy / Session Read" with read access to the *Session* model.
@@ -1852,9 +1852,9 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
 
     * https://github.com/akretion/ooor
     * https://github.com/syleam/openobject-library
-    * https://github.com/nicolas-van/odoo-client-lib
-    * https://pypi.python.org/pypi/oersted/
-    * https://github.com/abhishek-jaiswal/php-odoo-lib
+    * https://github.com/nicolas-van/openerp-client-lib
+    * http://pythonhosted.org/OdooRPC
+    * https://github.com/abhishek-jaiswal/php-openerp-lib
 
 .. [#autofields] it is possible to :attr:`disable the automatic creation of some
                  fields <odoo.models.Model._log_access>`

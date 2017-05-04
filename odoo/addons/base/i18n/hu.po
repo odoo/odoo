@@ -6,14 +6,14 @@
 # krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2017-01-27 11:58+0000\n"
+"PO-Revision-Date: 2017-01-27 11:58+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -249,6 +249,8 @@ msgid ""
 "        Common drinks data for points of sale\n"
 "    "
 msgstr ""
+"\n"
+"        Leggyakoribb ital adatok az értékesítési pont kasszáknál"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -6180,7 +6182,7 @@ msgid ""
 "Bank Account Number and the default Currency.\n"
 "\n"
 "Note: total digits configured by default are 6.\n"
-msgstr ""
+msgstr "Holland főkönyvi kivonat 6\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_act_window_id
@@ -6942,6 +6944,12 @@ msgid "Automatic Installation"
 msgstr "Automata telepítés"
 
 #. module: base
+#: code:addons/base/module/module.py:650
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr "Jelenleg kikapcsolva a letöltött alkalmazások automatikus telepítése."
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
 msgid ""
 "Automatically set to let administators find new terms that might need to be "
@@ -7431,8 +7439,10 @@ msgstr "nem tudja a beállítást megduplázni!"
 #. module: base
 #: code:addons/base/ir/ir_model.py:549
 #, python-format
-msgid "Cannot rename field to %s, because that field already exists!"
-msgstr "%s mezőt nem lehet átnevezni, mivel az adott néven már létezik mező!"
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+"Nem tudja átnevezni/törölni a mezőket, mivel még mindíg a nézetekben jelen "
+"van:"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:219
@@ -7890,7 +7900,7 @@ msgstr "Értékesítő személy"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
 msgid "Common Drinks data for points of sale"
-msgstr ""
+msgstr " Leggyakoribb ital adatok az értékesítési pont kasszáknál"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
@@ -10007,6 +10017,21 @@ msgid "Field `%(field_name)s` does not exist"
 msgstr "`%(field_name)s` mező nem létezik"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:298
+#, python-format
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+"Mező név csak karaktereket, számokat és aláhúzást tartalmazhat (63 "
+"karakterig)."
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:307
+#, python-format
+msgid "Field names must be unique per model."
+msgstr "Mező neveknek egyedinek kell lennie modellenként."
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: model:ir.model,name:base.model_ir_model_fields
 #: model:ir.model.fields,field_description:base.field_ir_model_field_id
@@ -10271,13 +10296,13 @@ msgstr "Űrlap"
 #: model:ir.model.fields,help:base.field_res_partner_email_formatted
 #: model:ir.model.fields,help:base.field_res_users_email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr ""
+msgstr "Email cím formátuma \"Név <email@domén>\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_email_formatted
 #: model:ir.model.fields,field_description:base.field_res_users_email_formatted
 msgid "Formatted Email"
-msgstr ""
+msgstr "Formázott Email"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
@@ -10760,6 +10785,9 @@ msgid ""
 "simplified payment mode encoding, automatic picking lists generation and "
 "more."
 msgstr ""
+"Segít Önnek, hogy a legtöbbet hozza ki az értékesítési helyeiből, gyors "
+"értékesítési kódolással, egyszerűsített fizetési mód kódolással, automatikus"
+" kiválasztási listák generálásával, stb."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_accounting_and_finance
@@ -11645,7 +11673,7 @@ msgstr ""
 #: code:addons/base/res/res_users.py:315
 #, python-format
 msgid "Invalid 'group by' parameter"
-msgstr ""
+msgstr "Érvénytelen 'csoportosítás' paraméter"
 
 #. module: base
 #: code:addons/base/ir/ir_cron.py:70
@@ -13575,7 +13603,7 @@ msgstr "Odoo Enterprise Kiadás Liszenc v1.0"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Odoo Proprietary License v1.0"
-msgstr ""
+msgstr "Odoo tulajdonosi Licenc v1.0"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_settings_dashboard
@@ -14686,6 +14714,9 @@ msgid ""
 "Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
 " inside the view definition"
 msgstr ""
+"Qweb nézetnek nem lehetnek 'Csoportjai' meghatározva az adatbázis "
+"bejegyzésen. Használja a 'csoportok' tulajdonságait a nézet meghatározáson "
+"belül"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -16592,7 +16623,7 @@ msgstr "A céltevékenység."
 #: code:addons/base/ir/ir_model.py:438
 #, python-format
 msgid "The field '%s' cannot be removed because the field '%s' depends on it."
-msgstr ""
+msgstr "A '%s' mezőt nem lehet eltávolítani mert  a '%s' mező tőle függ."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -17115,6 +17146,15 @@ msgstr "Eltávolítandó"
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
 msgstr "Frissítendő"
+
+#. module: base
+#: code:addons/base/module/module.py:651
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+"Bekapcsolásához, győződjön meg a könyvtár létezéséről és a szerveren az "
+"írhatóságáról:"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree

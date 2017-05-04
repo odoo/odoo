@@ -641,7 +641,11 @@ ListView.include(/** @lends instance.web.ListView# */{
             if (saveInfo.created) {
                 return self.start_edition();
             }
-            var record = self.records[next_record](saveInfo.record);
+            if (!options) {
+                options = {};
+            }
+            options.wraparound = !self.is_action_enabled('create');
+            var record = self.records[next_record](saveInfo.record, options);
             if (record === undefined) {
                 return self.start_edition();
             }
@@ -824,6 +828,10 @@ ListView.List.include(/** @lends instance.web.ListView.List# */{
         if (!this.view.editable() || !this.view.is_action_enabled('edit')) {
             return this._super.apply(this, arguments);
         }
+        if (this.__is_starting_edition) {
+            return;
+        }
+        this.__is_starting_edition = true;
 
         var self = this;
         var args = arguments;
@@ -835,6 +843,8 @@ ListView.List.include(/** @lends instance.web.ListView.List# */{
             focus_field: $(event.target).not(".o_readonly").data('field'),
         }).fail(function() {
             return _super.apply(self, args); // The record can't be edited so open it in a modal (use-case: readonly mode)
+        }).always(function () {
+            self.__is_starting_edition = false;
         });
     },
     /**

@@ -8,7 +8,7 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Javier Ramirez <elbomba887@gmail.com>, 2016
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
-# Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
+# Luis Martínez Ontalba <luismaront@gmail.com>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
@@ -17,13 +17,14 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Ana Juaristi <ajuaristio@gmail.com>, 2016\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +42,7 @@ msgstr " (copia)"
 #: code:addons/account_asset/models/account_asset.py:511
 #, python-format
 msgid " (grouped)"
-msgstr ""
+msgstr "(agrupado)"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
@@ -72,6 +73,8 @@ msgstr "Entrada contable"
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
 msgstr ""
+"Cuenta usada en la depreciación de entrada, para decrementar el valor del "
+"activo."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
@@ -79,12 +82,14 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
+"Cuenta usada en las entradas periódicas, para registrar una parte de los "
+"activos como gastos."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid ""
 "Account used to record the purchase of the asset at its original price."
-msgstr ""
+msgstr "Cuenta usada para registrar la compra de activos al precio original."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -95,7 +100,7 @@ msgstr "Activo"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Additional Options"
-msgstr ""
+msgstr "Opciones adicionales"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:568
@@ -230,7 +235,7 @@ msgstr "Análisis activos"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr ""
+msgstr "Líneas de depreciación de los activos"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
@@ -260,7 +265,7 @@ msgstr "Activos en ejecución"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
 msgid "Auto-confirm Assets"
-msgstr ""
+msgstr "Autoconfirmar activos"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -293,6 +298,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
 msgstr ""
+"Marque esta casilla si quiere agrupar las entradas generadas por categorías."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -490,13 +496,14 @@ msgstr "Fecha de depreciación"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Entries: Asset Account"
-msgstr ""
+msgstr "Entradas de depreciación: Cuenta de activos"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_expense_id
 msgid "Depreciation Entries: Expense Account"
-msgstr ""
+msgstr "Entradas de depreciació: Cuenta de gastos"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
@@ -647,7 +654,7 @@ msgstr "Agrupar por..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr ""
+msgstr "Entrada del diario del grupo"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -749,7 +756,7 @@ msgstr "Lineal"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
 msgid "Linked"
-msgstr ""
+msgstr "Enlazado"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -810,7 +817,7 @@ msgstr "Número de meses en un periodo"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr ""
+msgstr "Una entrada cada"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:570
@@ -900,7 +907,7 @@ msgstr "Motivo"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr ""
+msgstr "Cuenta de reconocimiento"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form

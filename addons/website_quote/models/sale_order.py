@@ -77,6 +77,14 @@ class SaleOrder(models.Model):
             total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
         self.amount_undiscounted = total
 
+    @api.onchange('partner_id')
+    def onchange_update_description_lang(self):
+        if not self.template_id:
+            return
+        else:
+            template = self.template_id.with_context(lang=self.partner_id.lang)
+            self.website_description = template.website_description
+
     @api.onchange('template_id')
     def onchange_template_id(self):
         if not self.template_id:
@@ -165,8 +173,7 @@ class SaleOrder(models.Model):
         """ Payment callback: validate the order and write transaction details in chatter """
         # create draft invoice if transaction is ok
         if transaction and transaction.state == 'done':
-            if self.state in ['draft', 'sent']:
-                self.sudo().action_confirm()
+            transaction._confirm_so()
             message = _('Order paid by %s. Transaction: %s. Amount: %s.') % (transaction.partner_id.name, transaction.acquirer_reference, transaction.amount)
             self.message_post(body=message)
             return True

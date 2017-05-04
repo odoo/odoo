@@ -350,6 +350,26 @@ class AccountChartTemplate(models.Model):
         new_xml_id = str(company.id)+'_'+template_xmlid.name
         return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
 
+    def _get_account_vals(self, company, account_template, code_acc, tax_template_ref):
+        """ This method generates a dictionnary of all the values for the account that will be created.
+        """
+        self.ensure_one()
+        tax_ids = []
+        for tax in account_template.tax_ids:
+            tax_ids.append(tax_template_ref[tax.id])
+        val = {
+                'name': account_template.name,
+                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
+                'code': code_acc,
+                'user_type_id': account_template.user_type_id and account_template.user_type_id.id or False,
+                'reconcile': account_template.reconcile,
+                'note': account_template.note,
+                'tax_ids': [(6, 0, tax_ids)],
+                'company_id': company.id,
+                'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
+            }
+        return val
+
     @api.multi
     def generate_account(self, tax_template_ref, acc_template_ref, code_digits, company):
         """ This method for generating accounts from templates.
@@ -365,28 +385,35 @@ class AccountChartTemplate(models.Model):
         account_tmpl_obj = self.env['account.account.template']
         acc_template = account_tmpl_obj.search([('nocreate', '!=', True), ('chart_template_id', '=', self.id)], order='id')
         for account_template in acc_template:
-            tax_ids = []
-            for tax in account_template.tax_ids:
-                tax_ids.append(tax_template_ref[tax.id])
-
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
-            vals = {
-                'name': account_template.name,
-                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
-                'code': code_acc,
-                'user_type_id': account_template.user_type_id and account_template.user_type_id.id or False,
-                'reconcile': account_template.reconcile,
-                'note': account_template.note,
-                'tax_ids': [(6, 0, tax_ids)],
-                'company_id': company.id,
-                'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
-            }
+            vals = self._get_account_vals(company, account_template, code_acc, tax_template_ref)
             new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
             acc_template_ref[account_template.id] = new_account
         return acc_template_ref
+
+    def _prepare_reconcile_model_vals(self, company, account_reconcile_model, acc_template_ref, tax_template_ref):
+        """ This method generates a dictionnary of all the values for the account.reconcile.model that will be created.
+        """
+        self.ensure_one()
+        return {
+                'name': account_reconcile_model.name,
+                'sequence': account_reconcile_model.sequence,
+                'has_second_line': account_reconcile_model.has_second_line,
+                'company_id': company.id,
+                'account_id': acc_template_ref[account_reconcile_model.account_id.id],
+                'label': account_reconcile_model.label,
+                'amount_type': account_reconcile_model.amount_type,
+                'amount': account_reconcile_model.amount,
+                'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
+                'second_account_id': account_reconcile_model.second_account_id and acc_template_ref[account_reconcile_model.second_account_id.id] or False,
+                'second_label': account_reconcile_model.second_label,
+                'second_amount_type': account_reconcile_model.second_amount_type,
+                'second_amount': account_reconcile_model.second_amount,
+                'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
+            }
 
     @api.multi
     def generate_account_reconcile_model(self, tax_template_ref, acc_template_ref, company):
@@ -403,22 +430,7 @@ class AccountChartTemplate(models.Model):
             ('account_id.chart_template_id', '=', self.id)
         ])
         for account_reconcile_model in account_reconcile_models:
-            vals = {
-                'name': account_reconcile_model.name,
-                'sequence': account_reconcile_model.sequence,
-                'has_second_line': account_reconcile_model.has_second_line,
-                'company_id': company.id,
-                'account_id': acc_template_ref[account_reconcile_model.account_id.id],
-                'label': account_reconcile_model.label,
-                'amount_type': account_reconcile_model.amount_type,
-                'amount': account_reconcile_model.amount,
-                'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
-                'second_account_id': account_reconcile_model.second_account_id and acc_template_ref[account_reconcile_model.second_account_id.id] or False,
-                'second_label': account_reconcile_model.second_label,
-                'second_amount_type': account_reconcile_model.second_amount_type,
-                'second_amount': account_reconcile_model.second_amount,
-                'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
-            }
+            vals = self._prepare_reconcile_model_vals(company, account_reconcile_model, acc_template_ref, tax_template_ref)
             self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
         return True
 

@@ -1568,28 +1568,28 @@
             <field name="code">4700</field>
             <field name="reconcile" eval="True"/>
             <field name="name">Hacienda Pública, deudora por IVA</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_4708_child" model="account.account.template">
             <field name="code">4708</field>
             <field name="reconcile" eval="True"/>
             <field name="name">Hacienda Pública, deudora por subvenciones concedidas</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_4709_child" model="account.account.template">
             <field name="code">4709</field>
             <field name="reconcile" eval="True"/>
             <field name="name">Hacienda Pública, deudora por devolución de impuestos</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_471_child" model="account.account.template">
             <field name="code">471</field>
             <field name="reconcile" eval="False"/>
             <field name="name">Organismos de la Seguridad Social, deudores</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_472_child" model="account.account.template">
@@ -1603,77 +1603,77 @@
             <field name="code">473</field>
             <field name="reconcile" eval="True"/>
             <field name="name">Hacienda Pública, retenciones y pagos a cuenta</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_4740_child" model="account.account.template">
             <field name="code">4740</field>
             <field name="reconcile" eval="False"/>
             <field name="name">Activos por diferencias temporarias deducibles</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_4742_child" model="account.account.template">
             <field name="code">4742</field>
             <field name="reconcile" eval="False"/>
             <field name="name">Derechos por deducciones y bonificaciones pendientes de aplicar</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_4745_child" model="account.account.template">
             <field name="code">4745</field>
             <field name="reconcile" eval="False"/>
             <field name="name">Crédito por pérdidas a compensar del ejercicio</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_4750_child" model="account.account.template">
             <field name="code">4750</field>
             <field name="reconcile" eval="True"/>
             <field name="name">Hacienda Pública, acreedora por IVA</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_4751_child" model="account.account.template">
             <field name="code">4751</field>
             <field name="reconcile" eval="True"/>
             <field name="name">Hacienda Pública, acreedora por retenciones practicadas</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_4752_child" model="account.account.template">
             <field name="code">4752</field>
             <field name="reconcile" eval="True"/>
             <field name="name">Hacienda Pública, acreedora por impuesto sobre sociedades</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_4758_child" model="account.account.template">
             <field name="code">4758</field>
             <field name="reconcile" eval="True"/>
             <field name="name">Hacienda Pública, acreedora por subvenciones a reintegrar</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_476_child" model="account.account.template">
             <field name="code">476</field>
             <field name="reconcile" eval="False"/>
             <field name="name">Organismos de la Seguridad Social, acreedores</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_477_child" model="account.account.template">
             <field name="code">477</field>
             <field name="reconcile" eval="True"/>
             <field name="name">Hacienda Pública. IVA repercutido</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_479_child" model="account.account.template">
             <field name="code">479</field>
             <field name="reconcile" eval="False"/>
             <field name="name">Pasivos por diferencias temporarias imponibles</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         </record>
         <record id="pgc_480_child" model="account.account.template">

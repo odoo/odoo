@@ -479,7 +479,9 @@ function on_needaction_notification (message) {
         increment_unread: true,
     });
     invalidate_caches(message.channel_ids);
-    needaction_counter++;
+    if (message.channel_ids.length !== 0) {
+        needaction_counter++;
+    }
     _.each(message.channel_ids, function (channel_id) {
         var channel = chat_manager.get_channel(channel_id);
         if (channel) {
@@ -667,7 +669,7 @@ var chat_manager = {
         // to linkify the urls we end up with double linkification a bit everywhere.
         // Ideally we want to keep the content as text internally and only make html
         // enrichment at display time but the current design makes this quite hard to do.
-        var body = utils.linkify(_.str.trim(data.content));
+        var body = utils.parse_and_transform(_.str.trim(data.content), utils.add_link);
 
         var msg = {
             partner_ids: data.partner_ids,
@@ -1044,7 +1046,9 @@ function init () {
 
     bus.on('notification', null, on_notification);
 
-    return session.rpc('/mail/client_action').then(function (result) {
+    return session.is_bound.then(function(){
+        return session.rpc('/mail/client_action');
+    }).then(function (result) {
         _.each(result.channel_slots, function (channels) {
             _.each(channels, add_channel);
         });

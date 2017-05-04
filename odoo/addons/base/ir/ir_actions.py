@@ -211,7 +211,7 @@ class IrActionsReportXml(models.Model):
         for report in self:
             if report.ir_values_id:
                 try:
-                    self.report.ir_values_id.sudo().unlink()
+                    report.ir_values_id.sudo().unlink()
                 except Exception:
                     raise UserError(_('Deletion of the action record failed.'))
         return True
@@ -896,10 +896,11 @@ class IrActionsServer(models.Model):
         :type action: browse record
         :returns: dict -- evaluation context given to (safe_)safe_eval """
         def log(message, level="info"):
-            self._cr.execute("""
-                INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
-                VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
+            with self.pool.cursor() as cr:
+                cr.execute("""
+                    INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
+                    VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
 
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model = self.env[action.model_id.model]
@@ -956,6 +957,7 @@ class IrActionsServer(models.Model):
         :return: an action_id to be executed, or False is finished correctly without
                  return action
         """
+        res = False
         for action in self:
             eval_context = self._get_eval_context(action)
             condition = action.condition

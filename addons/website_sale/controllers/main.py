@@ -498,8 +498,7 @@ class WebsiteSale(http.Controller):
                 shippings = Partner.sudo().search([("id", "child_of", order.partner_id.commercial_partner_id.ids)])
                 if partner_id not in shippings.mapped('id') and partner_id != order.partner_id.id:
                     return Forbidden()
-
-                Partner.browse(partner_id).sudo().update(checkout)
+                Partner.browse(partner_id).sudo().write(checkout)
         return partner_id
 
     def values_preprocess(self, order, mode, values):
@@ -522,7 +521,8 @@ class WebsiteSale(http.Controller):
         lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
         if lang:
             new_values['lang'] = lang
-
+        if mode == ('edit', 'billing') and order.partner_id.type == 'contact':
+            new_values['type'] = 'other'
         if mode[1] == 'shipping':
             new_values['parent_id'] = order.partner_id.commercial_partner_id.id
             new_values['type'] = 'delivery'
@@ -532,16 +532,17 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/address'], type='http', methods=['GET', 'POST'], auth="public", website=True)
     def address(self, **kw):
         Partner = request.env['res.partner'].with_context(show_address=1).sudo()
-        order = request.website.sale_get_order(force_create=1)
+        order = request.website.sale_get_order()
+
+        redirection = self.checkout_redirection(order)
+        if redirection:
+            return redirection
+
         mode = (False, False)
         def_country_id = order.partner_id.country_id
         values, errors = {}, {}
 
         partner_id = int(kw.get('partner_id', -1))
-
-        redirection = self.checkout_redirection(order)
-        if redirection:
-            return redirection
 
         # IF PUBLIC ORDER
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
@@ -555,7 +556,7 @@ class WebsiteSale(http.Controller):
         else:
             if partner_id > 0:
                 if partner_id == order.partner_id.id:
-                        mode = ('edit', 'billing')
+                    mode = ('edit', 'billing')
                 else:
                     shippings = Partner.search([('id', 'child_of', order.partner_id.commercial_partner_id.ids)])
                     if partner_id in shippings.mapped('id'):

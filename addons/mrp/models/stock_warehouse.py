@@ -118,10 +118,10 @@ class StockWarehouse(models.Model):
         return routes
 
     @api.multi
-    def _update_name_and_code(self, name, code):
+    def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)
         # change the manufacture procurement rule name
         for warehouse in self:
-            if warehouse.manufacture_pull_id:
+            if warehouse.manufacture_pull_id and name:
                 warehouse.manufacture_pull_id.write({'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)})
         return res

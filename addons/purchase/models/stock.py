@@ -124,7 +124,7 @@ class StockWarehouse(models.Model):
         return routes
 
     @api.multi
-    def _update_name_and_code(self, name, code):
+    def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)
         warehouse = self[0]
         #change the buy procurement rule name

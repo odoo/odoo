@@ -10,6 +10,7 @@ var config = require('web.config');
 var core = require('web.core');
 var form_common = require('web.form_common');
 var framework = require('web.framework');
+var pyeval = require('web.pyeval');
 var web_utils = require('web.utils');
 
 var _t = core._t;
@@ -452,10 +453,13 @@ var Chatter = form_common.AbstractField.extend({
 
     _render_value: function () {
         // update context
+        var context = _.extend(this.options.context || {},
+            pyeval.eval('contexts', this.build_context())
+        );
         this.context = _.extend({
             default_res_id: this.view.datarecord.id || false,
             default_model: this.view.model || false,
-        }, this.options.context || {});
+        }, context);
         this.thread_dataset = this.view.dataset;
         this.res_id = this.view.datarecord.id;
         this.record_name = this.view.datarecord.display_name;

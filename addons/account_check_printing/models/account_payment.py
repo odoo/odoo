@@ -88,7 +88,7 @@ class AccountPayment(models.Model):
                 and vals.get('check_manual_sequencing'):
             sequence = self.env['account.journal'].browse(vals['journal_id']).check_sequence_id
             vals.update({'check_number': sequence.next_by_id()})
-        return super(AccountPayment, self.sudo()).create(vals)
+        return super(AccountPayment, self).create(vals)
 
     @api.multi
     def print_checks(self):
@@ -123,7 +123,6 @@ class AccountPayment(models.Model):
             }
         else:
             self.filtered(lambda r: r.state == 'draft').post()
-            self.write({'state': 'sent'})
             return self.do_print_checks()
 
     @api.multi

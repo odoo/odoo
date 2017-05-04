@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
+"POT-Creation-Date: 2017-04-26 13:35+0000\n"
+"PO-Revision-Date: 2017-04-26 13:35+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -700,18 +700,14 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
 #: model:ir.model.fields,field_description:product.field_product_product_company_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_company_id
 #: model:ir.model.fields,field_description:product.field_product_template_company_id
 msgid "Company"
-msgstr "Bedijf"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
-msgid "Company id"
-msgstr "Bedrijf id"
+msgstr "Bedrijf"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -927,7 +923,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
 msgid "Delivery Lead Time"
-msgstr "Leveringstermijn"
+msgstr "Levertijd"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description
@@ -1264,7 +1260,7 @@ msgstr "Geeft de reeks volgorde wanneer een productlijst getoond wordt"
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid "Global"
-msgstr "Voor iedereen"
+msgstr "Voor alles"
 
 #. module: product
 #: model:product.product,name:product.membership_0
@@ -1978,7 +1974,7 @@ msgstr "Prijslijsten op product"
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr "Prijslijsten worden beheert bij"
+msgstr "Prijslijsten worden beheerd bij"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2157,6 +2153,11 @@ msgstr "Producten: "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Verkoopprijs"
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Verkoopprijslijst"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
@@ -2927,11 +2928,6 @@ msgstr ""
 "voortdurende toestelcompatibiliteit"
 
 #. module: product
-#: model:product.pricelist,name:product.list0
-msgid "USD"
-msgstr "USD"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Ultrafast wireless."
@@ -3026,7 +3022,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr "Geldig van"
+msgstr "Geldig vanaf"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name

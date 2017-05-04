@@ -36,11 +36,11 @@ class ProductProduct(models.Model):
     def _calc_price(self, bom):
         price = 0.0
         workcenter_cost = 0.0
-        for sbom in bom.bom_line_ids:
-            my_qty = sbom.product_qty
+        result, result2 = bom.explode(self, 1)
+        for sbom, sbom_data in result2:
             if not sbom.attribute_value_ids:
                 # No attribute_value_ids means the bom line is not variant specific
-                price += sbom.product_id.uom_id._compute_price(sbom.product_id.standard_price, sbom.product_uom_id) * my_qty
+                price += sbom.product_id.uom_id._compute_price(sbom.product_id.standard_price, sbom.product_uom_id) * sbom_data['qty']
         if bom.routing_id:
             total_cost = 0.0
             for order in bom.routing_id.operation_ids:
@@ -49,5 +49,5 @@ class ProductProduct(models.Model):
             price += bom.product_uom_id._compute_price(workcenter_cost, bom.product_id.uom_id)
         # Convert on product UoM quantities
         if price > 0:
-            price = bom.product_uom_id._compute_price(price / bom.product_qty, bom.product_id.uom_id)
+            price = bom.product_uom_id._compute_price(price / bom.product_qty, self.uom_id)
         return price

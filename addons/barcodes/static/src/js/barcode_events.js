@@ -113,6 +113,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         if (e.key === "ArrowLeft" || e.key === "ArrowRight" ||
             e.key === "ArrowUp" || e.key === "ArrowDown" ||
             e.key === "Escape" || e.key === "Tab" ||
+            e.key === "Backspace" || e.key === "Delete" ||
             /F\d\d?/.test(e.key)) {
             return true;
         } else {

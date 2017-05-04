@@ -27,12 +27,14 @@ class AccountTax(models.Model):
     _inherit = 'account.tax'
 
     name = fields.Char(translate=True)
+    description = fields.Char(translate=True)
 
 
 class AccountTaxTemplate(models.Model):
     _inherit = 'account.tax.template'
 
     name = fields.Char(translate=True)
+    description = fields.Char(translate=True)
 
 
 class AccountChartTemplate(models.Model):

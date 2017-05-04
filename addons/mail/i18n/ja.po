@@ -504,7 +504,7 @@ msgstr "アクセスグループ"
 #: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_needaction
 #: model:ir.model.fields,field_description:mail.field_survey_survey_message_needaction
 msgid "Action Needed"
-msgstr "必要なアクション"
+msgstr "要アクション"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_default
@@ -819,7 +819,7 @@ msgstr "取消済"
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
 msgid "Canned Response"
-msgstr ""
+msgstr "Canned Response"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
@@ -847,7 +847,7 @@ msgstr "CC"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Change"
-msgstr "お釣り"
+msgstr "変更"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
@@ -1812,7 +1812,7 @@ msgstr "フォロー中"
 #: model:ir.model.fields,field_description:mail.field_mail_template_email_from
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_email_from
 msgid "From"
-msgstr "開始日"
+msgstr "差出人"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -2174,7 +2174,7 @@ msgstr "人を招待する"
 #: code:addons/mail/static/src/js/client_action.js:649
 #, python-format
 msgid "Invite people to #%s"
-msgstr " #%s にユーザーを招待する"
+msgstr " #%s にユーザを招待する"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -2453,7 +2453,7 @@ msgstr "現在のドキュメントのフォロワーとして追加されるパ
 #: code:addons/mail/models/mail_channel.py:663
 #, python-format
 msgid "List users in the current channel"
-msgstr "現在のチャンネルのユーザーを一覧表示する"
+msgstr "現在のチャンネルのユーザを一覧表示する"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_channel_id
@@ -2844,7 +2844,7 @@ msgstr "要アクション受信者"
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "Never"
-msgstr "変換しない"
+msgstr "送信しない"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_char
@@ -3179,10 +3179,27 @@ msgstr "Odoo"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/js/client_action.js:130
+#, python-format
+msgid ""
+"Odoo has now the permission to send you native notifications on this device."
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "Odoo needs your permission to"
 msgstr "許可しますか？"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/client_action.js:128
+#, python-format
+msgid ""
+"Odoo will not have the permission to send native notifications on this "
+"device."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -3440,6 +3457,20 @@ msgstr "アクションが必要な取引先"
 #: model:ir.model.fields,help:mail.field_mail_template_auto_delete
 msgid "Permanently delete this email after sending it, to save space"
 msgstr "送信後、このEメールを削除（スペース節約のため）"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/client_action.js:128
+#, python-format
+msgid "Permission denied"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/client_action.js:130
+#, python-format
+msgid "Permission granted"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image
@@ -3984,7 +4015,7 @@ msgstr "件名..."
 #: code:addons/mail/static/src/xml/thread.xml:130
 #, python-format
 msgid "Subject:"
-msgstr ""
+msgstr "件名:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_substitution
@@ -4421,7 +4452,7 @@ msgstr "購読解除"
 #: code:addons/mail/static/src/xml/client_action.xml:137
 #, python-format
 msgid "Unsubscribe from channel"
-msgstr "チャンネルから退会する"
+msgstr "チャネルから退会する"
 
 #. module: mail
 #. openerp-web
@@ -4470,7 +4501,7 @@ msgstr "ユーザ"
 #: code:addons/mail/models/mail_channel.py:676
 #, python-format
 msgid "Users in this channel: %s %s and you."
-msgstr "このチャンネルのユーザー %s %s と、あなた。"
+msgstr "このチャンネルのユーザ %s %s と、あなた。"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:672

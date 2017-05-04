@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-11-14 15:55+0000\n"
 "PO-Revision-Date: 2015-11-26 08:08+0000\n"
 "Last-Translator: Andre de Kock <adekock11@gmail.com>\n"
 "Language-Team: Afrikaans (http://www.transifex.com/odoo/odoo-9/language/"
@@ -20,21 +20,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
-msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair "
-"order.             \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start "
-"repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or "
-"after repairing done.             \n"
-"* The 'Done' status is set when repairing is completed.            \n"
-"* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "(<i>Remove</i>)"
 msgstr "(<i>Verwyder</i>)"
@@ -43,6 +28,20 @@ msgstr "(<i>Verwyder</i>)"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "(update)"
 msgstr "(opdateer)"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
+msgid ""
+"* The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
+"* The 'Confirmed' status is used when a user confirms the repair order.\n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.\n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.\n"
+"* The 'Done' status is set when repairing is completed.\n"
+"* The 'Cancelled' status is used when user cancel repair order."
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -81,12 +80,6 @@ msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-#, fuzzy
-msgid "<strong>Shipping address :</strong>"
-msgstr "<strong>Druk Datum:</strong>"
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total Without Taxes</strong>"
 msgstr "<strong>Totaal Sonder Belasting</strong>"
 
@@ -94,12 +87,6 @@ msgstr "<strong>Totaal Sonder Belasting</strong>"
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total</strong>"
 msgstr "<strong>Totaal</strong>"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:24
-#, python-format
-msgid "Active ID not Found"
-msgstr ""
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -127,6 +114,12 @@ msgid "Before Repair"
 msgstr "Voor Herstelling"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:206
+#, python-format
+msgid "Can only confirm draft repairs."
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
 msgid "Cancel"
@@ -148,6 +141,12 @@ msgstr "Kanselleer Herstel Opdrag"
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Cancelled"
 msgstr "Gekanselleer"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:221
+#, python-format
+msgid "Cannot cancel completed repairs."
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -177,7 +176,8 @@ msgid "Confirmed"
 msgstr "Bevestig"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:524
+#: code:addons/mrp_repair/models/mrp_repair.py:508
+#: code:addons/mrp_repair/models/mrp_repair.py:570
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -217,6 +217,11 @@ msgstr "Geskep op"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
 msgid "Current Location"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
+msgid "Default address id"
 msgstr ""
 
 #. module: mrp_repair
@@ -340,11 +345,6 @@ msgid "Invoice"
 msgstr "Faktuur"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Invoice Corrected"
-msgstr ""
-
-#. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Invoice Exception"
 msgstr ""
@@ -441,32 +441,34 @@ msgid "No Invoice"
 msgstr "Geen Faktuur"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:511
+#: code:addons/mrp_repair/models/mrp_repair.py:499
+#: code:addons/mrp_repair/models/mrp_repair.py:561
 #, python-format
 msgid "No Pricelist!"
 msgstr "Geen Pryslys!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:322
+#: code:addons/mrp_repair/models/mrp_repair.py:260
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:350
-#: code:addons/mrp_repair/mrp_repair.py:379
+#: code:addons/mrp_repair/models/mrp_repair.py:285
+#: code:addons/mrp_repair/models/mrp_repair.py:313
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:372
+#: code:addons/mrp_repair/models/mrp_repair.py:306
 #, python-format
 msgid "No product defined on Fees!"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:522
+#: code:addons/mrp_repair/models/mrp_repair.py:506
+#: code:addons/mrp_repair/models/mrp_repair.py:568
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr ""
@@ -580,11 +582,6 @@ msgid "Ready to Repair"
 msgstr "Reg om te Herstel"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Recreate Invoice"
-msgstr ""
-
-#. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 msgid "Remove"
 msgstr "Verwyder"
@@ -634,13 +631,37 @@ msgid "Repair Reference"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:285
+#: code:addons/mrp_repair/models/mrp_repair.py:194
+#, python-format
+msgid "Repair must be canceled in order to reset it to draft."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:343
+#, python-format
+msgid "Repair must be confirmed before starting reparation."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:371
+#, python-format
+msgid "Repair must be repaired in order to make the product moves."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:354
+#, python-format
+msgid "Repair must be under repair in order to end reparation."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:223
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:32
+#: code:addons/mrp_repair/wizard/mrp_repair_cancel.py:20
 #, python-format
 msgid "Repair order is not invoiced."
 msgstr ""
@@ -668,12 +689,6 @@ msgid "Repairs order"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-#, fuzzy
-msgid "Search Repair Orders"
-msgstr "Kanselleer Herstel Opdrag"
-
-#. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
 msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
@@ -682,7 +697,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:272
+#: code:addons/mrp_repair/models/mrp_repair.py:213
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr ""
@@ -729,7 +744,7 @@ msgid "Taxes"
 msgstr "Belasting"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:207
+#: code:addons/mrp_repair/models/mrp_repair.py:166
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -823,7 +838,7 @@ msgid "VAT:"
 msgstr "VAT:"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:207
+#: code:addons/mrp_repair/models/mrp_repair.py:166
 #, python-format
 msgid "Warning"
 msgstr "Waarskuwing"
@@ -839,74 +854,16 @@ msgid "Yes"
 msgstr "Ja"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:308
+#: code:addons/mrp_repair/models/mrp_repair.py:248
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:513
+#: code:addons/mrp_repair/models/mrp_repair.py:501
+#: code:addons/mrp_repair/models/mrp_repair.py:563
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
-"Please set one before choosing a product."
+" Please set one before choosing a product."
 msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
-msgid "unknown"
-msgstr "onbekend"
-
-#~ msgid "Action Needed"
-#~ msgstr "Aksie word benodig"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum van die laaste boodskap wat op die rekord gepos is."
-
-#~ msgid "Followers"
-#~ msgstr "Volgelinge"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgelinge (Kanale)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgelinge (Venote)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "As dit gekies is vereis nuwe boodskappe jou aandag."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "As dit gekies is, vereis nuwe boodskappe jou aandag."
-
-#~ msgid "Is Follower"
-#~ msgstr "Is Volgeling"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Laaste Boodskap Datum"
-
-#~ msgid "Messages"
-#~ msgstr "Boodskappe"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Boodskap-en kommunikasiegeskiedenis"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Hoeveelheid Aksies"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Hoeveelheid boodskappe wat aksie vereis"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Hoeveelheid ongeleesde boodskappe"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ongeleesde Boodskappe"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Ongeleesde Boodskappe Teller"
-
-#~ msgid "Website Messages"
-#~ msgstr "Webtuiste Boodskappe"
-
-#~ msgid "Website communication history"
-#~ msgstr "Webtuiste kommunikasie geskiedenis"

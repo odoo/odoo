@@ -332,7 +332,7 @@ var CalendarView = View.extend({
                 self.proxy('update_record')(event._id, data);
             },
             eventRender: function (event, element, view) {
-                element.find('.fc-event-title').html(event.title);
+                element.find('.fc-event-title').html(event.title + event.attendee_avatars);
             },
             eventAfterRender: function (event, element, view) {
                 if ((view.name !== 'month') && (((event.end-event.start)/60000)<=30)) {
@@ -633,7 +633,6 @@ var CalendarView = View.extend({
                 if (attendee_other.length>2) {
                     the_title_avatar += '<span class="o_attendee_head" title="' + attendee_other.slice(0, -2) + '">+</span>';
                 }
-                the_title = the_title_avatar + the_title;
             }
         }
         
@@ -642,9 +641,10 @@ var CalendarView = View.extend({
             date_stop = m_start.toDate();
         }
         var r = {
-            'start': moment(date_start).format('YYYY-MM-DD HH:mm:ss'),
-            'end': moment(date_stop).format('YYYY-MM-DD HH:mm:ss'),
+            'start': moment(date_start).toString(),
+            'end': moment(date_stop).toString(),
             'title': the_title,
+            'attendee_avatars': the_title_avatar,
             'allDay': (this.fields[this.date_start].type == 'date' || (this.all_day && evt[this.all_day]) || false),
             'id': evt.id,
             'attendees':attendees
@@ -697,17 +697,17 @@ var CalendarView = View.extend({
                 date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7);
                 date_stop_day = new Date(event_end.getFullYear(),event_end.getMonth(),event_end.getDate(),19);
             }
-            data[this.date_start] = time.datetime_to_str(date_start_day);
+            data[this.date_start] = time.auto_date_to_str(date_start_day, this.fields[this.date_start].type);
             if (this.date_stop) {
-                data[this.date_stop] = time.datetime_to_str(date_stop_day);
+                data[this.date_stop] = time.auto_date_to_str(date_stop_day, this.fields[this.date_stop].type);
             }
             diff_seconds = Math.round((date_stop_day.getTime() - date_start_day.getTime()) / 1000);
                             
         }
         else {
-            data[this.date_start] = time.datetime_to_str(event.start);
+            data[this.date_start] = time.auto_date_to_str(event.start, this.fields[this.date_start].type);
             if (this.date_stop) {
-                data[this.date_stop] = time.datetime_to_str(event_end);
+                data[this.date_stop] = time.auto_date_to_str(event_end, this.fields[this.date_stop].type);
             }
             diff_seconds = Math.round((event_end.getTime() - event.start.getTime()) / 1000);
         }

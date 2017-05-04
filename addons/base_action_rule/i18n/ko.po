@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-01-25 08:56+0000\n"
 "Last-Translator: 종현 엄 <whd5367@naver.com>\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -28,12 +28,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
 msgid "Action Rule"
 msgstr "동작 규칙"
-
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
-#, fuzzy
-msgid "Action Rule Line Test"
-msgstr "동작 규칙 점검"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -118,11 +112,6 @@ msgid "Conditions"
 msgstr "조건"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
-msgid "Create Date"
-msgstr "작성일"
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
@@ -130,6 +119,7 @@ msgid "Created by"
 msgstr "작성자"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
 msgid "Created on"
@@ -148,12 +138,12 @@ msgstr "작동일 이후 지연"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
 msgid ""
-"Delay after the trigger date.You can put a negative number if you need a "
-"delay before thetrigger date, like sending a reminder 15 minutes before a "
-"meeting."
+"Delay after the trigger date.\n"
+"                                    You can put a negative number if you "
+"need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 "
+"minutes before a meeting."
 msgstr ""
-"작동일 이후 지연. 회의 15분 전에 알림 보내기 처럼 작동일 이전에 지연이 필요"
-"한 경우 음수 값을 넣을 수 있습니다."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -267,11 +257,6 @@ msgid "Last Modified on"
 msgstr "최근 수정"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
-msgid "Last Run"
-msgstr "최근 실행"
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
@@ -286,8 +271,18 @@ msgid "Last Updated on"
 msgstr "최근 갱신 날짜"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
+msgid "Last run"
+msgstr ""
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
+msgid "Line ids"
 msgstr ""
 
 #. module: base_action_rule
@@ -304,12 +299,6 @@ msgstr "모델"
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Months"
 msgstr "월"
-
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
-#, fuzzy
-msgid "Name"
-msgstr "규칙 이름"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -463,11 +452,10 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
-"When should the condition be triggered. If present, will be checked by the "
+"When should the condition be triggered.\n"
+"                                  If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"조건이 충족되면 존재하는 경우에는 일정표에서 확인할 것이고 비어 있다면 생성 "
-"및 갱신을 확인할 것입니다."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
@@ -487,8 +475,3 @@ msgid ""
 msgstr ""
 "당신은 또한 새 필터를 만들기 위해서 기록을 선택하는것 대신 필터를 사용할 수 "
 "있습니다."
-
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
-msgid "unknown"
-msgstr ""

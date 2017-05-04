@@ -200,7 +200,7 @@ var KanbanSelection = common.AbstractField.extend({
     prepare_dropdown_selection: function() {
         var self = this;
         var _data = [];
-        var current_stage_id = self.view.datarecord.stage_id[0];
+        var current_stage_id = self.view.datarecord.stage_id && self.view.datarecord.stage_id[0];
         var stage_data = {
             id: current_stage_id,
             legend_normal: self.view.datarecord.legend_normal || undefined,
@@ -427,8 +427,8 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 return;
             }
             var ds = new data.DataSetStatic(self, model, self.build_context());
-            ds.call('search_count', [domain]).then(function (results) {
-                self.$('.o_count').text(results + _t(' selected records'));
+            ds.call('search_count', [domain, ds.get_context()]).then(function (results) {
+                self.$('.o_count').text(results + ' ' + _t(' selected records'));
                 if (self.get('effective_readonly')) {
                     self.$('button').text(_t('See selection '));
                 }
@@ -1007,6 +1007,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         this.m2o = new FieldMany2One(this.fm, { attrs: {
             name: 'Referenced Document',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
+            context: this.build_context().eval(),
         }});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.appendTo(this.$el);

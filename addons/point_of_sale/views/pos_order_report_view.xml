@@ -4,7 +4,7 @@
             <field name="name">report.pos.order.pivot</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
-                <pivot string="Point of Sale Analysis">
+                <pivot string="Point of Sale Analysis" disable_linking="True">
                     <field name="product_categ_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
                     <field name="product_qty" type="measure"/>

@@ -22,6 +22,7 @@ class TestPurchaseOrder(AccountingTestCase):
         self.product_id_1 = self.env.ref('product.product_product_8')
         self.product_id_2 = self.env.ref('product.product_product_11')
 
+        (self.product_id_1 | self.product_id_2).write({'purchase_method': 'purchase'})
         # Ensure product_id_2 doesn't have res_partner_1 as supplier
         if self.partner_id in self.product_id_2.seller_ids.mapped('name'):
             id_to_remove = self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id).ids[0] if self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id) else False
@@ -80,6 +81,7 @@ class TestPurchaseOrder(AccountingTestCase):
             'partner_id': self.partner_id.id,
             'purchase_id': self.po.id,
             'account_id': self.partner_id.property_account_payable_id.id,
+            'type': 'in_invoice',
         })
         self.invoice.purchase_order_change()
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')

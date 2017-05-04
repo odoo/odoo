@@ -168,7 +168,7 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
+            locs = request.website.with_context(use_public_user=True).enumerate_pages()
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
@@ -191,9 +191,12 @@ class Website(Home):
                     'name': "/sitemap-%d.xml" % current_website.id,
                 })
             else:
+                # TODO: in master/saas-15, move current_website_id in template directly
+                pages_with_website = map(lambda p: "%d-%d" % (current_website.id, p), range(1, pages + 1))
+
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = View.render_template('website.sitemap_index_xml', {
-                    'pages': range(1, pages + 1),
+                    'pages': pages_with_website,
                     'url_root': request.httprequest.url_root,
                 })
                 create_sitemap('/sitemap-%d.xml' % current_website.id, content)

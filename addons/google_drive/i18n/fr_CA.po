@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-02-15 19:49+0000\n"
 "Last-Translator: Guillaume Rancourt <guillaumerancourt971@gmail.com>\n"
 "Language-Team: French (Canada) (http://www.transifex.com/odoo/odoo-9/"
@@ -63,7 +63,7 @@ msgid "Active"
 msgstr "Actif"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:34
+#: code:addons/google_drive/models/google_drive.py:40
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
 msgstr ""
@@ -105,7 +105,7 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:141
+#: code:addons/google_drive/models/google_drive.py:159
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "La création de google disque ne peut être fait que par un à la fois."
@@ -126,16 +126,11 @@ msgid "Filter"
 msgstr "Filtre"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:53
-#: code:addons/google_drive/google_drive.py:73
+#: code:addons/google_drive/models/google_drive.py:59
+#: code:addons/google_drive/models/google_drive.py:80
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Allez dans le panneau de configuration"
-
-#. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
-msgid "Google Client "
-msgstr "Client Google"
 
 #. module: google_drive
 #: model:ir.ui.menu,name:google_drive.menu_google_drive_config
@@ -154,8 +149,8 @@ msgid "Google Drive Name Pattern"
 msgstr "Patron de nommage Google Disque"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:55
-#: code:addons/google_drive/google_drive.py:75
+#: code:addons/google_drive/models/google_drive.py:61
+#: code:addons/google_drive/models/google_drive.py:82
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr "Google Disque n'est pas configuré, SVP contactez votre administrateur."
@@ -202,20 +197,12 @@ msgstr ""
 "les utiliser pour collaborer avec vos employés."
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model_id
 msgid "Model"
 msgstr "Modèle"
 
 #. module: google_drive
-#: constraint:google.drive.config:0
-msgid ""
-"Model of selected filter is not matching with model of current template."
-msgstr ""
-"Le modèle de filtre sélectionné ne correspond pas au modèle du modèle actuel."
-
-#. module: google_drive
-#: code:addons/google_drive/google_drive.py:173
+#: code:addons/google_drive/models/google_drive.py:201
 #, python-format
 msgid "Please enter a valid Google Document URL."
 msgstr "SVP entrez un hyperlien Google Document valide"
@@ -226,7 +213,7 @@ msgid "Resource Id"
 msgstr "Identificateur ressource"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:72
+#: code:addons/google_drive/models/google_drive.py:79
 #, python-format
 msgid ""
 "Something went wrong during the token generation. Please request again an "
@@ -252,7 +239,7 @@ msgid "Templates"
 msgstr "Modèle"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:90
+#: code:addons/google_drive/models/google_drive.py:97
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
 msgstr "Le modèle Google est introuvable. Il a peut-être été supprimé."
@@ -283,7 +270,7 @@ msgstr ""
 "                                Agrolait_SO0001_Ventes'."
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:117
+#: code:addons/google_drive/models/google_drive.py:135
 #, python-format
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
@@ -298,7 +285,7 @@ msgid "URI"
 msgstr "Hyperlien"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:52
+#: code:addons/google_drive/models/google_drive.py:58
 #, python-format
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "

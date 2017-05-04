@@ -6,7 +6,7 @@ from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 
 class MrpProductProduce(models.TransientModel):
     _name = "mrp.product.produce"
@@ -29,7 +29,7 @@ class MrpProductProduce(models.TransientModel):
             lines = []
             existing_lines = []
             for move in production.move_raw_ids.filtered(lambda x: (x.product_id.tracking != 'none') and x.state not in ('done', 'cancel')):
-                if not move.move_lot_ids:
+                if not move.move_lot_ids.filtered(lambda x: not x.lot_produced_id):
                     qty = quantity / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty
                     if move.product_id.tracking == 'serial':
                         while float_compare(qty, 0.0, precision_rounding=move.product_uom.rounding) > 0:
@@ -80,13 +80,16 @@ class MrpProductProduce(models.TransientModel):
             raise UserError(_('You should at least produce some quantity'))
         for move in moves.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel')):
             if move.unit_factor:
-                move.quantity_done_store += quantity * move.unit_factor
+                rounding = move.product_uom.rounding
+                move.quantity_done_store += float_round(quantity * move.unit_factor, precision_rounding=rounding)
         moves = self.production_id.move_finished_ids.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel'))
         for move in moves:
+            rounding = move.product_uom.rounding
             if move.product_id.id == self.production_id.product_id.id:
-                move.quantity_done_store += quantity
+                move.quantity_done_store += float_round(quantity, precision_rounding=rounding)
             elif move.unit_factor:
-                move.quantity_done_store += quantity * move.unit_factor
+                # byproducts handling
+                move.quantity_done_store += float_round(quantity * move.unit_factor, precision_rounding=rounding)
         self.check_finished_move_lots()
         if self.production_id.state == 'confirmed':
             self.production_id.write({
@@ -99,7 +102,7 @@ class MrpProductProduce(models.TransientModel):
     def check_finished_move_lots(self):
         lots = self.env['stock.move.lots']
         produce_move = self.production_id.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel'))
-        if produce_move.product_id.tracking != 'none':
+        if produce_move and produce_move.product_id.tracking != 'none':
             if not self.lot_id:
                 raise UserError(_('You need to provide a lot for the finished product'))
             existing_move_lot = produce_move.move_lot_ids.filtered(lambda x: x.lot_id == self.lot_id)
@@ -122,8 +125,8 @@ class MrpProductProduce(models.TransientModel):
                         #Possibly the entire move is selected
                         remaining_qty = movelots.quantity - movelots.quantity_done
                         if remaining_qty > 0:
-                            new_move_lot = movelots.copy()
-                            new_move_lot.write({'quantity':movelots.quantity_done, 'lot_produced_id': self.lot_id.id})
+                            default = {'quantity': movelots.quantity_done, 'lot_produced_id': self.lot_id.id}
+                            new_move_lot = movelots.copy(default=default)
                             movelots.write({'quantity': remaining_qty, 'quantity_done': 0})
                         else:
                             movelots.write({'lot_produced_id': self.lot_id.id})

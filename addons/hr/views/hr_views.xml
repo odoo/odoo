@@ -74,13 +74,13 @@
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
                             </page>
-                            <page string="Personal Information" groups="hr.group_hr_user">
+                            <page name="personal_information" string="Personal Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Citizenship &amp; Other Information">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="identification_id" groups="hr.group_hr_user"/>
                                         <field name="passport_id" groups="hr.group_hr_user"/>
-                                        <field name="bank_account_id"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
                                     </group>
                                     <group string="Contact Information">
                                         <field name="address_home_id"
@@ -96,7 +96,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="HR Settings" groups="hr.group_hr_user">
+                            <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
                                 <group>
                                     <group string='Status' name="active_group">
                                         <field name="company_id" groups="base.group_multi_company"/>

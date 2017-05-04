@@ -36,7 +36,7 @@ class AccountMoveLineReconcile(models.TransientModel):
         credit = debit = 0
         lines = self.env['account.move.line'].browse(context.get('active_ids', []))
         for line in lines:
-            if not line.reconciled:
+            if not line.full_reconcile_id:
                 credit += line.credit
                 debit += line.debit
         precision = self.env.user.company_id.currency_id.decimal_places
@@ -64,9 +64,13 @@ class AccountMoveLineReconcile(models.TransientModel):
                 if aml.currency_id.id == currency:
                     continue
                 raise UserError(_('Operation not allowed. You can only reconcile entries that share the same secondary currency or that don\'t have one. Edit your journal items or make another selection before proceeding any further.'))
+        #Don't consider entrires that are already reconciled
+        move_lines_filtered = move_lines.filtered(lambda aml: not aml.reconciled)
         #Because we are making a full reconcilition in batch, we need to consider use cases as defined in the test test_manual_reconcile_wizard_opw678153
-        #So we force the reconciliation in company currency only at first, then in second pass the amounts in secondary currency.
-        move_lines.with_context(skip_full_reconcile_check='amount_currency_excluded', manual_full_reconcile_currency=currency).reconcile()
+        #So we force the reconciliation in company currency only at first
+        move_lines_filtered.with_context(skip_full_reconcile_check='amount_currency_excluded', manual_full_reconcile_currency=currency).reconcile()
+
+        #then in second pass the amounts in secondary currency, only if some lines are still not fully reconciled
         move_lines_filtered = move_lines.filtered(lambda aml: not aml.reconciled)
         if move_lines_filtered:
             move_lines_filtered.with_context(skip_full_reconcile_check='amount_currency_only', manual_full_reconcile_currency=currency).reconcile()
@@ -123,13 +127,18 @@ class AccountMoveLineReconcileWriteoff(models.TransientModel):
                 if aml.currency_id.id == currency:
                     continue
                 raise UserError(_('Operation not allowed. You can only reconcile entries that share the same secondary currency or that don\'t have one. Edit your journal items or make another selection before proceeding any further.'))
+        #Don't consider entrires that are already reconciled
+        move_lines_filtered = move_lines.filtered(lambda aml: not aml.reconciled)
         #Because we are making a full reconcilition in batch, we need to consider use cases as defined in the test test_manual_reconcile_wizard_opw678153
-        #So we force the reconciliation in company currency only at first, then in second pass the amounts in secondary currency.
+        #So we force the reconciliation in company currency only at first,
         context['skip_full_reconcile_check'] = 'amount_currency_excluded'
         context['manual_full_reconcile_currency'] = currency
-        writeoff = move_lines.with_context(context).reconcile(self.writeoff_acc_id, self.journal_id)
+        writeoff = move_lines_filtered.with_context(context).reconcile(self.writeoff_acc_id, self.journal_id)
+        #then in second pass the amounts in secondary currency, only if some lines are still not fully reconciled
         move_lines_filtered = move_lines.filtered(lambda aml: not aml.reconciled)
         if move_lines_filtered:
             move_lines_filtered.with_context(skip_full_reconcile_check='amount_currency_only', manual_full_reconcile_currency=currency).reconcile()
-        (move_lines + writeoff).compute_full_after_batch_reconcile()
+        if not isinstance(writeoff, bool):
+            move_lines += writeoff
+        move_lines.compute_full_after_batch_reconcile()
         return {'type': 'ir.actions.act_window_close'}

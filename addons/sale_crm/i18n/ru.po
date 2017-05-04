@@ -3,14 +3,6 @@
 # * sale_crm
 # 
 # Translators:
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
-# Max Belyanin <maxbelyanin@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Максим Дронь <dronmax@gmail.com>, 2016
-# Alex Puchkov <ap@alteco.co>, 2016
-# OstapYakovenko <Ostap.Yakovenko@gmail.com>, 2016
-# Artur Komishenko <Archi1792@gmail.com>, 2016
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -52,23 +44,25 @@ msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Участник, с которым требуется связать ваше участие. Оно будет рассматривать "
+"состояние участия соответствующего участника."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
-msgstr ""
+msgstr "Ассоциированный участник"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "Отмена дату участия"
 
 #. module: sale_crm
 #. openerp-web
 #: code:addons/sale_crm/static/src/js/tour.js:16
 #, python-format
 msgid "Click here to see more options."
-msgstr ""
+msgstr "Нажмите здесь, чтобы увидеть дополнительные параметры."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
@@ -78,7 +72,7 @@ msgstr "Токен количества платежей"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
 msgid "Current Membership Status"
-msgstr ""
+msgstr "Текущий статус членства"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_customer
@@ -88,17 +82,17 @@ msgstr "Место хранения заказчика"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_start
 msgid "Date from which membership becomes active."
-msgstr "Дата, с которой членство становится активным."
+msgstr "Дата, с которой участие становится активным."
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "Дата, на котором было отменено участие"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
 msgid "Date until which membership remains active."
-msgstr "Дата, до которой членство остается активным."
+msgstr "Дата, до которой участник остается активным."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
@@ -113,7 +107,7 @@ msgstr "Счет"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
 msgid "Invoiced in Sale Orders Target"
-msgstr ""
+msgstr "Выставлен счет в продажу целевого заказа"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
@@ -126,23 +120,30 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Это показывает состояние участия.\n"
+"-Не участник: Партнер, который не применяется для какого либо участия.\n"
+"-Отмененный участник: Участник, который отменил его участие.\n"
+"-Старый участник: Участник, дата участия которого истекла.\n"
+"-Ожидание участия Участник, кто подал заявку на участие и чей счет будет создан.\n"
+"-Счет участника: Участник, чей счет был создан.\n"
+"-Платный участник: участник который заплатила членский взнос."
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Инициатива / возможность"
+msgstr "Лид /Возможность"
 
 #. module: sale_crm
 #. openerp-web
 #: code:addons/sale_crm/static/src/js/tour.js:20
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr ""
+msgstr "Давайте взглянем на коммерческое предложение этой команды продаж."
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
+msgstr "Войти в чат, из которых происходит возможность заказа"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -152,17 +153,17 @@ msgstr "Членство"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Количество участников"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
 msgid "Membership End Date"
-msgstr "Дата окончания членства"
+msgstr "Дата окончания участия"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_start
 msgid "Membership Start Date"
-msgstr "Дата Начала Членства"
+msgstr "Дата начала участия"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
@@ -177,7 +178,7 @@ msgstr "Сообщение для комплектования запасов"
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
-msgstr "Новая Оферта"
+msgstr "Новое коммерческое"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
@@ -219,7 +220,7 @@ msgstr "Заказ продаж"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Выберите, если вы хотите дать бесплатное участие."
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
@@ -280,4 +281,4 @@ msgstr "Пользователи"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
-msgstr "Место хранения Поставщика"
+msgstr "Расположение поставщика"

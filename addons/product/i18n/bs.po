@@ -9,10 +9,10 @@
 # Bole <bole@dajmi5.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
+"POT-Creation-Date: 2017-04-26 13:35+0000\n"
+"PO-Revision-Date: 2017-04-26 13:35+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2016\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -212,6 +212,8 @@ msgid ""
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
+"Opis proizvoda koji želite da prikažete vašem kupcu. Ovaj opis će biti "
+"kopiran na svaku Prodajnu Narudžbu, Nalog Isporuke i Račun/Povrat kupca."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -660,17 +662,13 @@ msgid "Companies"
 msgstr "Kompanije"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
 #: model:ir.model.fields,field_description:product.field_product_product_company_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_company_id
 #: model:ir.model.fields,field_description:product.field_product_template_company_id
 msgid "Company"
-msgstr "Kompanija"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
-msgid "Company id"
 msgstr "Kompanija"
 
 #. module: product
@@ -2048,6 +2046,11 @@ msgid "Public Price"
 msgstr "Javna cijena"
 
 #. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Javni cjenovnik"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template_description_purchase
 msgid "Purchase Description"
@@ -2731,11 +2734,6 @@ msgstr "Tip"
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
-msgstr ""
-
-#. module: product
-#: model:product.pricelist,name:product.list0
-msgid "USD"
 msgstr ""
 
 #. module: product

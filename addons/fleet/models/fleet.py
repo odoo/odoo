@@ -213,11 +213,11 @@ class FleetVehicle(models.Model):
         LogContract = self.env['fleet.vehicle.log.contract']
         Cost = self.env['fleet.vehicle.cost']
         for record in self:
-            record.odometer_count = Odometer.search_count([('vehicle_id', '=', self.id)])
-            record.fuel_logs_count = LogFuel.search_count([('vehicle_id', '=', self.id)])
-            record.service_count = LogService.search_count([('vehicle_id', '=', self.id)])
-            record.contract_count = LogContract.search_count([('vehicle_id', '=', self.id)])
-            record.cost_count = Cost.search_count([('vehicle_id', '=', self.id), ('parent_id', '=', False)])
+            record.odometer_count = Odometer.search_count([('vehicle_id', '=', record.id)])
+            record.fuel_logs_count = LogFuel.search_count([('vehicle_id', '=', record.id)])
+            record.service_count = LogService.search_count([('vehicle_id', '=', record.id)])
+            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id)])
+            record.cost_count = Cost.search_count([('vehicle_id', '=', record.id), ('parent_id', '=', False)])
 
     @api.depends('log_contracts')
     def _compute_contract_reminder(self):
@@ -344,7 +344,7 @@ class FleetVehicle(models.Model):
         if xml_id:
             res = self.env['ir.actions.act_window'].for_xml_id('fleet', xml_id)
             res.update(
-                context=dict(self.env.context, default_vehicle_id=self.id),
+                context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
                 domain=[('vehicle_id', '=', self.id)]
             )
             return res
@@ -656,5 +656,3 @@ class FleetVehicleLogContract(models.Model):
     def run_scheduler(self):
         self.scheduler_manage_auto_costs()
         self.scheduler_manage_contract_expiration()
-
-

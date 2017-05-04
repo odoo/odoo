@@ -26,7 +26,7 @@ var M2ODialog = Dialog.extend({
             title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
             buttons: [
-                {text: _t('Create'), classes: 'btn-primary', click: function() {
+                {text: _t('Create'), classes: 'btn-primary', click: function(e) {
                     if (this.$("input").val() !== ''){
                         this.getParent()._quick_create(this.$("input").val());
                         this.close();
@@ -959,7 +959,8 @@ var X2ManyListView = ListView.extend({
             field.no_rerender = true;
             current_values[field.name] = field.get('value');
         });
-        var cached_records = _.filter(this.dataset.cache, function(item){return !_.isEmpty(item.values) && !item.to_delete;});
+        var ids = _.map(this.records.records, function (item) { return item.attributes.id; });
+        var cached_records = _.filter(this.dataset.cache, function(item){return _.contains(ids, item.id) && !_.isEmpty(item.values) && !item.to_delete;});
         var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
@@ -1062,8 +1063,10 @@ var One2ManyListView = X2ManyListView.extend({
             this._dataset_changed = false;
         });
 
-        this.on('warning', this, function(e) { // In case of a one2many, we do not want any warning which comes from the editor
-            e.stop_propagation();
+        this.on('warning', this, function(e) { // In case of editable list view, we do not want any warning which comes from the editor
+            if (this.editable()) {
+                e.stop_propagation();
+            }
         });
     },
     do_add_record: function () {
@@ -1302,7 +1305,7 @@ var Many2ManyListView = X2ManyListView.extend({
             context: this.x2m.build_context(),
             title: _t("Add: ") + this.x2m.string,
             alternative_form_view: this.x2m.field.views ? this.x2m.field.views.form : undefined,
-            no_create: this.x2m.options.no_create,
+            no_create: this.x2m.options.no_create || !this.is_action_enabled('create'),
             on_selected: function(element_ids) {
                 return self.x2m.data_link_multi(element_ids).then(function() {
                     self.x2m.reload_current_view();

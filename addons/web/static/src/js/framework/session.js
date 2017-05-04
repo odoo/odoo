@@ -86,8 +86,11 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * Init a session, reloads from cookie, if it exists
      */
     session_init: function () {
+        var def = this.session_reload();
+        if (this.is_frontend) return def;
+
         var self = this;
-        return this.session_reload().then(function() {
+        return def.then(function() {
             var modules = self.module_list.join(',');
             var deferred = self.load_qweb(modules);
             if(self.session_is_valid()) {

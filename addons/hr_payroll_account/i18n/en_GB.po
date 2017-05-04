@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2015-11-22 02:04+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/"
@@ -31,8 +31,8 @@ msgid "Accounting Entry"
 msgstr "Accounting Entry"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:154
-#: code:addons/hr_payroll_account/hr_payroll_account.py:170
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
 #, python-format
 msgid "Adjustment Entry"
 msgstr "Adjustment Entry"
@@ -62,12 +62,6 @@ msgid "Debit Account"
 msgstr "Debit Account"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-#, fuzzy
-msgid "Employee Contract"
-msgstr "Contract"
-
-#. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
 msgstr "Generate payslips for all selected employees"
@@ -88,13 +82,7 @@ msgid "Payslip Line"
 msgstr "Payslip Line"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-#, fuzzy
-msgid "Payslip Run"
-msgstr "Payslip Line"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:105
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
 #, python-format
 msgid "Payslip of %s"
 msgstr "Payslip of %s"
@@ -113,7 +101,7 @@ msgid "Tax"
 msgstr "Tax"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
 #, python-format
 msgid ""
 "The Expense Journal \"%s\" has not properly configured the Credit Account!"
@@ -121,7 +109,7 @@ msgstr ""
 "The Expense Journal \"%s\" has not properly configured the Credit Account!"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:168
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
 #, python-format
 msgid ""
 "The Expense Journal \"%s\" has not properly configured the Debit Account!"
@@ -132,6 +120,3 @@ msgstr ""
 #: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
 msgid "hr.salary.rule"
 msgstr "hr.salary.rule"
-
-#~ msgid "Payslip Batches"
-#~ msgstr "Payslip Batches"

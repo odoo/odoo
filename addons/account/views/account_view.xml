@@ -283,7 +283,7 @@
                                         <field name="code"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}" groups="base.group_no_one"/>
                                         <field name="sequence_id" required="0" attrs="{'readonly': 1}" groups="base.group_no_one"/>
-                                        <field name="refund_sequence_id" attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)], 'required': [('type', 'in', ['sale', 'purchase']), ('refund_sequence', '=', True)]}"/>
+                                        <field name="refund_sequence_id" required="0" attrs="{'readonly': 1, 'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)]}" groups="base.group_no_one"/>
                                     </group>
                                     <group>
                                         <field name="default_debit_account_id" domain="[('deprecated', '=', False)]" />
@@ -655,7 +655,7 @@
             <field name="act_window_id" ref="action_bank_statement_tree"/>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_form_bank">
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_bank_statement_form"/>
             <field name="act_window_id" ref="action_bank_statement_tree"/>
@@ -1068,7 +1068,7 @@
                                                 class="oe_link"
                                                 type="object"
                                                 string="-> View partially reconciled entries"
-                                                attrs="{'invisible': ['|', ('full_reconcile_id', '=', True), '&amp;', ('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
+                                                attrs="{'invisible': ['|', ('full_reconcile_id', '!=', False), '&amp;', ('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
                                             </button>
                                         </div>
                                     </group>
@@ -1121,7 +1121,6 @@
                                 <field name="move_id" required="False"/>
                                 <newline/>
                                 <field name="date_maturity"/>
-                                <field name="date"/>
                                 <field name="blocked"/>
                                 <newline/>
                                 <field name="tax_ids" readonly="1"/>
@@ -1210,7 +1209,7 @@
                     <filter string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
                     <filter name="posted" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
                     <separator/>
-                    <filter string="Unreconciled" domain="[('full_reconcile_id','=',False), ('account_id.reconcile','=',True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
+                    <filter string="Unreconciled" domain="[('full_reconcile_id', '=', False), ('balance','!=', 0), ('account_id.reconcile','=',True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
                     <separator/>
                     <filter string="Payable" domain="[('account_id.internal_type', '=', 'payable')]" help="From Payable accounts" name="payable"/>
                     <filter string="Receivable" domain="[('account_id.internal_type', '=', 'receivable')]" help="From Receivable accounts" name="receivable"/>
@@ -1343,6 +1342,7 @@
                                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
+                                    <field name="date_maturity" required="0"/>
                                 </tree>
                             </field>
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>

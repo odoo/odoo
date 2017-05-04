@@ -5,26 +5,35 @@
 #                         维智众源 oldrev@gmail.com  <states data>
 # Copyright (C) 2012-2012 南京盈通 ccdos@intoerp.com <small business chart>
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
+# Copyright (C) 2017-now  jeffery9@gmail.com
 
 {
-    'name': '中国会计科目表-企业会计准则',
-    'version': '1.8',
+    'name': '会计科目表 - 中国企业会计准则',
+    'version': '2.0',
     'category': 'Localization',
-    'author': 'www.openerp-china.org',
-    'maintainer': 'jeff@osbzr.com',
-    'website': 'http://openerp-china.org',
+    'author': ['lvxin@gmail.co', 'oldrev@gmail.co', 'ccdos@intoerp.com', 'jeff@osbzr.com', 'jeffery9@gmail.com'],
+
+    'website': 'http://shine-it.net',
     'description': """
+Including the following data in the Accounting Standards for Business Enterprises
+包含企业会计准则以下数据
 
-    科目类型\会计科目表模板\增值税\辅助核算类别\管理会计凭证簿\财务会计凭证簿
+* Chart of Accounts
+* 科目表模板
 
-    添加中文省份数据
+* Account templates
+* 科目模板
 
-    增加小企业会计科目表
+* Tax templates
+* 税金模板
 
     """,
     'depends': ['l10n_cn'],
     'data': [
         'data/l10n_cn_standard_chart_data.xml',
+        'data/account.account.template.csv',
+        'data/account_tax_templates.xml',
+        'data/account_chart_template_data.xml',
         'data/account_chart_template_data.yml',
     ],
     'license': 'GPL-3',

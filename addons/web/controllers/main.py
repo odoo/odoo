@@ -53,6 +53,8 @@ env.filters["json"] = json.dumps
 # 1 week cache for asset bundles as advised by Google Page Speed
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
 
+DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
+
 #----------------------------------------------------------
 # Odoo Web helpers
 #----------------------------------------------------------
@@ -586,6 +588,22 @@ class WebClient(http.Controller):
 
 class Proxy(http.Controller):
 
+    @http.route('/web/proxy/load', type='json', auth="none")
+    def load(self, path):
+        """ Proxies an HTTP request through a JSON request.
+
+        It is strongly recommended to not request binary files through this,
+        as the result will be a binary data blob as well.
+
+        :param path: actual request path
+        :return: file content
+        """
+        from werkzeug.test import Client
+        from werkzeug.wrappers import BaseResponse
+
+        base_url = request.httprequest.base_url
+        return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
+
     @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
     def post(self, path):
         """Effectively execute a POST request that was hooked through user login"""
@@ -609,6 +627,7 @@ class Database(http.Controller):
         d['list_db'] = odoo.tools.config['list_db']
         d['langs'] = odoo.service.db.exp_list_lang()
         d['countries'] = odoo.service.db.exp_list_countries()
+        d['pattern'] = DBNAME_PATTERN
         # databases list
         d['databases'] = []
         try:
@@ -630,6 +649,8 @@ class Database(http.Controller):
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         try:
+            if not re.match(DBNAME_PATTERN, name):
+                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code])
@@ -642,6 +663,8 @@ class Database(http.Controller):
     @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
     def duplicate(self, master_pwd, name, new_name):
         try:
+            if not re.match(DBNAME_PATTERN, new_name):
+                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
@@ -1075,12 +1098,19 @@ class Binary(http.Controller):
                 # create an empty registry
                 registry = odoo.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
-                    cr.execute("""SELECT c.logo_web, c.write_date
-                                    FROM res_users u
-                               LEFT JOIN res_company c
-                                      ON c.id = u.company_id
-                                   WHERE u.id = %s
-                               """, (uid,))
+                    company = int(kw['company']) if kw and kw.get('company') else False
+                    if company:
+                        cr.execute("""SELECT logo_web, write_date
+                                        FROM res_company
+                                       WHERE id = %s
+                                   """, (company,))
+                    else:
+                        cr.execute("""SELECT c.logo_web, c.write_date
+                                        FROM res_users u
+                                   LEFT JOIN res_company c
+                                          ON c.id = u.company_id
+                                       WHERE u.id = %s
+                                   """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
                         image_base64 = str(row[0]).decode('base64')
@@ -1217,7 +1247,7 @@ class Export(http.Controller):
         info = {}
         fields = self.fields_get(model)
         if ".id" in export_fields:
-            fields['.id'] = fields.pop('id', {'string': 'ID'})
+            fields['.id'] = fields.get('id', {'string': 'ID'})
 
         # To make fields retrieval more efficient, fetch all sub-fields of a
         # given field at the same time. Because the order in the export list is
