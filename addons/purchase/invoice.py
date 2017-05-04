@@ -68,10 +68,7 @@ class AccountInvoice(models.Model):
             self.partner_id = self.purchase_id.partner_id.id
 
         new_lines = self.env['account.invoice.line']
-        for line in self.purchase_id.order_line:
-            # Load a PO line only once
-            if line in self.invoice_line_ids.mapped('purchase_line_id'):
-                continue
+        for line in self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id'):
             data = self._prepare_invoice_line_from_po_line(line)
             new_line = new_lines.new(data)
             new_line._set_additional_fields(self)
@@ -195,5 +192,5 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index=True, readonly=True)
-    purchase_id = fields.Many2one('purchase.order', related='purchase_line_id.order_id', string='Purchase Order', store=False, readonly=True,
+    purchase_id = fields.Many2one('purchase.order', related='purchase_line_id.order_id', string='Purchase Order', store=False, readonly=True, related_sudo=False,
         help='Associated Purchase Order. Filled in automatically when a PO is chosen on the vendor bill.')
