@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr_timesheet.hr_timesheet_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='msg_module_sale_timesheet']" position="replace">
-                <div class="content-group" attrs="{'invisible': [('module_sale_timesheet', '=', False)]}">
+                <div class="content-group" name="msg_module_sale_timesheet" attrs="{'invisible': [('module_sale_timesheet', '=', False)]}">
                     <div class="mt16">
                         <div>
                             <button name="%(sale_timesheet.product_template_action_time_based)d" string="Setup your time-based services" type="action" class="btn-link" icon="fa-arrow-right"/>
@@ -27,7 +27,7 @@
         <field name="inherit_id" ref="sale.sale_config_settings_view_form_inherit_sale"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='msg_module_sale_timesheet']" position="replace">
-                <div class="content-group" attrs="{'invisible': [('module_sale_timesheet', '=', False)]}">
+                <div class="content-group" name="msg_module_sale_timesheet" attrs="{'invisible': [('module_sale_timesheet', '=', False)]}">
                     <div class="mt16">
                         <div>
                             <button name="%(sale_timesheet.product_template_action_time_based)d" string="Setup your time-based services" type="action" class="btn-link" icon="fa-arrow-right"/>
@@ -47,7 +47,7 @@
         <field name="inherit_id" ref="project.project_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='msg_module_sale_timesheet']" position="replace">
-                <div class="content-group" attrs="{'invisible': [('module_sale_timesheet', '=', False)]}">
+                <div class="content-group" name="msg_module_sale_timesheet" attrs="{'invisible': [('module_sale_timesheet', '=', False)]}">
                     <div class="mt16">
                         <div>
                             <button name="%(sale_timesheet.product_template_action_time_based)d" string="Setup your time-based services" type="action" class="btn-link" icon="fa-arrow-right"/>
