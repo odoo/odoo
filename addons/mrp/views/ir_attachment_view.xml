@@ -2,8 +2,8 @@
 <odoo>
         <!-- Files -->
     <record model="ir.ui.view" id="view_document_file_kanban_mrp">
-        <field name="name">ir.attachment kanban.mrp</field>
-        <field name="model">ir.attachment</field>
+        <field name="name">mrp.document kanban.mrp</field>
+        <field name="model">mrp.document</field>
         <field name="arch" type="xml">
             <kanban>
                 <field name="id"/>
@@ -41,6 +41,18 @@
                     </t>
                 </templates>
             </kanban>
+        </field>
+    </record>
+
+    <record id="view_document_form" model="ir.ui.view">
+        <field name="name">mrp.document.form</field>
+        <field name="model">mrp.document</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='mimetype']" position="after">
+              <field name="priority" widget="priority"/>
+          </xpath>
         </field>
     </record>
 </odoo>

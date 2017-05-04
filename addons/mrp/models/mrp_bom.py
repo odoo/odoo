@@ -262,7 +262,7 @@ class MrpBomLine(models.Model):
         return {
             'name': _('Attachments'),
             'domain': domain,
-            'res_model': 'ir.attachment',
+            'res_model': 'mrp.document',
             'type': 'ir.actions.act_window',
             'view_id': attachment_view.id,
             'views': [(attachment_view.id, 'kanban'), (False, 'form')],
