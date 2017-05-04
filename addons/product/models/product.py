@@ -557,7 +557,7 @@ class ProductPackaging(models.Model):
     barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification.")
 
 
-class SuppliferInfo(models.Model):
+class SupplierInfo(models.Model):
     _name = "product.supplierinfo"
     _description = "Information about a product vendor"
     _order = 'sequence, min_qty desc, price'
