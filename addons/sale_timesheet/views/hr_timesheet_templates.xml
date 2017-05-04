@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="sale timesheet assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale_timesheet/static/src/js/timesheet_plan.js"></script>
+            <link rel="stylesheet" href="/sale_timesheet/static/src/less/sale_timesheet.less"/>
+        </xpath>
+    </template>
+
+    <template id="timesheet_plan" name="Timesheet Plan">
+        <div class="o_form_view o_form_readonly o_project_plan">
+            <div class="o_form_sheet_bg">
+                <div class="o_form_sheet o_timesheet_plan_content">
+                    <div class="o_timesheet_plan_sale_timesheet">
+                        <div class="o_timesheet_plan_sale_timesheet_dashboard">
+
+                            <h3>Overview</h3>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th rowspan="4">
+                                            <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_group_by': ['date:month'],'pivot_column_group_by': ['timesheet_invoice_type'], 'measures': ['unit_amount']}">Hours</a>
+                                        </th>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['hours']['billable_time']"/> h
+                                        </td>
+                                        <td>Time and material</td>
+                                        <th rowspan="4">
+                                            <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_group_by': ['date:month', 'employee_id'], 'pivot_column_group_by': ['timesheet_invoice_type'],'pivot_measures': ['unit_amount']}">Rates</a>
+                                        </th>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['rates']['billable_time']"/> %
+                                        </td>
+                                        <td>Time and material</td>
+                                        <th rowspan="4">
+                                            <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_group_by': ['timesheet_invoice_id'], 'pivot_column_group_by': ['date:month'],'pivot_measures': ['amount', 'timesheet_revenue']}">Profitability</a>
+                                        </th>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                            <t t-esc="dashboard['money_amount']['invoiced']"/>
+                                            <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                        </td>
+                                        <td>Invoiced</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['hours']['billable_fixed']"/> h
+                                        </td>
+                                        <td>Fixed</td>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['rates']['billable_fixed']"/> %
+                                        </td>
+                                        <td>Fixed</td>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                            <t t-esc="dashboard['money_amount']['to_invoice']"/>
+                                            <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                        </td>
+                                        <td>To invoice</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['hours']['non_billable']"/> h
+                                        </td>
+                                        <td>Non Billable</td>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['rates']['non_billable']"/> %
+                                        </td>
+                                        <td>Non Billable</td>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                            <t t-esc="dashboard['money_amount']['cost']"/>
+                                            <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                        </td>
+                                        <td>Cost</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_timesheet_plan_dashboard_total">
+                                            <t t-esc="dashboard['hours']['total']"/> h
+                                        </td>
+                                        <td><b>Total</b></td>
+                                        <td class="o_timesheet_plan_dashboard_total">
+                                            <t t-esc="dashboard['rates']['total']"/> %
+                                        </td>
+                                        <td><b>Total</b></td>
+                                        <td class="o_timesheet_plan_dashboard_total">
+                                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                            <t t-esc="dashboard['money_amount']['total']"/>
+                                            <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                        </td>
+                                        <td><b>Total</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="o_timesheet_plan_sale_timesheet_people_time">
+                            <h3>Time by people</h3>
+                            <t t-if="not repartition_employee">
+                                <p>There is no timesheet for now.</p>
+                            </t>
+                            <t t-if="repartition_employee">
+                                <div class="pull-right o_timesheet_plan_badge">
+                                    <span class="badge o_progress_billable_fixed">Billable fixed</span>
+                                    <span class="badge o_progress_billable_time">Billable time</span>
+                                    <span class="badge o_progress_non_billable">Non billable</span>
+                                </div>
+                                <table class="table ">
+                                    <tbody>
+                                        <t t-foreach="repartition_employee" t-as="employee_id">
+                                            <tr>
+                                                <td style="width: 15%">
+                                                    <a type="action" t-att-domain="json.dumps(domain)" t-att-context="{'search_default_employee_id': employee_id}" views="[[0, 'list']]">
+                                                        <t t-esc="repartition_employee[employee_id]['employee_name']"/>
+                                                    </a>
+                                                </td>
+                                                <td style="width: 10%">
+                                                    <t t-esc="repartition_employee[employee_id]['total']"/> hours
+                                                </td>
+                                                <td>
+                                                    <div class="progress" t-att-style="'width: ' + str(repartition_employee[employee_id]['total'] / repartition_employee_max * 100) +'%'">
+                                                        <div t-if="repartition_employee[employee_id]['billable_fixed']" class="progress-bar o_progress_billable_fixed" t-att-style="'width: ' + str(repartition_employee[employee_id]['billable_fixed'] / repartition_employee[employee_id]['total'] * 100) + '%'" t-att-title="str(repartition_employee[employee_id]['billable_fixed']) + ' hours'">
+                                                        </div>
+                                                        <div t-if="repartition_employee[employee_id]['billable_time']" class="progress-bar o_progress_billable_time" t-att-style="'width: ' + str(repartition_employee[employee_id]['billable_time'] / repartition_employee[employee_id]['total'] * 100) + '%'" t-att-title="str(repartition_employee[employee_id]['billable_time']) + ' hours'">
+                                                        </div>
+                                                        <div t-if="repartition_employee[employee_id]['non_billable']" class="progress-bar o_progress_non_billable" t-att-style="'width: ' + str(repartition_employee[employee_id]['non_billable'] / repartition_employee[employee_id]['total'] * 100) + '%'" t-att-title="str(repartition_employee[employee_id]['non_billable']) + ' hours'">
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

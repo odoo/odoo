@@ -25,6 +25,7 @@ have real delivered quantities in sales orders.
         'views/procurement_views.xml',
         'views/hr_timesheet_views.xml',
         'views/res_config_views.xml',
+        'views/hr_timesheet_templates.xml',
     ],
     'demo': [
         'data/sale_service_demo.xml',
