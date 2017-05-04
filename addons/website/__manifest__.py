@@ -26,7 +26,6 @@ Odoo Website CMS
         'views/res_config_views.xml',
         'views/ir_actions_views.xml',
         'wizard/base_language_install_views.xml',
-        'data/web_planner_data.xml',
     ],
     'demo': [
         'data/website_demo.xml',

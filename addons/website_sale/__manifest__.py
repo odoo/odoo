@@ -15,7 +15,6 @@ Odoo E-Commerce
         'security/ir.model.access.csv',
         'security/website_sale.xml',
         'data/data.xml',
-        'data/web_planner_data.xml',
         'views/product_views.xml',
         'views/account_views.xml',
         'views/sale_report_views.xml',
