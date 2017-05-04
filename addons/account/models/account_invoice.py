@@ -466,6 +466,8 @@ class AccountInvoice(models.Model):
         payment_term_id = False
         fiscal_position = False
         bank_id = False
+        warning = {}
+        domain = {}
         company_id = self.company_id.id
         p = self.partner_id if not company_id else self.partner_id.with_context(force_company=company_id)
         type = self.type
@@ -500,7 +502,6 @@ class AccountInvoice(models.Model):
                     }
                 if p.invoice_warn == 'block':
                     self.partner_id = False
-                return {'warning': warning}
 
         self.account_id = account_id
         self.payment_term_id = payment_term_id
@@ -510,8 +511,14 @@ class AccountInvoice(models.Model):
             bank_ids = p.commercial_partner_id.bank_ids
             bank_id = bank_ids[0].id if bank_ids else False
             self.partner_bank_id = bank_id
-            return {'domain': {'partner_bank_id': [('id', 'in', bank_ids.ids)]}}
-        return {}
+            domain = {'partner_bank_id': [('id', 'in', bank_ids.ids)]}
+
+        res = {}
+        if warning:
+            res['warning'] = warning
+        if domain:
+            res['domain'] = domain
+        return res
 
     @api.multi
     def get_delivery_partner_id(self):
