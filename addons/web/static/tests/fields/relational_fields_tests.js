@@ -3029,13 +3029,19 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('one2many list editable: trigger when row is valid', function (assert) {
+    QUnit.test('one2many list editable: trigger onchange when row is valid', function (assert) {
         // should omit require fields that aren't in the view as they (obviously)
         // have no value, when checking the validity of required fields
-        assert.expect(7);
+        // shouldn't consider numerical fields with value 0 as unset
+        assert.expect(11);
 
         this.data.turtle.fields.turtle_foo.required = true;
         this.data.turtle.fields.turtle_qux.required = true; // required field not in the view
+        this.data.turtle.fields.turtle_bar.required = true; // required boolean field with no default
+        delete this.data.turtle.fields.turtle_bar.default;
+        this.data.turtle.fields.turtle_int.required = true; // required int field (default 0)
+        this.data.turtle.fields.turtle_int.default = 0;
+        this.data.turtle.fields.partner_ids.required = true; // required many2many
         this.data.partner.onchanges = {
             turtles: function (obj) {
                 obj.int_field = obj.turtles.length;
@@ -3058,8 +3064,11 @@ QUnit.module('relational_fields', {
             },
             archs: {
                 'turtle,false,list' : '<tree editable="top">' +
+                        '<field name="turtle_qux"/>' +
+                        '<field name="turtle_bar"/>' +
                         '<field name="turtle_int"/>' +
                         '<field name="turtle_foo"/>' +
+                        '<field name="partner_ids" widget="many2many_tags"/>' +
                     '</tree>',
             },
             res_id: 1,
@@ -3068,13 +3077,23 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
             "int_field should start with value 0");
+
+        // add a new row (which is invalid at first)
         form.$('.o_field_x2many_list_row_add a').click();
         assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
-            "int_field should still be 0 (no onchange should have been done yet");
-
+            "int_field should still be 0 (no onchange should have been done yet)");
         assert.verifySteps(['read', 'default_get'], "no onchange should have been applied");
 
+        // fill turtle_foo field
         form.$('.o_field_widget[name="turtle_foo"]').val("some text").trigger('input');
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
+            "int_field should still be 0 (no onchange should have been done yet)");
+        assert.verifySteps(['read', 'default_get'], "no onchange should have been applied");
+
+        // fill partner_ids field with a tag (all required fields will then be set)
+        var $m2mInput = form.$('.o_field_widget[name=partner_ids] input');
+        $m2mInput.click();
+        $m2mInput.autocomplete('widget').find('li:first()').click();
         assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "1",
             "int_field should now be 1 (the onchange should have been done");
 
