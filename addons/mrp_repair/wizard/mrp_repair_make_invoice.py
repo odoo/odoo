@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools import pycompat
 
 
 class MakeInvoice(models.TransientModel):
@@ -24,7 +25,7 @@ class MakeInvoice(models.TransientModel):
             # but that second call will not do anything, since the repairs are already invoiced.
             repairs.action_repair_invoice_create()
         return {
-            'domain': [('id', 'in', new_invoice.values())],
+            'domain': [('id', 'in', list(pycompat.values(new_invoice)))],
             'name': 'Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',

@@ -10,6 +10,8 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, ValidationError
 import odoo.addons.decimal_precision as dp
 
+from odoo.tools import pycompat
+
 
 class LunchOrder(models.Model):
     """
@@ -24,10 +26,10 @@ class LunchOrder(models.Model):
         prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='id desc')
         # If we return return prev_order.ids, we will have duplicates (identical orders).
         # Therefore, this following part removes duplicates based on product_id and note.
-        return {
+        return list(pycompat.values({
             (order.product_id, order.note): order.id
             for order in prev_order
-        }.values()
+        }))
 
     user_id = fields.Many2one('res.users', 'User', readonly=True,
                               states={'new': [('readonly', False)]},
@@ -86,10 +88,10 @@ class LunchOrder(models.Model):
         prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='date desc, id desc')
         # If we use prev_order.ids, we will have duplicates (identical orders).
         # Therefore, this following part removes duplicates based on product_id and note.
-        self.previous_order_ids = {
+        self.previous_order_ids = list(pycompat.values({
             (order.product_id, order.note): order.id
             for order in prev_order
-        }.values()
+        }))
 
         if self.previous_order_ids:
             lunch_data = []

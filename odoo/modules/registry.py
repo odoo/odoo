@@ -16,7 +16,8 @@ import threading
 import odoo
 from .. import SUPERUSER_ID
 from odoo.tools import (assertion_report, lazy_classproperty, config,
-                        lazy_property, table_exists, topological_sort, OrderedSet)
+                        lazy_property, table_exists, topological_sort,
+                        OrderedSet, pycompat)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -156,7 +157,7 @@ class Registry(Mapping):
     def delete_all(cls):
         """ Delete all the registries. """
         with cls._lock:
-            for db_name in cls.registries.keys():
+            for db_name in list(pycompat.keys(cls.registries)):
                 cls.delete(db_name)
 
     #
@@ -192,8 +193,8 @@ class Registry(Mapping):
         # map fields on their dependents
         dependents = {
             field: set(dep for dep, _ in model._field_triggers[field] if dep != field)
-            for model in self.itervalues()
-            for field in model._fields.itervalues()
+            for model in pycompat.values(self)
+            for field in pycompat.values(model._fields)
         }
         # sort them topologically, and associate a sequence number to each field
         mapping = {
@@ -261,7 +262,7 @@ class Registry(Mapping):
             env['ir.model']._add_manual_models()
 
         # prepare the setup on all models
-        models = env.values()
+        models = list(pycompat.values(env))
         for model in models:
             model._prepare_setup()
 
@@ -310,18 +311,18 @@ class Registry(Mapping):
 
         # make sure all tables are present
         missing = [name
-                   for name, model in env.items()
+                   for name, model in pycompat.items(env)
                    if not model._abstract and not table_exists(cr, model._table)]
         if missing:
             _logger.warning("Models have no table: %s.", ", ".join(missing))
             # recreate missing tables following model dependencies
-            deps = {name: model._depends for name, model in env.items()}
+            deps = {name: model._depends for name, model in pycompat.items(env)}
             for name in topological_sort(deps):
                 if name in missing:
                     _logger.info("Recreate table of model %s.", name)
                     env[name].init()
             # check again, and log errors if tables are still missing
-            for name, model in env.items():
+            for name, model in pycompat.items(env):
                 if not model._abstract and not table_exists(cr, model._table):
                     _logger.error("Model %s has no table.", name)
 
@@ -340,7 +341,7 @@ class Registry(Mapping):
         """ Clear the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
         """
-        for model in self.models.itervalues():
+        for model in pycompat.values(self.models):
             model.clear_caches()
 
     def setup_signaling(self):

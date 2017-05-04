@@ -9,7 +9,7 @@ import uuid
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import ormcache
+from odoo.tools import ormcache, pycompat
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -614,12 +614,12 @@ class Channel(models.Model):
             GROUP BY mail_channel_id
             """, (tuple(self.ids),))
         channels_preview = dict((r['message_id'], r) for r in self._cr.dictfetchall())
-        last_messages = self.env['mail.message'].browse(channels_preview.keys()).message_format()
+        last_messages = self.env['mail.message'].browse(channels_preview).message_format()
         for message in last_messages:
             channel = channels_preview[message['id']]
             del(channel['message_id'])
             channel['last_message'] = message
-        return channels_preview.values()
+        return list(pycompat.values(channels_preview))
 
     #------------------------------------------------------
     # Commands

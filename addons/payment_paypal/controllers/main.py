@@ -37,7 +37,7 @@ class PaypalController(http.Controller):
             :return: tuple containing the STATUS str and the key/value pairs
                      parsed as a dict
         """
-        lines = filter(None, response.split('\n'))
+        lines = [line for line in response.split('\n') if line]
         status = lines.pop(0)
 
         pdt_post = {}

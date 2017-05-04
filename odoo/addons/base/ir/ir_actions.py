@@ -5,6 +5,7 @@ import odoo
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
 from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools import pycompat
 from odoo.http import request
 
 import datetime
@@ -649,17 +650,19 @@ class IrActionsTodo(models.Model):
         """
         user_groups = self.env.user.groups_id
 
-        def groups_match(todo):
-            """ Checks if the todo's groups match those of the current user """
-            return not todo.groups_id or bool(todo.groups_id & user_groups)
-
-        done = filter(groups_match, self.browse(self.search([('state', '!=', 'open')])))
-        total = filter(groups_match, self.browse(self.search([])))
-
+        done_count = self.search_count([
+            ('state', '!=', open),
+            '|', ('groups_id', '=', False),
+                 ('groups_id', 'in', user_groups.ids),
+        ])
+        total_count = self.search_count([
+            '|', ('groups_id', '=', False),
+                 ('groups_id', 'in', user_groups.ids),
+        ])
         return {
-            'done': len(done),
-            'total': len(total),
-            'todo': len(total) - len(done),
+            'done': done_count,
+            'total': total_count,
+            'todo': total_count - done_count,
         }
 
 
@@ -688,7 +691,7 @@ class IrActionsActClient(models.Model):
     @api.depends('params_store')
     def _compute_params(self):
         self_bin = self.with_context(bin_size=False, bin_size_params_store=False)
-        for record, record_bin in zip(self, self_bin):
+        for record, record_bin in pycompat.izip(self, self_bin):
             record.params = record_bin.params_store and safe_eval(record_bin.params_store, {'uid': self._uid})
 
     def _inverse_params(self):

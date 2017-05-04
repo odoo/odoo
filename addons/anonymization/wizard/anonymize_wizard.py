@@ -270,7 +270,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
         data = pickle.loads(base64.decodestring(self.file_import))
 
         fixes = self.env['ir.model.fields.anonymization.migration.fix'].search_read([
-            ('target_version', '=', '.'.join(map(str, version_info[:2])))
+            ('target_version', '=', '.'.join(str(v) for v in version_info[:2]))
         ], ['model_name', 'field_name', 'query', 'query_type', 'sequence'])
         fixes = group(fixes, ('model_name', 'field_name'))
 

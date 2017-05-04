@@ -8,7 +8,7 @@ import uuid
 import logging
 
 from odoo import api, fields, models
-from odoo.tools import config, ormcache, mute_logger
+from odoo.tools import config, ormcache, mute_logger, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ class IrConfigParameter(models.Model):
         Initializes the parameters listed in _default_parameters.
         It overrides existing parameters if force is ``True``.
         """
-        for key, func in _default_parameters.iteritems():
+        for key, func in pycompat.items(_default_parameters):
             # force=True skips search and always performs the 'if' body (because ids=False)
             params = self.sudo().search([('key', '=', key)])
             if force or not params:

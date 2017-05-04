@@ -45,7 +45,7 @@ def query_insert(cr, table, values):
     query = INSERT_QUERY.format(
         table=table,
         cols=",".join(values),
-        vals=",".join(map("%({0})s".format, values)),
+        vals=",".join("%({0})s".format(v) for v in values),
     )
     cr.execute(query, values)
 
@@ -53,8 +53,8 @@ def query_update(cr, table, values, selectors):
     setters = set(values) - set(selectors)
     query = UPDATE_QUERY.format(
         table=table,
-        assignment=",".join(map("{0}=%({0})s".format, setters)),
-        condition=" AND ".join(map("{0}=%({0})s".format, selectors)),
+        assignment=",".join("{0}=%({0})s".format(s) for s in setters),
+        condition=" AND ".join("{0}=%({0})s".format(s) for s in selectors),
     )
     cr.execute(query, values)
 
@@ -188,7 +188,7 @@ class IrModel(models.Model):
     @api.multi
     def write(self, vals):
         if '__last_update' in self._context:
-            self = self.with_context({k: v for k, v in self._context.iteritems() if k != '__last_update'})
+            self = self.with_context({k: v for k, v in pycompat.items(self._context) if k != '__last_update'})
         if 'model' in vals and any(rec.model != vals['model'] for rec in self):
             raise UserError(_('Field "Model" cannot be modified on models.'))
         if 'state' in vals and any(rec.state != vals['state'] for rec in self):
@@ -559,8 +559,8 @@ class IrModelFields(models.Model):
         except Exception:
             raise UserError("\n".join([
                 _("Cannot rename/delete fields that are still present in views:"),
-                _("Fields:") + " " + ", ".join(map(str, fields)),
-                _("View:") + " " + view.name,
+                _("Fields: %s") % ", ".join(str(f) for f in fields),
+                _("View: %s") % view.name,
             ]))
         finally:
             # the registry has been modified, restore it
@@ -760,7 +760,7 @@ class IrModelFields(models.Model):
             fields_data[field.name] = dict(params, id=record.id)
             return record
 
-        diff = {key for key, val in params.items() if field_data[key] != val}
+        diff = {key for key, val in pycompat.items(params) if field_data[key] != val}
         if diff:
             cr = self.env.cr
             # update the entry in this table
@@ -778,7 +778,7 @@ class IrModelFields(models.Model):
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """
         self.clear_caches()
-        for field in model._fields.itervalues():
+        for field in pycompat.values(model._fields):
             self._reflect_field(field)
 
         if not self.pool._init:
@@ -1228,7 +1228,7 @@ class IrModelData(models.Model):
     @api.depends('module', 'name')
     def _compute_complete_name(self):
         for res in self:
-            res.complete_name = ".".join(filter(None, [res.module, res.name]))
+            res.complete_name = ".".join(n for n in [res.module, res.name] if n)
 
     @api.depends('model', 'res_id')
     def _compute_reference(self):
@@ -1259,7 +1259,7 @@ class IrModelData(models.Model):
             model_id_name[xid.model][xid.res_id] = None
 
         # fill in model_id_name with name_get() of corresponding records
-        for model, id_name in model_id_name.iteritems():
+        for model, id_name in pycompat.items(model_id_name):
             try:
                 ng = self.env[model].browse(id_name).name_get()
                 id_name.update(ng)
@@ -1356,7 +1356,7 @@ class IrModelData(models.Model):
                 record = self.get_object(module, xml_id)
                 if record:
                     self.loads[(module, xml_id)] = (model, record.id)
-                    for parent_model, parent_field in self.env[model]._inherits.iteritems():
+                    for parent_model, parent_field in pycompat.items(self.env[model]._inherits):
                         parent = record[parent_field]
                         parent_xid = '%s_%s' % (xml_id, parent_model.replace('.', '_'))
                         self.loads[(module, parent_xid)] = (parent_model, parent.id)
@@ -1411,7 +1411,7 @@ class IrModelData(models.Model):
         elif record:
             record.write(values)
             if xml_id:
-                for parent_model, parent_field in record._inherits.iteritems():
+                for parent_model, parent_field in pycompat.items(record._inherits):
                     self.sudo().create({
                         'name': xml_id + '_' + parent_model.replace('.', '_'),
                         'model': parent_model,
@@ -1430,7 +1430,7 @@ class IrModelData(models.Model):
         elif mode == 'init' or (mode == 'update' and xml_id):
             existing_parents = set()            # {parent_model, ...}
             if xml_id:
-                for parent_model, parent_field in record._inherits.iteritems():
+                for parent_model, parent_field in pycompat.items(record._inherits):
                     xid = self.sudo().search([
                         ('module', '=', module),
                         ('name', '=', xml_id + '_' + parent_model.replace('.', '_')),
@@ -1450,7 +1450,7 @@ class IrModelData(models.Model):
                 inherit_models = [record]
                 while inherit_models:
                     current_model = inherit_models.pop()
-                    for parent_model_name, parent_field in current_model._inherits.iteritems():
+                    for parent_model_name, parent_field in pycompat.items(current_model._inherits):
                         inherit_models.append(self.env[parent_model_name])
                         if parent_model_name in existing_parents:
                             continue
@@ -1476,7 +1476,7 @@ class IrModelData(models.Model):
 
         if xml_id and record:
             self.loads[(module, xml_id)] = (model, record.id)
-            for parent_model, parent_field in record._inherits.iteritems():
+            for parent_model, parent_field in pycompat.items(record._inherits):
                 parent_xml_id = xml_id + '_' + parent_model.replace('.', '_')
                 self.loads[(module, parent_xml_id)] = (parent_model, record[parent_field].id)
 

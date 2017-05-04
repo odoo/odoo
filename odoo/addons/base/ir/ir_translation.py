@@ -128,7 +128,7 @@ class IrTranslationImport(object):
         env = api.Environment(cr, SUPERUSER_ID, {})
         src_relevant_fields = []
         for model in env:
-            for field_name, field in env[model]._fields.items():
+            for field_name, field in pycompat.items(env[model]._fields):
                 if hasattr(field, 'translate') and callable(field.translate):
                     src_relevant_fields.append("%s,%s" % (model, field_name))
 
@@ -530,7 +530,7 @@ class IrTranslation(models.Model):
 
         # check for read/write access on translated field records
         fmode = 'read' if mode == 'read' else 'write'
-        for mname, ids in model_ids.iteritems():
+        for mname, ids in pycompat.items(model_ids):
             records = self.env[mname].browse(ids)
             records.check_access_rights(fmode)
             records.check_field_access_rights(fmode, model_fields[mname])
@@ -640,7 +640,7 @@ class IrTranslation(models.Model):
             return ['&', ('res_id', '=', rec.id), ('name', '=', name)]
 
         # insert missing translations, and extend domain for related fields
-        for name, fld in record._fields.items():
+        for name, fld in pycompat.items(record._fields):
             if not fld.translate:
                 continue
 

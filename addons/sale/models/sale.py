@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.tools.misc import formatLang
 
 import odoo.addons.decimal_precision as dp
@@ -362,7 +362,7 @@ class SaleOrder(models.Model):
         if not invoices:
             raise UserError(_('There is no invoicable line.'))
 
-        for invoice in invoices.values():
+        for invoice in pycompat.values(invoices):
             if not invoice.invoice_line_ids:
                 raise UserError(_('There is no invoicable line.'))
             # If invoice is negative, do a refund invoice instead
@@ -379,7 +379,7 @@ class SaleOrder(models.Model):
             invoice.message_post_with_view('mail.message_origin_link',
                 values={'self': invoice, 'origin': references[invoice]},
                 subtype_id=self.env.ref('mail.mt_note').id)
-        return [inv.id for inv in invoices.values()]
+        return [inv.id for inv in pycompat.values(invoices)]
 
     @api.multi
     def action_draft(self):
@@ -517,8 +517,8 @@ class SaleOrder(models.Model):
                 if tax.include_base_amount:
                     base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1, product=line.product_id,
                                                 partner=self.partner_shipping_id)['taxes'][0]['amount']
-        res = sorted(res.items(), key=lambda l: l[0].sequence)
-        res = map(lambda l: (l[0].name, l[1]), res)
+        res = sorted(pycompat.items(res), key=lambda l: l[0].sequence)
+        res = [(l[0].name, l[1]) for l in res]
         return res
 
 

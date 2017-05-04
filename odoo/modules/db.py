@@ -99,7 +99,7 @@ def create_categories(cr, categories):
     category = []
     while categories:
         category.append(categories[0])
-        xml_id = 'module_category_' + ('_'.join(map(lambda x: x.lower(), category))).replace('&', 'and').replace(' ', '_')
+        xml_id = 'module_category_' + ('_'.join(x.lower() for x in category)).replace('&', 'and').replace(' ', '_')
         # search via xml_id (because some categories are renamed)
         cr.execute("SELECT res_id FROM ir_model_data WHERE name=%s AND module=%s AND model=%s",
                    (xml_id, "base", "ir.module.category"))

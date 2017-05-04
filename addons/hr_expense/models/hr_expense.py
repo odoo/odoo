@@ -5,7 +5,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import email_split, float_is_zero
+from odoo.tools import email_split, float_is_zero, pycompat
 
 import odoo.addons.decimal_precision as dp
 
@@ -237,12 +237,12 @@ class HrExpense(models.Model):
                     })
 
             #convert eml into an osv-valid format
-            lines = map(lambda x: (0, 0, expense._prepare_move_line(x)), move_lines)
+            lines = [(0, 0, expense._prepare_move_line(x)) for x in move_lines]
             move.with_context(dont_create_taxes=True).write({'line_ids': lines})
             expense.sheet_id.write({'account_move_id': move.id})
             if expense.payment_mode == 'company_account':
                 expense.sheet_id.paid_expense_sheets()
-        for move in move_group_by_sheet.values():
+        for move in pycompat.values(move_group_by_sheet):
             move.post()
         return True
 

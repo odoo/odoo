@@ -638,7 +638,7 @@ class TestViews(ViewCase):
         kw.setdefault('mode', 'extension' if kw.get('inherit_id') else 'primary')
         kw.setdefault('active', True)
 
-        keys = sorted(kw.keys())
+        keys = sorted(kw)
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)
         params = ','.join('%%(%s)s' % (k,) for k in keys)
 

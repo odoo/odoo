@@ -258,9 +258,9 @@ class MassMailingCampaign(models.Model):
             # Update standard results with default results
             result = []
             for state_value, state_name in states:
-                res = filter(lambda x: x['stage_id'] == (state_value, state_name), read_group_res)
+                res = [x for x in read_group_res if x['stage_id'] == (state_value, state_name)]
                 if not res:
-                    res = filter(lambda x: x['stage_id'] == state_value, read_group_all_states)
+                    res = [x for x in read_group_all_states if x['stage_id'] == state_value]
                 res[0]['stage_id'] = [state_value, state_name]
                 result.append(res[0])
             return result
@@ -456,7 +456,7 @@ class MassMailing(models.Model):
     def _onchange_model_and_list(self):
         if self.mailing_model == 'mail.mass_mailing.list':
             if self.contact_list_ids:
-                self.mailing_domain = "[('list_ids', 'in', [%s]), ('opt_out', '=', False)]" % (','.join(map(str,self.contact_list_ids.ids)),)
+                self.mailing_domain = "[('list_ids', 'in', [%s]), ('opt_out', '=', False)]" % (','.join(str(id) for id in self.contact_list_ids.ids),)
             else:
                 self.mailing_domain = "[(0, '=', 1)]"
         elif 'opt_out' in self.env[self.mailing_model]._fields and not self.mailing_domain:
@@ -497,9 +497,9 @@ class MassMailing(models.Model):
             # Update standard results with default results
             result = []
             for state_value, state_name in states:
-                res = filter(lambda x: x['state'] == state_value, read_group_res)
+                res = [x for x in read_group_res if x['state'] == state_value]
                 if not res:
-                    res = filter(lambda x: x['state'] == state_value, read_group_all_states)
+                    res = [x for x in read_group_all_states if x['state'] == state_value]
                 res[0]['state'] = [state_value, state_name]
                 result.append(res[0])
             return result

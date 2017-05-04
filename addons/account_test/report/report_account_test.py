@@ -31,8 +31,8 @@ class ReportAssertAccount(models.AbstractModel):
             :rtype: [(key, value)]
             """
             if cols is None:
-                cols = item.keys()
-            return [(col, item.get(col)) for col in cols if col in item.keys()]
+                cols = list(item)
+            return [(col, item.get(col)) for col in cols if col in item]
 
         localdict = {
             'cr': self.env.cr,

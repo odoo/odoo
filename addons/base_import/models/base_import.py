@@ -15,7 +15,7 @@ from odoo import api, fields, models
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import ustr
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 
 try:
     from cStringIO import StringIO
@@ -49,7 +49,7 @@ FILE_TYPE_DICT = {
 }
 EXTENSIONS = {
     '.' + ext: handler
-    for mime, (ext, handler, req) in FILE_TYPE_DICT.iteritems()
+    for mime, (ext, handler, req) in pycompat.items(FILE_TYPE_DICT)
 }
 
 
@@ -121,7 +121,7 @@ class Import(models.TransientModel):
         }]
         model_fields = Model.fields_get()
         blacklist = models.MAGIC_COLUMNS + [Model.CONCURRENCY_CHECK_FIELD]
-        for name, field in model_fields.iteritems():
+        for name, field in pycompat.items(model_fields):
             if name in blacklist:
                 continue
             # an empty string means the field is deprecated, @deprecated must
@@ -134,7 +134,7 @@ class Import(models.TransientModel):
                     continue
                 # states = {state: [(attr, value), (attr2, value2)], state2:...}
                 if not any(attr == 'readonly' and value is False
-                           for attr, value in itertools.chain.from_iterable(states.itervalues())):
+                           for attr, value in itertools.chain.from_iterable(pycompat.values(states))):
                     continue
             field_value = {
                 'id': name,
@@ -208,7 +208,7 @@ class Import(models.TransientModel):
     def _read_xls_book(self, book):
         sheet = book.sheet_by_index(0)
         # emulate Sheet.get_rows for pre-0.9.4
-        for row in itertools.imap(sheet.row, range(sheet.nrows)):
+        for row in pycompat.imap(sheet.row, range(sheet.nrows)):
             values = []
             for cell in row:
                 if cell.ctype is xlrd.XL_CELL_NUMBER:
@@ -543,13 +543,13 @@ class Import(models.TransientModel):
         else:
             mapper = operator.itemgetter(*indices)
         # Get only list of actually imported fields
-        import_fields = filter(None, fields)
+        import_fields = [f for f in fields if f]
 
         rows_to_import = self._read_file(options)
         if options.get('headers'):
             rows_to_import = itertools.islice(rows_to_import, 1, None)
         data = [
-            list(row) for row in itertools.imap(mapper, rows_to_import)
+            list(row) for row in pycompat.imap(mapper, rows_to_import)
             # don't try inserting completely empty rows (e.g. from
             # filtering out o2m fields)
             if any(row)
@@ -566,7 +566,7 @@ class Import(models.TransientModel):
             value = value[1:-1]
             negative = True
         float_regex = re.compile(r'([-]?[0-9.,]+)')
-        split_value = filter(None, float_regex.split(value))
+        split_value = [g for g in float_regex.split(value) if g]
         if len(split_value) > 2:
             # This is probably not a float
             return False
@@ -603,7 +603,7 @@ class Import(models.TransientModel):
     def _parse_import_data(self, data, import_fields, options):
         # Get fields of type date/datetime
         all_fields = self.env[self.res_model].fields_get()
-        for name, field in all_fields.iteritems():
+        for name, field in pycompat.items(all_fields):
             if field['type'] in ('date', 'datetime') and name in import_fields:
                 # Parse date
                 index = import_fields.index(name)

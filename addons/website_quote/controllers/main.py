@@ -50,7 +50,7 @@ class sale_quote(http.Controller):
         values = {
             'quotation': order_sudo,
             'message': message and int(message) or False,
-            'option': bool(filter(lambda x: not x.line_id, order_sudo.options)),
+            'option': any(not x.line_id for x in order_sudo.options),
             'order_valid': (not order_sudo.validity_date) or (now <= order_sudo.validity_date),
             'days_valid': days,
             'action': request.env.ref('sale.action_quotations').id,

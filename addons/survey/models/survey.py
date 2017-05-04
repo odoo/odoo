@@ -14,6 +14,8 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.website.models.website import slug
 
+from odoo.tools import pycompat
+
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 _logger = logging.getLogger(__name__)
 
@@ -23,8 +25,7 @@ def dict_keys_startswith(dictionary, string):
         .. note::
             This function uses dictionary comprehensions (Python >= 2.7)
     """
-    matched_keys = [key for key in dictionary.keys() if key.startswith(string)]
-    return dict((k, dictionary[k]) for k in matched_keys)
+    return {k: v for k, v in pycompat.items(dictionary) if k.startswith(string)}
 
 
 class SurveyStage(models.Model):
@@ -151,7 +152,7 @@ class Survey(models.Model):
         if page_id == 0:
             return (pages[0][1], 0, len(pages) == 1)
 
-        current_page_index = pages.index((filter(lambda p: p[1].id == page_id, pages))[0])
+        current_page_index = pages.index(next(p for p in pages if p[1].id == page_id))
 
         # All the pages have been displayed
         if current_page_index == len(pages) - 1 and not go_back:
@@ -238,7 +239,7 @@ class Survey(models.Model):
                     answers[input_line.value_suggested.id]['count'] += 1
                 if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     comments.append(input_line)
-            result_summary = {'answers': answers.values(), 'comments': comments}
+            result_summary = {'answers': list(pycompat.values(answers)), 'comments': comments}
 
         # Calculate and return statistics for matrix
         if question.type == 'matrix':
@@ -248,7 +249,7 @@ class Survey(models.Model):
             comments = []
             [rows.update({label.id: label.value}) for label in question.labels_ids_2]
             [answers.update({label.id: label.value}) for label in question.labels_ids]
-            for cell in product(rows.keys(), answers.keys()):
+            for cell in product(rows, answers):
                 res[cell] = 0
             for input_line in question.user_input_line_ids:
                 if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters) and input_line.value_suggested_row:
@@ -638,7 +639,7 @@ class SurveyQuestion(models.Model):
             if self.comments_allowed:
                 comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
             # Preventing answers with blank value
-            if all([True if not answer.strip() else False for answer in answer_candidates.values()]) and answer_candidates:
+            if all(not answer.strip() for answer in pycompat.values(answer_candidates)) and answer_candidates:
                 errors.update({answer_tag: self.constr_error_msg})
             # There is no answer neither comments (if comments count as answer)
             if not answer_candidates and self.comment_count_as_answer and (not comment_flag or not comment_answer):
@@ -660,7 +661,7 @@ class SurveyQuestion(models.Model):
             if self.matrix_subtype == 'simple':
                 answer_number = len(answer_candidates)
             elif self.matrix_subtype == 'multiple':
-                answer_number = len(set([sk.rsplit('_', 1)[0] for sk in answer_candidates.keys()]))
+                answer_number = len({sk.rsplit('_', 1)[0] for sk in answer_candidates})
             else:
                 raise RuntimeError("Invalid matrix subtype")
             # Validate that each line has been answered

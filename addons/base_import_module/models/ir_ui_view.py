@@ -23,6 +23,6 @@ class IrUiView(models.Model):
            GROUP BY coalesce(v.inherit_id, v.id)
         """, [model])
 
-        ids = map(itemgetter(0), self._cr.fetchall())
+        ids = (row[0] for row in self._cr.fetchall())
         views = self.with_context(load_all_views=True).browse(ids)
         return views._check_xml() and result

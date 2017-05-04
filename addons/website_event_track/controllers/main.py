@@ -8,7 +8,7 @@ import pytz
 
 from odoo import fields, http
 from odoo.http import request
-from odoo.tools import html_escape as escape, html2plaintext
+from odoo.tools import html_escape as escape, html2plaintext, pycompat
 
 
 class WebsiteEventTrackController(http.Controller):
@@ -47,7 +47,7 @@ class WebsiteEventTrackController(http.Controller):
             if forcetr or (start_date>dates[-1][0]) or not location:
                 formatted_time = self._get_locale_time(start_date, lang_code)
                 dates.append((start_date, {}, bool(location), formatted_time))
-                for loc in locations.keys():
+                for loc in list(locations):
                     if locations[loc] and (locations[loc][-1][2] > start_date):
                         locations[loc][-1][3] += 1
                     elif not locations[loc] or locations[loc][-1][2] <= start_date:
@@ -75,7 +75,7 @@ class WebsiteEventTrackController(http.Controller):
 
         days = {}
         tracks_by_days = {}
-        for day, tracks in days_tracks.iteritems():
+        for day, tracks in pycompat.items(days_tracks):
             tracks_by_days[day] = tracks
             days[day] = self._prepare_calendar(event, tracks)
 

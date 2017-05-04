@@ -12,6 +12,8 @@ from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 from odoo.addons.website.models.website import slug
 
+from odoo.tools import pycompat
+
 
 class TestSurvey(TransactionCase):
 
@@ -176,7 +178,7 @@ class TestSurvey(TransactionCase):
 
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         urltypes = {'public': 'start', 'print': 'print', 'result': 'results'}
-        for urltype, urltxt in urltypes.iteritems():
+        for urltype, urltxt in pycompat.items(urltypes):
             survey_url = getattr(self.survey1, urltype + '_url')
             survey_url_relative = getattr(self.survey1.with_context({'relative_url': True}), urltype + '_url')
             self.assertTrue(validate_url(survey_url))
@@ -208,7 +210,7 @@ class TestSurvey(TransactionCase):
         answers = [input_portal.user_input_line_ids[0], input_public.user_input_line_ids[0]]
         expected_values = {'answer_type': 'free_text', 'value_free_text': "Test Answer"}
         for answer in answers:
-            for field, value in expected_values.iteritems():
+            for field, value in pycompat.items(expected_values):
                 self.assertEqual(getattr(answer, field), value, msg="Unable to answer the survey. Expected behaviour of %s is not proper." % (field))
 
     def test_10_survey_result_simple_multiple_choice(self):
@@ -244,7 +246,7 @@ class TestSurvey(TransactionCase):
 
     def test_12_survey_result_numeric_box(self):
         question = self.env['survey.question'].sudo(self.survey_manager).create({'page_id': self.page1.id, 'question': 'Q0', 'type': 'numerical_box'})
-        num = map(float, random.sample(range(1, 100), 3))
+        num = [float(n) for n in random.sample(range(1, 100), 3)]
         nsum = sum(num)
         for i in range(3):
             self.env['survey.user_input'].sudo(self.user_public).create({'survey_id': self.survey1.id, 'user_input_line_ids': [(0, 0, {
@@ -253,7 +255,7 @@ class TestSurvey(TransactionCase):
             'average': round((nsum / len(num)), 2), 'max': round(max(num), 2),
             'min': round(min(num), 2), 'sum': nsum, 'most_common': Counter(num).most_common(5)}
         result = self.env['survey.survey'].prepare_result(question)
-        for key in exresult.keys():
+        for key in exresult:
             self.assertEqual(result[key], exresult[key], msg="Statistics of numeric box type questions are different from expectations")
 
     def test_13_survey_actions(self):
@@ -264,7 +266,7 @@ class TestSurvey(TransactionCase):
             'print': {'method': 'print', 'token': '/test', 'text': 'Print'},
             'result': {'method': 'result', 'token': '', 'text': 'Results of the'},
             'test': {'method': 'public', 'token': '/phantom', 'text': 'Results of the'}}
-        for action, val in actions.iteritems():
+        for action, val in pycompat.items(actions):
             result = getattr(self.survey1.with_context({'survey_token': val['token'][1:]}), 'action_' + action + '_survey')()
             url = getattr(self.survey1.with_context({'relative_url': True}), val['method'] + '_url') + val['token']
             self.assertEqual(result['url'], url)

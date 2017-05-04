@@ -255,7 +255,7 @@ def translate_xml_node(node, callback, method, parser=None):
         append_content(result, translate_content(todo) if todo_has_text else todo)
 
         # translate the required attributes
-        for name, value in result.items():
+        for name, value in pycompat.items(result.attrib):
             if name in TRANSLATED_ATTRS:
                 result.set(name, translate_text(value) or value)
 
@@ -660,7 +660,7 @@ def trans_export(lang, modules, buffer, format, cr):
                 row.setdefault('tnrs', []).append((type, name, res_id))
                 row.setdefault('comments', set()).update(comments)
 
-            for src, row in sorted(grouped_rows.items()):
+            for src, row in sorted(pycompat.items(grouped_rows)):
                 if not lang:
                     # translation template, so no translation value
                     row['translation'] = ''
@@ -674,7 +674,7 @@ def trans_export(lang, modules, buffer, format, cr):
                 module = row[0]
                 rows_by_module.setdefault(module, []).append(row)
             tmpdir = tempfile.mkdtemp()
-            for mod, modrows in rows_by_module.items():
+            for mod, modrows in pycompat.items(rows_by_module):
                 tmpmoddir = join(tmpdir, mod, 'i18n')
                 os.makedirs(tmpmoddir)
                 pofilename = (lang if lang else mod) + ".po" + ('t' if not lang else '')
@@ -1073,7 +1073,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             dic = dict.fromkeys(('type', 'name', 'res_id', 'src', 'value',
                                  'comments', 'imd_model', 'imd_name', 'module'))
             dic['lang'] = lang
-            dic.update(zip(fields, row))
+            dic.update(pycompat.izip(fields, row))
 
             # discard the target from the POT targets.
             src = dic['src']
@@ -1111,7 +1111,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # Then process the entries implied by the POT file (which is more
         # correct w.r.t. the targets) if some of them remain.
         pot_rows = []
-        for src, target in pot_targets.iteritems():
+        for src, target in pycompat.items(pot_targets):
             if target.value:
                 for type, name, res_id in target.targets:
                     pot_rows.append((type, name, res_id, src, target.value, target.comments))

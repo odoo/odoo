@@ -351,7 +351,7 @@ def list_db_incompatible(databases):
         :return: A list of databases that are incompatible
     """
     incompatible_databases = []
-    server_version = '.'.join(map(str, version_info[:2]))
+    server_version = '.'.join(str(v) for v in version_info[:2])
     for database_name in databases:
         with closing(db_connect(database_name).cursor()) as cr:
             if odoo.tools.table_exists(cr, 'ir_module_module'):

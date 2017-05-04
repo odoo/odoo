@@ -20,7 +20,7 @@ class PosInvoiceReport(models.AbstractModel):
         not_invoiced_orders_ids = list(set(docids) - set(invoiced_posorders_ids))
         if not_invoiced_orders_ids:
             not_invoiced_posorders = PosOrder.browse(not_invoiced_orders_ids)
-            not_invoiced_orders_names = list(map(lambda a: a.name, not_invoiced_posorders))
+            not_invoiced_orders_names = [a.name for a in not_invoiced_posorders]
             raise UserError(_('No link to an invoice for %s.') % ', '.join(not_invoiced_orders_names))
 
         return self.env['ir.actions.report'].sudo().render_template('account.report_invoice', {'docs': self.env['account.invoice'].sudo().browse(ids_to_print)})

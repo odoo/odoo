@@ -217,7 +217,7 @@ class Property(models.Model):
                 prop.write({'value': value})
 
         # create new properties for records that do not have one yet
-        for ref, id in refs.iteritems():
+        for ref, id in pycompat.items(refs):
             value = clean(values[id])
             if value != default_value:
                 self.create({
@@ -248,13 +248,13 @@ class Property(models.Model):
             elif operator in ('!=', '<=', '<', '>', '>='):
                 value = makeref(value)
             elif operator in ('in', 'not in'):
-                value = map(makeref, value)
+                value = [makeref(v) for v in value]
             elif operator in ('=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike'):
                 # most probably inefficient... but correct
                 target = self.env[comodel]
                 target_names = target.name_search(value, operator=operator, limit=None)
-                target_ids = map(itemgetter(0), target_names)
-                operator, value = 'in', map(makeref, target_ids)
+                target_ids = [n[0] for n in target_names]
+                operator, value = 'in', [makeref(v) for v in target_ids]
         elif field.type in ('integer', 'float'):
             # No record is created in ir.property if the field's type is float or integer with a value
             # equal to 0. Then to match with the records that are linked to a property field equal to 0,

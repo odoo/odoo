@@ -71,9 +71,9 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         tagname = unicode(tagname).lower()
 
         # extract generic attributes
-        attrs = {name.lower(): value for name, value in attributes.iteritems()}
+        attrs = {name.lower(): value for name, value in attributes.items()}
         attrs.update(
-            (name, value) for name, value in node.attributes.iteritems()
+            (name, value) for name, value in node.attributes.items()
             if name.startswith('data-')
         )
 
@@ -97,7 +97,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
             prefix=u''.join(prefix),
             tag=tagname,
             attrs=u' '.join(u'{}="{}"'.format(name, self.attval(value))
-                            for name,  value in attrs.iteritems()),
+                            for name,  value in attrs.items()),
             postfix=u''.join(postfix),
         )
     # only "space characters" SPACE, CHARACTER TABULATION, LINE FEED,

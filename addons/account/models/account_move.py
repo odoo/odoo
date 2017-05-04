@@ -1696,7 +1696,7 @@ class AccountPartialReconcile(models.Model):
                         total_amount_currency += aml.company_id.currency_id.with_context(date=aml.date).compute(aml.balance, partial_rec.currency_id)
                 for x in aml.matched_debit_ids | aml.matched_credit_ids:
                     partial_rec_set[x] = None
-        partial_rec_ids = [x.id for x in partial_rec_set.keys()]
+        partial_rec_ids = [x.id for x in partial_rec_set]
         aml_ids = aml_set.ids
         #then, if the total debit and credit are equal, or the total amount in currency is 0, the reconciliation is full
         digits_rounding_precision = aml_set[0].company_id.currency_id.rounding

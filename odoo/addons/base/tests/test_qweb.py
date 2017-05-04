@@ -13,6 +13,7 @@ from itertools import chain
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.ir.ir_qweb import QWebException
+from odoo.tools import pycompat
 
 
 def dedent_and_strip(string):
@@ -411,7 +412,7 @@ class TestQWebNS(TransactionCase):
             'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
             'cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2'
         }
-        self.assertSetEqual(set(expected_ns.items()) - set(result_etree.nsmap.items()), set())
+        self.assertSetEqual(set(pycompat.items(expected_ns)) - set(pycompat.items(result_etree.nsmap)), set())
 
         # check that the t-call did its work
         cac_lines = result_etree.findall('.//cac:line', namespaces={'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2'})

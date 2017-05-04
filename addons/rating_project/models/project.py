@@ -4,6 +4,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -73,13 +74,13 @@ class Project(models.Model):
         domain = [('create_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=30)))]
         for project in self:
             activity = project.tasks.rating_get_grades(domain)
-            project.percentage_satisfaction_project = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
+            project.percentage_satisfaction_project = activity['great'] * 100 / sum(pycompat.values(activity)) if sum(pycompat.values(activity)) else -1
 
     @api.one
     @api.depends('tasks.rating_ids.rating')
     def _compute_percentage_satisfaction_task(self):
         activity = self.tasks.rating_get_grades()
-        self.percentage_satisfaction_task = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
+        self.percentage_satisfaction_task = activity['great'] * 100 / sum(pycompat.values(activity)) if sum(pycompat.values(activity)) else -1
 
     percentage_satisfaction_task = fields.Integer(
         compute='_compute_percentage_satisfaction_task', string="Happy % on Task", store=True, default=-1)

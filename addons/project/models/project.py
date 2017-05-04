@@ -614,7 +614,7 @@ class Task(models.Model):
         email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
         # check left-part is not already an alias
         aliases = self.mapped('project_id.alias_name')
-        return filter(lambda x: x.split('@')[0] not in aliases, email_list)
+        return [x for x in email_list if x.split('@')[0] not in aliases]
 
     @api.model
     def message_new(self, msg, custom_values=None):
@@ -630,7 +630,7 @@ class Task(models.Model):
 
         task = super(Task, self).message_new(msg, custom_values=defaults)
         email_list = task.email_split(msg)
-        partner_ids = filter(None, task._find_partner_from_emails(email_list, force_create=False))
+        partner_ids = [p for p in task._find_partner_from_emails(email_list, force_create=False) if p]
         task.message_subscribe(partner_ids)
         return task
 
@@ -655,7 +655,7 @@ class Task(models.Model):
                         pass
 
         email_list = self.email_split(msg)
-        partner_ids = filter(None, self._find_partner_from_emails(email_list, force_create=False))
+        partner_ids = [p for p in self._find_partner_from_emails(email_list, force_create=False) if p]
         self.message_subscribe(partner_ids)
         return super(Task, self).message_update(msg, update_vals=update_vals)
 
@@ -677,7 +677,7 @@ class Task(models.Model):
             except Exception:
                 pass
         if self.project_id:
-            current_objects = filter(None, headers.get('X-Odoo-Objects', '').split(','))
+            current_objects = [h for h in headers.get('X-Odoo-Objects', '').split(',') if h]
             current_objects.insert(0, 'project.project-%s, ' % self.project_id.id)
             headers['X-Odoo-Objects'] = ','.join(current_objects)
         if self.tag_ids:

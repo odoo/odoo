@@ -172,6 +172,37 @@ statement to the following cross-language forms::
     exec(source, globals)
     exec(source, globals, locals)
 
+List/iteration builtins and methods
+-----------------------------------
+
+In Python 3, a number of builtins and methods formerly returning *lists* were
+converted to return *iterators* or *views*, with the corresponding redundant
+methods or functions having been *removed entirely*:
+
+* In Python 3, ``map``, ``filter`` and ``zip`` return iterators,
+  ``itertools.imap``, ``itertools.ifilter`` and ``itertools.izip`` have been
+  removed.
+
+  .. important::
+
+      When possible, use comprehensions (list, generator, ...) rather than
+      ``map`` or ``filter``, otherwise use the cross-version ``pycompat``
+      versions (``pycompat.imap``, ``pycompat.ifilter`` and
+      ``pycompat.izip``). The ``pycompat`` versions all return *iterators* and
+      may need to be wrapped in a ``list()`` call to yield a list.
+
+* In Python 3, ``dict.keys``, ``dict.values`` and ``dict.items`` return
+  *views* rather than lists, and the ``iter*`` and ``view*`` methods have
+  been removed.
+
+  .. important::
+
+      Prefer using :func:`odoo.tools.pycompat.keys`,
+      :func:`odoo.tools.pycompat.values` and :func:`odoo.tools.pycompat.items`
+      return cross-version iterators. When needing actual lists (e.g. to
+      modify a dictionary during iteration), wrap one of the calls above in a
+      ``list()``.
+
 builtins
 --------
 
@@ -258,21 +289,12 @@ code by replacing it with some other method altogether.
 ``xrange``
 ##########
 
-In Python 3, ``range()`` behaves the same as Python 3's ``xrange``. For
-cross-versions code you can:
+In Python 3, ``range()`` behaves the same as Python 3's ``xrange``.
 
-* just use ``range()`` everywhere and ignore the allocation cost of a list in
-  Python 2 (often not an issue)
-* conditionally alias ``xrange`` to ``range`` in Python 3 and use that
-* use a combination of ``itertools.count`` and ``takewhile`` for a
-  cross-compatible lazy increasing sequence of numbers
-
-.. warning::
-
-    In the *rare* cases where you need conditional code (code which applies
-    for one version of python and not the other), use ``sys.version_info``
-    e.g. ``sys.version_info() >= (3,)`` for Python3+ code or
-    ``sys.version_info() < (3,)`` for Python 2 code.
+For cross-version code, you can just use ``range()`` everywhere: while this
+will incur a slight allocation cost on Python 2, Python 3's ``range`` supports
+the entire Sequence protocol and thus behaves very much like a regular
+list or tuple.
 
 Removed/renamed methods
 -----------------------

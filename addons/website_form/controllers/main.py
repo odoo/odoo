@@ -10,7 +10,7 @@ from psycopg2 import IntegrityError
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.tools.translate import _
 from odoo.exceptions import ValidationError
 from odoo.addons.base.ir.ir_qweb.fields import nl2br
@@ -118,7 +118,7 @@ class WebsiteForm(http.Controller):
         error_fields = []
 
 
-        for field_name, field_value in values.items():
+        for field_name, field_value in pycompat.items(values):
             # If the value of the field if a file
             if hasattr(field_value, 'filename'):
                 # Undo file upload field name indexing
@@ -164,7 +164,7 @@ class WebsiteForm(http.Controller):
         if hasattr(dest_model, "website_form_input_filter"):
             data['record'] = dest_model.website_form_input_filter(request, data['record'])
 
-        missing_required_fields = [label for label, field in authorized_fields.iteritems() if field['required'] and not label in data['record']]
+        missing_required_fields = [label for label, field in pycompat.items(authorized_fields) if field['required'] and not label in data['record']]
         if any(error_fields):
             raise ValidationError(error_fields + missing_required_fields)
 

@@ -8,13 +8,13 @@ import psycopg2
 import pytz
 
 from odoo import api, fields, models, _
-from odoo.tools import ustr
+from odoo.tools import ustr, pycompat
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
 def only_ref_fields(record):
-    return {k: v for k, v in record.iteritems() if k in REFERENCING_FIELDS}
+    return {k: v for k, v in pycompat.items(record) if k in REFERENCING_FIELDS}
 def exclude_ref_fields(record):
-    return {k: v for k, v in record.iteritems() if k not in REFERENCING_FIELDS}
+    return {k: v for k, v in pycompat.items(record) if k not in REFERENCING_FIELDS}
 
 CREATE = lambda values: (0, False, values)
 UPDATE = lambda id, values: (1, id, values)
@@ -43,9 +43,9 @@ class IrFieldsConverter(models.AbstractModel):
             if isinstance(error_params, basestring):
                 error_params = sanitize(error_params)
             elif isinstance(error_params, dict):
-                error_params = {k: sanitize(v) for k, v in error_params.iteritems()}
+                error_params = {k: sanitize(v) for k, v in pycompat.items(error_params)}
             elif isinstance(error_params, tuple):
-                error_params = tuple(map(sanitize, error_params))
+                error_params = tuple(sanitize(v) for v in error_params)
         return error_type(error_msg % error_params, error_args)
 
     @api.model
@@ -64,12 +64,12 @@ class IrFieldsConverter(models.AbstractModel):
 
         converters = {
             name: self.to_field(model, field, fromtype)
-            for name, field in model._fields.iteritems()
+            for name, field in pycompat.items(model._fields)
         }
 
         def fn(record, log):
             converted = {}
-            for field, value in record.iteritems():
+            for field, value in pycompat.items(record):
                 if field in REFERENCING_FIELDS:
                     continue
                 if not value:
@@ -369,7 +369,7 @@ class IrFieldsConverter(models.AbstractModel):
         :rtype: str, list
         """
         # Can import by name_get, external id or database id
-        fieldset = set(record.iterkeys())
+        fieldset = set(record)
         if fieldset - REFERENCING_FIELDS:
             raise ValueError(
                 _(u"Can not create Many-To-One records indirectly, import the field separately"))

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 """html2text: Turn HTML into equivalent Markdown-structured text."""
+from odoo.tools import pycompat
+
 __version__ = "2.36"
 __author__ = "Aaron Swartz (me@aaronsw.com)"
 __copyright__ = "(C) 2004-2008 Aaron Swartz. GNU GPL 3."
@@ -8,7 +10,6 @@ __contributors__ = ["Martin 'Joey' Schulze", "Ricardo Reyes", "Kevin Jay North"]
 # TODO:
 #   Support decoded entities with unifiable.
 
-if not hasattr(__builtins__, 'True'): True, False = 1, 0
 import re, sys, urllib, htmlentitydefs, codecs
 import sgmllib
 import urlparse
@@ -52,7 +53,7 @@ unifiable = {'rsquo':"'", 'lsquo':"'", 'rdquo':'"', 'ldquo':'"',
 
 unifiable_n = {}
 
-for k in unifiable.keys():
+for k in unifiable:
     unifiable_n[name2cp(k)] = unifiable[k]
 
 def charref(name):
@@ -61,13 +62,13 @@ def charref(name):
     else:
         c = int(name)
 
-    if not UNICODE_SNOB and c in unifiable_n.keys():
+    if not UNICODE_SNOB and c in unifiable_n:
         return unifiable_n[c]
     else:
         return unichr(c)
 
 def entityref(c):
-    if not UNICODE_SNOB and c in unifiable.keys():
+    if not UNICODE_SNOB and c in unifiable:
         return unifiable[c]
     else:
         try: name2cp(c)
@@ -400,7 +401,7 @@ class _html2text(sgmllib.SGMLParser):
                 self.a = newa
 
             if self.abbr_list and force == "end":
-                for abbr, definition in self.abbr_list.items():
+                for abbr, definition in pycompat.items(self.abbr_list):
                     self.out("  *[" + abbr + "]: " + definition + "\n")
 
             self.p_p = 0

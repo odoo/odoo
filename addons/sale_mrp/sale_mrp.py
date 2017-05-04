@@ -68,7 +68,7 @@ class AccountInvoiceLine(models.Model):
                 if bom.type == 'phantom':
                     average_price_unit = 0
                     components = s_line._get_bom_component_qty(bom)
-                    for product_id in components.keys():
+                    for product_id in components:
                         factor = components[product_id]['qty']
                         prod_moves = [m for m in moves if m.product_id.id == product_id]
                         prod_qty_done = factor * qty_done
