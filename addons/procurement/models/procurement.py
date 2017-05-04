@@ -289,12 +289,11 @@ class ProcurementOrder(models.Model):
             This is appropriate for batch jobs only.
         @return:  Dictionary of values
         '''
-        ProcurementSudo = self.env['procurement.order'].sudo()
         try:
             if use_new_cursor:
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))  # TDE FIXME
-
+            ProcurementSudo = self.env['procurement.order'].sudo()
             # Run confirmed procurements
             procurements = ProcurementSudo.search([('state', '=', 'confirmed')] + (company_id and [('company_id', '=', company_id)] or []))
             while procurements:
