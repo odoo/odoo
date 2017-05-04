@@ -4024,5 +4024,35 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('action context is used when evaluating domains', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="trululu" domain="[(\'id\', \'in\', context.get(\'product_ids\', []))]"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                context: {product_ids: [45,46,47]}
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.deepEqual(args.kwargs.args[0], ['id', 'in', [45,46,47]],
+                        "domain should be properly evaluated");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('div[name="trululu"] input').click();
+
+        form.destroy();
+    });
 });
 });
