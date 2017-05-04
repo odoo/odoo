@@ -149,16 +149,22 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             view.created = this.create_view.bind(this)(view, view_options);
         }
 
+        this.active_search = $.Deferred();
         // Call do_search on the searchview to compute domains, contexts and groupbys
         if (this.search_view_loaded &&
                 this.flags.auto_search &&
                 view.controller.searchable !== false) {
-            this.active_search = $.Deferred();
             $.when(this.search_view_loaded, view.created).done(function() {
                 self.searchview.do_search();
             });
+        } else {
+            this.active_search.resolve();
         }
-        var switched = $.when(view.created, this.active_search).then(function () {
+        var switched = $.when(
+            view.created,
+            this.search_view_loaded,
+            this.active_search
+        ).then(function () {
             return self._display_view(view_options, old_view).then(function () {
                 self.trigger('switch_mode', view_type, no_store, view_options);
             });
