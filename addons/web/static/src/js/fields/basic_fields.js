@@ -26,6 +26,47 @@ var view_dialogs = require('web.view_dialogs');
 var qweb = core.qweb;
 var _t = core._t;
 
+var TranslatableFieldMixin = {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @returns {jQuery}
+     */
+    _renderTranslateButton: function () {
+        if (_t.database.multi_lang && this.field.translate && this.res_id) {
+            return $('<button>', {
+                    type: 'button',
+                    'class': 'o_field_translate fa fa-globe btn btn-link',
+                })
+                .on('click', this._onTranslate.bind(this));
+        }
+        return $();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * open the translation view for the current field
+     *
+     * @private
+     */
+    _onTranslate: function () {
+        this._rpc({
+            route: '/web/dataset/call_button',
+            params: {
+                model: 'ir.translation',
+                method: 'translate_fields',
+                args: [this.model, this.res_id, this.name, this.record.getContext()],
+            }
+        }).then(this.do_action.bind(this));
+    },
+};
+
 var DebouncedField = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'input': '_onInput',
@@ -260,10 +301,26 @@ var InputField = DebouncedField.extend({
     },
 });
 
-var FieldChar = InputField.extend({
+var FieldChar = InputField.extend(TranslatableFieldMixin, {
     className: 'o_field_char',
     tagName: 'span',
     supportedFieldTypes: ['char'],
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Add translation button
+     *
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        var def = this._super.apply(this, arguments);
+        this.$el = this.$el.add(this._renderTranslateButton());
+        return def;
+    },
 });
 
 var FieldDate = InputField.extend({
@@ -722,7 +779,7 @@ var FieldFloatTime = FieldFloat.extend({
     },
 });
 
-var FieldText = DebouncedField.extend({
+var FieldText = DebouncedField.extend(TranslatableFieldMixin, {
     className: 'o_field_text',
     supportedFieldTypes: ['text'],
 
@@ -749,6 +806,8 @@ var FieldText = DebouncedField.extend({
                 this.$textarea.attr('placeholder', this.attrs.placeholder);
             }
             dom.autoresize(this.$textarea, {parent: this});
+
+            this.$el = this.$el.add(this._renderTranslateButton());
         }
 
         return this._super();

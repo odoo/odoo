@@ -2,6 +2,7 @@ odoo.define('web.basic_fields_tests', function (require) {
 "use strict";
 
 var concurrency = require('web.concurrency');
+var core = require('web.core');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
 var ListView = require('web.ListView');
@@ -9,6 +10,7 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
+var _t = core._t;
 
 QUnit.module('fields', {}, function () {
 
@@ -22,6 +24,7 @@ QUnit.module('basic_fields', {
                     display_name: {string: "Displayed name", type: "char", searchable: true},
                     foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true},
                     bar: {string: "Bar", type: "boolean", default: true, searchable: true},
+                    txt: {string: "txt", type: "text", default: "My little txt Value\nHo-ho-hoooo Merry Christmas"},
                     int_field: {string: "int_field", type: "integer", sortable: true, searchable: true},
                     qux: {string: "Qux", type: "float", digits: [16,1], searchable: true},
                     p: {string: "one2many field", type: "one2many", relation: 'partner', searchable: true},
@@ -619,6 +622,59 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('char field translatable', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.foo.translate = true;
+
+        var multi_lang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                    assert.deepEqual(args.args, ["partner",1,"foo",{}], 'should call "call_button" route');
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        var $button = form.$('input[type="text"].o_field_char + .o_field_translate');
+        assert.strictEqual($button.length, 1, "should have a translate button");
+        $button.click();
+        form.destroy();
+
+        form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+        });
+        $button = form.$('input[type="text"].o_field_char + .o_field_translate');
+        assert.strictEqual($button.length, 0, "should not have a translate button in create mode");
+        form.destroy();
+
+        _t.database.multi_lang = multi_lang;
+    });
+
 
     QUnit.module('UrlWidget');
 
@@ -777,6 +833,59 @@ QUnit.module('basic_fields', {
         assert.strictEqual($textarea.innerHeight(), $textarea[0].scrollHeight,
             "textarea should not have a scroll bar");
         form.destroy();
+    });
+
+    QUnit.test('text field translatable', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.txt.translate = true;
+
+        var multi_lang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="txt"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                    assert.deepEqual(args.args, ["partner",1,"txt",{}], 'should call "call_button" route');
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        var $button = form.$('textarea + .o_field_translate');
+        assert.strictEqual($button.length, 1, "should have a translate button");
+        $button.click();
+        form.destroy();
+
+        form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="txt"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+        });
+        $button = form.$('textarea + .o_field_translate');
+        assert.strictEqual($button.length, 0, "should not have a translate button in create mode");
+        form.destroy();
+
+        _t.database.multi_lang = multi_lang;
     });
 
     QUnit.module('FieldBinary');
