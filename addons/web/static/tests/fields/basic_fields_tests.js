@@ -662,7 +662,7 @@ QUnit.module('basic_fields', {
 
         this.data.partner.fields.foo.translate = true;
 
-        var multi_lang = _t.database.multi_lang;
+        var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
 
         var form = createView({
@@ -707,7 +707,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual($button.length, 0, "should not have a translate button in create mode");
         form.destroy();
 
-        _t.database.multi_lang = multi_lang;
+        _t.database.multi_lang = multiLang;
     });
 
 
@@ -875,7 +875,7 @@ QUnit.module('basic_fields', {
 
         this.data.partner.fields.txt.translate = true;
 
-        var multi_lang = _t.database.multi_lang;
+        var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
 
         var form = createView({
@@ -920,7 +920,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual($button.length, 0, "should not have a translate button in create mode");
         form.destroy();
 
-        _t.database.multi_lang = multi_lang;
+        _t.database.multi_lang = multiLang;
     });
 
     QUnit.module('FieldBinary');

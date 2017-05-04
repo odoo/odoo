@@ -56,14 +56,7 @@ var TranslatableFieldMixin = {
      * @private
      */
     _onTranslate: function () {
-        this._rpc({
-            route: '/web/dataset/call_button',
-            params: {
-                model: 'ir.translation',
-                method: 'translate_fields',
-                args: [this.model, this.res_id, this.name, this.record.getContext()],
-            }
-        }).then(this.do_action.bind(this));
+        this.trigger_up('translate', {fieldName: this.name, id: this.dataPointID});
     },
 };
 

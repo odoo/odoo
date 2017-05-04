@@ -127,7 +127,7 @@ var KanbanModel = BasicModel.extend({
         }
         return this.notifyChanges(recordID, changes).then(function () {
             return self.save(recordID);
-        }).then(function (result) {
+        }).then(function () {
             // Remove record from its current group
             var old_group;
             for (var i = 0; i < parent.count; i++) {
@@ -140,7 +140,7 @@ var KanbanModel = BasicModel.extend({
                 }
             }
             // Add record to its new group
-            new_group.data.push(result.id);
+            new_group.data.push(recordID);
             new_group.count++;
             return [old_group.id, new_group.id];
         });

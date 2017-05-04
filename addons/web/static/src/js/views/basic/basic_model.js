@@ -708,6 +708,7 @@ var BasicModel = AbstractModel.extend({
      *   be 'locally' saved: its changes written in a _savePoint key that can
      *   be restored later by call discardChanges with option rollback to true
      * @returns {Deferred}
+     *   Resolved with the list of field names (whose value has been modified)
      */
     save: function (record_id, options) {
         var self = this;
@@ -723,7 +724,6 @@ var BasicModel = AbstractModel.extend({
                         rec._savePoint = _.extend({}, newValue);
                     }
                 });
-                return $.when();
             }
             var shouldReload = 'reload' in options ? options.reload : true;
             var method = self.isNew(record_id) ? 'create' : 'write';
@@ -742,10 +742,17 @@ var BasicModel = AbstractModel.extend({
                 });
             }
 
+            var def = $.Deferred();
+            var changedFields = Object.keys(changes);
+
+            if (options.savePoint) {
+                return def.resolve(changedFields);
+            }
+
             // in the case of a write, only perform the RPC if there are changes to save
-            if (method === 'create' || Object.keys(changes).length) {
+            if (method === 'create' || changedFields.length) {
                 var args = method === 'write' ? [[record.data.id], changes] : [changes];
-                return self._rpc({
+                self._rpc({
                         model: record.model,
                         method: method,
                         args: args,
@@ -759,23 +766,26 @@ var BasicModel = AbstractModel.extend({
                             record.count++;
                         }
 
-                        // Update the data directly or reload them
-                        var def;
-                        if (shouldReload) {
-                            def = self._fetchRecord(record);
-                        } else {
-                            _.extend(record.data, record._changes);
-                        }
+                        var _changes = record._changes;
 
                         // Erase changes as they have been applied
                         record._changes = {};
                         record._isDirty = false;
 
-                        return def;
+                        // Update the data directly or reload them
+                        if (shouldReload) {
+                            self._fetchRecord(record).then(function (record) {
+                                def.resolve(changedFields);
+                            });
+                        } else {
+                            _.extend(record.data, _changes);
+                            def.resolve(changedFields);
+                        }
                     });
             } else {
-                return $.when(record_id);
+                def.resolve(changedFields);
             }
+            return def;
         });
     },
     /**
