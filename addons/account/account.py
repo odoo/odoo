@@ -2083,6 +2083,16 @@ class account_tax(osv.osv):
                 cur_price_unit+=amount2
         return res
 
+
+    def _check_tax_amount_with_taxincluded_prices(self, tax_amount, unit_price, quantity, precision, total_in):
+        if tax_amount != 0:
+            total_ex = round(unit_price * quantity, precision)
+            diff = total_in - round(tax_amount , precision) - total_ex
+            if diff:
+                #We've to change the tax_amount to avoid having a total different from the sum of tax included prices due to tax rounding
+                return tax_amount + diff
+        return tax_amount
+
     def compute_for_bank_reconciliation(self, cr, uid, tax_id, amount, context=None):
         """ Called by RPC by the bank statement reconciliation widget """
         tax = self.browse(cr, uid, tax_id, context=context)
@@ -2123,6 +2133,12 @@ class account_tax(osv.osv):
             else:
                 tin.append(tax)
         tin = self.compute_inv(cr, uid, tin, price_unit, quantity, product=product, partner=partner, precision=tax_compute_precision)
+        if len(taxes)==1 and taxes[0].price_include and not force_excluded and len(tin)==1:
+            #Check if tax+price_tex=price_tin
+            tin[0]['amount'] = self._check_tax_amount_with_taxincluded_prices(tin[0].get('amount', 0.0),
+                                                                              tin[0].get('price_unit', 0.0),
+                                                                              quantity, precision, totalin)
+
         for r in tin:
             totalex -= r.get('amount', 0.0)
         totlex_qty = 0.0
@@ -2138,7 +2154,7 @@ class account_tax(osv.osv):
             'total_included': totalin,
             'taxes': tin + tex
         }
-
+    
     @api.v8
     def compute_all(self, price_unit, quantity, product=None, partner=None, force_excluded=False):
         return account_tax.compute_all(
