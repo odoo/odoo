@@ -34,11 +34,11 @@ class ProductTemplate(models.Model):
     description_purchase = fields.Text(
         'Purchase Description', translate=True,
         help="A description of the Product that you want to communicate to your vendors. "
-             "This description will be copied to every Purchase Order, Receipt and Vendor Bill/Refund.")
+             "This description will be copied to every Purchase Order, Receipt and Vendor Bill/Credit Note.")
     description_sale = fields.Text(
         'Sale Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
-             "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Refund")
+             "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     type = fields.Selection([
         ('consu', _('Consumable')),
         ('service', _('Service'))], string='Product Type', default='consu', required=True,

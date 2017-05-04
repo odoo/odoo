@@ -6,10 +6,10 @@ from odoo.exceptions import UserError
 
 
 class AccountInvoiceRefund(models.TransientModel):
-    """Refunds invoice"""
+    """Credit Notes"""
 
     _name = "account.invoice.refund"
-    _description = "Invoice Refund"
+    _description = "Credit Note"
 
     @api.model
     def _get_reason(self):
@@ -20,11 +20,11 @@ class AccountInvoiceRefund(models.TransientModel):
             return inv.name
         return ''
 
-    date_invoice = fields.Date(string='Refund Date', default=fields.Date.context_today, required=True)
+    date_invoice = fields.Date(string='Credit Note Date', default=fields.Date.context_today, required=True)
     date = fields.Date(string='Accounting Date')
     description = fields.Char(string='Reason', required=True, default=_get_reason)
     refund_only = fields.Boolean(string='Technical field to hide filter_refund in case invoice is partially paid', compute='_get_refund_only')
-    filter_refund = fields.Selection([('refund', 'Create a draft refund'), ('cancel', 'Cancel: create refund and reconcile'), ('modify', 'Modify: create refund, reconcile and create a new draft invoice')],
+    filter_refund = fields.Selection([('refund', 'Create a draft credit note'), ('cancel', 'Cancel: create credit note and reconcile'), ('modify', 'Modify: create credit note, reconcile and create a new draft invoice')],
         default='refund', string='Refund Method', required=True, help='Refund base on this type. You can not Modify and Cancel if the invoice is already reconciled')
 
     @api.depends('date_invoice')
@@ -51,9 +51,9 @@ class AccountInvoiceRefund(models.TransientModel):
             description = False
             for inv in inv_obj.browse(context.get('active_ids')):
                 if inv.state in ['draft', 'cancel']:
-                    raise UserError(_('Cannot refund draft/cancelled invoice.'))
+                    raise UserError(_('Cannot create credit note for the draft/cancelled invoice.'))
                 if inv.reconciled and mode in ('cancel', 'modify'):
-                    raise UserError(_('Cannot refund invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.'))
+                    raise UserError(_('Cannot create a credit note for the invoice which is already reconciled, invoice should be unreconciled first, then only you can add credit note for this invoice.'))
 
                 date = form.date or False
                 description = form.description or inv.name
@@ -112,7 +112,7 @@ class AccountInvoiceRefund(models.TransientModel):
                          inv.type == 'in_invoice' and 'action_invoice_in_refund' or \
                          inv.type == 'in_refund' and 'action_invoice_tree2'
                 # Put the reason in the chatter
-                subject = _("Invoice refund")
+                subject = _("Credit Note")
                 body = description
                 refund.message_post(body=body, subject=subject)
         if xml_id:
