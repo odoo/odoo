@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import ir_attachment
+from . import mrp_document
 from . import mrp_config_settings
 from . import mrp_bom
 from . import mrp_message
