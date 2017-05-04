@@ -386,19 +386,12 @@
     // Translate icon
     .o_field_translate {
         padding: 0;
-        display: none;
         cursor: pointer;
-        width: 12px;
+        width: 12px !important;
         vertical-align: top;
         &::before { // seems to be useful for some old browser
             position: relative;
         }
-        &.o_translate_active {
-            display: inline-block;
-        }
-    }
-    .o_field_widget.o_invisible_modifier + .o_field_translate {
-        display: none;
     }
 
     // Text field with oe_inline class
