@@ -136,8 +136,6 @@ class YamlInterpreter(object):
             if module != self.module:
                 module_count = self.env['ir.module.module'].search_count([('name', '=', module), ('state', '=', 'installed')])
                 assert module_count == 1, 'The ID "%s" refers to an uninstalled module.' % (xml_id,)
-        if len(id) > 64: # TODO where does 64 come from (DB is 128)? should be a constant or loaded form DB
-            _logger.error('id: %s is to long (max: 64)', id)
 
     def get_id(self, xml_id):
         if xml_id is False or xml_id is None:
