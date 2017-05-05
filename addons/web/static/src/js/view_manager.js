@@ -202,17 +202,19 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 });
             }
 
+            self.active_search = $.Deferred();
             // Call do_search on the searchview to compute domains, contexts and groupbys
             if (self.search_view_loaded &&
                     self.flags.auto_search &&
                     view.controller.searchable !== false) {
-                self.active_search = $.Deferred();
                 $.when(self.search_view_loaded, view.loaded).done(function() {
                     self.searchview.do_search();
                 });
+            } else {
+                self.active_search.resolve();
             }
 
-            return $.when(view.loaded, self.active_search)
+            return $.when(view.loaded, self.active_search, self.search_view_loaded)
                 .then(function() {
                     return self._display_view(view_options, old_view).then(function() {
                         self.trigger('switch_mode', view_type, view_options);
