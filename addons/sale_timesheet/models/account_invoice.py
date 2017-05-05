@@ -48,7 +48,10 @@ class AccountInvoice(models.Model):
     @api.multi
     def invoice_validate(self):
         result = super(AccountInvoice, self).invoice_validate()
+        self._compute_timesheet_revenue()
+        return result
 
+    def _compute_timesheet_revenue(self):
         for invoice in self:
             for invoice_line in invoice.invoice_line_ids.filtered(lambda line: line.product_id.type == 'service'):
                 uninvoiced_timesheet_lines = self.env['account.analytic.line'].sudo().search([
@@ -104,5 +107,3 @@ class AccountInvoice(models.Model):
                                 'timesheet_invoice_id': invoice.id,
                                 'timesheet_revenue': float_round(line_revenue, precision),
                             })
-
-        return result
