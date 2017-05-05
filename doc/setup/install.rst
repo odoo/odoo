@@ -131,6 +131,8 @@ daemon and automatically start it.
             is no official release for Debian Jessie, you can find ours on
             http://nightly.odoo.com/extra/.
 
+.. danger:: If you're using Ubuntu 16.04 have a look at this: https://github.com/odoo/odoo/issues/9270/.
+
 Configuration
 '''''''''''''
 
