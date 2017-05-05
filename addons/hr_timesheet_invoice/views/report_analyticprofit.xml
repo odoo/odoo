@@ -34,7 +34,7 @@
                             <th>Eff.</th>
                         </tr>
                     </thead>
-                    <tbdody>
+                    <tbody>
                         <tr>
                             <td>Totals:</td>
                             <td><span t-esc="reduce(lambda x, y: x+y['unit_amount'], line(data['form'], data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)"/></td>
@@ -74,7 +74,7 @@
                                 </tr>
                             </t>
                         </t>
-                    </tbdody>
+                    </tbody>
                 </table>
             </div>
         </t>
