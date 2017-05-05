@@ -113,7 +113,6 @@ class ir_cron(osv.osv):
 
         """
         cr.rollback()
-        _logger.exception("Call of self.pool.get('%s').%s(cr, uid, *%r) failed in Job %s" % (model_name, method_name, args, job_id))
 
     def _callback(self, cr, uid, model_name, method_name, args, job_id):
         """ Run the method associated to a given job
@@ -148,6 +147,7 @@ class ir_cron(osv.osv):
                 msg = "Model `%s` does not exist." % model_name
                 _logger.warning(msg)
         except Exception, e:
+            _logger.exception("Call of self.pool.get('%s').%s(cr, uid, *%r) failed in Job %s" % (model_name, method_name, args, job_id))
             self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
 
     def _process_job(self, job_cr, job, cron_cr):
