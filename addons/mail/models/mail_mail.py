@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import pdb
 import base64
 import datetime
 import logging
@@ -209,7 +210,6 @@ class MailMail(models.Model):
         for server_id, record_ids in groups.iteritems():
             for mail_batch in tools.split_every(batch_size, record_ids):
                 yield server_id, mail_batch
-
     @api.multi
     def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current
@@ -226,6 +226,8 @@ class MailMail(models.Model):
                 email sending process has failed
             :return: True
         """
+        # print 'print'
+        # pdb.set_trace()
         for server_id, batch_ids in self._split_by_server():
             smtp_session = None
             try:

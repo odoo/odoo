@@ -18,10 +18,18 @@ from odoo.addons.base.ir.ir_qweb.fields import nl2br
 
 class WebsiteForm(http.Controller):
 
+    # @http.route('/website_form_contactus/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
+    # def website_form_contactus(self, model_name, **kwargs):
+    #     # print 'dddddddddddddddddddddddddddddddddddd', kwargs
+    #     html_body = 'hi'
+    #     mail_to = 
+    #     print kwargs['email_from']
+
     # Check and insert values from the form on the model <model>
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
+        print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', kwargs, model_record, model_name
         if not model_record:
             return json.dumps(False)
 
@@ -36,17 +44,18 @@ class WebsiteForm(http.Controller):
             id_record = self.insert_record(request, model_record, data['record'], data['custom'], data.get('meta'))
             if id_record:
                 self.insert_attachment(model_record, id_record, data['attachments'])
-
         # Some fields have additional SQL constraints that we can't check generically
         # Ex: crm.lead.probability which is a float between 0 and 1
         # TODO: How to get the name of the erroneous field ?
         except IntegrityError:
             return json.dumps(False)
 
+        print '>>>>>>>',data, id_record, model_record.model, model_record.name, '<<<<<'
         request.session['form_builder_model_model'] = model_record.model
         request.session['form_builder_model'] = model_record.name
         request.session['form_builder_id'] = id_record
 
+        # request.env.['mail.mail'].sudo().send()
         return json.dumps({'id': id_record})
 
     # Constants string to make custom info and metadata readable on a text field
@@ -172,7 +181,6 @@ class WebsiteForm(http.Controller):
 
     def insert_record(self, request, model, values, custom, meta=None):
         record = request.env[model.model].sudo().create(values)
-
         if custom or meta:
             default_field = model.website_form_default_field_id
             default_field_data = values.get(default_field.name, '')
