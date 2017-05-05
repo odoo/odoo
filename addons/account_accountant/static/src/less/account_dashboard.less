@@ -1,0 +1,25 @@
+@dashboard-bg-color: white;
+
+.o_kanban_view.o_kanban_dashboard.o_account_kanban {
+    .o_account_dashboard_header {
+        margin: (0 - @o-kanban-record-margin) (@o-kanban-record-margin - @odoo-horizontal-padding) @o-kanban-record-margin;
+        .o-flex(1, 0, 100%);
+        background-color: @dashboard-bg-color;
+        .fa-gift {
+            color: #eeeeee;
+            &:hover {
+                color: #555555;
+            }
+        }
+
+        .o_arrow_button.btn-default {
+            color: @odoo-brand-optional;
+            &.o_action_done {
+                color: grey;
+            }
+            &:hover {
+                color: white;
+            }
+        }
+    }
+}
