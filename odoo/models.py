@@ -1553,56 +1553,66 @@ class BaseModel(object):
         if not field.group_expand:
             return read_group_result
 
-        # field.group_expand is the name of a method that returns a list of all
-        # aggregated values that we want to display for this field, in the form
-        # of a m2o-like pair (key,label).
-        # This is useful to implement kanban views for instance, where all
-        # columns should be displayed even if they don't contain any record.
+        # field.group_expand is the name of a method that returns the groups
+        # that we want to display for this field, in the form of a recordset or
+        # a list of values (depending on the type of the field). This is useful
+        # to implement kanban views for instance, where some columns should be
+        # displayed even if they don't contain any record.
 
-        # Grab the list of all groups that should be displayed, including all present groups
-        group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
-        groups = self.env[field.comodel_name].browse(group_ids)
-        # determine order on groups's model
-        order = groups._order
-        if read_group_order == groupby + ' desc':
-            order = tools.reverse_order(order)
-        groups = getattr(self, field.group_expand)(groups, domain, order)
-        groups = groups.sudo()
+        # determine all groups that should be returned
+        values = [line[groupby] for line in read_group_result if line[groupby]]
 
-        result_template = dict.fromkeys(aggregated_fields, False)
-        result_template[groupby + '_count'] = 0
-        if remaining_groupbys:
-            result_template['__context'] = {'group_by': remaining_groupbys}
+        if field.relational:
+            # groups is a recordset; determine order on groups's model
+            groups = self.env[field.comodel_name].browse([value[0] for value in values])
+            order = groups._order
+            if read_group_order == groupby + ' desc':
+                order = tools.reverse_order(order)
+            groups = getattr(self, field.group_expand)(groups, domain, order)
+            groups = groups.sudo()
+            values = groups.name_get()
+            value2key = lambda value: value and value[0]
 
-        # Merge the current results (list of dicts) with all groups (recordset).
-        # Determine the global order of results from all groups, which is
-        # supposed to be in the same order as read_group_result.
-        result = OrderedDict((group.id, {}) for group in groups)
+        else:
+            # groups is a list of values
+            values = getattr(self, field.group_expand)(values, domain, None)
+            if read_group_order == groupby + ' desc':
+                values.reverse()
+            value2key = lambda value: value
+
+        # Merge the current results (list of dicts) with all groups. Determine
+        # the global order of results groups, which is supposed to be in the
+        # same order as read_group_result (in the case of a many2one field).
+        result = OrderedDict((value2key(value), {}) for value in values)
 
         # fill in results from read_group_result
-        for left_side in read_group_result:
-            left_id = (left_side[groupby] or (False,))[0]
-            if not result.get(left_id):
-                result[left_id] = left_side
+        for line in read_group_result:
+            key = value2key(line[groupby])
+            if not result.get(key):
+                result[key] = line
             else:
-                result[left_id][count_field] = left_side[count_field]
+                result[key][count_field] = line[count_field]
 
         # fill in missing results from all groups
-        for right_side in groups.name_get():
-            right_id = right_side[0]
-            if not result[right_id]:
-                line = dict(result_template)
-                line[groupby] = right_side
-                line['__domain'] = [(groupby, '=', right_id)] + domain
-                result[right_id] = line
+        for value in values:
+            key = value2key(value)
+            if not result[key]:
+                line = dict.fromkeys(aggregated_fields, False)
+                line[groupby] = value
+                line[groupby + '_count'] = 0
+                line['__domain'] = [(groupby, '=', key)] + domain
+                if remaining_groupbys:
+                    line['__context'] = {'group_by': remaining_groupbys}
+                result[key] = line
 
-        result = result.values()
+        # add folding information if present
+        if field.relational and groups._fold_name in groups._fields:
+            fold = {group.id: group[groups._fold_name]
+                    for group in groups.browse([key for key in result if key])}
+            for key, line in result.iteritems():
+                line['__fold'] = fold.get(key, False)
 
-        if groups._fold_name in groups._fields:
-            for r in result:
-                group = groups.browse(r[groupby] and r[groupby][0])
-                r['__fold'] = group[groups._fold_name]
-        return result
+        return result.values()
 
     @api.model
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
