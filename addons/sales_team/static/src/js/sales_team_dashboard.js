@@ -132,19 +132,37 @@ var SalesTeamDashboardRenderer = KanbanRenderer.extend({
 });
 
 var SalesTeamDashboardModel = KanbanModel.extend({
+    /**
+     * @override
+     */
+    init: function () {
+        this.dashboardValues = {};
+        this._super.apply(this, arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
     /**
-     * @œverride
+     * @override
+     */
+    get: function (localID) {
+        var result = this._super.apply(this, arguments);
+        if (this.dashboardValues[localID]) {
+            result.dashboardValues = this.dashboardValues[localID];
+        }
+        return result;
+    },
+    /**
+     * @override
      * @returns {Deferred}
      */
     load: function () {
         return this._loadDashboard(this._super.apply(this, arguments));
     },
     /**
-     * @œverride
+     * @override
      * @returns {Deferred}
      */
     reload: function () {
@@ -157,6 +175,7 @@ var SalesTeamDashboardModel = KanbanModel.extend({
 
     /**
      * @abstract
+     * @private
      * @returns {Deferred -> Object} resolves to the required dashboard data
      */
     _fetchDashboardData: function () {
@@ -171,8 +190,7 @@ var SalesTeamDashboardModel = KanbanModel.extend({
         var self = this;
         var dashboard_def = this._fetchDashboardData();
         return $.when(super_def, dashboard_def).then(function (id, dashboardValues) {
-            var dataPoint = self.localData[id];
-            dataPoint.dashboardValues = dashboardValues;
+            self.dashboardValues[id] = dashboardValues;
             return id;
         });
     },

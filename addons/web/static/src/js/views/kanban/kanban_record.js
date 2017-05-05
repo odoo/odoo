@@ -254,9 +254,8 @@ var KanbanRecord = Widget.extend({
             }
             attrs[key] = value;
         });
-        this.fieldsInfo[field_name] = attrs;
-
-        var widget = new Widget(this, field_name, this.state, this.options);
+        var options = _.extend({}, this.options, {attrs: attrs});
+        var widget = new Widget(this, field_name, this.state, options);
         widget.replace($field);
         this._setFieldDisplay(widget.$el, field_name);
         return widget;
