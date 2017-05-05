@@ -219,10 +219,11 @@ class account_register_payments(models.TransientModel):
                     ctx = dict(ctx, invoice_ids=t_invoice_ids)
                 payment_vals = self.with_context(ctx).get_payment_vals()
                 payment_id = self.env['account.payment'].create(payment_vals)
+                payment_id.post()
                 payment_ids.append(payment_id.id)
         return {
             'name': _('Payments'),
-            'domain': [('id', 'in', payment_ids), ('state', '=', 'draft')],
+            'domain': [('id', 'in', payment_ids), ('state', '=', 'posted')],
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.payment',

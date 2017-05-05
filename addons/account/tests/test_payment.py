@@ -126,11 +126,7 @@ class TestPayment(AccountingTestCase):
         payment = self.payment_model.search([], order="id desc", limit=1)
 
         self.assertAlmostEquals(payment.amount, 300)
-        self.assertEqual(payment.state, 'draft')
-        self.assertEqual(inv_1.state, 'open')
-        self.assertEqual(inv_2.state, 'open')
-
-        payment.post()
+        self.assertEqual(payment.state, 'posted')
         self.assertEqual(payment.state, 'posted')
         self.assertEqual(inv_1.state, 'paid')
         self.assertEqual(inv_2.state, 'paid')
@@ -211,7 +207,7 @@ class TestPayment(AccountingTestCase):
         inv_3_pay = None
         inv_4_pay = None
         for payment_id in payment_ids:
-            self.assertEqual('draft', payment_id.state)
+            self.assertEqual('posted', payment_id.state)
             if payment_id.partner_id == self.partner_agrolait:
                 if payment_id.partner_type == 'supplier':
                     self.assertEqual(payment_id.amount, 50)
@@ -223,7 +219,6 @@ class TestPayment(AccountingTestCase):
                 self.assertEqual(payment_id.amount, 200)
                 inv_3_pay = payment_id
 
-        payment_ids.post()
         for payment_id in payment_ids:
             self.assertEqual(payment_id.state, 'posted')
 
@@ -268,7 +263,6 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(len(payment_id), 1)
         self.assertAlmostEquals(register_payments.amount, 450)
 
-        payment_id.post()
         self.assertEqual(payment_id.state, 'posted')
 
         self.check_journal_items(payment_id.move_line_ids, [
