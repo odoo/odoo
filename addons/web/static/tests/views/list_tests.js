@@ -164,6 +164,31 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('record-depending invisible lines are correctly aligned', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar" attrs="{\'invisible\': [(\'id\',\'=\', 1)]}"/>' +
+                    '<field name="int_field"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('tbody tr:first td').length, 4,
+            "there should be 4 cells in the first row");
+        assert.strictEqual(list.$('tbody td.o_invisible_modifier').length, 1,
+            "there should be 1 invisible bar cell");
+        assert.ok(list.$('tbody tr:first td:eq(2)').hasClass('o_invisible_modifier'),
+            "the 3rd cell should be invisible");
+        assert.strictEqual(list.$('tbody tr:eq(0) td:visible').length, list.$('tbody tr:eq(1) td:visible').length,
+            "there should be the same number of visible cells in different rows");
+        list.destroy();
+    });
+
     QUnit.test('do not perform extra RPC to read invisible many2one fields', function (assert) {
         assert.expect(3);
 
