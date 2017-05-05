@@ -304,8 +304,8 @@ class PaymentTxOgone(osv.Model):
                 }, context=context)
                 vals.update(payment_method_id=pm_id)
             tx.write(vals)
-            if tx.callback_eval:
-                safe_eval(tx.callback_eval, {'self': tx})
+            if tx.sudo().callback_eval:
+                safe_eval(tx.sudo().callback_eval, {'self': tx})
             return True
         elif status in self._ogone_cancel_tx_status:
             tx.write({
@@ -408,8 +408,8 @@ class PaymentTxOgone(osv.Model):
                     'name': tree.get('CARDNO'),
                 })
                 tx.write({'payment_method_id': pm.id})
-            if tx.callback_eval:
-                safe_eval(tx.callback_eval, {'self': tx})
+            if tx.sudo().callback_eval:
+                safe_eval(tx.sudo().callback_eval, {'self': tx})
             return True
         elif status in self._ogone_cancel_tx_status:
             tx.write({
