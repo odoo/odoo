@@ -135,7 +135,7 @@ class MailTemplate(models.Model):
 
     name = fields.Char('Name')
     model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
-    model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
+    model = fields.Char('Related Document Model', related='model_id.model', inverse="_set_model_id", index=True, store=True, readonly=True)
     lang = fields.Char('Language',
                        help="Optional translation language (ISO code) to select when sending out an email. "
                             "If not set, the english version will be used. "
@@ -192,6 +192,13 @@ class MailTemplate(models.Model):
     null_value = fields.Char('Default Value', help="Optional value to use if the target field is empty")
     copyvalue = fields.Char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field.")
     scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
+    image = fields.Binary(string="Template Image", attachment=True)
+
+    @api.multi
+    def _set_model_id(self):
+        self.ensure_one()
+        if self.model:
+            self.model_id = self.env['ir.model'].search([('model', '=', self.model)], limit=1).id or False
 
     @api.onchange('model_id')
     def onchange_model_id(self):

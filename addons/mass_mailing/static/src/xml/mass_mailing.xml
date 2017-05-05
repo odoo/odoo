@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <div t-name="mass_mailing.theme_selector" class="o_mail_theme_selector">
-        <a href="#" class="btn btn-xs dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-paint-brush"/> Change Style
+        <a href="#" class="btn btn-sm o_mail_save_template_button o_mail_theme_save_btn">
+            <i class="fa fa-floppy-o mr4" aria-hidden="true"/> Save
         </a>
-        <div class="dropdown-menu">
+        <a href="#" class="btn btn-sm dropdown-toggle o_mail_theme_selector_btn" data-toggle="dropdown">
+            <i class="fa fa-paint-brush mr4" aria-hidden="true"/> Change Style
+        </a>
+        <div class="o_mail_default_email_templates dropdown-menu">
             <li t-foreach="themes" t-as="theme">
                 <a href="#">
                     <div class="o_thumb small"  t-attf-style="background-image: url(#{theme.img}_small.png)"/>
@@ -18,5 +21,90 @@
                 </a>
             </li>
         </div>
+        <t t-call="mass_mailing.mailing_custom_templates"/>
     </div>
+    <div t-name="mass_mailing.save_template_dialog" class="o_mail_save_template_dialog">
+        <div class="form-horizontal">
+            <t t-set="TemplateData" t-value="widget.editor.templateData"/>
+            <t t-if="TemplateData.length">
+                <div class="o_mail_save_template_dialog_radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="template_option_radio" id="create_new_tmpl"/>New Template
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="template_option_radio" id="replace_existing_tmpl" checked="checked"/>Existing Template
+                    </label>
+                </div>
+            </t>
+            <div class="form-group row o_mail_template_name_input mt4 hidden">
+                <div class="col-xs-12">
+                    <label class="control-label" for="template_name mb4">Template Name<sup> *</sup></label>
+                    <div>
+                        <input type="text" class="form-control mt4" name="template_name" placeholder="Enter Template Name" autocomplete="off"/>
+                    </div>
+                </div>
+            </div>
+            <t t-if="TemplateData.length">
+                <div class="form-group o_mail_template_selector_dropdown mt8">
+                    <div class="row">
+                        <t t-set="selectedTemplate" t-value="False"/>
+                        <div class= "col-xs-8 ml16">
+                            <div class="o_mail_custom_template_selection">
+                                <select class="form-control o_mail_template_selector">
+                                    <t t-foreach="TemplateData" t-as="template">
+                                        <option t-att-value="template.id" t-att-selected="template.id === templateId ? 'selected' : None">
+                                            <t t-esc="template.name"/><span t-if="template.id === widget.templateId or TemplateData[0].id === template.id"><t t-set="selectedTemplate" t-value="template"/> (Current)</span>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-3">
+                            <div class="o_mail_selected_image_area">
+                                <img t-att-src="'data:image/*;base64,' + selectedTemplate.image" class="o_template_dropdown_image"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </div>
+    <div t-name="mass_mailing.mailing_custom_templates" class="o_mail_custom_email_template_list hidden">
+        <div class="o_mail_custom_theme_dropdown dropdown-menu">
+            <h3 class="o_mail_template_message o_mail_no_saved_template_message hidden text-center">There is no template saved yet</h3>
+            <h3 class="o_mail_template_message o_mail_no_saved_template_found_message hidden text-center">No Email Template Found</h3>
+            <div t-if="userTemplates.length" class="o_mail_my_saved_templates clearfix">
+                <h4 class="text-center o_mail_template_title">My Templates</h4>
+                <t t-set="is_user_template" t-value="true"/>
+                <t t-set="templates" t-value="userTemplates"/>
+                <t t-call="mass_mailing.template_list"/>
+            </div>
+            <div t-if="otherTemplates.length" class="o_mail_others_saved_templates mt8">
+                <h4 class="text-center o_mail_template_title">Other Templates</h4>
+                <t t-set="is_user_template" t-value="false"/>
+                <t t-set="templates" t-value="otherTemplates"/>
+                <t t-call="mass_mailing.template_list"/>
+            </div>
+        </div>
+    </div>
+    <t t-name="mass_mailing.template_list">
+        <t t-foreach="templates" t-as="template">
+            <li class="o_mail_custom_template_li" t-att-data-template_id="template.id" t-att-data-template_name="template.name" t-att-title="'Created by ' + template.create_uid[1] + ' on ' + template.create_date + '.' + '\n' + (template.write_date != template.create_date ? 'Last modified by ' + template.write_uid[1] + ' on ' + template.write_date + '.' : '')">
+                <div class="o_mail_user_saved_templates">
+                    <t t-if="isManager || is_user_template">
+                        <button class="btn btn-xs btn-danger o_mail_delete_template_btn"><i class="fa fa-times"/></button>
+                    </t>
+                    <a href="#">
+                        <div class="o_mail_template_image o_thumb small"  t-attf-style="background-image: url(data:image/*;base64,{{template.image}})"/>
+                        <div class="o_mail_template_image o_thumb large" t-attf-style="background-image: url(data:image/*;base64,{{template.image}})"/>
+                        <div class="o_mail_template_image o_thumb logo" t-attf-style="background-image: url(data:image/*;base64,{{template.image}})"/>
+                    </a>
+                    <div class="o_mail_custom_template_name text-center" t-att-contenteditable="(isManager || is_user_template ? 'true' : 'false')"><t t-esc="template.name"/></div>
+                </div>
+                <div class="o_mail_custom_template_body_html hidden">
+                    <t t-raw="template.body_html"/>
+                </div>
+            </li>
+        </t>
+    </t>
 </templates>

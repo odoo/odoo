@@ -3,7 +3,15 @@
 <!-- Snippets & Themes Menu -->
 <template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True">
     <xpath expr="//h2[@id='snippets_menu']" position="replace">
-        <h2 id="snippets_menu">Select a template</h2>
+        <div class="row o_mass_mailing_snippet_menu" id="snippets_menu">
+            <div class="btn-group col-md-6 mt8 pull-left" data-toggle="buttons">
+                <a data-template_type="default" class="btn btn-sm o_mail_switch_theme_btn active">Default Templates</a>
+                <a class="btn btn-sm o_mail_switch_theme_btn">Saved Templates</a>
+            </div>
+            <div class="input-group mr32 pull-right o_mail_search_email_template hidden mt8">
+                <input type="text" class="form-control o_mail_search_theme_input" placeholder="Search..." size="50"/>
+            </div>
+        </div>
     </xpath>
     <xpath expr="//div[@id='o_scroll']" position="replace">
         <div id="o_scroll">
