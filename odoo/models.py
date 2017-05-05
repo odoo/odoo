@@ -4436,11 +4436,20 @@ class BaseModel(object):
         """ Select the records in ``self`` such that ``func(rec)`` is true, and
             return them as a recordset.
 
-            :param func: a function or a dot-separated sequence of field names
+            :param func:
+                A function, a domain or a dot-separated sequence of field
+                names. If it is a domain, it will search only among real
+                records (see :meth:`~.exists`).
         """
+        # Transform to function
         if isinstance(func, basestring):
             name = func
             func = lambda rec: filter(None, rec.mapped(name))
+        # Apply domain filtering
+        if isinstance(func, (list, tuple)):
+            func = [("id", "in", self.ids)] + list(func)
+            return self.search(func)
+        # Apply callback filtering
         return self.browse([rec.id for rec in self if func(rec)])
 
     def sorted(self, key=None, reverse=False):
