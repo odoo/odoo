@@ -18,11 +18,7 @@ var _t = core._t;
 
 ListRenderer.include({
     custom_events: _.extend({}, ListRenderer.prototype.custom_events, {
-        move_down: '_onMoveDown',
-        move_up: '_onMoveUp',
-        move_left: '_onMoveLeft',
-        move_right: '_onMoveRight',
-        move_next_line: '_onMoveNextLine',
+        navigation_move: '_onNavigationMove',
     }),
     events: _.extend({}, ListRenderer.prototype.events, {
         'click tbody td.o_data_cell': '_onCellClick',
@@ -214,7 +210,20 @@ ListRenderer.include({
         return n;
     },
     /**
-     * Move the cursor one the beginning of the next line, if possible.
+     * Move the cursor on the end of the previous line, if possible.
+     * If there is no previous line, then we create a new record.
+     *
+     * @private
+     */
+    _moveToPreviousLine: function () {
+        if (this.currentRow > 0) {
+            this._selectCell(this.currentRow - 1, this.columns.length - 1);
+        } else {
+            this._unselectRow().then(this.trigger_up.bind(this, 'add_record'));
+        }
+    },
+    /**
+     * Move the cursor on the beginning of the next line, if possible.
      * If there is no next line, then we create a new record.
      *
      * @private
@@ -223,9 +232,7 @@ ListRenderer.include({
         if (this.currentRow < this.state.data.length - 1) {
             this._selectCell(this.currentRow + 1, 0);
         } else {
-            this._unselectRow().then(
-                this.trigger_up.bind(this, 'add_record')
-            );
+            this._unselectRow().then(this.trigger_up.bind(this, 'add_record'));
         }
     },
     /**
@@ -495,78 +502,68 @@ ListRenderer.include({
         this._unselectRow();
     },
     /**
-     * Move the cursor on the cell just down the current cell.
-     */
-    _onMoveDown: function () {
-        if (this.currentRow < this.state.data.length - 1) {
-            this._selectCell(this.currentRow + 1, this.currentCol);
-        }
-    },
-    /**
-     * Move the cursor on the left, if possible
-     */
-    _onMoveLeft: function () {
-        if (this.currentCol > 0) {
-            this._selectCell(this.currentRow, this.currentCol - 1);
-        }
-    },
-    /**
-     * Move the cursor on the next available cell, so either the next available
-     * cell on the right, or the first on the next line.  This method is called
-     * when the user press the TAB key.
+     * Handles the keyboard navigation according to events triggered by field
+     * widgets.
+     * - up/down: move to the cell above/below if any, or the first activable
+     *          one on the row above/below if any on the right of this cell
+     *          above/below (if none on the right, wrap to the beginning of the
+     *          line).
+     * - left/right: move to the first activable cell on the left/right if any
+     *          (wrap to the end/beginning of the line if necessary).
+     * - previous: move to the first activable cell on the left if any, if not
+     *          move to the rightmost activable cell on the row above.
+     * - next: move to the first activable cell on the right if any, if not move
+     *          to the leftmost activable cell on the row below.
+     * - next_line: move to leftmost activable cell on the row below.
      *
-     * @param {OdooEvent} ev
-     */
-    _onMoveNext: function (ev) {
-        // we need to stop the event, to prevent interference with some other
-        // component up there, such as a form renderer.
-        ev.stopPropagation();
-        if (this.currentCol + 1 < this.columns.length) {
-            this._selectCell(this.currentRow, this.currentCol + 1, false)
-                .fail(this._moveToNextLine.bind(this));
-        } else {
-            this._moveToNextLine();
-        }
-    },
-    /**
+     * Note: moving to a line below if on the last line or moving to a line
+     * above if on the first line automatically creates a new line.
+     *
      * @private
-     * @param {OdooEvent} event
-     */
-    _onMoveNextLine: function (event) {
-        event.stopPropagation();
-        this._moveToNextLine();
-    },
-    /**
-     * Move the cursor on the previous available cell, so either the previous
-     * available cell on the left, or the last on the previous line. This method
-     * is called when the user press the TAB key while holding the shift key.
-     *
      * @param {OdooEvent} ev
      */
-    _onMovePrevious: function (ev) {
-        // we need to stop the event, to prevent interference with some other
-        // component up there, such as a form renderer.
-        ev.stopPropagation();
-        if (this.currentCol > 0) {
-            this._selectCell(this.currentRow, this.currentCol - 1);
-        } else if (this.currentRow > 0) {
-            this._selectCell(this.currentRow - 1, this.columns.length - 1);
-        }
-    },
-    /**
-     * Move the cursor one cell right, if possible
-     */
-    _onMoveRight: function () {
-        if (this.currentCol + 1 < this.columns.length) {
-            this._selectCell(this.currentRow, this.currentCol + 1);
-        }
-    },
-    /**
-     * Move the cursor one line up
-     */
-    _onMoveUp: function () {
-        if (this.currentRow > 0) {
-            this._selectCell(this.currentRow - 1, this.currentCol);
+    _onNavigationMove: function (ev) {
+        ev.stopPropagation(); // stop the event, the action is done by this renderer
+        switch (ev.data.direction) {
+            case 'up':
+                if (this.currentRow > 0) {
+                    this._selectCell(this.currentRow - 1, this.currentCol);
+                }
+                break;
+            case 'right':
+                if (this.currentCol + 1 < this.columns.length) {
+                    this._selectCell(this.currentRow, this.currentCol + 1);
+                }
+                break;
+            case 'down':
+                if (this.currentRow < this.state.data.length - 1) {
+                    this._selectCell(this.currentRow + 1, this.currentCol);
+                }
+                break;
+            case 'left':
+                if (this.currentCol > 0) {
+                    this._selectCell(this.currentRow, this.currentCol - 1);
+                }
+                break;
+            case 'previous':
+                if (this.currentCol > 0) {
+                    this._selectCell(this.currentRow, this.currentCol - 1, false)
+                        .fail(this._moveToPreviousLine.bind(this));
+                } else {
+                    this._moveToPreviousLine();
+                }
+                break;
+            case 'next':
+                if (this.currentCol + 1 < this.columns.length) {
+                    this._selectCell(this.currentRow, this.currentCol + 1, false)
+                        .fail(this._moveToNextLine.bind(this));
+                } else {
+                    this._moveToNextLine();
+                }
+                break;
+            case 'next_line':
+                this._moveToNextLine();
+                break;
         }
     },
     /**
