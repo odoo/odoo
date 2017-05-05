@@ -168,18 +168,20 @@ var AbstractField = Widget.extend({
      * part can be disabled.  In that case, note that the focused input/textarea
      * will have the cursor at the very end.
      *
-     * @param {boolean} [noselect=false] if false and the input is of type text
-     *   or textarea, the content will also be selected
+     * @param {Object} [options]
+     * @param {boolean} [noselect=false] if false and the input
+     *   is of type text or textarea, the content will also be selected
+     * @param {Event} [options.event] the event which fired this activation
      * @returns {boolean} true if the widget was activated, false if the
      *                    focusable element was not found or invisible
      */
-    activate: function (noselect) {
+    activate: function (options) {
         var $focusable = this.getFocusableElement();
         if ($focusable.length && $focusable.is(':visible')) {
             $focusable.focus();
             if ($focusable.is('input[type="text"], textarea')) {
                 $focusable[0].selectionStart = $focusable[0].selectionEnd = $focusable[0].value.length;
-                if (!noselect) {
+                if (options && !options.noselect) {
                     $focusable.select();
                 }
             }

@@ -334,24 +334,31 @@ ListRenderer.include({
      *
      * @param {integer} rowIndex
      * @param {integer} colIndex
-     * @param {boolean} [wrap=true] if true and no widget could be selected from
-     *   the colIndex to the last column, then we wrap around and try to select
-     *   a widget starting from the beginning
+     * @param {Object} [options]
+     * @param {Event} [options.event] original target of the event which
+     * @param {boolean} [options.wrap=true] if true and no widget could be
+     *   triggered the cell selection
+     *   selected from the colIndex to the last column, then we wrap around and
+     *   try to select a widget starting from the beginning
      * @return {Deferred} fails if no cell could be selected
      */
-    _selectCell: function (rowIndex, colIndex, wrap) {
+    _selectCell: function (rowIndex, colIndex, options) {
         // Do nothing if the user tries to select current cell
         if (rowIndex === this.currentRow && colIndex === this.currentCol) {
             return $.when();
         }
-        wrap = wrap === undefined ? true : wrap;
+        var wrap = (!options || options.wrap === undefined) ? true : options.wrap;
 
         // Select the row then activate the widget in the correct cell
         var self = this;
         return this._selectRow(rowIndex).then(function () {
             var record = self.state.data[rowIndex];
             var correctedIndex = colIndex - getNbButtonBefore(colIndex);
-            var fieldIndex = self._activateFieldWidget(record, correctedIndex, {inc: 1, wrap: wrap});
+            var fieldIndex = self._activateFieldWidget(record, correctedIndex, {
+                inc: 1,
+                wrap: wrap,
+                event: options && options.event,
+            });
 
             if (fieldIndex < 0) {
                 return $.Deferred().reject();
@@ -474,7 +481,7 @@ ListRenderer.include({
         var $tr = $td.parent();
         var rowIndex = this.$('.o_data_row').index($tr);
         var colIndex = $tr.find('.o_data_cell').index($td);
-        this._selectCell(rowIndex, colIndex);
+        this._selectCell(rowIndex, colIndex, {event: event});
     },
     /**
      * We need to manually unselect row, because noone else would do it
@@ -536,7 +543,7 @@ ListRenderer.include({
                 break;
             case 'previous':
                 if (this.currentCol > 0) {
-                    this._selectCell(this.currentRow, this.currentCol - 1, false)
+                    this._selectCell(this.currentRow, this.currentCol - 1, {wrap: false})
                         .fail(this._moveToPreviousLine.bind(this));
                 } else {
                     this._moveToPreviousLine();
@@ -544,7 +551,7 @@ ListRenderer.include({
                 break;
             case 'next':
                 if (this.currentCol + 1 < this.columns.length) {
-                    this._selectCell(this.currentRow, this.currentCol + 1, false)
+                    this._selectCell(this.currentRow, this.currentCol + 1, {wrap: false})
                         .fail(this._moveToNextLine.bind(this));
                 } else {
                     this._moveToNextLine();
