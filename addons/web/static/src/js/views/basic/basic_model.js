@@ -1847,8 +1847,17 @@ var BasicModel = AbstractModel.extend({
                     // of a 'delete' and a 'link' commands with the exact diff
                     // because 1) performance-wise it doesn't change anything
                     // and 2) to guard against concurrent updates (policy: force
-                    // an complete override of the actual value of the m2m)
+                    // a complete override of the actual value of the m2m)
                     commands[fieldName].push(x2ManyCommands.replace_with(relIds));
+                    // generate update commands for records that have been
+                    // updated (it may happen with editable lists)
+                    _.each(relData, function (relRecord) {
+                        if (!_.isEmpty(relRecord._changes)) {
+                            var changes = self._generateChanges(relRecord);
+                            var command = x2ManyCommands.update(relRecord.res_id, changes);
+                            commands[fieldName].push(command);
+                        }
+                    });
                 } else if (type === 'one2many') {
                     var removedIds = _.difference(list.res_ids, relIds);
                     var addedIds = _.difference(relIds, list.res_ids);

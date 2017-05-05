@@ -588,6 +588,25 @@ var FieldX2Many = AbstractField.extend({
     isSet: function () {
         return true;
     },
+    /**
+     * @override
+     * @param {Object} record
+     * @param {OdooEvent} [ev] an event that triggered the reset action
+     * @returns {Deferred}
+     */
+    reset: function (record, ev) {
+        if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree' && this.editable) {
+            var command = ev.data.changes[this.name];
+            if (command.operation === 'UPDATE') {
+                var state = record.data[this.name];
+                var fieldNames = state.getFieldNames();
+                this.renderer.confirmChange(state, command.id, fieldNames);
+                return $.when();
+            }
+        }
+        return this._super.apply(this, arguments);
+    },
+
 
     //--------------------------------------------------------------------------
     // Private
@@ -833,15 +852,6 @@ var FieldOne2Many = FieldX2Many.extend({
      */
     reset: function (record, ev) {
         var self = this;
-        if (ev && ev.target === this && ev.data.changes && self.view.arch.tag === 'tree' && this.editable) {
-            var command = ev.data.changes[this.name];
-            if (command.operation === 'UPDATE') {
-                var state = record.data[this.name];
-                var fieldNames = state.getFieldNames();
-                this.renderer.confirmChange(state, command.id, fieldNames);
-                return $.when();
-            }
-        }
         return this._super.apply(this, arguments).then(function () {
             if (ev && ev.target === self && ev.data.changes && self.view.arch.tag === 'tree') {
                 if (ev.data.changes[self.name].operation === 'CREATE') {

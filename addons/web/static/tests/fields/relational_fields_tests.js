@@ -3293,9 +3293,10 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('many2many list (non editable): edition', function (assert) {
-        assert.expect(9);
+        assert.expect(27);
 
         this.data.partner.records[0].timmy = [12, 14];
+        this.data.partner_type.records.push({id: 15, display_name: "bronze", color: 6});
         this.data.partner_type.fields.float_field = {string: 'Float', type: 'float'};
         var form = createView({
             View: FormView,
@@ -3311,7 +3312,20 @@ QUnit.module('relational_fields', {
                         '</form>' +
                     '</field>' +
                 '</form>',
+            archs: {
+                'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+                'partner_type,false,search': '<search><field name="display_name"/></search>',
+            },
             res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(_.last(route.split('/')));
+                if (args.method === 'write' && args.model === 'partner') {
+                    assert.deepEqual(args.args[1].timmy, [
+                        [6, false, [12, 15]],
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.ok(!form.$('.o_list_record_delete').length,
@@ -3338,22 +3352,53 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'new name',
             'value of subrecord should have been updated');
 
-        // create new subrecords
-        // TODO when 'Add an item' will be implemented
+        // add new subrecords
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal .o_list_view').length, 1,
+            "a modal should be open");
+        assert.strictEqual($('.modal .o_list_view .o_data_row').length, 1,
+            "the list should contain one row");
+        $('.modal .o_list_view .o_data_row').click(); // select a record
+        assert.strictEqual($('.modal .o_list_view').length, 0,
+            "the modal should be closed");
+        assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 3,
+            'should contain 3 subrecords');
 
         // delete subrecords
-        form.$('.o_list_record_delete:first()').click();
-        assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 1,
-            'should contain 1 subrecord');
-        assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'silver',
-            'the remaining subrecord should be "aaa"');
+        form.$('.o_list_record_delete:nth(1)').click();
+        assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 2,
+            'should contain 2 subrecords');
+        assert.strictEqual(form.$('.o_list_view .o_data_row td:first').text(), 'new name',
+            'the updated row still has the correct values');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 2,
+            'should contain 2 subrecords');
+        assert.strictEqual(form.$('.o_list_view .o_data_row td:first').text(),
+            'new name', 'the updated row still has the correct values');
+
+        assert.verifySteps([
+            'read', // main record
+            'read', // relational field
+            'read', // relational record in dialog
+            'write', // save relational record from dialog
+            'read', // relational field (updated)
+            'search_read', // list view in dialog
+            'read', // relational field (updated)
+            'write', // save main record
+            'read', // main record
+            'read', // relational field
+        ]);
+
         form.destroy();
     });
 
     QUnit.test('many2many list (editable): edition', function (assert) {
-        assert.expect(11);
+        assert.expect(30);
 
         this.data.partner.records[0].timmy = [12, 14];
+        this.data.partner_type.records.push({id: 15, display_name: "bronze", color: 6});
         this.data.partner_type.fields.float_field = {string: 'Float', type: 'float'};
         var form = createView({
             View: FormView,
@@ -3364,11 +3409,22 @@ QUnit.module('relational_fields', {
                         '<tree editable="top">' +
                             '<field name="display_name"/><field name="float_field"/>' +
                         '</tree>' +
-                        '<form string="Partners">' +
-                            '<field name="display_name"/>' +
-                        '</form>' +
                     '</field>' +
                 '</form>',
+            archs: {
+                'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+                'partner_type,false,search': '<search><field name="display_name"/></search>',
+            },
+            mockRPC: function (route, args) {
+                assert.step(_.last(route.split('/')));
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].timmy, [
+                        [6, false, [12, 15]],
+                        [1, 12, {display_name: 'new name'}],
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
             res_id: 1,
         });
 
@@ -3395,22 +3451,53 @@ QUnit.module('relational_fields', {
         assert.ok(form.$('.o_list_view tbody tr:first()').hasClass('o_selected_row'),
             'first row should be in edition');
         form.$('.o_list_view input:first()').val('new name').trigger('input');
-        // FIXME: this doesn"t work for now as the x2many fields are reset on field changed
-        // form.$('.o_list_view tbody td:nth(1)').click(); // click on second record to validate the first one
-        // assert.ok(!form.$('.o_list_view tbody tr:first()').hasClass('o_selected_row'),
-        //     'first row should not be in edition anymore');
+        assert.ok(form.$('.o_list_view .o_data_row:first').hasClass('o_selected_row'),
+            'first row should still be in edition');
+        assert.strictEqual(form.$('.o_list_view input[name=display_name]').get(0),
+            document.activeElement, 'edited field should still have the focus');
+        form.$el.click(); // click outside the list to validate the row
+        assert.ok(!form.$('.o_list_view tbody tr:first').hasClass('o_selected_row'),
+            'first row should not be in edition anymore');
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'new name',
             'value of subrecord should have been updated');
+        assert.verifySteps(['read', 'read']);
 
         // add new subrecords
-        // TODO when 'Add an item' will be implemented
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal .o_list_view').length, 1,
+            "a modal should be open");
+        assert.strictEqual($('.modal .o_list_view .o_data_row').length, 1,
+            "the list should contain one row");
+        $('.modal .o_list_view .o_data_row').click(); // select a record
+        assert.strictEqual($('.modal .o_list_view').length, 0,
+            "the modal should be closed");
+        assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 3,
+            'should contain 3 subrecords');
 
         // delete subrecords
-        form.$('.o_list_record_delete:first()').click();
-        assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 1,
-            'should contain 1 subrecord');
-        assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'silver',
-            'the remaining subrecord should be "aaa"');
+        form.$('.o_list_record_delete:nth(1)').click();
+        assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 2,
+            'should contain 2 subrecord');
+        assert.strictEqual(form.$('.o_list_view tbody .o_data_row td:first').text(),
+            'new name', 'the updated row still has the correct values');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 2,
+            'should contain 2 subrecords');
+        assert.strictEqual(form.$('.o_list_view .o_data_row td:first').text(),
+            'new name', 'the updated row still has the correct values');
+
+        assert.verifySteps([
+            'read', // main record
+            'read', // relational field
+            'search_read', // list view in dialog
+            'read', // relational field (updated)
+            'write', // save main record
+            'read', // main record
+            'read', // relational field
+        ]);
+
         form.destroy();
     });
 
