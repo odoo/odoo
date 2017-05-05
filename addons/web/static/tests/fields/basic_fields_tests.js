@@ -237,10 +237,10 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 3,
             "should still have only 3 checked input");
 
-        // Re-Edit the line to check the checkbox back
+        // Re-Edit the line to check the checkbox back but this time click on
+        // the checkbox directly in readonly mode !
         $cell = list.$('tr.o_data_row:has(.o_checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
-        $cell.click();
-        $cell.find('.o_checkbox input:not(:checked)').click();
+        $cell.find('.o_checkbox span').click();
 
         // save
         list.$buttons.find('.o_form_button_save').click();

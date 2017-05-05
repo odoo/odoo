@@ -717,7 +717,7 @@ var FormRenderer = BasicRenderer.extend({
             }
         });
         if (focusWidget) {
-            focusWidget.activate(true);
+            focusWidget.activate({noselect: true});
         }
     },
     /**
