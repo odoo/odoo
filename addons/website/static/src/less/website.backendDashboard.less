@@ -64,6 +64,10 @@
                 .gapi-analytics-data-chart svg g path, svg [class*="nv-series-"] {
                     stroke: @odoo-main-color-muted !important;
                 }
+                g.nv-scatterWrap.nvd3-svg defs {
+                    display: none;
+                }
+
                 svg {
                     padding-top: 2px;
                     float: left;
@@ -71,7 +75,6 @@
                     g.nvd3.nv-wrap.nv-lineChart {
                         .translate(45; 30) !important;
                     }
-
                     g.nv-x.nv-axis .tick > line {
                         opacity: 0 !important;
                     }
@@ -80,16 +83,14 @@
                         //Display Line
                         stroke-width: 3!important;
                         fill: @odoo-main-color-muted !important;
-                        position:absolute;
-                        background-color:red;
-                        z-index:auto;
+                        position: absolute;
+                        z-index: auto;
                         
                     }
 
                     .nv-groups .nv-point, g circle {
                         //Display Point
-                        fill: @odoo-brand-optional; 
-                        //stroke-width: 20 !important;                       
+                        fill: @odoo-brand-optional;                
                     }
 
                     .nv-groups .nv-point {
@@ -114,17 +115,15 @@
                     }
                     tr:first-child .legend-color-guide > div {
                         background-color: @odoo-brand-optional !important;
-                        //padding: 0px 0px 2px 9px;
+                        
                     }
                     tr:last-child .legend-color-guide > div {
                         background-color: darken(@odoo-brand-lightsecondary, 10%) !important;
                     }
                     tr:first-child .key {
-                    
+                        text-align:left;
                     }
-                    tr:last-child .key {
-                        padding: 0px 0px 0px 0px;         
-                   }
+                   
                     
                 }
             }

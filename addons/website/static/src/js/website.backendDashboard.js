@@ -285,9 +285,9 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             this.$buttons = $(QWeb.render("website.GotToWebsite", {
                 widget: this,
             }));
-            this.$buttons.click('a.o_dashboard_action', function(ev) {
-                self.do_action('website.action_website');
-            });
+            //this.$buttons.click('a.o_dashboard_action', function(ev) {
+                // self.do_action('website.action_website');
+            //});
         }
         this.update_control_panel({
             cp_content: {
