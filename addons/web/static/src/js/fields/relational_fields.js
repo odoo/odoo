@@ -600,7 +600,7 @@ var FieldX2Many = AbstractField.extend({
             if (command.operation === 'UPDATE') {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
-                this.renderer.confirmChange(state, command.id, fieldNames);
+                this.renderer.confirmChange(state, command.id, fieldNames, ev.initialEvent);
                 return $.when();
             }
         }
@@ -787,12 +787,19 @@ var FieldX2Many = AbstractField.extend({
      */
     _onFieldChanged: function (ev) {
         if (ev.target === this) {
+            ev.initialEvent = this.lastInitialEvent;
             return;
         }
         ev.stopPropagation();
         // changes occured in an editable list
         var changes = ev.data.changes;
+        // save the initial event triggering the field_changed, as it will be
+        // necessary when the field triggering this event will be reset (to
+        // prevent it from re-rendering itself, formatting its value, loosing
+        // the focus... while still being edited)
+        this.lastInitialEvent = undefined;
         if (Object.keys(changes).length) {
+            this.lastInitialEvent = ev;
             this._setValue({
                 operation: 'UPDATE',
                 id: ev.data.dataPointID,

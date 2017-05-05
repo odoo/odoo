@@ -229,12 +229,7 @@ var InputField = DebouncedField.extend({
             type: 'text',
             placeholder: this.attrs.placeholder || "",
         });
-        // Save cursor position to restore it after updating value
-        var selectionStart = this.$input[0].selectionStart;
-        var selectionEnd = this.$input[0].selectionEnd;
         this.$input.val(this._formatValue(this.value));
-        this.$input[0].selectionStart = selectionStart;
-        this.$input[0].selectionEnd = selectionEnd;
         return this.$input;
     },
     /**

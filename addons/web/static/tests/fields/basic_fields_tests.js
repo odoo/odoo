@@ -1144,9 +1144,9 @@ QUnit.module('basic_fields', {
 
             var evt = document.createEvent("MouseEvents"); //taken ref from https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
             evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
-            $('.discreteBar')[0].dispatchEvent(evt)
+            $('.discreteBar')[0].dispatchEvent(evt);
             var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText;
-            assert.equal(tooltip,graph_key, "graph tooltip should be generated ")
+            assert.equal(tooltip,graph_key, "graph tooltip should be generated ");
             $('.nvtooltip').remove();
 
             // force a re-rendering of the first record (to check if the
@@ -1732,6 +1732,67 @@ QUnit.module('basic_fields', {
         $dropdown.find('li:not(.o_m2o_dropdown_option):last').mouseenter().click();
         assert.strictEqual(form.$('.o_field_monetary > span').html(), "€",
             "After currency change, the monetary field currency should have been updated");
+
+        form.destroy();
+    });
+
+    QUnit.test('should keep the focus when being edited in x2many lists', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.currency_id.default = 1;
+        this.data.partner.fields.m2m = {
+            string: "m2m", type: "many2many", relation: 'partner', default: [[6, false, [2]]],
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p"/>' +
+                        '<field name="m2m"/>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,list': '<tree editable="bottom">' +
+                    '<field name="qux" widget="monetary"/>' +
+                    '<field name="currency_id" invisible="1"/>' +
+                '</tree>',
+            },
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        // test the monetary field inside the one2many
+        var $o2m = form.$('.o_field_widget[name=p]');
+        $o2m.find('.o_field_x2many_list_row_add a').click();
+        $o2m.find('.o_field_widget input').val("22").trigger('input');
+
+        assert.strictEqual($o2m.find('.o_field_widget input').get(0), document.activeElement,
+            "the focus should still be on the input");
+        assert.strictEqual($o2m.find('.o_field_widget input').val(), "22",
+            "the value should not have been formatted yet");
+
+        form.$el.click(); // focusout the input
+
+        assert.strictEqual($o2m.find('.o_field_widget[name=qux]').html(), "$&nbsp;22.00",
+            "the value should have been formatted after losing the focus");
+
+        // test the monetary field inside the many2many
+        var $m2m = form.$('.o_field_widget[name=m2m]');
+        $m2m.find('.o_data_row td:first').click();
+        $m2m.find('.o_field_widget input').val("22").trigger('input');
+
+        assert.strictEqual($m2m.find('.o_field_widget input').get(0), document.activeElement,
+            "the focus should still be on the input");
+        assert.strictEqual($m2m.find('.o_field_widget input').val(), "22",
+            "the value should not have been formatted yet");
+
+        form.$el.click(); // focusout the input
+
+        assert.strictEqual($m2m.find('.o_field_widget[name=qux]').html(), "22.00&nbsp;€",
+            "the value should have been formatted after losing the focus");
 
         form.destroy();
     });
