@@ -289,35 +289,27 @@ var BasicModel = AbstractModel.extend({
             return null;
         }
 
-        var record = this.localData[id];
+        var element = this.localData[id];
 
         if (options.env) {
             var env = {
-                ids: record.res_ids ? record.res_ids.slice(0) : [],
+                ids: element.res_ids ? element.res_ids.slice(0) : [],
             };
-            if (record.type === 'record') {
-                env.currentId = this.isNew(record.id) ? undefined : record.res_id;
+            if (element.type === 'record') {
+                env.currentId = this.isNew(element.id) ? undefined : element.res_id;
             }
             return env;
         }
 
-        // do not copy fields: this has a really big performance cost, for views
-        // with many records and lots of fields (for ex, kanban view contacts)
-        var fields = record.fields;
-        delete record.fields;
-        var element = $.extend(true, {}, record);
-        record.fields = fields;
-        element.fields = fields;
 
-        var field, relDataPoint;
         if (element.type === 'record') {
-            // apply changes
-            _.extend(element.data, element._changes);
 
-            for (var fieldName in element.data) {
-                field = element.fields[fieldName];
-                if (element.data[fieldName] === null) {
-                    element.data[fieldName] = false;
+            var data = _.extend({}, element.data, element._changes);
+            var relDataPoint;
+            for (var fieldName in data) {
+                var field = element.fields[fieldName];
+                if (data[fieldName] === null) {
+                    data[fieldName] = false;
                 }
                 if (!field) {
                     continue;
@@ -326,72 +318,110 @@ var BasicModel = AbstractModel.extend({
                     if (field.type === 'float' ||
                         field.type === 'integer' ||
                         field.type === 'monetary') {
-                        element.data[fieldName] = element.data[fieldName] || 0;
+                        data[fieldName] = data[fieldName] || 0;
                     }
                 }
 
                 // get relational datapoint
                 if (field.type === 'many2one') {
                     if (options.raw) {
-                        relDataPoint = this.localData[element.data[fieldName]];
-                        element.data[fieldName] = relDataPoint ? relDataPoint.res_id : false;
+                        relDataPoint = this.localData[data[fieldName]];
+                        data[fieldName] = relDataPoint ? relDataPoint.res_id : false;
                     } else {
-                        element.data[fieldName] = this.get(element.data[fieldName]) || false;
+                        data[fieldName] = this.get(data[fieldName]) || false;
                     }
                 }
                 if (field.type === 'one2many' || field.type === 'many2many') {
                     if (options.raw) {
-                        relDataPoint = this.localData[element.data[fieldName]];
-                        var ids = _.map(relDataPoint.data, function (id) {
+                        relDataPoint = this.localData[data[fieldName]];
+                        var relData = relDataPoint._changes || relDataPoint.data;
+                        var ids = _.map(relData, function (id) {
                             return self.localData[id].res_id;
                         });
-                        element.data[fieldName] = ids;
+                        data[fieldName] = ids;
                     } else {
-                        element.data[fieldName] = this.get(element.data[fieldName]) || [];
+                        data[fieldName] = this.get(data[fieldName]) || [];
                     }
                 }
             }
+            var record = {
+                context: _.extend({}, element.context),
+                count: element.count,
+                data: data,
+                domain: element.domain.slice(0),
+                fields: element.fields,
+                fieldsInfo: element.fieldsInfo,
+                getContext: element.getContext,
+                getDomain: element.getDomain,
+                getEvalContext: element.getEvalContext,
+                getFieldNames: element.getFieldNames,
+                id: element.id,
+                limit: element.limit,
+                model: element.model,
+                offset: element.offset,
+                res_ids: element.res_ids.slice(0),
+                specialData: _.extend({}, element.specialData),
+                type: 'record',
+                viewType: element.viewType,
+            };
 
-            // this is not strictly necessary, but it hides some implementation
-            // details, and can easily be removed if needed.
-            delete element.orderedBy;
-            delete element.aggregateValues;
-            delete element.groupedBy;
-            if (this.isNew(element.id)) {
-                delete element.res_id;
+            if (!this.isNew(element.id)) {
+                record.res_id = element.res_id;
             }
             var evalContext;
-            Object.defineProperty(element, 'evalContext', {
+            Object.defineProperty(record, 'evalContext', {
                 get: function () {
-                    evalContext = evalContext || self._getEvalContext(record);
+                    evalContext = evalContext || self._getEvalContext(element);
                     return evalContext;
                 },
             });
+            return record;
         }
-        if (element.type === 'list') {
-            // apply changes if any
-            if (element._changes) {
-                element.data = element._changes;
-                element.count = element._changes.length;
-                element.res_ids = _.map(element._changes, function (elemID) {
-                    return self.localData[elemID].res_id;
-                });
-            }
-            // get relational datapoint
-            element.data = _.map(element.data, function (elemID) {
-                return self.get(elemID);
+
+        // here, type === 'list'
+        var listData, listCount, resIDs;
+        if (element._changes) {
+            listData = element._changes;
+            listCount = listData.length;
+            resIDs = _.map(listData, function (elemID) {
+                return self.localData[elemID].res_id;
             });
+        } else {
+            listData = element.data;
+            listCount = element.count;
+            resIDs = element.res_ids;
         }
-
-        delete element._cache;
-        delete element._changes;
-        delete element._forceM2MLink;
-        delete element.static;
-        delete element.parentID;
-        delete element.relation_field;
-        delete element.rawContext;
-
-        return element;
+        listData = _.map(listData, function (elemID) {
+            return self.get(elemID, options);
+        });
+        var list = {
+            aggregateValues: _.extend({}, element.aggregateValues),
+            context: _.extend({}, element.context),
+            count: listCount,
+            data: listData,
+            domain: element.domain.slice(0),
+            fields: element.fields,
+            getContext: element.getContext,
+            getDomain: element.getDomain,
+            getEvalContext: element.getEvalContext,
+            getFieldNames: element.getFieldNames,
+            groupedBy: element.groupedBy,
+            id: element.id,
+            isOpen: element.isOpen,
+            limit: element.limit,
+            model: element.model,
+            offset: element.offset,
+            orderedBy: element.orderedBy,
+            res_id: element.res_id,
+            res_ids: resIDs,
+            type: 'list',
+            value: element.value,
+            viewType: element.viewType,
+        };
+        if (element.fieldsInfo) {
+            list.fieldsInfo = element.fieldsInfo;
+        }
+        return list;
     },
     /**
      * Returns true if a record is dirty. A record is considered dirty if it has
@@ -2038,7 +2068,7 @@ var BasicModel = AbstractModel.extend({
                 return true;
             case 'one2many':
             case 'many2many':
-                return value.count > 0;
+                return value.length > 0;
             default:
                 return value !== false;
         }

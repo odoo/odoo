@@ -87,7 +87,7 @@ var AbstractField = Widget.extend({
         // the 'attrs' property contains the attributes of the xml 'field' tag,
         // the inner views...
         var fieldsInfo = record.fieldsInfo[this.viewType];
-        this.attrs = fieldsInfo && fieldsInfo[name] || {};
+        this.attrs = options.attrs || (fieldsInfo && fieldsInfo[name]) || {};
 
         // this property tracks the current (parsed if needed) value of the field.
         // Note that we don't use an event system anymore, using this.get('value')

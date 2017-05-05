@@ -156,7 +156,7 @@ var ListController = BasicController.extend({
             this.sidebar = new Sidebar(this, {
                 editable: this.is_action_enabled('edit'),
                 env: {
-                    context: this.model.get(this.handle).getContext(),
+                    context: this.model.get(this.handle, {raw: true}).getContext(),
                     activeIds: this.getSelectedIds(),
                     model: this.modelName,
                 },
