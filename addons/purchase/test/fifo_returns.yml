@@ -9,7 +9,7 @@
     categ_id: product.product_category_1
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
-    cost_method: real
+    cost_method: fifo
     valuation: real_time
     property_stock_account_input: o_expense
     property_stock_account_output: o_income
@@ -49,7 +49,7 @@
 -
   !python {model: purchase.order, id: purchase_order_fiforet1}: |
     picking = self.picking_ids[0]
-    picking.do_transfer()
+    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
 - 
   Check the standard price of the product (fifo icecream)
 - 
@@ -65,7 +65,7 @@
 - 
   !python {model: purchase.order, id: purchase_order_fiforet2}: |
     picking = self.picking_ids[0]
-    picking.do_transfer()
+    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
 - 
   Return the goods of purchase order 2
 - 
@@ -76,10 +76,11 @@
     # Important to pass through confirmation and assignation
     return_picking = self.env['stock.picking'].browse(return_picking_id)
     return_picking.action_confirm()
-    return_picking.action_assign()
-    return_picking.do_transfer()
+    return_picking.move_lines[0].quantity_done = return_picking.move_lines[0].product_uom_qty
+    return_picking.action_done()
 - 
-  Check the standard price of the product changed to 80.0 as we returned the quants of purchase order 2
+  After the return only 10 of the second purchase order should still be in stock as it applies fifo on the return too
 - 
   !python {model: product.product, id: product_fiforet_icecream}: |
-    assert self.standard_price == 80.0, 'Standard price should have changed to 80.0! %s found instead' % (self.standard_price,)
+    assert self.qty_available == 10.0, 'Qty available should be 10.0'
+    assert self.stock_value == 800, 'Stock value should be 800'

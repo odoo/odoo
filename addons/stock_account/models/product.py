@@ -4,6 +4,8 @@
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
+from odoo.addons import decimal_precision as dp
+
 
 
 class ProductTemplate(models.Model):
@@ -19,8 +21,8 @@ class ProductTemplate(models.Model):
     valuation = fields.Char(compute='_compute_valuation_type', inverse='_set_valuation_type')
     property_cost_method = fields.Selection([
         ('standard', 'Standard Price'),
-        ('average', 'Average Price'),
-        ('real', 'Real Price')], string='Costing Method',
+        ('fifo', '(financial) FIFO'),
+        ('average', 'AVCO')], string='Costing Method',
         company_dependent=True, copy=True,
         help="""Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).
                 Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
@@ -36,6 +38,19 @@ class ProductTemplate(models.Model):
         company_dependent=True, domain=[('deprecated', '=', False)],
         help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
              "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used.")
+    average_price = fields.Float(
+        'Average Cost', compute='_compute_average_price',
+        digits=dp.get_precision('Product Price'), groups="base.group_user",
+        help="Average cost of the product, in the default unit of measure of the product.")
+
+    @api.multi
+    def _compute_average_price(self):
+        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
+        for template in unique_variants:
+            template.average_price = template.product_variant_ids.average_price
+        for template in (self - unique_variants):
+            template.average_price = 0.0
+
 
     @api.one
     @api.depends('property_valuation', 'categ_id.property_valuation')
@@ -86,6 +101,15 @@ class ProductTemplate(models.Model):
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
+
+    average_price = fields.Float(
+        'Average Cost', 
+        digits=dp.get_precision('Product Price'),
+        groups="base.group_user",
+        compute='_compute_average_price',
+        help="Calculated average cost")
+    stock_value = fields.Float(
+        'Value', compute='_compute_stock_value')
 
     @api.onchange('type')
     def onchange_type_valuation(self):
@@ -139,6 +163,67 @@ class ProductProduct(models.Model):
         self.write({'standard_price': new_price})
         return True
 
+    def _get_latest_cumulated_value(self, not_move=False):
+        self.ensure_one()
+        # TODO: only filter on IN and OUT stock.move
+        domain = [
+            ('product_id', '=', self.id),
+            ('state', '=', 'done'),
+            ]
+        if not_move:
+            domain += [('id', '!=', not_move.id)]
+        latest = self.env['stock.move'].search(domain, order='date desc, id desc', limit=1)
+        if not latest:
+            return 0.0
+        return latest.cumulated_value
+
+    def _get_candidates_out_move(self):
+        self.ensure_one()
+        # TODO: filter at start of period
+        candidates = self.env['stock.move'].search([
+            ('product_id', '=', self.id),
+            ('location_dest_id.usage', 'not in', ('transit', 'internal')),
+            ('location_id.usage', 'in', ('transit', 'internal')),
+            ('remaining_qty', '>', 0),
+            ('state', '=', 'done')
+        ], order='date, id') #TODO: case
+        return candidates
+
+    def _get_candidates_move(self):
+        self.ensure_one()
+        # TODO: filter at start of period
+        candidates = self.env['stock.move'].search([
+            ('product_id', '=', self.id),
+            ('location_dest_id.usage', 'in', ('transit', 'internal')),
+            ('location_id.usage', 'not in', ('transit', 'internal')),
+            ('remaining_qty', '>', 0),
+            ('state', '=', 'done')
+        ], order='date, id') #TODO: case where 
+        return candidates
+
+    @api.multi
+    def _compute_average_price(self):
+        for product in self:
+            if product.qty_available > 0:
+                last_cumulated_value = product._get_latest_cumulated_value()
+                product.average_price = last_cumulated_value / product.qty_available
+            else:
+                product.average_price = 0
+    
+    @api.multi
+    def _compute_stock_value(self):
+        for product in self:
+            if product.cost_method == 'standard':
+                product.stock_value = product.standard_price * product.qty_available
+            elif product.cost_method == 'average':
+                product.stock_value = product._get_latest_cumulated_value()
+            elif product.cost_method == 'fifo': #Could also do same as for average, but it would lead to more rounding errors
+                moves = product._get_candidates_move()
+                value = 0
+                for move in moves:
+                    value += move.remaining_qty * move.price_unit
+                product.stock_value = value
+
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'
@@ -156,8 +241,8 @@ class ProductCategory(models.Model):
              "moves for incoming and outgoing products.")
     property_cost_method = fields.Selection([
         ('standard', 'Standard Price'),
-        ('average', 'Average Price'),
-        ('real', 'Real Price')], string="Costing Method",
+        ('fifo', '(financial) FIFO)'),
+        ('average', 'AVCO')], string="Costing Method",
         company_dependent=True, copy=True, required=True,
         help="Standard Price: The cost price is manually updated at the end "
              "of a specific period (usually once a year).\nAverage Price: "
