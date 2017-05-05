@@ -438,6 +438,35 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('do not trigger a field_changed if they have not changed', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[1].qux = undefined;
+        this.data.partner.records[1].int_field = undefined;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="float" digits="[5,3]"/>' +
+                        '<field name="int_field"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.verifySteps(['read']); // should not have save as nothing changed
+
+        form.destroy();
+    });
 
     QUnit.module('FieldEmail');
 

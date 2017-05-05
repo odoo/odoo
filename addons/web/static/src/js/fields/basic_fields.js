@@ -91,6 +91,13 @@ var DebouncedField = AbstractField.extend({
     init: function () {
         this._super.apply(this, arguments);
 
+        // isDirty is used to detect that the user interacted at least once with
+        // the widget, so that we can prevent it from triggering a field_changed
+        // in commitChanges if the user didn't change anything (this is required
+        // as sometimes it is hard to detect that an unset value is still unset,
+        // e.g. if a numerical field contains the value 0, is it because it is
+        // still unset or because the user set it to 0?
+        this.isDirty = false;
         if (this.DEBOUNCE && this.mode === 'edit') {
             this._doDebouncedAction = _.debounce(this._doDebouncedAction.bind(this), this.DEBOUNCE);
         }
@@ -108,7 +115,7 @@ var DebouncedField = AbstractField.extend({
      * @override
      */
     commitChanges: function () {
-        if (this.mode === 'edit') {
+        if (this.isDirty && this.mode === 'edit') {
             this._setValue(this._getValue());
         }
     },
@@ -158,6 +165,7 @@ var DebouncedField = AbstractField.extend({
      * @private
      */
     _onInput: function () {
+        this.isDirty = true;
         this._doDebouncedAction();
     },
 });
