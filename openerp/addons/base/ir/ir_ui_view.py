@@ -692,6 +692,10 @@ class view(osv.osv):
             if node.text and node.text.strip():
                 term = node.text.strip()
                 trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
+                if trans == term and ('base_model_name' in context):
+                    trans = Translations._get_source(
+                        cr, user, context['base_model_name'], 'view',
+                        context['lang'], term)
                 if trans:
                     node.text = node.text.replace(term, trans)
             if node.tail and node.tail.strip():
@@ -720,7 +724,11 @@ class view(osv.osv):
             for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
                 attr_value = node.get(attr_name)
                 if attr_value and attr_value.strip():
-                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value.strip())
+                    term = attr_value.strip()
+                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
+                    if trans == term and ('base_model_name' in context):
+                        # just like "string" attribute here above
+                        trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], term)
                     if trans:
                         node.set(attr_name, trans)
 
