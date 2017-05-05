@@ -869,7 +869,7 @@ class ProcurementOrder(models.Model):
     @api.v8
     def _get_purchase_order_date(self, schedule_date):
         self.ensure_one()
-        seller_delay = int(self.product_id._select_seller(self.product_id).delay)
+        seller_delay = int(self.product_id._select_seller(product_id=self.product_id, quantity=self.product_qty).delay)
         return schedule_date - relativedelta(days=seller_delay)
 
     @api.v7

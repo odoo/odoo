@@ -89,8 +89,6 @@ class ir_cron(models.Model):
 
         """
         self._cr.rollback()
-        _logger.exception("Call of self.env[%r].%s(*%r) failed in Job %s",
-                          model_name, method_name, args, job_id)
 
     @api.model
     def _callback(self, model_name, method_name, args, job_id):
@@ -123,6 +121,8 @@ class ir_cron(models.Model):
             else:
                 _logger.warning("Model %r does not exist.", model_name)
         except Exception, e:
+            _logger.exception("Call of self.env[%r].%s(*%r) failed in Job #%s",
+                              model_name, method_name, args, job_id)
             self._handle_callback_exception(model_name, method_name, args, job_id, e)
 
     def _process_job(self, job_cr, job, cron_cr):
