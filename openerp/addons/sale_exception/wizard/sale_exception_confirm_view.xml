@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_sale_exception_confirm" model="ir.ui.view">
+            <field name="name">Sale Exceptions</field>
+            <field name="model">sale.exception.confirm</field>
+            <field name="arch" type="xml">
+                <form string="Blocked in draft due to exceptions" version="7.0">
+                    <group>
+                        <field name="exception_ids" nolabel="1" colspan="4">
+                            <tree string="Sale Exceptions">
+                                <field name="name"/>
+                                <field name="description"/>
+                            </tree>
+                        </field>
+                        <newline/>
+                        <field name="ignore" groups='base.group_sale_manager'/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="_Close"
+                            colspan="1" type="object" icon="gtk-ok" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sale_exception_confirm" model="ir.actions.act_window">
+            <field name="name">Blocked in draft due to exceptions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.exception.confirm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_sale_exception_confirm"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

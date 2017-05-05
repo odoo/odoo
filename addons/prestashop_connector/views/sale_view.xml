@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_sale_order_state_form" model="ir.ui.view">
+            <field name="name">sale.order.state.form</field>
+            <field name="model">sale.order.state</field>
+            <field name="arch" type="xml">
+                <form string="Sale order State" version="7.0">
+                    <field name="name"/>
+                    <notebook>
+                       <page name="connector" string="Connector">
+                            <group string="Prestashop Bindings">
+                                <field name="prestashop_bind_ids" nolabel="1"/>
+                            </group>
+                       </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_sale_order_state_tree" model="ir.ui.view">
+            <field name="name">sale.order.state.tree</field>
+            <field name="model">sale.order.state</field>
+            <field name="arch" type="xml">
+                <tree string="Sale order State">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_prestashop_sale_order_state_tree" model="ir.ui.view">
+            <field name="name">prestashop.sale.order.state.tree</field>
+            <field name="model">prestashop.sale.order.state</field>
+            <field name="arch" type="xml">
+                <tree string="Sale order State">
+                    <field name="backend_id"/>
+                    <field name="prestashop_id"/>
+                    <field name="openerp_state_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_shop_form" model="ir.ui.view">
+            <field name="model">sale.shop</field>
+            <field name="inherit_id" ref="sale.view_shop_form"/>
+            <field name="arch" type="xml">
+                <field name="pricelist_id" position="after">
+                    <group colspan="5" string="PrestaShop">
+                        <field name="prestashop_bind_ids" nolabel="1">
+                            <tree name="prestashop_binding">
+                                <field name="openerp_id" />
+                                <field name="shop_group_id"/>
+                                <field name="default_category_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="view_prestashop_sale_order_state_form" model="ir.ui.view">
+            <field name="name">prestashop.sale.order.state.form</field>
+            <field name="model">prestashop.sale.order.state</field>
+            <field name="arch" type="xml">
+                <form string="Sale order State" version="7.0">
+                    <group>
+                        <field name="backend_id"/>
+                        <field name="prestashop_id"/>
+                    </group>
+                    <group>
+                        <field name="openerp_state_ids" nolabel="1" mode="tree">
+                            <tree string="States" editable="top">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_prestashop_sale_order_state_form" model="ir.actions.act_window">
+            <field name="name">Sale Order States</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.state</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_sale_order_state_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Here are the sale order states mapped with e-commerce.
+              </p><p>
+                Each state can be linked between Prestashop and OpenERP.
+                When a sale order state change, the connector will update the sale order in Prestashop.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="sale_order_state_tree_menu"
+            name="Sale Order States"
+            action="action_prestashop_sale_order_state_form"
+            parent="base.menu_sale_config_sales"
+            sequence="50"/>
+        
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <page string="Other Information" position="inside">
+                    <separator string="Prestashop Information"/>
+                    <field name="prestashop_bind_ids" readonly="True">
+                        <tree string="Prestashop Binding">
+                            <field name="total_amount"/>
+                            <field name="total_amount_tax"/>
+                        </tree>
+                    </field>
+                </page>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

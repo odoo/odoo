@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="product_categ_services" model="product.category">
+            <field name="name">Services</field>
+        </record>
+
+        <record id="product_product_shipping" model="product.product">
+            <field name="default_code">SHIP</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="type">service</field>
+            <field name="name">Shipping costs</field>
+            <field name="categ_id" ref="product_categ_services"/>
+        </record>
+
+        <record id="product_product_cash_on_delivery" model="product.product">
+            <field name="default_code">CASH ON DELIVERY</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="type">service</field>
+            <field name="name">Cash on delivery</field>
+            <field name="categ_id" ref="product_categ_services"/>
+        </record>
+
+        <record id="product_product_gift" model="product.product">
+            <field name="default_code">GIFT CERTIFICATE</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="type">service</field>
+            <field name="name">Gift Certificate</field>
+            <field name="categ_id" ref="product_categ_services"/>
+        </record>
+
+        <record id="product_product_discount" model="product.product">
+            <field name="default_code">DISCOUNT</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="type">service</field>
+            <field name="name">Discount Coupon</field>
+            <field name="categ_id" ref="product_categ_services"/>
+        </record>
+
+        <record id="excep_parent_order_need_cancel" model="sale.exception">
+            <field name="name">Parent sales order canceled on the backend.</field>
+            <field name="description">The parent sales order has been canceled on the backend.
+You will not be able to process this sales order until the parent's one is canceled.</field>
+            <field name="sequence">30</field>
+            <field name="model">sale.order</field>
+            <field name="code">if order.parent_need_cancel:
+    failed = True</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="excep_order_need_cancel" model="sale.exception">
+            <field name="name">Sales order canceled on the backend.</field>
+            <field name="description">The sales order has been canceled on the backend.</field>
+            <field name="sequence">20</field>
+            <field name="model">sale.order</field>
+            <field name="code">if order.need_cancel:
+    failed = True</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="excep_product_has_checkpoint" model="sale.exception">
+            <field name="name">A product needs to be reviewed.</field>
+            <field name="description">A product has been imported from a backend and needs to be reviewed.
+Go to Connectors > Checkpoint and review the new products.</field>
+            <field name="sequence">20</field>
+            <field name="model">sale.order.line</field>
+            <field name="code">if object.product_id and object.product_id.has_checkpoint:
+    failed = True</field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="wk_sale_shop_quotation_view_tree" model="ir.ui.view">
+            <field name="name">sale.order</field>
+            <field name="model">sale.order</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">  
+                <field name="date_order" position="after">
+                    <field name="shop_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="wk_sale_shop_shop_add_view_tree" model="ir.ui.view">
+            <field name="name">sale.order</field>
+            <field name="model">sale.order</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">  
+                <field name="date_order" position="after">
+                    <field name="shop_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="wk_shop_view_order_form" model="ir.ui.view">
+            <field name="name">sale.order</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">  
+                <field name="pricelist_id" position="after">
+                    <field name="shop_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="wk_sale_shop_form" model="ir.ui.view">
+            <field name="name">sale.shop</field>
+            <field name="model">sale.shop</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sale Shop">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="wk_sale_shop_tree" model="ir.ui.view">
+            <field name="name">sale.shop</field>
+            <field name="model">sale.shop</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Shop">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>       
+        
+        <record id="wk_sale_shop_action" model="ir.actions.act_window">
+            <field name="name">Sales Shop</field>
+            <field name="res_model">sale.shop</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="wk_sale_shop_tree"/>
+        </record>
+
+        <menuitem  id="wk_shop_menu" name="Shop" parent="base.menu_sale_config" action="wk_sale_shop_action" sequence="5"/>
+    </data>
+</openerp>

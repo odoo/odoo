@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--This is a product inherited form that will be dynamically populated-->
+        <record id="product_normal_form_view" model="ir.ui.view">
+           <field name="model">product.product</field>
+           <field name="inherit_id" ref="connector_base_product.product_normal_form_view" />
+           <field name="arch" type="xml">
+               <page name="connector" position="attributes">
+                    <attribute name="invisible">0</attribute>
+               </page>
+               <page name="connector" position="inside">
+                    <group string="Prestashop Bindings">
+                        <field
+                            name="prestashop_bind_ids"
+                            nolabel="1"
+                            attrs="{'invisible': [('prestashop_bind_ids', '=', [])]}"
+                        />
+                        <field
+                            name="prestashop_combinations_bind_ids"
+                            nolabel="1"
+                            attrs="{'invisible': [('prestashop_combinations_bind_ids', '=', [])]}"
+                        />
+                    </group>
+               </page>
+           </field>
+        </record>
+
+        <record id="product_connector_presta_form_view" model="ir.ui.view">
+           <field name="model">prestashop.product.product</field>
+           <field name="arch" type="xml">
+                <form string="prestashop fields" version="7.0">
+                    <group col="1">
+                        <field name="backend_id"/>
+                        <field name="default_shop_id"/>
+                        <field name="link_rewrite"/>
+                        <field name="description_short_html"/>
+                        <field name="description_html"/>
+                    </group>
+                    <group col="4" colspan="4">
+                        <field name="date_add"/>
+                        <field name="date_upd"/>
+                        <field name="sale_ok"/>
+                        <field name="quantity" string="qty"/>
+                        <field name="always_available"/>
+                    </group>
+                </form>
+           </field>
+        </record>
+
+        <record id="product_connector_presta_tree_view" model="ir.ui.view">
+            <field name="model">prestashop.product.product</field>
+            <field name="arch" type="xml">
+                <tree string="prestashop product" version="7.0">
+                    <field name="backend_id" string="Backend"/>
+                    <field name="date_add"/>
+                    <field name="date_upd"/>
+                    <field name="quantity"/>
+                    <field name="prestashop_id"/>
+                    <field name="reference"/>
+                    <button name="recompute_prestashop_qty"
+                        class="oe_highlight"
+                        type="object"
+                        string="Export quantity"/>
+                    <button name="resync"
+                        type="object"
+                        string="Resync" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="combination_connector_presta_form_view" model="ir.ui.view">
+           <field name="model">prestashop.product.combination</field>
+           <field name="arch" type="xml">
+                <form string="prestashop fields" version="7.0">
+                    <group col="2">
+                        <field name="backend_id"/>
+                        <field name="quantity"/>
+                    </group>
+                </form>
+           </field>
+        </record>
+
+        <record id="combination_connector_presta_tree_view" model="ir.ui.view">
+            <field name="model">prestashop.product.combination</field>
+            <field name="arch" type="xml">
+                <tree string="prestashop product" version="7.0">
+                    <field name="backend_id" string="Backend"/>
+                    <field name="quantity"/>
+                    <field name="prestashop_id"/>
+                    <field name="reference"/>
+                    <button name="recompute_prestashop_qty"
+                        class="oe_highlight"
+                        type="object"
+                        string="Export quantity"/>
+                    <button name="resync"
+                        type="object"
+                        string="Resync" />
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>

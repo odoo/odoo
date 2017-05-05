@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  sale_automatic_workflow for OpenERP
+  Copyright (C) 2011 Akretion Sébastien BEAU <sebastien.beau@akretion.com>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+    <data>
+
+        <!-- VIEW FOR THE OBJECT : payment_method -->
+        <record id="payment_method_view_form" model="ir.ui.view">
+            <field name="name">payment.method.connector_ecommerce.form</field>
+            <field name="model">payment.method</field>
+            <field name="inherit_id" ref="sale_payment_method_automatic_workflow.payment_method_view_form" />
+            <field name="arch" type="xml">
+                <group name="general" position="after">
+                    <group name="import_rule" string="Import Rules">
+                        <group>
+                            <field name="import_rule" />
+                            <field name="days_before_cancel" />
+                        </group>
+                        <group name="import_rule_help" class="oe_grey" col="1">
+                            <p attrs="{'invisible': [('import_rule', '!=', 'never')]}">
+                                The sales orders using the payment method will never be imported.
+                            </p>
+                            <p attrs="{'invisible': [('import_rule', '!=', 'always')]}">
+                                The sales orders using the payment method will always be imported.
+                            </p>
+                            <p attrs="{'invisible': [('import_rule', '!=', 'paid')]}">
+                                The sales orders using the payment method will be imported
+                                only when they receive a payment on the E-Commerce backend.<br/>
+                            </p>
+                        </group>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record id="payment_method_view_tree" model="ir.ui.view">
+            <field name="name">payment.method.connector_ecommerce.tree</field>
+            <field name="model">payment.method</field>
+            <field name="inherit_id" ref="sale_payment_method_automatic_workflow.payment_method_view_tree" />
+            <field name="arch" type="xml">
+                <field name="workflow_process_id" position="after">
+                    <field name="import_rule" />
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

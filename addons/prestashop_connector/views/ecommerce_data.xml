@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="excep_order_wrong_total_amount" model="sale.exception">
+            <field name="name">Total Amount differs from Prestashop</field>
+            <field name="description">The amount computed in OpenERP doesn't match with the amount in Prestashop.
+
+Cause:
+The taxes are probably different between OpenERP and Prestashop. A fiscal position could have changed the final price.
+
+Resolution:
+Check your taxes and fiscal positions configuration and correct them if necessary.</field>
+            <field name="sequence">30</field>
+            <field name="model">sale.order</field>
+            <field name="code">if order.prestashop_bind_ids and abs(order.amount_total - order.prestashop_bind_ids[0].total_amount) >= 0.001:
+    failed = True</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="excep_order_wrong_total_amount_tax" model="sale.exception">
+            <field name="name">Total Tax Amount differs from Prestashop</field>
+            <field name="description">The tax amount computed in OpenERP doesn't match with the tax amount in Prestashop.
+
+Cause:
+The taxes are probably different between OpenERP and Magento. A fiscal position could have changed the final price.
+
+Resolution:
+Check your taxes and fiscal positions configuration and correct them if necessary.</field>
+            <field name="sequence">30</field>
+            <field name="model">sale.order</field>
+            <field name="code"># By default, a cent of difference for the tax amount is allowed, feel free to customise it in your own module
+if order.prestashop_bind_ids:
+    ps_amount = order.prestashop_bind_ids[0].total_amount_tax
+    oerp_amount = order.amount_tax
+    if (ps_amount == 0.0 and oerp_amount != 0.0) or (ps_amount and abs(1 - oerp_amount / ps_amount) > 0.02):
+        failed = True
+    </field>
+            <field name="active" eval="True"/>
+        </record>
+
+
+    </data>
+</openerp>

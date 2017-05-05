@@ -1,0 +1,865 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * connector
+# 
+# Translators:
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015-2016
+msgid ""
+msgstr ""
+"Project-Id-Version: connector (9.0)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-15 18:53+0000\n"
+"PO-Revision-Date: 2016-03-17 11:27+0000\n"
+"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
+"Language-Team: Slovenian (http://www.transifex.com/oca/OCA-connector-9-0/language/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_form
+msgid ""
+"<span class=\"oe_grey oe_inline\"> If the max. retries is 0, the number of "
+"retries is infinite.</span>"
+msgstr ""
+
+#. module: connector
+#: code:addons/connector/checkpoint/checkpoint.py:136
+#, python-format
+msgid "A %s needs a review."
+msgstr "Potrebna je revizija %s ."
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_message_needaction
+#: model:ir.model.fields,field_description:connector.field_queue_job_message_needaction
+msgid "Action Needed"
+msgstr "Potreben ukrep"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_module_portal
+msgid "Activate the customer portal"
+msgstr "Aktiviranje portala kupcev"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_active
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_alias_domain
+msgid "Alias Domain"
+msgstr "Domenski psevdonim"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_module_share
+msgid "Allow documents sharing"
+msgstr "Omogoči souporabo dokumentov"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_auth_signup_uninvited
+msgid "Allow external users to sign up"
+msgstr "Dovoli prijavo zunanjih uporabnikov"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_module_google_calendar
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
+msgstr "Dovoli uporabnikom sinhronizacijo njihovega koledarja z Google koledarjem"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_module_base_import
+msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
+msgstr ""
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_connector_config_settings
+msgid "Apply"
+msgstr "Uporabi"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_module_google_drive
+msgid "Attach Google documents to any record"
+msgstr "Pripni Google dokument kateremukoli zapisu"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_connector_config_settings
+msgid "Backends"
+msgstr "Ozadja"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_review
+#: model:ir.ui.view,arch_db:connector.view_connector_config_settings
+#: model:ir.ui.view,arch_db:connector.view_requeue_job
+msgid "Cancel"
+msgstr "Preklic"
+
+#. module: connector
+#: code:addons/connector/queue/job.py:593
+#, python-format
+msgid "Canceled. Nothing to do."
+msgstr "Preklicano. Ni opravkov."
+
+#. module: connector
+#: code:addons/connector/queue/model.py:274
+#, python-format
+msgid "Cannot change the root channel"
+msgstr "Korenskega kanala ni mogoče spreminjati"
+
+#. module: connector
+#: code:addons/connector/queue/model.py:281
+#, python-format
+msgid "Cannot remove the root channel"
+msgstr "Korenskega kanala ni mogoče odstraniti"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel
+#: model:ir.model.fields,field_description:connector.field_queue_job_function_channel_id
+#: model:ir.ui.view,arch_db:connector.view_queue_job_function_search
+#: model:ir.ui.view,arch_db:connector.view_queue_job_search
+msgid "Channel"
+msgstr "Kanal"
+
+#. module: connector
+#: sql_constraint:queue.job.channel:0
+msgid "Channel complete name must be unique"
+msgstr "Celotni naziv kanala mora biti unikaten"
+
+#. module: connector
+#: model:ir.actions.act_window,name:connector.action_queue_job_channel
+#: model:ir.ui.menu,name:connector.menu_queue_job_channel
+#: model:ir.ui.view,arch_db:connector.view_queue_job_channel_form
+#: model:ir.ui.view,arch_db:connector.view_queue_job_channel_search
+#: model:ir.ui.view,arch_db:connector.view_queue_job_channel_tree
+msgid "Channels"
+msgstr "Kanali"
+
+#. module: connector
+#: model:ir.ui.menu,name:connector.menu_checkpoint
+msgid "Checkpoint"
+msgstr "Kontrolna točka"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_review_checkpoint_ids
+msgid "Checkpoints"
+msgstr "Kontrolne točke"
+
+#. module: connector
+#: model:ir.model,name:connector.model_connector_checkpoint_review
+msgid "Checkpoints Review"
+msgstr "Preverjanje kontrolnih točk"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_form
+msgid "Click on the"
+msgstr "Kliknite na"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_company_id
+msgid "Company"
+msgstr "Družba"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel_complete_name
+#: model:ir.model.fields,field_description:connector.field_queue_job_function_channel
+msgid "Complete Name"
+msgstr "Polni naziv"
+
+#. module: connector
+#: model:ir.actions.act_window,name:connector.action_connector_config_settings
+#: model:ir.ui.view,arch_db:connector.view_connector_config_settings
+msgid "Configure Connector"
+msgstr "Nastavitve povezovalnika"
+
+#. module: connector
+#: model:ir.module.category,name:connector.module_category_connector
+#: model:ir.ui.menu,name:connector.menu_connector_config_settings
+msgid "Connector"
+msgstr "Povezovalnik"
+
+#. module: connector
+#: model:ir.model,name:connector.model_connector_backend
+msgid "Connector Backend"
+msgstr "Ozadje povezovalnika"
+
+#. module: connector
+#: model:ir.actions.act_window,name:connector.action_connector_checkpoint
+#: model:ir.model,name:connector.model_connector_checkpoint
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_form
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_search
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_tree
+msgid "Connector Checkpoint"
+msgstr "Kontrolna točka povezovalnika"
+
+#. module: connector
+#: model:ir.model,name:connector.model_connector_config_settings
+msgid "Connector Configuration"
+msgstr "Nastavitve povezovalnika"
+
+#. module: connector
+#: model:res.groups,name:connector.group_connector_manager
+msgid "Connector Manager"
+msgstr "Upravitelj povezovalnika"
+
+#. module: connector
+#: model:ir.ui.menu,name:connector.menu_connector
+#: model:ir.ui.menu,name:connector.menu_connector_root
+#: model:ir.ui.view,arch_db:connector.view_partner_connector_form
+msgid "Connectors"
+msgstr "Konektorji"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_date_created
+msgid "Created Date"
+msgstr "Datum nastanka"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_create_uid
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_review_create_uid
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_create_uid
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel_create_uid
+#: model:ir.model.fields,field_description:connector.field_queue_requeue_job_create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_create_date
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_review_create_date
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_create_date
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel_create_date
+#: model:ir.model.fields,field_description:connector.field_queue_requeue_job_create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_retry
+msgid "Current try"
+msgstr "Trenutni poskus"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_form
+msgid "Current try / max. retries"
+msgstr "Trenutni poskus / maks. ponovitev"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_date_done
+msgid "Date Done"
+msgstr "Datum dokončanja"
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_checkpoint_message_last_post
+#: model:ir.model.fields,help:connector.field_queue_job_message_last_post
+msgid "Date of the last message posted on the record."
+msgstr "Datum zadnjega sporočila na zapisu."
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_name
+msgid "Description"
+msgstr "Opis"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_backend_display_name
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_display_name
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_review_display_name
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_display_name
+#: model:ir.model.fields,field_description:connector.field_external_binding_display_name
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel_display_name
+#: model:ir.model.fields,field_description:connector.field_queue_job_display_name
+#: model:ir.model.fields,field_description:connector.field_queue_job_function_display_name
+#: model:ir.model.fields,field_description:connector.field_queue_requeue_job_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_search
+#: selection:queue.job,state:0
+msgid "Done"
+msgstr "Opravljeno"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_auth_signup_reset_password
+msgid "Enable password reset from Login page"
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_date_enqueued
+msgid "Enqueue Time"
+msgstr "Čas čakanja"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_search
+#: selection:queue.job,state:0
+msgid "Enqueued"
+msgstr "V čakalni vrsti"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_exc_info
+msgid "Exception Info"
+msgstr "Podatki o izjemi"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_form
+msgid "Exception Information"
+msgstr "Podatki o izjemi"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_eta
+msgid "Execute only after"
+msgstr "Izvedba le po"
+
+#. module: connector
+#: model:ir.model,name:connector.model_external_binding
+msgid "External Binding (abstract)"
+msgstr "Zunanja povezava (povzetek)"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_fail_counter
+msgid "Fail Mail"
+msgstr ""
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_search
+#: selection:queue.job,state:0
+msgid "Failed"
+msgstr "Spodletelo"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_message_follower_ids
+#: model:ir.model.fields,field_description:connector.field_queue_job_message_follower_ids
+msgid "Followers"
+msgstr "Sledilci"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_message_channel_ids
+#: model:ir.model.fields,field_description:connector.field_queue_job_message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_message_partner_ids
+#: model:ir.model.fields,field_description:connector.field_queue_job_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_func_name
+msgid "Func name"
+msgstr "Naziv funkcije"
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_config_settings_module_portal
+msgid "Give your customers access to their documents."
+msgstr "Kupcem omogočite dostop do njihovih dokumentov."
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_function_search
+#: model:ir.ui.view,arch_db:connector.view_queue_job_search
+msgid "Group By"
+msgstr "Združi po"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_search
+msgid "Group By..."
+msgstr "Združi po..."
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_backend_id
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_id
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_review_id
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_id
+#: model:ir.model.fields,field_description:connector.field_external_binding_id
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel_id
+#: model:ir.model.fields,field_description:connector.field_queue_job_function_id
+#: model:ir.model.fields,field_description:connector.field_queue_job_id
+#: model:ir.model.fields,field_description:connector.field_queue_requeue_job_id
+msgid "ID"
+msgstr "ID"
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_checkpoint_message_unread
+#: model:ir.model.fields,help:connector.field_queue_job_message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ko je označeno, nova sporočila zahtevajo vašo pozornost."
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_checkpoint_message_needaction
+#: model:ir.model.fields,help:connector.field_queue_job_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_config_settings_auth_signup_uninvited
+msgid "If unchecked, only invited users may sign up."
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_config_settings_alias_domain
+msgid ""
+"If you have setup a catch-all email domain redirected to the Odoo server, "
+"enter the domain name here."
+msgstr "Če ste nastavili catch-all domensko e-pošto, ki je preusmerjena na Odoo strežnik, vnesite naziv domene."
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_backend_id
+msgid "Imported from"
+msgstr "Uvoženo iz"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_message_is_follower
+#: model:ir.model.fields,field_description:connector.field_queue_job_message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: connector
+#: model:ir.model,name:connector.model_queue_job_channel
+msgid "Job Channels"
+msgstr "Delovni kanali"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_job_function_id
+#: model:ir.ui.view,arch_db:connector.view_queue_job_search
+msgid "Job Function"
+msgstr "Delovna funkcija"
+
+#. module: connector
+#: model:ir.actions.act_window,name:connector.action_queue_job_function
+#: model:ir.model,name:connector.model_queue_job_function
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel_job_function_ids
+#: model:ir.ui.menu,name:connector.menu_queue_job_function
+#: model:ir.ui.view,arch_db:connector.view_queue_job_function_form
+#: model:ir.ui.view,arch_db:connector.view_queue_job_function_search
+#: model:ir.ui.view,arch_db:connector.view_queue_job_function_tree
+msgid "Job Functions"
+msgstr "Delovne funkcije"
+
+#. module: connector
+#: model:mail.message.subtype,name:connector.mt_job_failed
+msgid "Job failed"
+msgstr "Opravilo spodletelo"
+
+#. module: connector
+#: model:ir.actions.act_window,name:connector.action_queue_job
+#: model:ir.model.fields,field_description:connector.field_queue_requeue_job_job_ids
+#: model:ir.ui.menu,name:connector.menu_queue_job
+#: model:ir.ui.view,arch_db:connector.view_queue_job_form
+#: model:ir.ui.view,arch_db:connector.view_queue_job_search
+#: model:ir.ui.view,arch_db:connector.view_queue_job_tree
+msgid "Jobs"
+msgstr "Dela"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_message_last_post
+#: model:ir.model.fields,field_description:connector.field_queue_job_message_last_post
+msgid "Last Message Date"
+msgstr "Datum zadnjega sporočila"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_backend___last_update
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint___last_update
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_review___last_update
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings___last_update
+#: model:ir.model.fields,field_description:connector.field_external_binding___last_update
+#: model:ir.model.fields,field_description:connector.field_queue_job___last_update
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel___last_update
+#: model:ir.model.fields,field_description:connector.field_queue_job_function___last_update
+#: model:ir.model.fields,field_description:connector.field_queue_requeue_job___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_review_write_uid
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_write_uid
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_write_uid
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel_write_uid
+#: model:ir.model.fields,field_description:connector.field_queue_requeue_job_write_uid
+msgid "Last Updated by"
+msgstr "Zadnji posodobil"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_review_write_date
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_write_date
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_write_date
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel_write_date
+#: model:ir.model.fields,field_description:connector.field_queue_requeue_job_write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_external_binding_sync_date
+msgid "Last synchronization date"
+msgstr "Datum zadnje sinhronizacije"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_module_inter_company_rules
+msgid "Manage Inter Company"
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_group_light_multi_company
+msgid "Manage multiple companies"
+msgstr "Upravljanje več družb"
+
+#. module: connector
+#: code:addons/connector/queue/model.py:133
+#, python-format
+msgid "Manually set to done by %s"
+msgstr "Ročno nastavil kot opravljeno: %s"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_max_retries
+msgid "Max. retries"
+msgstr "Maks. št. poskusov"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_message_ids
+#: model:ir.model.fields,field_description:connector.field_queue_job_message_ids
+msgid "Messages"
+msgstr "Sporočila"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_model_id
+#: model:ir.model.fields,field_description:connector.field_queue_job_model_name
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_search
+msgid "Model"
+msgstr "Model"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_backend_name
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel_name
+#: model:ir.model.fields,field_description:connector.field_queue_job_function_name
+msgid "Name"
+msgstr "Naziv"
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_checkpoint_name
+msgid "Name of the record to review"
+msgstr ""
+
+#. module: connector
+#: selection:connector.checkpoint,state:0
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_search
+msgid "Need Review"
+msgstr "Potrebna revizija"
+
+#. module: connector
+#: code:addons/connector/queue/model.py:109
+#, python-format
+msgid "No action available for this job"
+msgstr "Za to delo ni aktivnosti"
+
+#. module: connector
+#: model:ir.actions.act_window,help:connector.action_connector_checkpoint
+msgid "No record to check."
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_message_needaction_counter
+#: model:ir.model.fields,field_description:connector.field_queue_job_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_checkpoint_message_needaction_counter
+#: model:ir.model.fields,help:connector.field_queue_job_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_checkpoint_message_unread_counter
+#: model:ir.model.fields,help:connector.field_queue_job_message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: connector
+#: model:ir.actions.client,name:connector.action_client_connector_menu
+msgid "Open Connector Menu"
+msgstr "Odpri meni povezovalnika"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_channel_parent_id
+msgid "Parent Channel"
+msgstr "Nadrejeni kanal"
+
+#. module: connector
+#: code:addons/connector/queue/model.py:266
+#, python-format
+msgid "Parent channel required."
+msgstr "Zahteva se nadrejeni kanal."
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_search
+#: selection:queue.job,state:0
+msgid "Pending"
+msgstr "Na čakanju"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_func
+msgid "Pickled Function"
+msgstr "Vložena funkcija"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_priority
+msgid "Priority"
+msgstr "Prioriteta"
+
+#. module: connector
+#: model:ir.ui.menu,name:connector.menu_queue
+msgid "Queue"
+msgstr "Čakalna vrsta"
+
+#. module: connector
+#: model:ir.model,name:connector.model_queue_job
+msgid "Queue Job"
+msgstr "Delo čakalne vrste"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_record
+msgid "Record"
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_record_id
+msgid "Record ID"
+msgstr "ID zapisa"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_name
+msgid "Record Name"
+msgstr ""
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_form
+msgid "Related"
+msgstr "Povezano"
+
+#. module: connector
+#: code:addons/connector/related_action.py:48
+#, python-format
+msgid "Related Record"
+msgstr "Povezani zapis"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_requeue_job
+msgid "Requeue"
+msgstr "Razvrščanje"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_form
+msgid "Requeue Job"
+msgstr "Razvrščeno delo"
+
+#. module: connector
+#: model:ir.actions.act_window,name:connector.action_requeue_job
+#: model:ir.ui.view,arch_db:connector.view_requeue_job
+msgid "Requeue Jobs"
+msgstr "Razvrščena dela"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_result
+#: model:ir.ui.view,arch_db:connector.view_queue_job_form
+msgid "Result"
+msgstr "Rezultat"
+
+#. module: connector
+#: model:ir.actions.act_window,name:connector.action_connector_checkpoint_review
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_review
+msgid "Review Checkpoints"
+msgstr "Pregled kontrolnih točk"
+
+#. module: connector
+#: selection:connector.checkpoint,state:0
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_form
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_search
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_tree
+msgid "Reviewed"
+msgstr "Pregledano"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_review
+msgid "Set as reviewed"
+msgstr "Nastavi kot pregledano"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_form
+msgid "Set to 'Done'"
+msgstr "Nastavi kot 'opravljeno'"
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_config_settings_module_share
+msgid "Share or embbed any screen of Odoo."
+msgstr "Souporaba ali vgradnja kateregakoli zaslona Odoo"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_company_share_partner
+msgid "Share partners to all companies"
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_config_settings_company_share_partner
+msgid ""
+"Share your partners to all companies defined in your instance.\n"
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+
+#. module: connector
+#: code:addons/connector/queue/model.py:179
+#, python-format
+msgid ""
+"Something bad happened during the execution of the job. More details in the "
+"'Exception Information' section."
+msgstr "Med izvedbo opravila je prišlo do težav. Več podrobnosti je na voljo v razdelku 'Podatki o izjemah'"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_date_started
+msgid "Start Date"
+msgstr "Začetni datum"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_queue_job_search
+#: selection:queue.job,state:0
+msgid "Started"
+msgstr "Začeto"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_state
+#: model:ir.ui.view,arch_db:connector.view_queue_job_search
+msgid "State"
+msgstr "Stanje"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_state
+msgid "Status"
+msgstr "Status"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_func_string
+msgid "Task"
+msgstr "Opravilo"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_auth_signup_template_user_id
+msgid "Template user for new users created through signup"
+msgstr ""
+
+#. module: connector
+#: model:ir.actions.act_window,help:connector.action_connector_checkpoint
+msgid ""
+"The connectors list the new records to verify\n"
+"                    based on their type.  Only some need a manual\n"
+"                    review."
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_queue_job_max_retries
+msgid ""
+"The job will fail if the number of tries reach the max. retries.\n"
+"Retries are infinite when empty."
+msgstr "Opravilo bo spodletelo, če število poskusov doseže maksimalno število poskusov.\nKadar je prazno, je število poskusov neskončno."
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_checkpoint_backend_id
+msgid "The record has been imported from this backend"
+msgstr "Zapis je bil uvožen iz tega ozadja."
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_checkpoint_record
+msgid "The record to review."
+msgstr ""
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_review
+msgid "The selected checkpoints will be set as reviewed."
+msgstr "Izbrane kontrolne točke bodo označene kot pregledane."
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_requeue_job
+msgid "The selected jobs will be requeued."
+msgstr "Izbrana opravila bodo prerazporejena."
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_config_settings_auth_signup_reset_password
+msgid "This allows users to trigger a password reset from the Login page."
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_config_settings_module_google_calendar
+msgid "This installs the module google_calendar."
+msgstr "Namesti modul google_calendar."
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_config_settings_module_google_drive
+msgid "This installs the module google_docs."
+msgstr "Namesti modul google_docs."
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_config_settings_module_inter_company_rules
+msgid ""
+"This installs the module inter_company_rules.\n"
+" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_uuid
+msgid "UUID"
+msgstr "UUID"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_message_unread
+#: model:ir.model.fields,field_description:connector.field_queue_job_message_unread
+msgid "Unread Messages"
+msgstr "Neprebrana sporočila"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_checkpoint_message_unread_counter
+#: model:ir.model.fields,field_description:connector.field_queue_job_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_config_settings_module_auth_oauth
+msgid "Use external authentication providers, sign in with Google..."
+msgstr ""
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_queue_job_user_id
+msgid "User ID"
+msgstr "ID uporabnika"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_connector_backend_version
+msgid "Version"
+msgstr "Verzija"
+
+#. module: connector
+#: model:ir.actions.act_window,help:connector.action_connector_checkpoint
+msgid ""
+"When a connector imports new records which have\n"
+"                    configuration or reviews to do manually, they\n"
+"                    will appear in this list.  Once a record has been\n"
+"                    checked, click on the 'Reviewed' button."
+msgstr ""
+
+#. module: connector
+#: model:ir.model,name:connector.model_queue_requeue_job
+msgid "Wizard to requeue a selection of jobs"
+msgstr "Čarovnik za prerazporeditev izbire opravil."
+
+#. module: connector
+#: model:ir.model.fields,help:connector.field_connector_config_settings_group_light_multi_company
+msgid ""
+"Work in multi-company environments, with appropriate security access between"
+" companies."
+msgstr ""
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_review
+#: model:ir.ui.view,arch_db:connector.view_connector_config_settings
+#: model:ir.ui.view,arch_db:connector.view_requeue_job
+msgid "or"
+msgstr "ali"
+
+#. module: connector
+#: model:ir.ui.view,arch_db:connector.view_connector_checkpoint_form
+msgid "to verify it:"
+msgstr "za preverjanje:"
