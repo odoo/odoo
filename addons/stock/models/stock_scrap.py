@@ -78,21 +78,16 @@ class StockScrap(models.Model):
     @api.multi
     def do_scrap(self):
         for scrap in self:
-            moves = scrap._get_origin_moves() or self.env['stock.move']
             move = self.env['stock.move'].create(scrap._prepare_move_values())
-            quants = self.env['stock.quant'].quants_get_preferred_domain(
-                move.product_qty, move,
-                domain=[
-                    ('qty', '>', 0),
-                    ('lot_id', '=', self.lot_id.id),
-                    ('package_id', '=', self.package_id.id)],
-                preferred_domain_list=scrap._get_preferred_domain())
-            if any([not x[0] for x in quants]):
+            quantity_in_stock = self.env['stock.quant']._get_quantity(
+                self.product_id, self.location_id, lot_id=self.lot_id,
+                package_id=self.package_id, owner_id=self.owner_id, strict=True
+            )
+            if quantity_in_stock < move.product_qty:  # FIXME: float compare
                 raise UserError(_('You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment.') % move.product_id.name)
-            self.env['stock.quant'].quants_reserve(quants, move)
             move.action_done()
             scrap.write({'move_id': move.id, 'state': 'done'})
-            moves.recalculate_move_state()
+            # TODO: unreserve reserved
         return True
 
     def _prepare_move_values(self):
@@ -106,23 +101,18 @@ class StockScrap(models.Model):
             'location_id': self.location_id.id,
             'scrapped': True,
             'location_dest_id': self.scrap_location_id.id,
-            'restrict_lot_id': self.lot_id.id,
-            'restrict_partner_id': self.owner_id.id,
+            'pack_operation_ids': [(0, 0, {'product_id': self.product_id.id,
+                                           'product_uom_id': self.product_uom_id.id, 
+                                           'qty_done': self.scrap_qty,
+                                           'location_id': self.location_id.id, 
+                                           'location_dest_id': self.scrap_location_id.id,
+                                           'package_id': self.package_id.id, 
+                                           'owner_id': self.owner_id.id,
+                                           'lot_id': self.lot_id.id, })],
+#             'restrict_lot_id': self.lot_id.id,  # FIXME: JCO i asked you x times, should we drop this or not????
+#             'restrict_partner_id': self.owner_id.id,
             'picking_id': self.picking_id.id
         }
-
-    def _get_preferred_domain(self):
-        if not self.picking_id:
-            return []
-        if self.picking_id.state == 'done':
-            preferred_domain = [('history_ids', 'in', self.picking_id.move_lines.filtered(lambda x: x.state == 'done')).ids]
-            preferred_domain2 = [('history_ids', 'not in', self.picking_id.move_lines.filtered(lambda x: x.state == 'done')).ids]
-            return [preferred_domain, preferred_domain2]
-        else:
-            preferred_domain = [('reservation_id', 'in', self.picking_id.move_lines.ids)]
-            preferred_domain2 = [('reservation_id', '=', False)]
-            preferred_domain3 = ['&', ('reservation_id', 'not in', self.picking_id.move_lines.ids), ('reservation_id', '!=', False)]
-            return [preferred_domain, preferred_domain2, preferred_domain3]
 
     @api.multi
     def action_get_stock_picking(self):
