@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sale_config_settings_view_form_inherit_phone_validatation" model="ir.ui.view">
+        <field name="name">sale.config.settings.view.form.inherit.phone.validatation</field>
+        <field name="model">sale.config.settings</field>
+        <field name="inherit_id" ref="crm.sale_config_settings_view_form_inherit_crm" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='module_crm_phone_validation']/p" position="replace">
+                <label for="crm_phone_valid_method"/>
+                <field name="crm_phone_valid_method"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
