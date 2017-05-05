@@ -1035,7 +1035,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 if ($target.attr('disabled')) {
                     return;
                 }
-                $target.attr('disabled', 'disabled');
+                //$target.attr('disabled', 'disabled');
 
                 // note: $.data converts data to number if it's composed only
                 // of digits, nice when storing actual numbers, not nice when
