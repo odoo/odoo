@@ -39,7 +39,10 @@
                     </field>
                     <field name="standard_price" position="replace">
                         <field name="standard_price"
-                            attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}"
+                            attrs="{'readonly': [('valuation','=','real_time')]}"
+                            widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                        <field name="average_price" readonly="1" 
+                            attrs="{'invisible': [('cost_method','!=', 'average')]}"
                             widget='monetary' options="{'currency_field': 'currency_id'}"/>
                     </field>
                     <div name="standard_price_uom" position="after">
@@ -84,6 +87,32 @@
                             class="oe_link oe_read_only" colspan="2"/>
                     </field>
                 </data>
+            </field>
+        </record>
+        
+        <record id="product_valuation_tree" model="ir.ui.view">
+            <field name="name">product.valuation.tree</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="stock_value" sum="Stock Valuation"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_valuation_action" model="ir.actions.act_window">
+            <field name="name">Product Valuation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_valuation_tree"/>
+            <field name="domain">[('type', '=', 'product')]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    If there are products, you will see its name and valuation. 
+                </p>
             </field>
         </record>
     </data>
