@@ -37,6 +37,9 @@ var AbstractField = Widget.extend({
     events: {
         'keydown': '_onKeydown',
     },
+    custom_events: {
+        navigation_move: '_onNavigationMove',
+    },
     /**
      * If this flag is set to true, the field widget will be reset on every
      * change which is made in the view (if the view supports it). This is
@@ -374,20 +377,59 @@ var AbstractField = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * might be controversial: intercept the tab key, to allow the editable list
-     * view to control where the focus is.
+     * Intercepts navigation keyboard events to prevent their default behavior
+     * and notifies the view so that it can handle it its own way.
+     *
+     * Note: the navigation keyboard events are stopped so that potential parent
+     * abstract field does not trigger the navigation_move event a second time.
+     * However, this might be controversial, we might wanna let the event
+     * continue its propagation and flag it to say that navigation has already
+     * been handled (TODO ?).
      *
      * @private
-     * @param {KeyEvent} event
+     * @param {KeyEvent} ev
      */
-    _onKeydown: function (event) {
-        if (event.which === $.ui.keyCode.TAB) {
-            // the event needs to be stopped, to prevent other field widgets
-            // to retrigger a move event
-            event.stopPropagation();
-            this.trigger_up(event.shiftKey ? 'move_previous' : 'move_next');
-            event.preventDefault();
+    _onKeydown: function (ev) {
+        switch (ev.which) {
+            case $.ui.keyCode.TAB:
+                ev.preventDefault();
+                ev.stopPropagation();
+                this.trigger_up('navigation_move', {
+                    direction: ev.shiftKey ? 'previous' : 'next',
+                });
+                break;
+            case $.ui.keyCode.ENTER:
+                ev.stopPropagation();
+                this.trigger_up('navigation_move', {direction: 'next_line'});
+                break;
+            case $.ui.keyCode.UP:
+                ev.stopPropagation();
+                this.trigger_up('navigation_move', {direction: 'up'});
+                break;
+            case $.ui.keyCode.RIGHT:
+                ev.stopPropagation();
+                this.trigger_up('navigation_move', {direction: 'right'});
+                break;
+            case $.ui.keyCode.DOWN:
+                ev.stopPropagation();
+                this.trigger_up('navigation_move', {direction: 'down'});
+                break;
+            case $.ui.keyCode.LEFT:
+                ev.stopPropagation();
+                this.trigger_up('navigation_move', {direction: 'left'});
+                break;
         }
+    },
+    /**
+     * Updates the target data value with the current AbstractField instance.
+     * This allows to consider the parent field in case of nested fields. The
+     * field which triggered the event is still accessible through ev.target.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onNavigationMove: function (ev) {
+        ev.data.target = this;
     },
 });
 

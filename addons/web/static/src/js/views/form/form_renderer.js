@@ -740,20 +740,16 @@ var FormRenderer = BasicRenderer.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onMoveNext: function (ev) {
+    _onNavigationMove: function (ev) {
         ev.stopPropagation();
-        var index = this.allFieldWidgets[this.state.id].indexOf(ev.target);
-        this._activateNextFieldWidget(this.state, index);
-    },
-    /**
-     * @override
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onMovePrevious: function (ev) {
-        ev.stopPropagation();
-        var index = this.allFieldWidgets[this.state.id].indexOf(ev.target);
-        this._activatePreviousFieldWidget(this.state, index);
+        var index;
+        if (ev.data.direction === "next") {
+            index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
+            this._activateNextFieldWidget(this.state, index);
+        } else if (ev.data.direction === "previous") {
+            index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
+            this._activatePreviousFieldWidget(this.state, index);
+        }
     },
 });
 

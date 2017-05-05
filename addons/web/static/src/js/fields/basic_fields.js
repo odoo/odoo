@@ -277,40 +277,20 @@ var InputField = DebouncedField.extend({
         this._doDebouncedAction();
     },
     /**
-     * Implement keyboard movements.  Mostly useful for its environment, such
-     * as a list view.
+     * Stops the left/right navigation move event if the cursor is not at the
+     * start/end of the input element.
      *
-     * @override
      * @private
-     * @param {any} event
+     * @param {OdooEvent} ev
      */
-    _onKeydown: function (event) {
-        var input = this.$input[0];
-        var is_not_selecting;
-        switch (event.which) {
-            case $.ui.keyCode.DOWN:
-                this.trigger_up('move_down');
-                break;
-            case $.ui.keyCode.UP:
-                this.trigger_up('move_up');
-                break;
-            case $.ui.keyCode.LEFT:
-                is_not_selecting = input.selectionEnd === input.selectionStart;
-                if (is_not_selecting && input.selectionStart === 0) {
-                    this.trigger_up('move_left');
-                }
-                break;
-            case $.ui.keyCode.RIGHT:
-                is_not_selecting = input.selectionEnd === input.selectionStart;
-                if (is_not_selecting && input.selectionEnd === input.value.length) {
-                    this.trigger_up('move_right');
-                }
-                break;
-            case $.ui.keyCode.ENTER:
-                this.trigger_up('move_next_line');
-                break;
-        }
+    _onNavigationMove: function (ev) {
         this._super.apply(this, arguments);
+        var input = this.$input[0];
+        var selecting = (input.selectionEnd !== input.selectionStart);
+        if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
+         || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
+            ev.stopPropagation();
+        }
     },
 });
 
@@ -660,28 +640,16 @@ var FieldBoolean = AbstractField.extend({
      *
      * @override
      * @private
-     * @param {KeyEvent} event
+     * @param {KeyEvent} ev
      */
-    _onKeydown: function (event) {
-        this._super.apply(this, arguments);
-        switch (event.which) {
-            case $.ui.keyCode.DOWN:
-                this.trigger_up('move_down');
-                break;
-            case $.ui.keyCode.UP:
-                this.trigger_up('move_up');
-                break;
-            case $.ui.keyCode.LEFT:
-                this.trigger_up('move_left');
-                break;
-            case $.ui.keyCode.RIGHT:
-                this.trigger_up('move_right');
-                break;
+    _onKeydown: function (ev) {
+        switch (ev.which) {
             case $.ui.keyCode.ENTER:
                 this.$input.prop('checked', !this.value);
                 this._setValue(!this.value);
-                break;
+                return;
         }
+        this._super.apply(this, arguments);
     },
 });
 
@@ -1904,10 +1872,10 @@ var FieldDomain = AbstractField.extend({
         "click .o_domain_show_selection_button": "_onShowSelectionButtonClick",
         "click .o_field_domain_dialog_button": "_onDialogEditButtonClick",
     }),
-    custom_events: {
+    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         "domain_changed": "_onDomainSelectorValueChange",
         "domain_selected": "_onDomainSelectorDialogValueChange",
-    },
+    }),
     /**
      * @constructor
      * @override init from AbstractField
