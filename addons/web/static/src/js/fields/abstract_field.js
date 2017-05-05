@@ -177,7 +177,7 @@ var AbstractField = Widget.extend({
             if ($focusable.is('input[type="text"], textarea')) {
                 $focusable[0].selectionStart = $focusable[0].selectionEnd = $focusable[0].value.length;
                 if (!noselect) {
-                    setTimeout($focusable.select.bind($focusable), 0);
+                    $focusable.select();
                 }
             }
             return true;

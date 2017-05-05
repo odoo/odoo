@@ -1913,7 +1913,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('navigation: moving right with keydown from text field', function (assert) {
-        assert.expect(2);
+        assert.expect(6);
 
         this.data.foo.fields.foo.type = 'text';
         var list = createView({
@@ -1931,14 +1931,15 @@ QUnit.module('Views', {
         var textarea = list.$('textarea[name="foo"]')[0];
         assert.strictEqual(document.activeElement, textarea,
             "textarea should be focused");
-        // TODO would be nice to test this but does not work in test
-        // assert.strictEqual(textarea.selectionStart === 0 && textarea.selectionEnd === 3,
-        //     "textarea value ('yop') should be selected");
-        // $(textarea).trigger({type: 'keydown', which: $.ui.keyCode.RIGHT});
-        // assert.strictEqual(document.activeElement, textarea,
-        //     "textarea should still be focused");
-        // assert.strictEqual(textarea.selectionStart === 3 && textarea.selectionEnd === 3,
-        //     "textarea value ('yop') should not be selected and cursor should be at the end");
+        assert.strictEqual(textarea.selectionStart,  0,
+            "textarea selection start should be at the beginning");
+        assert.strictEqual(textarea.selectionEnd,  3,
+            "textarea selection end should be at the end");
+        textarea.selectionStart = 3; // Simulate browser keyboard right behavior (unselect)
+        assert.strictEqual(document.activeElement, textarea,
+            "textarea should still be focused");
+        assert.ok(textarea.selectionStart === 3 && textarea.selectionEnd === 3,
+            "textarea value ('yop') should not be selected and cursor should be at the end");
         $(textarea).trigger({type: 'keydown', which: $.ui.keyCode.RIGHT});
         assert.strictEqual(document.activeElement, list.$('[name="bar"] input')[0],
             "next field (checkbox) should now be focused");
