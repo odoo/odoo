@@ -4,7 +4,8 @@
         <record id="crm.model_crm_lead" model="ir.model">
             <field name="website_form_default_field_id" ref="crm.field_crm_lead_description" />
             <field name="website_form_access">True</field>
-            <field name="website_form_label">Create a lead</field>
+            <field name="website_form_label">Create an Opportunity</field>
+            <field name="website_form_default_template">website_crm.website_crm_contactus</field>
         </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>crm.lead</value>
