@@ -9,7 +9,6 @@ var field_registry = require('web.field_registry');
 
 var transcoder = require('web_editor.transcoder');
 
-var DebouncedField = basic_fields.DebouncedField;
 var QWeb = core.qweb;
 
 
@@ -22,24 +21,13 @@ var QWeb = core.qweb;
  * hasn't been re-introduced yet (because this feature hasn't been introduced
  * yet in the fields in general)
  */
-var FieldTextHtmlSimple = DebouncedField.extend({
+var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
     className: 'oe_form_field oe_form_field_html_text',
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * Summernote doesn't notify for all changes (e.g. changing the background
-     * color). Moreover, we can't detect that this field looses the focus, so
-     * we can't notify the environment that the value may have changed at that
-     * moment. So we always send the current value before saving.
-     *
-     * @override
-     */
-    commitChanges: function () {
-        this._setValue(this._getValue());
-    },
     /**
      * @override
      */
@@ -89,7 +77,7 @@ var FieldTextHtmlSimple = DebouncedField.extend({
             styleWithSpan: false,
             inlinemedia: ['p'],
             lang: "odoo",
-            onChange: this._onInput.bind(this),
+            onChange: this._doDebouncedAction.bind(this),
         };
         if (this.getSession().debug) {
             config.toolbar.splice(7, 0, ['view', ['codeview']]);

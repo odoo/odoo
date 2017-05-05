@@ -187,13 +187,16 @@ var AbstractField = Widget.extend({
     /**
      * This function should be implemented by widgets that are not able to
      * notify their environment when their value changes (maybe because their
-     * are not aware of the changes). It is called before saving, and should
-     * call _setValue() to notify the environment if the value changed.
+     * are not aware of the changes) or that may have a value in a temporary
+     * state (maybe because some action should be performed to validate it
+     * before notifying it). This is typically called before trying to save the
+     * widget's value, so it should call _setValue() to notify the environment
+     * if the value changed but was not notified.
      *
      * @abstract
+     * @returns {Deferred|undefined}
      */
-    commitChanges: function () { // TODO maybe should be done for all fields (keyboard save)
-    },
+    commitChanges: function () {},
     /**
      * Returns the main field's DOM element (jQuery form) which can be focused
      * by the browser.

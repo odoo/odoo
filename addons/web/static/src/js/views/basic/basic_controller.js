@@ -166,15 +166,16 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @returns {Deferred}
      */
     saveRecord: function (recordID, options) {
-        // Some field widgets (e.g. 'html') can't detect (all) their changes, so
-        // we ask them to commit their current value before saving. This has to
-        // be done outside of the mutex protection of saving because
-        // commitChanges will trigger changes and these are also protected. So
-        // the actual saving has to be done after these changes. Also the
-        // commitChanges operation might not be synchronous for other reason
-        // (e.g. the x2m fields will ask the user if some discarding has to be
-        // made). This operation must also be mutex-protected as commitChanges
-        // function of x2m has to be aware of all final changes made to a row.
+        // Some field widgets can't detect (all) their changes immediately or
+        // may have to validate them before notifying them, so we ask them to
+        // commit their current value before saving. This has to be done outside
+        // of the mutex protection of saving because commitChanges will trigger
+        // changes and these are also protected. So the actual saving has to be
+        // done after these changes. Also the commitChanges operation might not
+        // be synchronous for other reason (e.g. the x2m fields will ask the
+        // user if some discarding has to be made). This operation must also be
+        // mutex-protected as commitChanges function of x2m has to be aware of
+        // all final changes made to a row.
         this.mutex.exec(this.renderer.commitChanges.bind(this.renderer, recordID || this.handle)); // TODO write a test for this
         return this.mutex.exec(this._saveRecord.bind(this, recordID, options));
     },

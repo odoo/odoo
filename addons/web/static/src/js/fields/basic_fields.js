@@ -68,38 +68,48 @@ var TranslatableFieldMixin = {
 };
 
 var DebouncedField = AbstractField.extend({
-    events: _.extend({}, AbstractField.prototype.events, {
-        'input': '_onInput',
-        'change': '_onChange',
-    }),
     /**
-     * for field widgets that may have a large number of field changes quickly,
+     * For field widgets that may have a large number of field changes quickly,
      * it could be a good idea to debounce the changes. In that case, this is
      * the suggested value.
      */
     DEBOUNCE: 1000,
 
     /**
-     * Override init to debounce the input changes to make sure they are not
-     * done too quickly.  Note that this is done here and not on the prototype,
-     * so each inputfield has its own debounced function to work with.
-     * Also, if the debounce value is set to 0, no debouncing is done, which is
-     * really useful for the unit tests.
+     * Override init to debounce the field "_doAction" method (by creating a new
+     * one called "_doDebouncedAction"). By default, this method notifies the
+     * current value of the field and we do not want that to happen for each
+     * keystroke. Note that this is done here and not on the prototype, so that
+     * each DebouncedField has its own debounced function to work with. Also, if
+     * the debounce value is set to 0, no debouncing is done, which is really
+     * useful for the unit tests.
      *
+     * @constructor
      * @override
      */
     init: function () {
         this._super.apply(this, arguments);
 
-        // isDirty is used to detect that the user interacted at least once with
-        // the widget, so that we can prevent it from triggering a field_changed
-        // in commitChanges if the user didn't change anything (this is required
-        // as sometimes it is hard to detect that an unset value is still unset,
-        // e.g. if a numerical field contains the value 0, is it because it is
-        // still unset or because the user set it to 0?
-        this.isDirty = false;
-        if (this.DEBOUNCE && this.mode === 'edit') {
-            this._doDebouncedAction = _.debounce(this._doDebouncedAction.bind(this), this.DEBOUNCE);
+        // _debouncedStarted is used to detect that the user interacted at least
+        // once with the widget, so that we can prevent it from triggering a
+        // field_changed in commitChanges if the user didn't change anything
+        // (this is required as sometimes it is hard to detect that an unset
+        // value is still unset, e.g. if a numerical field contains the value 0,
+        // is it because it is still unset or because the user set it to 0?
+        this._debouncedStarted = false;
+        if (this.mode === 'edit') {
+            if (this.DEBOUNCE) {
+                this._doDebouncedAction = _.debounce(this._doAction, this.DEBOUNCE);
+            } else {
+                this._doDebouncedAction = this._doAction;
+            }
+
+            var self = this;
+            var debouncedFunction = this._doDebouncedAction;
+            this._doDebouncedAction = function () {
+                self._debouncedStarted = true;
+                debouncedFunction.apply(self, arguments);
+            };
         }
     },
 
@@ -108,15 +118,15 @@ var DebouncedField = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Debounced fields do not notify the rest of the environment immediately of
-     * their new state, so it is necessary to actually get their value when this
-     * method is called.
+     * This field main action is debounced and might sets the field's value.
+     * When the changes are asked to be commited, the debounced action has to
+     * be done immediately.
      *
      * @override
      */
     commitChanges: function () {
-        if (this.isDirty && this.mode === 'edit') {
-            this._setValue(this._getValue());
+        if (this._debouncedStarted && this.mode === 'edit') {
+            this._doAction();
         }
     },
 
@@ -125,6 +135,16 @@ var DebouncedField = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * By default, notifies the outside world of the new value (checked from the
+     * DOM). This method has an automatically-created (@see init) associated
+     * debounced version called _doDebouncedAction.
+     *
+     * @private
+     */
+    _doAction: function () {
+        this._setValue(this._getValue());
+    },
+    /**
      * Should return the current value of the field, in the DOM (for example,
      * the content of the input)
      *
@@ -132,47 +152,18 @@ var DebouncedField = AbstractField.extend({
      * @private
      * @returns {*}
      */
-    _getValue: function () {
-    },
-    /**
-     * Notifies the outside world of the new value (checked from the DOM).
-     * This method is debounced so that onchanges are not triggered too quickly.
-     *
-     * @private
-     */
-    _doDebouncedAction: function () {
-        this._setValue(this._getValue());
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * We immediately notify the outside world when this field confirms its
-     * changes.
-     *
-     * @private
-     */
-    _onChange: function () {
-        this._setValue(this._getValue());
-    },
-    /**
-     * Called when the user is typing text -> By default this only calls a
-     * debounced method to notify the outside world of the changes.
-     * @see _doDebouncedAction
-     *
-     * @private
-     */
-    _onInput: function () {
-        this.isDirty = true;
-        this._doDebouncedAction();
-    },
+    _getValue: function () {},
 });
 
 var InputField = DebouncedField.extend({
+    events: _.extend({}, DebouncedField.prototype.events, {
+        'input': '_onInput',
+        'change': '_onChange',
+    }),
+
     /**
-     * The very purpose of this field is to be an input tag in edit mode.
+     * Prepares the rendering so that it creates an element the user can type
+     * text into in edit mode.
      *
      * @override
      */
@@ -271,6 +262,25 @@ var InputField = DebouncedField.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * We immediately notify the outside world when this field confirms its
+     * changes.
+     *
+     * @private
+     */
+    _onChange: function () {
+        this._doAction();
+    },
+    /**
+     * Called when the user is typing text -> By default this only calls a
+     * debounced method to notify the outside world of the changes.
+     * @see _doDebouncedAction
+     *
+     * @private
+     */
+    _onInput: function () {
+        this._doDebouncedAction();
+    },
     /**
      * Implement keyboard movements.  Mostly useful for its environment, such
      * as a list view.
@@ -787,7 +797,7 @@ var FieldFloatTime = FieldFloat.extend({
     },
 });
 
-var FieldText = DebouncedField.extend(TranslatableFieldMixin, {
+var FieldText = InputField.extend(TranslatableFieldMixin, {
     className: 'o_field_text',
     supportedFieldTypes: ['text'],
 
@@ -799,7 +809,6 @@ var FieldText = DebouncedField.extend(TranslatableFieldMixin, {
 
         if (this.mode === 'edit') {
             this.tagName = 'textarea';
-            this.className += ' o_input';
         }
     },
     /**
@@ -809,60 +818,11 @@ var FieldText = DebouncedField.extend(TranslatableFieldMixin, {
      */
     start: function () {
         if (this.mode === 'edit') {
-            this.$textarea = this.$el;
-            if (this.attrs.placeholder) {
-                this.$textarea.attr('placeholder', this.attrs.placeholder);
-            }
-            dom.autoresize(this.$textarea, {parent: this});
+            dom.autoresize(this.$el, {parent: this});
 
             this.$el = this.$el.add(this._renderTranslateButton());
         }
-
         return this._super();
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Returns the associated <textarea/> element.
-     *
-     * @override
-     */
-    getFocusableElement: function () {
-        return this.$textarea || $();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @returns {string} the content of the textarea
-     */
-    _getValue: function () {
-        return this.$textarea.val();
-    },
-    /**
-     * Format the value and put it in the textarea.
-     *
-     * @override
-     * @private
-     */
-    _renderEdit: function () {
-        this.$textarea.val(this._formatValue(this.value));
-    },
-
-    /**
-     * Format the value and display it.
-     *
-     * @override
-     * @private
-     */
-    _renderReadonly: function () {
-        this.$el.text(this._formatValue(this.value));
     },
 });
 
@@ -2238,8 +2198,8 @@ var AceEditor = DebouncedField.extend({
             useSoftTabs: true,
         });
         if (this.mode === "edit") {
-            this.aceEditor.on("change", this._onInput.bind(this));
-            this.aceEditor.on("blur", this._onChange.bind(this));
+            this.aceEditor.on("change", this._doDebouncedAction.bind(this));
+            this.aceEditor.on("blur", this._doAction.bind(this));
         }
     },
 });
