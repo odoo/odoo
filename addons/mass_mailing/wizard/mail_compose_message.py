@@ -61,8 +61,8 @@ class MailComposeMessage(models.TransientModel):
                 mail_values = res[res_id]
                 if mail_values.get('email_to'):
                     recips = tools.email_split(mail_values['email_to'])
-                elif mail_values.get('recipient_ids') and partners_email.get(res_id):
-                    recips = tools.email_split(partners_email[res_id])
+                else:
+                    recips = tools.email_split(partners_email.get(res_id))
                 mail_to = recips[0].lower() if recips else False
                 if (blacklist and mail_to in blacklist) or (seen_list and mail_to in seen_list):
                     # prevent sending to blocked addresses that were included by mistake
