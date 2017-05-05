@@ -10,6 +10,10 @@ from PIL import Image
 from PIL import ImageEnhance
 from random import randrange
 
+# Preload PIL with the minimal subset of image formats we need
+Image.preinit()
+Image._initialized = 2
+
 # ----------------------------------------
 # Image resizing
 # ----------------------------------------
