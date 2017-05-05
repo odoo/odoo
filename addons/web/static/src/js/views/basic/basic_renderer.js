@@ -59,7 +59,8 @@ var BasicRenderer = AbstractRenderer.extend({
     /**
      * Calls 'commitChanges' on all field widgets, so that they can notify the
      * environment with their current value (useful for widgets that can't
-     * detect when their value changes, e.g. field 'html').
+     * detect when their value changes or that have to validate their changes
+     * before notifying them).
      *
      * @param {string} recordID
      * @return {Deferred}
