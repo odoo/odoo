@@ -1107,6 +1107,10 @@ class ProductTemplate(models.Model):
     purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line', help=WARNING_HELP, required=True, default="no-message")
     purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
 
+    @api.onchange('categ_id')
+    def _onchange_category(self):
+        if not self.property_account_creditor_price_difference:
+            self.property_account_creditor_price_difference = self.categ_id.property_account_creditor_price_difference_categ
 
 class ProductProduct(models.Model):
     _name = 'product.product'
