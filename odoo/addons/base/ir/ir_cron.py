@@ -72,8 +72,6 @@ class ir_cron(models.Model):
 
         Simply logs the exception and rollback the transaction. """
         self._cr.rollback()
-        _logger.exception("Call from cron %s for server action %d failed in Job %s",
-                          cron_name, server_action_id, job_id)
 
     @api.model
     def _callback(self, cron_name, server_action_id, job_id):
@@ -97,6 +95,8 @@ class ir_cron(models.Model):
                 _logger.debug('%.3fs (cron %s, server action %d with uid %d)', end_time - start_time, cron_name, server_action_id, self.env.uid)
             self.pool.signal_caches_change()
         except Exception, e:
+            _logger.exception("Call from cron %s for server action #%s failed in Job #%s",
+                              cron_name, server_action_id, job_id)
             self._handle_callback_exception(cron_name, server_action_id, job_id, e)
 
     @classmethod
