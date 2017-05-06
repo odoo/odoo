@@ -20,10 +20,6 @@ def get_records_pager(ids, current):
 
 
 class website_account(http.Controller):
-
-    MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]
-    OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "company_name"]
-
     _items_per_page = 20
 
     def _prepare_portal_layout_values(self):
@@ -80,8 +76,8 @@ class website_account(http.Controller):
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
-                values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS}
-                values.update({key: post[key] for key in self.OPTIONAL_BILLING_FIELDS if key in post})
+                values = {key: post[key] for key in self._details_from_fields()["mandatory"]}
+                values.update({key: post[key] for key in self._details_from_fields()["optional"] if key in post})
                 values.update({'zip': values.pop('zipcode', '')})
                 partner.sudo().write(values)
                 if redirect:
@@ -103,12 +99,33 @@ class website_account(http.Controller):
         response.headers['X-Frame-Options'] = 'DENY'
         return response
 
+    def _details_form_fields(self):
+        """Get the expected billing fields in form."""
+        return {
+            "mandatory": {
+                "name",
+                "phone",
+                "email",
+                "street",
+                "city",
+                "country_id",
+            },
+            "optional": {
+                "company_name",
+                "zipcode",
+                "state_id",
+                "vat",
+                "street2",
+            },
+        }
+
     def details_form_validate(self, data):
         error = dict()
         error_message = []
+        billing_fields = self._details_form_fields()
 
         # Validation
-        for field_name in self.MANDATORY_BILLING_FIELDS:
+        for field_name in billing_fields["mandatory"]:
             if not data.get(field_name):
                 error[field_name] = 'missing'
 
@@ -133,7 +150,9 @@ class website_account(http.Controller):
         if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
-        unknown = [k for k in data.iterkeys() if k not in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS]
+        unknown = (set(data.keys())
+                   - billing_fields["mandatory"]
+                   - billing_fields["optional"])
         if unknown:
             error['common'] = 'Unknown field'
             error_message.append("Unknown field '%s'" % ','.join(unknown))
