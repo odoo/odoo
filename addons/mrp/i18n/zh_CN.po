@@ -616,7 +616,7 @@ msgstr "点击创建一个新的消息"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid "Click to create a new routing."
-msgstr "点击创建一个工艺路线"
+msgstr "点击创建一个工序"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -1171,7 +1171,7 @@ msgstr "如果这有效字段设为否，那么可以隐藏此记录且并不删
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
-msgstr "如果去掉这个启用的勾，工艺不需要删除就可以隐藏"
+msgstr "如果去掉这个启用的勾，工序不需要删除就可以隐藏"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1472,12 +1472,12 @@ msgstr "制造"
 #: model:ir.model.fields,field_description:mrp.field_product_template_produce_delay
 #: model:ir.model.fields,field_description:mrp.field_res_company_manufacturing_lead
 msgid "Manufacturing Lead Time"
-msgstr "制造交货时间"
+msgstr "制造前置时间"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_manufacturing_lead
 msgid "Manufacturing Lead Time *"
-msgstr "生产交货时间* "
+msgstr "生产前置时间* "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_mo_id
@@ -1665,7 +1665,7 @@ msgstr "此产品没有BoM表！"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "No Routing"
-msgstr "无工艺"
+msgstr "无工序"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
@@ -1689,7 +1689,7 @@ msgstr "不维护机器和工作中心"
 #: selection:mrp.config.settings,module_mrp_mps:0
 msgid ""
 "No need for Master Production Schedule as products have short lead times"
-msgstr "不需要主生产计划，因为产品的交货期短"
+msgstr "不需要主生产计划，因为产品前置时间短"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_plm:0
@@ -1865,7 +1865,7 @@ msgstr "父级 BoM"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr "父级工艺路线"
+msgstr "父级工序"
 
 #. module: mrp
 #: selection:mrp.production,availability:0
@@ -2352,23 +2352,23 @@ msgstr "负责人"
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr "工艺"
+msgstr "工序"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_routing_line_ids
 msgid "Routing Lines"
-msgstr "工艺行"
+msgstr "工序行"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
 msgid "Routing Name"
-msgstr "工艺名称"
+msgstr "工序名称"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
-msgstr "工艺工作中心"
+msgstr "工序工作中心"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -2377,12 +2377,12 @@ msgstr "工艺工作中心"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Routings"
-msgstr "工艺"
+msgstr "工序"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
 msgid "Routings & Planning"
-msgstr "工艺 & 规划"
+msgstr "工序& 规划"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -2391,7 +2391,7 @@ msgid ""
 "                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials."
-msgstr "工艺，路线能够创建和管理随着不同工作中心流转的制造作业还附带者能够产生原材料需求的物料表"
+msgstr "工序，路线能够创建和管理随着不同工作中心流转的制造作业还附带者能够产生原材料需求的物料表"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
@@ -2701,7 +2701,7 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "planning."
-msgstr "生产产成品需要的一系列作业（发生在一系列工作中心上）。工艺主要用于计算工作中心成本和根据生产计划来规划工作中心负载。"
+msgstr "生产产成品需要的一系列作业（发生在一系列工作中心上）。工序主要用于计算工作中心成本和根据生产计划来规划工作中心负载。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_routing_id
@@ -3171,7 +3171,7 @@ msgid ""
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
 msgstr ""
-"工作中心用来创建和管理制造单位，他们由工人和／或机器构成，\n"
+"工作中心允许你创建和管理制造单位，他们由工人和/或机器构成，\n"
 "通常被认为是任务分配的单位也是产能和预估计划的单位"
 
 #. module: mrp
