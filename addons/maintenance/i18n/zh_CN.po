@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
-# 苏州远鼎 <tiexinliu@126.com>, 2016
+# 卓忆科技 <zhanghao@jointd.com>, 2016
 # Eddie Lim <bhweelim@yahoo.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 msgid ""
@@ -49,7 +49,7 @@ msgstr "<span class=\"label label-warning pull-right\">取消</span>"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>报表</span>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -186,18 +186,18 @@ msgstr "点击创建一个新的设备"
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action_link
 msgid "Click to add a new maintenance request."
-msgstr "点击创建一个新的保养请求"
+msgstr "点击创建一个新的维护请求"
 
 #. module: maintenance
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_stage_action
 #: model:ir.actions.act_window,help:maintenance.maintenance_dashboard_action
 msgid "Click to add a stage in the maintenance request."
-msgstr "在保养请求中点击创建一个阶段"
+msgstr "在维护请求中点击创建一个阶段"
 
 #. module: maintenance
 #: model:ir.actions.act_window,help:maintenance.maintenance_team_action_settings
 msgid "Click to add a team in the maintenance request."
-msgstr ""
+msgstr "增加团队到维护请求中"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_close_date
@@ -263,7 +263,7 @@ msgstr "创建时间"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_maintenance_open_count
 msgid "Current Maintenance"
-msgstr "当前保养"
+msgstr "当前维护"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_dashboard
@@ -273,29 +273,29 @@ msgstr "仪表板"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_next_action_date
 msgid "Date of the next preventive maintenance"
-msgstr ""
+msgstr "下次预防维护日期"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_request_date
 msgid "Date requested for the maintenance to happen"
-msgstr ""
+msgstr "要求进行维护的日期"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_schedule_date
 msgid ""
 "Date the maintenance team plans the maintenance.  It should not differ much "
 "from the Request Date. "
-msgstr ""
+msgstr "维护团队计划维护的日期。 它应该与请求日期不同。"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_close_date
 msgid "Date the maintenance was finished. "
-msgstr ""
+msgstr "维护完成日期。"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_period
 msgid "Days between each preventive maintenance"
-msgstr "每次预防保养间隔天数"
+msgstr "预防维护间隔天数"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_defaults
@@ -355,7 +355,7 @@ msgstr "Email别名"
 msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create new maintenance request for this equipment category."
-msgstr "该设备种类的邮件别名。只要是这个邮件别名收到的邮件就会自动的创建该设备种类的修理需求"
+msgstr "该设备类别的邮件别名。此邮件别名收到的邮件能自动的创建该设备种类的维护需求"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment
@@ -542,7 +542,7 @@ msgstr "保养请求"
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_cat_req_created
 msgid "Maintenance Request Created"
-msgstr "已创建保养请求"
+msgstr "已创建维护请求"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_tree
@@ -557,7 +557,7 @@ msgstr "保养请求需求阶段"
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_created
 msgid "Maintenance Request created"
-msgstr "已创建保养请求"
+msgstr "已创建维护请求"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action
@@ -609,7 +609,7 @@ msgstr "保养类型"
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
 #: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
-msgstr ""
+msgstr "维护：生成预防性维护请求"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_model
@@ -851,7 +851,7 @@ msgstr "序列号"
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_archive
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
-msgstr ""
+msgstr "将归档设置为真以隐藏维护请求，而不是删除它。"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -862,7 +862,7 @@ msgstr "设置"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "显示在今天之前的下一个行动日期的所有记录"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_stage_id
@@ -944,7 +944,7 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"基于此别名接收到的邮件，创建记录的所有人。若此字段没有设置，系统将试图根据发送者(From)地址来查找正确的所有者，如果对于那个地址没有系统用户被发现，将使用系统管理员账户。"
+"在收到此别名的电子邮件时创建记录的所有者。如果此字段未设置，系统将尝试根据发件人(发件人)地址查找正确的所有者，或者如果没有找到该地址的系统用户，将使用管理员帐户。"
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -970,6 +970,9 @@ msgid ""
 "                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
 "                You will manage allocations, issues and maintenance of equipment."
 msgstr ""
+"此应用程序可帮助您追溯员工使用的设备。\n"
+"诸如笔记本电脑，打印机或电话，并将每个设备关联到员工或部门。\n"
+"您将管理设备的分配，故障和维护。"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -990,27 +993,27 @@ msgstr "今天的活动"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
 msgid "Todo Request"
-msgstr ""
+msgstr "待办请求"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count
 msgid "Todo Request Count"
-msgstr ""
+msgstr "待办请求统计"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_block
 msgid "Todo Request Count Block"
-msgstr ""
+msgstr "待办请求受阻统计"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_date
 msgid "Todo Request Count Date"
-msgstr ""
+msgstr "待办请求日期统计"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
 msgid "Todo Request Count High Priority"
-msgstr ""
+msgstr "待办请求高优先级统计"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1044,7 +1047,7 @@ msgstr "未安排的保养"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Upcoming Activities (7 days)"
-msgstr ""
+msgstr "未完成的活动(7天内)"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
