@@ -1,35 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-#
+# 
 # Translators:
-# Max Belyanin <maxbelyanin@gmail.com>, 2015
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Denis Baranov <baranov@itlibertas.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2015-10-12 11:19+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Denis Baranov <baranov@itlibertas.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
-msgstr "Активен"
+msgstr "Активно"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
-msgstr "Архив"
+msgstr "Архивировать"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -37,9 +42,14 @@ msgid "By sticky note Category"
 msgstr "По категории заметок-наклеек"
 
 #. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "Кликните, чтобы создать новый тег."
+
+#. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid "Click to add a personal note."
-msgstr "Нажмите, чтобы добавить новую заметку"
+msgstr "Нажмите, чтобы добавить заметку."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_color
@@ -50,7 +60,7 @@ msgstr "Цветовая палитра"
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
-msgstr "Настройки"
+msgstr "Настройка"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_create_uid
@@ -91,41 +101,45 @@ msgstr "Папка по умолчанию"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировать"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_id
 #: model:ir.model.fields,field_description:note.field_note_stage_id
 #: model:ir.model.fields,field_description:note.field_note_tag_id
 msgid "ID"
-msgstr "ID"
+msgstr "Номер"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note___last_update
 #: model:ir.model.fields,field_description:note.field_note_stage___last_update
 #: model:ir.model.fields,field_description:note.field_note_tag___last_update
 msgid "Last Modified on"
-msgstr "Последний раз изменено"
+msgstr "Последнее изменение"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_uid
 #: model:ir.model.fields,field_description:note.field_note_stage_write_uid
 #: model:ir.model.fields,field_description:note.field_note_tag_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_date
 #: model:ir.model.fields,field_description:note.field_note_stage_write_date
 #: model:ir.model.fields,field_description:note.field_note_tag_write_date
 msgid "Last Updated on"
-msgstr "Последний раз обновлено"
+msgstr "Последнее обновление"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "Позже"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr ""
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
@@ -133,17 +147,11 @@ msgid "New"
 msgstr "Новый"
 
 #. module: note
-#: code:addons/note/note.py:165
-#, python-format
-msgid "New Note"
-msgstr "Новая заметка"
-
-#. module: note
 #: model:ir.model,name:note.model_note_note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "Примечание"
+msgstr "Заметка"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_memo
@@ -158,7 +166,7 @@ msgstr "Этап заметки"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_name
 msgid "Note Summary"
-msgstr "Заметка - кратко"
+msgstr "Резюме заметки"
 
 #. module: note
 #: model:ir.model,name:note.model_note_tag
@@ -171,7 +179,12 @@ msgstr "Тег заметки"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_04
 msgid "Notes"
-msgstr "Примечания"
+msgstr "Заметки"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Overdue Activities"
+msgstr "Просроченные мероприятия"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
@@ -181,7 +194,7 @@ msgstr "Владелец"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
+msgid "Owner of the note stage"
 msgstr "Владелец этапа заметки"
 
 #. module: note
@@ -189,6 +202,11 @@ msgstr "Владелец этапа заметки"
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
 msgstr "Нумерация"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr "Показать все записи с просроченой датой следующего действия"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -231,46 +249,51 @@ msgstr "Название тега"
 #. module: note
 #: sql_constraint:note.tag:0
 msgid "Tag name already exists !"
-msgstr "Значение тэга уже существует !"
+msgstr "Такой тег уже существует!"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Теги"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Эта неделя"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
-msgstr "Cегодня"
+msgstr "Сегодня"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
-msgstr "Завтра"
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr "Сегодняшние мероприятия"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Upcoming Activities (7 days)"
+msgstr "Предстоящие события (7 дней)"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. "
-"However\n"
-"            you can share some notes with other people by inviting "
-"followers\n"
+"            notes are private; no one else will be able to see them. However\n"
+"            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""
-"Используйте заметки, чтобы организовать личные задачи или заметки. Все\n"
-"заметки личные; никто больше не будет их видеть. Однако,\n"
-"вы можете открыть доступ к некоторым заметкам другим людям, приглашая "
-"подписчиковна заметку. (Полезно для протоколов собрания, особенно, если вы "
+"Используйте заметки, чтобы организовать личные \n"
+"задачи или заметки. Все заметки личные; никто больше \n"
+"не сможет их видеть. Однако вы можете открыть доступ \n"
+"к некоторым из них другим людям пригласив подписчиков. \n"
+"(Полезно для протоколов собрания, особенно, если вы \n"
 "активируете функцию блокнота для корпоративных писем)."
 
 #. module: note
@@ -289,53 +312,5 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
-"Вы можете настраивать то, как будете обрабатывать Ваши\n"
-"заметки/задачи, добавляя, удаляя или изменяя столбцы."
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитанные"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"
+"Вы можете настроить процесс обработки заметок или задач\n"
+"добавляя, удаляя или изменяя столбцы."
