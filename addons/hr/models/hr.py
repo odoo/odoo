@@ -32,7 +32,7 @@ class Job(models.Model):
     _description = "Job Position"
     _inherit = ['mail.thread']
 
-    name = fields.Char(string='Job Title', required=True, index=True, translate=True)
+    name = fields.Char(string='Job Position', required=True, index=True, translate=True)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
         help='Expected number of employees for this job position after new recruitment.')
     no_of_employee = fields.Integer(compute='_compute_employees', string="Current Number of Employees", store=True,
@@ -161,7 +161,7 @@ class Employee(models.Model):
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
     # employee in company
-    job_id = fields.Many2one('hr.job', 'Job Title')
+    job_id = fields.Many2one('hr.job', 'Job Position')
     department_id = fields.Many2one('hr.department', 'Department')
     parent_id = fields.Many2one('hr.employee', 'Manager')
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Subordinates')
