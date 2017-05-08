@@ -58,13 +58,16 @@ class Contract(models.Model):
     department_id = fields.Many2one('hr.department', string="Department")
     type_id = fields.Many2one('hr.contract.type', string="Contract Type", required=True, default=lambda self: self.env['hr.contract.type'].search([], limit=1))
     job_id = fields.Many2one('hr.job', string='Job Position')
-    date_start = fields.Date('Start Date', required=True, default=fields.Date.today)
-    date_end = fields.Date('End Date')
-    trial_date_end = fields.Date('End of Trial Period')
+    date_start = fields.Date('Start Date', required=True, default=fields.Date.today,
+        help="Start date of the contract.")
+    date_end = fields.Date('End Date',
+        help="End date of the contract (if it's a fixed-term contract).")
+    trial_date_end = fields.Date('End of Trial Period',
+        help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id.id)
-    wage = fields.Monetary('Wage', digits=(16, 2), required=True, help="The monthly gross wage of the employee.")
+    wage = fields.Monetary('Wage', digits=(16, 2), required=True, help="Employee's monthly gross wage.")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
     state = fields.Selection([

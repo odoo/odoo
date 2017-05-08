@@ -7,9 +7,10 @@ from odoo import api, fields, models
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
-    car_id = fields.Many2one('fleet.vehicle', string='Car',
+    car_id = fields.Many2one('fleet.vehicle', string='Company Car',
         domain=lambda self: self._get_available_cars_domain(),
-        default=lambda self: self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1))
+        default=lambda self: self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1),
+        help="Employee's company car.")
     car_atn = fields.Float(compute='_compute_car_atn_and_costs', string='ATN Company Car')
     company_car_total_depreciated_cost = fields.Float(compute='_compute_car_atn_and_costs')
     available_cars_amount = fields.Integer(compute='_compute_available_cars_amount', string='Number of available cars')
