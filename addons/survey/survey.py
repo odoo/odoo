@@ -837,6 +837,7 @@ class survey_user_input(osv.Model):
     _name = "survey.user_input"
     _rec_name = 'date_create'
     _description = 'Survey User Input'
+    _copy = False
 
     def _quizz_get_score(self, cr, uid, ids, name, args, context=None):
         ret = dict()
@@ -942,6 +943,7 @@ class survey_user_input_line(osv.Model):
     _name = 'survey.user_input_line'
     _description = 'Survey User Input Line'
     _rec_name = 'date_create'
+    _copy = False
 
     def _answered_or_skipped(self, cr, uid, ids, context=None):
         for uil in self.browse(cr, uid, ids, context=context):
