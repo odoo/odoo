@@ -332,7 +332,7 @@ class MailTemplate(models.Model):
         with the result of evaluating these expressions with an evaluation
         context containing:
 
-         - ``user``: browse_record of the current user
+         - ``user``: Model of the current user
          - ``object``: record of the document record this mail is related to
          - ``context``: the context passed to the mail composition wizard
 

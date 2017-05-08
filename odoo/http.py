@@ -908,8 +908,7 @@ class ControllerType(type):
             return
         controllers_per_module[module].append(name_class)
 
-class Controller(object):
-    __metaclass__ = ControllerType
+Controller = ControllerType('Controller', (object,), {})
 
 class EndPoint(object):
     def __init__(self, method, routing):

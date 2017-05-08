@@ -671,7 +671,7 @@ class AccountMoveLine(models.Model):
     def prepare_move_lines_for_reconciliation_widget(self, target_currency=False, target_date=False):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
-            :param target_currency: currency (browse_record or ID) you want the move line debit/credit converted into
+            :param target_currency: currency (Model or ID) you want the move line debit/credit converted into
             :param target_date: date to use for the monetary conversion
         """
         context = dict(self._context or {})
