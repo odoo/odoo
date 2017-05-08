@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== -->
+<!-- ===== CCTS Core Component Type Schema Module ===== -->
+<!-- ====================================================================== -->
+<!--
+   Module of Core Component Type
+   Agency: UN/CEFACT
+   VersionID: 1.1
+   Last change: 14 January 2005
+   
+   
+   
+   Copyright (C) UN/CEFACT (2006). All Rights Reserved.
+   This document and translations of it may be copied and furnished to others,
+   and derivative works that comment on or otherwise explain it or assist
+   in its implementation may be prepared, copied, published and distributed,
+   in whole or in part, without restriction of any kind, provided that the
+   above copyright notice and this paragraph are included on all such copies
+   and derivative works. However, this document itself may not be modified in
+   any way, such as by removing the copyright notice or references to
+   UN/CEFACT, except as needed for the purpose of developing UN/CEFACT
+   specifications, in which case the procedures for copyrights defined in the
+   UN/CEFACT Intellectual Property Rights document must be followed, or as
+   
+   
+   required to translate it into languages other than English.
+   The limited permissions granted above are perpetual and will not be revoked
+   
+   
+   
+   by UN/CEFACT or its successors or assigns.
+   This document and the information contained herein is provided on an "AS IS"
+   basis and UN/CEFACT DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+   NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR
+   FITNESS FOR A PARTICULAR PURPOSE.
+-->
+<xsd:schema targetNamespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"
+xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+xmlns:cct="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+   <!-- ===== Type Definitions ===== -->
+   <!-- =================================================================== -->
+   <!-- ===== CCT: AmountType ===== -->
+   <!-- =================================================================== -->
+   <xsd:complexType name="AmountType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <ccts:UniqueID>UNDT000001</ccts:UniqueID>
+            <ccts:CategoryCode>CCT</ccts:CategoryCode>
+            <ccts:DictionaryEntryName>Amount. Type</ccts:DictionaryEntryName>
+            <ccts:VersionID>1.0</ccts:VersionID>
+            <ccts:Definition>A number of monetary units specified in a currency where the unit of the currency is explicit or implied.</ccts:Definition>
+            <ccts:RepresentationTermName>Amount</ccts:RepresentationTermName>
+            <ccts:PrimitiveType>decimal</ccts:PrimitiveType>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:decimal">
+            <xsd:attribute name="currencyID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000001-SC2</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Amount Currency. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The currency of the amount.</ccts:Definition>
+                     <ccts:ObjectClass>Amount Currency</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Identification</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                     <ccts:UsageRule>Reference UNECE Rec 9, using 3-letter alphabetic codes.</ccts:UsageRule>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="currencyCodeListVersionID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000001-SC3</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Amount Currency. Code List Version. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The VersionID of the UN/ECE Rec9 code list.</ccts:Definition>
+                     <ccts:ObjectClass>Amount Currency</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Code List Version</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <!-- ===== CCT: BinaryObjectType ===== -->
+   <!-- =================================================================== -->
+   <xsd:complexType name="BinaryObjectType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <ccts:UniqueID>UNDT000002</ccts:UniqueID>
+            <ccts:CategoryCode>CCT</ccts:CategoryCode>
+            <ccts:DictionaryEntryName>Binary Object. Type</ccts:DictionaryEntryName>
+            <ccts:VersionID>1.0</ccts:VersionID>
+            <ccts:Definition>A set of finite-length sequences of binary octets.</ccts:Definition>
+            <ccts:RepresentationTermName>Binary Object</ccts:RepresentationTermName>
+            <ccts:PrimitiveType>binary</ccts:PrimitiveType>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:base64Binary">
+            <xsd:attribute name="format" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000002-SC2</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Binary Object. Format. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>The format of the binary content.</ccts:Definition>
+                     <ccts:ObjectClass>Binary Object</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Format</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000002-SC3</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Binary Object. Mime. Code</ccts:DictionaryEntryName>
+                     <ccts:Definition>The mime type of the binary object.</ccts:Definition>
+                     <ccts:ObjectClass>Binary Object</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="encodingCode" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000002-SC4</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Binary Object. Encoding. Code</ccts:DictionaryEntryName>
+                     <ccts:Definition>Specifies the decoding algorithm of the binary object.</ccts:Definition>
+                     <ccts:ObjectClass>Binary Object</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Encoding</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="characterSetCode" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000002-SC5</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Binary Object. Character Set. Code</ccts:DictionaryEntryName>
+                     <ccts:Definition>The character set of the binary object if the mime type is text.</ccts:Definition>
+                     <ccts:ObjectClass>Binary Object</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Character Set</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="uri" type="xsd:anyURI" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000002-SC6</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Binary Object. Uniform Resource. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The Uniform Resource Identifier that identifies where the binary object is located.</ccts:Definition>
+                     <ccts:ObjectClass>Binary Object</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Uniform Resource Identifier</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="filename" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000002-SC7</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Binary Object. Filename.Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>The filename of the binary object.</ccts:Definition>
+                     <ccts:ObjectClass>Binary Object</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Filename</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <!-- ===== CCT: CodeType ===== -->
+   <!-- =================================================================== -->
+   <xsd:complexType name="CodeType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <ccts:UniqueID>UNDT000007</ccts:UniqueID>
+            <ccts:CategoryCode>CCT</ccts:CategoryCode>
+            <ccts:DictionaryEntryName>Code. Type</ccts:DictionaryEntryName>
+            <ccts:VersionID>1.0</ccts:VersionID>
+            <ccts:Definition>A character string (letters, figures, or symbols) that for brevity and/or languange independence may be used to represent or replace a definitive value or text of an attribute together with relevant supplementary information.</ccts:Definition>
+            <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+            <ccts:PrimitiveType>string</ccts:PrimitiveType>
+            <ccts:UsageRule>Should not be used if the character string identifies an instance of an object class or an object in the real world, in which case the Identifier. Type should be used.</ccts:UsageRule>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:normalizedString">
+            <xsd:attribute name="listID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000007-SC2</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Code List. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The identification of a list of codes.</ccts:Definition>
+                     <ccts:ObjectClass>Code List</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Identification</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="listAgencyID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000007-SC3</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Code List. Agency. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>An agency that maintains one or more lists of codes.</ccts:Definition>
+                     <ccts:ObjectClass>Code List</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Agency</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                     <ccts:UsageRule>Defaults to the UN/EDIFACT data element 3055 code list.</ccts:UsageRule>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="listAgencyName" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000007-SC4</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Code List. Agency Name. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>The name of the agency that maintains the list of codes.</ccts:Definition>
+                     <ccts:ObjectClass>Code List</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Agency Name</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="listName" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000007-SC5</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Code List. Name. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>The name of a list of codes.</ccts:Definition>
+                     <ccts:ObjectClass>Code List</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Name</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="listVersionID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000007-SC6</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Code List. Version. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The version of the list of codes.</ccts:Definition>
+                     <ccts:ObjectClass>Code List</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Version</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="name" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000007-SC7</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Code. Name. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>The textual equivalent of the code content component.</ccts:Definition>
+                     <ccts:ObjectClass>Code</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Name</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="languageID" type="xsd:language" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000007-SC8</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Language. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The identifier of the language used in the code name.</ccts:Definition>
+                     <ccts:ObjectClass>Language</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Identification</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="listURI" type="xsd:anyURI" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000007-SC9</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Code List. Uniform Resource. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The Uniform Resource Identifier that identifies where the code list is located.</ccts:Definition>
+                     <ccts:ObjectClass>Code List</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Uniform Resource Identifier</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="listSchemeURI" type="xsd:anyURI" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000007-SC10</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Code List Scheme. Uniform Resource. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The Uniform Resource Identifier that identifies where the code list scheme is located.</ccts:Definition>
+                     <ccts:ObjectClass>Code List Scheme</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Uniform Resource Identifier</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <!-- ===== CCT: DateTimeType ===== -->
+   <!-- =================================================================== -->
+   <xsd:complexType name="DateTimeType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <ccts:UniqueID>UNDT000008</ccts:UniqueID>
+            <ccts:CategoryCode>CCT</ccts:CategoryCode>
+            <ccts:DictionaryEntryName>Date Time. Type</ccts:DictionaryEntryName>
+            <ccts:VersionID>1.0</ccts:VersionID>
+            <ccts:Definition>A particular point in the progression of time together with the relevant supplementary information.</ccts:Definition>
+            <ccts:RepresentationTermName>Date Time</ccts:RepresentationTermName>
+            <ccts:PrimitiveType>string</ccts:PrimitiveType>
+            <ccts:UsageRule>Can be used for a date and/or time.</ccts:UsageRule>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:string">
+            <xsd:attribute name="format" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000008-SC1</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Date Time. Format. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>The format of the date time content</ccts:Definition>
+                     <ccts:ObjectClass>Date Time</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Format</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <!-- ===== CCT: IdentifierType ===== -->
+   <!-- =================================================================== -->
+   <xsd:complexType name="IdentifierType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <ccts:UniqueID>UNDT000011</ccts:UniqueID>
+            <ccts:CategoryCode>CCT</ccts:CategoryCode>
+            <ccts:DictionaryEntryName>Identifier. Type</ccts:DictionaryEntryName>
+            <ccts:VersionID>1.0</ccts:VersionID>
+            <ccts:Definition>A character string to identify and distinguish uniquely, one instance of an object in an identification scheme from all other objects in the same scheme together with relevant supplementary information.</ccts:Definition>
+            <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+            <ccts:PrimitiveType>string</ccts:PrimitiveType>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:normalizedString">
+            <xsd:attribute name="schemeID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000011-SC2</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Identification Scheme. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The identification of the identification scheme.</ccts:Definition>
+                     <ccts:ObjectClass>Identification Scheme</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Identification</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="schemeName" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000011-SC3</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Identification Scheme. Name. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>The name of the identification scheme.</ccts:Definition>
+                     <ccts:ObjectClass>Identification Scheme</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Name</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="schemeAgencyID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000011-SC4</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Identification Scheme Agency. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The identification of the agency that maintains the identification scheme.</ccts:Definition>
+                     <ccts:ObjectClass>Identification Scheme Agency</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Identification</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                     <ccts:UsageRule>Defaults to the UN/EDIFACT data element 3055 code list.</ccts:UsageRule>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="schemeAgencyName" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000011-SC5</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Identification Scheme Agency. Name. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>The name of the agency that maintains the identification scheme.</ccts:Definition>
+                     <ccts:ObjectClass>Identification Scheme Agency</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Agency Name</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="schemeVersionID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000011-SC6</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Identification Scheme. Version. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The version of the identification scheme.</ccts:Definition>
+                     <ccts:ObjectClass>Identification Scheme</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Version</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="schemeDataURI" type="xsd:anyURI" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000011-SC7</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Identification Scheme Data. Uniform Resource. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The Uniform Resource Identifier that identifies where the identification scheme data is located.</ccts:Definition>
+                     <ccts:ObjectClass>Identification Scheme Data</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Uniform Resource Identifier</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="schemeURI" type="xsd:anyURI" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000011-SC8</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Identification Scheme. Uniform Resource. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The Uniform Resource Identifier that identifies where the identification scheme is located.</ccts:Definition>
+                     <ccts:ObjectClass>Identification Scheme</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Uniform Resource Identifier</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <!-- ===== CCT: IndicatorType ===== -->
+   <!-- =================================================================== -->
+   <xsd:complexType name="IndicatorType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <ccts:UniqueID>UNDT000012</ccts:UniqueID>
+            <ccts:CategoryCode>CCT</ccts:CategoryCode>
+            <ccts:DictionaryEntryName>Indicator. Type</ccts:DictionaryEntryName>
+            <ccts:VersionID>1.0</ccts:VersionID>
+            <ccts:Definition>A list of two mutually exclusive Boolean values that express the only possible states of a Property.</ccts:Definition>
+            <ccts:RepresentationTermName>Indicator</ccts:RepresentationTermName>
+            <ccts:PrimitiveType>string</ccts:PrimitiveType>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:string">
+            <xsd:attribute name="format" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000012-SC2</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Indicator. Format. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>Whether the indicator is numeric, textual or binary.</ccts:Definition>
+                     <ccts:ObjectClass>Indicator</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Format</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <!-- ===== CCT: MeasureType ===== -->
+   <!-- =================================================================== -->
+   <xsd:complexType name="MeasureType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <ccts:UniqueID>UNDT000013</ccts:UniqueID>
+            <ccts:CategoryCode>CCT</ccts:CategoryCode>
+            <ccts:DictionaryEntryName>Measure. Type</ccts:DictionaryEntryName>
+            <ccts:VersionID>1.0</ccts:VersionID>
+            <ccts:Definition>A numeric value determined by measuring an object along with the specified unit of measure.</ccts:Definition>
+            <ccts:RepresentationTermName>Measure</ccts:RepresentationTermName>
+            <ccts:PrimitiveType>decimal</ccts:PrimitiveType>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:decimal">
+            <xsd:attribute name="unitCode" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000013-SC2</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Measure Unit. Code</ccts:DictionaryEntryName>
+                     <ccts:Definition>The type of unit of measure.</ccts:Definition>
+                     <ccts:ObjectClass>Measure Unit</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Code</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                     <ccts:UsageRule>Reference UNECE Rec. 20 and X12 355</ccts:UsageRule>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="unitCodeListVersionID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000013-SC3</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Measure Unit. Code List Version. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The version of the measure unit code list.</ccts:Definition>
+                     <ccts:ObjectClass>Measure Unit</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Code List Version</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <!-- ===== CCT: NumericType ===== -->
+   <!-- =================================================================== -->
+   <xsd:complexType name="NumericType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <ccts:UniqueID>UNDT000014</ccts:UniqueID>
+            <ccts:CategoryCode>CCT</ccts:CategoryCode>
+            <ccts:DictionaryEntryName>Numeric. Type</ccts:DictionaryEntryName>
+            <ccts:VersionID>1.0</ccts:VersionID>
+            <ccts:Definition>Numeric information that is assigned or is determined by calculation, counting, or sequencing. It does not require a unit of quantity or unit of measure.</ccts:Definition>
+            <ccts:RepresentationTermName>Numeric</ccts:RepresentationTermName>
+            <ccts:PrimitiveType>string</ccts:PrimitiveType>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:decimal">
+            <xsd:attribute name="format" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000014-SC2</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Numeric. Format. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>Whether the number is an integer, decimal, real number or percentage.</ccts:Definition>
+                     <ccts:ObjectClass>Numeric</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Format</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <!-- ===== CCT: QuantityType ===== -->
+   <!-- =================================================================== -->
+   <xsd:complexType name="QuantityType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <ccts:UniqueID>UNDT000018</ccts:UniqueID>
+            <ccts:CategoryCode>CCT</ccts:CategoryCode>
+            <ccts:DictionaryEntryName>Quantity. Type</ccts:DictionaryEntryName>
+            <ccts:VersionID>1.0</ccts:VersionID>
+            <ccts:Definition>A counted number of non-monetary units possibly including fractions.</ccts:Definition>
+            <ccts:RepresentationTermName>Quantity</ccts:RepresentationTermName>
+            <ccts:PrimitiveType>decimal</ccts:PrimitiveType>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:decimal">
+            <xsd:attribute name="unitCode" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000018-SC2</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Quantity. Unit. Code</ccts:DictionaryEntryName>
+                     <ccts:Definition>The unit of the quantity</ccts:Definition>
+                     <ccts:ObjectClass>Quantity</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Unit Code</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="unitCodeListID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000018-SC3</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Quantity Unit. Code List. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The quantity unit code list.</ccts:Definition>
+                     <ccts:ObjectClass>Quantity Unit</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Code List</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="unitCodeListAgencyID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000018-SC4</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Quantity Unit. Code List Agency. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The identification of the agency that maintains the quantity unit code list</ccts:Definition>
+                     <ccts:ObjectClass>Quantity Unit</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Code List Agency</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                     <ccts:UsageRule>Defaults to the UN/EDIFACT data element 3055 code list.</ccts:UsageRule>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="unitCodeListAgencyName" type="xsd:string" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000018-SC5</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Quantity Unit. Code List Agency Name. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>The name of the agency which maintains the quantity unit code list.</ccts:Definition>
+                     <ccts:ObjectClass>Quantity Unit</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Code List Agency Name</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <!-- ===== CCT: TextType ===== -->
+   <!-- =================================================================== -->
+   <xsd:complexType name="TextType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <ccts:UniqueID>UNDT000019</ccts:UniqueID>
+            <ccts:CategoryCode>CCT</ccts:CategoryCode>
+            <ccts:DictionaryEntryName>Text. Type</ccts:DictionaryEntryName>
+            <ccts:VersionID>1.0</ccts:VersionID>
+            <ccts:Definition>A character string (i.e. a finite set of characters) generally in the form of words of a language.</ccts:Definition>
+            <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+            <ccts:PrimitiveType>string</ccts:PrimitiveType>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:string">
+            <xsd:attribute name="languageID" type="xsd:language" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000019-SC2</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName>Language. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The identifier of the language used in the content component.</ccts:Definition>
+                     <ccts:ObjectClass>Language</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Identification</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="languageLocaleID" type="xsd:normalizedString" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                     <ccts:UniqueID>UNDT000019-SC3</ccts:UniqueID>
+                     <ccts:CategoryCode>SC</ccts:CategoryCode>
+                     <ccts:DictionaryEntryName> Language. Locale. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>The identification of the locale of the language.</ccts:Definition>
+                     <ccts:ObjectClass>Language</ccts:ObjectClass>
+                     <ccts:PropertyTermName>Locale</ccts:PropertyTermName>
+                     <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                     <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                  </xsd:documentation>
+               </xsd:annotation>
+            </xsd:attribute>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+</xsd:schema>

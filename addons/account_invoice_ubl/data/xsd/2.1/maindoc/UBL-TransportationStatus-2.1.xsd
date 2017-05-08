@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Library:           OASIS Universal Business Language (UBL) 2.1 OS
+                     http://docs.oasis-open.org/ubl/os-UBL-2.1/
+  Release Date:      04 November 2013
+  Module:            xsd/maindoc/UBL-TransportationStatus-2.1.xsd
+  Generated on:      2013-10-31 17:17z
+  Copyright (c) OASIS Open 2013. All Rights Reserved.
+-->
+<xsd:schema xmlns="urn:oasis:names:specification:ubl:schema:xsd:TransportationStatus-2"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+            targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:TransportationStatus-2"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="2.1">
+   <!-- ===== Imports ===== -->
+   <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               schemaLocation="../common/UBL-CommonAggregateComponents-2.1.xsd"/>
+   <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               schemaLocation="../common/UBL-CommonBasicComponents-2.1.xsd"/>
+   <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+               schemaLocation="../common/UBL-CommonExtensionComponents-2.1.xsd"/>
+   <!-- ===== Element Declarations ===== -->
+   <xsd:element name="TransportationStatus" type="TransportationStatusType">
+      <xsd:annotation>
+         <xsd:documentation>This element MUST be conveyed as the root element in any instance document based on this Schema expression</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <!-- ===== Type Definitions ===== -->
+   <!-- ===== Aggregate Business Information Entity Type Definitions ===== -->
+   <xsd:complexType name="TransportationStatusType">
+      <xsd:annotation>
+         <xsd:documentation>
+            <ccts:Component>
+               <ccts:ComponentType>ABIE</ccts:ComponentType>
+               <ccts:DictionaryEntryName>Transportation Status. Details</ccts:DictionaryEntryName>
+               <ccts:Definition>A document to circulate reports of transportation status or changes in status (events) among a group of participants.</ccts:Definition>
+               <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+            </ccts:Component>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+           <xsd:element ref="ext:UBLExtensions" minOccurs="0" maxOccurs="1">
+              <xsd:annotation>
+                 <xsd:documentation>A container for all extensions present in the document.</xsd:documentation>
+              </xsd:annotation>
+           </xsd:element>
+          <xsd:element ref="cbc:UBLVersionID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. UBL Version Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>Identifies the earliest version of the UBL 2 schema for this document type that defines all of the elements that might be encountered in the current instance.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>UBL Version Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                     <ccts:Examples>2.0.5</ccts:Examples>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:CustomizationID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Customization Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>Identifies a user-defined customization of UBL for a specific use.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Customization Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                     <ccts:Examples>NES</ccts:Examples>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:ProfileID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Profile Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>Identifies a user-defined profile of the customization of UBL being used.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Profile Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                     <ccts:Examples>BasicProcurementProcess</ccts:Examples>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:ProfileExecutionID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Profile Execution Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>Identifies an instance of executing a profile, to associate all transactions in a collaboration.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Profile Execution Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                     <ccts:Examples>BPP-1001</ccts:Examples>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:ID" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>An identifier for this document, assigned by the sender.</ccts:Definition>
+                     <ccts:Cardinality>1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:CarrierAssignedID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Carrier Assigned_ Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>A reference number assigned by a carrier or its agent to identify a specific shipment, such as a booking reference number when cargo space is reserved prior to loading.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Carrier Assigned</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:UUID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. UUID. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>A universally unique identifier for an instance of this document.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>UUID</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:IssueDate" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Issue Date. Date</ccts:DictionaryEntryName>
+                     <ccts:Definition>The date, assigned by the sender, on which this document was issued.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Issue Date</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Date</ccts:RepresentationTerm>
+                     <ccts:DataType>Date. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:IssueTime" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Issue Time. Time</ccts:DictionaryEntryName>
+                     <ccts:Definition>The time, assigned by the sender, at which this document was issued.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Issue Time</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Time</ccts:RepresentationTerm>
+                     <ccts:DataType>Time. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:Name" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Name</ccts:DictionaryEntryName>
+                     <ccts:Definition>Text, assigned by the sender, that identifies this document to business users.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Name</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Name</ccts:RepresentationTerm>
+                     <ccts:DataType>Name. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:Description" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Description. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>A textual description of transportation status.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Description</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+                     <ccts:DataType>Text. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:Note" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Note. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>Free-form text pertinent to this document, conveying information that is not contained explicitly in other structures.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Note</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+                     <ccts:DataType>Text. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:ShippingOrderID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Shipping Order Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>A reference number for a shipping order.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Shipping Order Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:OtherInstruction" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Other_ Instruction. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>An instruction regarding this message.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Other</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Instruction</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+                     <ccts:DataType>Text. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:TransportationStatusTypeCode" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Transportation Status Type Code. Code</ccts:DictionaryEntryName>
+                     <ccts:Definition>A code signifying the type of status provided in a Transportation Status document.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Transportation Status Type Code</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+                     <ccts:DataType>Code. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:TransportExecutionStatusCode" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Transport Execution Status Code. Code</ccts:DictionaryEntryName>
+                     <ccts:Definition>A code signifying the overall status of transport service execution.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Transport Execution Status Code</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+                     <ccts:DataType>Code. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:Consignment" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Consignment</ccts:DictionaryEntryName>
+                     <ccts:Definition>A consignment associated with this Transportation Status report.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Consignment</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Consignment</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Consignment</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:TransportEvent" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Transport Event</ccts:DictionaryEntryName>
+                     <ccts:Definition>An event associated with this Transportation Status report.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Transport Event</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Transport Event</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Transport Event</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:DocumentReference" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Document Reference</ccts:DictionaryEntryName>
+                     <ccts:Definition>A reference to another document associated with this document.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Document Reference</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Document Reference</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Document Reference</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:Signature" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Signature</ccts:DictionaryEntryName>
+                     <ccts:Definition>A signature applied to this document.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Signature</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Signature</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Signature</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:SenderParty" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Sender_ Party. Party</ccts:DictionaryEntryName>
+                     <ccts:Definition>The party sending this Transportation Status report.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Sender</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Party</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Party</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Party</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:ReceiverParty" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Receiver_ Party. Party</ccts:DictionaryEntryName>
+                     <ccts:Definition>The party receiving this Transportation Status report.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Receiver</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Party</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Party</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Party</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:TransportationStatusRequestDocumentReference"
+                      minOccurs="0"
+                      maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Transportation Status Request_ Document Reference. Document Reference</ccts:DictionaryEntryName>
+                     <ccts:Definition>A reference to the Transportation Status Request to which this report is a response.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Transportation Status Request</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Document Reference</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Document Reference</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Document Reference</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:TransportExecutionPlanDocumentReference"
+                      minOccurs="0"
+                      maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Transport Execution Plan_ Document Reference. Document Reference</ccts:DictionaryEntryName>
+                     <ccts:Definition>A reference to the Transport Execution Plan associated with the transport service whose status is being reported.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Transport Execution Plan</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Document Reference</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Document Reference</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Document Reference</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:UpdatedPickupTransportEvent" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Updated Pickup_ Transport Event. Transport Event</ccts:DictionaryEntryName>
+                     <ccts:Definition>Update of the original plan regarding a pickup of goods.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Updated Pickup</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Transport Event</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Transport Event</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Transport Event</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:UpdatedDeliveryTransportEvent" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Updated Delivery_ Transport Event. Transport Event</ccts:DictionaryEntryName>
+                     <ccts:Definition>Update of the original plan regarding a delivery.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Updated Delivery</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Transport Event</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Transport Event</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Transport Event</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:StatusLocation" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Status_ Location. Location</ccts:DictionaryEntryName>
+                     <ccts:Definition>Locations associated with this Transportation Status report.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Status</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Location</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Location</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Location</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:StatusPeriod" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Transportation Status. Status_ Period. Period</ccts:DictionaryEntryName>
+                     <ccts:Definition>A period for which status is provided.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Transportation Status</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Status</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Period</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Period</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Period</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+</xsd:schema>
+<!-- ===== Copyright Notice ===== --><!--
+  OASIS takes no position regarding the validity or scope of any 
+  intellectual property or other rights that might be claimed to pertain 
+  to the implementation or use of the technology described in this 
+  document or the extent to which any license under such rights 
+  might or might not be available; neither does it represent that it has 
+  made any effort to identify any such rights. Information on OASIS's 
+  procedures with respect to rights in OASIS specifications can be 
+  found at the OASIS website. Copies of claims of rights made 
+  available for publication and any assurances of licenses to be made 
+  available, or the result of an attempt made to obtain a general 
+  license or permission for the use of such proprietary rights by 
+  implementors or users of this specification, can be obtained from 
+  the OASIS Executive Director.
+
+  OASIS invites any interested party to bring to its attention any 
+  copyrights, patents or patent applications, or other proprietary 
+  rights which may cover technology that may be required to 
+  implement this specification. Please address the information to the 
+  OASIS Executive Director.
+  
+  This document and translations of it may be copied and furnished to 
+  others, and derivative works that comment on or otherwise explain 
+  it or assist in its implementation may be prepared, copied, 
+  published and distributed, in whole or in part, without restriction of 
+  any kind, provided that the above copyright notice and this 
+  paragraph are included on all such copies and derivative works. 
+  However, this document itself may not be modified in any way, 
+  such as by removing the copyright notice or references to OASIS, 
+  except as needed for the purpose of developing OASIS 
+  specifications, in which case the procedures for copyrights defined 
+  in the OASIS Intellectual Property Rights document must be 
+  followed, or as required to translate it into languages other than 
+  English. 
+
+  The limited permissions granted above are perpetual and will not be 
+  revoked by OASIS or its successors or assigns. 
+
+  This document and the information contained herein is provided on 
+  an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, 
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+  WARRANTY THAT THE USE OF THE INFORMATION HEREIN 
+  WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED 
+  WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A 
+  PARTICULAR PURPOSE.    
+-->

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Library:           OASIS Universal Business Language (UBL) 2.1 OS
+                     http://docs.oasis-open.org/ubl/os-UBL-2.1/
+  Release Date:      04 November 2013
+  Module:            UBL-CommonExtensionComponents-2.1.xsd
+  Generated on:      2013-04-20 18:40(UTC)
+  Copyright (c) OASIS Open 2013. All Rights Reserved.
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" 
+xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+xmlns:udt="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2"
+targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" 
+            elementFormDefault="qualified" attributeFormDefault="unqualified" 
+            version="2.1">
+<!-- ===== Imports ===== -->
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2" schemaLocation="UBL-UnqualifiedDataTypes-2.1.xsd"/>
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" schemaLocation="UBL-CommonBasicComponents-2.1.xsd"/>
+<!-- ===== Includes ===== -->
+<xsd:include schemaLocation="UBL-ExtensionContentDataType-2.1.xsd"/>
+<!-- ===== Aggregate Element and Type Declarations ===== -->
+  <xsd:element name="UBLExtensions" type="UBLExtensionsType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A container for all extensions present in the document.
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="UBLExtensionsType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A container for all extensions present in the document.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="UBLExtension" minOccurs="1" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            A single extension for private use.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="UBLExtension" type="UBLExtensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A single extension for private use.
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="UBLExtensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A single extension for private use.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="cbc:ID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            An identifier for the Extension assigned by the creator of the extension.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:Name" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            A name for the Extension assigned by the creator of the extension.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="ExtensionAgencyID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            An agency that maintains one or more Extensions.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="ExtensionAgencyName" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            The name of the agency that maintains the Extension.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="ExtensionVersionID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            The version of the Extension.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="ExtensionAgencyURI" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            A URI for the Agency that maintains the Extension.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="ExtensionURI" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            A URI for the Extension.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="ExtensionReasonCode" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            A code for reason the Extension is being included.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="ExtensionReason" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            A description of the reason for the Extension.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="ExtensionContent" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            The definition of the extension content.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+<!-- ===== Basic Element and Type Declarations ===== -->
+  <xsd:element name="ExtensionAgencyID" type="ExtensionAgencyIDType"/>
+  <xsd:element name="ExtensionAgencyName" type="ExtensionAgencyNameType"/>
+  <xsd:element name="ExtensionAgencyURI" type="ExtensionAgencyURIType"/>
+  <xsd:element name="ExtensionContent" type="ExtensionContentType"/>
+  <xsd:element name="ExtensionReason" type="ExtensionReasonType"/>
+  <xsd:element name="ExtensionReasonCode" type="ExtensionReasonCodeType"/>
+  <xsd:element name="ExtensionURI" type="ExtensionURIType"/>
+  <xsd:element name="ExtensionVersionID" type="ExtensionVersionIDType"/>
+  <xsd:complexType name="ExtensionAgencyIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExtensionAgencyNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExtensionAgencyURIType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExtensionReasonType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExtensionReasonCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExtensionURIType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExtensionVersionIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+</xsd:schema>
+<!-- ===== Copyright Notice ===== -->
+<!--
+  OASIS takes no position regarding the validity or scope of any 
+  intellectual property or other rights that might be claimed to pertain 
+  to the implementation or use of the technology described in this 
+  document or the extent to which any license under such rights 
+  might or might not be available; neither does it represent that it has 
+  made any effort to identify any such rights. Information on OASIS's 
+  procedures with respect to rights in OASIS specifications can be 
+  found at the OASIS website. Copies of claims of rights made 
+  available for publication and any assurances of licenses to be made 
+  available, or the result of an attempt made to obtain a general 
+  license or permission for the use of such proprietary rights by 
+  implementors or users of this specification, can be obtained from 
+  the OASIS Executive Director.
+
+  OASIS invites any interested party to bring to its attention any 
+  copyrights, patents or patent applications, or other proprietary 
+  rights which may cover technology that may be required to 
+  implement this specification. Please address the information to the 
+  OASIS Executive Director.
+  
+  This document and translations of it may be copied and furnished to 
+  others, and derivative works that comment on or otherwise explain 
+  it or assist in its implementation may be prepared, copied, 
+  published and distributed, in whole or in part, without restriction of 
+  any kind, provided that the above copyright notice and this 
+  paragraph are included on all such copies and derivative works. 
+  However, this document itself may not be modified in any way, 
+  such as by removing the copyright notice or references to OASIS, 
+  except as needed for the purpose of developing OASIS 
+  specifications, in which case the procedures for copyrights defined 
+  in the OASIS Intellectual Property Rights document must be 
+  followed, or as required to translate it into languages other than 
+  English. 
+
+  The limited permissions granted above are perpetual and will not be 
+  revoked by OASIS or its successors or assigns. 
+
+  This document and the information contained herein is provided on 
+  an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, 
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+  WARRANTY THAT THE USE OF THE INFORMATION HEREIN 
+  WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED 
+  WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A 
+  PARTICULAR PURPOSE.
+-->
