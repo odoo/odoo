@@ -6,21 +6,14 @@
         <record id="mx_partner_address_form" model="ir.ui.view">
             <field name="name">mx.partner.form.address</field>
             <field name="model">res.partner</field>
-            <field name="priority" eval="999"/>
+            <field name="priority" eval="900"/>
             <field name="arch" type="xml">
                 <form>
                     <div class="o_address_format">
-                        <field name="street" invisible="1"/>
-                        <field name="street_name" placeholder="Street Name..." class="o_address_street"/>
-                        <div class="o_row">
-                            <label for="street_number" class="oe_edit_only"/>
-                            <span> </span>
-                            <field name="street_number"/>
-                            <label for="street_number2" class="oe_edit_only"/>
-                            <field name="street_number2"/>
-                        </div>
+                        <field name="street" placeholder="Street..." class="o_address_street"/>
                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                        <field name="city" placeholder="City..." class="o_address_street" />
+                        <field name='city' attrs="{'invisible': [('country_enforce_cities', '=', True)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
+                        <field name='city_id' attrs="{'invisible': [('country_enforce_cities', '=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'default_country_id': country_id}" domain="[('country_id', '=', country_id)]"/>
                         <div class="o_row">
                             <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                             <field name="state_id" placeholder="State" options='{"no_open": True}'/>

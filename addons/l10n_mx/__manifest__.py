@@ -34,7 +34,6 @@ With this module you will have:
         "account",
         "base_vat",
         "base_address_city",
-        "base_address_extended",
     ],
     "data": [
         "data/account_tag_data.xml",
