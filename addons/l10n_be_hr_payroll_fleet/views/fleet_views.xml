@@ -5,10 +5,12 @@
         <field name="model">fleet.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='co2']" position="after">
-                <field name="co2_fee"/>
-            </xpath>
             <xpath expr="//field[@name='car_value']" position="after">
+                <label for="co2_fee"/>
+                <div class="o_row">
+                    <field name="co2_fee"/>
+                    <span> / month</span>
+                </div>
                 <label for="total_depreciated_cost"/>
                 <div class="o_row">
                     <field name="total_depreciated_cost" nolabel="1"/>
@@ -47,18 +49,42 @@
                     </group>
                 </group>                        
             </xpath>
-            <xpath expr="//page[@name='vendors']" position="after">
+            <xpath expr="//page[@name='vendors']" position="before">
                 <page string="Information">
                     <group>
-                        <group>
-                            <field name="default_car_value"/>
-                            <field name="default_co2"/>
-                            <field name="default_fuel_type" widget="selection"/>
-                            <field name="default_recurring_cost_amount_depreciated"/>
+                        <group string="Vehicle Cost">
+                            <label for="default_car_value"/>
+                            <div class="o_row">
+                                <field name="default_car_value" nolabel="1"/>
+                            </div>
+                            <label for="co2_fee"/>
+                            <div class="o_row">
+                                <field name="co2_fee" nolabel="1"/>
+                                <span> / month</span>
+                            </div>
+                            <label for="default_recurring_cost_amount_depreciated"/>
+                            <div class="o_row">
+                                <field name="default_recurring_cost_amount_depreciated" nolabel="1"/>
+                                <span> / month</span>
+                            </div>       
+                            <label for="default_total_depreciated_cost"/>
+                            <div class="o_row">
+                                <field name="default_total_depreciated_cost" nolabel="1"/>
+                                <span> / month</span>
+                            </div>
+                            <label for="default_atn"/>
+                            <div class="o_row">
+                                <field name="default_atn" nolabel="1"/>
+                                <span> / month</span>
+                            </div>
                         </group>
-                        <group>
-                            <field name="default_atn"/>
-                            <field name="default_total_depreciated_cost" invisible="1"/>
+                        <group string="Vehicle Information">
+                            <label for="default_co2"/>
+                            <div class="o_row">
+                                <field name="default_co2" nolabel="1"/>
+                                <span> g / km</span>
+                            </div>
+                            <field name="default_fuel_type" widget="selection"/>
                         </group>
                     </group>
                 </page>
