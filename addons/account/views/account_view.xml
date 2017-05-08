@@ -523,8 +523,9 @@
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="button_journal_entries"
                                 string="Journal Entries" type="object"
-                                attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
-                        <field name="move_line_ids" invisible="1"/>
+                                attrs="{'invisible':[('move_line_count','=', 0)]}" icon="fa-bars" />
+                        <field name="move_line_count" invisible="1"/>
+
                     </div>
                     <div class="oe_title oe_inline">
                         <label for="name" class="oe_edit_only"/>
@@ -535,7 +536,7 @@
                             <field name="journal_type" invisible="1"/>
                             <field name="cashbox_start_id" invisible="1"/>
                             <field name="cashbox_end_id" invisible="1"/>
-                            <field name="journal_id" domain="[('type', '=', journal_type)]" attrs="{'readonly': [('move_line_ids', '!=', [])]}" widget="selection"/>
+                            <field name="journal_id" domain="[('type', '=', journal_type)]" attrs="{'readonly': [('move_line_count','!=', 0)]}" widget="selection"/>
                             <field name="date"/>
                             <field name='company_id' options="{'no_create': True}" groups="base.group_multi_company" />
                             <field name="currency_id" invisible="1"/>
