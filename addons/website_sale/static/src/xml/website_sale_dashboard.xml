@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-extend="website.dashboard_header">
-        <t t-jquery="t[t-foreach='apps']" t-operation="before">
-            <div t-if="widget.dashboards_data.sales.summary.order_unpaid_count" class="o_inner_box o_main o_box_item" title="Confirm orders when you get paid." t-name='unpaid_orders_box'>
-                <a href="#" class="o_dashboard_action" name="website_sale.action_unpaid_orders_ecommerce">
+        <t t-jquery="div.o_dashboard_common" t-operation="append">
+            <div class="o_box" t-if="_.some(_.values(widget.dashboards_data.sales.summary))">
+                <div t-if="widget.dashboards_data.sales.summary.order_unpaid_count" class="o_inner_box o_dashboard_action" title="Confirm orders when you get paid." name="website_sale.action_unpaid_orders_ecommerce">
                     <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_unpaid_count"/></div>
                     Unpaid Orders
-                </a>
-                <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>
-            </div>
-            <div t-if="widget.dashboards_data.sales.summary.payment_to_capture_count" class="o_inner_box o_main o_box_item" title="Capture order payments when the delivery is completed.">
-                <a href="#" class="o_dashboard_action" name="website_sale.payment_transaction_action_payments_to_capture">
+                </div>
+                <div t-if="widget.dashboards_data.sales.summary.order_to_invoice_count" class="o_inner_box o_dashboard_action" title="Generate an invoice from orders ready for invoicing." name="website_sale.sale_order_action_to_invoice">
+                    <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_to_invoice_count"/></div>
+                    Orders to Invoice
+                </div>
+                <div t-if="widget.dashboards_data.sales.summary.payment_to_capture_count" class="o_inner_box o_dashboard_action" title="Capture order payments when the delivery is completed." name="website_sale.payment_transaction_action_payments_to_capture">
                     <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.payment_to_capture_count"/></div>
                     Payments to Capture
-                </a>
-                <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>
-            </div>
-            <div t-if="widget.dashboards_data.sales.summary.order_carts_abandoned_count" class="o_inner_box o_main o_box_item" title="Send a recovery email to visitors who haven't completed their order.">
-                <a href="#" class="o_dashboard_action" name="website_sale.action_abandoned_orders_ecommerce">
+                </div>
+                <div t-if="widget.dashboards_data.sales.summary.order_carts_abandoned_count" class="o_inner_box o_dashboard_action" title="Send a recovery email to visitors who haven't completed their order." name="website_sale.action_abandoned_orders_ecommerce">
                     <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_abandoned_count"/></div>
                     Abandoned Carts
-                </a>
-                <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>
+                </div>
             </div>
         </t>
    </t>
