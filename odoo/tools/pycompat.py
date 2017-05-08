@@ -20,6 +20,8 @@ if PY2:
         cls.next = cls.__next__
         del cls.__next__
         return cls
+
+    exec ('def reraise(tp, value, tb=None):\n raise tp, value, tb')
 else:
     # pylint: disable=bad-functions
     integer_types = (int,)
@@ -34,3 +36,8 @@ else:
 
     def implements_iterator(cls):
         return cls
+
+    def reraise(tp, value, tb=None):
+        if value.__traceback__ != tb:
+            raise value.with_traceback(tb)
+        raise value
