@@ -20,7 +20,8 @@ class Job(models.Model):
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
     user_id = fields.Many2one('res.users', "Recruitment Responsible", track_visibility='onchange')
-    hr_responsible_id = fields.Many2one('res.users', "HR Responsible", track_visibility='onchange')
+    hr_responsible_id = fields.Many2one('res.users', "HR Responsible", track_visibility='onchange',
+        help="Person responsible of validating the employee's contracts.")
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Applications")
     documents_count = fields.Integer(compute='_compute_document_ids', string="Documents")
     alias_id = fields.Many2one(
