@@ -2065,6 +2065,48 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('numbers in list are right-aligned', function (assert) {
+        assert.expect(2);
+
+        var currencies = {};
+        _.each(this.data.res_currency.records, function (currency) {
+            currencies[currency.id] = currency;
+        });
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                    '<field name="qux"/>' +
+                    '<field name="amount" widget="monetary"/>' +
+                    '<field name="currency_id" invisible="1"/>' +
+                '</tree>',
+            session: {
+                currencies: currencies,
+            },
+        });
+
+        var nbCellRight = _.filter(list.$('.o_data_row:first > .o_data_cell'), function (el) {
+            var style = window.getComputedStyle(el);
+            return style.textAlign === 'right';
+        }).length;
+        assert.strictEqual(nbCellRight, 2,
+            "there should be two right-aligned cells");
+
+        list.$('.o_data_cell:first').click();
+
+        var nbInputRight = _.filter(list.$('.o_data_row:first > .o_data_cell input'), function (el) {
+            var style = window.getComputedStyle(el);
+            return style.textAlign === 'right';
+        }).length;
+        assert.strictEqual(nbInputRight, 2,
+            "there should be two right-aligned input");
+
+        list.destroy();
+    });
 });
 
 });

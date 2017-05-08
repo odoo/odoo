@@ -246,10 +246,12 @@ var ListRenderer = BasicRenderer.extend({
         if (node.tag === 'button') {
             tdClassName += ' o_list_button';
         } else {
-            if (node.attrs.widget){
+            var typeClass = FIELD_CLASSES[this.state.fields[node.attrs.name].type];
+            if (typeClass) {
+                tdClassName += (' ' + typeClass);
+            }
+            if (node.attrs.widget) {
                 tdClassName += (' o_' + node.attrs.widget + '_cell');
-            } else {
-                tdClassName += (' ' + FIELD_CLASSES[this.state.fields[node.attrs.name].type]);
             }
         }
         var $td = $('<td>', {class: tdClassName});
