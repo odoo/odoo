@@ -87,7 +87,7 @@ class AccountChartTemplate(models.Model):
     name = fields.Char(required=True)
     company_id = fields.Many2one('res.company', string='Company')
     parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
-    code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
+    code_digits = fields.Integer(string='# of Digits', required=True, default=4, help="No. of Digits to use for account code")
     visible = fields.Boolean(string='Can be Visible?', default=True,
         help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from "
             "templates, this is useful when you want to generate accounts of this template only when loading its child template.")
