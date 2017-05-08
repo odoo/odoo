@@ -696,6 +696,50 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('required float fields works as expected', function (assert) {
+        assert.expect(8);
+
+        this.data.partner.fields.qux.required = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="qux"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(form.$('input[name="qux"]').hasClass('o_required_modifier'),
+            "qux input is flagged as required");
+        assert.strictEqual(form.$('input[name="qux"]').val(), "",
+            "qux input is empty");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.ok(form.$('input[name="qux"]').hasClass('o_field_invalid'),
+            "qux input is displayed as invalid");
+
+        form.$('input[name="qux"]').val("0").trigger('input');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('input[name="qux"]').val(), "0.0",
+            "qux input is properly formatted");
+
+        assert.verifySteps(['default_get', 'create', 'read']);
+        form.destroy();
+    });
+
     QUnit.test('separators', function (assert) {
         assert.expect(1);
 
