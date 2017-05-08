@@ -7,6 +7,23 @@ from odoo.http import request
 
 
 class WebsiteHrRecruitment(http.Controller):
+
+    def _get_all_jobs(self):
+        env = request.env(
+            context=dict(
+                request.env.context, show_address=True, no_tag_br=True))
+        Jobs = env['hr.job']
+
+        # List jobs available to current UID
+        job_ids = Jobs.search(
+            [], order="website_published desc,no_of_recruitment desc").ids
+        # Browse jobs as superuser, because address is restricted
+        jobs = Jobs.sudo().browse(job_ids)
+        return jobs
+
+    def _get_render_datas(self, datas, kwargs):
+        return datas
+
     @http.route([
         '/jobs',
         '/jobs/country/<model("res.country"):country>',
@@ -21,12 +38,8 @@ class WebsiteHrRecruitment(http.Controller):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
 
         Country = env['res.country']
-        Jobs = env['hr.job']
 
-        # List jobs available to current UID
-        job_ids = Jobs.search([], order="website_published desc,no_of_recruitment desc").ids
-        # Browse jobs as superuser, because address is restricted
-        jobs = Jobs.sudo().browse(job_ids)
+        jobs = self._get_all_jobs()
 
         # Default search by user country
         if not (country or department or office_id or kwargs.get('all_countries')):
@@ -55,16 +68,18 @@ class WebsiteHrRecruitment(http.Controller):
         else:
             office_id = False
 
+        vals = self._get_render_datas({
+                'jobs': jobs,
+                'countries': countries,
+                'departments': departments,
+                'offices': offices,
+                'country_id': country,
+                'department_id': department,
+                'office_id': office_id,
+            }, kwargs)
+
         # Render page
-        return request.render("website_hr_recruitment.index", {
-            'jobs': jobs,
-            'countries': countries,
-            'departments': departments,
-            'offices': offices,
-            'country_id': country,
-            'department_id': department,
-            'office_id': office_id,
-        })
+        return request.render("website_hr_recruitment.index", vals)
 
     @http.route('/jobs/add', type='http', auth="user", website=True)
     def jobs_add(self, **kwargs):
