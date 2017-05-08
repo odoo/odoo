@@ -127,7 +127,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     def _compile_directive_call_assets(self, el, options):
         """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
         if len(el):
-            raise "t-call-assets cannot contain children nodes"
+            raise SyntaxError("t-call-assets cannot contain children nodes")
 
         # self._get_asset(xmlid, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
         return [

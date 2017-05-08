@@ -802,7 +802,7 @@ class GoogleCalendar(models.AbstractModel):
                     if actSrc == 'GG':
                         self.create_from_google(event, my_partner_id)
                     elif actSrc == 'OE':
-                        raise "Should be never here, creation for OE is done before update !"
+                        raise AssertionError("Should be never here, creation for OE is done before update !")
                     #TODO Add to batch
                 elif isinstance(actToDo, Update):
                     if actSrc == 'GG':

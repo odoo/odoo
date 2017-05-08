@@ -550,7 +550,7 @@ class PreforkServer(CommonServer):
                     if e.errno not in [errno.EAGAIN]:
                         raise
         except select.error as e:
-            if e[0] not in [errno.EINTR]:
+            if e.args[0] not in [errno.EINTR]:
                 raise
 
     def start(self):
@@ -660,7 +660,7 @@ class Worker(object):
         try:
             select.select([self.multi.socket], [], [], self.multi.beat)
         except select.error as e:
-            if e[0] not in [errno.EINTR]:
+            if e.args[0] not in [errno.EINTR]:
                 raise
 
     def process_limit(self):

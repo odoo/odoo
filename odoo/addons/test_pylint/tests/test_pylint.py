@@ -42,6 +42,12 @@ class TestPyLint(TransactionCase):
         'parameter-unpacking',
 
         'metaclass-assignment',
+
+        'exception-message-attribute',
+        'indexing-exception',
+        'old-raise-syntax',
+        'raising-string',
+        'unpacking-in-except',
     ]
 
     BAD_FUNCTIONS = [
