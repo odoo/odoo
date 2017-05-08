@@ -10,35 +10,302 @@
     <!-- Templates for interest / refusing applicants -->
     <record id="email_template_data_applicant_refuse" model="mail.template">
         <field name="name">Applicant: Refuse</field>
-        <field name="subject">Application refused</field>
-        <field name="email_to">${object.email_from}</field>
-        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
-        <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
+        <field name="subject">Application ${object.name | safe} refused</field>
+        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
+        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="lang">${object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
-        <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_name or 'applicant'},</p>
-<p>Thank you for your enquiry.<br />
-Unfortunately, your profile does not match with our needs</p>
-<p>If you have any questions, please let us know.</p>
-<p>Best regards,</p>]]></field>
+        <field name="body_html" type="html">
+<table cellspacing="0" cellpadding="0" width="100%" style="font-family: 'Helvetica'; background-color: #EEE; color:#666666; border-collapse: collapse;">
+<tr><td valign="top" align="center">
+    <table cellspacing="0" cellpadding="0" width="600" style="margin: 0 auto; width: 600px;">
+        <tr><td>
+            <table cellspacing="0" cellpadding="0" width="100%">
+                <tr><td valign="middle" align="left" style="padding:15px">
+                    <img width="90" src="/logo.png" style="width:80px;" />
+                </td></tr>
+            </table>
+            <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#fff" style="background-color:#fff;">
+                <tr><td width="100%" style="padding: 15px;">
+                    <table cellspacing="0" cellpadding="0" width="100%">
+                        <tr><td style="margin-bottom: 30px;">
+                            <p style="font-size:18px;">Dear ${object.partner_name or 'applicant'},</p>
+                            <p style="margin-top: 25px;">
+                                Thank your for giving us the opportunity to consider you for employment.
+                            </p>
+                            <p>
+                                We have taken the time to review your background.
+                            </p>
+                            <p>
+                                We truly appreciate your interest with our company; however, after careful consideration, <strong>you were not selected</strong> for the next steps of the interview process. We wish you the best of luck in your job hunt.
+                            </p>
+                        </td></tr>
+                    </table>
+                    <table cellspacing="0" cellpadding="0" width="100%">
+                        <tr>
+                            % if object.user_id:
+                            <td style="font-size:12px;">
+                                <span><strong>${object.user_id.name}</strong></span><br/>
+                                % if object.user_id.job_id:
+                                <span>${object.user_id.job_id}</span><br/>
+                                % endif
+                                % if object.user_id.phone
+                                <span>TEL: ${object.user_id.phone}</span><br/>
+                                % endif
+                            </td>
+                            <td width="30%"></td>
+                            % else:
+                            <td style="margin-top:15px;"><span>Best Regards,<br/>${object.company_id.name} HR Team</span></td>
+                            % endif
+                        </tr>
+                    </table>
+                </td></tr>
+            </table>
+            <!-- Footer -->
+            <table cellspacing="0" cellpadding="0" width="100%" style="padding: 15px;">
+                <tr><td align="center" style="padding: 30px 15px;">
+                    <span style="font-size:12px;color:#AAAAAA">${ object.company_id.name or '' },</span>
+                    % if object.company_id.street:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.street },</span>
+                    % endif
+                    % if object.company_id.street2:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.street2 },</span>
+                    % endif
+                    % if object.company_id.city:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.city },</span>
+                    % endif
+                    % if object.company_id.state_id.name:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.state_id.name },</span>
+                    % endif
+                    % if object.company_id.zip:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.zip },</span>
+                    % endif
+                    % if object.company_id.country_id.name:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.country_id.name }</span>
+                    % endif
+                </td></tr>
+            </table>
+        </td></tr>
+    </table>
+</td></tr>
+</table>
+        </field>
     </record>
 
     <record id="email_template_data_applicant_interest" model="mail.template">
         <field name="name">Applicant: Interest</field>
-        <field name="subject">Application approved</field>
-        <field name="email_to">${object.email_from}</field>
-        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
-        <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
+        <field name="subject">${object.name | safe} got our interest</field>
+        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
+        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="lang">${object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
-        <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_name or 'applicant'},</p>
-<p>Thank you for your enquiry.<br />
-Your resume got our interest. I will contact you as soon as possible to plan
-next steps of the recruitment process.</p>
-<p>If you have any questions, please let us know.</p>
-<p>Best regards,</p>]]></field>
+        <field name="body_html" type="html">
+<table cellspacing="0" cellpadding="0" width="100%" style="font-family: 'Helvetica'; background-color: #EEE; color:#666666; border-collapse: collapse;">
+<tr><td valign="top" align="center">
+    <table cellspacing="0" cellpadding="0" width="600" style="margin: 0 auto; width: 600px;">
+        <tr><td>
+            <table cellspacing="0" cellpadding="0" width="100%">
+                <tr><td valign="middle" align="left" style="padding:15px">
+                    <img width="90" src="/logo.png" style="width:80px;" />
+                </td></tr>
+            </table>
+            <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#fff" style="background-color:#fff;">
+                <tr><td width="100%" style="padding: 15px;">
+                    <table width="100%">
+                        <tr>
+                            <td style="text-align:center;">
+                                <p style="font-size:18px;margin-top:20px;">Dear ${object.partner_name or 'applicant'},</p>
+                                <img src="/hr_recruitment/static/src/img/congratulations.png" alt="Congratulations!" style="width:175px;margin:25px 0;"/>
+                                <h2 style="margin-bottom:20px;">Congratulations!</h2>
+                            </td>
+                        </tr>
+                    </table>
+                    <table width="100%">
+                        <tr><td>
+                            <p>
+                                Your resume caught our attention and we think you’d be great for this position. We would like to get to know you and your talent better. In order to achieve this, <strong>we invite you for</strong> the first step in <strong>our interviewing process at ${object.company_id.name} for the ${object.job_id.name} position.</strong>
+                            </p>
+                            <p style="margin-bottom: 0;">
+                                In order to schedule the meeting, please click the button below.
+                            </p>
+                        </td></tr>
+                        <tr><td align="center">
+                            <div style="background-color: #1CC5A9;color:#fff;margin:30px 0;padding:20px 0;">
+                                <a href="${object.company_id.website}" style="color:#fff;padding:20px;font-size:18px;">SCHEDULE THE INTERVIEW</a>
+                            </div>
+                        </td></tr>
+                    </table>
+                    % if object.user_id:
+                    <table width="100%">
+                        <tr><td colspan="4" width="100%" style="height:1px;background-color:#9A6C8E;"></td></tr>
+                        <tr><td colspan="4">
+                            <h3 style="margin: 25px 0;">Your contact:</h3>
+                        </td></tr>
+                        <tr style="vertical-align:middle;"><td width="50%" style="font-size:12px;padding:0 0 30px 0;">
+                            <span style="font-size:20px;">${object.user_id.name}</span><br/>
+                            % if object.user_id.job_id
+                            <span>${object.user_id.job_id | safe}</span><br/>
+                            % endif
+                            % if object.user_id.phone
+                            <span>TEL: ${object.user_id.phone}</span><br/>
+                            % endif
+                        </td><td width="20%"></td></tr>
+                        <tr><td colspan="4" width="100%" style="height:1px;background-color:#9A6C8E;"></td></tr>
+                    </table>
+                    % endif
+                    <table width="100%">
+                        <tr><td>
+                            <h3 style="margin:30px 0;color:#9A6C8E;"><strong>WHAT IS THE NEXT STEP?</strong></h3>
+                            <p>Once scheduled, you will receive a confirmation email with the date/time.</p>
+                        </td></tr>
+                        <tr><td>
+                            <p style="margin-top:30px;">Best regards,</p>
+                            % if object.user_id
+                            <p><strong>${object.user_id.name}</strong></p>
+                            % if object.user_id.job_id
+                            <p>${object.user_id.job_id}</p>
+                            % endif
+                            % endif
+                            % if not object.user_id
+                            <p><strong>${object.company_id.name} HR Department</strong></p>
+                            % endif
+                        </td></tr>
+                    </table>
+                </td></tr>
+            </table>
+            <table cellspacing="0" cellpadding="0" width="100%" style="padding: 15px;">
+                <tr><td align="center" style="padding: 30px 15px;">
+                    <span style="font-size:12px;color:#AAAAAA">${ object.company_id.name or '' },</span>
+                    % if object.company_id.street:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.street },</span>
+                    % endif
+                    % if object.company_id.street2:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.street2 },</span>
+                    % endif
+                    % if object.company_id.city:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.city },</span>
+                    % endif
+                    % if object.company_id.state_id.name:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.state_id.name },</span>
+                    % endif
+                    % if object.company_id.zip:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.zip },</span>
+                    % endif
+                    % if object.company_id.country_id.name:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.country_id.name }</span>
+                    % endif
+                </td></tr>
+            </table>
+        </td></tr>
+    </table>
+</td></tr></table>
+        </field>
+    </record>
+
+    <record id="email_template_data_applicant_congratulations" model="mail.template">
+        <field name="name">Applicant: Accepted</field>
+        <field name="subject">Congratulations ${object.name | safe}!</field>
+        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
+        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="lang">${object.partner_id.lang or ''}</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="user_signature" eval="False"/>
+        <field name="body_html" type="html">
+<table cellspacing="0" cellpadding="0" width="100%" style="font-family: 'Helvetica'; background-color: #EEE; color:#666666; border-collapse: collapse;">
+<tr><td valign="top" align="center">
+    <table cellspacing="0" cellpadding="0" width="600" style="margin: 0 auto; width: 600px;">
+        <tr><td>
+            <table cellspacing="0" cellpadding="0" width="100%">
+                <tr><td valign="middle" align="left" style="padding:15px">
+                    <img width="90" src="/logo.png" style="width:80px;" />
+                </td></tr>
+            </table>
+            <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#fff" style="background-color:#fff;">
+                <tr><td width="100%" style="padding: 15px;">
+                    <table>
+                        <tr><td>
+                            <p style="font-size:24px;">Congratulations!</p>
+                            <p style="padding:30px 0;">You've applied for the <span style="color:#9A6C8E;"><strong>${object.job_id.name}</strong></span> position at <span style="color:#9A6C8E;"><strong>${object.company_id.name}</strong></span>.
+                            </p>
+                        </td></tr>
+                    </table>
+                    % if object.user_id:
+                    <table width="100%">
+                        <tr><td colspan="4" width="100%" style="height:1px;background-color:#9A6C8E;"></td></tr>
+                        <tr>
+                            <td colspan="4">
+                                <h3 style="margin: 25px 0;">Your contact:</h3>
+                            </td>
+                        </tr>
+                        <tr style="vertical-align:middle;">
+                            <td width="50%" style="font-size:12px;padding:0 0 30px 0;">
+                                <span style="font-size:20px;">${object.user_id.name}</span><br/>
+                                <span>${object.user_id.job_id or ''}</span><br/>
+                                <span>TEL: ${object.user_id.phone or ''}</span><br/>
+                            </td>
+                            <td width="20%"></td>
+                        </tr>
+                        <tr><td colspan="4" width="100%" style="height:1px;background-color:#9A6C8E;"></td></tr>
+                    </table>
+                    % endif
+                    <table width="100%">
+                        <tr><td>
+                            <h3 style="margin:30px 0;color:#9A6C8E;"><strong>WHAT IS THE NEXT STEP?</strong></h3>
+                            <p style="padding-bottom: 20px;">We usually <strong>answer applications within a week.</strong></p>
+                            <p>
+                                Feel free to <strong>contact us if you want a faster feedback</strong> or if you don't get news from us quickly enough (just reply to this email).
+                            </p>
+                        </td></tr>
+                        <tr><td>
+                            <h3 style="margin:30px 0;color:#9A6C8E;"><strong>WANT TO LEARN MORE?</strong></h3>
+                            <ol style="color:#1CC5A9">
+                                <li><a style="color:#1CC5A9" href="https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56">Founders' story</a></li>
+                                <li><a style="color:#1CC5A9" href="https://www.slideshare.net/openobject/the-odoo-culture">The Odoo Culture</a></li>
+                                <li><a style="color:#1CC5A9" href="https://www.odoo.com/page/about-us">Our managers</a></li>
+                            </ol>
+                        </td></tr>
+                    </table>
+                    <table width="100%">
+                        <tr><td>
+                            <p style="padding-top:30px;">See you soon,</p>
+                            <p><strong>${object.company_id.name} HR Department</strong></p>
+                            % if object.company_id.website
+                            <a style="color:#1CC5A9;font-size:12px;" href="${object.company_id.website}">${object.company_id.website}</a>
+                            % endif
+                        </td></tr>
+                    </table>
+                    </td>
+                </tr>
+            </table>
+            <table cellspacing="0" cellpadding="0" width="100%" style="padding: 15px;">
+                <tr><td align="center" style="padding: 30px 15px;">
+                    <span style="font-size:12px;color:#AAAAAA">${ object.company_id.name or '' },</span>
+                    % if object.company_id.street:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.street },</span>
+                    % endif
+                    % if object.company_id.street2:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.street2 },</span>
+                    % endif
+                    % if object.company_id.city:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.city },</span>
+                    % endif
+                    % if object.company_id.state_id.name:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.state_id.name },</span>
+                    % endif
+                    % if object.company_id.zip:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.zip },</span>
+                    % endif
+                    % if object.company_id.country_id.name:
+                        <span style="font-size:12px;color:#AAAAAA">${ object.company_id.country_id.name }</span>
+                    % endif
+                </td></tr>
+            </table>
+        </td></tr>
+    </table>
+</td></tr></table>
+        </field>
     </record>
 
     <record id="email_template_data_applicant_employee" model="mail.template">
