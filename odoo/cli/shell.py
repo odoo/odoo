@@ -63,7 +63,7 @@ class Shell(Command):
 
     def console(self, local_vars):
         if not os.isatty(sys.stdin.fileno()):
-            exec sys.stdin in local_vars
+            exec(sys.stdin, local_vars)
         else:
             if 'env' not in local_vars:
                 print('No environment set, use `%s shell -d dbname` to get one.' % sys.argv[0])
