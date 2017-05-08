@@ -930,8 +930,8 @@ screens.define_action_button({
 });
 
 return {
-	TableGuestsButton	: TableGuestsButton,
-	TableWidget			: TableWidget,
-	FloorScreenWidget	: FloorScreenWidget,
+	TableGuestsButton : TableGuestsButton,
+	TableWidget       : TableWidget,
+	FloorScreenWidget : FloorScreenWidget,
 };
 });
