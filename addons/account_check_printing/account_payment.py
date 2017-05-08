@@ -35,8 +35,8 @@ class account_register_payments(models.TransientModel):
             check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
         self.check_amount_in_words = check_amount_in_words
 
-    def get_payment_vals(self):
-        res = super(account_register_payments, self).get_payment_vals()
+    def get_payment_vals(self, invoice_ids):
+        res = super(account_register_payments, self).get_payment_vals(invoice_ids)
         if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
             res.update({
                 'check_amount_in_words': self.check_amount_in_words,
