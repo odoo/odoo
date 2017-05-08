@@ -72,7 +72,7 @@ class PortalAccount(website_account):
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
         })
-        return request.render("website_portal_sale.portal_my_invoices", values)
+        return request.render("website_account.portal_my_invoices", values)
 
     @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="user", website=True)
     def portal_my_invoices_report(self, invoice_id, **kw):

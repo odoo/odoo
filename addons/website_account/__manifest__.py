@@ -16,6 +16,7 @@ Add your sales document in the frontend portal. Your customers will be able to c
     ],
     'data': [
         'views/account_views.xml',
+        'views/account_templates.xml',
         'security/ir.model.access.csv',
         'security/account.xml',
     ],
