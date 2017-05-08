@@ -131,8 +131,7 @@ class ProductProduct(models.Model):
              "Expressed in the default unit of measure of the product.")
     volume = fields.Float('Volume', help="The volume of this product.")
     weight = fields.Float(
-        'Weight', digits=dp.get_precision('Stock Weight'),
-        help="The weight of the contents, not including any packaging, etc.")
+        'Weight', help="The weight of the contents, not including any packaging, etc.")
 
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
