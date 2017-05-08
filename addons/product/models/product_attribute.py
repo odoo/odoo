@@ -20,7 +20,7 @@ class ProductAttribute(models.Model):
 
 class ProductAttributevalue(models.Model):
     _name = "product.attribute.value"
-    _order = 'sequence, id'
+    _order = 'sequence, attribute_id, id'
 
     name = fields.Char('Value', required=True, translate=True)
     sequence = fields.Integer('Sequence', help="Determine the display order")
