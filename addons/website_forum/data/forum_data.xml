@@ -15,13 +15,6 @@
     <data>
         <function model="ir.config_parameter" name="set_param" eval="('auth_signup.allow_uninvited', True)"/>
 
-        <!-- JUMP TO FORUM AT INSTALL -->
-        <record id="action_open_forum" model="ir.actions.act_url">
-            <field name="name">Forum</field>
-            <field name="target">self</field>
-            <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))"/>
-        </record>
-
         <!-- Set Admin karma -->
         <record id="base.user_root" model="res.users">
             <field name="karma">2500</field>
@@ -74,11 +67,6 @@
 
     </data>
     <data noupdate="1">
-
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_open_forum"/>
-            <field name="state">open</field>
-        </record>
 
         <!-- Reasons for closing Post -->
         <record id="reason_1" model="forum.post.reason">

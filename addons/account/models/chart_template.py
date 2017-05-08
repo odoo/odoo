@@ -137,16 +137,6 @@ class AccountChartTemplate(models.Model):
             wizard.onchange_chart_template_id()
             wizard.execute()
 
-    @api.multi
-    def open_select_template_wizard(self):
-        # Add action to open wizard to select between several templates
-        if not self.company_id.chart_template_id:
-            todo = self.env['ir.actions.todo']
-            action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_wizard_multi_chart')
-            if action_rec:
-                todo.create({'action_id': action_rec.id, 'name': _('Choose Accounting Template'), 'type': 'automatic'})
-        return True
-
     @api.model
     def generate_journals(self, acc_template_ref, company, journals_dict=None):
         """
@@ -660,7 +650,6 @@ class WizardMultiChartsAccounts(models.TransientModel):
     """
 
     _name = 'wizard.multi.charts.accounts'
-    _inherit = 'res.config'
 
     company_id = fields.Many2one('res.company', string='Company', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', help="Currency as per company's country.", required=True)

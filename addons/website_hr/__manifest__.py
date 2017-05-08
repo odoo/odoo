@@ -16,7 +16,6 @@ Our Team Page
     'data': [
         'security/hr_employee_security.xml',
         'security/ir.model.access.csv',
-        'data/website_hr_data.xml',
         'views/website_hr_templates.xml',
         'views/hr_employee_views.xml',
     ],
