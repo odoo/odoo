@@ -28,7 +28,7 @@ It assigns manager and user access rights to the Administrator for the accountin
         "static/src/xml/account_dashboard.xml",
     ],
     'demo': ['data/account_accountant_demo.xml'],
-    'test': [],
+    'test': ['static/tests/account_accountant_dashboard_tests.js'],
     'installable': True,
     'auto_install': False,
     'application': True,
