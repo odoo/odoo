@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="gst_report_invoice_layouted_inherit" inherit_id="sale.report_invoice_layouted">
+        <xpath expr="//t[@groups='sale.group_sale_layout']//span[@t-field='l.name']" position="after">
+            <t t-if="l.product_id.l10n_in_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="l.product_id.l10n_in_hsn_code"/></h6></t>
+        </xpath>
+        <xpath expr="//t[@groups='sale.group_sale_layout']/table/thead/tr/th[5]" position="attributes">
+            <attribute name="t-if">len(o.tax_line_ids) > 0</attribute>
+        </xpath>
+        <xpath expr="//t[@groups='sale.group_sale_layout']//tbody[hasclass('invoice_tbody')]//t[2]/tr/td[5]" position="attributes">
+            <attribute name="t-if">len(o.tax_line_ids) > 0</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='o.order_lines_layouted()']/table/thead/tr" position="replace">
+            <tr>
+                <th>Description</th>
+                <th class="text-right">Quantity</th>
+                <th class="text-right">Unit Price</th>
+                <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                <th class="text-right" t-if="len(o.tax_line_ids) > 0">Tax</th>
+                <th class="text-right">Price</th>
+                <th></th>
+                <th class="text-right" t-if="is_cgst">CGST</th>
+                <th class="text-right" t-if="is_cgst">SGST</th>
+                <th class="text-right" t-if="is_igst">IGST</th>
+                <th class="text-right" t-if="is_cess">CESS</th>
+            </tr>
+        </xpath>
+        <xpath expr="//t[@t-foreach='o.order_lines_layouted()']/table/tbody//tr/td[@groups='sale.group_show_price_total']" position="after">
+            <td class="text-right" t-if="is_cgst">
+                <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                    <t t-if="tag_cgst_id in tax_data['tag_ids']">
+                        <t t-esc="tax_data['amount']"/>
+                    </t>
+                </t>
+            </td>
+            <td class="text-right" t-if="is_cgst">
+                <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                    <t t-if="tag_sgst_id in tax_data['tag_ids']">
+                        <t t-esc="tax_data['amount']"/>
+                    </t>
+                </t>
+            </td>
+            <td class="text-right" t-if="is_igst">
+                <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                    <t t-if="tag_igst_id in tax_data['tag_ids']">
+                        <t t-esc="tax_data['amount']"/>
+                    </t>
+                </t>
+            </td>
+            <t t-set="total_cess" t-value="0.0"/>
+            <td class="text-right" t-if="is_cess">
+                <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                    <t t-if="tag_cess_id in tax_data['tag_ids']">
+                        <t t-set="total_cess" t-value="total_cess + tax_data['amount']"/>
+                    </t>
+                </t>
+                <t t-esc="total_cess"/>
+            </td>
+        </xpath>
+
+    </template>
+
+</odoo>

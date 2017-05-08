@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='total']" position="after">
+            <div id="total_in_words" class="row mb16">
+                <div class="col-xs-2">
+                    <strong>Total (In Words): </strong>
+                </div>
+                <div class="col-xs-8">
+                    <span t-field="o.amount_total_words"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//tbody[hasclass('invoice_tbody')]/tr/td[1]" position="replace">
+            <td><span t-field="l.name"/><t t-if="l.product_id.l10n_in_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="l.product_id.l10n_in_hsn_code"/></h6></t></td>
+        </xpath>
+        <xpath expr="//table//thead/tr/th[6]" position="attributes">
+            <attribute name="t-if">len(o.tax_line_ids) > 0</attribute>
+        </xpath>
+        <xpath expr="//tbody[hasclass('invoice_tbody')]/tr/td[6]" position="attributes">
+            <attribute name="t-if">len(o.tax_line_ids) > 0</attribute>
+        </xpath>
+        <xpath expr="//h2" position="replace">
+            <h2>
+                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')" t-field="o.journal_id.name"/>
+                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft <span t-field="o.journal_id.name"/></span>
+                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled <span t-field="o.journal_id.name"/></span>
+                <span t-if="o.type == 'out_refund'">Credit Note</span>
+                <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+                <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                <span t-field="o.number"/>
+            </h2>
+        </xpath>
+    </template>
+
+</odoo>
