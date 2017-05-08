@@ -3,8 +3,8 @@
 
 from datetime import timedelta
 
-from odoo import api, fields, models
 from odoo.tools import pycompat
+from odoo import api, fields, models, _
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -109,16 +109,12 @@ class Project(models.Model):
             project.rating_request_deadline = fields.datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
 
     @api.multi
-    def action_view_task_rating(self):
-        """ return the action to see all the rating about the tasks of the project """
-        action = self.env['ir.actions.act_window'].for_xml_id('rating_project', 'rating_rating_action_view_project_rating')
-        action_domain = safe_eval(action['domain']) if action['domain'] else []
-        domain = ['&', ('res_id', 'in', self.tasks.ids), ('res_model', '=', 'project.task')]
-        if action_domain:
-            domain = ['&'] + domain + action_domain
-        return dict(action, domain=domain)
-
-    @api.multi
     def action_view_all_rating(self):
-        """ return the action to see all the rating about the all sort of activity of the project (tasks, issues, ...) """
-        return self.action_view_task_rating()
+        """ return the action to see all the rating of the project, and activate default filters """
+        action = self.env['ir.actions.act_window'].for_xml_id('rating_project', 'rating_rating_action_view_project_rating')
+        action['name'] = _('Ratings of %s') % (self.name,)
+        action_context = safe_eval(action['context']) if action['context'] else {}
+        action_context.update(self._context)
+        if self.use_tasks:
+            action_context['search_default_rating_tasks'] = 1
+        return dict(action, context=action_context)

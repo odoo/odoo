@@ -80,26 +80,8 @@ class Project(models.Model):
     percentage_satisfaction_issue = fields.Integer(compute='_compute_percentage_satisfaction_issue', string="Happy % on Issue", store=True, default=-1)
 
     @api.multi
-    def action_view_issue_rating(self):
-        """ return the action to see all the rating about the issues of the project """
-        action = self.env['ir.actions.act_window'].for_xml_id('rating_project', 'rating_rating_action_view_project_rating')
-        issues = self.env['project.issue'].search([('project_id', 'in', self.ids)])
-        action_domain = safe_eval(action['domain']) if action['domain'] else []
-        domain = ['&', ('res_id', 'in', issues.ids), ('res_model', '=', 'project.issue')]
-        if action_domain:
-            domain = ['&'] + domain + action_domain
-        return dict(action, domain=domain)
-
-    @api.multi
     def action_view_all_rating(self):
         action = super(Project, self).action_view_all_rating()
-        task_domain = action['domain']
-        domain = []
-        if self.use_tasks:  # add task domain, if needed
-            domain = task_domain
-        if self.use_issues:  # add issue domain if needed
-            issue_domain = self.action_view_issue_rating()['domain']
-            domain = domain + issue_domain
-        if self.use_tasks and self.use_issues:
-            domain = ['|'] + domain
-        return dict(action, domain=domain)
+        if self.use_issues:  # add default filter for issue rating
+            action['context']['search_default_rating_issues'] = 1
+        return action
