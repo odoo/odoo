@@ -6,19 +6,13 @@
         <field name="inherit_id" ref="l10n_be_hr_payroll.hr_contract_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='transport_mode']" position="after">
-                <label for="car_id" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}"/>
-                <div attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}">
+                <field name="new_car" attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('available_cars_amount', '&gt;', 3)]}"/>
+                <label for="car_id" attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('new_car', '=', True)]}"/>
+                <div attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('new_car', '=', True)]}">
                     <field name="car_id" nolabel="1" attrs="{'invisible': [('new_car', '=', True)]}"/>
                     <field name="available_cars_amount" invisible="1"/>
-                    <div>
-                        <field name="new_car" attrs="{'invisible': [('available_cars_amount', '&gt;', 3)]}" nolabel="1"/>
-                        <label for="new_car"/>
-                    </div>
-                    <div attrs="{'invisible': [('new_car', '=', False)]}" class="oe_inline">
-                        <label for="new_car_model_id" class="oe_inline"/>
-                        <field name="new_car_model_id" class="oe_inline"/>
-                    </div>
                 </div>
+                <field name="new_car_model_id" attrs="{'invisible': [('new_car', '=', False)]}"/>
                 <field name="max_unused_cars" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='car_atn']" position="after">
