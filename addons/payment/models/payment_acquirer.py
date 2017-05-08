@@ -353,7 +353,7 @@ class PaymentAcquirer(models.Model):
         return True
 
     @api.multi
-    def toggle_enviroment_value(self):
+    def toggle_environment_value(self):
         prod = self.filtered(lambda acquirer: acquirer.environment == 'prod')
         prod.write({'environment': 'test'})
         (self-prod).write({'environment': 'prod'})
