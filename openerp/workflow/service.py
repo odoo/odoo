@@ -20,6 +20,8 @@
 ##############################################################################
 from helpers import Session
 from helpers import Record
+import sys
+from importlib import import_module
 
 from openerp.workflow.instance import WorkflowInstance
 # import instance
@@ -68,6 +70,55 @@ class WorkflowService(object):
         WorkflowInstance(self.session, self.record, {}).delete()
 
     def create(self):
+        def load_module(module):
+            """
+            Check if the module is loaded and load it if it isn't.
+
+            Has the modules are addons, we have to check if
+            the module is present in sys.modules using the form:
+
+                openerp.addons.module_name
+
+            :param module: The id of the workflow with the module that
+                           created it.
+            :type module: tuple (res_id, module_name)
+            :returns: python module or None
+            """
+            module_name = 'openerp.addons.%s' % module[1]
+            if not sys.modules.get(module_name):
+                import_module(module_name)
+
+            return module
+
+        def check_module(module):
+            """
+            Check if the module is loaded.
+
+            Has the modules are addons, we have to check if
+            the module is present in sys.modules using the form:
+
+                openerp.addons.module_name
+
+            :param module: The id of the workflow with the module that
+                           created it.
+            :type module: tuple (res_id, module_name)
+            :returns: python module or None
+            """
+            return sys.modules.get('openerp.addons.%s' % module[1])
+
+        def to_record(module_record):
+            """
+            Convert a module record to the same format that is used in
+            wkf_ids. We have to convert the tuple of format
+            (id, ...) to (id,).
+            
+            :param module_record: A tuple containing a pair
+                                  (res_id, module_name).
+            :type module_record: tuple (res_id, module_name)
+            :returns: tuple (id, )
+            """
+            return (module_record[0], )
+
         WorkflowService.CACHE.setdefault(self.cr.dbname, {})
 
         wkf_ids = WorkflowService.CACHE[self.cr.dbname].get(self.record.model, None)
@@ -76,6 +127,20 @@ class WorkflowService(object):
             self.cr.execute('select id from wkf where osv=%s and on_create=True', (self.record.model,))
             wkf_ids = self.cr.fetchall()
             WorkflowService.CACHE[self.cr.dbname][self.record.model] = wkf_ids
+
+        if wkf_ids:
+            self.cr.execute("select res_id, module from ir_model_data "
+                            "where model='workflow' and res_id in %s",
+                            wkf_ids)
+            modules = self.cr.fetchall()
+
+            all_ids = set(wkf_ids)
+            static_ids = set(map(to_record, modules))
+            # Created on the system programmatically or manually
+            dynamic_ids = list(all_ids - static_ids)
+
+            loaded_modules = map(load_module, modules)
+            wkf_ids = map(to_record, loaded_modules) + dynamic_ids
 
         for (wkf_id, ) in wkf_ids:
             WorkflowInstance.create(self.session, self.record, wkf_id)
