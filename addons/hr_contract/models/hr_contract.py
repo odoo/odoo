@@ -79,7 +79,7 @@ class Contract(models.Model):
     ], string='Status', group_expand='_expand_states',
        track_visibility='onchange', help='Status of the contract', default='draft')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
-    currency_id = fields.Many2one(string="Currency", related='company_id.currency_id')
+    currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no")
     visa_no = fields.Char('Visa No', related="employee_id.visa_no")
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire")
