@@ -879,6 +879,8 @@ class AccountBankStatementLine(models.Model):
             if aml_dict.get('tax_ids') and aml_dict['tax_ids'] and isinstance(aml_dict['tax_ids'][0], (int, long)):
                 # Transform the value in the format required for One2many and Many2many fields
                 aml_dict['tax_ids'] = map(lambda id: (4, id, None), aml_dict['tax_ids'])
+        if any(line.journal_entry_ids for line in self):
+            raise UserError(_('A selected statement line was already reconciled with an account move.'))
 
         # Fully reconciled moves are just linked to the bank statement
         total = self.amount
