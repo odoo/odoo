@@ -161,10 +161,10 @@ if (typeof(window) !== 'undefined') {
  * implementations in the future.
  */
 nv.dom.write = function(callback) {
-	if (window.fastdom !== undefined) {
-		return fastdom.write(callback);
-	}
-	return callback();
+    if (window.fastdom !== undefined) {
+        return fastdom.write(callback);
+    }
+    return callback();
 };
 
 /* Facade for queueing DOM read operations
@@ -174,10 +174,10 @@ nv.dom.write = function(callback) {
  * implementations in the future.
  */
 nv.dom.read = function(callback) {
-	if (window.fastdom !== undefined) {
-		return fastdom.read(callback);
-	}
-	return callback();
+    if (window.fastdom !== undefined) {
+        return fastdom.read(callback);
+    }
+    return callback();
 };/* Utility class to handle creation of an interactive layer.
  This places a rectangle on top of the chart. When you mouse move over it, it sends a dispatch
  containing the X-coordinate. It can also render a vertical line where the mouse is located.
