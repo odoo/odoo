@@ -57,7 +57,7 @@ class Contract(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee')
     department_id = fields.Many2one('hr.department', string="Department")
     type_id = fields.Many2one('hr.contract.type', string="Contract Type", required=True, default=lambda self: self.env['hr.contract.type'].search([], limit=1))
-    job_id = fields.Many2one('hr.job', string='Job Title')
+    job_id = fields.Many2one('hr.job', string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today)
     date_end = fields.Date('End Date')
     trial_date_end = fields.Date('End of Trial Period')
