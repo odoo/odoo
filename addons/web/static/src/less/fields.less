@@ -26,7 +26,11 @@
 //------------------------------------------------------------------------------
 
 .o_field_widget {
-    display: inline-block;
+    // Default display and alignment of widget and internal <input/>
+    &, input.o_input {
+        display: inline-block;
+        text-align: inherit;
+    }
 
     // Block fields
     &.note-editor, &.oe_form_field_html, &.oe_form_field_html_text, &.oe_form_field_text, &.o_view_manager_content, &.o_field_domain {
@@ -62,11 +66,6 @@
                 .o-caret-down;
             }
         }
-    }
-
-    // Input in field
-    input[type="text"] {
-        display: inline-block;
     }
 
     // Text
