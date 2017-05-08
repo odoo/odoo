@@ -415,9 +415,9 @@ QUnit.module('basic_fields', {
                   '</tree>',
         });
 
-        var zeroValues = list.$('td').filter(function () {return $(this).text() === '0.000';});
-        assert.strictEqual(zeroValues.length, 2,
-            'Unset float values should be rendered as zeros.');
+        var zeroValues = list.$('td.o_data_cell').filter(function () {return $(this).text() === '';});
+        assert.strictEqual(zeroValues.length, 1,
+            'Unset float values should be rendered as empty strings.');
 
         // switch to edit mode
         var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector)').first();
@@ -441,8 +441,8 @@ QUnit.module('basic_fields', {
     QUnit.test('do not trigger a field_changed if they have not changed', function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[1].qux = undefined;
-        this.data.partner.records[1].int_field = undefined;
+        this.data.partner.records[1].qux = false;
+        this.data.partner.records[1].int_field = false;
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -1659,9 +1659,9 @@ QUnit.module('basic_fields', {
         assert.strictEqual(euroValues.length, 1,
             'One one line has euro as a currency.');
 
-        var zeroValues = list.$('td').filter(function () {return _.str.include($(this).text(), '0.00');});
-        assert.strictEqual(zeroValues.length, 2,
-            'Unset float values should be rendered as zeros.');
+        var zeroValues = list.$('td.o_data_cell').filter(function () {return $(this).text() === '';});
+        assert.strictEqual(zeroValues.length, 1,
+            'Unset float values should be rendered as empty strings.');
 
         // switch to edit mode
         var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector):contains($)');

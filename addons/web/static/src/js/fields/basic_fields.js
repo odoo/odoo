@@ -93,9 +93,6 @@ var DebouncedField = AbstractField.extend({
         // _debouncedStarted is used to detect that the user interacted at least
         // once with the widget, so that we can prevent it from triggering a
         // field_changed in commitChanges if the user didn't change anything
-        // (this is required as sometimes it is hard to detect that an unset
-        // value is still unset, e.g. if a numerical field contains the value 0,
-        // is it because it is still unset or because the user set it to 0?
         this._debouncedStarted = false;
         if (this.mode === 'edit') {
             if (this.DEBOUNCE) {
