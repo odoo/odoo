@@ -151,6 +151,18 @@ class Project(models.Model):
         for project in self:
             project.is_favorite = self.env.user in project.favorite_user_ids
 
+    def _inverse_is_favorite(self):
+        favorite_projects = not_fav_projects = self.env['project.project'].sudo()
+        for project in self:
+            if self.env.user in project.favorite_user_ids:
+                favorite_projects |= project
+            else:
+                not_fav_projects |= project
+
+        # Project User has no write access for project.
+        not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
+        favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
+
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
@@ -172,7 +184,7 @@ class Project(models.Model):
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
         default=_get_default_favorite_user_ids,
         string='Members')
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', string='Show Project on dashboard',
+    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', string='Show Project on dashboard',
         help="Whether this project should be displayed on the dashboard or not")
     label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Gives label to tasks on project's kanban view.")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
@@ -277,19 +289,6 @@ class Project(models.Model):
         """ Unsubscribe from all tasks when unsubscribing from a project """
         self.mapped('tasks').message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
         return super(Project, self).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
-
-    @api.multi
-    def toggle_favorite(self):
-        favorite_projects = not_fav_projects = self.env['project.project'].sudo()
-        for project in self:
-            if self.env.user in project.favorite_user_ids:
-                favorite_projects |= project
-            else:
-                not_fav_projects |= project
-
-        # Project User has no write access for project.
-        not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
-        favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     @api.multi
     def close_dialog(self):

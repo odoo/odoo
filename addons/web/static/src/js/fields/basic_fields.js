@@ -1449,6 +1449,58 @@ var StateSelectionWidget = AbstractField.extend({
     },
 });
 
+var FavoriteWidget = AbstractField.extend({
+    className: 'o_favorite',
+    events: {
+        'click': '_setFavorite'
+    },
+    supportedFieldTypes: ['boolean'],
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * A boolean field is always set since false is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
+        return true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Render favorite icon based on state
+     *
+     * @override
+     * @private
+     */
+    _render: function () {
+        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s"></i></a>' : '<a href="#"><i class="fa %s"></i> %s</a>';
+        this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', this.value ? _t('Remove from Favorites') : _t('Add to Favorites')));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggle favorite state
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _setFavorite: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this._setValue(!this.value);
+    },
+});
+
 var LabelSelection = AbstractField.extend({
     supportedFieldTypes: ['selection'],
 
@@ -2350,6 +2402,7 @@ return {
     AttachmentImage: AttachmentImage,
     LabelSelection: LabelSelection,
     StateSelectionWidget: StateSelectionWidget,
+    FavoriteWidget: FavoriteWidget,
     PriorityWidget: PriorityWidget,
     StatInfo: StatInfo,
     UrlWidget: UrlWidget,
