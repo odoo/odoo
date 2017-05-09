@@ -419,7 +419,7 @@ class AccountJournal(models.Model):
             if not vals.get('code'):
                 for num in xrange(1, 100):
                     # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
-                    journal_code = (vals['type'] == 'cash' and 'CSH' or 'BNK') + str(num)
+                    journal_code = (_('CSH')  if vals['type'] == 'cash' else _('BNK')) + str(num)
                     journal = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company_id)], limit=1)
                     if not journal:
                         vals['code'] = journal_code
