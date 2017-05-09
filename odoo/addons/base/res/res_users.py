@@ -716,7 +716,7 @@ class GroupsView(models.Model):
         if view and view.exists() and view._name == 'ir.ui.view':
             group_no_one = view.env.ref('base.group_no_one')
             xml1, xml2 = [], []
-            xml1.append(E.separator(string=_('Application'), colspan="2"))
+            xml1.append(E.separator(string=_('Application Accesses'), colspan="2"))
             for app, kind, gs in self.get_groups_by_application():
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
                 attrs = {}
