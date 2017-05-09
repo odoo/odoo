@@ -6,7 +6,7 @@
     from odoo import tools
     data, format = self.env.ref('l10n_fr.report_l10nfrbilan').render([], data={'model':'account.move.line', 'form':{'fiscalyear_id': ref('account.data_fiscalyear')}})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'l10n_fr-bilan_report.'+format), 'wb+').write(data)
+        open(os.path.join(tools.config['test_report_directory'], 'l10n_fr-bilan_report.'+format), 'wb+').write(data)
 
 -
   In order to test the PDF reports defined on a l10n_fr, we will print a Compute Resultant Report for l10n_fr
@@ -16,4 +16,4 @@
     from odoo import tools
     data, format =  self.env.ref('l10n_fr.report_l10nfrresultat').render([], data={'model':'account.move.line', 'form':{'fiscalyear_id': ref('account.data_fiscalyear')}})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'l10n_fr-compute_resultant_report.'+format), 'wb+').write(data)
+        open(os.path.join(tools.config['test_report_directory'], 'l10n_fr-compute_resultant_report.'+format), 'wb+').write(data)

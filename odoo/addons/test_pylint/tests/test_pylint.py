@@ -59,9 +59,9 @@ class TestPyLint(TransactionCase):
         'map',
         'filter',
         'zip',
-        # TODO: enable once report has been removed
-        # 'file',
-        # 'reduce',
+
+        'file',
+        'reduce',
     ]
 
     def _skip_test(self, reason):

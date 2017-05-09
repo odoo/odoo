@@ -17,7 +17,7 @@
     from odoo import tools
     data, format = ref('account.report_invoice').render(ref('account.account_invoice_customer0'))
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
+        open(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
 -
   In order to test the PDF reports defined on a partner, we will print the Overdue Report
 -
@@ -26,7 +26,7 @@
     from odoo import tools
     data, format = ref('account.report_overdue').render([ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')])
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
+        open(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
 -
   Print the Aged Partner Balance Report
 -
