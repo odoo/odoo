@@ -54,7 +54,7 @@ models.load_models({
 
         for(var i = 0; i < printers.length; i++){
             if(active_printers[printers[i].id]){
-                var printer = new Printer(self,{url:'http://'+printers[i].proxy_ip+':8069'});
+                var printer = new Printer(self,{url:'http://'+printers[i].proxy_ip});
                 printer.config = printers[i];
                 self.printers.push(printer);
 
