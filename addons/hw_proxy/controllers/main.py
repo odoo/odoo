@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from __future__ import print_function
-import commands
 import logging
+import subprocess
 import time
 from threading import Lock
 
@@ -16,11 +16,11 @@ _logger = logging.getLogger(__name__)
 
 # Those are the builtin raspberry pi USB modules, they should
 # not appear in the list of connected devices.
-BANNED_DEVICES = set([
+BANNED_DEVICES = {
 	"0424:9514",	# Standard Microsystem Corp. Builtin Ethernet module
 	"1d6b:0002",	# Linux Foundation 2.0 root hub
 	"0424:ec00",	# Standard Microsystem Corp. Other Builtin Ethernet module
-])
+}
 
 
 # drivers modules must add to drivers an object with a get_status() method 
@@ -99,14 +99,14 @@ class Proxy(http.Controller):
         """
         if debug is None:
             resp += """(<a href="/hw_proxy/status?debug">debug version</a>)"""
-        devices = commands.getoutput("lsusb").split('\n')
+        devices = subprocess.check_output("lsusb").split('\n')
         count   = 0
         resp += "<div class='devices'>\n"
         for device in devices:
             device_name = device[device.find('ID')+2:]
             device_id   = device_name.split()[0]
             if not (device_id in BANNED_DEVICES):
-            	resp+= "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
+                resp += "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
                 count += 1
         
         if count == 0:
