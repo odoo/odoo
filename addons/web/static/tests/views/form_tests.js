@@ -1126,7 +1126,7 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {sidebar: true},
             res_id: 1,
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
                 }
@@ -1271,7 +1271,7 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {sidebar: true},
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
                 }
@@ -1722,7 +1722,7 @@ QUnit.module('Views', {
             arch: '<form string="Partners"><field name="foo"></field></form>',
             res_id: 1,
             viewOptions: {sidebar: true},
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
                 }
@@ -2069,7 +2069,7 @@ QUnit.module('Views', {
                 sidebar: true,
             },
             res_id: 1,
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
                 }
@@ -3696,49 +3696,49 @@ QUnit.module('Views', {
         });
 
     QUnit.test('onchanges are applied before checking if it can be saved', function (assert) {
-       assert.expect(4);
+        assert.expect(4);
 
-       this.data.partner.onchanges.foo = function (obj) {};
-       this.data.partner.fields.foo.required = true;
+        this.data.partner.onchanges.foo = function (obj) {};
+        this.data.partner.fields.foo.required = true;
 
-       var def = $.Deferred();
+        var def = $.Deferred();
 
-       var form = createView({
-           View: FormView,
-           model: 'partner',
-           data: this.data,
-           arch: '<form string="Partners">' +
-                   '<sheet><group>' +
-                       '<field name="foo"/>' +
-                   '</group></sheet>' +
-               '</form>',
-           res_id: 2,
-           mockRPC: function (route, args) {
-               var result = this._super.apply(this, arguments);
-               assert.step(args.method);
-               if (args.method === 'onchange') {
-                   return def.then(function () {
-                       return result;
-                   });
-               }
-               return result;
-           },
-           intercepts: {
-               warning: function () {
-                   assert.step('warning');
-               },
-           },
-       });
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet><group>' +
+                        '<field name="foo"/>' +
+                    '</group></sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                assert.step(args.method);
+                if (args.method === 'onchange') {
+                    return def.then(function () {
+                        return result;
+                    });
+                }
+                return result;
+            },
+            intercepts: {
+                warning: function () {
+                    assert.step('warning');
+                },
+            },
+        });
 
-       form.$buttons.find('.o_form_button_edit').click();
-       form.$('input[name="foo"]').val('').trigger("input");
-       form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input[name="foo"]').val('').trigger("input");
+        form.$buttons.find('.o_form_button_save').click();
 
-       def.resolve();
+        def.resolve();
 
-       assert.verifySteps(['read', 'onchange', 'warning'])
-       form.destroy();
-   });
+        assert.verifySteps(['read', 'onchange', 'warning']);
+        form.destroy();
+    });
 
     QUnit.test('display toolbar', function (assert) {
         assert.expect(7);
@@ -3763,7 +3763,7 @@ QUnit.module('Views', {
             viewOptions: {
                 sidebar: true,
             },
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (route === '/web/action/load') {
                     assert.strictEqual(args.context.active_id, 1,
                         "the active_id shoud be 1.");
