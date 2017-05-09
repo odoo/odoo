@@ -302,20 +302,78 @@ var FormRenderer = BasicRenderer.extend({
      * @param {Object} node
      * @returns {jQueryElement}
      */
-    _renderInnerField: function (node) {
+    _renderInnerGroup: function (node) {
         var self = this;
-        var fieldName = node.attrs.name;
-        var field = this.state.fields[fieldName];
-        var fieldDescr = node.attrs.string || field.string;
-        var widget = this._renderFieldWidget(node, this.state);
+        var $result = $('<table/>', {class: 'o_group o_inner_group'});
+        this._handleAttributes($result, node);
+        this._registerModifiers(node, this.state, $result);
 
-        if (!node.attrs.nolabel) {
-            var $label = $('<label>', {
-                class: 'o_form_label',
-                for: this._getIDForLabel(node.attrs.name),
-                text: fieldDescr,
+        var col = parseInt(node.attrs.col, 10) || 2;
+
+        if (node.attrs.string) {
+            var $sep = $('<tr><td colspan="' + col + '" style="width: 100%;"><div class="o_horizontal_separator">' + node.attrs.string + '</div></td></tr>');
+            $result.append($sep);
+        }
+
+        var currentColspan = 0;
+        var $currentRow = $('<tr/>');
+        _.each(node.children, function (child) {
+            var colspan = parseInt(child.attrs.colspan, 10);
+            var isLabeledField = (child.tag === 'field' && child.attrs.nolabel !== '1');
+            if (!colspan) {
+                if (isLabeledField) {
+                    colspan = 2;
+                } else {
+                    colspan = 1;
+                }
+            }
+            var finalColspan = colspan - (isLabeledField ? 1 : 0);
+            currentColspan += colspan;
+
+            if (currentColspan > col) {
+                $currentRow.appendTo($result);
+                $currentRow = $('<tr/>');
+                currentColspan = colspan;
+            }
+
+            var $tds;
+            if (child.tag === 'field') {
+                $tds = self._renderInnerGroupField(child);
+            } else if (child.tag === 'label') {
+                $tds = self._renderInnerGroupLabel(child);
+            } else {
+                $tds = $('<td/>').append(self._renderNode(child));
+            }
+            if (finalColspan > 1) {
+                $tds.last().attr('colspan', finalColspan);
+            }
+            $currentRow.append($tds);
+        });
+        $currentRow.appendTo($result);
+
+        _.each($result.find('tr'), function (tr) {
+            var $tr = $(tr);
+            var nonLabelColSize = 100 / (col - $tr.children('.o_td_label').length);
+            _.each($tr.children(':not(.o_td_label)'), function (el) {
+                var $el = $(el);
+                $el.css('width', ((parseInt($el.attr('colspan'), 10) || 1) * nonLabelColSize) + '%');
             });
-            this._registerModifiers(node, this.state, $label, {
+        });
+
+        return $result;
+    },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
+    _renderInnerGroupField: function (node) {
+        var self = this;
+        var widget = this._renderFieldWidget(node, this.state);
+        var $tds = $('<td/>').append(widget.$el);
+
+        if (node.attrs.nolabel !== '1') {
+            var $labelTd = this._renderInnerGroupLabel(node, {
                 callback: function (element, modifiers, record) {
                     element.$el.toggleClass('o_form_label_empty', !!( // FIXME condition is evaluated twice (label AND widget...)
                         record.data.id
@@ -324,84 +382,20 @@ var FormRenderer = BasicRenderer.extend({
                     ));
                 },
             });
-            return $('<tr>')
-                    .append($('<td class="o_td_label">').append($label))
-                    .append($('<td style="width: 100%">').append(widget.$el));
-        } else {
-            var style = {
-                width: 100/2 + '%',
-            };
-            return $('<tr>')
-                    .append($('<td colspan="1">').css(style).append(widget.$el));
+            $tds = $labelTd.add($tds);
         }
+
+        return $tds;
     },
     /**
      * @private
-     * @param {Object} node
-     * @returns {jQueryElement}
-     */
-    _renderInnerGroup: function (node) {
-        var $result = $('<table class="o_group o_inner_group"/>');
-        this._handleAttributes($result, node);
-        this._registerModifiers(node, this.state, $result);
-        if (node.attrs.string) {
-            var $sep = $('<tr><td colspan="2" style="width:100%;"><div class="o_horizontal_separator">' + node.attrs.string + '</div></td></tr>');
-            $result.append($sep);
-        }
-        var children = node.children;
-        for (var i = 0; i < children.length; i++) {
-            if (children[i].tag === 'field') {
-                var fieldNodes = [children[i]];
-                if (children[i].attrs.nolabel && children[i+1] &&
-                        children[i+1].tag === 'field' && children[i+1].attrs.nolabel) {
-                    fieldNodes.push(children[i+1]);
-                    i++;
-                }
-                $result.append(this._renderInnerGroupRow(fieldNodes));
-            } else if (children[i].tag === 'label') {
-                var label =  children[i];
-                // If there is a "for" attribute, we expect to have an id concerned in the next node.
-                if (label.attrs.for) {
-                    var linkedNode = children[i+1];
-                    $result = this._renderInnerGroupLabel($result, label, linkedNode);
-                    i++; // Skip the rendering of the next node because we just did it.
-                } else {
-                    $result = this._renderInnerGroupLabel($result, label);
-                }
-            } else {
-                var $td = $('<td colspan="2" style="width:100%;">').append(this._renderNode(children[i]));
-                $result.append($('<tr>').append($td));
-            }
-        }
-        return $result;
-    },
-    /**
-     * @private
-     * @param {jQueryElement} $result
      * @param {string} label
-     * @param {Object} linkedNode
+     * @param {Object} [modifiersOptions]
      * @returns {jQueryElement}
      */
-    _renderInnerGroupLabel: function ($result, label, linkedNode) {
-        var $first = $('<td class="o_td_label">')
-                    .append(this._renderNode(label));
-        var $second = linkedNode ? $('<td>').append(this._renderNode(linkedNode)) : $('<td>');
-        var $tr = $('<tr>').append($first).append($second);
-        return $result.append($tr);
-    },
-    /**
-     * Render a group row, with all the nodes inside.
-     *
-     * @private
-     * @param {Object[]} nodes
-     * @returns {jQueryElement}
-     */
-    _renderInnerGroupRow: function (nodes) {
-        var $tr = $('<tr>');
-        for (var i = 0; i < nodes.length; i++) {
-            $tr.append(this._renderInnerField(nodes[i]).contents());
-        }
-        return $tr;
+    _renderInnerGroupLabel: function (label, modifiersOptions) {
+        return $('<td/>', {class: 'o_td_label'})
+            .append(this._renderTagLabel(label, modifiersOptions));
     },
     /**
      * Render a node, from the arch of the view. It is a generic method, that
@@ -537,17 +531,13 @@ var FormRenderer = BasicRenderer.extend({
             return this._renderInnerGroup(node);
         }
 
-        var $result = $('<div class="o_group"/>');
-        var $child;
-        _.each(node.children, function (child) {
-            if (child.tag === 'group') {
-                $child = self._renderInnerGroup(child);
-            } else {
-                $child = self._renderNode(child);
-            }
-            $child.addClass('o_group_col_6');
-            $child.appendTo($result);
-        });
+        var $result = $('<div/>', {class: 'o_group'});
+        var colSize = Math.max(1, Math.round(12 / (parseInt(node.attrs.col, 10) || 2)));
+        $result.append(_.map(node.children, function (child) {
+            var $child = self._renderNode(child);
+            $child.addClass('o_group_col_' + (colSize * (parseInt(child.attrs.colspan, 10) || 1)));
+            return $child;
+        }));
         this._handleAttributes($result, node);
         this._registerModifiers(node, this.state, $result);
         return $result;
@@ -572,23 +562,28 @@ var FormRenderer = BasicRenderer.extend({
     /**
      * @private
      * @param {Object} node
+     * @param {Object} [modifiersOptions]
      * @returns {jQueryElement}
      */
-    _renderTagLabel: function (node) {
+    _renderTagLabel: function (node, modifiersOptions) {
         var text;
+        var fieldName = node.tag === 'label' ? node.attrs.for : node.attrs.name;
         if ('string' in node.attrs) { // allow empty string
             text = node.attrs.string;
-        } else if (node.attrs.for) {
-            text = this.state.fields[node.attrs.for].string;
+        } else if (fieldName) {
+            text = this.state.fields[fieldName].string;
         } else  {
             return this._renderGenericTag(node);
         }
-        var $result = $('<label>')
-                        .addClass('o_form_label')
-                        .attr('for', this._getIDForLabel(node.attrs.for))
-                        .text(text);
-        this._handleAttributes($result, node);
-        this._registerModifiers(node, this.state, $result);
+        var $result = $('<label>', {
+            class: 'o_form_label',
+            for: this._getIDForLabel(fieldName),
+            text: text,
+        });
+        if (node.tag === 'label') {
+            this._handleAttributes($result, node);
+        }
+        this._registerModifiers(node, this.state, $result, modifiersOptions);
         return $result;
     },
     /**
