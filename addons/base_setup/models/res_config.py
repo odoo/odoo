@@ -94,7 +94,7 @@ class BaseConfigSettings(models.TransientModel):
             'res_id': template_id.id,
         }
 
-    @api.model
+    @api.multi
     def edit_external_header(self):
         return self._prepare_report_view_action('web.external_layout_' + self.external_report_layout)
 

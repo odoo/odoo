@@ -38,7 +38,6 @@ position.
         'base_iban',
         'base_vat',
         'l10n_multilang',
-        'report',
     ],
     'data': [
         'data/account_chart_template_data.xml',

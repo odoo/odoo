@@ -298,6 +298,8 @@
         <t t-if="not o and doc">
             <t t-set="o" t-value="doc"/>
         </t>
+        <h2 t-esc="o"/>
+
         <t t-if="o and 'company_id' in o">
             <t t-set="company" t-value="o.company_id.sudo()"/>
         </t>
@@ -358,4 +360,36 @@
         </t>
     </template>
 
+    <!-- Customize the company form view by adding paperformat field as well as demo reports -->
+    <!-- Demo reports definition -->
+    <template id="preview_internalreport">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <p>This is a sample of an internal report.</p>
+                </div>
+            </t>
+        </t>
+    </template>
+    <template id="preview_externalreport">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <p>This is a sample of an external report.</p>
+                </div>
+            </t>
+        </t>
+    </template>
+    <report id="action_report_internalpreview"
+        model="res.company"
+        name="web.preview_internalreport"
+        file="web.preview_internalreport"
+        string="Preview Internal Report"
+        report_type="qweb-pdf"/>
+    <report id="action_report_externalpreview"
+        model="res.company"
+        name="web.preview_externalreport"
+        file="web.preview_externalreport"
+        string="Preview External Report"
+        report_type="qweb-pdf"/>
 </odoo>
