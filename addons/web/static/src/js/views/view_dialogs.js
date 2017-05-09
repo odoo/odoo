@@ -19,6 +19,9 @@ var _t = core._t;
 var ViewDialog = Dialog.extend({
     custom_events: _.extend({}, Dialog.prototype.custom_events, {
         push_state: '_onPushState',
+        env_updated: function (event) {
+            event.stopPropagation();
+        },
     }),
     /**
      * @constructor
