@@ -36,7 +36,7 @@ class procurement_order(osv.osv):
         if self._is_procurement_task(cr, uid, procurement, context=context) and not procurement.task_id:
             # If the SO was confirmed, cancelled, set to draft then confirmed, avoid creating a new
             # task.
-            if procurement.sale_line_id:
+            if procurement.sale_line_id and procurement.product_id == procurement.sale_line_id.product_id:
                 existing_task = self.pool['project.task'].search(
                     cr, uid, [('sale_line_id', '=', procurement.sale_line_id.id)],
                     context=context
