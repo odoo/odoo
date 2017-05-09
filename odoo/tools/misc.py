@@ -12,6 +12,8 @@ import datetime
 import subprocess
 import io
 import os
+
+import collections
 import passlib.utils
 import pickle as pickle_
 import re
@@ -274,16 +276,12 @@ def flatten(list):
     >>> flatten(t)
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     """
-
-    def isiterable(x):
-        return hasattr(x, "__iter__")
-
     r = []
     for e in list:
-        if isiterable(e):
-            r.extend(flatten(e))
-        else:
+        if isinstance(e, (bytes, pycompat.text_type)) or not isinstance(e, collections.Iterable):
             r.append(e)
+        else:
+            r.extend(flatten(e))
     return r
 
 def reverse_enumerate(l):

@@ -1369,12 +1369,12 @@ class Char(_String):
             return None
         # we need to convert the string to a unicode object to be able
         # to evaluate its length (and possibly truncate it) reliably
-        return ustr(value)[:self.size].encode('utf8')
+        return pycompat.to_text(value)[:self.size]
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return False
-        return ustr(value)[:self.size]
+        return pycompat.to_text(value)[:self.size]
 
 
 class Text(_String):
@@ -1596,6 +1596,11 @@ class Datetime(Field):
         assert record, 'Record expected'
         return Datetime.to_string(Datetime.context_timestamp(record, Datetime.from_string(value)))
 
+# http://initd.org/psycopg/docs/usage.html#binary-adaptation
+# Received data is returned as buffer (in Python 2) or memoryview (in Python 3).
+_BINARY = memoryview
+if pycompat.PY2:
+    _BINARY = buffer #pylint: disable=buffer-builtin
 
 class Binary(Field):
     type = 'binary'
@@ -1624,8 +1629,8 @@ class Binary(Field):
         return psycopg2.Binary(pycompat.text_type(value).encode('ascii'))
 
     def convert_to_cache(self, value, record, validate=True):
-        if isinstance(value, buffer):
-            return str(value)
+        if isinstance(value, _BINARY):
+            return bytes(value)
         if isinstance(value, pycompat.integer_types) and \
                 (record._context.get('bin_size') or
                  record._context.get('bin_size_' + self.name)):
