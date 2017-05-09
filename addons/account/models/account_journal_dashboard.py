@@ -26,11 +26,6 @@ class account_journal(models.Model):
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True)
 
-    @api.multi
-    def toggle_favorite(self):
-        self.write({'show_on_dashboard': False if self.show_on_dashboard else True})
-        return False
-
     def _graph_title_and_key(self):
         if self.type == 'sale':
             return ['', _('Sales: Untaxed Total')]

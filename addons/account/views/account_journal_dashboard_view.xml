@@ -209,7 +209,7 @@
 
                         <div groups="account.group_account_manager" class="row o_kanban_card_settings">
                             <div class="col-xs-6">
-                                <a type="object" name="toggle_favorite"><i t-attf-class="fa o_dashboard_star #{record.show_on_dashboard.raw_value ? 'fa-star' : 'fa-star-o'}" title="Click to add/remove from favorite"/> Favorite</a>
+                                <field name="show_on_dashboard" widget="boolean_favorite" />
                             </div>
                             <div class="col-xs-6 text-right">
                                 <a t-if="widget.editable" type="edit">Settings</a>

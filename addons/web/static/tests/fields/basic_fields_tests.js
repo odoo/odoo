@@ -2997,6 +2997,129 @@ QUnit.module('basic_fields', {
     });
 
 
+    QUnit.module('FavoriteWidget');
+
+    QUnit.test('favorite widget in kanban view', function (assert) {
+        assert.expect(4);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="bar" widget="boolean_favorite" />' +
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                  '</kanban>',
+            domain: [['id', '=', 1]],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record .o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+        assert.strictEqual(kanban.$('.o_kanban_record .o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
+            'the label should say "Remove from Favorites"');
+
+        // click on favorite
+        kanban.$('.o_field_widget.o_favorite').click();
+        assert.strictEqual(kanban.$('.o_kanban_record  .o_field_widget.o_favorite > a i.fa.fa-star').length, 0,
+            'should not be favorite');
+        assert.strictEqual(kanban.$('.o_kanban_record  .o_field_widget.o_favorite > a').text(), ' Add to Favorites',
+            'the label should say "Add to Favorites"');
+
+        kanban.destroy();
+    });
+
+    QUnit.test('favorite widget in form view', function (assert) {
+        assert.expect(10);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="bar" widget="boolean_favorite" />' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
+            'the label should say "Remove from Favorites"');
+
+        // click on favorite
+        form.$('.o_field_widget.o_favorite').click();
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a i.fa.fa-star').length, 0,
+            'should not be favorite');
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Add to Favorites',
+            'the label should say "Add to Favorites"');
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a i.fa.fa-star-o').length, 1,
+            'should not be favorite');
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Add to Favorites',
+            'the label should say "Add to Favorites"');
+
+        // click on favorite
+        form.$('.o_field_widget.o_favorite').click();
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
+            'the label should say "Remove from Favorites"');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
+            'the label should say "Remove from Favorites"');
+
+        form.destroy();
+    });
+
+    QUnit.test('favorite widget in editable list view without label', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="bar" widget="boolean_favorite" nolabel="1" />' +
+                  '</tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+
+        // switch to edit mode
+        list.$('tbody td:not(.o_list_record_selector)').first().click();
+        assert.strictEqual(list.$('.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+
+        // click on favorite
+        list.$('.o_data_row:first .o_field_widget.o_favorite').click();
+        assert.strictEqual(list.$('.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star').length, 0,
+            'should not be favorite');
+
+        // save
+        list.$buttons.find('.o_list_button_save').click();
+        assert.strictEqual(list.$('.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star-o').length, 1,
+            'should not be favorite');
+
+        list.destroy();
+    });
+
+
     QUnit.module('LabelSelectionWidget');
 
     QUnit.test('label_selection widget in form view', function (assert) {

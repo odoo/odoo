@@ -55,7 +55,7 @@ class CrmTeam(models.Model):
         default=_get_default_favorite_user_ids)
     is_favorite = fields.Boolean(
         string='Show on dashboard',
-        compute='_compute_is_favorite', inverse='_set_is_favorite',
+        compute='_compute_is_favorite', inverse='_inverse_is_favorite',
         help="Favorite teams to display them in the dashboard and access them easily.")
     reply_to = fields.Char(string='Reply-To',
                            help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this sales channel")
@@ -94,6 +94,13 @@ class CrmTeam(models.Model):
     def _compute_is_favorite(self):
         for team in self:
             team.is_favorite = self.env.user in team.favorite_user_ids
+
+    def _inverse_is_favorite(self):
+        sudoed_self = self.sudo()
+        to_fav = sudoed_self.filtered(lambda team: self.env.user not in team.favorite_user_ids)
+        to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
+        (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
+        return True
 
     def _graph_get_dates(self, today):
         """ return a coherent start and end date for the dashboard graph according to the graph settings.
@@ -285,14 +292,6 @@ class CrmTeam(models.Model):
         if values.get('member_ids'):
             self._add_members_to_favorites()
         return res
-
-    @api.multi
-    def toggle_favorite(self):
-        sudoed_self = self.sudo()
-        to_fav = sudoed_self.filtered(lambda team: self.env.user not in team.favorite_user_ids)
-        to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
-        (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
-        return True
 
     def _add_members_to_favorites(self):
         for team in self:
