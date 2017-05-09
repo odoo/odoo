@@ -1454,8 +1454,8 @@ QUnit.module('Views', {
         assert.strictEqual(form.$("label").eq(1).text(), "Bar",
             "one should be the one for the bar field");
 
-        assert.strictEqual(form.$('.firstgroup td').first().attr('colspan'), "1",
-            "foo td should have a colspan of 1");
+        assert.strictEqual(form.$('.firstgroup td').first().attr('colspan'), undefined,
+            "foo td should have a default colspan (1)");
         assert.strictEqual(form.$('.secondgroup tr').length, 2,
             "int_field and qux should have same tr");
 
@@ -4095,6 +4095,118 @@ QUnit.module('Views', {
         });
         form.$buttons.find('.o_form_button_edit').click();
         form.$('div[name="trululu"] input').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('form rendering with groups with col/colspan', function (assert) {
+        assert.expect(45);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<group col="6" class="parent_group">' +
+                            '<group col="4" colspan="3" class="group_4">' +
+                                '<div colspan="3"/>' +
+                                '<div colspan="2"/><div/>' +
+                                '<div colspan="4"/>' +
+                            '</group>' +
+                            '<group col="3" colspan="4" class="group_3">' +
+                                '<group col="1" class="group_1">' +
+                                    '<div/><div/><div/>' +
+                                '</group>' +
+                                '<div/>' +
+                                '<group col="3" class="field_group">' +
+                                    '<field name="foo" colspan="3"/>' +
+                                    '<div/><field name="bar" nolabel="1"/>' +
+                                    '<field name="qux"/>' +
+                                    '<field name="int_field" colspan="3" nolabel="1"/>' +
+                                    '<span/><field name="product_id"/>' +
+                                '</group>' +
+                            '</group>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        var $parentGroup = form.$('.parent_group');
+        var $group4 = form.$('.group_4');
+        var $group3 = form.$('.group_3');
+        var $group1 = form.$('.group_1');
+        var $fieldGroup = form.$('.field_group');
+
+        // Verify outergroup/innergroup
+        assert.strictEqual($parentGroup[0].tagName, 'DIV', ".parent_group should be an outergroup");
+        assert.strictEqual($group4[0].tagName, 'TABLE', ".group_4 should be an innergroup");
+        assert.strictEqual($group3[0].tagName, 'DIV', ".group_3 should be an outergroup");
+        assert.strictEqual($group1[0].tagName, 'TABLE', ".group_1 should be an innergroup");
+        assert.strictEqual($fieldGroup[0].tagName, 'TABLE', ".field_group should be an innergroup");
+
+        // Verify .parent_group content
+        var $parentGroupChildren = $parentGroup.children();
+        assert.strictEqual($parentGroupChildren.length, 2, "there should be 2 groups in .parent_group");
+        assert.ok($parentGroupChildren.eq(0).is('.o_group_col_6'), "first .parent_group group should be 1/2 parent width");
+        assert.ok($parentGroupChildren.eq(1).is('.o_group_col_8'), "second .parent_group group should be 2/3 parent width");
+
+        // Verify .group_4 content
+        var $group4rows = $group4.find('> tbody > tr');
+        assert.strictEqual($group4rows.length, 3, "there should be 3 rows in .group_4");
+        var $group4firstRowTd = $group4rows.eq(0).children('td');
+        assert.strictEqual($group4firstRowTd.length, 1, "there should be 1 td in first row");
+        assert.strictEqual($group4firstRowTd.attr('colspan'), "3", "the first td colspan should be 3");
+        assert.strictEqual($group4firstRowTd.attr('style').substr(0, 9), "width: 75", "the first td should be 75% width");
+        assert.strictEqual($group4firstRowTd.children()[0].tagName, "DIV", "the first td should contain a div");
+        var $group4secondRowTds = $group4rows.eq(1).children('td');
+        assert.strictEqual($group4secondRowTds.length, 2, "there should be 2 tds in second row");
+        assert.strictEqual($group4secondRowTds.eq(0).attr('colspan'), "2", "the first td colspan should be 2");
+        assert.strictEqual($group4secondRowTds.eq(0).attr('style').substr(0, 9), "width: 50", "the first td be 50% width");
+        assert.strictEqual($group4secondRowTds.eq(1).attr('colspan'), undefined, "the second td colspan should be default one (1)");
+        assert.strictEqual($group4secondRowTds.eq(1).attr('style').substr(0, 9), "width: 25", "the second td be 75% width");
+        var $group4thirdRowTd = $group4rows.eq(2).children('td');
+        assert.strictEqual($group4thirdRowTd.length, 1, "there should be 1 td in third row");
+        assert.strictEqual($group4thirdRowTd.attr('colspan'), "4", "the first td colspan should be 4");
+        assert.strictEqual($group4thirdRowTd.attr('style').substr(0, 10), "width: 100", "the first td should be 100% width");
+
+        // Verify .group_3 content
+        assert.strictEqual($group3.children().length, 3, ".group_3 should have 3 children");
+        assert.strictEqual($group3.children('.o_group_col_4').length, 3, ".group_3 should have 3 children of 1/3 width");
+
+        // Verify .group_1 content
+        assert.strictEqual($group1.find('> tbody > tr').length, 3, "there should be 3 rows in .group_1");
+
+        // Verify .field_group content
+        var $fieldGroupRows = $fieldGroup.find('> tbody > tr');
+        assert.strictEqual($fieldGroupRows.length, 5, "there should be 5 rows in .field_group");
+        var $fieldGroupFirstRowTds = $fieldGroupRows.eq(0).children('td');
+        assert.strictEqual($fieldGroupFirstRowTds.length, 2, "there should be 2 tds in first row");
+        assert.ok($fieldGroupFirstRowTds.eq(0).hasClass('o_td_label'), "first td should be a label td");
+        assert.strictEqual($fieldGroupFirstRowTds.eq(1).attr('colspan'), "2", "second td colspan should be given colspan (3) - 1 (label)");
+        assert.strictEqual($fieldGroupFirstRowTds.eq(1).attr('style').substr(0, 10), "width: 100", "second td width should be 100%");
+        var $fieldGroupSecondRowTds = $fieldGroupRows.eq(1).children('td');
+        assert.strictEqual($fieldGroupSecondRowTds.length, 2, "there should be 2 tds in second row");
+        assert.strictEqual($fieldGroupSecondRowTds.eq(0).attr('colspan'), undefined, "first td colspan should be default one (1)");
+        assert.strictEqual($fieldGroupSecondRowTds.eq(0).attr('style').substr(0, 9), "width: 33", "first td width should be 33.3333%");
+        assert.strictEqual($fieldGroupSecondRowTds.eq(1).attr('colspan'), undefined, "second td colspan should be default one (1)");
+        assert.strictEqual($fieldGroupSecondRowTds.eq(1).attr('style').substr(0, 9), "width: 33", "second td width should be 33.3333%");
+        var $fieldGroupThirdRowTds = $fieldGroupRows.eq(2).children('td'); // new row as label/field pair colspan is greater than remaining space
+        assert.strictEqual($fieldGroupThirdRowTds.length, 2, "there should be 2 tds in third row");
+        assert.ok($fieldGroupThirdRowTds.eq(0).hasClass('o_td_label'), "first td should be a label td");
+        assert.strictEqual($fieldGroupThirdRowTds.eq(1).attr('colspan'), undefined, "second td colspan should be default one (1)");
+        assert.strictEqual($fieldGroupThirdRowTds.eq(1).attr('style').substr(0, 9), "width: 50", "second td should be 50% width");
+        var $fieldGroupFourthRowTds = $fieldGroupRows.eq(3).children('td');
+        assert.strictEqual($fieldGroupFourthRowTds.length, 1, "there should be 1 td in fourth row");
+        assert.strictEqual($fieldGroupFourthRowTds.attr('colspan'), "3", "the td should have a colspan equal to 3");
+        assert.strictEqual($fieldGroupFourthRowTds.attr('style').substr(0, 10), "width: 100", "the td should have 100% width");
+        var $fieldGroupFifthRowTds = $fieldGroupRows.eq(4).children('td'); // label/field pair can be put after the 1-colspan span
+        assert.strictEqual($fieldGroupFifthRowTds.length, 3, "there should be 3 tds in fourth row");
+        assert.strictEqual($fieldGroupFifthRowTds.eq(0).attr('style').substr(0, 9), "width: 50", "the first td should 50% width");
+        assert.ok($fieldGroupFifthRowTds.eq(1).hasClass('o_td_label'), "the second td should be a label td");
+        assert.strictEqual($fieldGroupFifthRowTds.eq(2).attr('style').substr(0, 9), "width: 50", "the third td should 50% width");
 
         form.destroy();
     });
