@@ -112,12 +112,12 @@ class WebsiteSaleBackend(WebsiteBackend):
         previous_datetime_from = (datetime_from - timedelta(days=date_diff_days))
         previous_summary = self._compute_previous_sale_evolution(previous_datetime_from, datetime_from, date_diff_days)
         sales_values['evl_summary'].update(
-            evl_order_count=round((float(sales_values['summary']['order_count']) / previous_summary['pre_order_count'] * 100) - 100, 2) if previous_summary['pre_order_count'] > 0 else round((float(sales_values['summary']['order_count']) * 100), 2),
-            evl_total_sold=round((float(sales_values['summary']['total_sold']) / previous_summary['pre_total_sold'] * 100) - 100, 2) if previous_summary['pre_total_sold'] > 0 else round((float(sales_values['summary']['total_sold']) * 100), 2),
-            evl_order_carts_count=round((float(sales_values['summary']['order_carts_count']) / previous_summary['pre_order_carts_count'] * 100) - 100, 2) if previous_summary['pre_order_carts_count'] > 0 else round((float(sales_values['summary']['order_carts_count']) * 100), 2),
-            evl_order_per_day_ratio=round((float(sales_values['summary']['order_per_day_ratio']) / previous_summary['pre_order_per_day_ratio'] * 100) - 100, 2) if previous_summary['pre_order_per_day_ratio'] > 0 else round((float(sales_values['summary']['order_per_day_ratio']) * 100), 2),
-            evl_order_sold_ratio=round((float(sales_values['summary']['order_sold_ratio']) / previous_summary['pre_order_sold_ratio'] * 100) - 100, 2) if previous_summary['pre_order_sold_ratio'] > 0 else round((float(sales_values['summary']['order_sold_ratio']) * 100), 2),
-            evl_order_convertion_pctg=round((float(sales_values['summary']['order_convertion_pctg']) / previous_summary['pre_order_convertion_pctg'] * 100) - 100, 2) if previous_summary['pre_order_convertion_pctg'] > 0 else round((float(sales_values['summary']['order_convertion_pctg']) * 100), 2),
+            evl_order_count=round((float(sales_values['summary']['order_count']) / previous_summary['pre_order_count'] * 100) - 100, 2) if previous_summary['pre_order_count'] > 0 else 0,
+            evl_total_sold=round((float(sales_values['summary']['total_sold']) / previous_summary['pre_total_sold'] * 100) - 100, 2) if previous_summary['pre_total_sold'] > 0 else 0,
+            evl_order_carts_count=round((float(sales_values['summary']['order_carts_count']) / previous_summary['pre_order_carts_count'] * 100) - 100, 2) if previous_summary['pre_order_carts_count'] > 0 else 0,
+            evl_order_per_day_ratio=round((float(sales_values['summary']['order_per_day_ratio']) / previous_summary['pre_order_per_day_ratio'] * 100) - 100, 2) if previous_summary['pre_order_per_day_ratio'] > 0 else 0,
+            evl_order_sold_ratio=round((float(sales_values['summary']['order_sold_ratio']) / previous_summary['pre_order_sold_ratio'] * 100) - 100, 2) if previous_summary['pre_order_sold_ratio'] > 0 else 0,
+            evl_order_convertion_pctg=round((float(sales_values['summary']['order_convertion_pctg']) / previous_summary['pre_order_convertion_pctg'] * 100) - 100, 2) if previous_summary['pre_order_convertion_pctg'] > 0 else 0,
         )
 
         # Graphes computation

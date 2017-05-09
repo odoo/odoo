@@ -59,7 +59,7 @@
     </t>
 
     <t t-name="website_sale.products_table">
-        <t t-set="date_filter" t-value="' since last ' + widget.date_range"/>
+        <t t-set="set_tooltip" t-value="'compared to previous period'"/>
         <div class="row">
             <div class="col-md-12 col-xs-12">
                 <div class="row">
@@ -72,13 +72,10 @@
                             </div>
                             <t t-set="order_count" t-value="widget.dashboards_data.sales.evl_summary.evl_order_count"/>
                             <t t-if="order_count &gt; 0">
-                                <div class="o_green"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_count, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                                <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_count, 'float', [3, 2], '%')"/></div>
                             </t>
                             <t t-if="order_count &lt; 0">
-                                <div class="o_red"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_count, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
-                            </t>
-                            <t t-if="order_count == 0">
-                                <div><t t-esc="widget.format_number(order_count, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                                <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_count, 'float', [3, 2], '%')"/></div>
                             </t>
                         </div>
                     </a>
@@ -90,13 +87,10 @@
                             </div>
                             <t t-set="total_sold" t-value="widget.dashboards_data.sales.evl_summary.evl_total_sold"/>
                             <t t-if="total_sold &gt; 0">
-                                <div class="o_green"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(total_sold, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                                <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(total_sold, 'float', [3, 2], '%')"/></div>
                             </t>
                             <t t-if="total_sold &lt; 0">
-                                <div class="o_red"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(total_sold, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
-                            </t>
-                            <t t-if="total_sold == 0">
-                                <div><t t-esc="widget.format_number(total_sold, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                                <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(total_sold, 'float', [3, 2], '%')"/></div>
                             </t>
                         </div>
                     </a>
@@ -106,13 +100,10 @@
                             <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_count"/></div>
                             <t t-set="order_carts" t-value="widget.dashboards_data.sales.evl_summary.evl_order_carts_count"/>
                             <t t-if="order_carts &gt; 0">
-                                <div class="o_green"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_carts, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                                <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_carts, 'float', [3, 2], '%')"/></div>
                             </t>
                             <t t-if="order_carts &lt; 0">
-                                <div class="o_red"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_carts, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
-                            </t>
-                            <t t-if="order_carts == 0">
-                                <div><t t-esc="widget.format_number(order_carts, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                                <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_carts, 'float', [3, 2], '%')"/></div>
                             </t>
                         </div>
                     </a>
@@ -121,13 +112,10 @@
                         <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_per_day_ratio"/></div>
                         <t t-set="order_per_day" t-value="widget.dashboards_data.sales.evl_summary.evl_order_per_day_ratio"/>
                         <t t-if="order_per_day &gt; 0">
-                            <div class="o_green"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_per_day, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                            <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_per_day, 'float', [3, 2], '%')"/></div>
                         </t>
                         <t t-if="order_per_day &lt; 0">
-                            <div class="o_red"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_per_day, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
-                        </t>
-                        <t t-if="order_per_day == 0">
-                            <div><t t-esc="widget.format_number(order_per_day, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                            <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_per_day, 'float', [3, 2], '%')"/></div>
                         </t>
                     </div>
                     <div class="col-sm-4 o_link_disable" title="Average Order">
@@ -135,13 +123,10 @@
                         <div class="o_highlight"><t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.order_sold_ratio, widget.data.currency)"/></div>
                         <t t-set="average_order" t-value="widget.dashboards_data.sales.evl_summary.evl_order_sold_ratio"/>
                         <t t-if="average_order &gt; 0">
-                            <div class="o_green"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(average_order, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                            <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(average_order, 'float', [3, 2], '%')"/></div>
                         </t>
                         <t t-if="average_order &lt; 0">
-                            <div class="o_red"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(average_order, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
-                        </t>
-                        <t t-if="average_order == 0">
-                            <div><t t-esc="widget.format_number(average_order, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                            <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(average_order, 'float', [3, 2], '%')"/></div>
                         </t>
                     </div>
                     <div class="col-sm-4 o_link_disable o_invisible_border" title="Conversion">
@@ -149,13 +134,10 @@
                         <div class="o_highlight"><t t-esc="widget.format_number(widget.dashboards_data.sales.summary.order_convertion_pctg, 'float', [3, 2], '%')"/></div>
                         <t t-set="order_convertion" t-value="widget.dashboards_data.sales.evl_summary.evl_order_convertion_pctg"/>
                         <t t-if="order_convertion &gt; 0">
-                            <div class="o_green"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_convertion, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                            <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_convertion, 'float', [3, 2], '%')"/></div>
                         </t>
                         <t t-if="order_convertion &lt; 0">
-                            <div class="o_red"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_convertion, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
-                        </t>
-                        <t t-if="order_convertion == 0">
-                            <div><t t-esc="widget.format_number(order_convertion, 'float', [3, 2], '%')"/><t t-esc="date_filter"/></div>
+                            <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_convertion, 'float', [3, 2], '%')"/></div>
                         </t>
                     </div>
                 </div>
