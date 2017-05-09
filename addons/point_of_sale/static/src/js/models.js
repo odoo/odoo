@@ -656,7 +656,12 @@ exports.PosModel = Backbone.Model.extend({
             order.destroy({'reason':'abandon'});
         }
     },
-
+    // save order to local, and then push to server later
+    save_order_to_local: function(order) {
+        if(order){
+            this.db.add_order(order.export_as_JSON());
+        }
+    },
     // saves the order locally and try to send it to the backend. 
     // it returns a deferred that succeeds after having tried to send the order and all the other pending orders.
     push_order: function(order, opts) {
@@ -2238,6 +2243,7 @@ exports.Order = Backbone.Model.extend({
         });
     },
     finalize: function(){
+        this.push_order();
         this.destroy();
     },
     destroy: function(){
