@@ -319,7 +319,7 @@ class WebsiteSlides(http.Controller):
             return {'error': e.name}
         except Exception as e:
             _logger.error(e)
-            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e.message}
+            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
         return {'url': "/slides/slide/%s" % (slide_id.id)}
 
     # --------------------------------------------------
