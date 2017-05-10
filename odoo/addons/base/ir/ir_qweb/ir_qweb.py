@@ -75,7 +75,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     # apply ormcache_context decorator unless in dev mode...
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('id_or_xml_id', 'tuple(map(options.get, self._get_template_cache_keys()))'),
+        tools.ormcache('id_or_xml_id', 'tuple(options.get(k) for k in self._get_template_cache_keys())'),
     )
     def compile(self, id_or_xml_id, options):
         return super(IrQWeb, self).compile(id_or_xml_id, options=options)
@@ -173,7 +173,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         if field_options and 'monetary' in field_options:
             try:
                 options = "{'widget': 'monetary'"
-                for k, v in json.loads(field_options).iteritems():
+                for k, v in pycompat.items(json.loads(field_options)):
                     if k in ('display_currency', 'from_currency'):
                         options = "%s, '%s': %s" % (options, k, v)
                     else:
@@ -238,12 +238,12 @@ class IrQWeb(models.AbstractModel, QWeb):
                         atype = 'text/less'
                     if atype not in ('text/less', 'text/sass'):
                         atype = 'text/css'
-                    path = filter(None, href.split('/'))
+                    path = [segment for segment in href.split('/') if segment]
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': href, 'filename': filename, 'content': el.text, 'media': media})
                 elif el.tag == 'script':
                     atype = 'text/javascript'
-                    path = filter(None, src.split('/'))
+                    path = [segment for segment in src.split('/') if segment]
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
                 else:

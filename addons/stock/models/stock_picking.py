@@ -6,7 +6,7 @@ import json
 import time
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.tools.float_utils import float_compare
 from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
@@ -83,7 +83,10 @@ class PickingType(models.Model):
             data = self.env['stock.picking'].read_group(domains[field] +
                 [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
                 ['picking_type_id'], ['picking_type_id'])
-            count = dict(map(lambda x: (x['picking_type_id'] and x['picking_type_id'][0], x['picking_type_id_count']), data))
+            count = {
+                x['picking_type_id'][0]: x['picking_type_id_count']
+                for x in data if x['picking_type_id']
+            }
             for record in self:
                 record[field] = count.get(record.id, 0)
         for record in self:
@@ -503,7 +506,7 @@ class Picking(models.Model):
         valid_quants = quants.filtered(lambda quant: quant.qty > 0)
         _Mapping = namedtuple('Mapping', ('product', 'package', 'owner', 'location', 'location_dst_id'))
 
-        all_products = valid_quants.mapped('product_id') | self.env['product.product'].browse(p.id for p in forced_qties.keys()) | self.move_lines.mapped('product_id')
+        all_products = valid_quants.mapped('product_id') | self.env['product.product'].browse(p.id for p in forced_qties) | self.move_lines.mapped('product_id')
         computed_putaway_locations = dict(
             (product, self.location_dest_id.get_putaway_strategy(product).id or self.location_dest_id.id) for product in all_products)
 
@@ -545,7 +548,7 @@ class Picking(models.Model):
                 lots_grouped.setdefault(key, dict()).setdefault(quant.lot_id.id, 0.0)
                 lots_grouped[key][quant.lot_id.id] += quant.qty
         # Do the same for the forced quantities (in cases of force_assign or incomming shipment for example)
-        for product, qty in forced_qties.items():
+        for product, qty in pycompat.items(forced_qties):
             if qty <= 0.0:
                 continue
             key = _Mapping(product, self.env['stock.quant.package'], self.owner_id, self.location_id, computed_putaway_locations[product])
@@ -555,7 +558,7 @@ class Picking(models.Model):
         # Create the necessary operations for the grouped quants and remaining qtys
         Uom = self.env['product.uom']
         product_id_to_vals = {}  # use it to create operations using the same order as the picking stock moves
-        for mapping, qty in qtys_grouped.items():
+        for mapping, qty in pycompat.items(qtys_grouped):
             uom = product_to_uom[mapping.product.id]
             val_dict = {
                 'picking_id': self.id,
@@ -568,7 +571,7 @@ class Picking(models.Model):
                 'product_uom_id': uom.id,
                 'pack_lot_ids': [
                     (0, 0, {'lot_id': lot, 'qty': 0.0, 'qty_todo': lots_grouped[mapping][lot]})
-                    for lot in lots_grouped.get(mapping, {}).keys()],
+                    for lot in lots_grouped.get(mapping, {})],
             }
             product_id_to_vals.setdefault(mapping.product.id, list()).append(val_dict)
 
@@ -915,7 +918,7 @@ class Picking(models.Model):
         self.ensure_one()
         moves = self.env['stock.move']
         for pack_operation in self.pack_operation_ids:
-            for product, remaining_qty in pack_operation._get_remaining_prod_quantities().items():
+            for product, remaining_qty in pycompat.items(pack_operation._get_remaining_prod_quantities()):
                 if float_compare(remaining_qty, 0, precision_rounding=product.uom_id.rounding) > 0:
                     vals = self._prepare_values_extra_move(pack_operation, product, remaining_qty)
                     moves |= moves.create(vals)

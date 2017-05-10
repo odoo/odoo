@@ -22,7 +22,7 @@ import time
 import werkzeug.utils
 import zipfile
 from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
-from itertools import islice, izip, groupby, repeat
+from itertools import islice, groupby, repeat
 from lxml import etree
 
 from .which import which
@@ -282,7 +282,7 @@ def flatten(list):
     r = []
     for e in list:
         if isiterable(e):
-            map(r.append, flatten(e))
+            r.extend(flatten(e))
         else:
             r.append(e)
     return r
@@ -304,7 +304,7 @@ def reverse_enumerate(l):
       File "<stdin>", line 1, in <module>
     StopIteration
     """
-    return izip(pycompat.range(len(l)-1, -1, -1), reversed(l))
+    return pycompat.izip(range(len(l)-1, -1, -1), reversed(l))
 
 def partition(pred, elems):
     """ Return a pair equivalent to:
@@ -337,10 +337,12 @@ def topological_sort(elems):
             visited.add(n)
             if n in elems:
                 # first visit all dependencies of n, then append n to result
-                map(visit, elems[n])
+                for it in elems[n]:
+                    visit(it)
                 result.append(n)
 
-    map(visit, elems)
+    for el in elems:
+        visit(el)
 
     return result
 
@@ -458,7 +460,7 @@ def logged(f):
         vector = ['Call -> function: %r' % f]
         for i, arg in enumerate(args):
             vector.append('  arg %02d: %s' % (i, pformat(arg)))
-        for key, value in kwargs.items():
+        for key, value in pycompat.items(kwargs):
             vector.append('  kwarg %10s: %s' % (key, pformat(value)))
 
         timeb4 = time.time()
@@ -523,9 +525,9 @@ def detect_ip_addr():
 
             # try 32 bit kernel:
             if ip_addr is None:
-                ifaces = filter(None, [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)])
+                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
 
-                for ifname in [iface for iface in ifaces if iface != 'lo']:
+                for ifname in [iface for iface in ifaces if iface if iface != 'lo']:
                     ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
                     break
 
@@ -909,7 +911,7 @@ def dumpstacks(sig=None, frame=None):
                                'uid': getattr(th, 'uid', 'n/a'),
                                'dbname': getattr(th, 'dbname', 'n/a')}
                     for th in threading.enumerate()}
-    for threadId, stack in sys._current_frames().items():
+    for threadId, stack in pycompat.items(sys._current_frames()):
         thread_info = threads_info.get(threadId, {})
         code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s)" %
                     (thread_info.get('name', 'n/a'),
@@ -939,7 +941,7 @@ def freehash(arg):
         if isinstance(arg, Mapping):
             return hash(frozendict(arg))
         elif isinstance(arg, Iterable):
-            return hash(frozenset(map(freehash, arg)))
+            return hash(frozenset(freehash(item) for item in arg))
         else:
             return id(arg)
 
@@ -960,7 +962,7 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
     def __hash__(self):
-        return hash(frozenset((key, freehash(val)) for key, val in self.iteritems()))
+        return hash(frozenset((key, freehash(val)) for key, val in pycompat.items(self)))
 
 class Collector(Mapping):
     """ A mapping from keys to lists. This is essentially a space optimization
@@ -1122,7 +1124,7 @@ def format_date(env, value, lang_code=False, date_format=False):
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
         known length only, because length difference is optimized. """
-    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
+    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in pycompat.izip(str1, str2)) == 0
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
 

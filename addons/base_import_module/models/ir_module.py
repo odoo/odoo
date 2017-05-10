@@ -8,7 +8,7 @@ from os.path import join as opj
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.modules import load_information_from_description_file
-from odoo.tools import convert_file, exception_to_unicode
+from odoo.tools import convert_file, exception_to_unicode, pycompat
 from odoo.tools.osutil import tempdir
 
 _logger = logging.getLogger(__name__)
@@ -113,6 +113,6 @@ class IrModule(models.Model):
                         _logger.exception('Error while importing module')
                         errors[mod_name] = exception_to_unicode(e)
         r = ["Successfully imported module '%s'" % mod for mod in success]
-        for mod, error in errors.items():
+        for mod, error in pycompat.items(errors):
             r.append("Error while importing module '%s': %r" % (mod, error))
         return '\n'.join(r), module_names

@@ -9,7 +9,7 @@ import urllib2
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
-from odoo.tools import html2plaintext
+from odoo.tools import html2plaintext, pycompat
 
 from ..py_etherpad import EtherpadLiteClient
 
@@ -102,7 +102,7 @@ class PadCommon(models.AbstractModel):
 
         # In case the pad is created programmatically, the content is not filled in yet since it is
         # normally initialized by the JS layer
-        for k, field in self._fields.iteritems():
+        for k, field in pycompat.items(self._fields):
             if hasattr(field, 'pad_content_field') and k not in vals:
                 ctx = {
                     'model': self._name,
@@ -115,7 +115,7 @@ class PadCommon(models.AbstractModel):
 
     # Set the pad content in vals
     def _set_pad_value(self, vals):
-        for k, v in vals.items():
+        for k, v in list(pycompat.items(vals)):
             field = self._fields[k]
             if hasattr(field, 'pad_content_field'):
                 vals[field.pad_content_field] = self.pad_get_content(v)
@@ -125,7 +125,7 @@ class PadCommon(models.AbstractModel):
         self.ensure_one()
         if not default:
             default = {}
-        for k, field in self._fields.iteritems():
+        for k, field in pycompat.items(self._fields):
             if hasattr(field, 'pad_content_field'):
                 pad = self.pad_generate_url()
                 default[k] = pad.get('url')

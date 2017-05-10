@@ -13,9 +13,11 @@ import re
 import smtplib
 import threading
 
+import itertools
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import except_orm, UserError
-from odoo.tools import html2text, ustr
+from odoo.tools import html2text, ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -110,7 +112,7 @@ def extract_rfc2822_addresses(text):
     if not text:
         return []
     candidates = address_pattern.findall(ustr(text).encode('utf-8'))
-    return filter(try_coerce_ascii, candidates)
+    return [c for c in candidates if try_coerce_ascii(c)]
 
 
 def encode_rfc2822_address_header(header_text):
@@ -127,7 +129,7 @@ def encode_rfc2822_address_header(header_text):
         return formataddr((name, email))
 
     addresses = getaddresses([ustr(header_text).encode('utf-8')])
-    return COMMASPACE.join(map(encode_addr, addresses))
+    return COMMASPACE.join(encode_addr(a) for a in addresses)
 
 
 class IrMailServer(models.Model):
@@ -333,7 +335,7 @@ class IrMailServer(models.Model):
             msg['Bcc'] = encode_rfc2822_address_header(COMMASPACE.join(email_bcc))
         msg['Date'] = formatdate()
         # Custom headers may override normal headers or provide additional ones
-        for key, value in headers.iteritems():
+        for key, value in pycompat.items(headers):
             msg[ustr(key).encode('utf-8')] = encode_header(value)
 
         if subtype == 'html' and not body_alternative and html2text:
@@ -442,7 +444,12 @@ class IrMailServer(models.Model):
         email_cc = message['Cc']
         email_bcc = message['Bcc']
 
-        smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses, [email_to, email_cc, email_bcc])))
+        smtp_to_list = [
+            address
+            for base in [email_to, email_cc, email_bcc]
+            for address in extract_rfc2822_addresses(base)
+            if address
+        ]
         assert smtp_to_list, self.NO_VALID_RECIPIENT
 
         x_forge_to = message['X-Forge-To']

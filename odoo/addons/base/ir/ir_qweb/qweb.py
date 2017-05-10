@@ -6,14 +6,15 @@ import traceback
 
 from collections import OrderedDict, Sized, Mapping, defaultdict
 from functools import reduce
-from itertools import chain, izip, tee, count
+from itertools import tee, count
 from textwrap import dedent
 
+import itertools
 from lxml import etree, html
 import werkzeug
 from werkzeug.utils import escape as _escape
 
-from odoo.tools import pycompat
+from odoo.tools import pycompat, freehash
 
 try:
     import builtins
@@ -82,7 +83,7 @@ class Contextifier(ast.NodeTransformer):
         return ast.copy_location(ast.Lambda(
             args=ast.arguments(
                 args=args.args,
-                defaults=map(self.visit, args.defaults),
+                defaults=[self.visit(default) for default in args.defaults],
                 vararg=args.vararg,
                 kwarg=args.kwarg,
             ),
@@ -109,7 +110,7 @@ class Contextifier(ast.NodeTransformer):
         for field, value in ast.iter_fields(node):
             # map transformation of comprehensions
             if isinstance(value, list):
-                setattr(newnode, field, map(transformer.visit, value))
+                setattr(newnode, field, [transformer.visit(v) for v in value])
             else: # set transformation of key/value/expr fields
                 setattr(newnode, field, transformer.visit(value))
         return newnode
@@ -168,14 +169,14 @@ def foreach_iterator(base_ctx, enum, name):
     if not enum:
         return
     if isinstance(enum, int):
-        enum = pycompat.range(enum)
+        enum = range(enum)
     size = None
     if isinstance(enum, Sized):
         ctx["%s_size" % name] = size = len(enum)
     if isinstance(enum, Mapping):
-        enum = enum.iteritems()
+        enum = pycompat.items(enum)
     else:
-        enum = izip(*tee(enum))
+        enum = pycompat.izip(*tee(enum))
     value_key = '%s_value' % name
     index_key = '%s_index' % name
     first_key = '%s_first' % name
@@ -201,7 +202,7 @@ def foreach_iterator(base_ctx, enum, name):
         yield ctx
     # copy changed items back into source context (?)
     # FIXME: maybe values could provide a ChainMap-style clone?
-    for k in base_ctx.keys():
+    for k in list(base_ctx):
         base_ctx[k] = ctx[k]
 
 _FORMAT_REGEX = re.compile(
@@ -226,7 +227,7 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
     def __hash__(self):
-        return hash(frozenset((key, freehash(val)) for key, val in self.iteritems()))
+        return hash(frozenset((key, freehash(val)) for key, val in pycompat.items(self)))
 
 
 ####################################
@@ -510,6 +511,7 @@ class QWeb(object):
         """
         return ast.parse(dedent("""
             from collections import OrderedDict
+            from odoo.tools import pycompat
             from odoo.addons.base.ir.ir_qweb.qweb import escape, unicodifier, foreach_iterator
             """))
 
@@ -665,7 +667,7 @@ class QWeb(object):
 
         # all directives have been compiled, there should be none left
         if any(att.startswith('t-') for att in el.attrib):
-            raise "Unknown directive on %s" % ("', '".join(directives), etree.tostring(el))
+            raise NameError("Unknown directive on %s" % etree.tostring(el))
         return []
 
     def _values_var(self, varname, ctx):
@@ -726,7 +728,7 @@ class QWeb(object):
             attrib = {}
             # If `el` introduced new namespaces, write them as attribute by using the
             # `attrib` dict.
-            for ns_prefix, ns_definition in set(el.nsmap.items()) - set(options['nsmap'].items()):
+            for ns_prefix, ns_definition in set(pycompat.items(el.nsmap)) - set(pycompat.items(options['nsmap'])):
                 if ns_prefix is None:
                     attrib['xmlns'] = ns_definition
                 else:
@@ -735,8 +737,9 @@ class QWeb(object):
             # Etree will also remove the ns prefixes indirection in the attributes. As we only have
             # the namespace definition, we'll use an nsmap where the keys are the definitions and
             # the values the prefixes in order to get back the right prefix and restore it.
-            nsprefixmap = {v: k for k, v in options['nsmap'].items() + el.nsmap.items()}
-            for key, value in el.attrib.items():
+            ns = itertools.chain(pycompat.items(options['nsmap']), pycompat.items(el.nsmap))
+            nsprefixmap = {v: k for k, v in ns}
+            for key, value in pycompat.items(el.attrib):
                 attrib_qname = etree.QName(key)
                 if attrib_qname.namespace:
                     attrib['%s:%s' % (nsprefixmap[attrib_qname.namespace], attrib_qname.localname)] = value
@@ -754,7 +757,7 @@ class QWeb(object):
 
         if unqualified_el_tag == 't':
             return content
-        tag = u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in attrib.iteritems()]))
+        tag = u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in pycompat.items(attrib)]))
         if unqualified_el_tag in self._void_elements:
             return [self._append(ast.Str(tag + '/>'))] + content
         else:
@@ -766,10 +769,10 @@ class QWeb(object):
         # Etree will also remove the ns prefixes indirection in the attributes. As we only have
         # the namespace definition, we'll use an nsmap where the keys are the definitions and
         # the values the prefixes in order to get back the right prefix and restore it.
-        nsprefixmap = {v: k for k, v in options['nsmap'].items() + el.nsmap.items()}
+        nsprefixmap = {v: k for k, v in itertools.chain(pycompat.items(options['nsmap']), pycompat.items(el.nsmap))}
 
         nodes = []
-        for key, value in el.attrib.iteritems():
+        for key, value in pycompat.items(el.attrib):
             if not key.startswith('t-'):
                 attrib_qname = etree.QName(key)
                 if attrib_qname.namespace:
@@ -784,7 +787,7 @@ class QWeb(object):
         We do not support namespaced dynamic attributes.
         """
         nodes = []
-        for name, value in el.attrib.iteritems():
+        for name, value in pycompat.items(el.attrib):
             if name.startswith('t-attf-'):
                 nodes.append((name[7:], self._compile_format(value)))
             elif name.startswith('t-att-'):
@@ -810,7 +813,7 @@ class QWeb(object):
     def _compile_all_attributes(self, el, options, attr_already_created=False):
         """ Compile the attributes of the given elements into a list of AST nodes. """
         body = []
-        if any(name.startswith('t-att') or not name.startswith('t-') for name, value in el.attrib.iteritems()):
+        if any(name.startswith('t-att') or not name.startswith('t-') for name, value in pycompat.items(el.attrib)):
             if not attr_already_created:
                 attr_already_created = True
                 body.append(
@@ -851,7 +854,7 @@ class QWeb(object):
                     )))
 
         if attr_already_created:
-            # for name, value in t_attrs.iteritems():
+            # for name, value in pycompat.items(t_attrs):
             #     if value or isinstance(value, basestring)):
             #         append(u' ')
             #         append(name)
@@ -862,11 +865,11 @@ class QWeb(object):
                 target=ast.Tuple(elts=[ast.Name(id='name', ctx=ast.Store()), ast.Name(id='value', ctx=ast.Store())], ctx=ast.Store()),
                 iter=ast.Call(
                     func=ast.Attribute(
-                        value=ast.Name(id='t_attrs', ctx=ast.Load()),
-                        attr='iteritems',
+                        value=ast.Name(id='pycompat', ctx=ast.Load()),
+                        attr='items',
                         ctx=ast.Load()
                         ),
-                    args=[], keywords=[],
+                    args=[ast.Name(id='t_attrs', ctx=ast.Load())], keywords=[],
                     starargs=None, kwargs=None
                 ),
                 body=[ast.If(
@@ -923,7 +926,7 @@ class QWeb(object):
 
             # If `el` introduced new namespaces, write them as attribute by using the
             # `extra_attrib` dict.
-            for ns_prefix, ns_definition in set(el.nsmap.items()) - set(options['nsmap'].items()):
+            for ns_prefix, ns_definition in set(pycompat.items(el.nsmap)) - set(pycompat.items(options['nsmap'])):
                 if ns_prefix is None:
                     extra_attrib['xmlns'] = ns_definition
                 else:
@@ -932,7 +935,7 @@ class QWeb(object):
         if unqualified_el_tag == 't':
             return content
 
-        body = [self._append(ast.Str(u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in extra_attrib.iteritems()]))))]
+        body = [self._append(ast.Str(u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in pycompat.items(extra_attrib)]))))]
         body.extend(self._compile_all_attributes(el, options, attr_already_created))
         if unqualified_el_tag in self._void_elements:
             body.append(self._append(ast.Str(u'/>')))
@@ -1054,7 +1057,7 @@ class QWeb(object):
     def _compile_directive_if(self, el, options):
         orelse = []
         next_el = el.getnext()
-        if next_el is not None and {'t-else', 't-elif'} & set(next_el.attrib.keys()):
+        if next_el is not None and {'t-else', 't-elif'} & set(next_el.attrib):
             if el.tail and not el.tail.isspace():
                 raise ValueError("Unexpected non-whitespace characters between t-if and t-else directives")
             el.tail = None
@@ -1437,7 +1440,7 @@ class QWeb(object):
                 # make the nsmap an ast dict
                 keys = []
                 values = []
-                for key, value in options['nsmap'].items():
+                for key, value in pycompat.items(options['nsmap']):
                     if isinstance(key, basestring):
                         keys.append(ast.Str(s=key))
                     elif key is None:

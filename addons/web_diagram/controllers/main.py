@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.http as http
+from odoo.tools import pycompat
 
 from odoo.tools.safe_eval import safe_eval
 
@@ -43,7 +44,12 @@ class DiagramView(http.Controller):
         isolate_nodes = {}
         for blnk_node in graphs['blank_nodes']:
             isolate_nodes[blnk_node['id']] = blnk_node
-        y = map(lambda t: t['y'], filter(lambda x: x['y'] if x['x'] == 20 else None, nodes.values()))
+        y = [
+            t['y']
+            for t in pycompat.values(nodes)
+            if t['x'] == 20
+            if t['y']
+        ]
         y_max = (y and max(y)) or 120
 
         connectors = {}
@@ -93,11 +99,11 @@ class DiagramView(http.Controller):
                 color='white',
                 options={}
             )
-            for color, expr in bgcolors.items():
+            for color, expr in pycompat.items(bgcolors):
                 if safe_eval(expr, act):
                     n['color'] = color
 
-            for shape, expr in shapes.items():
+            for shape, expr in pycompat.items(shapes):
                 if safe_eval(expr, act):
                     n['shape'] = shape
 

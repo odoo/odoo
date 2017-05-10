@@ -8,6 +8,8 @@ from odoo.exceptions import UserError, ValidationError
 
 import odoo.addons.decimal_precision as dp
 
+from odoo.tools import pycompat
+
 
 class Pricelist(models.Model):
     _name = "product.pricelist"
@@ -19,7 +21,7 @@ class Pricelist(models.Model):
 
     def _get_default_item_ids(self):
         ProductPricelistItem = self.env['product.pricelist.item']
-        vals = ProductPricelistItem.default_get(ProductPricelistItem._fields.keys())
+        vals = ProductPricelistItem.default_get(list(ProductPricelistItem._fields))
         vals.update(compute_price='formula')
         return [[0, False, vals]]
 
@@ -88,7 +90,7 @@ class Pricelist(models.Model):
         results = {}
         for pricelist in pricelists:
             subres = pricelist._compute_price_rule(products_qty_partner, date=date, uom_id=uom_id)
-            for product_id, price in subres.items():
+            for product_id, price in pycompat.items(subres):
                 results.setdefault(product_id, {})
                 results[product_id][pricelist.id] = price
         return results
@@ -126,7 +128,7 @@ class Pricelist(models.Model):
             while categ:
                 categ_ids[categ.id] = True
                 categ = categ.parent_id
-        categ_ids = categ_ids.keys()
+        categ_ids = list(categ_ids)
 
         is_product_template = products[0]._name == "product.template"
         if is_product_template:
@@ -251,7 +253,14 @@ class Pricelist(models.Model):
         """ For a given pricelist, return price for products
         Returns: dict{product_id: product price}, in the given pricelist """
         self.ensure_one()
-        return dict((product_id, res_tuple[0]) for product_id, res_tuple in self._compute_price_rule(zip(products, quantities, partners), date=date, uom_id=uom_id).iteritems())
+        return {
+            product_id: res_tuple[0]
+            for product_id, res_tuple in pycompat.items(self._compute_price_rule(
+                list(pycompat.izip(products, quantities, partners)),
+                date=date,
+                uom_id=uom_id
+            ))
+        }
 
     def get_product_price(self, product, quantity, partner, date=False, uom_id=False):
         """ For a given pricelist, return price for a given product """
@@ -272,7 +281,7 @@ class Pricelist(models.Model):
     @api.multi
     def price_get(self, prod_id, qty, partner=None):
         """ Multi pricelist, mono product - returns price per pricelist """
-        return dict((key, price[0]) for key, price in self.price_rule_get(prod_id, qty, partner=partner).items())
+        return {key: price[0] for key, price in pycompat.items(self.price_rule_get(prod_id, qty, partner=partner))}
 
     @api.multi
     def price_rule_get_multi(self, products_by_qty_by_partner):
@@ -288,7 +297,8 @@ class Pricelist(models.Model):
     @api.model
     def _price_get_multi(self, pricelist, products_by_qty_by_partner):
         """ Mono pricelist, multi product - return price per product """
-        return pricelist.get_products_price(zip(**products_by_qty_by_partner))
+        return pricelist.get_products_price(
+            list(pycompat.izip(**products_by_qty_by_partner)))
 
     def _get_partner_pricelist(self, partner_id, company_id=None):
         """ Retrieve the applicable pricelist for a given partner in a given company.

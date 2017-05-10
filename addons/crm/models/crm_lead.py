@@ -433,9 +433,6 @@ class Lead(models.Model):
             res = _get_first_not_null(attr, opportunities)
             return res.id if res else False
 
-        def _concat_all(attr, opportunities):
-            return '\n\n'.join(filter(None, (opp[attr] for opp in opportunities)))
-
         # process the fields' values
         data = {}
         for field_name in fields:
@@ -447,7 +444,7 @@ class Lead(models.Model):
             elif field.type == 'many2one':
                 data[field_name] = _get_first_not_null_id(field_name, self)  # take the first not null
             elif field.type == 'text':
-                data[field_name] = _concat_all(field_name, self)  # contact field of all opportunities
+                data[field_name] = '\n\n'.join(it for it in self.mapped(field_name) if it)
             else:
                 data[field_name] = _get_first_not_null(field_name, self)
 

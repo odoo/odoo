@@ -71,7 +71,7 @@ def amount_to_text(number, currency):
     cents_number = int(list[1])
     cents_name = (cents_number > 1) and 'Cents' or 'Cent'
 
-    return ' '.join(filter(None, [start_word, units_name, (start_word or units_name) and (end_word or cents_name) and 'and', end_word, cents_name]))
+    return ' '.join(w for w in [start_word, units_name, (start_word or units_name) and (end_word or cents_name) and 'and', end_word, cents_name] if w)
 
 
 #-------------------------------------------------------------

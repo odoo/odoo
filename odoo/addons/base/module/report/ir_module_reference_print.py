@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.tools import pycompat
+
 
 class IrModelReferenceReport(models.AbstractModel):
     _name = 'report.base.report_irmodulereference'
@@ -21,7 +23,7 @@ class IrModelReferenceReport(models.AbstractModel):
         if data:
             res_ids = data.mapped('res_id')
             fnames = self.env['ir.model.fields'].browse(res_ids).mapped('name')
-            return sorted(self.env[model].fields_get(fnames).iteritems())
+            return sorted(pycompat.items(self.env[model].fields_get(fnames)))
         return []
 
     @api.model

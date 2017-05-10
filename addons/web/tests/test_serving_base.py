@@ -15,7 +15,7 @@ def sample(population):
 
 class TestModulesLoading(unittest.TestCase):
     def setUp(self):
-        self.mods = map(str, range(1000))
+        self.mods = [str(i) for i in range(1000)]
 
     def test_topological_sort(self):
         random.shuffle(self.mods)

@@ -21,6 +21,7 @@ import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import request, STATIC_CACHE, content_disposition
+from odoo.tools import pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
@@ -54,7 +55,7 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
 
     def to_python(self, value):
         env = api.Environment(request.cr, UID_PLACEHOLDER, request.context)
-        return env[self.model].browse(map(int, value.split(',')))
+        return env[self.model].browse(int(v) for v in value.split(','))
 
     def to_url(self, value):
         return ",".join(value.ids)
@@ -202,7 +203,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _postprocess_args(cls, arguments, rule):
         """ post process arg to set uid on browse records """
-        for name, arg in arguments.items():
+        for name, arg in list(pycompat.items(arguments)):
             if isinstance(arg, models.BaseModel) and arg._uid is UID_PLACEHOLDER:
                 arguments[name] = arg.sudo(request.uid)
                 if not arg.exists():

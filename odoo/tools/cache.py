@@ -8,6 +8,8 @@ from decorator import decorator
 from inspect import formatargspec, getargspec
 import logging
 
+from odoo.tools import pycompat
+
 unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
@@ -112,7 +114,7 @@ class ormcache_context(ormcache):
         spec = getargspec(self.method)
         args = formatargspec(*spec)[1:-1]
         cont_expr = "(context or {})" if 'context' in spec.args else "self._context"
-        keys_expr = "tuple(map(%s.get, %r))" % (cont_expr, self.keys)
+        keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
         if self.args:
             code = "lambda %s: (%s, %s)" % (args, ", ".join(self.args), keys_expr)
         else:
@@ -200,10 +202,10 @@ def log_ormcache_stats(sig=None, frame=None):
     me = threading.currentThread()
     me_dbname = me.dbname
     entries = defaultdict(int)
-    for dbname, reg in Registry.registries.iteritems():
-        for key in reg.cache.iterkeys():
+    for dbname, reg in pycompat.items(Registry.registries):
+        for key in reg.cache:
             entries[(dbname,) + key[:2]] += 1
-    for key, count in sorted(entries.items()):
+    for key, count in sorted(pycompat.items(entries)):
         dbname, model_name, method = key
         me.dbname = dbname
         stat = STAT[key]

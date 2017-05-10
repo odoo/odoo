@@ -137,7 +137,7 @@ def check(f):
                 time.sleep(wait_time)
             except IntegrityError as inst:
                 registry = odoo.registry(dbname)
-                for key in registry._sql_error.keys():
+                for key in pycompat.keys(registry._sql_error):
                     if key in inst[0]:
                         raise ValidationError(tr(registry._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):

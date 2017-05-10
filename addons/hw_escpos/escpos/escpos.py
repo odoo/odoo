@@ -168,7 +168,7 @@ class StyleStack:
     def to_escpos(self):
         """ converts the current style to an escpos command string """
         cmd = ''
-        ordered_cmds = sorted(self.cmds.keys(), key=lambda x: self.cmds[x]['_order'])
+        ordered_cmds = sorted(self.cmds, key=lambda x: self.cmds[x]['_order'])
         for style in ordered_cmds:
             cmd += self.cmds[style][self.get(style)]
         return cmd
@@ -788,7 +788,7 @@ class Escpos:
                     if encoding in remaining:
                         del remaining[encoding]
                     if len(remaining) >= 1:
-                        encoding = remaining.items()[0][0]
+                        (encoding, _) = remaining.popitem()
                     else:
                         encoding = 'cp437'
                         encoded  = '\xb1'    # could not encode, output error character

@@ -5,6 +5,7 @@ import ast
 
 from odoo import models
 from odoo.http import request
+from odoo.tools import pycompat
 
 
 class QWeb(models.AbstractModel):
@@ -65,7 +66,7 @@ class QWeb(models.AbstractModel):
             else:
                 return item
 
-        return map(process, items)
+        return [process(it) for it in items]
 
     def _compile_static_attributes(self, el, options):
         items = super(QWeb, self)._compile_static_attributes(el, options)
@@ -81,7 +82,7 @@ class QWeb(models.AbstractModel):
         atts = super(QWeb, self)._get_dynamic_att(tagName, atts, options, values)
         if options.get('rendering_bundle'):
             return atts
-        for name, value in atts.iteritems():
+        for name, value in pycompat.items(atts):
             atts[name] = self._website_build_attribute(tagName, name, value, options, values)
         return atts
 

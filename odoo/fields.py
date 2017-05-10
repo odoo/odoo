@@ -335,7 +335,7 @@ class Field(object):
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
-        args = {key: val for key, val in kwargs.iteritems() if val is not Default}
+        args = {key: val for key, val in pycompat.items(kwargs) if val is not Default}
         self.args = args or EMPTY_DICT
         self._setup_done = None
 
@@ -364,7 +364,7 @@ class Field(object):
         """ Set all field attributes at once (with slot defaults). """
         # optimization: we assign slots only
         assign = object.__setattr__
-        for key, val in self._slots.iteritems():
+        for key, val in pycompat.items(self._slots):
             assign(self, key, attrs.pop(key, val))
         if attrs:
             assign(self, '_attrs', attrs)
@@ -542,7 +542,7 @@ class Field(object):
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
-        for attr, value in field._attrs.iteritems():
+        for attr, value in pycompat.items(field._attrs):
             if attr not in self._attrs:
                 setattr(self, attr, value)
 
@@ -565,7 +565,7 @@ class Field(object):
         """ Compute the related field ``self`` on ``records``. """
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
-        for record, other in zip(records, others):
+        for record, other in pycompat.izip(records, others):
             if not record.id and record.env != other.env:
                 # draft records: copy record's cache to other's cache first
                 copy_cache(record, other.env)
@@ -650,7 +650,7 @@ class Field(object):
                 model = model0.env.get(field.comodel_name)
 
         # add self's model dependencies
-        for mname, fnames in model0._depends.iteritems():
+        for mname, fnames in pycompat.items(model0._depends):
             model = model0.env[mname]
             for fname in fnames:
                 field = model._fields[fname]
@@ -1002,7 +1002,7 @@ class Field(object):
                     # HACK: if result is in the wrong cache, copy values
                     if recs.env != env:
                         computed = record._field_computed[self]
-                        for source, target in zip(recs, recs.with_env(env)):
+                        for source, target in pycompat.izip(recs, recs.with_env(env)):
                             try:
                                 values = target._convert_to_cache({
                                     f.name: source[f.name] for f in computed
@@ -1071,8 +1071,8 @@ class Field(object):
         for field, path in records._field_triggers[self]:
             bymodel[field.model_name][path].append(field)
 
-        for model_name, bypath in bymodel.iteritems():
-            for path, fields in bypath.iteritems():
+        for model_name, bypath in pycompat.items(bymodel):
+            for path, fields in pycompat.items(bypath):
                 if path and any(field.compute and field.store for field in fields):
                     # process stored fields
                     stored = set(field for field in fields if field.compute and field.store)
@@ -1755,7 +1755,7 @@ class Selection(Field):
             if 'selection_add' in field.args:
                 # use an OrderedDict to update existing values
                 selection_add = field.args['selection_add']
-                self.selection = OrderedDict(self.selection + selection_add).items()
+                self.selection = list(pycompat.items(OrderedDict(self.selection + selection_add)))
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
@@ -1934,7 +1934,7 @@ class Many2one(_Relational):
         super(Many2one, self)._setup_attrs(model, name)
         # determine self.delegate
         if not self.delegate:
-            self.delegate = name in model._inherits.values()
+            self.delegate = name in pycompat.values(model._inherits)
 
     def update_db(self, model, columns):
         comodel = model.env[self.comodel_name]

@@ -13,6 +13,7 @@ from os.path import join as opj
 from odoo.modules.module import get_resource_path
 import odoo.release as release
 import odoo.tools as tools
+from odoo.tools import pycompat
 from odoo.tools.parse_version import parse_version
 
 
@@ -87,13 +88,12 @@ class MigrationManager(object):
             return "%s.%s" % (release.major_version, version)
 
         def _get_migration_versions(pkg):
-            versions = list(set(
+            versions = sorted({
                 ver
-                for lv in self.migrations[pkg.name].values()
-                for ver, lf in lv.items()
+                for lv in pycompat.values(self.migrations[pkg.name])
+                for ver, lf in pycompat.items(lv)
                 if lf
-            ))
-            versions.sort(key=lambda k: parse_version(convert_version(k)))
+            }, key=lambda k: parse_version(convert_version(k)))
             return versions
 
         def _get_migration_files(pkg, version, stage):
@@ -107,7 +107,7 @@ class MigrationManager(object):
                 'maintenance': opj('base', 'maintenance', 'migrations', pkg.name),
             }
 
-            for x in mapping.keys():
+            for x in mapping:
                 if version in m.get(x):
                     for f in m[x][version]:
                         if not f.startswith(stage + '-'):

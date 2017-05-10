@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, pycompat
 from odoo.tools import float_compare, float_is_zero
 
 
@@ -374,7 +374,7 @@ class AccountAssetAsset(models.Model):
         vals = self.onchange_category_id_values(self.category_id.id)
         # We cannot use 'write' on an object that doesn't exist yet
         if vals:
-            for k, v in vals['value'].iteritems():
+            for k, v in pycompat.items(vals['value']):
                 setattr(self, k, v)
 
     def onchange_category_id_values(self, category_id):
@@ -583,7 +583,7 @@ class AccountAssetDepreciationLine(models.Model):
             message = ''
             if message_description:
                 message = '<span>%s</span>' % message_description
-            for name, values in tracked_values.iteritems():
+            for name, values in pycompat.items(tracked_values):
                 message += '<div> &nbsp; &nbsp; &bull; <b>%s</b>: ' % name
                 message += '%s</div>' % values
             return message

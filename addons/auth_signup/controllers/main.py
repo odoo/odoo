@@ -7,6 +7,7 @@ from odoo import http, _
 from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
 from odoo.http import request
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -86,7 +87,7 @@ class AuthSignupHome(Home):
             try:
                 # retrieve the user info (name, login or email) corresponding to a signup token
                 token_infos = request.env['res.partner'].sudo().signup_retrieve_info(qcontext.get('token'))
-                for k, v in token_infos.items():
+                for k, v in pycompat.items(token_infos):
                     qcontext.setdefault(k, v)
             except:
                 qcontext['error'] = _("Invalid signup token")
@@ -96,7 +97,7 @@ class AuthSignupHome(Home):
     def do_signup(self, qcontext):
         """ Shared helper that creates a res.partner out of a token """
         values = { key: qcontext.get(key) for key in ('login', 'name', 'password') }
-        assert values.values(), "The form was not properly filled in."
+        assert values, "The form was not properly filled in."
         assert values.get('password') == qcontext.get('confirm_password'), "Passwords do not match; please retype them."
         supported_langs = [lang['code'] for lang in request.env['res.lang'].sudo().search_read([], ['code'])]
         if request.lang in supported_langs:

@@ -27,7 +27,7 @@ class ReportGeneralLedger(models.AbstractModel):
         """
         cr = self.env.cr
         MoveLine = self.env['account.move.line']
-        move_lines = dict(map(lambda x: (x, []), accounts.ids))
+        move_lines = {x: [] for x in accounts.ids}
 
         # Prepare initial sql query and Get the initial move lines
         if init_balance:

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 from odoo import api, fields, models
+from odoo.tools import pycompat
 
 
 class StockProductionLot(models.Model):
@@ -31,10 +32,10 @@ class StockProductionLot(models.Model):
             'removal_date': 'removal_time',
             'alert_date': 'alert_time'
         }
-        res = dict.fromkeys(mapped_fields.keys(), False)
+        res = dict.fromkeys(mapped_fields, False)
         product = self.env['product.product'].browse(product_id) or self.product_id
         if product:
-            for field in mapped_fields.keys():
+            for field in mapped_fields:
                 duration = getattr(product, mapped_fields[field])
                 if duration:
                     date = datetime.datetime.now() + datetime.timedelta(days=duration)
@@ -45,7 +46,7 @@ class StockProductionLot(models.Model):
     @api.model
     def create(self, vals):
         dates = self._get_dates(vals.get('product_id'))
-        for d in dates.keys():
+        for d in dates:
             if not vals.get(d):
                 vals[d] = dates[d]
         return super(StockProductionLot, self).create(vals)
@@ -53,5 +54,5 @@ class StockProductionLot(models.Model):
     @api.onchange('product_id')
     def _onchange_product(self):
         dates_dict = self._get_dates()
-        for field, value in dates_dict.items():
+        for field, value in pycompat.items(dates_dict):
             setattr(self, field, value)

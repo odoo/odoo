@@ -4,7 +4,7 @@ import hmac
 import logging
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import consteq, float_round, image_resize_images, ustr
+from odoo.tools import consteq, float_round, image_resize_images, ustr, pycompat
 from odoo.addons.base.module import module
 from odoo.exceptions import ValidationError
 
@@ -155,7 +155,7 @@ class PaymentAcquirer(models.Model):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>. """
         for acquirer in self:
-            if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in self._fields.items()):
+            if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in pycompat.items(self._fields)):
                 return False
         return True
 
@@ -686,7 +686,7 @@ class PaymentToken(models.Model):
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(values))
                 # remove all non-model fields used by (provider)_create method to avoid warning
-                fields_wl = set(self._fields.keys()) & set(values.keys())
+                fields_wl = set(self._fields) & set(values)
                 values = {field: values[field] for field in fields_wl}
         return super(PaymentToken, self).create(values)
 

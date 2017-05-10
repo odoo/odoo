@@ -14,7 +14,7 @@ import odoo
 from odoo import api, models
 from odoo import SUPERUSER_ID
 from odoo.http import request
-from odoo.tools import config
+from odoo.tools import config, pycompat
 from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
 
@@ -241,7 +241,7 @@ class Http(models.AbstractModel):
     def _postprocess_args(cls, arguments, rule):
         super(Http, cls)._postprocess_args(arguments, rule)
 
-        for key, val in arguments.items():
+        for key, val in pycompat.items(arguments):
             # Replace uid placeholder by the current request.uid
             if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
                 arguments[key] = val.sudo(request.uid)

@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
 
 
@@ -257,7 +257,7 @@ class StockMove(models.Model):
         Picking = self.env['stock.picking']
         # Check that we do not modify a stock.move which is done
         frozen_fields = ['product_qty', 'product_uom', 'location_id', 'location_dest_id', 'product_id']
-        if any(fname in frozen_fields for fname in vals.keys()) and any(move.state == 'done' for move in self):
+        if any(fname in frozen_fields for fname in vals) and any(move.state == 'done' for move in self):
             raise UserError(_('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
 
         propagated_changes_dict = {}
@@ -490,7 +490,7 @@ class StockMove(models.Model):
         (move_waiting | move_create_proc).write({'state': 'waiting'})
 
         # assign picking in batch for all confirmed move that share the same details
-        for key, moves in to_assign.items():
+        for key, moves in pycompat.items(to_assign):
             moves.assign_picking()
         self._push_apply()
         return self
@@ -706,7 +706,7 @@ class StockMove(models.Model):
                 Add reserved false lots lot by lot
                 Check if there are not reserved quants or reserved elsewhere with that lot or without lot (with the traditional method)
         """
-        return self.browse(lot_move_qty.keys())._move_quants_by_lot_v10(quants_taken, false_quants, ops, lot_qty, lot_move_qty, quant_dest_package_id)
+        return self.browse(lot_move_qty)._move_quants_by_lot_v10(quants_taken, false_quants, ops, lot_qty, lot_move_qty, quant_dest_package_id)
 
     @api.multi
     def _move_quants_by_lot_v10(self, quants_taken, false_quants, pack_operation, lot_quantities, lot_move_quantities, dest_package_id):
@@ -724,7 +724,7 @@ class StockMove(models.Model):
                     lot_to_quants[quant[0].lot_id.id].append(quant)
 
             false_quants_move = [x for x in false_quants if x[0].reservation_id.id == move_rec_updateme.id]
-            for lot_id in lot_quantities.keys():
+            for lot_id in lot_quantities:
                 redo_false_quants = False
 
                 # Take remaining reserved quants with  no lot first
@@ -804,7 +804,7 @@ class StockMove(models.Model):
             qty = operation.product_qty
             if operation.product_uom_id and operation.product_uom_id != operation.product_id.uom_id:
                 qty = operation.product_uom_id._compute_quantity(qty, operation.product_id.uom_id)
-            if operation.pack_lot_ids and float_compare(sum(lot_quantities.values()), qty, precision_rounding=operation.product_id.uom_id.rounding) != 0.0:
+            if operation.pack_lot_ids and float_compare(sum(pycompat.values(lot_quantities)), qty, precision_rounding=operation.product_id.uom_id.rounding) != 0.0:
                 raise UserError(_('You have a difference between the quantity on the operation and the quantities specified for the lots. '))
 
             quants_taken = []
@@ -816,7 +816,7 @@ class StockMove(models.Model):
                 prout_move_qty[link.move_id] = prout_move_qty.get(link.move_id, 0.0) + link.qty
 
             # Process every move only once for every pack operation
-            for move in prout_move_qty.keys():
+            for move in list(prout_move_qty):
                 # TDE FIXME: do in batch ?
                 move.check_tracking(operation)
 

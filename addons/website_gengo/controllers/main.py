@@ -44,7 +44,7 @@ class WebsiteGengo(http.Controller):
             if not translation_ids:
                 translations = IrTranslation.search_read([('lang', '=', lang), ('src', '=', initial_content)], fields=['id'])
                 if translations:
-                    translation_ids = map(lambda t_id: t_id['id'], translations)
+                    translation_ids = [t_id['id'] for t_id in translations]
 
             vals = {
                 'gengo_comment': term['gengo_comment'],

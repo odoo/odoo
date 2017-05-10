@@ -26,7 +26,7 @@ from PIL import Image as I
 import odoo.modules
 
 from odoo import api, models, fields
-from odoo.tools import ustr
+from odoo.tools import ustr, pycompat
 from odoo.tools import html_escape as escape
 from odoo.addons.base.ir import ir_qweb
 
@@ -283,7 +283,7 @@ class Image(models.AbstractModel):
             "hose again."
 
         aclasses = ['img', 'img-responsive'] + options.get('class', '').split()
-        classes = ' '.join(itertools.imap(escape, aclasses))
+        classes = ' '.join(pycompat.imap(escape, aclasses))
 
         max_size = None
         if options.get('resize'):

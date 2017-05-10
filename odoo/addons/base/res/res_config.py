@@ -9,7 +9,7 @@ from lxml import etree
 
 from odoo import api, models, registry, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
-from odoo.tools import ustr
+from odoo.tools import ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -257,7 +257,7 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
                   installer
         :rtype: [str]
         """
-        return map(attrgetter('name'), self._already_installed())
+        return [m.name for m in self._already_installed()]
 
     def _already_installed(self):
         """ For each module (boolean fields in a res.config.installer),
@@ -267,7 +267,7 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
         :returns: a list of all installed modules in this installer
         :rtype: recordset (collection of Record)
         """
-        selectable = [name for name, field in self._fields.iteritems()
+        selectable = [name for name, field in pycompat.items(self._fields)
                       if field.type == 'boolean']
         return self.env['ir.module.module'].search([('name', 'in', selectable),
                             ('state', 'in', ['to install', 'installed', 'to upgrade'])])
@@ -292,7 +292,7 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
         """
         base = set(module_name
                    for installer in self.read()
-                   for module_name, to_install in installer.iteritems()
+                   for module_name, to_install in pycompat.items(installer)
                    if self._fields[module_name].type == 'boolean' and to_install)
 
         hooks_results = set()
@@ -302,7 +302,7 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
                 hooks_results.update(hook() or set())
 
         additionals = set(module
-                          for requirements, consequences in self._install_if.iteritems()
+                          for requirements, consequences in pycompat.items(self._install_if)
                           if base.issuperset(requirements)
                           for module in consequences)
 
@@ -462,13 +462,13 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         ref = self.env.ref
 
         defaults, groups, modules, others = [], [], [], []
-        for name, field in self._fields.iteritems():
+        for name, field in pycompat.items(self._fields):
             if name.startswith('default_') and hasattr(field, 'default_model'):
                 defaults.append((name, field.default_model, name[8:]))
             elif name.startswith('group_') and field.type in ('boolean', 'selection') and \
                     hasattr(field, 'implied_group'):
                 field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
-                field_groups = Groups.concat(*map(ref, field_group_xmlids))
+                field_groups = Groups.concat(*(ref(it) for it in field_group_xmlids))
                 groups.append((name, field_groups, ref(field.implied_group)))
             elif name.startswith('module_') and field.type in ('boolean', 'selection'):
                 module = IrModule.sudo().search([('name', '=', name[7:])], limit=1)

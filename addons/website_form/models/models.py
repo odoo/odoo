@@ -5,6 +5,7 @@ import itertools
 
 from odoo import models, fields, api
 from odoo.http import request
+from odoo.tools import pycompat
 
 
 class website_form_config(models.Model):
@@ -47,7 +48,7 @@ class website_form_model(models.Model):
             ])
         }
         return {
-            k: v for k, v in self.get_authorized_fields(self.model).iteritems()
+            k: v for k, v in pycompat.items(self.get_authorized_fields(self.model))
             if k not in excluded
         }
 
@@ -57,17 +58,17 @@ class website_form_model(models.Model):
         model = self.env[model_name]
         fields_get = model.fields_get()
 
-        for key, val in model._inherits.iteritems():
+        for key, val in pycompat.items(model._inherits):
             fields_get.pop(val, None)
 
         # Unrequire fields with default values
-        default_values = model.default_get(fields_get.keys())
+        default_values = model.default_get(list(fields_get))
         for field in [f for f in fields_get if f in default_values]:
             fields_get[field]['required'] = False
 
         # Remove readonly and magic fields
         MAGIC_FIELDS = models.MAGIC_COLUMNS + [model.CONCURRENCY_CHECK_FIELD]
-        for field in fields_get.keys():
+        for field in list(fields_get):
             if fields_get[field]['readonly'] or field in MAGIC_FIELDS:
                 del fields_get[field]
 

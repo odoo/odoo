@@ -5,7 +5,7 @@ from ast import literal_eval
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, MissingError, ValidationError
-from odoo.tools import pickle
+from odoo.tools import pickle, pycompat
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -315,7 +315,7 @@ class IrValues(models.Model):
         for row in self._cr.dictfetchall():
             value = pickle.loads(row['value'].encode('utf-8'))
             defaults.setdefault(row['name'], (row['id'], row['name'], value))
-        return defaults.values()
+        return list(pycompat.values(defaults))
 
     # use ormcache: this is called a lot by BaseModel.default_get()!
     @api.model
@@ -426,4 +426,4 @@ class IrValues(models.Model):
                 results[name] = (id, name, action_def)
             except (AccessError, MissingError):
                 continue
-        return sorted(results.values())
+        return sorted(pycompat.values(results))

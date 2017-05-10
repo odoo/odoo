@@ -135,7 +135,7 @@ class BaseCase(unittest.TestCase):
 
     def shortDescription(self):
         doc = self._testMethodDoc
-        return doc and ' '.join(filter(None, map(str.strip, doc.splitlines()))) or None
+        return doc and ' '.join(l.strip() for l in doc.splitlines() if not l.isspace()) or None
 
 
 class TransactionCase(BaseCase):

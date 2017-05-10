@@ -10,6 +10,8 @@ import logging
 import re
 import zipfile
 
+from odoo.tools import pycompat
+
 __all__ = ['guess_mimetype']
 
 _logger = logging.getLogger(__name__)
@@ -33,7 +35,7 @@ def _check_ooxml(data):
 
         # then there is a directory whose name denotes the type of the file:
         # word, pt (powerpoint) or xl (excel)
-        for dirname, mime in _ooxml_dirs.iteritems():
+        for dirname, mime in pycompat.items(_ooxml_dirs):
             if any(entry.startswith(dirname) for entry in filenames):
                 return mime
 

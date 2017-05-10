@@ -23,6 +23,7 @@ import odoo
 import odoo.tools as tools
 import odoo.release as release
 from odoo import SUPERUSER_ID, api
+from odoo.tools import pycompat
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -323,7 +324,7 @@ def load_information_from_description_file(module, mod_path=None):
             'sequence': 100,
             'summary': '',
         }
-        info.update(itertools.izip(
+        info.update(pycompat.izip(
             'depends data demo test init_xml update_xml demo_xml'.split(),
             iter(list, None)))
 
@@ -395,7 +396,11 @@ def get_modules():
             for mname in MANIFEST_NAMES:
                 if os.path.isfile(opj(dir, name, mname)):
                     return True
-        return map(clean, filter(is_really_module, os.listdir(dir)))
+        return [
+            clean(it)
+            for it in os.listdir(dir)
+            if is_really_module(it)
+        ]
 
     plist = []
     initialize_sys_path()
@@ -492,7 +497,7 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
     r = True
     for m in mods:
         tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
-        suite = unittest.TestSuite(itertools.ifilter(position, tests))
+        suite = unittest.TestSuite(t for t in tests if position(t))
 
         if suite.countTestCases():
             t0 = time.time()
@@ -532,5 +537,5 @@ def unwrap_suite(test):
         return
 
     for item in itertools.chain.from_iterable(
-            itertools.imap(unwrap_suite, subtests)):
+            unwrap_suite(t) for t in subtests):
         yield item

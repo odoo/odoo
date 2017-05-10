@@ -1,6 +1,9 @@
 import yaml
 import logging
 
+from . import pycompat
+
+
 class YamlTag(object):
     """
     Superclass for constructors of custom tags defined in yaml file.
@@ -13,7 +16,7 @@ class YamlTag(object):
     def __getattr__(self, attr):
         return None
     def __repr__(self):
-        return "<%s %s>" % (self.__class__.__name__, sorted(self.__dict__.items()))
+        return "<%s %s>" % (self.__class__.__name__, sorted(pycompat.items(self.__dict__)))
 
 class Assert(YamlTag):
     def __init__(self, model, id=None, severity=logging.WARNING, string="NONAME", **kwargs):

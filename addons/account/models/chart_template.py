@@ -5,6 +5,9 @@ from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
 
 import logging
+
+from odoo.tools import pycompat
+
 _logger = logging.getLogger(__name__)
 
 def migrate_set_tags_and_taxes_updatable(cr, registry, module):
@@ -322,7 +325,7 @@ class AccountChartTemplate(models.Model):
 
         # writing account values after creation of accounts
         company.transfer_account_id = account_template_ref[transfer_account_id.id]
-        for key, value in generated_tax_res['account_dict'].items():
+        for key, value in pycompat.items(generated_tax_res['account_dict']):
             if value['refund_account_id'] or value['account_id'] or value['cash_basis_account']:
                 AccountTaxObj.browse(key).write({
                     'refund_account_id': account_ref.get(value['refund_account_id'], False),

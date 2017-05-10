@@ -30,22 +30,33 @@ class TestPyLint(TransactionCase):
         'relative-import',
         'deprecated-module',
         'import-star-module-level',
-        # 'bad-python3-import', # TODO: more stuff used in report
+
+        'bad-builtin',
+
+        'dict-iter-method',
+        'dict-view-method',
 
         'long-suffix',
-        'apply-builtin',
-        'cmp-builtin',
-        'coerce-builtin',
-        'execfile-builtin',
-        'input-builtin',
-        'intern-builtin',
-        'long-builtin',
-        'raw_input-builtin',
-        'reload-builtin',
-        'xrange-builtin',
+    ]
+
+    BAD_FUNCTIONS = [
+        'apply',
+        'cmp',
+        'coerce',
+        'execfile',
+        'input',
+        'intern',
+        'long',
+        'raw_input',
+        'reload',
+        'xrange',
+        'long',
+        'map',
+        'filter',
+        'zip',
         # TODO: enable once report has been removed
-        # 'file-builtin',
-        # 'reduce-builtin',
+        # 'file',
+        # 'reduce',
     ]
 
     def _skip_test(self, reason):
@@ -69,6 +80,8 @@ class TestPyLint(TransactionCase):
             '--enable=%s' % ','.join(self.ENABLED_CODES),
             '--reports=n',
             "--msg-template='{msg} ({msg_id}) at {path}:{line}'",
+            '--load-plugins=pylint.extensions.bad_builtin',
+            '--bad-functions=%s' % ','.join(self.BAD_FUNCTIONS),
         ]
 
         try:

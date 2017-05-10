@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools import pycompat
 
 
 class Followers(models.Model):
@@ -41,7 +42,7 @@ class Followers(models.Model):
                       using the subtypes given in the parameters
         """
         res_model_id = self.env['ir.model']._get(res_model).id
-        force_mode = force or (all(data for data in partner_data.values()) and all(data for data in channel_data.values()))
+        force_mode = force or (all(data for data in pycompat.values(partner_data)) and all(data for data in pycompat.values(channel_data)))
         generic = []
         specific = {}
         existing = {}  # {res_id: follower_ids}
@@ -51,7 +52,7 @@ class Followers(models.Model):
         followers = self.sudo().search([
             '&',
             '&', ('res_model_id', '=', res_model_id), ('res_id', 'in', res_ids),
-            '|', ('partner_id', 'in', partner_data.keys()), ('channel_id', 'in', channel_data.keys())])
+            '|', ('partner_id', 'in', list(partner_data)), ('channel_id', 'in', list(channel_data))])
 
         if force_mode:
             followers.unlink()
@@ -69,20 +70,20 @@ class Followers(models.Model):
         external_default_subtypes = default_subtypes.filtered(lambda subtype: not subtype.internal)
 
         if force_mode:
-            employee_pids = self.env['res.users'].sudo().search([('partner_id', 'in', partner_data.keys()), ('share', '=', False)]).mapped('partner_id').ids
-            for pid, data in partner_data.iteritems():
+            employee_pids = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_data)), ('share', '=', False)]).mapped('partner_id').ids
+            for pid, data in pycompat.items(partner_data):
                 if not data:
                     if pid not in employee_pids:
                         partner_data[pid] = external_default_subtypes.ids
                     else:
                         partner_data[pid] = default_subtypes.ids
-            for cid, data in channel_data.iteritems():
+            for cid, data in pycompat.items(channel_data):
                 if not data:
                     channel_data[cid] = default_subtypes.ids
 
         # create new followers, batch ok
-        gen_new_pids = [pid for pid in partner_data.keys() if pid not in p_exist]
-        gen_new_cids = [cid for cid in channel_data.keys() if cid not in c_exist]
+        gen_new_pids = [pid for pid in partner_data if pid not in p_exist]
+        gen_new_cids = [cid for cid in channel_data if cid not in c_exist]
         for pid in gen_new_pids:
             generic.append([0, 0, {'res_model_id': res_model_id, 'partner_id': pid, 'subtype_ids': [(6, 0, partner_data.get(pid) or default_subtypes.ids)]}])
         for cid in gen_new_cids:
@@ -94,8 +95,8 @@ class Followers(models.Model):
                 command = []
                 doc_followers = existing.get(res_id, list())
 
-                new_pids = set(partner_data.keys()) - set([sub.partner_id.id for sub in doc_followers if sub.partner_id]) - set(gen_new_pids)
-                new_cids = set(channel_data.keys()) - set([sub.channel_id.id for sub in doc_followers if sub.channel_id]) - set(gen_new_cids)
+                new_pids = set(partner_data) - set([sub.partner_id.id for sub in doc_followers if sub.partner_id]) - set(gen_new_pids)
+                new_cids = set(channel_data) - set([sub.channel_id.id for sub in doc_followers if sub.channel_id]) - set(gen_new_cids)
 
                 # subscribe new followers
                 for new_pid in new_pids:

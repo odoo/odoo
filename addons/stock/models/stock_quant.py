@@ -3,7 +3,7 @@ from datetime import datetime
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.translate import _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.exceptions import UserError
 
 import logging
@@ -611,7 +611,7 @@ class QuantPackage(models.Model):
 
     @api.multi
     def name_get(self):
-        return self._compute_complete_name().items()
+        return list(pycompat.items(self._compute_complete_name()))
 
     def _compute_complete_name(self):
         """ Forms complete name of location from parent location to child location. """

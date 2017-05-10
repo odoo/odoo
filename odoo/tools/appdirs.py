@@ -15,7 +15,7 @@ from __future__ import print_function
 # - XDG spec for Un*x: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 
 __version_info__ = (1, 3, 0)
-__version__ = '.'.join(map(str, __version_info__))
+__version__ = '.'.join(str(v) for v in __version_info__)
 
 
 import sys

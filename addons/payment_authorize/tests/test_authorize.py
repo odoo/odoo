@@ -11,7 +11,7 @@ import odoo
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, pycompat
 
 
 @odoo.tests.common.at_install(True)
@@ -91,7 +91,7 @@ class AuthorizeForm(AuthorizeCommon):
         tree = objectify.fromstring(res)
         self.assertEqual(tree.get('action'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong form POST url')
         for el in tree.iterfind('input'):
-            values = el.values()
+            values = list(pycompat.values(el.attrib))
             if values[1] in ['submit', 'x_fp_hash', 'return_url', 'x_state', 'x_ship_to_state']:
                 continue
             self.assertEqual(

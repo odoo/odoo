@@ -808,7 +808,7 @@ class AccountBankStatementLine(models.Model):
                 whose value is the same as described in process_reconciliation except that ids are used instead of recordsets.
         """
         AccountMoveLine = self.env['account.move.line']
-        for st_line, datum in zip(self, data):
+        for st_line, datum in pycompat.izip(self, data):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
             for aml_dict in datum.get('counterpart_aml_dicts', []):
                 aml_dict['move_line'] = AccountMoveLine.browse(aml_dict['counterpart_aml_id'])
@@ -879,7 +879,7 @@ class AccountBankStatementLine(models.Model):
         for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
             if aml_dict.get('tax_ids') and isinstance(aml_dict['tax_ids'][0], pycompat.integer_types):
                 # Transform the value in the format required for One2many and Many2many fields
-                aml_dict['tax_ids'] = map(lambda id: (4, id, None), aml_dict['tax_ids'])
+                aml_dict['tax_ids'] = [(4, id, None) for id in aml_dict['tax_ids']]
 
         # Fully reconciled moves are just linked to the bank statement
         total = self.amount

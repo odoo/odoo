@@ -25,7 +25,7 @@ class StockPickingType(models.Model):
             data = self.env['mrp.production'].read_group(domains[field] +
                 [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
                 ['picking_type_id'], ['picking_type_id'])
-            count = dict(map(lambda x: (x['picking_type_id'] and x['picking_type_id'][0], x['picking_type_id_count']), data))
+            count = {x['picking_type_id'] and x['picking_type_id'][0]: x['picking_type_id_count'] for x in data}
             for record in mrp_picking_types:
                 record[field] = count.get(record.id, 0)
 

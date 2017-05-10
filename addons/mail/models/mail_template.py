@@ -356,7 +356,7 @@ class MailTemplate(models.Model):
             return multi_mode and results or results[res_ids[0]]
 
         # prepare template variables
-        records = self.env[model].browse(filter(None, res_ids))  # filter to avoid browsing [None]
+        records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]
         res_to_rec = dict.fromkeys(res_ids, None)
         for record in records:
             res_to_rec[record.id] = record
@@ -366,7 +366,7 @@ class MailTemplate(models.Model):
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
         }
-        for res_id, record in res_to_rec.iteritems():
+        for res_id, record in pycompat.items(res_to_rec):
             variables['object'] = record
             try:
                 render_result = template.render(variables)
@@ -378,7 +378,7 @@ class MailTemplate(models.Model):
             results[res_id] = render_result
 
         if post_process:
-            for res_id, result in results.iteritems():
+            for res_id, result in pycompat.items(results):
                 results[res_id] = self.render_post_process(result)
 
         return multi_mode and results or results[res_ids[0]]
@@ -399,7 +399,7 @@ class MailTemplate(models.Model):
         self.ensure_one()
 
         langs = self.render_template(self.lang, self.model, res_ids)
-        for res_id, lang in langs.iteritems():
+        for res_id, lang in pycompat.items(langs):
             if lang:
                 template = self.with_context(lang=lang)
             else:
@@ -418,11 +418,11 @@ class MailTemplate(models.Model):
 
         if self.use_default_to or self._context.get('tpl_force_default_to'):
             default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
-            for res_id, recipients in default_recipients.iteritems():
+            for res_id, recipients in pycompat.items(default_recipients):
                 results[res_id].pop('partner_to', None)
                 results[res_id].update(recipients)
 
-        for res_id, values in results.iteritems():
+        for res_id, values in pycompat.items(results):
             partner_ids = values.get('partner_ids', list())
             if self._context.get('tpl_partners_only'):
                 mails = tools.email_split(values.pop('email_to', '')) + tools.email_split(values.pop('email_cc', ''))
@@ -461,11 +461,11 @@ class MailTemplate(models.Model):
 
         # templates: res_id -> template; template -> res_ids
         templates_to_res_ids = {}
-        for res_id, template in res_ids_to_templates.iteritems():
+        for res_id, template in pycompat.items(res_ids_to_templates):
             templates_to_res_ids.setdefault(template, []).append(res_id)
 
         results = dict()
-        for template, template_res_ids in templates_to_res_ids.iteritems():
+        for template, template_res_ids in pycompat.items(templates_to_res_ids):
             Template = self.env['mail.template']
             # generate fields value for all res_ids linked to the current template
             if template.lang:
@@ -475,7 +475,7 @@ class MailTemplate(models.Model):
                 generated_field_values = Template.render_template(
                     getattr(template, field), template.model, template_res_ids,
                     post_process=(field == 'body_html'))
-                for res_id, field_value in generated_field_values.iteritems():
+                for res_id, field_value in pycompat.items(generated_field_values):
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
             if any(field in fields for field in ['email_to', 'partner_to', 'email_cc']):

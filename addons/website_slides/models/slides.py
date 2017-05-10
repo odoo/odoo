@@ -12,7 +12,7 @@ import re
 import urllib2
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools import image
+from odoo.tools import image, pycompat
 from odoo.tools.translate import html_translate
 from odoo.exceptions import Warning
 from odoo.addons.website.models.website import slug
@@ -323,7 +323,7 @@ class Slide(models.Model):
             values = res['values']
             if not values.get('document_id'):
                 raise Warning(_('Please enter valid Youtube or Google Doc URL'))
-            for key, value in values.iteritems():
+            for key, value in pycompat.items(values):
                 setattr(self, key, value)
 
     # website
@@ -386,7 +386,7 @@ class Slide(models.Model):
             values['date_published'] = datetime.datetime.now()
         if values.get('url'):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
-            for key, value in doc_data.iteritems():
+            for key, value in pycompat.items(doc_data):
                 values.setdefault(key, value)
         # Do not publish slide if user has not publisher rights
         if not self.user_has_groups('website.group_website_publisher'):
@@ -400,7 +400,7 @@ class Slide(models.Model):
     def write(self, values):
         if values.get('url'):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
-            for key, value in doc_data.iteritems():
+            for key, value in pycompat.items(doc_data):
                 values.setdefault(key, value)
         if values.get('channel_id'):
             custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])

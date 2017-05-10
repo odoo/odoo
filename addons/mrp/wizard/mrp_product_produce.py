@@ -59,7 +59,7 @@ class MrpProductProduce(models.TransientModel):
             res['product_qty'] = quantity
             res['product_id'] = production.product_id.id
             res['product_uom_id'] = production.product_uom_id.id
-            res['consume_line_ids'] = map(lambda x: (0,0,x), lines) + map(lambda x:(4, x), existing_lines)
+            res['consume_line_ids'] = [(0,0,x) for x in lines] + [(4, x) for x in existing_lines]
         return res
 
     serial = fields.Boolean('Requires Serial')

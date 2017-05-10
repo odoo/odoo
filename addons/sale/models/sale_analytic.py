@@ -3,6 +3,8 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -46,7 +48,7 @@ class SaleOrderLine(models.Model):
                 qty = d['unit_amount']
             lines[line] += qty
 
-        for line, qty in lines.items():
+        for line, qty in pycompat.items(lines):
             line.qty_delivered = qty
         return True
 

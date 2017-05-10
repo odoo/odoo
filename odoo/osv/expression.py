@@ -1018,7 +1018,7 @@ class expression(object):
                             subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
                             subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
                             # avoid flattening of argument in to_sql()
-                            subquery = cr.mogrify(subquery, [tuple(filter(None, res_ids))])
+                            subquery = cr.mogrify(subquery, [tuple(it for it in res_ids if it)])
                             push(create_substitution_leaf(leaf, ('id', subop, (subquery, [])), internal=True))
 
                     if call_null_m2m:
@@ -1200,7 +1200,7 @@ class expression(object):
                     else:
                         field = model._fields[left]
                         instr = ','.join([field.column_format] * len(params))
-                        params = map(partial(field.convert_to_column, record=model), params)
+                        params = [field.convert_to_column(p, record=model) for p in params]
                     query = '(%s."%s" %s (%s))' % (table_alias, left, operator, instr)
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).

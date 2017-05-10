@@ -17,8 +17,7 @@ from .validate_email import validate_email
 from odoo import api, fields, models
 from odoo import SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import mute_logger
-
+from odoo.tools import mute_logger, pycompat
 
 _logger = logging.getLogger('base.partner.merge')
 
@@ -269,7 +268,7 @@ class MergePartnerAutomatic(models.TransientModel):
                 return item
         # get all fields that are not computed or x2many
         values = dict()
-        for column, field in model_fields.iteritems():
+        for column, field in pycompat.items(model_fields):
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
@@ -407,7 +406,7 @@ class MergePartnerAutomatic(models.TransientModel):
         """
         return any(
             self.env[model].search_count([(field, 'in', aggr_ids)])
-            for model, field in models.iteritems()
+            for model, field in pycompat.items(models)
         )
 
     @api.model

@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 
 class CrmLeadForwardToPartner(models.TransientModel):
@@ -85,7 +86,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
                 else:
                     partners_leads[partner.id] = {'partner': partner, 'leads': [lead_details]}
 
-        for partner_id, partner_leads in partners_leads.items():
+        for partner_id, partner_leads in pycompat.items(partners_leads):
             in_portal = False
             if portal_group:
                 for contact in (partner.child_ids or partner).filtered(lambda contact: contact.user_ids):

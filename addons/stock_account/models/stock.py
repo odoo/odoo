@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, pycompat
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -127,7 +127,7 @@ class StockQuant(models.Model):
             quant_cost_qty[quant.cost] += quant.qty
 
         AccountMove = self.env['account.move']
-        for cost, qty in quant_cost_qty.iteritems():
+        for cost, qty in pycompat.items(quant_cost_qty):
             move_lines = move._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id)
             if move_lines:
                 date = self._context.get('force_period_date', fields.Date.context_today(self))

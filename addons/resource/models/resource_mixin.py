@@ -92,4 +92,4 @@ class ResourceMixin(models.AbstractModel):
         attendances = calendar._get_day_attendances(day_date, False, False)
         if not attendances:
             return 0
-        return sum(map(lambda i: float(i.hour_to) - float(i.hour_from), attendances))
+        return sum(float(i.hour_to) - float(i.hour_from) for i in attendances)

@@ -4,6 +4,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -56,11 +57,11 @@ class Project(models.Model):
             if project.use_tasks:
                 activity_task = project.tasks.rating_get_grades(domain)
                 activity_great = activity_task['great']
-                activity_sum = sum(activity_task.values())
+                activity_sum = sum(pycompat.values(activity_task))
             if project.use_issues:
                 activity_issue = self.env['project.issue'].search([('project_id', '=', project.id)]).rating_get_grades(domain)
                 activity_great += activity_issue['great']
-                activity_sum += sum(activity_issue.values())
+                activity_sum += sum(pycompat.values(activity_issue))
             project.percentage_satisfaction_project = activity_great * 100 / activity_sum if activity_sum else -1
 
     @api.one
@@ -68,7 +69,7 @@ class Project(models.Model):
     def _compute_percentage_satisfaction_issue(self):
         project_issue = self.env['project.issue'].search([('project_id', '=', self.id)])
         activity = project_issue.rating_get_grades()
-        self.percentage_satisfaction_issue = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
+        self.percentage_satisfaction_issue = activity['great'] * 100 / sum(pycompat.values(activity)) if sum(pycompat.values(activity)) else -1
 
     percentage_satisfaction_issue = fields.Integer(compute='_compute_percentage_satisfaction_issue', string="Happy % on Issue", store=True, default=-1)
 

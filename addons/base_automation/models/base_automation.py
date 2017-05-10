@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.modules.registry import Registry
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -263,7 +264,7 @@ class BaseAutomation(models.Model):
                 if res:
                     if 'value' in res:
                         res['value'].pop('id', None)
-                        self.update({key: val for key, val in res['value'].iteritems() if key in self._fields})
+                        self.update({key: val for key, val in pycompat.items(res['value']) if key in self._fields})
                     if 'domain' in res:
                         result.setdefault('domain', {}).update(res['domain'])
                     if 'warning' in res:

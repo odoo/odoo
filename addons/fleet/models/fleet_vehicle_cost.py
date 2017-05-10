@@ -6,6 +6,8 @@ from odoo.exceptions import UserError
 
 from dateutil.relativedelta import relativedelta
 
+from odoo.tools import pycompat
+
 
 class FleetVehicleCost(models.Model):
     _name = 'fleet.vehicle.cost'
@@ -262,7 +264,7 @@ class FleetVehicleLogContract(models.Model):
                 res[contract.vehicle_id.id] = 1
 
         Vehicle = self.env['fleet.vehicle']
-        for vehicle, value in res.items():
+        for vehicle, value in pycompat.items(res):
             Vehicle.browse(vehicle).message_post(body=_('%s contract(s) need(s) to be renewed and/or closed!') % value)
         return contracts.write({'state': 'toclose'})
 

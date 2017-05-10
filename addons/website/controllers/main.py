@@ -21,6 +21,8 @@ from odoo.exceptions import AccessError
 from odoo.addons.website.models.website import slug
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
 
+from odoo.tools import pycompat
+
 logger = logging.getLogger(__name__)
 
 # Completely arbitrary limits
@@ -37,11 +39,11 @@ class QueryURL(object):
 
     def __call__(self, path=None, path_args=None, **kw):
         path = path or self.path
-        for key, value in self.args.items():
+        for key, value in pycompat.items(self.args):
             kw.setdefault(key, value)
         path_args = set(path_args or []).union(self.path_args)
         paths, fragments = [], []
-        for key, value in kw.items():
+        for key, value in pycompat.items(kw):
             if value and key in path_args:
                 if isinstance(value, browse_record):
                     paths.append((key, slug(value)))
@@ -193,7 +195,7 @@ class Website(Home):
                 })
             else:
                 # TODO: in master/saas-15, move current_website_id in template directly
-                pages_with_website = map(lambda p: "%d-%d" % (current_website.id, p), range(1, pages + 1))
+                pages_with_website = ["%d-%d" % (current_website.id, p) for p in range(1, pages + 1)]
 
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = View.render_template('website.sitemap_index_xml', {

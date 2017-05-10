@@ -21,7 +21,7 @@ class ResPartner(models.Model):
         mapped_data = dict([(m['partner_id'][0], m['partner_id_count']) for m in sale_data])
         for partner in self:
             # let's obtain the partner id and all its child ids from the read up there
-            partner_ids = filter(lambda r: r['id'] == partner.id, partner_child_ids)[0]
-            partner_ids = [partner_ids.get('id')] + partner_ids.get('child_ids')
+            item = next(p for p in partner_child_ids if p['id'] == partner.id)
+            partner_ids = [partner.id] + item.get('child_ids')
             # then we can sum for all the partner's child
             partner.sale_order_count = sum(mapped_data.get(child, 0) for child in partner_ids)

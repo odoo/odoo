@@ -5,6 +5,9 @@
 import operator
 import math
 
+from odoo.tools import pycompat
+
+
 class graph(object):
     def __init__(self, nodes, transitions, no_ancester=None):
         """Initialize graph's object
@@ -256,7 +259,7 @@ class graph(object):
         """The ranks are normalized by setting the least rank to zero.
         """
 
-        least_rank = min(map(lambda x: x['x'], self.result.values()))
+        least_rank = min(x['x'] for x in pycompat.values(self.result.values))
 
         if least_rank!=0:
             for node in self.result:
@@ -380,7 +383,7 @@ class graph(object):
         """Finds actual-order of the nodes with respect to maximum number of nodes in a rank in component
         """
         mid_pos = 0.0
-        max_level = max(map(lambda x: len(x), self.levels.values()))
+        max_level = max(len(x) for x in pycompat.values(self.levels.values))
 
         for level in self.levels:
             if level:
@@ -471,7 +474,7 @@ class graph(object):
         """
 
         if self.Is_Cyclic:
-            max_level = max(map(lambda x: len(x), self.levels.values()))
+            max_level = max(len(x) for x in pycompat.values(self.levels.values))
 
             if max_level%2:
                 self.result[self.start]['y'] = (max_level+1)/2 + self.max_order + (self.max_order and 1)
@@ -483,7 +486,7 @@ class graph(object):
         else:
             self.result[self.start]['y'] = 0
             self.tree_order(self.start, 0)
-            min_order = math.fabs(min(map(lambda x: x['y'], self.result.values())))
+            min_order = math.fabs(min(x['y'] for x in pycompat.values(self.result.values)))
 
             index = self.start_nodes.index(self.start)
             same = False
@@ -537,7 +540,7 @@ class graph(object):
                     self.result[start]['y'] = base + factor
                     factor += 1
 
-            self.max_order = max(map(lambda x: x['y'], self.result.values()))
+            self.max_order = max(x['y'] for x in pycompat.values(self.result.values))
 
     def find_starts(self):
         """Finds other start nodes of the graph in the case when graph is disconneted
@@ -626,7 +629,7 @@ class graph(object):
         self.make_chain()
         self.preprocess_order()
         self.order = {}
-        max_rank = max(map(lambda x: x, self.levels.keys()))
+        max_rank = max(x for x in self.levels)
 
         for i in range(max_rank+1):
             self.order[i] = 0
@@ -657,7 +660,7 @@ class graph(object):
 
                 for node in self.no_ancester:
                     for sec_node in self.transitions.get(node, []):
-                        if sec_node in self.partial_order.keys():
+                        if sec_node in pycompat.keys(self.partial_order):
                             self.transitions[self.start_nodes[0]].append(node)
                             break
 
@@ -743,7 +746,7 @@ if __name__=='__main__':
     for node in nodes:
         node_res[node] = result[node]
 
-    for name,node in node_res.items():
+    for name,node in pycompat.items(node_res):
 
         draw.arc( (int(node['y']-radius), int(node['x']-radius),int(node['y']+radius), int(node['x']+radius) ), 0, 360, (128,128,128))
         draw.text( (int(node['y']),  int(node['x'])), str(name),  (128,128,128))

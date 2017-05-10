@@ -12,6 +12,7 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -166,7 +167,7 @@ class Forum(models.Model):
         post_tags = []
         existing_keep = []
         user = self.env.user
-        for tag in filter(None, tags.split(',')):
+        for tag in (tag for tag in tags.split(',') if tag):
             if tag.startswith('_'):  # it's a new tag
                 # check that not arleady created meanwhile or maybe excluded by the limit on the search
                 tag_ids = Tag.search([('name', '=', tag[1:])])
@@ -379,7 +380,7 @@ class Post(models.Model):
         is_admin = user.id == SUPERUSER_ID
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
-        for post, post_sudo in itertools.izip(self, self.sudo()):
+        for post, post_sudo in pycompat.izip(self, self.sudo()):
             is_creator = post.create_uid == user
 
             post.karma_accept = post.forum_id.karma_answer_accept_own if post.parent_id.create_uid == user else post.forum_id.karma_answer_accept_all
@@ -492,7 +493,7 @@ class Post(models.Model):
             tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
             if any(set(post.tag_ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
                 raise KarmaError(_('Not enough karma to retag.'))
-        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id', 'tag_ids'] for key in vals.keys()) and any(not post.can_edit for post in self):
+        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id', 'tag_ids'] for key in vals) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
 
         res = super(Post, self).write(vals)

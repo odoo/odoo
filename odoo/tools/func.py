@@ -33,7 +33,7 @@ class lazy_property(object):
         """ Reset all lazy properties on the instance `obj`. """
         cls = type(obj)
         obj_dict = vars(obj)
-        for name in obj_dict.keys():
+        for name in list(obj_dict):
             if isinstance(getattr(cls, name, None), lazy_property):
                 obj_dict.pop(name)
 

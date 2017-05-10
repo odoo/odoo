@@ -4,6 +4,8 @@
 import unittest
 from odoo.addons.website.models.website import slugify, unslug
 
+from odoo.tools import pycompat
+
 
 class TestUnslug(unittest.TestCase):
 
@@ -23,7 +25,7 @@ class TestUnslug(unittest.TestCase):
             'foo1': (None, None),
         }
 
-        for slug, expected in tests.iteritems():
+        for slug, expected in pycompat.items(tests):
             self.assertEqual(unslug(slug), expected)
 
 

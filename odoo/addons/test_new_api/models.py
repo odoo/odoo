@@ -5,6 +5,7 @@ import datetime
 
 from odoo import models, fields, api, _
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tools import pycompat
 
 
 class Category(models.Model):
@@ -45,7 +46,7 @@ class Category(models.Model):
             categories.append(category[0])
         categories.append(self)
         # assign parents following sequence
-        for parent, child in zip(categories, categories[1:]):
+        for parent, child in pycompat.izip(categories, categories[1:]):
             if parent and child:
                 child.parent = parent
         # assign name of last category, and reassign display_name (to normalize it)

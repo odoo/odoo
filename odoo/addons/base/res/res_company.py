@@ -6,6 +6,7 @@ import re
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
+from odoo.tools import pycompat
 
 
 class Company(models.Model):
@@ -146,7 +147,7 @@ class Company(models.Model):
         if self.country_id:
             res['domain']['state_id'] = [('country_id', '=', self.country_id.id)]
         values = self.on_change_country(self.country_id.id)['value']
-        for fname, value in values.iteritems():
+        for fname, value in pycompat.items(values):
             setattr(self, fname, value)
         return res
 

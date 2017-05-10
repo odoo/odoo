@@ -2,6 +2,9 @@ from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 import time
 import unittest
 
+from odoo.tools import pycompat
+
+
 class TestReconciliation(AccountingTestCase):
 
     """Tests for reconciliation (account.tax)
@@ -336,8 +339,8 @@ class TestReconciliation(AccountingTestCase):
         self.assertTrue(exchange_loss_line, 'There should be one move line of 0.01 EUR in credit')
         # The journal items of the reconciliation should have their debit and credit total equal
         # Besides, the total debit and total credit should be 60.61 EUR (2.00 USD)
-        self.assertEquals(sum([res['debit'] for res in result.values()]), 60.61)
-        self.assertEquals(sum([res['credit'] for res in result.values()]), 60.61)
+        self.assertEquals(sum(res['debit'] for res in pycompat.values(result)), 60.61)
+        self.assertEquals(sum(res['credit'] for res in pycompat.items(result)), 60.61)
         counterpart_exchange_loss_line = None
         for line in exchange_loss_line.move_id.line_id:
             if line.account_id.id == self.account_fx_expense_id:

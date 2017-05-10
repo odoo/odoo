@@ -23,7 +23,6 @@ from types import CodeType
 import logging
 import werkzeug
 
-from odoo.tools import pycompat
 from .misc import ustr
 
 import odoo
@@ -251,7 +250,7 @@ _BUILTINS = {
     'divmod': divmod,
     'isinstance': isinstance,
     'range': range,
-    'xrange': pycompat.range,
+    'xrange': range,
     'zip': zip,
     'Exception': Exception,
 }

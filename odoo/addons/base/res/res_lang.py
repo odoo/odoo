@@ -8,6 +8,7 @@ import re
 from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 
@@ -22,7 +23,7 @@ class Lang(models.Model):
     _description = "Languages"
     _order = "active desc,name"
 
-    _disallowed_datetime_patterns = tools.DATETIME_FORMATS_MAP.keys()
+    _disallowed_datetime_patterns = list(tools.DATETIME_FORMATS_MAP)
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
 
     name = fields.Char(required=True)
@@ -125,7 +126,7 @@ class Lang(models.Model):
             # For some locales, nl_langinfo returns a D_FMT/T_FMT that contains
             # unsupported '%-' patterns, e.g. for cs_CZ
             format = format.replace('%-', '%')
-            for pattern, replacement in tools.DATETIME_FORMATS_MAP.iteritems():
+            for pattern, replacement in pycompat.items(tools.DATETIME_FORMATS_MAP):
                 format = format.replace(pattern, replacement)
             return str(format)
 
@@ -318,5 +319,5 @@ def intersperse(string, counts, separator=''):
     left, rest, right = intersperse_pat.match(string).groups()
     def reverse(s): return s[::-1]
     splits = split(reverse(rest), counts)
-    res = separator.join(map(reverse, reverse(splits)))
+    res = separator.join(reverse(s) for s in reverse(splits))
     return left + res + right, len(splits) > 0 and len(splits) -1 or 0
