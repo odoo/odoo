@@ -6,8 +6,10 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <kanban quick_create="false" create="false" class="o_kanban_payment_acquirer">
-                <field name="payment_environment"/>
-                <field name="payment_acquirer_id"/>
+                <!-- <field name="payment_environment"/> -->
+                <!-- <field name="payment_acquirer_id"/> -->
+                <field name="payment_acquirer_ids"/>
+                <field name="payment_acquirer_data"/>
                 <field name="icon_image"/>
                 <field name="shortdesc"/>
                 <field name="description"/>
@@ -17,12 +19,12 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
                             <div class="o_kanban_image">
-                                <t t-if="record.payment_acquirer_id.raw_value">
+<!--                                 <t t-if="record.payment_acquirer_id.raw_value">
                                     <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_small', record.payment_acquirer_id.raw_value)"/>
                                 </t>
                                 <t t-if="! record.payment_acquirer_id.raw_value">
                                     <img type="open" t-att-src="kanban_image('ir.module.module', 'icon_image', record.icon_image.value)"/>
-                                </t>
+                                </t> -->
                             </div>
                             <div class="o_payment_acquirer_desc">
                                 <h3 class="mt4"><t t-esc="record.shortdesc.value"/></h3>
@@ -30,11 +32,17 @@
                                 <!-- <t t-if="record.description.raw_value" t-raw="record.description.raw_value"/> -->
                             </div>
                             <div class="o_payment_acquirer_bottom">
-                                <t t-if="record.state.raw_value == 'installed'">
+                                <t t-raw="record.payment_acquirer_ids.raw_value"/>
+                                <field name="payment_acquirer_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                                <!-- <t t-if="record.state.raw_value == 'installed'">
                                     <field name="payment_environment" widget="kanban_label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}"/>
                                 </t>
                                 <button t-if="record.state.raw_value != 'installed'" type="object" class="btn btn-default pull-right btn-sm" name="action_payment_immediate_install">Install</button>
-                                <button t-if="record.state.raw_value == 'installed'" type="object" class="btn btn-primary pull-right btn-sm" name="action_payment_edit">Configure</button>
+                                <button t-if="record.state.raw_value == 'installed'" type="object" class="btn btn-primary pull-right btn-sm" name="action_payment_edit">Configure</button> -->
                             </div>
                         </div>
                     </t>

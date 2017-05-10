@@ -7,26 +7,42 @@ class IrModule(models.Model):
     _name = 'ir.module.module'
     _inherit = 'ir.module.module'
 
-    payment_environment = fields.Selection([
-        ('test', 'Test'),
-        ('prod', 'Production')], 'Acquirer Environment',
-        compute='_compute_payment_environment', inverse='_set_payment_environment',
-        search='_search_payment_environment')
-    payment_acquirer_id = fields.Many2one(
-        'payment.acquirer', compute='_compute_payment_acquirer_id')
+    # payment_environment = fields.Selection([
+    #     ('test', 'Test'),
+    #     ('prod', 'Production')], 'Acquirer Environment',
+    #     compute='_compute_payment_environment', inverse='_set_payment_environment',
+    #     search='_search_payment_environment')
+    payment_acquirer_ids = fields.Many2many(
+        'payment.acquirer', compute='_compute_payment_acquirer_info')
+    payment_acquirer_data = fields.Text(
+        compute='_compute_payment_acquirer_info')
 
     @api.depends('state')
-    def _compute_payment_acquirer_id(self):
+    def _compute_payment_acquirer_info(self):
         payment_modules = self.filtered(lambda module: module.name.startswith('payment_'))
-        payment_names = map(lambda name: name.split('payment_', 1)[1], payment_modules.mapped('name'))
-        payment_acquirers = dict((acquirer.provider, acquirer.id) for acquirer in self.env['payment.acquirer'].search([('provider', 'in', payment_names)]))
-        for module in payment_modules:
-            module.payment_acquirer_id = payment_acquirers.get(module.name.split('payment_', 1)[1], False)
+        payment_names = [module.name[8:] for module in payment_modules]
+        payment_acquirers = dict((item, list()) for item in payment_names)
+        for acquirer in self.env['payment.acquirer'].search([('provider', 'in', payment_names)]):
+            payment_acquirers[acquirer.provider].append({
+                'name': acquirer.name,
+                'provider': acquirer.provider,
+                'id': acquirer.id,
+                'environment': acquirer.environment,
+            })
 
-    @api.depends('payment_acquirer_id')
-    def _compute_payment_environment(self):
-        for module in self.filtered(lambda module: module.payment_acquirer_id):
-            module.payment_environment = module.payment_acquirer_id.environment
+        print payment_acquirers
+        for module in payment_modules:
+            module.payment_acquirer_ids = [item['id'] for item in payment_acquirers.get(module.name.split('payment_', 1)[1], dict())]
+            print module, module.payment_acquirer_ids
+
+        for module in payment_modules:
+            module.payment_acquirer_data = payment_acquirers.get(module.name.split('payment_', 1)[1], False)
+            print module, module.payment_acquirer_data
+
+    # @api.depends('payment_acquirer_id')
+    # def _compute_payment_environment(self):
+    #     for module in self.filtered(lambda module: module.payment_acquirer_id):
+    #         module.payment_environment = module.payment_acquirer_id.environment
 
     @api.multi
     def action_payment_immediate_install(self):
