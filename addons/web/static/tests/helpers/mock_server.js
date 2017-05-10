@@ -62,6 +62,9 @@ var MockServer = Class.extend({
      * @returns {Object} an object with 2 keys: arch and fields
      */
     fieldsViewGet: function (arch, model, toolbar) {
+        if (!(model in this.data)) {
+            throw new Error('Model ' + model + ' was not defined in mock server data');
+        }
         var fields = $.extend(true, {}, this.data[model].fields);
         var fvg = this._fieldsViewGet(arch, model, fields);
         var fields_views = {};
@@ -898,7 +901,7 @@ var MockServer = Class.extend({
         }
         var model = this.data[args.model];
         if (model && typeof model[args.method] === 'function') {
-            return this.data[args.model][args.method](args.args, args.kwargs);
+            return $.when(this.data[args.model][args.method](args.args, args.kwargs));
         }
 
         console.error("Unimplemented route", route, args);
