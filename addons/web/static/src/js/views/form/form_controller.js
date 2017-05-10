@@ -20,6 +20,19 @@ var FormController = BasicController.extend({
         toggle_column_order: '_onToggleColumnOrder',
     }),
     /**
+     * Called each time the form view is attached into the DOM
+     */
+    on_attach_callback: function() {
+        this.trigger('attached');
+        this.autofocus();
+    },
+    /**
+     * Called each time the form view is detached from the DOM
+     */
+    on_detach_callback: function() {
+        this.trigger('detached');
+    },
+    /**
      * @override
      *
      * @param {boolean} params.hasSidebar
@@ -40,12 +53,10 @@ var FormController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * This method is supposed to focus the first active control, I think. It
-     * is currently only called by the FormViewDialog.
-     *
-     * @todo To be implemented
+     * This method will set focus on the default focus field or the first active control
      */
     autofocus: function () {
+        this.renderer.autoFocus();
     },
     /**
      * This method switches the form view in edit mode, with a new record.
