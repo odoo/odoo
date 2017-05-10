@@ -43,7 +43,7 @@ var FormRenderer = BasicRenderer.extend({
                 // TODO: Use isFocusable method instead of following condition and check why we need to check label
                 var idForLabel = this.idsForLabels[widget.name];
                 var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
-                if (!widget.$el.is('.o_form_invisible') && !widget.$el.is('.o_readonly') && $label.length  && !widget.$el.is(":hidden")) {
+                if (!widget.$el.is('.o_form_invisible') && !widget.$el.is('.o_readonly') && $label && $label.length  && !widget.$el.is(":hidden")) {
                     focusWidget = widget;
                     break;
                 }
