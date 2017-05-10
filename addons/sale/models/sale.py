@@ -151,6 +151,24 @@ class SaleOrder(models.Model):
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
+    count_po = fields.Integer(compute='_compute_count_po_mo')
+    count_mo = fields.Integer(compute='_compute_count_po_mo')
+
+    @api.depends('order_line.procurement_ids')
+    def _compute_count_po_mo(self):
+        for order in self:
+            order.count_po = len(order.order_line.mapped('procurement_ids')._get_purchase_orders() or [])
+            order.count_mo = len(order.order_line.mapped('procurement_ids')._get_manufacturing_orders() or [])
+
+    @api.multi
+    def action_open_purchase_orders(self):
+        self.ensure_one()
+        return self.order_line.mapped('procurement_ids').action_open_purchase_orders()
+
+    @api.multi
+    def action_open_manufacturing_orders(self):
+        self.ensure_one()
+        return self.order_line.mapped('procurement_ids').action_open_manufacturing_orders()
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):

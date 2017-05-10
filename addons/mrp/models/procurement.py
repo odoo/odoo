@@ -21,6 +21,22 @@ class ProcurementOrder(models.Model):
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order')
 
     @api.multi
+    def _get_manufacturing_orders(self):
+        return self.search([('group_id', 'in', self.mapped('group_id').ids)]).mapped('production_id')
+
+    @api.multi
+    def action_open_manufacturing_orders(self):
+        mos = self._get_manufacturing_orders()
+        action = self.env.ref('mrp.mrp_production_action').read()[0]
+        action['domain'] = [('id', 'in', mos.ids)]
+        action['views'] = [(False, 'tree'), (False, 'form')]
+        action['context'] = {}
+        if len(mos) == 1:
+            action['views'] = [(False, 'form')]
+            action['res_id'] = mos.id
+        return action
+
+    @api.multi
     def propagate_cancels(self):
         cancel_man_orders = self.filtered(lambda procurement: procurement.rule_id.action == 'manufacture' and procurement.production_id).mapped('production_id')
         if cancel_man_orders:

@@ -843,6 +843,21 @@ class ProcurementOrder(models.Model):
     purchase_id = fields.Many2one(related='purchase_line_id.order_id', string='Purchase Order')
 
     @api.multi
+    def _get_purchase_orders(self):
+        return self.search([('group_id', 'in', self.mapped('group_id').ids)]).mapped('purchase_id')
+
+    @api.multi
+    def action_open_purchase_orders(self):
+        pos = self._get_purchase_orders()
+        action = self.env.ref('purchase.purchase_order_action_generic').read()[0]
+        action['domain'] = [('id', 'in', pos.ids)]
+        action['views'] = [(False, 'tree'), (False, 'form')]
+        if len(pos) == 1:
+            action['views'] = [(False, 'form')]
+            action['res_id'] = pos.id
+        return action
+
+    @api.multi
     def propagate_cancels(self):
         result = super(ProcurementOrder, self).propagate_cancels()
         for procurement in self:
