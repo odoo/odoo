@@ -617,9 +617,9 @@ class Import(models.TransientModel):
                             try:
                                 line[index] = dt.strftime(dt.strptime(ustr(line[index]).encode('utf-8'), user_format), server_format)
                             except ValueError as e:
-                                raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, ustr(e.message)))
+                                raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
                             except Exception as e:
-                                raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, ustr(e.message)))
+                                raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, e))
 
             elif field['type'] in ('float', 'monetary') and name in import_fields:
                 # Parse float, sometimes float values from file have currency symbol or () to denote a negative value
