@@ -143,7 +143,7 @@ function createAsyncView(params) {
     var view = new params.View(viewInfo, viewOptions);
 
     // make sure images do not trigger a GET on the server
-    $('#qunit-fixture').on('DOMNodeInserted.removeSRC', function () {
+    $target.on('DOMNodeInserted.removeSRC', function () {
         removeSrcAttribute($(this), widget);
     });
 
@@ -436,9 +436,15 @@ function triggerPositionalMouseEvent(x, y, type){
  */
 function removeSrcAttribute($el, widget) {
     $el.find('img, iframe[src]').each(function () {
-        var src = $(this).attr('src');
-        if (src[0] !== '#') {
-            $(this).attr('src', '#test:' + $(this).attr('src'));
+        var $el = $(this);
+        var src = $el.attr('src');
+        if (src[0] !== '#' && src !== 'about:blank') {
+            if ($el[0].nodeName === 'IMG') {
+                $el.attr('src', '#test:' + src);
+            } else {
+                $el.attr('data-src', src);
+                $el.attr('src', 'about:blank');
+            }
             if (widget) {
                 widget._rpc({route: src});
             }

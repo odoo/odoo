@@ -77,8 +77,8 @@ QUnit.module('mrp', {
             "there should not be a any visible 'Upload' button");
         assert.notOk(form.$('.o_field_widget iframe.o_pdfview_iframe').hasClass('o_hidden'),
             "there should be an visible iframe");
-        assert.strictEqual(form.$('.o_field_widget iframe.o_pdfview_iframe').attr('src'),
-            '#test:/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1',
+        assert.strictEqual(form.$('.o_field_widget iframe.o_pdfview_iframe').attr('data-src'),
+            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1',
             "the src attribute should be correctly set on the iframe");
 
         form.destroy();
