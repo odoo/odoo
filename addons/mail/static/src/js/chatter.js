@@ -98,7 +98,7 @@ var ChatterComposer = composer.BasicComposer.extend({
     },
 
     /*
-        Default, suggested recipients are checked
+        Default, suggested recipients are unchecked
     */
     get_suggested_recipients_check: function() {
         return true;
@@ -551,6 +551,9 @@ var Chatter = form_common.AbstractField.extend({
 
 core.form_widget_registry.add('mail_thread', Chatter);
 
-return Chatter;
+return {
+    Chatter: Chatter,
+    ChatterComposer: ChatterComposer,
+};
 
 });
