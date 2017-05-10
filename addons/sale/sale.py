@@ -248,7 +248,7 @@ class sale_order(osv.osv):
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'company_id': fields.many2one('res.company', 'Company'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'procurement_group_id': fields.many2one('procurement.group', 'Procurement group', copy=False),
+        'procurement_group_id': fields.many2one('procurement.group', 'Procurement group', copy=False, select=True),
         'product_id': fields.related('order_line', 'product_id', type='many2one', relation='product.product', string='Product'),
     }
 
