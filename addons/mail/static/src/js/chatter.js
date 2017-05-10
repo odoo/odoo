@@ -98,7 +98,7 @@ var ChatterComposer = composer.BasicComposer.extend({
     },
 
     /*
-        Default, suggested recipients are unchecked
+        Default, suggested recipients are checked
     */
     get_suggested_recipients_check: function() {
         return true;
