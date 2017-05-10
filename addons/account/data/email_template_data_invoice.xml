@@ -62,7 +62,7 @@ from ${object.company_id.name}.
         </record>
 
         <!--Default Notification Email template for invoices-->
-        <record id="account.mail_template_data_notification_email_account_invoice" model="mail.template">
+        <record id="mail_template_data_notification_email_account_invoice" model="mail.template">
             <field name="name">Invoice Notification Email</field>
             <field name="subject">${object.subject}</field>
             <field name="model_id" ref="mail.model_mail_message"/>
