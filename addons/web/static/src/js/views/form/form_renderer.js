@@ -370,15 +370,19 @@ var FormRenderer = BasicRenderer.extend({
     _renderInnerGroupField: function (node) {
         var self = this;
         var widget = this._renderFieldWidget(node, this.state);
+        var fieldName = node.attrs.name;
         var $tds = $('<td/>').append(widget.$el);
 
         if (node.attrs.nolabel !== '1') {
             var $labelTd = this._renderInnerGroupLabel(node, {
                 callback: function (element, modifiers, record) {
+                    var widgets = self.allFieldWidgets[record.id];
                     element.$el.toggleClass('o_form_label_empty', !!( // FIXME condition is evaluated twice (label AND widget...)
                         record.data.id
                         && (modifiers.readonly || self.mode === 'readonly')
-                        && !widget.isSet() // getting like this because it could have been re-rendered...
+                        // The widget could have been rerendered so we have to
+                        // search it in the list with the field name
+                        && !_.findWhere(widgets, {name: fieldName}).isSet()
                     ));
                 },
             });
