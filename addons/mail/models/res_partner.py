@@ -4,6 +4,7 @@
 import logging
 import threading
 
+from odoo.tools import pycompat
 from odoo.tools.misc import split_every
 
 from odoo import _, api, fields, models, registry, SUPERUSER_ID
@@ -174,7 +175,7 @@ class Partner(models.Model):
 
         emails = self.env['mail.mail']
         recipients_nbr, recipients_max = 0, 50
-        for email_type, recipient_template_values in recipients.iteritems():
+        for email_type, recipient_template_values in pycompat.items(recipients):
             if recipient_template_values['followers']:
                 # generate notification email content
                 template_fol_values = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_unfollow to none

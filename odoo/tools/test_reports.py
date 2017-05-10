@@ -174,7 +174,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 view_data.update(wiz_data)
             _logger.debug("View data is: %r", view_data)
 
-            for fk, field in view_res.get('fields',{}).items():
+            for fk, field in pycompat.items(view_res.get('fields',{})):
                 # Default fields returns list of int, while at create()
                 # we need to send a [(6,0,[int,..])]
                 if field['type'] in ('one2many', 'many2many') \

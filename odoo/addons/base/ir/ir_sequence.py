@@ -6,6 +6,7 @@ import pytz
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -178,7 +179,7 @@ class IrSequence(models.Model):
                 'weekday': '%w', 'h24': '%H', 'h12': '%I', 'min': '%M', 'sec': '%S'
             }
             res = {}
-            for key, format in sequences.iteritems():
+            for key, format in pycompat.items(sequences):
                 res[key] = effective_date.strftime(format)
                 res['range_' + key] = range_date.strftime(format)
                 res['current_' + key] = now.strftime(format)

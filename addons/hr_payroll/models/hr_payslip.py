@@ -11,6 +11,7 @@ import babel
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import pycompat
 
 
 class HrPayslip(models.Model):
@@ -203,7 +204,8 @@ class HrPayslip(models.Model):
                 'contract_id': contract.id,
             }
 
-            res += [attendances] + leaves.values()
+            res.append(attendances)
+            res.extend(pycompat.values(leaves))
         return res
 
     @api.model
@@ -367,7 +369,7 @@ class HrPayslip(models.Model):
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in rule._recursive_search_of_rules()]
 
-        return [value for code, value in result_dict.items()]
+        return [value for code, value in pycompat.items(result_dict)]
 
     # YTI TODO To rename. This method is not really an onchange, as it is not in any view
     # employee_id and contract_id could be browse records
@@ -378,9 +380,9 @@ class HrPayslip(models.Model):
             'value': {
                 'line_ids': [],
                 #delete old input lines
-                'input_line_ids': map(lambda x: (2, x,), self.input_line_ids.ids),
+                'input_line_ids': [(2, x,) for x in self.input_line_ids.ids],
                 #delete old worked days lines
-                'worked_days_line_ids': map(lambda x: (2, x,), self.worked_days_line_ids.ids),
+                'worked_days_line_ids': [(2, x,) for x in self.worked_days_line_ids.ids],
                 #'details_by_salary_head':[], TODO put me back
                 'name': '',
                 'contract_id': False,

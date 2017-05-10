@@ -20,6 +20,7 @@ import odoo.tools as tools
 
 from odoo import api, SUPERUSER_ID
 from odoo.modules.module import adapt_version, initialize_sys_path, load_openerp_module
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -295,15 +296,15 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 _logger.info('updating modules list')
                 Module.update_list()
 
-            _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
+            _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
 
-            module_names = [k for k, v in tools.config['init'].items() if v]
+            module_names = [k for k, v in pycompat.items(tools.config['init']) if v]
             if module_names:
                 modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', module_names)])
                 if modules:
                     modules.button_install()
 
-            module_names = [k for k, v in tools.config['update'].items() if v]
+            module_names = [k for k, v in pycompat.items(tools.config['update']) if v]
             if module_names:
                 modules = Module.search([('state', '=', 'installed'), ('name', 'in', module_names)])
                 if modules:
@@ -391,7 +392,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                         getattr(py_module, uninstall_hook)(cr, registry)
 
                 Module = env['ir.module.module']
-                Module.browse(modules_to_remove.values()).module_uninstall()
+                Module.browse(pycompat.values(modules_to_remove)).module_uninstall()
                 # Recursive reload, should only happen once, because there should be no
                 # modules to remove next time
                 cr.commit()
@@ -414,7 +415,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.info('Modules loaded.')
 
         # STEP 8: call _register_hook on every model
-        for model in env.values():
+        for model in pycompat.values(env):
             model._register_hook()
 
         # STEP 9: save installed/updated modules for post-install tests

@@ -8,7 +8,7 @@ class ReportOverdue(models.AbstractModel):
     _name = 'report.account.report_overdue'
 
     def _get_account_move_lines(self, partner_ids):
-        res = dict(map(lambda x:(x,[]), partner_ids))
+        res = {x: [] for x in partner_ids}
         self.env.cr.execute("SELECT m.name AS move_id, l.date, l.name, l.ref, l.date_maturity, l.partner_id, l.blocked, l.amount_currency, l.currency_id, "
             "CASE WHEN at.type = 'receivable' "
                 "THEN SUM(l.debit) "

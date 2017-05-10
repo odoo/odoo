@@ -247,7 +247,7 @@ class ResourceCalendar(models.Model):
         """ Return the list of weekdays that contain at least one working
         interval. """
         self.ensure_one()
-        return list(set(map(int, (self.attendance_ids.mapped('dayofweek')))))
+        return list({int(d) for d in self.attendance_ids.mapped('dayofweek')})
 
     @api.multi
     def _get_next_work_day(self, day_date):

@@ -5,12 +5,15 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
+from odoo.tools import pycompat
+
+
 class WebsiteSaleOptions(WebsiteSale):
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
         r = super(WebsiteSaleOptions, self).product(product, category, search, **kwargs)
-        r.qcontext['optional_product_ids'] = map(lambda p: p.with_context({'active_id': p.id}), product.optional_product_ids)
+        r.qcontext['optional_product_ids'] = [p.with_context({'active_id': p.id}) for p in product.optional_product_ids]
         return r
 
     @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
@@ -23,7 +26,7 @@ class WebsiteSaleOptions(WebsiteSale):
 
         option_ids = product.optional_product_ids.mapped('product_variant_ids').ids
         optional_product_ids = []
-        for k, v in kw.items():
+        for k, v in pycompat.items(kw):
             if "optional-product-" in k and int(kw.get(k.replace("product", "add"))) and int(v) in option_ids:
                 optional_product_ids.append(int(v))
 

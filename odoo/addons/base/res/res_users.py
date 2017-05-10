@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import pytz
 import datetime
+import itertools
 import logging
 
 from collections import defaultdict
@@ -13,7 +14,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import partition
+from odoo.tools import partition, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ def name_boolean_group(id):
     return 'in_group_' + str(id)
 
 def name_selection_groups(ids):
-    return 'sel_groups_' + '_'.join(map(str, ids))
+    return 'sel_groups_' + '_'.join(str(it) for it in ids)
 
 def is_boolean_group(name):
     return name.startswith('in_group_')
@@ -44,7 +45,7 @@ def get_boolean_group(name):
     return int(name[9:])
 
 def get_selection_groups(name):
-    return map(int, name[11:].split('_'))
+    return [int(v) for v in name[11:].split('_')]
 
 def parse_m2m(commands):
     "return a list of ids corresponding to a many2many value"
@@ -92,7 +93,7 @@ class Groups(models.Model):
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
-        for group, group1 in zip(self, self.sudo()):
+        for group, group1 in pycompat.izip(self, self.sudo()):
             if group1.category_id:
                 group.full_name = '%s / %s' % (group1.category_id.name, group1.name)
             else:
@@ -111,7 +112,7 @@ class Groups(models.Model):
             operand = [operand]
         where = []
         for group in operand:
-            values = filter(bool, group.split('/'))
+            values = [v for v in group.split('/') if v]
             group_name = values.pop().strip()
             category_name = values and '/'.join(values).strip() or group_name
             group_domain = [('name', operator, lst and [group_name] or group_name)]
@@ -299,13 +300,11 @@ class Users(models.Model):
 
         canwrite = self.env['ir.model.access'].check('res.users', 'write', False)
         if not canwrite:
-            def override_password(vals):
-                if (vals['id'] != self._uid):
+            for vals in result:
+                if vals['id'] != self._uid:
                     for key in USER_PRIVATE_FIELDS:
                         if key in vals:
                             vals[key] = '********'
-                return vals
-            result = map(override_password, result)
 
         return result
 
@@ -343,7 +342,7 @@ class Users(models.Model):
                     raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
         if self == self.env.user:
-            for key in values.keys():
+            for key in list(values):
                 if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
                     break
             else:
@@ -624,7 +623,7 @@ class GroupsImplied(models.Model):
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
-                vals = {'users': zip(repeat(4), group.with_context(active_test=False).users.ids)}
+                vals = {'users': list(pycompat.izip(repeat(4), group.with_context(active_test=False).users.ids))}
                 super(GroupsImplied, group.trans_implied_ids).write(vals)
         return res
 
@@ -766,7 +765,7 @@ class GroupsView(models.Model):
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
             # check whether order is total, i.e., sequence orders are distinct
-            if len(set(order.itervalues())) == len(gs):
+            if len(set(pycompat.values(order))) == len(gs):
                 return (app, 'selection', gs.sorted(key=order.get))
             else:
                 return (app, 'boolean', gs)
@@ -780,7 +779,7 @@ class GroupsView(models.Model):
                 others += g
         # build the result
         res = []
-        for app, gs in sorted(by_app.iteritems(), key=lambda it: it[0].sequence or 0):
+        for app, gs in sorted(pycompat.items(by_app), key=lambda it: it[0].sequence or 0):
             res.append(linearize(app, gs))
         if others:
             res.append((self.env['ir.module.category'], 'boolean', others))
@@ -820,7 +819,7 @@ class UsersView(models.Model):
         add, rem = [], []
         values1 = {}
 
-        for key, val in values.iteritems():
+        for key, val in pycompat.items(values):
             if is_boolean_group(key):
                 (add if val else rem).append(get_boolean_group(key))
             elif is_selection_groups(key):
@@ -832,7 +831,10 @@ class UsersView(models.Model):
 
         if 'groups_id' not in values and (add or rem):
             # remove group ids in `rem` and add group ids in `add`
-            values1['groups_id'] = zip(repeat(3), rem) + zip(repeat(4), add)
+            values1['groups_id'] = list(itertools.chain(
+                pycompat.izip(repeat(3), rem),
+                pycompat.izip(repeat(4), add)
+            ))
 
         return values1
 
@@ -847,7 +849,7 @@ class UsersView(models.Model):
     @api.multi
     def read(self, fields=None, load='_classic_read'):
         # determine whether reified groups fields are required, and which ones
-        fields1 = fields or self.fields_get().keys()
+        fields1 = fields or list(self.fields_get())
         group_fields, other_fields = partition(is_reified_group, fields1)
 
         # read regular fields (other_fields); add 'groups_id' if necessary

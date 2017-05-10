@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, http, _
 from odoo.addons.website.models.website import slug
 from odoo.http import request
+from odoo.tools import pycompat
 
 
 class WebsiteEventController(http.Controller):
@@ -79,7 +80,7 @@ class WebsiteEventController(http.Controller):
 
         def dom_without(without):
             domain = [('state', "in", ['draft', 'confirm', 'done'])]
-            for key, search in domain_search.items():
+            for key, search in pycompat.items(domain_search):
                 if key != without:
                     domain += search
             return domain
@@ -232,16 +233,16 @@ class WebsiteEventController(http.Controller):
         ''' Process data posted from the attendee details form. '''
         registrations = {}
         global_values = {}
-        for key, value in details.iteritems():
+        for key, value in pycompat.items(details):
             counter, field_name = key.split('-', 1)
             if counter == '0':
                 global_values[field_name] = value
             else:
                 registrations.setdefault(counter, dict())[field_name] = value
-        for key, value in global_values.iteritems():
-            for registration in registrations.values():
+        for key, value in pycompat.items(global_values):
+            for registration in pycompat.values(registrations):
                 registration[key] = value
-        return registrations.values()
+        return list(pycompat.values(registrations))
 
     @http.route(['/event/<model("event.event"):event>/registration/confirm'], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):

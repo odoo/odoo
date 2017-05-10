@@ -367,7 +367,7 @@ class Website(models.Model):
 
         def get_url_localized(router, lang):
             arguments = dict(request.endpoint_arguments)
-            for key, val in arguments.items():
+            for key, val in list(pycompat.items(arguments)):
                 if isinstance(val, models.BaseModel):
                     arguments[key] = val.with_context(lang=lang)
             return router.build(request.endpoint, arguments)
@@ -486,7 +486,7 @@ class Website(models.Model):
                 'num': pmax
             },
             "pages": [
-                {'url': get_url(page), 'num': page} for page in pycompat.range(pmin, pmax+1)
+                {'url': get_url(page), 'num': page} for page in range(pmin, pmax+1)
             ]
         }
 
@@ -499,7 +499,7 @@ class Website(models.Model):
         endpoint = rule.endpoint
         methods = endpoint.routing.get('methods') or ['GET']
 
-        converters = rule._converters.values()
+        converters = list(pycompat.values(rule._converters))
         if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
             and endpoint.routing['auth'] in ('none', 'public')
@@ -542,9 +542,10 @@ class Website(models.Model):
             if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
                 continue
             values = [{}]
-            convitems = converters.items()
             # converters with a domain are processed after the other ones
-            convitems.sort(key=lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]'))
+            convitems = sorted(
+                pycompat.items(converters),
+                key=lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]'))
             for (i, (name, converter)) in enumerate(convitems):
                 newval = []
                 for val in values:
@@ -559,7 +560,7 @@ class Website(models.Model):
             for value in values:
                 domain_part, url = rule.build(value, append_unknown=False)
                 page = {'loc': url}
-                for key, val in value.items():
+                for key, val in pycompat.items(value):
                     if key.startswith('__'):
                         page[key[2:]] = val
                 if url in ('/sitemap.xml',):

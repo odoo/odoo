@@ -47,7 +47,7 @@ class TestSaleExpense(TestSale):
         # Create Expense Entries
         sheet.action_sheet_move_create()
         # expense should now be in sales order
-        self.assertTrue(prod_exp_1 in map(lambda so: so.product_id, so.order_line), 'Sale Expense: expense product should be in so')
+        self.assertIn(prod_exp_1, so.mapped('order_line.product_id'), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp_1.id)
         self.assertEqual((sol.price_unit, sol.qty_delivered), (621.54, 1.0), 'Sale Expense: error when invoicing an expense at cost')
         self.assertEqual(so.amount_total, init_price, 'Sale Expense: price of so not updated after adding expense')
@@ -76,7 +76,7 @@ class TestSaleExpense(TestSale):
         # Create Expense Entries
         sheet.action_sheet_move_create()
         # expense should now be in sales order
-        self.assertTrue(prod_exp_2 in map(lambda so: so.product_id, so.order_line), 'Sale Expense: expense product should be in so')
+        self.assertIn(prod_exp_2, so.mapped('order_line.product_id'), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp_2.id)
         self.assertEqual((sol.price_unit, sol.qty_delivered), (prod_exp_2.list_price, 100.0), 'Sale Expense: error when invoicing an expense at cost')
         self.assertEqual(so.amount_total, init_price, 'Sale Expense: price of so not updated after adding expense')

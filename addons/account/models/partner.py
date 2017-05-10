@@ -4,7 +4,7 @@ from operator import itemgetter
 import time
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.exceptions import ValidationError
 from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
@@ -72,7 +72,7 @@ class AccountFiscalPosition(models.Model):
         ref_dict = {}
         for line in self.account_ids:
             ref_dict[line.account_src_id] = line.account_dest_id
-        for key, acc in accounts.items():
+        for key, acc in list(pycompat.items(accounts)):
             if acc in ref_dict:
                 accounts[key] = ref_dict[acc]
         return accounts
@@ -245,7 +245,7 @@ class ResPartner(models.Model):
         res = self._cr.fetchall()
         if not res:
             return [('id', '=', '0')]
-        return [('id', 'in', map(itemgetter(0), res))]
+        return [('id', 'in', [r[0] for r in res])]
 
     @api.model
     def _credit_search(self, operator, operand):
@@ -292,7 +292,7 @@ class ResPartner(models.Model):
                 """ % where_clause
         self.env.cr.execute(query, where_clause_params)
         price_totals = self.env.cr.dictfetchall()
-        for partner, child_ids in all_partners_and_children.items():
+        for partner, child_ids in pycompat.items(all_partners_and_children):
             partner.total_invoiced = sum(price['total'] for price in price_totals if price['partner_id'] in child_ids)
 
     @api.multi

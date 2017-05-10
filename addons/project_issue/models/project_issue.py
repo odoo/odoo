@@ -278,7 +278,7 @@ class ProjectIssue(models.Model):
     def email_split(self, msg):
         email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
         # check left-part is not already an alias
-        return filter(lambda x: x.split('@')[0] not in self.mapped('project_id.alias_name'), email_list)
+        return [x for x in email_list if x.split('@')[0] not in self.mapped('project_id.alias_name')]
 
     @api.model
     def message_new(self, msg, custom_values=None):
@@ -303,7 +303,7 @@ class ProjectIssue(models.Model):
 
         issue = super(ProjectIssue, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         email_list = issue.email_split(msg)
-        partner_ids = filter(None, issue._find_partner_from_emails(email_list))
+        partner_ids = [p for p in issue._find_partner_from_emails(email_list) if p]
         issue.message_subscribe(partner_ids)
         return issue
 
@@ -311,7 +311,7 @@ class ProjectIssue(models.Model):
     def message_update(self, msg, update_vals=None):
         """ Override to update the issue according to the email. """
         email_list = self.email_split(msg)
-        partner_ids = filter(None, self._find_partner_from_emails(email_list))
+        partner_ids = [p for p in self._find_partner_from_emails(email_list) if p]
         self.message_subscribe(partner_ids)
         return super(ProjectIssue, self).message_update(msg, update_vals=update_vals)
 
@@ -351,7 +351,7 @@ class ProjectIssue(models.Model):
             except Exception:
                 pass
         if self.project_id:
-            current_objects = filter(None, headers.get('X-Odoo-Objects', '').split(','))
+            current_objects = [h for h in headers.get('X-Odoo-Objects', '').split(',') if h]
             current_objects.insert(0, 'project.project-%s, ' % self.project_id.id)
             headers['X-Odoo-Objects'] = ','.join(current_objects)
         if self.tag_ids:

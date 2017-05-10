@@ -6,6 +6,7 @@ import uuid
 from odoo import api, fields, models, tools, _
 
 from odoo.modules.module import get_resource_path
+from odoo.tools import pycompat
 
 
 class Rating(models.Model):
@@ -214,7 +215,7 @@ class RatingMixin(models.AbstractModel):
         values.update((d['rating'], d['rating_count']) for d in data)
         # add other stats
         if add_stats:
-            rating_number = sum(values.values())
+            rating_number = sum(pycompat.values(values))
             result = {
                 'repartition': values,
                 'avg': sum(float(key * values[key]) for key in values) / rating_number if rating_number > 0 else 0,

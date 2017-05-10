@@ -217,10 +217,10 @@ if __name__ == "__main__":
     fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
     expecteds = ['.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
     precisions = [2, 2, 2, 2, 2, 2, 3, 4]
-    for magnitude in pycompat.range(7):
-        for frac, exp, prec in zip(fractions, expecteds, precisions):
+    for magnitude in range(7):
+        for frac, exp, prec in pycompat.izip(fractions, expecteds, precisions):
             for sign in [-1,1]:
-                for x in pycompat.range(0, 10000, 97):
+                for x in range(0, 10000, 97):
                     n = x * 10**magnitude
                     f = sign * (n + frac)
                     f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp

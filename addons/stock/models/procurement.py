@@ -9,7 +9,8 @@ from psycopg2 import OperationalError
 
 from odoo import api, fields, models, registry, _
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, \
+    float_round, pycompat
 
 import logging
 
@@ -307,7 +308,7 @@ class ProcurementOrder(models.Model):
                 location_data[key]['orderpoints'] += orderpoint
                 location_data[key]['groups'] = self._procurement_from_orderpoint_get_groups([orderpoint.id])
 
-            for location_id, location_data in location_data.iteritems():
+            for location_id, location_data in pycompat.items(location_data):
                 location_orderpoints = location_data['orderpoints']
                 product_context = dict(self._context, location=location_orderpoints[0].location_id.id)
                 substract_quantity = location_orderpoints.subtract_procurements_from_orderpoints()

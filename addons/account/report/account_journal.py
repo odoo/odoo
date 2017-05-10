@@ -24,7 +24,7 @@ class ReportJournal(models.AbstractModel):
             query += 'am.name'
         query += ', "account_move_line".move_id, acc.code'
         self.env.cr.execute(query, tuple(params))
-        ids = map(lambda x: x[0], self.env.cr.fetchall())
+        ids = (x[0] for x in self.env.cr.fetchall())
         return self.env['account.move.line'].browse(ids)
 
     def _sum_debit(self, data, journal_id):

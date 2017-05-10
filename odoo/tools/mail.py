@@ -16,6 +16,7 @@ from lxml import etree
 
 import odoo
 from odoo.loglevels import ustr
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ class _Cleaner(clean.Cleaner):
             new_node.text = text
             new_node.tail = tail
             if attrs:
-                for key, val in attrs.iteritems():
+                for key, val in pycompat.items(attrs):
                     new_node.set(key, val)
             return new_node
 
@@ -153,7 +154,7 @@ class _Cleaner(clean.Cleaner):
                 if style[0].lower() in self._style_whitelist:
                     valid_styles[style[0].lower()] = style[1]
             if valid_styles:
-                el.attrib['style'] = '; '.join('%s: %s' % (key, val) for (key, val) in valid_styles.iteritems())
+                el.attrib['style'] = '; '.join('%s: %s' % (key, val) for (key, val) in pycompat.items(valid_styles))
             else:
                 del el.attrib['style']
 
@@ -530,4 +531,4 @@ def decode_smtp_header(smtp_header):
 
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
-    return separator.join(map(decode_smtp_header, filter(None, message.get_all(header, []))))
+    return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)

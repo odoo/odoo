@@ -17,8 +17,8 @@ class WebsiteSaleDigitalConfirmation(WebsiteSale):
     def payment_confirmation(self, **post):
         response = super(WebsiteSaleDigitalConfirmation, self).payment_confirmation(**post)
         order_lines = response.qcontext['order'].order_line
-        digital_content = map(lambda x: x.product_id.type == 'digital', order_lines)
-        response.qcontext.update(digital=any(digital_content))
+        digital_content = any(x.product_id.type == 'digital' for x in order_lines)
+        response.qcontext.update(digital=digital_content)
         return response
 
 
@@ -85,8 +85,7 @@ class WebsiteSaleDigital(website_account):
 
         # Also check for attachments in the product templates
         elif res_model == 'product.template':
-            P = request.env['product.product']
-            template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, purchased_products)
+            template_ids = request.env['product.product'].browse(purchased_products).mapped('product_tmpl_id').ids
             if res_id not in template_ids:
                 return redirect(self.orders_page)
 

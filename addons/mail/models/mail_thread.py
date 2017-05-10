@@ -235,10 +235,10 @@ class MailThread(models.AbstractModel):
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
-        for key, val in self._context.iteritems():
+        for key, val in pycompat.items(self._context):
             if key.startswith('default_') and key[8:] not in create_values:
                 create_values[key[8:]] = val
-        thread.message_auto_subscribe(create_values.keys(), values=create_values)
+        thread.message_auto_subscribe(list(create_values), values=create_values)
 
         # track values
         if not self._context.get('mail_notrack'):
@@ -246,7 +246,7 @@ class MailThread(models.AbstractModel):
                 track_thread = thread.with_context(lang=self.env.user.lang)
             else:
                 track_thread = thread
-            tracked_fields = track_thread._get_tracked_fields(values.keys())
+            tracked_fields = track_thread._get_tracked_fields(list(values))
             if tracked_fields:
                 initial_values = {thread.id: dict.fromkeys(tracked_fields, False)}
                 track_thread.message_track(tracked_fields, initial_values)
@@ -266,7 +266,7 @@ class MailThread(models.AbstractModel):
 
         tracked_fields = None
         if not self._context.get('mail_notrack'):
-            tracked_fields = track_self._get_tracked_fields(values.keys())
+            tracked_fields = track_self._get_tracked_fields(list(values))
         if tracked_fields:
             initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
                                   for record in track_self)
@@ -275,7 +275,7 @@ class MailThread(models.AbstractModel):
         result = super(MailThread, self).write(values)
 
         # update followers
-        self.message_auto_subscribe(values.keys(), values=values)
+        self.message_auto_subscribe(list(values), values=values)
 
         # Perform the tracking
         if tracked_fields:
@@ -385,7 +385,7 @@ class MailThread(models.AbstractModel):
                 always tracked fields and modified on_change fields
         """
         tracked_fields = []
-        for name, field in self._fields.items():
+        for name, field in pycompat.items(self._fields):
             if getattr(field, 'track_visibility', False):
                 tracked_fields.append(name)
 
@@ -413,10 +413,10 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _message_track_post_template(self, tracking):
-        if not any(change for rec_id, (change, tracking_value_ids) in tracking.iteritems()):
+        if not any(change for rec_id, (change, tracking_value_ids) in pycompat.items(tracking)):
             return True
         templates = self._track_template(tracking)
-        for field_name, (template, post_kwargs) in templates.iteritems():
+        for field_name, (template, post_kwargs) in pycompat.items(templates):
             if not template:
                 continue
             if isinstance(template, basestring):
@@ -447,7 +447,7 @@ class MailThread(models.AbstractModel):
         display_values_ids = []
 
         # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
-        for col_name, col_info in tracked_fields.items():
+        for col_name, col_info in pycompat.items(tracked_fields):
             track_visibility = getattr(self._fields[col_name], 'track_visibility', 'onchange')
             initial_value = initial[col_name]
             new_value = getattr(self, col_name)
@@ -565,7 +565,7 @@ class MailThread(models.AbstractModel):
     @api.model
     def _generate_notification_token(self, base_link, params):
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
-        token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params.keys())))
+        token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params)))
         hm = hmac.new(str(secret), token, hashlib.sha1).hexdigest()
         return hm
 
@@ -765,20 +765,20 @@ class MailThread(models.AbstractModel):
                         aliases[alias.alias_parent_thread_id] = '%s@%s' % (alias.alias_name, alias_domain)
                 doc_names.update(
                     dict((ng_res[0], ng_res[1])
-                         for ng_res in self.env[model_name].sudo().browse(aliases.keys()).name_get()))
+                         for ng_res in self.env[model_name].sudo().browse(aliases).name_get()))
             # left ids: use catchall
-            left_ids = set(res_ids).difference(set(aliases.keys()))
+            left_ids = set(res_ids).difference(set(aliases))
             if left_ids:
                 catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
                 if catchall_alias:
                     aliases.update(dict((res_id, '%s@%s' % (catchall_alias, alias_domain)) for res_id in left_ids))
             # compute name of reply-to
             company_name = self.env.user.company_id.name
-            for res_id in aliases.keys():
+            for res_id in aliases:
                 email_name = '%s%s' % (company_name, doc_names.get(res_id) and (' ' + doc_names[res_id]) or '')
                 email_addr = aliases[res_id]
                 res[res_id] = formataddr((email_name, email_addr))
-        left_ids = set(res_ids).difference(set(aliases.keys()))
+        left_ids = set(res_ids).difference(set(aliases))
         if left_ids:
             res.update(dict((res_id, default) for res_id in res_ids))
         return res
@@ -813,7 +813,7 @@ class MailThread(models.AbstractModel):
     def message_capable_models(self):
         """ Used by the plugin addon, based for plugin_outlook and others. """
         ret_dict = {}
-        for model_name, model in self.env.iteritems():
+        for model_name, model in pycompat.items(self.env):
             if hasattr(model, "message_process") and hasattr(model, "message_post"):
                 ret_dict[model_name] = model._description
         return ret_dict
@@ -823,7 +823,7 @@ class MailThread(models.AbstractModel):
 
             :param string message: an email.message instance """
         s = ', '.join([tools.decode_smtp_header(message.get(h)) for h in header_fields if message.get(h)])
-        return filter(lambda x: x, self._find_partner_from_emails(tools.email_split(s)))
+        return [x for x in self._find_partner_from_emails(tools.email_split(s)) if x]
 
     def _routing_warn(self, error_message, warn_suffix, message_id, route, raise_exception):
         """ Tools method used in message_route_verify: whether to log a warning or raise an error """
@@ -1836,7 +1836,7 @@ class MailThread(models.AbstractModel):
         if self._context.get('mail_post_autofollow') and self.ids and partner_ids:
             partner_to_subscribe = partner_ids
             if self._context.get('mail_post_autofollow_partner_ids'):
-                partner_to_subscribe = filter(lambda item: item in self._context.get('mail_post_autofollow_partner_ids'), partner_ids)
+                partner_to_subscribe = [p for p in partner_ids if p in self._context.get('mail_post_autofollow_partner_ids')]
             self.message_subscribe(list(partner_to_subscribe), force=False)
 
         # _mail_flat_thread: automatically set free messages to the first posted message
@@ -2047,7 +2047,7 @@ class MailThread(models.AbstractModel):
         if auto_follow_fields is None:
             auto_follow_fields = ['user_id']
         user_field_lst = []
-        for name, field in self._fields.items():
+        for name, field in pycompat.items(self._fields):
             if name in auto_follow_fields and name in updated_fields and getattr(field, 'track_visibility', False) and field.comodel_name == 'res.users':
                 user_field_lst.append(name)
         return user_field_lst
@@ -2142,10 +2142,10 @@ class MailThread(models.AbstractModel):
         for partner in to_add_users.mapped('partner_id'):
             new_partners.setdefault(partner.id, None)
 
-        for pid, subtypes in new_partners.items():
+        for pid, subtypes in pycompat.items(new_partners):
             subtypes = list(subtypes) if subtypes is not None else None
             self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes, force=(subtypes != None))
-        for cid, subtypes in new_channels.items():
+        for cid, subtypes in pycompat.items(new_channels):
             subtypes = list(subtypes) if subtypes is not None else None
             self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
 

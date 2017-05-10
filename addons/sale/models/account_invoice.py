@@ -3,6 +3,7 @@
 
 from itertools import groupby
 from odoo import api, fields, models, _
+from odoo.tools import pycompat
 
 
 class AccountInvoice(models.Model):
@@ -57,7 +58,7 @@ class AccountInvoice(models.Model):
         result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
         if self.env.context.get('mode') == 'modify':
             for i, line in enumerate(lines):
-                for name, field in line._fields.iteritems():
+                for name, field in pycompat.items(line._fields):
                     if name == 'sale_line_ids':
                         result[i][2][name] = [(6, 0, line[name].ids)]
                         line[name] = False

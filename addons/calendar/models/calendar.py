@@ -34,7 +34,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
         :return: real event id
     """
     if calendar_id and isinstance(calendar_id, (basestring)):
-        res = filter(None, calendar_id.split('-'))
+        res = [bit for bit in calendar_id.split('-') if bit]
         if len(res) == 2:
             real_id = res[0]
             if with_date:
@@ -127,7 +127,7 @@ class Attendee(models.Model):
     def create(self, values):
         if not values.get("email") and values.get("common_name"):
             common_nameval = values.get("common_name").split(':')
-            email = filter(lambda x: x.__contains__('@'), common_nameval)  # TODO JEM : should be refactored
+            email = [x for x in common_nameval if '@' in x] # TODO JEM : should be refactored
             values['email'] = email and email[0] or ''
             values['common_name'] = values.get("common_name")
         return super(Attendee, self).create(values)
@@ -354,7 +354,7 @@ class AlarmManager(models.AbstractModel):
 
         all_meetings = self.get_next_potential_limit_alarm('email', seconds=cron_interval)
 
-        for meeting in self.env['calendar.event'].browse(all_meetings.keys()):
+        for meeting in self.env['calendar.event'].browse(all_meetings):
             max_delta = all_meetings[meeting.id]['max_duration']
 
             if meeting.recurrency:
@@ -468,7 +468,7 @@ class Alarm(models.Model):
     name = fields.Char('Name', required=True)
     type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True, default='email')
     duration = fields.Integer('Remind Before', required=True, default=1)
-    interval = fields.Selection(list(_interval_selection.iteritems()), 'Unit', required=True, default='hours')
+    interval = fields.Selection(list(pycompat.items(_interval_selection)), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
 
     @api.onchange('duration', 'interval')
@@ -541,7 +541,7 @@ class Meeting(models.Model):
         """ Get recurrent start and stop dates based on Rule string"""
         start_dates = self._get_recurrent_date_by_event(date_field='start')
         stop_dates = self._get_recurrent_date_by_event(date_field='stop')
-        return zip(start_dates, stop_dates)
+        return list(pycompat.izip(start_dates, stop_dates))
 
     @api.multi
     def _get_recurrent_date_by_event(self, date_field='start'):
@@ -550,7 +550,7 @@ class Meeting(models.Model):
         date_field: the field containing the reference date information for recurrency computation
         """
         self.ensure_one()
-        if date_field in self._fields.keys() and self._fields[date_field].type in ('date', 'datetime'):
+        if date_field in self._fields and self._fields[date_field].type in ('date', 'datetime'):
             reference_date = self[date_field]
         else:
             reference_date = self.start
@@ -1157,7 +1157,7 @@ class Meeting(models.Model):
         data['final_date'] = rule._until and rule._until.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         #repeat weekly
         if rule._byweekday:
-            for i in pycompat.range(0, 7):
+            for i in range(0, 7):
                 if i in rule._byweekday:
                     data[day_list[i]] = True
             data['rrule_type'] = 'weekly'
@@ -1286,7 +1286,7 @@ class Meeting(models.Model):
     @api.multi
     def _get_message_unread(self):
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
-        real = self.browse(set(id_map.values()))
+        real = self.browse(set(pycompat.values(id_map)))
         super(Meeting, real)._get_message_unread()
         for event in self:
             if event.id == id_map[event.id]:
@@ -1298,7 +1298,7 @@ class Meeting(models.Model):
     @api.multi
     def _get_message_needaction(self):
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
-        real = self.browse(set(id_map.values()))
+        real = self.browse(set(pycompat.values(id_map)))
         super(Meeting, real)._get_message_needaction()
         for event in self:
             if event.id == id_map[event.id]:
@@ -1339,7 +1339,7 @@ class Meeting(models.Model):
 
     @api.multi
     def get_metadata(self):
-        real = self.browse(set({x: calendar_id2real_id(x) for x in self.ids}.values()))
+        real = self.browse({calendar_id2real_id(x) for x in self.ids})
         return super(Meeting, real).get_metadata()
 
     @api.model
@@ -1460,7 +1460,7 @@ class Meeting(models.Model):
             if fields and (f not in fields):
                 fields2.append(f)
 
-        select = map(lambda x: (x, calendar_id2real_id(x)), self.ids)
+        select = [(x, calendar_id2real_id(x)) for x in self.ids]
         real_events = self.browse([real_id for calendar_id, real_id in select])
         real_data = super(Meeting, real_events).read(fields=fields2, load=load)
         real_data = dict((d['id'], d) for d in real_data)
@@ -1493,7 +1493,7 @@ class Meeting(models.Model):
                 if user_id == self.env.user.id or partner_id in r.get("partner_ids", []):
                     continue
             if r['privacy'] == 'private':
-                for f in r.keys():
+                for f in r:
                     recurrent_fields = self._get_recurrent_fields()
                     public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
                     if f not in public_fields:
