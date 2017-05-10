@@ -215,11 +215,7 @@ class AccountBankStatementImport(models.TransientModel):
                 if 'unique_import_id' not in line_vals \
                    or not line_vals['unique_import_id'] \
                    or not bool(BankStatementLine.sudo().search([('unique_import_id', '=', line_vals['unique_import_id'])], limit=1)):
-                    if line_vals['amount'] != 0:
-                        # Some banks, like ING, create a line for free charges.
-                        # We just skip those lines as there's a 'non-zero' constraint
-                        # on the amount of account.bank.statement.line
-                        filtered_st_lines.append(line_vals)
+                    filtered_st_lines.append(line_vals)
                 else:
                     ignored_statement_lines_import_ids.append(line_vals['unique_import_id'])
                     if 'balance_start' in st_vals:
