@@ -396,7 +396,14 @@ QUnit.module('Views', {
         var top = calendar.$('.fc-axis:contains(8am)').offset().top + 5;
         var left = calendar.$('.fc-day:eq(2)').offset().left + 5;
 
-        testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        try {
+            testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        } catch (e) {
+            calendar.destroy();
+            $view.remove();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
+
         testUtils.triggerPositionalMouseEvent(left, top + 60, "mousemove");
 
         assert.strictEqual(calendar.$('.fc-content .fc-time').text(), "08:00 - 10:00",
@@ -497,7 +504,13 @@ QUnit.module('Views', {
         var top = calendar.$('.fc-axis:contains(8am)').offset().top + 5;
         var left = calendar.$('.fc-day:eq(2)').offset().left + 5;
 
-        testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        try {
+            testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        } catch (e) {
+            calendar.destroy();
+            $view.remove();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
         testUtils.triggerPositionalMouseEvent(left, top + 60, "mousemove");
         testUtils.triggerPositionalMouseEvent(left, top + 60, "mouseup");
         $('.modal input:first').val('new event').trigger('input');
@@ -593,7 +606,13 @@ QUnit.module('Views', {
 
 
         var pos = calendar.$('.fc-bg td:eq(4)').offset();
-        testUtils.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mousedown");
+        try {
+            testUtils.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mousedown");
+        } catch (e) {
+            calendar.destroy();
+            $view.remove();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
         pos = calendar.$('.fc-bg td:eq(5)').offset();
         testUtils.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mousemove");
         testUtils.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mouseup");
