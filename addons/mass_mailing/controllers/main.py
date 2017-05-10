@@ -37,7 +37,8 @@ class MassMailController(http.Controller):
             elif 'email' in model._fields:
                 email_fname = 'email'
             if email_fname:
-                record_ids = model.search(cr, SUPERUSER_ID, [('id', '=', res_id), (email_fname, 'ilike', email)], context=context)
+                ctx = dict(context or {}, active_test=False)
+                record_ids = model.search(cr, SUPERUSER_ID, [('id', '=', res_id), (email_fname, 'ilike', email)], context=ctx)
             if 'opt_out' in model._fields:
                 model.write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
         return 'OK'
