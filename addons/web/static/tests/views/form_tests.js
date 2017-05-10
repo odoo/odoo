@@ -576,6 +576,53 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('empty fields\' labels still get the empty class after widget rerender', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.foo.default = false; // no default value for this test
+        this.data.partner.records[1].foo = false;  // 1 is record with id=2
+        this.data.partner.records[1].int_field = false;  // 1 is record with id=2
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                            '<field name="int_field" attrs="{\'readonly\': [[\'foo\', \'=\', \'readonly\']]}"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget.o_field_empty').length, 2,
+            "should have 2 empty fields with correct class");
+        assert.strictEqual(form.$('.o_form_label_empty').length, 2,
+            "should have 2 muted labels (for the empty fieds) in readonly");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_field_empty').length, 0,
+            "in edit mode, only empty readonly fields should have the o_field_empty class");
+        assert.strictEqual(form.$('.o_form_label_empty').length, 0,
+            "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class");
+
+        form.$('input[name="foo"]').val("readonly").trigger("input"); // int_field is now rerendered as readonly
+        form.$('input[name="foo"]').val("edit").trigger("input"); // int_field is now rerendered as editable
+        form.$('input[name="int_field"]').val('1').trigger("input"); // int_field is now set
+        form.$('input[name="foo"]').val("readonly").trigger("input"); // int_field is now rerendered as readonly
+
+        assert.strictEqual(form.$('.o_field_empty').length, 0,
+            "there still should not be any empty class on fields as the readonly one is now set");
+        assert.strictEqual(form.$('.o_form_label_empty').length, 0,
+            "there still should not be any empty class on labels as the associated readonly field is now set");
+
+        form.destroy();
+    });
+
     QUnit.test('empty inner readonly fields don\'t have o_form_empty class in "create" mode', function (assert) {
         assert.expect(2);
 
