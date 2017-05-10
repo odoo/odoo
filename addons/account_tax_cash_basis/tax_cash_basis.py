@@ -144,8 +144,10 @@ class AccountPartialReconcileCashBasis(models.Model):
                 value_before_reconciliation[line.move_id.id] = line.move_id.matched_percentage
         #Reconcile
         res = super(AccountPartialReconcileCashBasis, self).create(vals)
-        #eventually create a tax cash basis entry
-        res.create_tax_cash_basis_entry(value_before_reconciliation)
+        # DO NOT FORWARDPORT! ONLY FOR v9
+        if self.env.context.get('cash_basis', True):
+            #eventually create a tax cash basis entry
+            res.create_tax_cash_basis_entry(value_before_reconciliation)
         return res
 
     @api.multi
