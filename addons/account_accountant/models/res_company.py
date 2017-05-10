@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from dateuil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 
