@@ -170,5 +170,83 @@
         </t>
     </template>
 
+    <template id="payment_token_form_confirm">
+        <t t-call="website.layout">
+            <t t-call="website_payment.payment_summary"/>
+        </t>
+    </template>
+
+    <template id="invoice_portal_layout" inherit_id="payment.invoice_pay" name="Invoice Pay">
+      <xpath expr="//span[contains(@class,'o_extend_layout')]" position="replace">
+        <t t-call="website.layout">
+          <t t-call="payment.invoice_payment"/>
+        </t>
+      </xpath>
+    </template>
+
+    <template id="payment_summary">
+        <div id="wrap">
+            <div class="container">
+                <div class="row">
+                    <h2 class="mb32 ml16">Confirm <em t-field="tx.payment_request_id.reference" /> Payment</h2>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-9 col-sm-12">
+                        <div class='row'>
+                            <div class='col-sm-4 well'>
+                                <div class="h4 text-center">Summary</div>
+                                <div>
+                                    <span class="col-xs-6 text-right text-muted">Subtotal:</span>
+                                    <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
+                                        <span t-field="payment_request.invoice_id.amount_untaxed" t-options='{"widget": "monetary","display_currency":  payment_request.currency_id}' style="white-space: nowrap;" />
+                                    </span>
+                                    <span class="col-xs-6 text-right text-muted">Taxes:</span>
+                                    <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
+                                        <span t-field="payment_request.invoice_id.amount_tax" t-options='{"widget": "monetary","display_currency": payment_request.currency_id}'/>
+                                    </span>
+                                    <span class="col-xs-6 text-right h4">Total:</span>
+                                    <span class="col-xs-6 text-right-not-xs text-left-xs h4" style="white-space: nowrap;">
+                                        <span t-field="payment_request.amount_total" t-options='{"widget": "monetary","display_currency": payment_request.currency_id}' style="white-space: nowrap;" />
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="o_pay_token col-sm-8">
+                                <div class="panel panel-info">
+                                    <div class="panel-body">
+                                        <div class='js_token_load' style='display:none;'>Transaction processing ...</div>
+                                        <div class='js_token_load'>
+                                            <p class="text-center">
+                                                <i class="fa fa-3x fa-credit-card text-muted" aria-hidden="true"></i><br/>
+                                                Are you sure you want to pay with this card: <br/>
+                                                <b><t t-esc='tx.payment_token_id.short_name'/></b>
+                                            </p>
+                                            <div class='mt16 text-center'>
+                                                <form action="/payment/transaction_token/confirm" method='POST'>
+                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                    <input type='hidden' name='tx_id' t-att-value='tx.id'/>
+                                                    <a class="btn btn-success btn-md js_btn_valid_tx">Yes, pay with this card</a>
+                                                    <a t-att-href="'/payment/%s' % payment_request.invoice_id.id" class="btn btn-danger btn-md">No, choose another method</a>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-lg-offset-1 col-md-3 hidden-xs hidden-sm text-muted">
+                        <div class="panel panel-info break-word">
+                            <div class="panel-heading">Bill To:</div>
+                            <div class="panel-body">
+                                <div class="o_div_text_overflow" t-field="payment_request.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone", "email"]}'/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="oe_structure" />
+    </template>
+
     </data>
 </odoo>

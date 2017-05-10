@@ -464,6 +464,7 @@ class PaymentTransaction(models.Model):
     callback_hash = fields.Char('Callback Hash', groups="base.group_system")
 
     payment_token_id = fields.Many2one('payment.token', 'Payment Token', domain="[('acquirer_id', '=', acquirer_id)]")
+    payment_request_id = fields.Many2one('account.payment.request', string='Payment Request')
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):

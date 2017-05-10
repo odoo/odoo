@@ -5,3 +5,19 @@ from odoo import api, fields, models
 class PaymentAcquirer(models.Model):
     _name = 'payment.acquirer'
     _inherit = ['payment.acquirer','website.published.mixin']
+
+
+class AccountPaymentRequest(models.Model):
+    _inherit = "account.payment.request"
+
+    @api.multi
+    def _prepare_payment_acquirer(self, values=None):
+        self.ensure_one()
+        result = super(AccountPaymentRequest, self)._prepare_payment_acquirer(values)
+        if result:
+            result['tokens'] = self.env['payment.token'].search([
+                ('partner_id', '=', self.partner_id.id),
+                ('acquirer_id', 'in', [payment.id for payment in result['acquirers']])
+            ])
+            result['save_option'] = True
+        return result

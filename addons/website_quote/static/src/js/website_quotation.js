@@ -201,7 +201,7 @@ if(!$('.o_website_quote').length) {
     });
 });
 
-odoo.define('website_quote.payment', function (require) {
+odoo.define('website_quote.payment_method', function (require) {
 'use strict';
 
     require('website.website');
