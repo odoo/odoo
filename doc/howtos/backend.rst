@@ -50,7 +50,7 @@ Composition of a module
 An Odoo module can contain a number of elements:
 
 Business objects
-    declared as Python classes, these resources are automatically persisted
+    Declared as Python classes, these resources are automatically persisted
     by Odoo based on their configuration
 
 Data files
@@ -77,8 +77,7 @@ option.
     file <reference/cmdline/config>`
 
 An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`.
-See the :ref:`manifest documentation <reference/module/manifest>` information
-about it.
+See the :ref:`manifest documentation <reference/module/manifest>` about it.
 
 A module is also a
 `Python package <http://docs.python.org/2/tutorial/modules.html#packages>`_
@@ -167,7 +166,7 @@ Some attributes are available on all fields, here are the most common ones:
 :attr:`~odoo.fields.Field.help` (``unicode``, default: ``''``)
     Long-form, provides a help tooltip to users in the UI.
 :attr:`~odoo.fields.Field.index` (``bool``, default: ``False``)
-    Requests that Odoo create a `database index`_ on the column
+    Requests that Odoo create a `database index`_ on the column.
 
 Simple fields
 #############
@@ -187,15 +186,15 @@ managed by the system and shouldn't be written to. They can be read if
 useful or necessary:
 
 :attr:`~odoo.fields.Model.id` (:class:`~odoo.fields.Id`)
-    the unique identifier for a record in its model
+    The unique identifier for a record in its model.
 :attr:`~odoo.fields.Model.create_date` (:class:`~odoo.fields.Datetime`)
-    creation date of the record
+    Creation date of the record.
 :attr:`~odoo.fields.Model.create_uid` (:class:`~odoo.fields.Many2one`)
-    user who created the record
+    User who created the record.
 :attr:`~odoo.fields.Model.write_date` (:class:`~odoo.fields.Datetime`)
-    last modification date of the record
+    Last modification date of the record.
 :attr:`~odoo.fields.Model.write_uid` (:class:`~odoo.fields.Many2one`)
-    user who last modified the record
+    user who last modified the record.
 
 Special fields
 ##############
@@ -238,9 +237,9 @@ record.
         </data>
     </odoo>
 
-* ``model`` is the name of the Odoo model for the record
+* ``model`` is the name of the Odoo model for the record.
 * ``id`` is an :term:`external identifier`, it allows referring to the record
-  (without having to know its in-database identifier)
+  (without having to know its in-database identifier).
 * ``<field>`` elements have a ``name`` which is the name of the field in the
   model (e.g. ``description``). Their body is the field's value.
 
@@ -294,7 +293,7 @@ action more easily.
 .. exercise:: Define new menu entries
 
     Define new menu entries to access courses under the
-    OpenAcademy menu entry. A user should be able to
+    OpenAcademy menu entry. A user should be able to :
 
     - display a list of all the courses
     - create/modify courses
@@ -365,7 +364,7 @@ Form views
 Forms are used to create and edit single records.
 
 
-Their root element is ``<form>``. They composed of high-level structure
+Their root element is ``<form>``. They are composed of high-level structure
 elements (groups, notebooks) and interactive elements (buttons and fields):
 
 .. code-block:: xml
