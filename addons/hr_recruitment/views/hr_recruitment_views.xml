@@ -323,6 +323,7 @@
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">kanban,tree,form,graph,calendar,pivot</field>
+        <field name="search_view_id" ref="view_crm_case_jobs_filter"/>
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
         <field name="help" type="html">
               <p>
@@ -525,7 +526,7 @@
     <record model="ir.actions.act_window" id="crm_case_categ0_act_job">
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_mode">kanban,tree,form,graph,calendar,pivot</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_crm_case_jobs_filter"/>
         <field name="context">{}</field>
@@ -556,9 +557,16 @@
     </record>
 
     <record model="ir.actions.act_window.view" id="action_hr_sec_form_view_act_job">
-        <field name="sequence" eval="3"/>
+        <field name="sequence" eval="2"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="crm_case_form_view_job"/>
+        <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+    </record>
+
+    <record  id="hr_applicant_action_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="crm_case_pivot_view_job"/>
         <field name="act_window_id" ref="crm_case_categ0_act_job"/>
     </record>
 

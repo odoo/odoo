@@ -2,8 +2,8 @@
 <odoo>
 <data>
     <record id="view_hr_recruitment_report_pivot" model="ir.ui.view">
-         <field name="name">hr.recruitment.report.pivot</field>
-         <field name="model">hr.recruitment.report</field>
+         <field name="name">hr.applicant.pivot</field>
+         <field name="model">hr.applicant</field>
          <field name="arch" type="xml">
              <pivot string="Recruitment Analysis" disable_linking="True">
                  <field name="stage_id" type="row"/>
@@ -13,8 +13,8 @@
     </record>
 
     <record id="view_hr_recruitment_report_graph" model="ir.ui.view">
-         <field name="name">hr.recruitment.report.graph</field>
-         <field name="model">hr.recruitment.report</field>
+         <field name="name">hr.applicant.graph</field>
+         <field name="model">hr.applicant</field>
          <field name="arch" type="xml">
              <graph string="Recruitment Analysis">
                  <field name="stage_id" type="row"/>
@@ -23,35 +23,15 @@
          </field>
     </record>
 
-    <!-- Custom reports (aka filters) -->
-    <record id="filter_recruitment_report_recruiter" model="ir.filters">
-        <field name="name">By Recruiter</field>
-        <field name="model_id">hr.recruitment.report</field>
-        <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date_create:month', 'user_id'], 'col_group_by': ['date_create:month']}</field>
-    </record>
-    <record id="filter_recruitment_report_job" model="ir.filters">
-        <field name="name">By Job</field>
-        <field name="model_id">hr.recruitment.report</field>
-        <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date_create:month', 'job_id'], 'col_group_by': ['date_create:month']}</field>
-    </record>
-    <record id="filter_recruitment_report_departmnet" model="ir.filters">
-        <field name="name">By Department</field>
-        <field name="model_id">hr.recruitment.report</field>
-        <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date_create:month', 'department_id'], 'col_group_by': ['date_create:month']}</field>
-    </record>
-
     <record id="view_hr_recruitment_report_search" model="ir.ui.view">
-        <field name="name">hr.recruitment.report.search</field>
-        <field name="model">hr.recruitment.report</field>
+        <field name="name">hr.applicant.search</field>
+        <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <search string="Recruitment Analysis">
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
-                <filter string="This Year" name="year" domain="[('date_create','&lt;=', time.strftime('%%Y-12-31')),('date_create','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter string="This Year" name="year" domain="[('create_date','&lt;=', time.strftime('%%Y-12-31')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <separator/>
                 <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
@@ -64,7 +44,7 @@
                     <field name="priority"/>
                     <field name="stage_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="date_create"/>
+                    <field name="create_date"/>
                     <field name="date_closed"/>
                 </group>
                 <group expand="1" string="Group By">
@@ -74,7 +54,7 @@
                    <filter string="Department" name="department" context="{'group_by':'department_id'}"/>
                    <filter string="Stage" context="{'group_by':'stage_id'}" />
                    <separator/>
-                   <filter string="Creation Week" context="{'group_by':'date_create:week'}" help="Creation Week"/>
+                   <filter string="Creation Week" context="{'group_by':'create_date:week'}" help="Creation Week"/>
                 </group>
             </search>
         </field>
@@ -82,17 +62,21 @@
 
     <record id="action_hr_recruitment_report_all" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>
-        <field name="res_model">hr.recruitment.report</field>
+        <field name="res_model">hr.applicant</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_hr_recruitment_report_pivot')}),
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('view_hr_recruitment_report_graph')})]"/>
         <field name="context">{}</field>  <!-- force empty -->
     </record>
-    <menuitem name="Reporting" id="report_hr_recruitment" parent="menu_hr_recruitment_root" 
+    <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root" 
     sequence="99" action="action_hr_recruitment_report_all"/>
     <record id="action_hr_recruitment_report_filtered_department" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>
-        <field name="res_model">hr.recruitment.report</field>
+        <field name="res_model">hr.applicant</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
@@ -104,7 +88,7 @@
 
     <record id="action_hr_recruitment_report_filtered_job" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>
-        <field name="res_model">hr.recruitment.report</field>
+        <field name="res_model">hr.applicant</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
@@ -112,6 +96,29 @@
             'search_default_job_id': [active_id],
             'default_job_id': active_id}
         </field>
+    </record>
+
+    <!-- Custom reports (aka filters) -->
+    <record id="filter_recruitment_report_recruiter" model="ir.filters">
+        <field name="name">By Recruiter</field>
+        <field name="model_id">hr.applicant</field>
+        <field name="user_id" eval="False"/>
+        <field name="action_id" ref="action_hr_recruitment_report_all"/>
+        <field name="context">{'group_by': ['create_date:month', 'user_id'], 'col_group_by': ['create_date:month']}</field>
+    </record>
+    <record id="filter_recruitment_report_job" model="ir.filters">
+        <field name="name">By Job</field>
+        <field name="model_id">hr.applicant</field>
+        <field name="user_id" eval="False"/>
+        <field name="action_id" ref="action_hr_recruitment_report_all"/>
+        <field name="context">{'group_by': ['create_date:month', 'job_id'], 'col_group_by': ['create_date:month']}</field>
+    </record>
+    <record id="filter_recruitment_report_departmnet" model="ir.filters">
+        <field name="name">By Department</field>
+        <field name="model_id">hr.applicant</field>
+        <field name="user_id" eval="False"/>
+        <field name="action_id" ref="action_hr_recruitment_report_all"/>
+        <field name="context">{'group_by': ['create_date:month', 'department_id'], 'col_group_by': ['create_date:month']}</field>
     </record>
 
 </data>
