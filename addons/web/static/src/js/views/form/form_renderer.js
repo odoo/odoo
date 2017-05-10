@@ -129,6 +129,32 @@ var FormRenderer = BasicRenderer.extend({
         return this._super.apply(this, arguments);
     },
 
+    /**
+    * Sets focus on the field where default_focus attribute is defined
+    * if default_focus attribute is not defined on any field then set focus on first active field
+    */
+    autoFocus: function() {
+        if (this.mode == 'readonly') {
+            return;
+        }
+        var focusWidget = this.defaultFocusField;
+        if (!focusWidget) {
+            var widgets = this.allFieldWidgets[this.state.id];
+            for (var i = 0; i < widgets.length; i += 1) {
+                var widget = widgets[i];
+                var idForLabel = this.idsForLabels[widget.name];
+                var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
+                if (!widget.$el.is('.o_invisible_modifier') && !widget.$el.is('.o_readonly_modifier') && $label.length) {
+                    focusWidget = widget;
+                    break;
+                }
+            }
+        }
+        if (focusWidget) {
+            focusWidget.activate(true);
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -682,6 +708,7 @@ var FormRenderer = BasicRenderer.extend({
 
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
+            self.autoFocus();
         });
     },
     /**
@@ -705,20 +732,15 @@ var FormRenderer = BasicRenderer.extend({
         core.bus.trigger('DOM_updated');
 
         // Attach the tooltips on the fields' label
-        var focusWidget = this.defaultFocusField;
         _.each(this.allFieldWidgets[this.state.id], function (widget) {
-            if (!focusWidget) {
-                focusWidget = widget;
-            }
+            var idForLabel = self.idsForLabels[widget.name];
+            var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
             if (core.debug || widget.attrs.help || widget.field.help) {
                 var idForLabel = self.idsForLabels[widget.name];
                 var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
                 self._addFieldTooltip(widget, $label);
             }
         });
-        if (focusWidget) {
-            focusWidget.activate(true);
-        }
     },
     /**
      * Sets id attribute of given widget to idForLabel
