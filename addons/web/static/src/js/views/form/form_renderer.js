@@ -368,24 +368,11 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderInnerGroupField: function (node) {
-        var self = this;
         var widget = this._renderFieldWidget(node, this.state);
-        var fieldName = node.attrs.name;
         var $tds = $('<td/>').append(widget.$el);
 
         if (node.attrs.nolabel !== '1') {
-            var $labelTd = this._renderInnerGroupLabel(node, {
-                callback: function (element, modifiers, record) {
-                    var widgets = self.allFieldWidgets[record.id];
-                    element.$el.toggleClass('o_form_label_empty', !!( // FIXME condition is evaluated twice (label AND widget...)
-                        record.data.id
-                        && (modifiers.readonly || self.mode === 'readonly')
-                        // The widget could have been rerendered so we have to
-                        // search it in the list with the field name
-                        && !_.findWhere(widgets, {name: fieldName}).isSet()
-                    ));
-                },
-            });
+            var $labelTd = this._renderInnerGroupLabel(node);
             $tds = $labelTd.add($tds);
         }
 
@@ -394,12 +381,11 @@ var FormRenderer = BasicRenderer.extend({
     /**
      * @private
      * @param {string} label
-     * @param {Object} [modifiersOptions]
      * @returns {jQueryElement}
      */
-    _renderInnerGroupLabel: function (label, modifiersOptions) {
+    _renderInnerGroupLabel: function (label) {
         return $('<td/>', {class: 'o_td_label'})
-            .append(this._renderTagLabel(label, modifiersOptions));
+            .append(this._renderTagLabel(label));
     },
     /**
      * Render a node, from the arch of the view. It is a generic method, that
@@ -566,10 +552,10 @@ var FormRenderer = BasicRenderer.extend({
     /**
      * @private
      * @param {Object} node
-     * @param {Object} [modifiersOptions]
      * @returns {jQueryElement}
      */
-    _renderTagLabel: function (node, modifiersOptions) {
+    _renderTagLabel: function (node) {
+        var self = this;
         var text;
         var fieldName = node.tag === 'label' ? node.attrs.for : node.attrs.name;
         if ('string' in node.attrs) { // allow empty string
@@ -587,6 +573,31 @@ var FormRenderer = BasicRenderer.extend({
         if (node.tag === 'label') {
             this._handleAttributes($result, node);
         }
+        var modifiersOptions;
+        if (fieldName) {
+            modifiersOptions = {
+                callback: function (element, modifiers, record) {
+                    var widgets = self.allFieldWidgets[record.id];
+                    var widget = _.findWhere(widgets, {name: fieldName});
+                    if (!widget) {
+                        return; // FIXME this occurs if the widget is created
+                                // after the label (explicit <label/> tag in the
+                                // arch), so this won't work on first rendering
+                                // only on reevaluation
+                    }
+                    element.$el.toggleClass('o_form_label_empty', !!( // FIXME condition is evaluated twice (label AND widget...)
+                        record.data.id
+                        && (modifiers.readonly || self.mode === 'readonly')
+                        && !widget.isSet()
+                    ));
+                },
+            };
+        }
+        // FIXME if the function is called with a <label/> node, the registered
+        // modifiers will be those on this node. Maybe the desired behavior
+        // would be to merge them with associated field node if any... note:
+        // this worked in 10.0 for "o_form_label_empty" reevaluation but not for
+        // "o_invisible_modifier" reevaluation on labels...
         this._registerModifiers(node, this.state, $result, modifiersOptions);
         return $result;
     },
