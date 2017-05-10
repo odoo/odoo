@@ -140,13 +140,14 @@ var FormRenderer = BasicRenderer.extend({
         var focusWidget = this.defaultFocusField;
         if (!focusWidget) {
             var widgets = this.allFieldWidgets[this.state.id];
-            for (var i = 0; i < widgets.length; i += 1) {
-                var widget = widgets[i];
-                var idForLabel = this.idsForLabels[widget.name];
-                var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
-                if (!widget.$el.is('.o_invisible_modifier') && !widget.$el.is('.o_readonly_modifier') && $label.length) {
-                    focusWidget = widget;
-                    break;
+            if (widgets) {
+                for (var i = 0; i < widgets.length; i += 1) {
+                    var widget = widgets[i];
+                    var $focusable = widget.getFocusableElement();
+                    if ($focusable.length && $focusable.is(':visible')) {
+                        focusWidget = widget;
+                        break;
+                    }
                 }
             }
         }
@@ -733,8 +734,6 @@ var FormRenderer = BasicRenderer.extend({
 
         // Attach the tooltips on the fields' label
         _.each(this.allFieldWidgets[this.state.id], function (widget) {
-            var idForLabel = self.idsForLabels[widget.name];
-            var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
             if (core.debug || widget.attrs.help || widget.field.help) {
                 var idForLabel = self.idsForLabels[widget.name];
                 var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();

@@ -3624,6 +3624,26 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('in create mode, autofocus field or first active field is focused', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="bar"/>' +
+                        '<field name="foo" default_focus="1"/>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_create').click();
+        assert.strictEqual(form.$('input[name="foo"]')[0], document.activeElement,
+            "foo field should have focus");
+
+        form.destroy();
+    });
+
     QUnit.test('create with false values', function (assert) {
         assert.expect(1);
         var form = createView({
