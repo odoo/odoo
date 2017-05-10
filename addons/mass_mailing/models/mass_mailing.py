@@ -48,7 +48,7 @@ class MassMailingList(models.Model):
                 mail_mass_mailing_contact_list_rel r 
                 left join mail_mass_mailing_contact c on (r.contact_id=c.id)
             where
-                c.opt_out <> true
+                c.email NOT IN (select email from mail_blacklist where email like c.email)
             group by
                 list_id
         ''')
@@ -75,23 +75,10 @@ class MassMailingContact(models.Model):
     list_ids = fields.Many2many(
         'mail.mass_mailing.list', 'mail_mass_mailing_contact_list_rel',
         'contact_id', 'list_id', string='Mailing Lists')
-    opt_out = fields.Boolean(string='Opt Out', help='The contact has chosen not to receive mails anymore from this list')
     unsubscription_date = fields.Datetime(string='Unsubscription Date')
     message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.', default=0)
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
-
-    @api.model
-    def create(self, vals):
-        if 'opt_out' in vals:
-            vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
-        return super(MassMailingContact, self).create(vals)
-
-    @api.multi
-    def write(self, vals):
-        if 'opt_out' in vals:
-            vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
-        return super(MassMailingContact, self).write(vals)
 
     def get_name_email(self, name):
         name, email = self.env['res.partner']._parse_partner_name(name)
@@ -357,7 +344,8 @@ class MassMailing(models.Model):
     replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Integer(compute="_compute_statistics", String='Bounced Ratio')
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Next Departure')
-
+    #Exclude blacklisted email globally
+    exclude_blacklist = fields.Boolean(string='Exclude Blacklist', help='Exclude Email on mass mailing', default=True)
     def _compute_total(self):
         for mass_mailing in self:
             mass_mailing.total = len(mass_mailing.sudo().get_recipients())
@@ -456,11 +444,9 @@ class MassMailing(models.Model):
     def _onchange_model_and_list(self):
         if self.mailing_model == 'mail.mass_mailing.list':
             if self.contact_list_ids:
-                self.mailing_domain = "[('list_ids', 'in', [%s]), ('opt_out', '=', False)]" % (','.join(str(id) for id in self.contact_list_ids.ids),)
+                self.mailing_domain = "[('list_ids', 'in', [%s])]" % (','.join(str(id) for id in self.contact_list_ids.ids),)
             else:
                 self.mailing_domain = "[(0, '=', 1)]"
-        elif 'opt_out' in self.env[self.mailing_model]._fields and not self.mailing_domain:
-            self.mailing_domain = "[('opt_out', '=', False)]"
         self.body_html = "on_change_model_and_list"
 
     #------------------------------------------------------
@@ -506,14 +492,11 @@ class MassMailing(models.Model):
         else:
             return super(MassMailing, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby)
 
-    def update_opt_out(self, email, res_ids, value):
-        model = self.env[self.mailing_model_real].with_context(active_test=False)
-        if 'opt_out' in model._fields:
-            email_fname = 'email_from'
-            if 'email' in model._fields:
-                email_fname = 'email'
-            records = model.search([('id', 'in', res_ids), (email_fname, 'ilike', email)])
-            records.write({'opt_out': value})
+    def update_blacklist_email(self, email):
+        MailBlacklist = self.env['mail.blacklist']
+        blacklisted_email = MailBlacklist.sudo().search([('email', 'ilike', email)])
+        if len(blacklisted_email) == 0:
+            MailBlacklist.create({'email': email})
 
     #------------------------------------------------------
     # Views & Actions
@@ -568,30 +551,29 @@ class MassMailing(models.Model):
     #------------------------------------------------------
 
     def _get_blacklist(self):
-        """Returns a set of emails opted-out in target model"""
+        """Returns a set of blacklisted email in target model"""
         # TODO: implement a global blacklist table, to easily share
         # it and update it.
         self.ensure_one()
         blacklist = {}
         target = self.env[self.mailing_model_real]
         mail_field = 'email' if 'email' in target._fields else 'email_from'
-        if 'opt_out' in target._fields:
-            # avoid loading a large number of records in memory
-            # + use a basic heuristic for extracting emails
+        if self.exclude_blacklist:
             query = """
                 SELECT lower(substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
                   FROM %(target)s
-                 WHERE opt_out AND
+                 WHERE %(mail_field)s IN (select mb.email from mail_blacklist mb) AND
                        substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL;
             """
             query = query % {'target': target._table, 'mail_field': mail_field}
             self._cr.execute(query)
             blacklist = set(m[0] for m in self._cr.fetchall())
-            _logger.info(
-                "Mass-mailing %s targets %s, blacklist: %s emails",
-                self, target._name, len(blacklist))
+            if blacklist:
+                _logger.info("Mass-mailing %s targets %s, blacklist: %s emails",self, target._name, len(blacklist))
+            else:
+                _logger.info("Mass-mailing %s targets %s, no blacklist available", self, target._name)
         else:
-            _logger.info("Mass-mailing %s targets %s, no blacklist available", self, target._name)
+            _logger.info("Mass-mailing %s targets %s, blacklist excluded", self, target._name)
         return blacklist
 
     def _get_seen_list(self):

@@ -20,13 +20,6 @@
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['create_date:month']}</field>
         </record>
-        <record id="filter_contact_unsubscription" model="ir.filters">
-            <field name="name">List Unsubscription</field>
-            <field name="model_id">mail.mass_mailing.contact</field>
-            <field name="user_id" eval="False"/>
-            <field name="domain">[('opt_out','=',True)]</field>
-            <field name="context">{'group_by': ['unsubscription_date:month']}</field>
-        </record>
 
         <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
             <field name="name">mail.mass_mailing.contact.search</field>
@@ -38,7 +31,6 @@
                     <field name="tag_ids"/>
                     <field name="list_ids"/>
                     <separator/>
-                    <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"/>
                     <separator/>
                     <filter string="Exclude Bounced" name="not_bounced" domain="[('message_bounce', '&lt;', 3)]"/>
                     <group expand="0" string="Group By">
@@ -60,7 +52,6 @@
                     <field name="company_name"/>
                     <field name="email"/>
                     <field name="message_bounce"/>
-                    <field name="opt_out"/>
                 </tree>
             </field>
         </record>
@@ -141,7 +132,6 @@
                                     <field name="message_bounce"/>
                                     <span> times</span>
                                 </div>
-                                <field name="opt_out"/>
                             </group>
                         </group>
                         <field name="list_ids"/>
@@ -177,7 +167,6 @@
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
-            <field name="context">{'search_default_not_opt_out': 1}</field>
         </record>
 
         <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts_from_list">
@@ -186,7 +175,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('list_ids', 'in', [active_id])]</field>
-            <field name="context">{'search_default_not_opt_out': 1, 'default_list_ids': [(4,active_id)]}</field>
+            <field name="context">{'default_list_ids': [(4,active_id)]}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a recipient.
@@ -419,8 +408,7 @@
                                 <field name="mailing_model_real" invisible="1"/>
                                 <field name="mailing_domain" widget="domain"
                                     attrs="{'invisible': [('mailing_model', '=', 'mail.mass_mailing.list')]}"
-                                    options="{'model': 'mailing_model_real'}"
-                                    context="{'search_default_not_opt_out':1}"/>
+                                    options="{'model': 'mailing_model_real'}"/>
                                 <div attrs="{'invisible': [('mailing_model', '!=', 'mail.mass_mailing.list')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
                                     <field name="contact_list_ids" widget="many2many_tags"
@@ -435,6 +423,7 @@
                             <page string="Options">
                                 <group>
                                     <group string="Mailing">
+                                        <field name="exclude_blacklist"/>
                                         <label for="attachment_ids"/>
                                         <div>
                                             <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"/>
@@ -861,6 +850,19 @@
 </field>
         </record>
 
+        <act_window name="Partner Email Marketing"
+            res_model="mail.mass_mailing"
+            multi="True"
+            src_model="res.partner"
+            view_mode="form"
+            target="current"
+            key2="client_action_multi"
+            id="action_partner_mass_mailing"
+            context="{
+                        'default_mailing_model': context.get('active_model', False),
+                        'default_mailing_domain': [['id', 'in', context.get('active_ids', [])]],
+                    }"
+                />
         <menuitem name="Campaigns" id="menu_email_campaigns"
             parent="mass_mailing_menu_root" sequence="5"
             action="action_view_mass_mailing_campaigns"
