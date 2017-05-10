@@ -498,9 +498,12 @@ class StockMove(models.Model):
         self._push_apply()
         return self
 
+    def _set_default_price_moves(self):
+        return self.filtered(lambda move: not move.price_unit)
+
     def set_default_price_unit_from_product(self):
         """ Set price to move, important in inter-company moves or receipts with only one partner """
-        for move in self.filtered(lambda move: not move.price_unit):
+        for move in self._set_default_price_moves():
             move.write({'price_unit': move.product_id.standard_price})
     attribute_price = set_default_price_unit_from_product
 
