@@ -73,7 +73,6 @@ class TestPyLint(TransactionCase):
 
     BAD_MODULES = [
         'commands',
-        'types',
     ]
 
     def _skip_test(self, reason):
