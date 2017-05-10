@@ -287,6 +287,7 @@
             <field name="view_type">form</field>
             <field name="name">Issues</field>
             <field name="view_mode">kanban,tree,form,calendar,graph,pivot</field>
+            <field name="search_view_id" ref="view_project_issue_filter"/>
             <field name="context">{
                     'search_default_project_id': [active_id],
                     'default_project_id': active_id,
@@ -306,6 +307,7 @@
             <field name="view_type">form</field>
             <field name="name">Issues</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="search_view_id" ref="view_project_issue_filter"/>
             <field name="help" type="html">
                 <p>
                     The Odoo issues tracker allows you to efficiently manage things
@@ -337,6 +339,7 @@
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('project_issue_tree_view')}),
                           (0, 0, {'view_mode': 'calendar', 'view_id': ref('project_issue_calendar_view')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('project_issue_form_view')}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('project_issue_pivot_view')}),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('project_issue_graph_view')}),
                           ]"/>
             <field name="help" type="html">
