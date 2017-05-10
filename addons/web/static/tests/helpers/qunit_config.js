@@ -36,7 +36,7 @@ QUnit.config.testTimeout = 1 * 60 * 1000;
 /**
  * Hide passed tests by default in the QUnit page
  */
-QUnit.config.hidepassed = true;
+QUnit.config.hidepassed = (window.location.href.match(/[?&]testId=/) === null);
 
 var sortButtonAppended = false;
 
@@ -67,6 +67,8 @@ QUnit.log(function( result) {
         console.log('"' + result.name + '"',
                     'in section', '"' + result.module + '"',
                     'failed:', result.message);
+        console.log('actual:', result.actual);
+        console.log('expected:', result.expected);
     }
 });
 
