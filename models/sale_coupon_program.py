@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 
 class SaleCouponProgram(models.Model):
@@ -198,7 +199,10 @@ class SaleCouponProgram(models.Model):
             products_qties[line.product_id.id] += line.product_uom_qty
         valid_programs = self.filtered(lambda program: not program.rule_product_ids)
         for program in self - valid_programs:
-            ordered_rule_products_qty = sum(map(lambda product_id, qty: product_id in program.rule_product_ids.ids and qty, products_qties, products_qties.values()))
+            ordered_rule_products_qty = sum(
+                qty for product, qty in pycompat.items(products_qties)
+                if product in program.rule_product_ids.ids
+            )
             # Avoid program if 1 ordered foo on a program '1 foo, 1 free foo'
             if program.reward_product_id in program.rule_product_ids and program.reward_type == 'product':
                 line = order.order_line.filtered(lambda line: line.product_id == program.reward_product_id)
