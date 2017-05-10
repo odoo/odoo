@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <record id="payment.payment_acquirer_custom" model="payment.acquirer">
+        <field name="name">Custom</field>
+        <field name="image" type="base64" file="payment_custom/static/src/img/custom_icon.png"/>
+        <field name="provider">custom</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+</data>
+</odoo>
