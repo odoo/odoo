@@ -210,7 +210,7 @@ class hr_holidays(osv.osv):
     }
     _defaults = {
         'employee_id': _employee_get,
-        'state': 'confirm',
+        'state': 'draft',
         'type': 'remove',
         'user_id': lambda obj, cr, uid, context: uid,
         'holiday_type': 'employee',
