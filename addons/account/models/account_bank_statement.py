@@ -424,7 +424,7 @@ class AccountBankStatementLine(models.Model):
                     payment_to_unreconcile |= line.payment_id
                     if st_line.move_name and line.payment_id.payment_reference == st_line.move_name:
                         #there can be several moves linked to a statement line but maximum one created by the line itself
-                        moves_to_cancel |= st_line.journal_entry_ids
+                        moves_to_cancel |= move
                         payment_to_cancel |= line.payment_id
 
             moves_to_unbind = moves_to_unbind - moves_to_cancel
