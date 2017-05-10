@@ -15,7 +15,7 @@ class OgonePayment(PaymentAcquirerCommon):
     def setUp(self):
         super(OgonePayment, self).setUp()
 
-        self.ogone = self.env.ref('payment.payment_acquirer_ogone')
+        self.ogone = self.env.ref('payment_ogone.payment_acquirer_ogone')
 
     def test_10_ogone_form_render(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')

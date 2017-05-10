@@ -17,7 +17,7 @@ class BuckarooCommon(PaymentAcquirerCommon):
     def setUp(self):
         super(BuckarooCommon, self).setUp()
         # get the buckaroo account
-        self.buckaroo = self.env.ref('payment.payment_acquirer_buckaroo')
+        self.buckaroo = self.env.ref('payment_buckaroo.payment_acquirer_buckaroo')
 
 
 @odoo.tests.common.at_install(False)

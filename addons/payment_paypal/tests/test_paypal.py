@@ -14,7 +14,7 @@ class PaypalCommon(PaymentAcquirerCommon):
     def setUp(self):
         super(PaypalCommon, self).setUp()
 
-        self.paypal = self.env.ref('payment.payment_acquirer_paypal')
+        self.paypal = self.env.ref('payment_paypal.payment_acquirer_paypal')
 
         # some CC
         self.amex = (('378282246310005', '123'), ('371449635398431', '123'))

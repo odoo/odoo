@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Ogone Payment Acquirer',
+    'name': 'Ingenico',
     'category': 'Accounting',
     'summary': 'Payment Acquirer: Ogone Implementation',
     'version': '1.0',
