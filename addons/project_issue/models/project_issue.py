@@ -55,12 +55,12 @@ class ProjectIssue(models.Model):
     duration = fields.Float('Duration')
     task_id = fields.Many2one('project.task', string='Task', domain="[('project_id','=',project_id)]",
                               help="You can link this issue to an existing task or directly create a new one from here")
-    day_open = fields.Float(compute='_compute_day', string='Days to Assign', store=True)
-    day_close = fields.Float(compute='_compute_day', string='Days to Close', store=True)
+    day_open = fields.Float(compute='_compute_day', string='Days to Assign', store=True, group_operator="avg")
+    day_close = fields.Float(compute='_compute_day', string='Days to Close', store=True, group_operator="avg")
 
     user_id = fields.Many2one('res.users', string='Assigned to', index=True, track_visibility='onchange', default=lambda self: self.env.uid)
-    working_hours_open = fields.Float(compute='_compute_day', string='Working Hours to assign the Issue', store=True)
-    working_hours_close = fields.Float(compute='_compute_day', string='Working Hours to close the Issue', store=True)
+    working_hours_open = fields.Float(compute='_compute_day', string='Working Hours to assign the Issue', store=True, group_operator="avg")
+    working_hours_close = fields.Float(compute='_compute_day', string='Working Hours to close the Issue', store=True, group_operator="avg")
     inactivity_days = fields.Integer(compute='_compute_inactivity_days', string='Days since last action',
                                      help="Difference in days between last action and current date")
     color = fields.Integer('Color Index')
