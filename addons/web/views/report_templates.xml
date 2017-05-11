@@ -55,6 +55,11 @@
                 <meta charset="utf-8" />
                 <meta name="viewport" content="initial-scale=1"/>
                 <title><t t-esc="title or 'Odoo Report'"/></title>
+                <script type="text/javascript">
+                    var odoo = {
+                        csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                    };
+                </script>
                 <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
                 <t t-if="editable">
@@ -67,16 +72,6 @@
                     <t t-call-assets="web_editor.summernote" t-css="false"/>
                     <t t-call-assets="web_editor.assets_editor" t-css="false"/>
                     <t t-call-assets="web.report_assets_editor" t-css="false"/>
-                    <script>
-                        if(window.odoo.define) {
-                            odoo.define('web.csrf', function (require) {
-                                var token = "<t t-esc="request and request.csrf_token(None)"/>";
-                                var core = require('web.core');
-                                core.csrf_token = token;
-                                core.qweb.default_dict.csrf_token = token;
-                            });
-                        }
-                    </script>
                 </t>
             </head>
             <body class="container">
