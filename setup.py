@@ -140,6 +140,7 @@ setup(
         'docutils',
         'feedparser',
         'gevent',
+        'html2text',
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'mako',
