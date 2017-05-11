@@ -46,7 +46,7 @@ class MailComposeMessage(models.TransientModel):
                 mail_values = res[res_id]
                 recips = tools.email_split(mail_values.get('email_to'))
                 mail_to = recips[0].lower() if recips else False
-                if (blacklist and mail_to in blacklist) or (seen_list and mail_to in seen_list):
+                if (blacklist and mail_to in blacklist) or (seen_list and mail_to in seen_list) or not (mail_to or mail_values.get('recipient_ids')):
                     # prevent sending to blocked addresses that were included by mistake
                     mail_values['state'] = 'cancel'
                 elif seen_list is not None:
@@ -66,12 +66,4 @@ class MailComposeMessage(models.TransientModel):
                     'notification': mass_mailing.reply_to_mode == 'thread',
                     'auto_delete': not mass_mailing.keep_archives,
                 })
-                if not (res[res_id].get('email_to') or res[res_id].get('recipient_ids')):
-                    del res[res_id]
-                    self.env['mail.mail.statistics'].create({
-                        'model': self.model,
-                        'exception': fields.datetime.now(),
-                        'mass_mailing_id': mass_mailing.id,
-                        'res_id': res_id,
-                    })
         return res
