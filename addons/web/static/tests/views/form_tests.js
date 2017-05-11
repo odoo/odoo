@@ -4257,5 +4257,62 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('form group with newline tag inside', function (assert) {
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<group col="5" class="main_inner_group">' +
+                            // col=5 otherwise the test is ok even without the
+                            // newline code as this will render a <newline/> DOM
+                            // element in the third column, leaving no place for
+                            // the next field and its label on the same line.
+                            '<field name="foo"/>' +
+                            '<newline/>' +
+                            '<field name="bar"/>' +
+                            '<field name="qux"/>' +
+                        '</group>' +
+                        '<group col="3">' +
+                            // col=3 otherwise the test is ok even without the
+                            // newline code as this will render a <newline/> DOM
+                            // element with the o_group_col_6 class, leaving no
+                            // place for the next group on the same line.
+                            '<group class="top_group">' +
+                                '<div style="height: 200px;"/>' +
+                            '</group>' +
+                            '<newline/>' +
+                            '<group class="bottom_group">' +
+                                '<div/>' +
+                            '</group>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // Inner group
+        assert.strictEqual(form.$('.main_inner_group > tbody > tr').length, 2,
+            "there should be 2 rows in the group");
+        assert.strictEqual(form.$('.main_inner_group > tbody > tr:first > .o_td_label').length, 1,
+            "there should be only one label in the first row");
+        assert.strictEqual(form.$('.main_inner_group > tbody > tr:first .o_field_widget').length, 1,
+            "there should be only one widget in the first row");
+        assert.strictEqual(form.$('.main_inner_group > tbody > tr:last > .o_td_label').length, 2,
+            "there should be two labels in the second row");
+        assert.strictEqual(form.$('.main_inner_group > tbody > tr:last .o_field_widget').length, 2,
+            "there should be two widgets in the second row");
+
+        // Outer group
+        assert.ok((form.$('.bottom_group').position().top - form.$('.top_group').position().top) >= 200,
+            "outergroup children should not be on the same line");
+
+        form.destroy();
+    });
 });
 });

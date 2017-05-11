@@ -315,9 +315,16 @@ var FormRenderer = BasicRenderer.extend({
             $result.append($sep);
         }
 
-        var currentColspan = 0;
         var $currentRow = $('<tr/>');
+        var currentColspan = 0;
         _.each(node.children, function (child) {
+            if (child.tag === 'newline') {
+                $currentRow.appendTo($result);
+                $currentRow = $('<tr/>');
+                currentColspan = 0;
+                return;
+            }
+
             var colspan = parseInt(child.attrs.colspan, 10);
             var isLabeledField = (child.tag === 'field' && child.attrs.nolabel !== '1');
             if (!colspan) {
@@ -524,6 +531,9 @@ var FormRenderer = BasicRenderer.extend({
         var $result = $('<div/>', {class: 'o_group'});
         var colSize = Math.max(1, Math.round(12 / (parseInt(node.attrs.col, 10) || 2)));
         $result.append(_.map(node.children, function (child) {
+            if (child.tag === 'newline') {
+                return $('<br/>');
+            }
             var $child = self._renderNode(child);
             $child.addClass('o_group_col_' + (colSize * (parseInt(child.attrs.colspan, 10) || 1)));
             return $child;
