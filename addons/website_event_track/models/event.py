@@ -80,6 +80,11 @@ class Event(models.Model):
             self.website_track = False
             self.website_track_proposal = False
 
+    def _get_standard_menu_entries_names(self):
+        res = super(Event, self)._get_standard_menu_entries_names()
+        res += [_('Talks'), _('Agenda'), _('Talk Proposals')]
+        return res
+
     def _get_menu_entries(self):
         self.ensure_one()
         res = super(Event, self)._get_menu_entries()
