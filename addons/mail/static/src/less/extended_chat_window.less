@@ -28,7 +28,14 @@
             }
         }
         .o_composer_attachments_list, .o_composer_buttons {
-            display: none;
+            .o_composer_button_send{
+                display: none;
+            }
+            .o_composer_button_emoji, .o_composer_button_add_attachment {
+                &:hover, &:focus {
+                    background-color: #FFFFFF !important;
+                }
+            }
         }
     }
 }
