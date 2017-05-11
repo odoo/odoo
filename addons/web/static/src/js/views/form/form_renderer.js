@@ -214,72 +214,6 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Add a tooltip on a button
-     *
-     * @private
-     * @param {Object} node
-     * @param {jQuery} $button
-     */
-    _addButtonTooltip: function (node, $button) {
-        var self = this;
-        $button.tooltip({
-            delay: { show: 1000, hide: 0 },
-            title: function () {
-                return qweb.render('WidgetButton.tooltip', {
-                    debug: config.debug,
-                    state: self.state,
-                    node: node,
-                });
-            },
-        });
-    },
-    /**
-     * @private
-     * @param {jQueryElement} $el
-     * @param {Object} node
-     */
-    _addOnClickAction: function ($el, node) {
-        var self = this;
-        $el.click(function () {
-            self.trigger_up('button_clicked', {
-                attrs: node.attrs,
-                record: self.state,
-            });
-        });
-    },
-    _activateButton: function($button) {
-        var activate = function() {
-            if ($button.focus() !== false) {
-                return true;
-            } 
-            return false;
-        }
-        return activate;
-    },
-    _getFocusTip: function(node) {
-        var show_focus_tip = function() {
-            var content = node.attrs.on_focus_tip ? node.attrs.on_focus_tip : _.str.sprintf(_t("Press ENTER to %s"), node.attrs.string);
-            return content;
-        }
-        return show_focus_tip;
-    },
-    _addOnFocusAction: function($el, node) {
-        var self = this;
-        var options = _.extend({
-            delay: { show: 1000, hide: 0 },
-            trigger: 'focus',
-            title: function() {
-                return qweb.render('FocusTooltip', {
-                    getFocusTip: self._getFocusTip(node)
-                });
-            }
-        }, {});
-        $el.tooltip(options);
-    },
-    _addOnEnterAction: function($el, node) {
-        this._addOnClickAction($el, node);
-    },
-    /**
      * @private
      * @param {string} name
      * @returns {string}
@@ -385,7 +319,7 @@ var FormRenderer = BasicRenderer.extend({
         var self = this;
         var widget = new ButtonWidget(this, node, this.state);
         // Prepare widget rendering and save the related deferred
-        var def = widget.__widgetRenderAndInsert(function () {});
+        var def = widget._widgetRenderAndInsert(function () {});
         if (def.state() === 'pending') {
             this.defs.push(def);
         }
@@ -545,31 +479,23 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderStatButton: function (node) {
-        var $button = $('<button>').addClass('btn btn-sm oe_stat_button');
-        if (node.attrs.icon) {
-            $('<div>')
-                .addClass('fa fa-fw o_button_icon')
-                .addClass(node.attrs.icon)
-                .appendTo($button);
+        var widget = new ButtonWidget(this, node, this.state);
+        // Prepare widget rendering and save the related deferred
+        var def = widget._widgetRenderAndInsert(function () {});
+        if (def.state() === 'pending') {
+            this.defs.push(def);
         }
-        if (node.attrs.string) {
-            $('<span>')
-                .text(node.attrs.string)
-                .appendTo($button);
-        }
-        $button.append(_.map(node.children, this._renderNode.bind(this)));
-        this._addOnClickAction($button, node);
-        this._addOnFocusAction($button, node);
-        this._addOnEnterAction($button, node);
-        this._handleAttributes($button, node);
-        this._registerModifiers(node, this.state, $button);
+        widget.$el.append(_.map(node.children, this._renderNode.bind(this)));
+        this._handleAttributes(widget.$el, node);
+        this._registerModifiers(node, this.state, widget.$el);
+
         if (node.attrs.class && (node.attrs.class.indexOf('btn-primary') != -1
             || node.attrs.class.indexOf('oe_highlight') != -1
             || node.attrs.class.indexOf('oe_stat_button') != -1)) {
             // TODO: Add into tabindexWidgets but mainatain separate object and push inside tabindexWidgets in last so that stat buttons get focus in last
-            // this.tabindexButtons[this.state.id].push({'$el': $button, activate: this._activateButton($button)});
+            // this.tabindexButtons[this.state.id].push(widget);
         }
-        return $button;
+        return widget.$el;
     },
     /**
      * @private
@@ -604,31 +530,20 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagButton: function (node) {
-        var $button = dom.renderButton({
-            attrs: _.omit(node.attrs, 'icon', 'string'),
-            icon: node.attrs.icon,
-            text: (node.attrs.string || '').replace(/_/g, ''),
-        });
-        $button.append(_.map(node.children, this._renderNode.bind(this)));
-        this._addOnClickAction($button, node);
-        this._addOnFocusAction($button, node);
-        this._addOnEnterAction($button, node);
-        this._handleAttributes($button, node);
-        this._registerModifiers(node, this.state, $button);
-
-        // Display tooltip
-        if (config.debug || node.attrs.help) {
-            this._addButtonTooltip(node, $button);
+        var widget = new ButtonWidget(this, node, this.state);
+        // Prepare widget rendering and save the related deferred
+        var def = widget._widgetRenderAndInsert(function () {});
+        if (def.state() === 'pending') {
+            this.defs.push(def);
         }
-
+        this._handleAttributes(widget.$el, node);
+        this._registerModifiers(node, this.state, widget.$el);
         if (node.attrs.class && (node.attrs.class.indexOf('btn-primary') != -1
             || node.attrs.class.indexOf('oe_highlight') != -1
             || node.attrs.class.indexOf('oe_stat_button') != -1)) {
-            widget['$el'] = $button;
-            widget['activate'] = this._activateButton($button);
             this.tabindexButtons[this.state.id].push(widget);
         }
-        return $button;
+        return widget.$el;
     },
     /**
      * @private

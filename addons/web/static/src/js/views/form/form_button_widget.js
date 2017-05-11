@@ -2,6 +2,7 @@ odoo.define('web.ButtonWidget', function (require) {
 "use strict";
 
 var core = require('web.core');
+var config = require('web.config');
 var ViewWidget = require('web.ViewWidget');
 
 var _t = core._t;
@@ -21,12 +22,17 @@ var ButtonWidget = ViewWidget.extend({
      */
 	init: function (parent, node, record, options) {
 		this._super(parent);
+
 		this.node = node;
+
 		// the datapoint fetched from the model
         this.record = record;
 
         this.string = this.node.attrs.string;
 
+        if (node.attrs.icon) {
+            this.fa_icon = node.attrs.icon.indexOf('fa-') === 0;
+        }
 	},
 	start: function() {
 		var self = this;
@@ -35,12 +41,17 @@ var ButtonWidget = ViewWidget.extend({
             self.trigger_up('button_clicked', {
                 attrs: self.node.attrs,
                 record: self.record,
-                show_wow: self.$el.hasClass('o_wow'),  // TODO: implement this (in view)
                 callback: function() {
                     self.trigger_up('move_next');
                 }
             });
         });
+
+        // Display tooltip
+        if (config.debug || this.node.attrs.help) {
+            this._addButtonTooltip();
+        }
+
         this._addOnFocusAction();
     },
 
@@ -100,18 +111,6 @@ var ButtonWidget = ViewWidget.extend({
         }, {});
         this.$el.tooltip(options);
     },
-    _addTooltip: function(widget, $node) {
-    	var self = this;
-        this.$el.tooltip({
-            delay: { show: 1000, hide: 0 },
-            title: function () {
-                return qweb.render('WidgetLabel.tooltip', {
-                    debug: core.debug,
-                    widget: self,
-                });
-            }
-        });
-    },
     /**
      * Return on_focus_tip attribute if available else will return current button string
      *
@@ -143,7 +142,7 @@ var ButtonWidget = ViewWidget.extend({
             return;
         }
         return this._super.apply(this, arguments);
-    }
+    },
 });
 
 return ButtonWidget;
