@@ -189,6 +189,23 @@ class AccountInvoice(models.Model):
                 return diff_res
         return []
 
+    @api.model
+    def _default_currency(self):
+        journal = self._default_journal()
+        purchase_id = self.env.context.get('default_purchase_id')
+        if purchase_id and not journal.currency_id:
+            return self.env['purchase.order'].browse([purchase_id]).currency_id
+        return super(AccountInvoice, self)._default_currency()
+
+    @api.onchange('journal_id')
+    def _onchange_journal_id(self):
+        purchase_id = self.env.context.get('default_purchase_id')
+        if purchase_id and not self.journal_id.currency_id:
+            self.currency_id = self.env['purchase.order'].browse([purchase_id]).currency_id
+        else:
+           super(AccountInvoice, self)._onchange_journal_id()
+
+
 
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
