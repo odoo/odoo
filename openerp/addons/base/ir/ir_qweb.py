@@ -685,7 +685,8 @@ class DateConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
-        if not value or len(value)<10: return ''
+        if not value or (isinstance(value, basestring) and len(value) < 10):
+            return ''
         lang = self.user_lang(cr, uid, context=context)
         locale = babel.Locale.parse(lang.code)
 
@@ -1004,23 +1005,52 @@ class QwebWidgetMonetary(osv.AbstractModel):
     _inherit = 'ir.qweb.widget'
 
     def _format(self, inner, options, qwebcontext):
-        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
-        display = self.pool['ir.qweb'].eval_object(options['display_currency'], qwebcontext)
-        precision = int(round(math.log10(display.rounding)))
-        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
-        lang_code = qwebcontext.context.get('lang') or 'en_US'
-        formatted_amount = self.pool['res.lang'].format(
-            qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
-        )
-        pre = post = u''
-        if display.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'
-        else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'
+        field_name = 'field'
+        record = {field_name: self.pool['ir.qweb'].eval(inner, qwebcontext)}
+        options['_qweb_context'] = qwebcontext
+        return self.pool['ir.qweb.field.monetary'].record_to_html(
+            qwebcontext.cr, qwebcontext.uid, field_name, record, options,
+            context=qwebcontext.context)
 
-        return u'{pre}{0}{post}'.format(
-            formatted_amount, pre=pre, post=post
-        ).format(symbol=display.symbol,)
+class QwebWidgetDate(osv.AbstractModel):
+    """ QWeb widget that mimics the ``ir.qweb.field.date`` behaviour. """
+    _name = 'ir.qweb.widget.date'
+    _inherit = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
+        return self.pool['ir.qweb.field.date'].value_to_html(
+            qwebcontext.cr, qwebcontext.uid, inner, None,
+            options=options, context=qwebcontext.context)
+
+class QwebWidgetDateTime(osv.AbstractModel):
+    """ QWeb widget that mimics the ``ir.qweb.field.datetime`` behaviour. """
+    _name = 'ir.qweb.widget.datetime'
+    _inherit = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
+        return self.pool['ir.qweb.field.datetime'].value_to_html(
+            qwebcontext.cr, qwebcontext.uid, inner, None,
+            options=options, context=qwebcontext.context)
+
+class QwebWidgetFloat(osv.AbstractModel):
+    """ QWeb widget that mimics the ``ir.qweb.field.float`` behaviour.
+
+    .. rubric:: Set the precision
+
+    The precision can be set by setting the ``digits`` parameter, e.g.,
+    ``t-esc-options='{"widget": "float", "digits": [16, 4]}'``
+    """
+    _name = 'ir.qweb.widget.float'
+    _inherit = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
+        field = fields.float(digits=options.get('digits'))
+        return self.pool['ir.qweb.field.float'].value_to_html(
+            qwebcontext.cr, qwebcontext.uid, inner, field,
+            options=options, context=qwebcontext.context)
 
 class HTMLSafe(object):
     """ HTMLSafe string wrapper, Werkzeug's escape() has special handling for
