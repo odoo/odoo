@@ -331,6 +331,9 @@ var KanbanController = BasicController.extend({
                 .then(function (db_id) {
                     self._updateEnv();
                     column.addRecord(self.model.get(db_id), {position: 'before'});
+                    if (event.data.open_record) {
+                        self.trigger_up('open_record', {id: db_id, mode: 'edit'});
+                    }
                 });
         }
     },

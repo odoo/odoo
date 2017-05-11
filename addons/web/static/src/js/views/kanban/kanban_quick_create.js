@@ -11,10 +11,12 @@ var Widget = require('web.Widget');
 var AbstractQuickCreate = Widget.extend({
     events: {
         'click .o_kanban_add': '_onAddClicked',
+        'click .o_kanban_edit': '_onEditClicked',
         'click .o_kanban_cancel': '_onCancelClicked',
         'keydown': '_onKeydown',
         'keypress input': '_onKeypress',
         'mousedown .o_kanban_add': '_onMousedown',
+        'mousedown .o_kanban_edit': '_onMousedown',
         'mousedown .o_kanban_cancel': '_onMousedown',
     },
 
@@ -23,20 +25,29 @@ var AbstractQuickCreate = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Clears the input value and notify the environment that a quick create
-     * has been done
-     *
+     * Notify the environment that a quick create has been done
      * @private
      */
     _add: function () {
+        var newValue = this._getData();
+        if(!newValue) {
+            return;
+        }
+        this._notifyAdd(newValue);
+        this.$input.focus();
+    },
+    /**
+    *  Clears the input value and and return the value that is retrived from text
+    *  @private
+    */
+    _getData: function () {
         var value = this.$input.val();
         this.$input.val('');
         if (/^\s*$/.test(value)) {
             return;
         }
-        this._notifyAdd(value);
-        this.$input.focus();
-    },
+        return value;
+     },
     /**
      * Should implement what to do when the quick creation has been cancelled
      *
@@ -186,6 +197,18 @@ var RecordQuickCreate = AbstractQuickCreate.extend({
     _onAddClicked: function (event) {
         this._super.apply(this, arguments);
         this._addDefaultName();
+    },
+    /**
+    * Get value from the _getData function
+    * @private
+    * Triggers up an event to quick create a record with the given value and parameter
+    */
+    _onEditClicked: function () {
+        var newValue = this._getData();
+        if (!newValue) {
+            return;
+        }
+        this.trigger_up('quick_create_add_record', {value: newValue, open_record: true});
     },
 });
 

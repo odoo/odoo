@@ -381,6 +381,52 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create and edit in grouped mode', function (assert) {
+        assert.expect(6);
+        var self = this;
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+        });
+        testUtils.intercept(kanban, "open_record", function (event) {
+            assert.strictEqual(event.data.mode, "edit",
+            "should trigger 'open_record' event in edit mode");
+            assert.strictEqual(event.target.model.localData[event.data.id].data.id, _.last(self.data.partner.records).id,
+            "should have correct id while editing");
+        });
+
+        // click to add an element and cancel the quick creation
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+
+        var $quickCreate = kanban.$('.o_kanban_quick_create');
+        assert.strictEqual($quickCreate.length, 1, "should have a quick create element");
+
+        $quickCreate.find('input').trigger($.Event('keydown', {keyCode: $.ui.keyCode.ESCAPE}));
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
+            "should have destroyed the quick create element");
+
+        // click to really add and then edit element
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+        $quickCreate = kanban.$('.o_kanban_quick_create');
+        $quickCreate.find('input').val('new partner');
+        $quickCreate.find('button.o_kanban_edit').click();
+
+        assert.strictEqual(this.data.partner.records.length, 5,
+            "should have created a partner");
+        assert.strictEqual(_.last(this.data.partner.records).name, "new partner",
+            "should have correct name");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create fail in grouped', function (assert) {
         assert.expect(7);
 
