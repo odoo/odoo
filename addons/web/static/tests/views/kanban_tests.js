@@ -606,7 +606,7 @@ QUnit.module('Views', {
                     assert.ok(true, "should call name_create");
                 }
                 return this._super(route, args);
-            }
+            },
         });
         assert.strictEqual(kanban.$('.o_column_quick_create').length, 1, "should have a quick create column");
         assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
@@ -647,6 +647,37 @@ QUnit.module('Views', {
         assert.strictEqual(nbRPCs, 0, 'no rpc should have been done when folding/unfolding');
         kanban.destroy();
     });
+
+    QUnit.test('quick create record & column in grouped on m2o', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+        kanban.$('.o_kanban_group:first .o_kanban_quick_add').click();
+        var $quickCreate = kanban.$('.o_kanban_quick_create');
+        $quickCreate.find('input').val('new partner');
+        $quickCreate.find('button.o_kanban_add').click();
+        assert.strictEqual(this.data.partner.records.length, 5,
+            "should have created a partner");
+
+        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').val('new column');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column)').length, 1,
+            "the last column should be the newly created one");
+        kanban.destroy();
+    }),
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
         assert.expect(25);
