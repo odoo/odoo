@@ -896,29 +896,30 @@ class Lead(models.Model):
             'nb_opportunities': 0,
         }
 
-        opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid), ('activity_date_deadline', '!=', False)])
+        opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid)])
 
         for opp in opportunities:
             # Expected closing
-            if opp.date_deadline:
-                date_deadline = fields.Date.from_string(opp.date_deadline)
-                if date_deadline == date.today():
-                    result['closing']['today'] += 1
-                if date.today() <= date_deadline <= date.today() + timedelta(days=7):
-                    result['closing']['next_7_days'] += 1
-                if date_deadline < date.today():
-                    result['closing']['overdue'] += 1
-            # Next activities
-            for activity in opp.activity_ids:
-                date_deadline = fields.Date.from_string(activity.date_deadline)
-                if date_deadline == date.today():
-                    result['activity']['today'] += 1
-                if date.today() <= date_deadline <= date.today() + timedelta(days=7):
-                    result['activity']['next_7_days'] += 1
-                if date_deadline < date.today():
-                    result['activity']['overdue'] += 1
+            if opp.activity_date_deadline:
+                if opp.date_deadline:
+                    date_deadline = fields.Date.from_string(opp.date_deadline)
+                    if date_deadline == date.today():
+                        result['closing']['today'] += 1
+                    if date.today() <= date_deadline <= date.today() + timedelta(days=7):
+                        result['closing']['next_7_days'] += 1
+                    if date_deadline < date.today():
+                        result['closing']['overdue'] += 1
+                # Next activities
+                for activity in opp.activity_ids:
+                    date_deadline = fields.Date.from_string(activity.date_deadline)
+                    if date_deadline == date.today():
+                        result['activity']['today'] += 1
+                    if date.today() <= date_deadline <= date.today() + timedelta(days=7):
+                        result['activity']['next_7_days'] += 1
+                    if date_deadline < date.today():
+                        result['activity']['overdue'] += 1
             # Won in Opportunities
-            if opp.date_closed:
+            if opp.date_closed and opp.stage_id.probability == 100:
                 date_closed = fields.Date.from_string(opp.date_closed)
                 if date.today().replace(day=1) <= date_closed <= date.today():
                     if opp.planned_revenue:
