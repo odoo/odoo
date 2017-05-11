@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_round
+
 
 
 class AccountInvoice(models.Model):
@@ -150,13 +151,13 @@ class AccountInvoice(models.Model):
             for line in res:
                 if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
                     valuation_price_unit = i_line.product_id.uom_id._compute_price(i_line.product_id.standard_price, i_line.uom_id)
+                    valuation_price_unit_total = 0
                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                         valuation_price_unit = i_line.purchase_line_id.product_uom._compute_price(i_line.purchase_line_id.price_unit, i_line.uom_id)
                         stock_move_obj = self.env['stock.move']
                         valuation_stock_move = stock_move_obj.search([('purchase_line_id', '=', i_line.purchase_line_id.id), ('state', '=', 'done')])
                         if valuation_stock_move:
-                            valuation_price_unit_total = 0
                             valuation_total_qty = 0
                             for val_stock_move in valuation_stock_move:
                                 valuation_price_unit_total += val_stock_move.price_unit * val_stock_move.product_qty
@@ -165,7 +166,8 @@ class AccountInvoice(models.Model):
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
                     if inv.currency_id.id != company_currency.id:
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
-                    if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
+                            valuation_price_unit_total = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit_total, inv.currency_id, round=False)
+                    if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=account_prec) != 0 and line['price_unit'] == i_line.price_unit and acc:
                         # price with discount and without tax included
                         price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                         tax_ids = []
@@ -179,7 +181,7 @@ class AccountInvoice(models.Model):
                                     if child.type_tax_use != 'none':
                                         tax_ids.append((4, child.id, None))
                         price_before = line.get('price', 0.0)
-                        line.update({'price': company_currency.round(valuation_price_unit * line['quantity'])})
+                        line.update({'price': company_currency.round(valuation_price_unit_total)})
                         diff_res.append({
                             'type': 'src',
                             'name': i_line.name[:64],
@@ -217,6 +219,20 @@ class AccountInvoice(models.Model):
                 message = _("This vendor bill has been modified from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id="+str(order.id)+">"+order.name+"</a>" for order in purchase]))
                 invoice.message_post(body=message)
         return result
+
+    def _get_related_stock_moves(self): # overridden from stock_account
+        rslt = super(AccountInvoice, self)._get_related_stock_moves()
+
+        if self.type == 'in_invoice':
+            for inv_line in self.invoice_line_ids:
+                rslt += inv_line.purchase_line_id.move_ids
+
+        return rslt
+
+    def _get_anglosaxon_interim_account(self, product): # overridden from stock_account
+        if self.type == 'in_invoice':
+            return product.product_tmpl_id.get_product_accounts()['stock_input']
+        return super(AccountInvoice, self)._get_anglosaxon_interim_account(product)
 
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
