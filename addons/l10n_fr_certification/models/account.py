@@ -9,15 +9,8 @@ from odoo.tools.misc import _consteq
 ERR_MSG = _("You cannot modify a %s in order for its posted data to be updated or deleted. It is the law. Field: %s")
 
 #forbidden fields
-MOVE_FIELDS = ['date', 'journal_id', 'company_id', 'line_ids']
-LINE_FIELDS = ['debit', 'credit', 'account_id', 'move_id']  # partner_id, tax_ids, tax_line_id?
-
-
-def _getattrstring(obj, field_str):
-    field_value = obj[field_str]
-    if obj._fields[field_str].type == 'many2one':
-        field_value = field_value.id
-    return str(field_value)
+MOVE_FIELDS = ['date', 'journal_id', 'company_id', 'line_ids']  # remove line_ids ?
+LINE_FIELDS = ['debit', 'credit', 'account_id', 'move_id']  # invoice_id, partner_id, tax_ids, tax_line_id?
 
 
 class AccountMove(models.Model):
@@ -41,6 +34,13 @@ class AccountMove(models.Model):
     def _compute_hash(self, previous_hash):
         """ Computes the hash of the browse_record given as self, based on the hash
         of the previous record in the company's securisation sequence given as parameter"""
+
+        def _getattrstring(obj, field_str):
+            field_value = obj[field_str]
+            if obj._fields[field_str].type == 'many2one':
+                field_value = field_value.id
+            return str(field_value)
+
         self.ensure_one()
         hash_string = sha1(previous_hash)
         for field in MOVE_FIELDS:
