@@ -29,11 +29,11 @@
             </div>
 
             <h2>
-                <t t-if="not proforma">
+                <t t-if="not env.context.get('proforma', False)">
                     <span t-if="doc.state not in ['draft','sent']">Order # </span>
                     <span t-if="doc.state in ['draft','sent']">Quotation # </span>
                 </t>
-                <t t-if="proforma">
+                <t t-if="env.context.get('proforma', False)">
                     <span>Pro-Forma # </span>
                 </t>
                 <span t-field="doc.name"/>
