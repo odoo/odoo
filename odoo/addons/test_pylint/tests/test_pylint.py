@@ -37,6 +37,9 @@ class TestPyLint(TransactionCase):
         'dict-view-method',
 
         'long-suffix',
+        'old-ne-operator',
+        'old-octal-operator',
+        'parameter-unpacking',
 
         'metaclass-assignment',
     ]
