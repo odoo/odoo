@@ -457,7 +457,7 @@
                                     <a id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
                                 </div>
                             </form>
-                            <hr />
+                            <hr t-if="product.availability != 'empty'"/>
                             <div t-if="product.availability == 'in_stock'" class="alert alert-success">
                                 <span class="fa fa-check" />
                                 <span>In Stock</span>
