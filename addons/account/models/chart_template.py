@@ -690,7 +690,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
         """ Returns the IDs of all ancestor charts, including the chart itself.
             (inverse of child_of operator)
 
-            :param browse_record chart_template: the account.chart.template record
+            :param BaseModel chart_template: the account.chart.template record
             :return: the IDS of all ancestor charts, including the chart itself.
         """
         result = [chart_template.id]

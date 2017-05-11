@@ -17,12 +17,7 @@ class CommandType(type):
         if name != 'command':
             commands[name] = cls
 
-class Command(object):
-    """Subclass this class to define new odoo subcommands """
-    __metaclass__ = CommandType
-
-    def run(self, args):
-        pass
+Command = CommandType('Command', (object,), {'run': lambda self, args: None})
 
 class Help(Command):
     """Display the list of available commands"""
