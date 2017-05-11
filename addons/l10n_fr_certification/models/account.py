@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from hashlib import sha1
 
-from odoo import models, api, fields
-from odoo.tools.translate import _
-from odoo.exceptions import UserError
-from odoo.tools.misc import _consteq
+from openerp import models, api, fields
+from openerp.tools.translate import _
+from openerp.exceptions import UserError
+from openerp.tools.misc import _consteq
 
 ERR_MSG = _("You cannot modify a %s in order for its posted data to be updated or deleted. It is the law. Field: %s")
 
@@ -24,12 +24,12 @@ class AccountMove(models.Model):
         self.ensure_one()
         #find previous move
         prev_move = self.search([('state', '=', 'posted'),
-            ('company_id', '=', company_id),
+            ('company_id', '=', company_id.id),
             ('l10n_fr_secure_sequence_number', '!=', False)],
             order="l10n_fr_secure_sequence_number DESC",
             limit=1)
         #build and return the hash
-        return self._compute_hash(self, prev_move.l10n_fr_hash if prev_move else '')
+        return self._compute_hash(prev_move.l10n_fr_hash if prev_move else '')
 
     def _compute_hash(self, previous_hash):
         """ Computes the hash of the browse_record given as self, based on the hash
@@ -86,7 +86,7 @@ class AccountMove(models.Model):
               (None otherwise)
         """
         moves = self.search([('state', '=', 'posted'),
-            ('company_id', '=', company_id),
+            ('company_id', '=', company_id.id),
             ('l10n_fr_secure_sequence_number', '!=', False)],
             order="l10n_fr_secure_sequence_number ASC")
 
@@ -99,7 +99,7 @@ class AccountMove(models.Model):
 
     def client_check_hash_integrity(self):
         """Makes the hash integrity check and informs the user of the result"""
-        check_result, wrong_move = self._check_hash_integrity(self.user.company_id.id)
+        check_result, wrong_move = self._check_hash_integrity(self.env.user.company_id)
         if check_result:
             action_params = {'title': _('Success: checking the integrity of account moves'),
                              'message': _('The account moves are guaranteed to be in their original and inalterable state'),

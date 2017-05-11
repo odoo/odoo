@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from openerp import fields, models, api
 
 class ResCompany(models.Model):
-    _name = 'res.company'
+    _inherit = 'res.company'
 
     l10n_fr_secure_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to ensure the securisation of data', readonly=True)
 
@@ -16,6 +16,7 @@ class ResCompany(models.Model):
             company._create_secure_sequence()
         return company
 
+    @api.multi
     def write(self, vals):
         res = super(ResCompany, self).write(vals)
         #if country changed to fr, create the securisation sequence
