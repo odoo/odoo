@@ -2584,6 +2584,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             :param inherited_field_names: list of column names from parent
                 models; some of those fields may not be read
         """
+        if not self:
+            return
+
         env = self.env
         cr, user, context = env.args
 
@@ -2591,13 +2594,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         param_ids = object()
         query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [param_ids])
         self._apply_ir_rules(query, 'read')
-        order_str = self._generate_order_by(None, query)
 
-        # determine the fields that are stored as columns in tables;
-        fields = [self._fields[n] for n in (field_names + inherited_field_names)]
+        # determine the fields that are stored as columns in tables; ignore 'id'
         fields_pre = [
             field
-            for field in fields
+            for field in (self._fields[name] for name in field_names + inherited_field_names)
+            if field.name != 'id'
             if field.base_field.store and field.base_field.column_type
             if not (field.inherited and callable(field.base_field.translate))
         ]
@@ -2611,18 +2613,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 res = 'pg_size_pretty(length(%s)::bigint)' % res
             return '%s as "%s"' % (res, col)
 
-        qual_names = [qualify(name) for name in set(fields_pre + [self._fields['id']])]
+        qual_names = [qualify(name) for name in [self._fields['id']] + fields_pre]
 
         # determine the actual query to execute
         from_clause, where_clause, params = query.get_sql()
-        query_str = """ SELECT %(qual_names)s FROM %(from_clause)s
-                        WHERE %(where_clause)s %(order_str)s
-                    """ % {
-                        'qual_names': ",".join(qual_names),
-                        'from_clause': from_clause,
-                        'where_clause': where_clause,
-                        'order_str': order_str,
-                    }
+        query_str = "SELECT %s FROM %s WHERE %s" % (",".join(qual_names), from_clause, where_clause)
 
         result = []
         param_pos = params.index(param_ids)
@@ -2639,26 +2634,26 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if context.get('lang'):
                 for field in fields_pre:
                     if not field.inherited and callable(field.translate):
-                        f = field.name
+                        name = field.name
                         translate = field.get_trans_func(fetched)
                         for vals in result:
-                            vals[f] = translate(vals['id'], vals[f])
+                            vals[name] = translate(vals['id'], vals[name])
 
-            # store result in cache for POST fields
+            # store result in cache
             for vals in result:
-                record = self.browse(vals['id'], self._prefetch)
+                record = self.browse(vals.pop('id'), self._prefetch)
                 record._cache.update(record._convert_to_cache(vals, validate=False))
 
             # determine the fields that must be processed now;
             # for the sake of simplicity, we ignore inherited fields
-            for f in field_names:
-                field = self._fields[f]
+            for name in field_names:
+                field = self._fields[name]
                 if not field.column_type:
                     field.read(fetched)
 
         # Warn about deprecated fields now that fields_pre and fields_post are computed
-        for f in field_names:
-            field = self._fields[f]
+        for name in field_names:
+            field = self._fields[name]
             if field.deprecated:
                 _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
