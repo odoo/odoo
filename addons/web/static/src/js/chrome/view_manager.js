@@ -550,6 +550,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      * @param {String} [action_data.special=null] special action handlers, closes the dialog if set
      * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
      * @param {Object} [action_data.context=null] additional action context, to add to the current context
+     * @param {string} [action_data.effect] if given, a visual effect (a
+     *   rainbowman by default) will be displayed when the action is complete,
+     *   with the string (evaluated) given as options.
      * @param {DataSet} dataset a dataset object used to communicate with the server
      * @param {integer[]} [res_ids] the res_ids of the objects on which the action is to be applied (fallback on env.ids if not set)
      * @param {Function} on_closed callback to execute when dialog is closed or when the action does not generate any result (no new action)
@@ -562,6 +565,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
 
         // response handler
         var handler = function (action) {
+            // show effect if button have effect attribute
+            // Rainbowman can be displayed from two places : from attribute on a button, or from python.
+            // Code below handles the first case i.e 'effect' attribute on button.
+            var effect = false;
+            if (action_data.effect) {
+                effect = pyeval.py_eval(action_data.effect);
+            };
+
             if (action && action.constructor === Object) {
                 // filter out context keys that are specific to the current action.
                 // Wrong default_* and search_default_* values will no give the expected result
@@ -580,11 +591,16 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 }
                 ncontext.add(action.context || {});
                 action.context = ncontext;
+                // In case effect data is returned from python and also there is rainbow
+                // attribute on button, priority is given to button attribute
+                action.effect = effect || action.effect;
                 return self.do_action(action, {
                     on_close: result_handler,
                 });
             } else {
-                self.do_action({"type":"ir.actions.act_window_close"});
+                // If action doesn't return anything, but have effect
+                // attribute on button, display rainbowman
+                self.do_action({"type":"ir.actions.act_window_close", 'effect': effect});
                 return result_handler();
             }
         };

@@ -244,7 +244,7 @@ var FormController = BasicController.extend({
      * @override
      * @private
      */
-    _disableButtons: function () {
+    _disableButtons: function () {
         this._super.apply(this, arguments);
         this.renderer.disableButtons();
     },
@@ -254,7 +254,7 @@ var FormController = BasicController.extend({
      * @override
      * @private
      */
-    _enableButtons: function () {
+    _enableButtons: function () {
         this._super.apply(this, arguments);
         this.renderer.enableButtons();
     },
@@ -378,10 +378,6 @@ var FormController = BasicController.extend({
                 var record = self.model.get(event.data.record.id);
                 return self._callButtonAction(attrs, record);
             });
-        }
-
-        if (event.data.showWow) {
-            def.then(this.trigger_up.bind(this, 'show_wow'));
         }
 
         def.always(this._enableButtons.bind(this));

@@ -109,8 +109,15 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
                 'number': state.valuenow,
                 'timePerTransaction': Math.round(dt/1000/state.valuemax)
             }));
-            $done.appendTo(this.$el.first());
-            this.$('.o_automatic_reconciliation').hide();
+            this.$el.children().hide();
+            // display rainbowman after full reconciliation
+            this.trigger_up('show_effect', {
+                type: 'rainbow_man',
+                fadeout: 'no',
+                message: $done,
+                click_close: false,
+            });
+            this.$el.css('min-height', '450px');
         }
 
         if (state.notifications) {

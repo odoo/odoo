@@ -46,9 +46,8 @@
 </t>
 
 <div t-name="reconciliation.done" class="done_message">
-    <i class="fa fa-4x fa-thumbs-o-up congrats_icon pull-right"></i>
-    <h2>Congrats, you're all done !</h2>
-    <p>It took you <strong><t t-esc="duration"/></strong> to reconcile <strong><t t-esc="number"/> transactions.</strong><br/>That's on average <t t-esc="timePerTransaction"/> seconds per transaction.</p>
+    <h2>Congrats, you're all done!</h2>
+    <p>You reconciled <strong><t t-esc="number"/></strong> transactions in <strong><t t-esc="duration"/></strong>.<br/>That's on average <t t-esc="timePerTransaction"/> seconds per transaction.</p>
 </div>
 
 <t t-name="reconciliation.line">
