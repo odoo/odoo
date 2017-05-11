@@ -19,15 +19,14 @@ import unittest
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from pprint import pformat
+
+import requests
+
 try:
-    from urllib import request as urllib2
     from xmlrpc import client as xmlrpclib
 except ImportError:
     # pylint: disable=bad-python3-import
-    import urllib2
     import xmlrpclib
-
-import werkzeug
 
 import odoo
 from odoo import api
@@ -215,26 +214,6 @@ class SavepointCase(SingleTransactionCase):
         self.registry.clear_caches()
 
 
-class RedirectHandler(urllib2.HTTPRedirectHandler):
-    """
-    HTTPRedirectHandler is predicated upon HTTPErrorProcessor being used and
-    works by intercepting 3xy "errors".
-
-    Inherit from it to handle 3xy non-error responses instead, as we're not
-    using the error processor
-    """
-
-    def http_response(self, request, response):
-        code, msg, hdrs = response.code, response.msg, response.info()
-
-        if 300 <= code < 400:
-            return self.parent.error(
-                'http', request, response, code, msg, hdrs)
-
-        return response
-
-    https_response = http_response
-
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and phantomjs helpers.
     """
@@ -259,18 +238,15 @@ class HttpCase(TransactionCase):
         self.session.db = get_db_name()
         odoo.http.root.session_store.save(self.session)
         # setup an url opener helper
-        self.opener = urllib2.OpenerDirector()
-        self.opener.add_handler(urllib2.UnknownHandler())
-        self.opener.add_handler(urllib2.HTTPHandler())
-        self.opener.add_handler(urllib2.HTTPSHandler())
-        self.opener.add_handler(urllib2.HTTPCookieProcessor())
-        self.opener.add_handler(RedirectHandler())
-        self.opener.addheaders.append(('Cookie', 'session_id=%s' % self.session_id))
+        self.opener = requests.Session()
+        self.opener.cookies['session_id'] = self.session_id
 
     def url_open(self, url, data=None, timeout=10):
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, PORT, url)
-        return self.opener.open(url, data, timeout)
+        if data:
+            return self.opener.post(url, data=data, timeout=timeout)
+        return self.opener.get(url, timeout=timeout)
 
     def authenticate(self, user, password):
         # stay non-authenticated

@@ -2,11 +2,12 @@
 
 from lxml import objectify
 import time
-import urlparse
 
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.addons.payment_ogone.controllers.main import OgoneController
+from werkzeug import urls
+
 from odoo.tools import mute_logger
 
 
@@ -40,10 +41,10 @@ class OgonePayment(PaymentAcquirerCommon):
             'OWNERTOWN': 'Sin City',
             'OWNERTELNO': '0032 12 34 56 78',
             'SHASIGN': '815f67b8ff70d234ffcf437c13a9fa7f807044cc',
-            'ACCEPTURL': '%s' % urlparse.urljoin(base_url, OgoneController._accept_url),
-            'DECLINEURL': '%s' % urlparse.urljoin(base_url, OgoneController._decline_url),
-            'EXCEPTIONURL': '%s' % urlparse.urljoin(base_url, OgoneController._exception_url),
-            'CANCELURL': '%s' % urlparse.urljoin(base_url, OgoneController._cancel_url),
+            'ACCEPTURL': urls.url_join(base_url, OgoneController._accept_url),
+            'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
+            'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
+            'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
         }
 
         # render the button

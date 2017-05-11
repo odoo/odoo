@@ -5,9 +5,10 @@ import datetime
 import logging
 import re
 import uuid
-from urlparse import urljoin
 from collections import Counter, OrderedDict
 from itertools import product
+
+from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
@@ -108,9 +109,9 @@ class Survey(models.Model):
         base_url = '/' if self.env.context.get('relative_url') else \
                    self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for survey in self:
-            survey.public_url = urljoin(base_url, "survey/start/%s" % (slug(survey)))
-            survey.print_url = urljoin(base_url, "survey/print/%s" % (slug(survey)))
-            survey.result_url = urljoin(base_url, "survey/results/%s" % (slug(survey)))
+            survey.public_url = urls.url_join(base_url, "survey/start/%s" % (slug(survey)))
+            survey.print_url = urls.url_join(base_url, "survey/print/%s" % (slug(survey)))
+            survey.result_url = urls.url_join(base_url, "survey/results/%s" % (slug(survey)))
             survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, _("Click here to start survey"))
 
     @api.model

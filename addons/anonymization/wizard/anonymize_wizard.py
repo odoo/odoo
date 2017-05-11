@@ -4,10 +4,7 @@
 import base64
 import os
 import random
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import pickle
 from lxml import etree
 from operator import itemgetter
 

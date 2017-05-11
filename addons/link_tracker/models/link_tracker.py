@@ -6,11 +6,10 @@ import random
 import re
 import string
 
+import requests
 from lxml import html
-from urllib2 import urlopen
-from urlparse import urljoin
-from urlparse import urlparse
-from werkzeug import url_encode, unescape
+from werkzeug import urls, utils
+
 
 from odoo import models, fields, api, _
 from odoo.tools import ustr, pycompat
@@ -18,7 +17,7 @@ from odoo.tools import ustr, pycompat
 URL_REGEX = r'(\bhref=[\'"](?!mailto:)([^\'"]+)[\'"])'
 
 def VALIDATE_URL(url):
-    if urlparse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
+    if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
         return 'http://' + url
 
     return url
@@ -56,7 +55,7 @@ class link_tracker(models.Model):
             href = match[0]
             long_url = match[1]
 
-            vals['url'] = unescape(long_url)
+            vals['url'] = utils.unescape(long_url)
 
             if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
                 link = self.create(vals)
@@ -77,7 +76,7 @@ class link_tracker(models.Model):
     @api.depends('code')
     def _compute_short_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        self.short_url = urljoin(base_url, '/r/%(code)s' % {'code': self.code})
+        self.short_url = urls.url_join(base_url, '/r/%(code)s' % {'code': self.code})
 
     @api.one
     def _compute_short_url_host(self):
@@ -96,22 +95,23 @@ class link_tracker(models.Model):
     @api.one
     @api.depends('url')
     def _compute_redirected_url(self):
-        parsed = urlparse(self.url)
+        parsed = urls.url_parse(self.url)
 
         utms = {}
         for key, field, cook in self.env['utm.mixin'].tracking_fields():
             attr = getattr(self, field).name
             if attr:
                 utms[key] = attr
+        utms.update(parsed.decode_query())
 
-        self.redirected_url = '%s://%s%s?%s&%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, url_encode(utms), parsed.query, parsed.fragment)
+        self.redirected_url = parsed.replace(query=urls.url_encode(utms)).to_url()
 
     @api.model
     @api.depends('url')
     def _get_title_from_url(self, url):
         try:
-            page = urlopen(url, timeout=5)
-            p = html.fromstring(ustr(page.read()).encode('utf-8'), parser=html.HTMLParser(encoding='utf-8'))
+            page = requests.get(url, timeout=5)
+            p = html.fromstring(page.text.encode('utf-8'), parser=html.HTMLParser(encoding='utf-8'))
             title = p.find('.//title').text
         except:
             title = url
@@ -122,7 +122,7 @@ class link_tracker(models.Model):
     @api.depends('url')
     def _compute_favicon(self):
         try:
-            icon = urlopen('http://www.google.com/s2/favicons?domain=' + self.url, timeout=5).read()
+            icon = requests.get('http://www.google.com/s2/favicons', params={'domain': self.url}, timeout=5).content
             icon_base64 = icon.encode('base64').replace("\n", "")
         except:
             icon_base64 = 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACiElEQVQ4EaVTzU8TURCf2tJuS7tQtlRb6UKBIkQwkRRSEzkQgyEc6lkOKgcOph78Y+CgjXjDs2i44FXY9AMTlQRUELZapVlouy3d7kKtb0Zr0MSLTvL2zb75eL838xtTvV6H/xELBptMJojeXLCXyobnyog4YhzXYvmCFi6qVSfaeRdXdrfaU1areV5KykmX06rcvzumjY/1ggkR3Jh+bNf1mr8v1D5bLuvR3qDgFbvbBJYIrE1mCIoCrKxsHuzK+Rzvsi29+6DEbTZz9unijEYI8ObBgXOzlcrx9OAlXyDYKUCzwwrDQx1wVDGg089Dt+gR3mxmhcUnaWeoxwMbm/vzDFzmDEKMMNhquRqduT1KwXiGt0vre6iSeAUHNDE0d26NBtAXY9BACQyjFusKuL2Ry+IPb/Y9ZglwuVscdHaknUChqLF/O4jn3V5dP4mhgRJgwSYm+gV0Oi3XrvYB30yvhGa7BS70eGFHPoTJyQHhMK+F0ZesRVVznvXw5Ixv7/C10moEo6OZXbWvlFAF9FVZDOqEABUMRIkMd8GnLwVWg9/RkJF9sA4oDfYQAuzzjqzwvnaRUFxn/X2ZlmGLXAE7AL52B4xHgqAUqrC1nSNuoJkQtLkdqReszz/9aRvq90NOKdOS1nch8TpL555WDp49f3uAMXhACRjD5j4ykuCtf5PP7Fm1b0DIsl/VHGezzP1KwOiZQobFF9YyjSRYQETRENSlVzI8iK9mWlzckpSSCQHVALmN9Az1euDho9Xo8vKGd2rqooA8yBcrwHgCqYR0kMkWci08t/R+W4ljDCanWTg9TJGwGNaNk3vYZ7VUdeKsYJGFNkfSzjXNrSX20s4/h6kB81/271ghG17l+rPTAAAAAElFTkSuQmCC'

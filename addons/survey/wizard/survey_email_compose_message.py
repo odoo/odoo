@@ -3,7 +3,8 @@
 
 import re
 import uuid
-import urlparse
+
+from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -85,7 +86,7 @@ class SurveyMailComposeMessage(models.TransientModel):
             #set url
             url = wizard.survey_id.public_url
 
-            url = urlparse.urlparse(url).path[1:]  # dirty hack to avoid incorrect urls
+            url = urls.url_parse(url).path[1:]  # dirty hack to avoid incorrect urls
 
             if token:
                 url = url + '/' + token

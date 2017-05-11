@@ -3,7 +3,8 @@
 import json
 import logging
 from hashlib import sha256
-import urlparse
+
+from werkzeug import urls
 
 from odoo import models, fields, api
 from odoo.tools.float_utils import float_compare
@@ -89,8 +90,8 @@ class AcquirerSips(models.Model):
             'Data': u'amount=%s|' % amount +
                     u'currencyCode=%s|' % currency_code +
                     u'merchantId=%s|' % merchant_id +
-                    u'normalReturnUrl=%s|' % urlparse.urljoin(base_url, SipsController._return_url) +
-                    u'automaticResponseUrl=%s|' % urlparse.urljoin(base_url, SipsController._return_url) +
+                    u'normalReturnUrl=%s|' % urls.url_join(base_url, SipsController._return_url) +
+                    u'automaticResponseUrl=%s|' % urls.url_join(base_url, SipsController._return_url) +
                     u'transactionReference=%s|' % values['reference'] +
                     u'statementReference=%s|' % values['reference'] +
                     u'keyVersion=%s' % key_version,
