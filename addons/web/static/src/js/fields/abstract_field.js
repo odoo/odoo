@@ -192,24 +192,6 @@ var AbstractField = ViewWidget.extend({
      */
     commitChanges: function () {},
     /**
-     * Returns the main field's DOM element (jQuery form) which can be focused
-     * by the browser.
-     *
-     * @returns {jQuery} main focusable element inside the widget
-     */
-    getFocusableElement: function () {
-        return $();
-    },
-    /**
-     * Returns true iff the widget has a visible element that can take the focus
-     *
-     * @returns {boolean}
-     */
-    isFocusable: function () {
-        var $focusable = this.getFocusableElement();
-        return $focusable.length && $focusable.is(':visible');
-    },
-    /**
      * this method is used to determine if the field value is set to a meaningful
      * value.  This is useful to determine if a field should be displayed as empty
      *

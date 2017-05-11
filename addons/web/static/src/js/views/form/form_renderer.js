@@ -5,6 +5,7 @@ var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
+var ButtonWidget = require('web.ButtonWidget');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -381,25 +382,21 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderHeaderButton: function (node) {
-        var $button = $('<button>')
-                        .text(node.attrs.string)
-                        .addClass('btn btn-sm btn-default');
-        this._addOnClickAction($button, node);
-        this._addOnFocusAction($button, node);
-        this._addOnEnterAction($button, node);
-        this._handleAttributes($button, node);
-        this._registerModifiers(node, this.state, $button);
-
-        // Display tooltip
-        if (config.debug || node.attrs.help) {
-            this._addButtonTooltip(node, $button);
+        var self = this;
+        var widget = new ButtonWidget(this, node, this.state);
+        // Prepare widget rendering and save the related deferred
+        var def = widget.__widgetRenderAndInsert(function () {});
+        if (def.state() === 'pending') {
+            this.defs.push(def);
         }
+        this._handleAttributes(widget.$el, node);
+        this._registerModifiers(node, this.state, widget.$el);
         if (node.attrs.class && (node.attrs.class.indexOf('btn-primary') != -1
             || node.attrs.class.indexOf('oe_highlight') != -1
             || node.attrs.class.indexOf('oe_stat_button') != -1)) {
-            this.tabindexButtons[this.state.id].push({'$el': $button, activate: this._activateButton($button)});
+            this.tabindexButtons[this.state.id].push(widget);
         }
-        return $button;
+        return widget.$el;
     },
     /**
      * @private
