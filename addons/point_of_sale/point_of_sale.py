@@ -930,6 +930,10 @@ class pos_order(osv.osv):
             amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
             order.amount_total = order.amount_tax + amount_untaxed
 
+    # DEPRECATED, REMOVE ME IN v10
+    def _amount_all(self, cr, uid, ids, name, args, context=None):
+        res = self.read(cr, uid, ids, name, context=context)
+        return dict((l['id'], l) for l in res)
 
     def _default_session(self, cr, uid, context=None):
         so = self.pool.get('pos.session')
@@ -1601,6 +1605,10 @@ class pos_order_line(osv.osv):
             line.price_subtotal = currency.round(line.price_subtotal)
             line.price_subtotal_incl = currency.round(line.price_subtotal_incl)
 
+    # DEPRECATED, REMOVE ME IN v10
+    def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
+        res = self.read(cr, uid, ids, field_names, context=context)
+        return dict((l['id'], l) for l in res)
 
     _defaults = {
         'qty': lambda *a: 1,
