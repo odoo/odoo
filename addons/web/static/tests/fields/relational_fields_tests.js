@@ -4979,7 +4979,7 @@ QUnit.module('relational_fields', {
         assert.notOk(form.$('div.o_field_widget div.o_checkbox input').prop('disabled'),
             "the checkboxes should not be disabled");
 
-        // add a m2m value
+        // add a m2m value by clicking on input
         form.$('div.o_field_widget div.o_checkbox input').eq(1).click();
         form.$buttons.find('.o_form_button_save').click();
         assert.deepEqual(this.data.partner.records[0].timmy, [12, 14],
@@ -4987,9 +4987,9 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('input:checked').length, 2,
             "both checkboxes should be checked");
 
-        // remove a m2m value
+        // remove a m2m value by clinking on label
         form.$buttons.find('.o_form_button_edit').click();
-        form.$('div.o_field_widget div.o_checkbox input').eq(0).click();
+        form.$('div.o_field_widget div.o_checkbox + label').eq(0).click();
         form.$buttons.find('.o_form_button_save').click();
         assert.deepEqual(this.data.partner.records[0].timmy, [14],
             "should have removed the first element to the many2many");

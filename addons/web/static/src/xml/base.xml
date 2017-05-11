@@ -1180,11 +1180,12 @@
 <t t-name="FieldMany2ManyCheckBoxes">
     <div>
         <div t-foreach="widget.m2mValues" t-as="m2m_value">
+            <t t-set="id_for_label" t-value="'o_many2many_checkbox_' + _.uniqueId()"/>
             <div class="o_checkbox">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
+                <input type="checkbox" t-att-id="id_for_label" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
                 <span/>
             </div>
-            <label class="o_form_label"><t t-esc="m2m_value[1]"/></label>
+            <label t-att-for="id_for_label" class="o_form_label"><t t-esc="m2m_value[1]"/></label>
         </div>
     </div>
 </t>
