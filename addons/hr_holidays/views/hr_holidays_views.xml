@@ -194,6 +194,51 @@
             </field>
         </record>
 
+        <record id="view_hr_holidays_kanban" model="ir.ui.view">
+            <field name="name">hr.holidays.kanban</field>
+            <field name="model">hr.holidays</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="employee_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="name"/>
+                    <field name="number_of_days"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div>
+                                    <span>
+                                        <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="40" height="40" class="oe_kanban_avatar pull-left"/>
+                                    </span>
+                                    <span>
+                                        <div>
+                                            <strong><t t-esc="record.employee_id.value"/></strong>
+                                        </div>
+                                        <div class="text-muted">
+                                            <t t-esc="record.name.value"/>
+                                        </div>
+                                    </span>
+                                    <span class="pull-right mt8">
+                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'validate': 'success','confirm': 'default', 'cancel': 'danger'}}"/>
+                                    </span>
+                                </div>
+                                <hr class="mt4 mb4"/>
+                                <div t-if="record.date_from.value">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    <t t-esc="record.date_from.value"/>
+                                    - <t t-esc="record.date_to.value"/>
+                                </div>
+                                <div>
+                                    <t t-esc="record.number_of_days.value"/> days
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_holiday_employee" model="ir.ui.view">
             <field name="name">hr.holidays.report_employee_tree</field>
             <field name="model">hr.holidays</field>
@@ -374,6 +419,7 @@
             <field name="name">Allocation Request</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="context">{
                 'default_type':'add',
                 'search_default_my_leaves': 1,
@@ -448,7 +494,7 @@
             <field name="name">Leaves Summary</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" eval="view_holiday_simple"/>
             <field name="context">{
                 'search_default_group_type': 1,
@@ -482,7 +528,7 @@
             <field name="name">Leave Details</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="view_id" eval="view_holiday_employee"/>
             <field name="context">{'default_type': 'remove', 'search_default_todo': 1}</field>
             <field name="help" type="html">

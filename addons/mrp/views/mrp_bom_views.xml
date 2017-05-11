@@ -88,6 +88,33 @@
                 </tree>
             </field>
         </record>
+
+        <record id="mrp_bom_kanban_view" model="ir.ui.view">
+            <field name="name">mrp.bom.kanban</field>
+            <field name="model">mrp.bom</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="product_tmpl_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-7">
+                                        <strong><span><field name="product_tmpl_id"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-5">
+                                        <strong><span class="pull-right badge"><t t-esc="record.product_qty.value"/> <t t-esc="record.product_uom_id.value"/></span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_mrp_bom_filter" model="ir.ui.view">
             <field name="name">mrp.bom.select</field>
             <field name="model">mrp.bom</field>
@@ -115,6 +142,7 @@
             <field name="res_model">mrp.bom</field>
             <field name="domain">[]</field> <!-- force empty -->
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

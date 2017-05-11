@@ -89,6 +89,51 @@
             </field>
         </record>
 
+        <record id="view_report_intrastat_kanban" model="ir.ui.view">
+            <field name="name">report.intrastat.kanban</field>
+            <field name="model">report.intrastat</field>
+            <field name="arch" type="xml">
+               <kanban class="o_kanban_mobile">
+                   <field name="name" />
+                    <field name="month"/>
+                    <field name="code"/>
+                    <field name="ref"/>
+                    <field name="intrastat_id"/>
+                    <field name="supply_units"/>
+                    <field name="type"/>
+                   <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div class="text-center">
+                                   <strong><span><field name="ref"/></span></strong>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4 text-center text-success"><strong>Year</strong></div>
+                                    <div class="col-xs-4 text-center text-danger"><strong>Month</strong></div>
+                                    <div class="col-xs-4 text-center"><strong>Country Code</strong></div>
+                                    <div class="col-xs-4 text-center text-success"><field name="name"/></div>
+                                    <div class="col-xs-4 text-center text-danger"><field name="month"/></div>
+                                    <div class="col-xs-4 text-center"><field name="code"/></div>
+                                </div>
+                                <hr class="mt4 mb4"/>
+                                <div class="row">
+                                    <div class="col-xs-4 text-center">
+                                        <field name="value" widget="monetary"/>
+                                    </div>
+                                    <div class="col-xs-4 text-center">
+                                        <field name="supply_units"/>
+                                    </div>
+                                    <div class="col-xs-4 text-center">
+                                        <field name="type"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_report_intrastat_search" model="ir.ui.view">
             <field name="name">report.intrastat.search</field>
             <field name="model">report.intrastat</field>
@@ -107,7 +152,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">report.intrastat</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,kanban</field>
             <field name="search_view_id" ref="view_report_intrastat_search"/>
         </record>
 

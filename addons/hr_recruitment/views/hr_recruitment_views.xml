@@ -509,7 +509,7 @@
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="context">{'search_default_in_recruitment': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -662,6 +662,30 @@
         </field>
     </record>
 
+    <record id="view_hr_recruitment_stage_kanban" model="ir.ui.view">
+        <field name="name">hr.recruitment.stage.kanban</field>
+        <field name="model">hr.recruitment.stage</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="fold"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <field name="name"/>
+                            </div>
+                            <div>
+                                <strong>Folded in Recruitment Pipe: </strong>
+                                <field name="fold" widget="boolean"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <!-- Stage Form View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_form">
         <field name="name">hr.recruitment.stage.form</field>
@@ -690,6 +714,7 @@
         <field name="name">Stages</field>
         <field name="res_model">hr.recruitment.stage</field>
         <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="hr_recruitment_stage_tree"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">

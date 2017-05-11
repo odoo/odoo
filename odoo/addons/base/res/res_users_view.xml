@@ -234,6 +234,41 @@
                 </tree>
             </field>
         </record>
+        <record id="view_res_users_kanban" model="ir.ui.view">
+            <field name="name">res.users.kanban</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="login"/>
+                    <field name="lang"/>
+                    <field name="active"/>
+                    <field name="login_date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('res.users', 'image_medium', record.id.value)"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li class="text-success pull-right mb4" t-if="record.active.raw_value"><i class="fa fa-circle" aria-hidden="true"></i></li>
+                                        <li class="text-danger pull-right mb4" t-if="!record.active.raw_value"><i class="fa fa-circle"></i></li>
+                                        <li class="mb4">
+                                            <strong><field name="name"/></strong>
+                                        </li>
+                                        <li class="badge pull-right mb4" t-if="record.lang.raw_value"><field name="lang"/></li>
+                                        <li class="mb4" t-if="record.login.raw_value"><i class="fa fa-envelope"/> <field name="login"/></li>
+                                        <li t-if="record.login_date.raw_value" title="Latest connection"><i class="fa fa-calendar"/> <field name="login_date"/></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="view_users_search" model="ir.ui.view">
             <field name="name">res.users.search</field>
             <field name="model">res.users</field>
@@ -263,6 +298,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.users</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_users_tree"/>
             <field name="search_view_id" ref="view_users_search"/>
             <field name="context">{'search_default_no_share': 1}</field>

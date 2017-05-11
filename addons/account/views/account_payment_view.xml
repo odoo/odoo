@@ -40,6 +40,43 @@
             </field>
         </record>
 
+        <record id="view_account_payment_kanban" model="ir.ui.view">
+            <field name="name">account.payment.kanban</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="payment_date"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-xs-6">
+                                        <strong><span><field name="name"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <strong><i class="fa fa-clock-o"/> <t t-esc="record.payment_date.value"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <span><field name="partner_id"/></span>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'sent': 'success'}}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_account_payment_search" model="ir.ui.view">
             <field name="name">account.payment.search</field>
             <field name="model">account.payment</field>
@@ -145,7 +182,7 @@
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
             <field name="context">{'default_payment_type': 'inbound'}</field>
             <field name="domain">[('partner_type', '=', 'customer')]</field>
             <field name="view_id" ref="view_account_payment_tree"/>
@@ -163,7 +200,7 @@
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
             <field name="context">{'default_payment_type': 'outbound'}</field>
             <field name="domain">[('partner_type', '=', 'supplier')]</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>

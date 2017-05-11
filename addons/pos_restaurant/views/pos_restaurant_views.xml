@@ -37,12 +37,31 @@
             </field>
         </record>
 
+        <record id="view_restaurant_floor_kanban" model="ir.ui.view">
+            <field name="name">restaurant.floor.kanban</field>
+            <field name="model">restaurant.floor</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="pos_config_id" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div><strong>Floor Name: </strong><t t-esc="record.name.value"/></div>
+                                <div><strong>Point of Sale: </strong><t t-esc="record.pos_config_id.value"/></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="action_restaurant_floor_form" model="ir.actions.act_window">
             <field name="name">Floor Plans</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">restaurant.floor</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a Restaurant Floor.
@@ -101,7 +120,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">restaurant.printer</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a Restaurant Order Printer.

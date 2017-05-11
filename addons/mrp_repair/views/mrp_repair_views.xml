@@ -188,6 +188,44 @@
     </record>
 
 
+    <record id="view_mrp_repair_kanban" model="ir.ui.view">
+        <field name="name">mrp.repair.kanban</field>
+        <field name="model">mrp.repair</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name" />
+                <field name="product_id" />
+                <field name="partner_id"/>
+                <field name="address_id"/>
+                <field name="guarantee_limit"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div class="col-xs-6">
+                                    <strong><span><t t-esc="record.name.value"/></span></strong>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'dafault'}}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 text-muted">
+                                    <span><t t-esc="record.product_id.value"/></span>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span class="pull-right">
+                                        <field name="partner_id"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 
     <record id="view_repair_order_form_filter" model="ir.ui.view">
           <field name="name">mrp.repair.select</field>
@@ -233,7 +271,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.repair</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

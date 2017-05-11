@@ -181,6 +181,45 @@
             </field>
         </record>
 
+        <record id="view_crm_lead_kanban" model="ir.ui.view">
+            <field name="name">crm.lead.kanban</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="contact_name"/>
+                    <field name="priority"/>
+                    <field name="tag_ids"/>
+                    <field name="user_id"/>
+                    <field name="message_needaction_counter"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div>
+                                    <field name="tag_ids"/>
+                                </div>
+                                <div>
+                                    <strong><span><field name="name"/></span></strong>
+                                </div>
+                                <div>
+                                    <span><field name="contact_name"/></span>
+                                </div>
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="priority" widget="priority"/>
+                                    <t t-if="record.message_needaction_counter.raw_value">
+                                        <span class="oe_kanban_mail_new" title="Unread Messages"><i class="fa fa-comments"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                    </t>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record  id="crm_case_calendar_view_leads" model="ir.ui.view">
             <field name="name">crm.lead.calendar.lead</field>
             <field name="model">crm.lead</field>
@@ -697,7 +736,7 @@ if record:
         <record model="ir.actions.act_window" id="crm_lead_all_leads">
             <field name="name">Leads</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">tree,graph,pivot,calendar,form</field>
+            <field name="view_mode">tree,kanban,graph,pivot,calendar,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
             <field name="view_id" ref="crm_case_tree_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
