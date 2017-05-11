@@ -703,6 +703,7 @@ class AccountInvoice(models.Model):
             if self.type in ('out_invoice', 'in_refund'):
                 total += line['price']
                 total_currency += line['amount_currency'] or line['price']
+                #When out_invoice or in_refund => price is negative
                 line['price'] = - line['price']
             else:
                 total -= line['price']
@@ -921,11 +922,11 @@ class AccountInvoice(models.Model):
             'date_maturity': line.get('date_maturity', False),
             'partner_id': part,
             'name': line['name'][:64],
-            'debit': line['price'] > 0 and line['price'],
-            'credit': line['price'] < 0 and -line['price'],
+            'debit': line['price'] < 0 and -line['price'],
+            'credit': line['price'] > 0 and line['price'],
             'account_id': line['account_id'],
             'analytic_line_ids': line.get('analytic_line_ids', []),
-            'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+            'amount_currency': line['price'] < 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
             'currency_id': line.get('currency_id', False),
             'quantity': line.get('quantity', 1.00),
             'product_id': line.get('product_id', False),
