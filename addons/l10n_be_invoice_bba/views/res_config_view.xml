@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_config_settings_view_form_inherit_bba" model="ir.ui.view">
+            <field name="name">account.config.settings.form.inherit.bba</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.account_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='invoicing_settings']" position="inside">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="use_out_inv_comm" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label string="Structured Communication"/>
+                            <div class="text-muted">
+                                Generate automatically structured communications on your customer invoices
+                            </div>
+                            <field name="out_inv_comm_type" invisible="1"/>
+                            <label string="Communication Algorithm:" class="o_light_label mt16" attrs="{'invisible': [('use_out_inv_comm', '=', False)]}"/>
+                            <div class="content-group" attrs="{'invisible': [('use_out_inv_comm', '=', False)]}">
+                                <field name="out_inv_comm_algorithm" class="o_light_label mt16" widget="radio"/>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+</odoo>
