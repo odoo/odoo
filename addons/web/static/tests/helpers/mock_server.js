@@ -771,6 +771,8 @@ var MockServer = Class.extend({
             return result;
         });
         if (args.sort) {
+            // deal with sort on multiple fields (i.e. only consider the first)
+            args.sort = args.sort.split(',')[0];
             var fieldName = args.sort.split(' ')[0];
             var order = args.sort.split(' ')[1];
             processedRecords.sort(function (r1, r2) {
