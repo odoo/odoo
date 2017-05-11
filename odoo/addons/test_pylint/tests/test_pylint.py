@@ -116,11 +116,10 @@ class TestPyLint(TransactionCase):
         ]
 
         try:
-            with open(devnull, 'w') as devnull_file:
-                process = subprocess.Popen(['pylint'] + options + paths, stdout=subprocess.PIPE, stderr=devnull_file)
+            process = subprocess.Popen(['pylint'] + options + paths, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except (OSError, IOError):
             self._skip_test('pylint executable not found in the path')
         else:
-            out = process.communicate()[0]
+            out, err = process.communicate()
             if process.returncode:
-                self.fail("\n" + out)
+                self.fail("\n" + out + "\n" + err)
