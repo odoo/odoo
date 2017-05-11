@@ -7,11 +7,9 @@
             model="sale.order" 
             report_type="qweb-pdf"
             file="sale.report_saleorder" 
-            name="sale.report_saleorder" 
+            name="sale.report_saleorder"
+            print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"
         />
-        <record id="action_report_saleorder" model="ir.actions.report">
-            <field name="print_report_name">(object.state in ('draft', 'sent') and 'Quotation'+'-'+(object.name) or 'Order'+'-'+(object.name))</field>
-        </record>
 
          <report
             string="Pro-Forma"
@@ -20,9 +18,7 @@
             report_type="qweb-pdf"
             name="sale.report_saleproforma"
             file="sale.report_saleorder"
+            print_report_name="'Pro-Forma - %s' % (object.name)"
         />
-        <record id="report_proforma_quotation" model="ir.actions.report">
-            <field name="print_report_name">'Pro-Forma'+'-'+(object.name)</field>
-        </record>
     </data>
 </odoo>

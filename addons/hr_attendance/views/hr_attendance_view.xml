@@ -15,6 +15,36 @@
         </field>
     </record>
 
+    <record id="view_hr_attendance_kanban" model="ir.ui.view">
+        <field name="name">hr.attendance.kanban</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="employee_id"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                <span class="ml8">
+                                    <strong><t t-esc="record.employee_id.value"/></strong>
+                                </span>
+                            </div>
+                            <hr class="mt4 mb4"/>
+                            <div>
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                <t t-esc="record.check_in.value"/>
+                                - <t t-esc="record.check_out.value"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="hr_attendance_view_form" model="ir.ui.view">
         <field name="name">hr.attendance.form</field>
         <field name="model">hr.attendance</field>
@@ -83,7 +113,7 @@
         <field name="name">Attendances</field>
         <field name="res_model">hr.attendance</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="context">{"search_default_today":1}</field>
         <field name="search_view_id" ref="hr_attendance_view_filter" />
         <field name="help" type="html">

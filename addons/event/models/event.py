@@ -55,8 +55,6 @@ class EventType(models.Model):
         '_tz_get', string='Timezone',
         default=lambda self: self.env.user.tz)
     # communication
-    use_reply_to = fields.Boolean('Use Default Reply-To')
-    default_reply_to = fields.Char('Reply To')
     use_hashtag = fields.Boolean('Use Default Hashtag')
     default_hashtag = fields.Char('Twitter Hashtag')
     use_mail_schedule = fields.Boolean(
@@ -156,9 +154,6 @@ class EventEvent(models.Model):
         string='Status', default='draft', readonly=True, required=True, copy=False,
         help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
     auto_confirm = fields.Boolean(string='Autoconfirm Registrations')
-    reply_to = fields.Char(
-        'Reply-To Email', readonly=False, states={'done': [('readonly', True)]},
-        help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one.")
     is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
         'res.partner', string='Location',
@@ -236,9 +231,6 @@ class EventEvent(models.Model):
 
             if self.event_type_id.auto_confirm:
                 self.auto_confirm = self.event_type_id.auto_confirm
-
-            if self.event_type_id.use_reply_to:
-                self.reply_to = self.event_type_id.default_reply_to
 
             if self.event_type_id.use_hashtag:
                 self.twitter_hashtag = self.event_type_id.default_hashtag

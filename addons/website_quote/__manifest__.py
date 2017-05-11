@@ -11,7 +11,7 @@ Odoo Sale Quote Roller
 =========================
 
         """,
-    'depends': ['website', 'sale', 'mail', 'payment', 'website_portal_sale', 'website_mail'],
+    'depends': ['website', 'sale_management', 'mail', 'payment', 'website_portal_sale', 'website_mail'],
     'data': [
         'data/website_quotation_data.xml',
         'report/sale_order_reports.xml',

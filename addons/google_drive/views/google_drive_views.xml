@@ -52,11 +52,43 @@
             </field>
         </record>
 
+        <record id="view_google_drive_config_kanban" model="ir.ui.view">
+            <field name="name">google.drive.config.kanban</field>
+            <field name="model">google.drive.config</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="model_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-4 text-center"><strong>Template</strong></div>
+                                    <div class="col-xs-4 text-center"><strong>Model</strong></div>
+                                    <div class="col-xs-4 text-center"><strong>Active</strong></div>
+                                </div>
+                                <hr class="mb4 mt4"/>
+                                <div class="row">
+                                    <div class="col-xs-4 text-center"><field name="name"/></div>
+                                    <div class="col-xs-4 text-center"><field name="model_id"/></div>
+                                    <div class="col-xs-4 text-center">
+                                        <field name="active" widget="boolean"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id='action_google_drive_users_config' model='ir.actions.act_window'>
             <field name='name'>Templates</field>
             <field name='res_model'>google.drive.config</field>
             <field name='type'>ir.actions.act_window</field>
             <field name='view_type'>form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name='view_id' ref='view_google_drive_config_tree' />
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">

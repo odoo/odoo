@@ -40,6 +40,8 @@ class TestPyLint(TransactionCase):
         'old-ne-operator',
         'old-octal-operator',
         'parameter-unpacking',
+
+        'metaclass-assignment',
     ]
 
     BAD_FUNCTIONS = [

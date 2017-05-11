@@ -110,9 +110,12 @@
     <menuitem id="product_catalog_variants" name="Product Variants"
         action="product.product_normal_action"
         parent="menu_catalog" groups="product.group_product_variant" sequence="2"/>
+    <menuitem id="menu_catalog_categories"
+        action="product_public_category_action"
+        parent="menu_catalog" sequence="3"/>
     <menuitem id="menu_catalog_pricelists" name="Pricelists"
         action="product.product_pricelist_action2"
-        parent="menu_catalog" groups="product.group_sale_pricelist" sequence="3"/>
+        parent="menu_catalog" groups="product.group_sale_pricelist" sequence="4"/>
 
     <!-- Reporting sub-menus -->
     <menuitem id="menu_report_sales" name="Sales"
@@ -129,11 +132,5 @@
     <menuitem id="menu_catalog_variants_action"
         action="product.variants_action"
         parent="menu_product_settings" groups="product.group_product_variant" sequence="2"/>
-    <menuitem id="menu_catalog_categories" name="Website Categories"
-        action="product_public_category_action"
-        parent="menu_product_settings" sequence="3"/>
-    <menuitem id="menu_internal_product_categories" name="Internal Categories"
-        action="product.product_category_action_form"
-        parent="menu_product_settings" sequence="4"/>
 
 </odoo>

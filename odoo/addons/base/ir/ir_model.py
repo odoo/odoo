@@ -1304,8 +1304,8 @@ class IrModelData(models.Model):
 
     @api.model
     def xmlid_to_object(self, xmlid, raise_if_not_found=False):
-        """ Return a browse_record
-        if not found and raise_if_not_found is False return None
+        """ Return a Model object, or ``None`` if ``raise_if_not_found`` is 
+        set
         """
         t = self.xmlid_to_res_model_res_id(xmlid, raise_if_not_found)
         res_model, res_id = t

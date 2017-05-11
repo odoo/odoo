@@ -7,10 +7,9 @@
             model="product.product"
             report_type="qweb-pdf"
             name="product.report_productlabel"
-            file="product.report_productlabel"/>
-        <record id="report_product_label" model="ir.actions.report">
-            <field name="print_report_name">'Products Labels'+'-'+(object.name)</field>
-        </record>
+            file="product.report_productlabel"
+            print_report_name="'Products Labels - %s' % (object.name)"
+        />
 
         <report
             id="report_product_template_label"
@@ -18,10 +17,9 @@
             model="product.template"
             report_type="qweb-pdf"
             name="product.report_producttemplatelabel"
-            file="product.report_producttemplatelabel"/>
-        <record id="report_product_template_label" model="ir.actions.report">
-            <field name="print_report_name">'Products Labels'+'-'+(object.name)</field>
-        </record>
+            file="product.report_producttemplatelabel"
+            print_report_name="'Products Labels - %s' % (object.name)"
+        />
 
         <report 
             id="action_report_pricelist" 
@@ -30,6 +28,6 @@
             report_type="qweb-pdf" 
             name="product.report_pricelist" 
             file="product.report_pricelist"
-	    menu="False"/>
+            menu="False"/>
     </data>
 </odoo>

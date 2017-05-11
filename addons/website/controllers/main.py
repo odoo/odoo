@@ -12,11 +12,9 @@ import werkzeug.utils
 import werkzeug.wrappers
 
 import odoo
-from odoo import http
+from odoo import http, models
 from odoo import fields
 from odoo.http import request
-from odoo.osv.orm import browse_record
-from odoo.exceptions import AccessError
 
 from odoo.addons.website.models.website import slug
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
@@ -45,7 +43,7 @@ class QueryURL(object):
         paths, fragments = [], []
         for key, value in pycompat.items(kw):
             if value and key in path_args:
-                if isinstance(value, browse_record):
+                if isinstance(value, models.BaseModel):
                     paths.append((key, slug(value)))
                 else:
                     paths.append((key, value))

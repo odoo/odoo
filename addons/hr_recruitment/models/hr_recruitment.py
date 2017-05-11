@@ -140,8 +140,8 @@ class Applicant(models.Model):
     job_id = fields.Many2one('hr.job', "Applied Job")
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages")
-    salary_proposed = fields.Float("Proposed Salary", help="Salary Proposed by the Organisation")
-    salary_expected = fields.Float("Expected Salary", help="Salary Expected by Applicant")
+    salary_proposed = fields.Float("Proposed Salary", group_operator="avg", help="Salary Proposed by the Organisation")
+    salary_expected = fields.Float("Expected Salary", group_operator="avg", help="Salary Expected by Applicant")
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working")
     partner_name = fields.Char("Applicant's Name")
     partner_phone = fields.Char("Phone", size=32)
@@ -151,6 +151,7 @@ class Applicant(models.Model):
     reference = fields.Char("Referred By")
     day_open = fields.Float(compute='_compute_day', string="Days to Open")
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
+    delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of Delay to close", store=True)
     color = fields.Integer("Color Index", default=0)
     emp_id = fields.Many2one('hr.employee', string="Employee", track_visibility="onchange", help="Employee linked to the applicant.")
     user_email = fields.Char(related='user_id.email', type="char", string="User Email", readonly=True)
@@ -170,6 +171,7 @@ class Applicant(models.Model):
             date_create = datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
             date_closed = datetime.strptime(self.date_closed, tools.DEFAULT_SERVER_DATETIME_FORMAT)
             self.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
+            self.delay_close = self.day_close - self.day_open
 
     @api.multi
     def _get_attachment_number(self):

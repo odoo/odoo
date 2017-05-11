@@ -25,6 +25,7 @@ class AcquirerPaypal(models.Model):
         'Paypal Merchant ID', groups='base.group_user',
         help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.')
     paypal_use_ipn = fields.Boolean('Use IPN', default=True, help='Paypal Instant Payment Notification', groups='base.group_user')
+    paypal_pdt_token = fields.Char(string='Paypal PDT Token', required_if_provider='paypal', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
     # Server 2 server
     paypal_api_enabled = fields.Boolean('Use Rest API', default=False)
     paypal_api_username = fields.Char('Rest API Username', groups='base.group_user')

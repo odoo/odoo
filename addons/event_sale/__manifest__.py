@@ -18,7 +18,7 @@ that product, you will be able to choose an existing event of that category and
 when you confirm your sales order it will automatically create a registration for
 this event.
 """,
-    'depends': ['event', 'sale'],
+    'depends': ['event', 'sale_management'],
     'data': [
         'views/event_views.xml',
         'views/product_views.xml',
