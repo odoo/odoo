@@ -94,10 +94,7 @@ class AccountMove(models.Model):
     def _check_hash_integrity(self, company_id):
         """Checks that all posted moves have still the same data as when they were posted
 
-        @return: tuple with
-          *  1st element being a boolean giving the result of the inalterability check
-          *  2nd element being the browse record of the corrupted move in case it failed
-              (None otherwise)
+        @return: the first move with a wrong hash or True if all moves have a correct hash
         """
         moves = self.search([('state', '=', 'posted'),
                              ('company_id', '=', company_id.id),
