@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from hashlib import sha1
+from json import dumps
 
 from openerp import models, api, fields
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
-from openerp.tools.misc import _consteq
 
-ERR_MSG = _("You cannot modify a %s in order for its posted data to be updated or deleted. It is the law. Field: %s")
+ERR_MSG = _("According to the french law, you cannot modify a %s in order for its posted data to be updated or deleted. Field: %s")
 
 #forbidden fields
-MOVE_FIELDS = ['date', 'journal_id', 'company_id', 'line_ids']  # remove line_ids ?
+MOVE_FIELDS = ['date', 'journal_id', 'company_id']
 LINE_FIELDS = ['debit', 'credit', 'account_id', 'move_id']  # invoice_id, partner_id, tax_ids, tax_line_id?
 
 
@@ -18,61 +18,71 @@ class AccountMove(models.Model):
 
     l10n_fr_secure_sequence_number = fields.Char(readonly=True)
     l10n_fr_hash = fields.Char(readonly=True)
+    l10n_fr_string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True, store=False)
 
-    def _get_new_hash(self, secure_seq_number, company_id):
+    def _get_new_hash(self, secure_seq_number):
         """ Returns the hash to write on journal entries when they get posted"""
         self.ensure_one()
-        #find previous move
+        #get the only one exact previous move in the securisation sequence
         prev_move = self.search([('state', '=', 'posted'),
-            ('company_id', '=', company_id.id),
-            ('l10n_fr_secure_sequence_number', '!=', False)],
-            order="l10n_fr_secure_sequence_number DESC",
-            limit=1)
+            ('company_id', '=', self.company_id.id),
+            ('l10n_fr_secure_sequence_number', '=', int(secure_seq_number) - 1)])
+        if prev_move and len(prev_move) != 1:
+            raise UserError(
+               _('Error occured when computing the hash. Impossible to get the unique previous posted move'))
+
         #build and return the hash
         return self._compute_hash(prev_move.l10n_fr_hash if prev_move else '')
 
     def _compute_hash(self, previous_hash):
         """ Computes the hash of the browse_record given as self, based on the hash
         of the previous record in the company's securisation sequence given as parameter"""
+        self.ensure_one()
+        hash_string = sha1(previous_hash + self.l10n_fr_string_to_hash)
+        return hash_string.hexdigest()
 
+    def _compute_string_to_hash(self):
         def _getattrstring(obj, field_str):
             field_value = obj[field_str]
             if obj._fields[field_str].type == 'many2one':
                 field_value = field_value.id
             return str(field_value)
 
-        self.ensure_one()
-        hash_string = sha1(previous_hash)
-        for field in MOVE_FIELDS:
-            # field delimiter to make sure the string can't be wrongly interpreted
-            hash_string.update('*')
-            hash_string.update(_getattrstring(self, field))
+        for move in self:
+            values = {}
+            for field in MOVE_FIELDS:
+                values[field] = _getattrstring(move, field)
 
-        for line in self.line_ids:
-            for field in LINE_FIELDS:
-                hash_string.update('*')
-                hash_string.update(_getattrstring(line, field))
-
-        return hash_string.hexdigest()
+            for line in move.line_ids:
+                for field in LINE_FIELDS:
+                    values[field] = _getattrstring(line, field)
+            move.l10n_fr_string_to_hash = dumps(values, sort_keys=True)
 
     @api.multi
     def write(self, vals):
-        if self.company_id.country_id == self.env.ref('base.fr'):
-            # write the hash and the secure_sequence_number when posting an account.move
-            if vals.get('state') == 'posted':
-                new_number = self.company_id.l10n_fr_secure_sequence_id.next_by_id()
-                vals.update({'l10n_fr_secure_sequence_number': new_number,
-                             'l10n_fr_hash': self._get_new_hash(new_number, self.company_id)})
+        has_been_posted = False
+        for move in self:
+            if move.company_id.country_id.code == 'FR':
+                # write the hash and the secure_sequence_number when posting an account.move
+                if vals.get('state') == 'posted':
+                    has_been_posted = True
 
-            # restrict the operation in case we are trying to write a forbidden field
-            if (self.state == "posted" and set(vals.keys()) & set(MOVE_FIELDS)):
-                raise UserError(ERR_MSG % (self._name, ', '.join(MOVE_FIELDS)))
-        return super(AccountMove, self).write(vals)
+                # restrict the operation in case we are trying to write a forbidden field
+                if (move.state == "posted" and set(vals.keys()).intersection(MOVE_FIELDS)):
+                    raise UserError(ERR_MSG % (self._name, ', '.join(MOVE_FIELDS)))
+        res = super(AccountMove, self).write(vals)
+        # write the hash and the secure_sequence_number when posting an account.move
+        if has_been_posted:
+            for move in self.filtered(lambda m: m.company_id.country_id.code == 'FR'):
+                new_number = move.company_id.l10n_fr_secure_sequence_id.next_by_id()
+                move.l10n_fr_secure_sequence_number = new_number
+                move.l10n_fr_hash = move._get_new_hash(new_number)
+        return res
 
     def button_cancel(self):
         #by-pass the normal behavior/message that tells people can cancel a posted journal entry
         #if the journal allows it.
-        if self.company_id.country_id == self.env.ref('base.fr'):
+        if self.company_id.country_id.code == 'FR':
             raise UserError(_('You cannot modify a posted entry of a journal.'))
         super(AccountMove, self).button_cancel()
 
@@ -92,25 +102,19 @@ class AccountMove(models.Model):
 
         previous_hash = ''
         for move in moves:
-            if not _consteq(move.l10n_fr_hash, move._compute_hash(previous_hash=previous_hash)):
-                return False, move
+            if move.l10n_fr_hash != move._compute_hash(previous_hash=previous_hash):
+                return move
             previous_hash = move.l10n_fr_hash
-        return True, None
+        return True
 
     def client_check_hash_integrity(self):
         """Makes the hash integrity check and informs the user of the result"""
-        check_result, wrong_move = self._check_hash_integrity(self.env.user.company_id)
-        if check_result:
-            action_params = {'title': _('Success: checking the integrity of account moves'),
-                             'message': _('The account moves are guaranteed to be in their original and inalterable state'),
-                             'sticky': True}
-        else:
-            action_params = {'title': _('Failure: checking account moves inalterability failed'),
-                             'message': _('Corrupted Data on move %s.') % wrong_move.id}
-
-        return {'type': 'ir.actions.client',
-                'tag': 'notify_user',
-                'params': action_params}
+        check_result = self._check_hash_integrity(self.env.user.company_id.id)
+        #raise a warning each and every time with the result of the check
+        if check_result is True:
+            raise UserError(_('''Success: checking the integrity of account moves.
+                             The account moves are guaranteed to be in their original and inalterable state'''))
+        raise UserError(_('Corrupted Data on move %s.') % check_result.id)
 
 
 class AccountMoveLine(models.Model):
@@ -119,9 +123,9 @@ class AccountMoveLine(models.Model):
     @api.multi
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
-        if (self.company_id.country_id.id == self.env.ref('base.fr').id and
-                self.move_id.state == "posted" and set(vals.keys()) & set(LINE_FIELDS)):
-            raise UserError(ERR_MSG % (self._name, ', '.join(LINE_FIELDS)))
+        if set(vals.keys()).intersection(LINE_FIELDS):
+            if any(l.company_id.country_id.code == 'FR' and l.move_id.state == 'posted' for l in self):
+                raise UserError(ERR_MSG % (self._name, ', '.join(LINE_FIELDS)))
         return super(AccountMoveLine, self).write(vals)
 
 
@@ -131,13 +135,13 @@ class AccountJournal(models.Model):
     @api.multi
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
-        if self.company_id.country_id == self.env.ref('base.fr') and vals.get('update_posted'):
+        if self.company_id.country_id.code == 'FR' and vals.get('update_posted'):
             raise UserError(ERR_MSG % (self._name, 'update_posted'))
         return super(AccountJournal, self).write(vals)
 
     @api.model
     def create(self, vals):
         # restrict the operation in case we are trying to set a forbidden field
-        if self.company_id.country_id == self.env.ref('base.fr') and vals.get('update_posted'):
+        if self.company_id.country_id.code == 'FR' and vals.get('update_posted'):
             raise UserError(ERR_MSG % (self._name, 'update_posted'))
         return super(AccountJournal, self).create(vals)

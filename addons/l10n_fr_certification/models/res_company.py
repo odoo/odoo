@@ -34,8 +34,9 @@ class ResCompany(models.Model):
                 'name': 'French Securisation of account_move_line - ' + company.name,
                 'code': 'FRSECUR',
                 'implementation': 'no_gap',
-                'prefix': 'FRSCR/',
-                'suffix': '/%s' % company.id,
+                'prefix': '',
+                'suffix': '',
+                'padding': 0,
                 'company_id': company.id}
             seq = self.env['ir.sequence'].create(vals)
             company.write({'l10n_fr_secure_sequence_id': seq.id})

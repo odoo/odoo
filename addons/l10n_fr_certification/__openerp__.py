@@ -9,10 +9,9 @@
 """,
     'depends': ['l10n_fr'],
     'installable': True,
-    'auto_install': True, #to discuss with AL
+    'auto_install': True,
     'data': [
         'views/no_cancel.xml',
-        'views/assets_account_move.xml',
         'data/account_move.xml',
     ],
     'post_init_hook': '_setup_inalterability',
