@@ -760,11 +760,17 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.data = {data:{children:[]}};
         this.on("menu_bound", this, function() {
             // launch the fetch of needaction counters, asynchronous
-            var $all_menus = self.$el.parents('body').find('.oe_webclient').find('[data-menu]');
-            var all_menu_ids = _.map($all_menus, function (menu) {return parseInt($(menu).attr('data-menu'), 10);});
-            if (!_.isEmpty(all_menu_ids)) {
-                this.do_load_needaction(all_menu_ids);
-            }
+	    var menu = self.$el.find('[data-menu]:first');
+	    if (menu.length) {
+		var menu_id = menu.data('menu');
+		var $all_menus = self.$el.parents('body').
+		    find('.oe_webclient [data-menu-parent='+menu_id+']').
+		    find('[data-menu]');
+		var all_menu_ids = _.map($all_menus, function (menu) {return parseInt($(menu).attr('data-menu'), 10);});
+		if (!_.isEmpty(all_menu_ids)) {
+                    this.do_load_needaction(all_menu_ids);
+		}
+	    }
         });
     },
     start: function() {
