@@ -863,10 +863,31 @@ class account_bank_statement_line(osv.osv):
                 if mv_line_dict.get('counterpart_move_line_id'):
                     #post an account line that use the same currency rate than the counterpart (to balance the account) and post the difference in another line
                     ctx['date'] = mv_line.date
-                    if mv_line.currency_id.id == mv_line_dict['currency_id'] \
-                            and float_is_zero(abs(mv_line.amount_currency) - abs(mv_line_dict['amount_currency']), precision_rounding=mv_line.currency_id.rounding):
-                        debit_at_old_rate = mv_line.credit
-                        credit_at_old_rate = mv_line.debit
+                    if mv_line.currency_id.id == mv_line_dict['currency_id']:
+                        if float_is_zero(abs(mv_line.amount_currency) - abs(mv_line_dict['amount_currency']), precision_rounding=mv_line.currency_id.rounding):
+                            debit_at_old_rate = mv_line.credit
+                            credit_at_old_rate = mv_line.debit
+                        else:
+                            # the computation of the open amount
+                            # in company currency may give a rounding difference
+                            # compared with the open amount on the original move.
+                            # We avoid this by using the open amount.
+                            rec_part = mv_line.reconcile_partial_id
+                            if rec_part and \
+                                    len(rec_part.line_partial_ids) > 1:
+                                amt_open = reduce(
+                                    lambda y, t:
+                                    (t.debit or 0.0) - (t.credit or 0.0) + y,
+                                    rec_part.line_partial_ids, 0.0)
+                                if amt_open < 0:
+                                    debit_at_old_rate = -amt_open
+                                    credit_at_old_rate = 0.0
+                                else:
+                                    debit_at_old_rate = 0.0
+                                    credit_at_old_rate = amt_open
+                            else:
+                                debit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
+                                credit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
                     else:
                         debit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
                         credit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
@@ -915,7 +936,8 @@ class account_bank_statement_line(osv.osv):
             if mv_line_dict.get('counterpart_move_line_id'):
                 counterpart_move_line_id = mv_line_dict['counterpart_move_line_id']
                 del mv_line_dict['counterpart_move_line_id']
-            new_aml_id = aml_obj.create(cr, uid, mv_line_dict, context=context)
+            if not company_currency.is_zero(mv_line_dict['debit'] - mv_line_dict['credit']):
+                new_aml_id = aml_obj.create(cr, uid, mv_line_dict, context=context)
             if counterpart_move_line_id != None:
                 move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
         # Reconcile
