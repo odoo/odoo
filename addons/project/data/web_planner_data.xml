@@ -476,8 +476,8 @@
                                     </div>
                                     <div class="panel-body">
                                         <li>For employees, the
-                                            <a t-if="is_module_installed('hr_timesheet_sheet')" t-attf-href="web#view_type=form&amp;model=hr_timesheet_sheet.sheet&amp;menu_id=#{timesheet_menu and timesheet_menu.id}">Current Timesheet</a>
-                                            <a t-if="not is_module_installed('hr_timesheet_sheet')" t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_timesheet_sheet')">Current Timesheet</a>
+                                            <a t-if="is_module_installed('hr_timesheet')" t-attf-href="web#menu_id=#{timesheet_menu and timesheet_menu.id}">Current Timesheet</a>
+                                            <a t-if="not is_module_installed('hr_timesheet')" t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_timesheet')">Current Timesheet</a>
                                             view of the HR module is the main tool to check, modify and confirm Timesheets.</li><br/>
                                         <li>Alternatively, Timesheets can be added directly from Tasks by activating <strong>'Log work activities on tasks'</strong> in the <a t-att-href="prepare_backend_url('project.action_config_settings')">Project Settings</a>.</li><br/>
                                         <li>Or, if you are using Issues, by activating 'Activate timesheets on issues', also in the <a t-att-href="prepare_backend_url('project.action_config_settings')">Project Settings</a>.</li>
@@ -526,21 +526,6 @@
                                 </div>
                             </div>
                         </div>
-                        <h3><strong>Approve your Timesheets</strong> (every week)</h3>
-                        <p>
-                            At the end of the week, each employee should review
-                            their entries for the week and makes sure the
-                            entries are correctly encoded. This can be done
-                            from the
-                            <a t-if="is_module_installed('hr_timesheet_sheet')" t-attf-href="web#view_type=form&amp;model=hr_timesheet_sheet.sheet&amp;menu_id=#{timesheet_menu and timesheet_menu.id}">Current Timesheet</a>
-                            <a t-if="not is_module_installed('hr_timesheet_sheet')" t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_timesheet_sheet')">Current Timesheet</a>
-                            view of the Human Resources module.
-                        </p><p>
-                            Once a Timesheet is confirmed by an employee, it needs to be Approved by a manager in the
-                            <a t-if="is_module_installed('hr_timesheet_sheet')" t-att-href="prepare_backend_url('hr_timesheet_sheet.act_hr_timesheet_sheet_form')">Timesheets to Approve</a>
-                            <a t-if="not is_module_installed('hr_timesheet_sheet')" t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_timesheet_sheet')">Timesheets to Approve</a>
-                            view.
-                        </p>
                         <h3><strong>Invoice your customers</strong> (every month)</h3>
                         <p>
                         If you work on a Time &amp; Material project, you'll probably want to extract a Timesheet of the tasks and issues to invoice directly to the customer. To do that:
