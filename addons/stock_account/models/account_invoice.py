@@ -77,6 +77,40 @@ class AccountInvoice(models.Model):
                 ]
         return []
 
+    def _get_related_stock_moves(self): #TODO OCO DOC to be overridden
+        return self.env['stock.move']
+
+    def _get_products_set(self):
+        rslt = self.env['product.product']
+        for inv_line in self.invoice_line_ids:
+            rslt += inv_line.product_id
+        return rslt
+
+    def _get_anglosaxon_interim_account(self, product): #to be overridden
+        return None
+
+    def invoice_validate(self):
+        super(AccountInvoice, self).invoice_validate()
+
+        for invoice in self:
+            if invoice.company_id.anglo_saxon_accounting:
+
+                invoice_stock_moves_id_list = [move.id for move in self._get_related_stock_moves()]
+                for product in self._get_products_set():
+                    if product.valuation == 'real_time' and product.cost_method == 'real':
+                        product_interim_account = invoice._get_anglosaxon_interim_account(product)
+
+                        to_reconcile = self.env['account.move.line'].search([('move_id','=',invoice.move_id.id), ('product_id','=',product.id), ('account_id','=',product_interim_account.id)])
+
+                        product_stock_moves = self.env['stock.move'].search([('id','in',invoice_stock_moves_id_list), ('product_id','=',product.id)])
+                        for stock_move in product_stock_moves:
+                            for valuation_move in stock_move.stock_account_valuation_account_move_ids:
+                                for valuation_line in valuation_move.line_ids:
+                                    if valuation_line.account_id == product_interim_account:
+                                        to_reconcile += valuation_line
+
+                        if to_reconcile:
+                            to_reconcile.reconcile()
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"

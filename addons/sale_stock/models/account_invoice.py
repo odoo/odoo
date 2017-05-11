@@ -11,6 +11,21 @@ class AccountInvoice(models.Model):
         help="Incoterms are series of sales terms. They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices.",
         readonly=True, states={'draft': [('readonly', False)]})
 
+    def _get_related_stock_moves(self): # overridden from stock_account
+        rslt = super(AccountInvoice, self)._get_related_stock_moves()
+
+        if self.type == 'out_invoice':
+            for inv_line in self.invoice_line_ids:
+                for so_line in inv_line.sale_line_ids:
+                    for picking in so_line.order_id.picking_ids:
+                        rslt += picking.move_lines
+
+        return rslt
+
+    def _get_anglosaxon_interim_account(self, product): # overridden from stock_account
+        if self.type == 'out_invoice':
+            return product.product_tmpl_id._get_product_accounts()['stock_output']
+        return super(AccountInvoice, self)._get_anglosaxon_interim_account(product)
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
