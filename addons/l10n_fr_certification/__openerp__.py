@@ -10,6 +10,7 @@
     'depends': ['l10n_fr'],
     'installable': True,
     'auto_install': True,
+    'application': True,
     'data': [
         'views/no_cancel.xml',
         'data/account_move.xml',

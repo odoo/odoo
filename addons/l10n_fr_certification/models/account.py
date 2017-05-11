@@ -93,29 +93,30 @@ class AccountMove(models.Model):
     @api.model
     def _check_hash_integrity(self, company_id):
         """Checks that all posted moves have still the same data as when they were posted
-
-        @return: the first move with a wrong hash or True if all moves have a correct hash
+        and raises an error with the result.
         """
         moves = self.search([('state', '=', 'posted'),
                              ('company_id', '=', company_id.id),
                              ('l10n_fr_secure_sequence_number', '!=', False)],
                             order="l10n_fr_secure_sequence_number ASC")
 
+        if not moves:
+            raise UserError(_('Warning: impossible to find any move with a hash.'))
         previous_hash = ''
+        start_move_info = []
         for move in moves:
             if move.l10n_fr_hash != move._compute_hash(previous_hash=previous_hash):
-                return move
+                raise UserError(_('Corrupted Data on move %s.') % move.id)
             previous_hash = move.l10n_fr_hash
-        return True
-
-    def client_check_hash_integrity(self):
-        """Makes the hash integrity check and informs the user of the result"""
-        check_result = self._check_hash_integrity(self.env.user.company_id.id)
-        #raise a warning each and every time with the result of the check
-        if check_result is True:
-            raise UserError(_('''Success: checking the integrity of account moves.
-                             The account moves are guaranteed to be in their original and inalterable state'''))
-        raise UserError(_('Corrupted Data on move %s.') % check_result.id)
+            if not previous_hash:
+                #save the date and sequence number of the first move hashed
+                start_move_info = [move.date, move.l10n_fr_secure_sequence_number]
+        end_move_info = [move.date, move.l10n_fr_secure_sequence_number]
+        raise UserError(_('''Success: checking the integrity of account moves.
+                         The account moves are guaranteed to be in their original and inalterable state
+                         since:   Date-%s  Sequence Number-%s
+                         to:      Date-%s  Sequence Number-%s'''
+                         ) % (start_move_info[0], start_move_info[1], end_move_info[0], end_move_info[1]))
 
 
 class AccountMoveLine(models.Model):

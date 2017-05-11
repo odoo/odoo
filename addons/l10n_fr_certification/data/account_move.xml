@@ -4,7 +4,7 @@
         <field name="model_id" ref="account.model_account_move"/>
         <field name="type">ir.actions.server</field>
         <field name="code">
-            action = env['account.move'].client_check_hash_integrity()
+            action = env['account.move']._check_hash_integrity()
         </field>
     </record>
 

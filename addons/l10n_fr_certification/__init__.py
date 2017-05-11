@@ -5,11 +5,14 @@ import models
 from openerp import api, SUPERUSER_ID
 
 def _setup_inalterability(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    # enable ping for this module
+    env['publisher_warranty.contract'].update_notification(cron_mode=True)
+
     # make sure account_cancel is not usable at the same time as l10n_fr
     # FORWARD PORT NOTICE
     # In master as of March 2017, RCO-ODOO coded an exclusive field on modules to flag incompatibility
 
-    env = api.Environment(cr, SUPERUSER_ID, {})
     wanted_states = ['installed', 'to upgrade', 'to install']
     account_cancel_module = env['ir.module.module'].search([('name', '=', 'account_cancel')], limit=1)
 
