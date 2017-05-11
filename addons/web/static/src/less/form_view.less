@@ -107,7 +107,18 @@
         .oe_read_only {
             display: none!important;
         }
-
+        .o_required_icon {
+            position: relative;
+        }
+        .o_required_icon::after {
+            font-family: 'FontAwesome';
+            color: red;
+            position: absolute;
+            transform: translate(-50%, 0%);
+            margin-left: -20px;
+            content: "\f071";
+            top: 0;
+        }
         .oe_title {
             max-width: @container-sm - (2 * @odoo-horizontal-padding);
         }

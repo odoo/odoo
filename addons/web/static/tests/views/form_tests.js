@@ -4893,5 +4893,39 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+     QUnit.test('required icon test', function (assert) {
+         assert.expect(4);
+         var form = createView({
+             View: FormView,
+             model: 'partner',
+             data: this.data,
+             arch:
+                 '<form>' +
+                     '<sheet>' +
+                         '<group>' +
+                             '<field name="display_name" required="True"/>' +
+                             '<field name="trululu" required="True"/>'  +
+                         '</group>' +
+                         '<group>' +
+                             '<field name="timmy" required="True" widget="many2many_tags"/>' +
+                             '<field name="datetime" required="True"/>'  +
+                         '</group>' +
+                     '</sheet>' +
+                 '</form>',
+         });
+         assert.strictEqual(form.$('.o_required_icon').length, 0, "initially there should not be any required icon");
+         var event = $.Event( 'keydown', { which: $.ui.keyCode.TAB } );
+         form.$('input[name="display_name"]').trigger(_.clone(event));
+         assert.strictEqual(form.$('.o_required_icon').length, 1, "required icon present when required field left empty");
+         form.$('div[name="trululu"] input').trigger(_.clone(event));
+         form.$('div[name="timmy"] input').trigger(_.clone(event));
+         form.$('div[name="datetime"] input').trigger(_.clone(event));
+         assert.strictEqual(form.$('.o_required_icon').length, 4, "required icon present when all required field are blank");
+         form.$('input[name="display_name"]').val('test').trigger('input');
+         form.$('input[name="display_name"]').trigger(_.clone(event));
+         assert.strictEqual(form.$('.o_required_icon').length, 3, "required icon removed after adding text to field");
+         form.destroy();
+     });
+
 });
 });
