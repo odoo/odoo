@@ -25,17 +25,11 @@
             attachment_use="True"
             attachment="'ISR-' + object.number + '.pdf'"
             menu="False"
-            />
-
-        <record id="l10n_ch_isr_report" model ="ir.actions.report">
-            <field name="print_report_name">
-                'ISR-' + object.number
-                <!--No additional condition on invoice state or type as this
-                report is only available to be printed for out invoices after
-                'draft' state, if the fields required by the ISR have been set.-->
-            </field>
-            <field name="paperformat_id" ref="paperformat_euro_no_margin"/>
-        </record>
+            print_report_name="'ISR-%s' % object.number"
+            paperformat="paperformat_euro_no_margin"/>
+        <!--No additional condition in report name on invoice state or type as this
+            report is only available to be printed for out invoices after
+            'draft' state, if the fields required by the ISR have been set.-->
 
         <template id="assets_common" name="l10n_ch_isr_report" inherit_id="web.assets_common">
             <xpath expr="." position="inside">
