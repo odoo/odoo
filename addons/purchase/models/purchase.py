@@ -711,10 +711,10 @@ class PurchaseOrderLine(models.Model):
            PO Lines that correspond to the given product.seller_ids,
            when ordered at `date_order_str`.
 
-           :param browse_record | False product: product.product, used to
-               determine delivery delay thanks to the selected seller field (if False, default delay = 0)
-           :param browse_record | False po: purchase.order, necessary only if
-               the PO line is not yet attached to a PO.
+           :param Model seller: used to fetch the delivery delay (if no seller
+                                is provided, the delay is 0)
+           :param Model po: purchase.order, necessary only if the PO line is 
+                            not yet attached to a PO.
            :rtype: datetime
            :return: desired Schedule Date for the PO line
         """

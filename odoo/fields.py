@@ -105,6 +105,9 @@ class MetaField(type):
 
     def __init__(cls, name, bases, attrs):
         super(MetaField, cls).__init__(name, bases, attrs)
+        if not hasattr(cls, 'type'):
+            return
+
         if cls.type and cls.type not in MetaField.by_type:
             MetaField.by_type[cls.type] = cls
 
@@ -118,7 +121,7 @@ class MetaField(type):
                 cls.description_attrs.append((attr[13:], attr))
 
 
-class Field(object):
+class Field(MetaField('DummyField', (object,), {})):
     """ The field descriptor contains the field definition, and manages accesses
         and assignments of the corresponding field on records. The following
         attributes may be provided when instanciating a field:
@@ -280,7 +283,6 @@ class Field(object):
                 state = fields.Selection(help="Blah blah blah")
 
     """
-    __metaclass__ = MetaField
 
     type = None                         # type of the field (string)
     relational = False                  # whether the field is a relational one

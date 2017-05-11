@@ -41,14 +41,13 @@ from lxml import etree
 from lxml.builder import E
 
 import odoo
-from odoo.tools import pycompat
 from . import SUPERUSER_ID
 from . import api
 from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
-                   Collector, LastOrderedSet, OrderedSet
+                   Collector, LastOrderedSet, OrderedSet, pycompat
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -182,7 +181,7 @@ LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 
 
-class BaseModel(object):
+class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     """ Base class for Odoo models.
 
     Odoo models are created by inheriting:
@@ -210,7 +209,6 @@ class BaseModel(object):
     To create a class that should not be instantiated, the _register class
     attribute may be set to False.
     """
-    __metaclass__ = MetaModel
     _auto = False               # don't create any database backend
     _register = False           # not visible in ORM registry
     _abstract = True            # whether model is abstract

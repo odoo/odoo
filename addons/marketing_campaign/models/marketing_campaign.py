@@ -131,8 +131,7 @@ class MarketingCampaign(models.Model):
         """Finds possible duplicates workitems for a record in this campaign, based on a uniqueness
            field.
 
-           :param record: browse_record to find duplicates workitems for.
-           :param campaign_rec: browse_record of campaign
+           :param Model record: to find duplicates workitems for.
         """
         self.ensure_one()
         duplicate_workitem_domain = [('res_id', '=', record.id), ('campaign_id', '=', self.id)]

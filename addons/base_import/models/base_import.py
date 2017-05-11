@@ -522,7 +522,7 @@ class Import(models.TransientModel):
 
     @api.model
     def _convert_import_data(self, fields, options):
-        """ Extracts the input browse_record and fields list (with
+        """ Extracts the input BaseModel and fields list (with
             ``False``-y placeholders for fields to *not* import) into a
             format Model.import_data can use: a fields list without holes
             and the precisely matching data matrix

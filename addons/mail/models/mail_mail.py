@@ -131,7 +131,6 @@ class MailMail(models.Model):
         attachment if the ``auto_delete`` flag of the mail was set.
         Overridden by subclasses for extra post-processing behaviors.
 
-        :param browse_record mail: the mail that was just sent
         :return: True
         """
         notif_emails = self.filtered(lambda email: email.notification)
@@ -180,8 +179,7 @@ class MailMail(models.Model):
         """Return a dictionary for specific email values, depending on a
         partner, or generic to the whole recipients given by mail.email_to.
 
-            :param browse_record mail: mail.mail browse_record
-            :param browse_record partner: specific recipient partner
+            :param Model partner: specific recipient partner
         """
         self.ensure_one()
         body = self.send_get_mail_body(partner=partner)

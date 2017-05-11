@@ -37,6 +37,8 @@ class TestPyLint(TransactionCase):
         'dict-view-method',
 
         'long-suffix',
+
+        'metaclass-assignment',
     ]
 
     BAD_FUNCTIONS = [
