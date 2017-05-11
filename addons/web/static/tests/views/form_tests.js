@@ -2930,7 +2930,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('onchange value are not discarded on o2m edition', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         this.data.partner.records[1].p = [4];
         this.data.partner.onchanges = {
@@ -2985,6 +2985,8 @@ QUnit.module('Views', {
             "onchange should have been correctly applied on field in o2m list");
 
         form.$('.o_data_row').click(); // edit the o2m in the dialog
+        assert.strictEqual($('.modal .modal-title').text().trim(), 'Open: one2many field',
+            "the field string is displayed in the modal title");
         assert.strictEqual($('.modal .o_field_widget').val(), 'foo changed',
             "the onchange value hasn't been discarded when opening the o2m");
 
@@ -3040,7 +3042,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('args of onchanges in o2m fields are correct (dialog edition)', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         this.data.partner.records[1].p = [4];
         this.data.partner.fields.p.relation_field = 'rel_field';
@@ -3057,7 +3059,7 @@ QUnit.module('Views', {
             arch: '<form>' +
                     '<group>' +
                         '<field name="foo"/>' +
-                        '<field name="p">' +
+                        '<field name="p" string="custom label">' +
                             '<tree>' +
                                 '<field name="foo"/>' +
                             '</tree>' +
@@ -3086,6 +3088,8 @@ QUnit.module('Views', {
 
         // create a new o2m record
         form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal .modal-title').text().trim(), 'Create custom label',
+            "the custom field label is applied in the modal title");
         assert.strictEqual($('.modal input:first').val(), '[blip] 14',
             "onchange should have been correctly applied after default get");
         $('.modal .modal-footer .btn-primary').click(); // save the dialog
@@ -3883,7 +3887,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('check interactions between multiple FormViewDialogs', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         this.data.product.fields.product_ids = {
             string: "one2many product", type: "one2many", relation: "product",
@@ -3934,6 +3938,8 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal').length, 1,
             "One FormViewDialog should be opened");
         var $firstModal = $('.modal');
+        assert.strictEqual($('.modal .modal-title').first().text().trim(), 'Open: Product',
+            "dialog title should display the python field string as label");
         assert.strictEqual($firstModal.find('input').val(), 'xphone',
             "display_name should be correctly displayed");
 
@@ -4339,6 +4345,35 @@ QUnit.module('Views', {
         // Outer group
         assert.ok((form.$('.bottom_group').position().top - form.$('.top_group').position().top) >= 200,
             "outergroup children should not be on the same line");
+
+        form.destroy();
+    });
+
+    QUnit.test('custom open record dialog title', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].p = [2];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p" widget="many2many" string="custom label">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="display_name"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            session: {},
+            res_id: 1,
+        });
+
+        form.$('.o_data_row:first').click();
+        assert.strictEqual($('.modal .modal-title').first().text().trim(), 'Open: custom label',
+            "modal should use the python field string as title");
 
         form.destroy();
     });
