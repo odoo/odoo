@@ -7,6 +7,7 @@ var mixins = require('web.mixins');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
+var RainbowMan = require('web.rainbow_man');
 
 var _t = core._t;
 
@@ -403,6 +404,20 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     },
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
+        //display rainbow at the end of any tour
+        if (this.tours[tour_name].current_step === this.tours[tour_name].steps.length){
+            var $rainbow_message = $('<strong>' +
+                                '<b>Good job!</b>' +
+                                ' You went through all steps of this tour.' +
+                                '</strong>')
+            this.RainbowMan = new RainbowMan();
+            this.RainbowMan.data = {
+                'rainbowManType': 'medium',
+                'rainbowManUrl': '/web/static/src/img/smile.svg',
+                'rainbowManMessage': $rainbow_message,
+            };
+            this.RainbowMan.appendTo($('body'));
+        };
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));
         if (this.running_tour === tour_name) {

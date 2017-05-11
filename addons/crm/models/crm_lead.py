@@ -352,7 +352,47 @@ class Lead(models.Model):
         for lead in self:
             stage_id = lead._stage_find(domain=[('probability', '=', 100.0), ('on_change', '=', True)])
             lead.write({'stage_id': stage_id.id, 'probability': 100})
-        return True
+            image = '/web/image/%s/%s/image' % (lead.user_id._name, lead.user_id.id)
+            rainbow_man = lead.probability
+            planned_revenue = lead.planned_revenue
+            rainbow_message = _('')
+            result = {
+                'first': 0,
+                '30_days_for_sales_team': planned_revenue,
+                '7_days_for_sales_team': planned_revenue,
+                'biggest_from_30_days': planned_revenue,
+            }
+
+            opportunities = lead.search([('probability', '=', 100)])
+
+            for opportunity in opportunities:
+                date_closed = fields.Date.from_string(opportunity.date_closed)
+                if date.today() + relativedelta(month=1, day=1) <= date_closed and lead.user_id == opportunity.user_id:
+                    result['first'] += 1
+
+                if lead.team_id == opportunity.team_id:
+                    if date.today() + timedelta(days=-30) <= date_closed and result['30_days_for_sales_team'] < opportunity.planned_revenue:
+                        result['30_days_for_sales_team'] = opportunity.planned_revenue
+
+                    if date.today() + timedelta(days=-7) <= date_closed and result['7_days_for_sales_team'] < opportunity.planned_revenue:
+                        result['7_days_for_sales_team'] = opportunity.planned_revenue
+
+                if date.today() + timedelta(days=-30) <= date_closed and lead.user_id == opportunity.user_id and result['biggest_from_30_days'] < opportunity.planned_revenue:
+                    result['biggest_from_30_days'] = opportunity.planned_revenue
+
+            if result['first'] == 1:
+                rainbow_message = _('Go, go, go! Congrats for your first deal.')
+            elif result['30_days_for_sales_team'] == planned_revenue:
+                rainbow_message = _('Boum! Team record for the past 30 days.')
+            elif result['7_days_for_sales_team'] == planned_revenue:
+                rainbow_message = _('Yeah! Deal of the last 7 days for the team.')
+            elif result['biggest_from_30_days'] == planned_revenue:
+                rainbow_message = _('You just beat your personal record for the past 30 days.')
+            else:
+                rainbow_man = 10
+            return {'rainbow_man': rainbow_man,
+                    'rainbow_image_url': image,
+                    'rainbow_message': rainbow_message}
 
     @api.multi
     def action_schedule_meeting(self):

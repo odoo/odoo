@@ -7,6 +7,7 @@ var relational_fields = require('web.relational_fields');
 var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var time = require('web.time');
+var RainbowMan = require('web.rainbow_man');
 var qweb = core.qweb;
 var _t = core._t;
 
@@ -101,23 +102,32 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             .attr('aria-valuenow', state.valuenow)
             .attr('aria-valuemax', state.valuemax)
             .css('width', (state.valuenow/state.valuemax*100) + '%');
+        this.RainbowMan = new RainbowMan();
 
         if (state.valuenow === state.valuemax && !this.$('.done_message').length) {
             var dt = Date.now()-this.time;
-            var $done = $(qweb.render("reconciliation.done", {
+            var $done_message = $(qweb.render("reconciliation.done", {
                 'duration': moment(dt).utc().format(time.strftime_to_moment_format(_t.database.parameters.time_format)),
                 'number': state.valuenow,
-                'timePerTransaction': Math.round(dt/1000/state.valuemax)
+                'timePerTransaction': Math.round(dt/1000/state.valuemax),
             }));
-            $done.appendTo(this.$el.first());
-            this.$('.o_automatic_reconciliation').hide();
+            this.$('.o_automatic_reconciliation, .reconciliation_statement').remove();
+            // 100% completion of reconciliation display the rainbow
+            this.RainbowMan.data = {
+                'rainbowManType': 'no',
+                'rainbowManUrl': '/web/static/src/img/smile.svg',
+                'rainbowManMessage': $done_message[0],
+            };
+            this.RainbowMan.appendTo(this.$el.first());
+            this.$el.first().css('min-height', '515px');
+        } else {
+            this.$('h1.statement_name').text(state.title);
         }
 
         if (state.notifications) {
             this._renderNotifications(state.notifications);
         }
 
-        this.$('h1.statement_name').text(state.title);
     },
 
     //--------------------------------------------------------------------------

@@ -11,6 +11,7 @@ var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var view_registry = require('web.view_registry');
 var Widget = require('web.Widget');
+var RainbowMan = require('web.rainbow_man');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -562,6 +563,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
 
         // response handler
         var handler = function (action) {
+            //show rainbow if button have data_rainbow attribute
+            if (action_data.data_rainbow && pyeval.py_eval(action_data.data_rainbow)) {
+                self.RainbowMan = new RainbowMan();
+                if (!action.rainbow_man || action.rainbow_man === 100) {
+                    self.RainbowMan.prepareData(action, action_data);
+                    self.RainbowMan.appendTo($('.o_content'));
+                };
+            };
             if (action && action.constructor === Object) {
                 // filter out context keys that are specific to the current action.
                 // Wrong default_* and search_default_* values will no give the expected result

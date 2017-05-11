@@ -16,6 +16,7 @@ var dom = require('web.dom');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var Widget = require('web.Widget');
+var RainbowMan = require('web.rainbow_man');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -218,8 +219,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons.on('click', '.o_mail_toggle_channels', function () {
             self.$('.o_mail_chat_sidebar').slideToggle(200);
         });
+        this.rainbowman = new RainbowMan();
         this.$buttons.on('click', '.o_mail_chat_button_mark_read', function () {
-            chat_manager.mark_all_as_read(self.channel, self.domain);
+            chat_manager.mark_all_as_read(self.channel, self.domain).then(function() {
+                // show rainbow man on click;
+                self.rainbowman.data = self.$buttons.find('.o_mail_chat_button_mark_read')[0].dataset;
+                self.rainbowman.appendTo(self.$el);
+            });
         });
         this.$buttons.on('click', '.o_mail_chat_button_unstar_all', chat_manager.unstar_all);
 

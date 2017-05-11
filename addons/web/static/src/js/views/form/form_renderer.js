@@ -117,14 +117,14 @@ var FormRenderer = BasicRenderer.extend({
      * Disable stat buttons so that they can't be clicked anymore
      *
      */
-    disableButtons: function() {
+    disableButtons: function() {
         this.$('.oe_button_box button').attr('disabled', true);
     },
     /**
      * Enable stat buttons so they can be clicked again
      *
      */
-    enableButtons: function() {
+    enableButtons: function() {
         this.$('.oe_button_box button').removeAttr('disabled');
     },
     /**
@@ -206,7 +206,6 @@ var FormRenderer = BasicRenderer.extend({
             self.trigger_up('button_clicked', {
                 attrs: node.attrs,
                 record: self.state,
-                showWow: $el.hasClass('o_wow'),
             });
         });
     },
