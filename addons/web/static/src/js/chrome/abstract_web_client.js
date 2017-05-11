@@ -21,6 +21,7 @@ var Dialog = require('web.Dialog');
 var Loading = require('web.Loading');
 var mixins = require('web.mixins');
 var NotificationManager = require('web.notification').NotificationManager;
+var RainbowMan = require('web.rainbow_man');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -43,13 +44,13 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         // downstream widgets.  Mainly side effects, such as rpcs, notifications
         // or cache.
 
-        // notifications and warnings
+        // notifications, warnings and effects
         notification: function (e) {
             if(this.notification_manager) {
                 this.notification_manager.notify(e.data.title, e.data.message, e.data.sticky);
             }
         },
-        warning: '_displayWarning',
+        warning: '_onDisplayWarning',
         load_views: function (event) {
             var params = {
                 model: event.data.modelName,
@@ -65,6 +66,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 .load_filters(event.data.dataset, event.data.action_id)
                 .then(event.data.on_success);
         },
+        show_effect: '_onShowEffect',
         // session
         get_session: function (event) {
             if (event.data.callback) {
@@ -82,7 +84,6 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 }
             });
         },
-        show_wow: '_onShowWow',
     },
     init: function (parent) {
         this.client_options = {};
@@ -300,7 +301,8 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
 
     /**
      * Displays a warning in a dialog of with the NotificationManager
-
+     *
+     * @private
      * @param {OdooEvent} e
      * @param {string} e.data.message the warning's message
      * @param {string} e.data.title the warning's title
@@ -308,7 +310,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
      * @param {boolean} [e.data.sticky] whether or not the warning should be
      *   sticky (if displayed with the NotificationManager)
      */
-    _displayWarning: function (e) {
+    _onDisplayWarning: function (e) {
         var data = e.data;
         if (data.type === 'dialog') {
             new Dialog(this, {
@@ -321,20 +323,21 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         }
     },
     /**
-     * Displays a thumb up, heart or peace image (randomly) for a moment (e.g.
-     * used when an opportunity is won)
+     * Displays a visual effect (for example, a rainbowman0
      *
      * @private
+     * @param {OdooEvent} e
+     * @param {Object} [e.data] - key-value options to decide rainbowman
+     *   behavior / appearance
      */
-    _onShowWow: function () {
-        var className = 'o_wow_thumbs';
-        if (Math.random() > 0.9) {
-            var otherClasses = ['o_wow_peace', 'o_wow_heart'];
-            className = otherClasses[Math.floor(Math.random()*otherClasses.length)];
+    _onShowEffect: function (e) {
+        var data = e.data || {};
+        var type = data.type || 'rainbow_man';
+        if (type === 'rainbow_man') {
+            new RainbowMan(data).appendTo(this.$el);
+        } else {
+            throw new Error('Unknown effect type: ' + type);
         }
-        var $body = $('body');
-        $body.addClass(className);
-        setTimeout($body.removeClass.bind($body, className), 1000);
     },
 });
 

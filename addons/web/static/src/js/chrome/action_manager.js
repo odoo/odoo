@@ -862,6 +862,11 @@ var ActionManager = Widget.extend({
             options.on_close();
         }
         this.dialog_stop();
+        // Display rainbowman on appropriate actions
+        if (action.effect) {
+            this.trigger_up('show_effect', action.effect);
+        }
+
         return $.when();
     },
     ir_actions_server: function (action, options) {
