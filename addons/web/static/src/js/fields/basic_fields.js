@@ -1758,7 +1758,8 @@ var JournalDashboardGraph = AbstractField.extend({
         this.data = JSON.parse(this.value);
     },
     start: function () {
-        nv.utils.windowResize(this._onResize.bind(this));
+        this._onResize = this._onResize.bind(this);
+        nv.utils.windowResize(this._onResize);
         return this._super.apply(this, arguments);
     },
     destroy: function () {

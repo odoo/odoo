@@ -1072,6 +1072,11 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         this._generatedMetadata();
     },
 
+    destroy: function () {
+        this._super();
+        $(window).off(this.fileupload_id);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

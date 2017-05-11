@@ -30,7 +30,7 @@ var GraphController = AbstractController.extend({
     destroy: function () {
         if (this.$buttons) {
             // remove jquery's tooltip() handlers
-            this.$buttons.find('button').off();
+            this.$buttons.find('button').off().tooltip('destroy');
         }
         this._super.apply(this, arguments);
     },

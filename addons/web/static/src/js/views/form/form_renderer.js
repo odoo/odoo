@@ -724,6 +724,8 @@ var FormRenderer = BasicRenderer.extend({
 
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
+        }, function () {
+            $form.remove();
         });
     },
     /**

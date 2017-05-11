@@ -17,6 +17,10 @@ var QWeb = core.qweb;
  * @type {*}
  */
 var QuickCreate = Dialog.extend({
+    events: _.extend({}, Dialog.events, {
+        'keyup input': '_onkeyup',
+    }),
+
     /**
      * @constructor
      * @param {Widget} parent
@@ -32,7 +36,6 @@ var QuickCreate = Dialog.extend({
         // Can hold data pre-set from where you clicked on agenda
         this.dataTemplate = dataTemplate || {};
         this.dataCalendar = dataCalendar;
-        this.$input = $();
 
         var self = this;
         this._super(parent, {
@@ -46,7 +49,7 @@ var QuickCreate = Dialog.extend({
                 }},
                 {text: _t("Edit"), click: function () {
                     dataCalendar.disableQuickCreate = true;
-                    dataCalendar.title = self.$input.val().trim();
+                    dataCalendar.title = self.$('input').val().trim();
                     dataCalendar.on_save = self.destroy.bind(self);
                     self.trigger_up('openCreate', dataCalendar);
                 }},
@@ -55,37 +58,13 @@ var QuickCreate = Dialog.extend({
             $content: QWeb.render('CalendarView.quick_create', {widged: this})
         });
     },
-    /**
-     * @override
-     * @returns {Deferred}
-     */
-    start: function () {
-        var self = this;
-
-        if (this.options.disableQuickCreate) {
-            this.slow_create();
-            return;
-        }
-        this.$input = this.$('input').keyup(function enterHandler (e) {
-            if(e.keyCode === $.ui.keyCode.ENTER) {
-                self.$input.off('keyup', enterHandler);
-                if (!self._quickAdd(self.dataCalendar)){
-                    self.$input.on('keyup', enterHandler);
-                }
-            } else if (e.keyCode === $.ui.keyCode.ESCAPE && self._buttons) {
-                self.close();
-            }
-        });
-
-        return this._super();
-    },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
     focus: function () {
-        this.$input.focus();
+        this.$('input').focus();
     },
 
     //--------------------------------------------------------------------------
@@ -110,9 +89,26 @@ var QuickCreate = Dialog.extend({
      */
     _quickAdd: function (dataCalendar) {
         dataCalendar = $.extend({}, this.dataTemplate, dataCalendar);
-        var val = this.$input.val().trim();
+        var val = this.$('input').val().trim();
         dataCalendar.title = val;
         return (val)? this.trigger_up('quickCreate', {data: dataCalendar, options: this.options}) : false;
+    },
+    /**
+     * @private
+     * @param {keyEvent} event
+     */
+    _onkeyup: function (event) {
+        if (this._flagEnter) {
+            return;
+        }
+        if(event.keyCode === $.ui.keyCode.ENTER) {
+            this._flagEnter = true;
+            if (!this._quickAdd(this.dataCalendar)){
+                this._flagEnter = false;
+            }
+        } else if (event.keyCode === $.ui.keyCode.ESCAPE && this._buttons) {
+            this.close();
+        }
     },
 });
 
