@@ -613,6 +613,20 @@ var FieldBoolean = AbstractField.extend({
     isSet: function () {
         return true;
     },
+    /**
+     * When the checkbox is rerendered, we need to check if it was the actual
+     * origin of the reset. If it is, we need to activate it back so it looks
+     * like it was not rerendered but is still the same input.
+     *
+     * @override
+     */
+    reset: function (record, event) {
+        var rendered = this._super.apply(this, arguments);
+        if (event && event.target.name === this.name) {
+            this.activate();
+        }
+        return rendered;
+    },
 
     //--------------------------------------------------------------------------
     // Private
