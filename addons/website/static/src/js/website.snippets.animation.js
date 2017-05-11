@@ -230,51 +230,71 @@ animation.registry.gallery = animation.Class.extend({
 
 animation.registry.gallery_slider = animation.Class.extend({
     selector: ".o_slideshow",
-    start: function () {
-        var $carousel = this.$target.is(".carousel") ? this.$target : this.$target.find(".carousel");
+    start: function (editable_mode) {
         var self = this;
-        var $indicator = $carousel.find('.carousel-indicators');
-        var $lis = $indicator.find('li:not(.fa)');
-        var $prev = $indicator.find('li.fa:first');
-        var $next = $indicator.find('li.fa:last');
-        var index = ($lis.filter('.active').index() || 1) -1;
-        var page = Math.floor(index / 10);
-        var nb = Math.ceil($lis.length / 10);
+        this.$carousel = this.$target.is(".carousel") ? this.$target : this.$target.find(".carousel");
+        this.$indicator = this.$carousel.find('.carousel-indicators');
+        this.$prev = this.$indicator.find('li.fa:first').css('visibility', ''); // force visibility as some databases have it hidden
+        this.$next = this.$indicator.find('li.fa:last').css('visibility', '');
+        var $lis = this.$indicator.find('li:not(.fa)');
+        var nbPerPage = Math.floor(this.$indicator.width() / $lis.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
+        var realNbPerPage = nbPerPage || 1;
+        var nbPages = Math.ceil($lis.length / realNbPerPage);
 
-         // fix bootstrap use index insead of data-slide-to
-        $carousel.on('slide.bs.carousel', function () {
+        var index;
+        var page;
+        update();
+
+        function hide() {
+            $lis.each(function (i) {
+                $(this).toggleClass('hidden', !(i >= page*nbPerPage && i < (page+1)*nbPerPage));
+            });
+            if (editable_mode) { // do not remove DOM in edit mode
+                return;
+            }
+            if (page <= 0) {
+                self.$prev.detach();
+            } else {
+                self.$prev.prependTo(self.$indicator);
+            }
+            if (page >= nbPages - 1) {
+                self.$next.detach();
+            } else {
+                self.$next.appendTo(self.$indicator);
+            }
+        }
+
+        function update() {
+            index = $lis.index($lis.filter('.active')) || 0;
+            page = Math.floor(index / realNbPerPage);
+            hide();
+        }
+
+        this.$carousel.on('slide.bs.carousel.gallery_slider', function () {
             setTimeout(function () {
-                var $item = $carousel.find('.carousel-inner .prev, .carousel-inner .next');
+                var $item = self.$carousel.find('.carousel-inner .prev, .carousel-inner .next');
                 var index = $item.index();
                 $lis.removeClass("active")
                     .filter('[data-slide-to="'+index+'"]')
                     .addClass("active");
-            },0);
+            }, 0);
         });
-
-        function hide () {
-            $lis.addClass('hidden').each(function (i) {
-                if (i >= page*10 && i < (page+1)*10) {
-                    $(this).removeClass('hidden');
-                }
-            });
-            $prev.css('visibility', page === 0 ? 'hidden' : '');
-            $next.css('visibility', (page+1) >= nb ? 'hidden' : '');
-        }
-
-        $indicator.find('li.fa').on('click', function () {
-            page = (page + ($(this).hasClass('o_indicators_left')?-1:1)) % nb;
-            $carousel.carousel(page*10);
+        this.$indicator.on('click.gallery_slider', '> li.fa', function () {
+            page += ($(this).hasClass('o_indicators_left') ? -1 : 1);
+            page = Math.max(0, Math.min(nbPages - 1, page)); // should not be necessary
+            self.$carousel.carousel(page * realNbPerPage);
             hide();
         });
-        hide();
+        this.$carousel.on('slid.bs.carousel.gallery_slider', update);
+    },
+    stop: function () {
+        this._super.apply(this, arguments);
 
-        $carousel.on('slid.bs.carousel', function () {
-            var index = ($lis.filter('.active').index() || 1) -1;
-            page = Math.floor(index / 10);
-            hide();
-        });
-    }
+        this.$prev.prependTo(this.$indicator);
+        this.$next.appendTo(this.$indicator);
+        this.$carousel.off('.gallery_slider');
+        this.$indicator.off('.gallery_slider');
+    },
 });
 
 });
