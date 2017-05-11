@@ -63,6 +63,9 @@ class AccountAnalyticLine(models.Model):
 
             # find the analytic account
             account_id = values.get('account_id') or self.account_id.id
+            if not account_id and values.get('project_id'):
+                project = self.env['project.project'].browse(values['project_id'])
+                account_id = project.analytic_account_id.id
             analytic_account = self.env['account.analytic.account'].browse(account_id) if account_id else self.env['account.analytic.account']
 
             # convert employee cost into timesheet (analytic account) currency
@@ -107,13 +110,13 @@ class AccountAnalyticLine(models.Model):
             analytic_account = self.env['account.analytic.account'].browse(account_id)
             # calculate the revenue on the timesheet
             if so_line.product_id.invoice_policy == 'delivery':
-                delivered_revenue = unit_amount * so_line.price_unit * (1-so_line.discount)
-                revenue = so_line.currency_id.compute(delivered_revenue, analytic_account.currency_id)  # amount from SO should be convert into analytic account currency
+                sale_price_unit = so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id)  # amount from SO should be convert into analytic account currency
+                revenue = analytic_account.currency_id.round(unit_amount * sale_price_unit * (1-so_line.discount))
                 billable_type = 'billable_time'
             elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.track_service == 'task':
                 # compute the total revenue the SO since we are in fixed price
-                total_revenue_so = so_line.product_uom_qty * so_line.price_unit * (1-so_line.discount)
-                total_revenue_so = so_line.currency_id.compute(total_revenue_so, analytic_account.currency_id)
+                sale_price_unit = so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id)
+                total_revenue_so = analytic_account.currency_id.round(so_line.product_uom_qty * sale_price_unit * (1-so_line.discount))
                 # compute the total revenue already existing (without the current timesheet line)
                 domain = [('so_line', '=', so_line.id)]
                 if self.ids:
@@ -122,7 +125,7 @@ class AccountAnalyticLine(models.Model):
                 total_revenue_invoiced = sum(analytic_lines.mapped('timesheet_revenue'))
                 # compute (new) revenue of current timesheet line
                 revenue = min(
-                    so_line.currency_id.compute(unit_amount * (so_line.price_unit) * (1-so_line.discount), analytic_account.currency_id),
+                    analytic_account.currency_id.round(unit_amount * so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id) * (1-so_line.discount)),
                     total_revenue_so - total_revenue_invoiced
                 )
                 billable_type = 'billable_fixed'
