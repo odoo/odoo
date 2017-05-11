@@ -37,10 +37,6 @@ try:
 except ImportError:
     import profile as cProfile
 
-try:
-    from html2text import html2text
-except ImportError:
-    html2text = None
 
 from .config import config
 from .cache import *

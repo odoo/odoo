@@ -13,11 +13,11 @@ import re
 import smtplib
 import threading
 
-import itertools
+import html2text
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import except_orm, UserError
-from odoo.tools import html2text, ustr, pycompat
+from odoo.tools import ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -330,9 +330,9 @@ class IrMailServer(models.Model):
         for key, value in pycompat.items(headers):
             msg[ustr(key).encode('utf-8')] = encode_header(value)
 
-        if subtype == 'html' and not body_alternative and html2text:
+        if subtype == 'html' and not body_alternative:
             # Always provide alternative text body ourselves if possible.
-            text_utf8 = tools.html2text(email_body_utf8.decode('utf-8')).encode('utf-8')
+            text_utf8 = html2text.html2text(email_body_utf8.decode('utf-8')).encode('utf-8')
             alternative_part = MIMEMultipart(_subtype="alternative")
             alternative_part.attach(MIMEText(text_utf8, _charset='utf-8', _subtype='plain'))
             alternative_part.attach(email_text_part)
