@@ -13,17 +13,13 @@ from functools import wraps
 import logging
 import time
 import uuid
-try:
-    from urllib import parse as urlparse
-except ImportError:
-    #pylint: disable=bad-python3-import
-    import urlparse
 
 import psycopg2
 import psycopg2.extras
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
+from werkzeug import urls
 
 from .tools import pycompat
 
@@ -656,7 +652,7 @@ def connection_info_for(db_or_uri):
     """
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
-        us = urlparse.urlsplit(db_or_uri)
+        us = urls.url_parse(db_or_uri)
         if len(us.path) > 1:
             db_name = us.path[1:]
         elif us.username:

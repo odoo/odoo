@@ -5,7 +5,8 @@ import logging
 import random
 import re
 import string
-import urllib2
+
+import requests
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
@@ -53,7 +54,7 @@ class PadCommon(models.AbstractModel):
             myPad = EtherpadLiteClient(pad["key"], pad["server"] + '/api')
             try:
                 myPad.createPad(path)
-            except urllib2.URLError:
+            except IOError:
                 raise UserError(_("Pad creation failed, either there is a problem with your pad server URL or with your connection."))
 
             # get attr on the field model
@@ -79,12 +80,15 @@ class PadCommon(models.AbstractModel):
         content = ''
         if url:
             try:
-                page = urllib2.urlopen('%s/export/html' % url).read()
-                mo = re.search('<body>(.*)</body>', page, re.DOTALL)
-                if mo:
-                    content = mo.group(1)
+                r = requests.get('%s/export/html' % url)
+                r.raise_for_status()
             except:
                 _logger.warning("No url found '%s'.", url)
+            else:
+                mo = re.search('<body>(.*)</body>', r.content, re.DOTALL)
+                if mo:
+                    content = mo.group(1)
+
         return content
 
     # TODO

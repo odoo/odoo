@@ -7,8 +7,9 @@ from collections import OrderedDict
 import hashlib
 import hmac
 import logging
-import urlparse
 from itertools import chain
+
+from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -132,7 +133,7 @@ class AcquirerAdyen(models.Model):
                 'merchantAccount': self.adyen_merchant_account,
                 'shopperLocale': values.get('partner_lang', ''),
                 'sessionValidity': tmp_date.isoformat('T')[:19] + "Z",
-                'resURL': '%s' % urlparse.urljoin(base_url, AdyenController._return_url),
+                'resURL': urls.url_join(base_url, AdyenController._return_url),
                 'merchantReturnData': json.dumps({'return_url': '%s' % values.pop('return_url')}) if values.get('return_url', '') else False,
                 'shopperEmail': values.get('partner_email', ''),
             })
@@ -150,7 +151,7 @@ class AcquirerAdyen(models.Model):
                 'merchantAccount': self.adyen_merchant_account,
                 'shopperLocale': values.get('partner_lang'),
                 'sessionValidity': tmp_date,
-                'resURL': '%s' % urlparse.urljoin(base_url, AdyenController._return_url),
+                'resURL': urls.url_join(base_url, AdyenController._return_url),
                 'merchantReturnData': json.dumps({'return_url': '%s' % values.pop('return_url')}) if values.get('return_url') else False,
                 'merchantSig': self._adyen_generate_merchant_sig('in', values),
             })

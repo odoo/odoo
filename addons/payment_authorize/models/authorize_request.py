@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+import requests
 from lxml import etree, objectify
-from urllib2 import urlopen, Request
 from StringIO import StringIO
 import xml.etree.ElementTree as ET
 from uuid import uuid4
@@ -57,10 +57,9 @@ class AuthorizeAPI():
         :param etree._Element data: etree data to process
         """
         data = etree.tostring(data, xml_declaration=True, encoding='utf-8')
-        request = Request(self.url, data)
-        request.add_header('Content-Type', 'text/xml')
-        response = urlopen(request).read()
-        response = strip_ns(response, XMLNS)
+        r = requests.post(self.url, data=data, headers={'Content-Type': 'text/xml'})
+        r.raise_for_status()
+        response = strip_ns(r.content, XMLNS)
         if response.find('messages/resultCode').text == 'Error':
             messages = [m.text for m in response.findall('messages/message/text')]
             raise ValidationError('Authorize.net Error Message(s):\n %s' % '\n'.join(messages))

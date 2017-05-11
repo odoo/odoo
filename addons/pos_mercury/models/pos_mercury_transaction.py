@@ -4,8 +4,9 @@
 from datetime import date, timedelta
 
 import cgi
-import urllib2
 import ssl
+
+import requests
 import werkzeug
 
 from odoo import models, api, service
@@ -61,11 +62,11 @@ class MercuryTransaction(models.Model):
             'SOAPAction': 'http://www.mercurypay.com/CreditTransaction',
         }
 
-        r = urllib2.Request('https://w1.mercurypay.com/ws/ws.asmx', data=xml_transaction, headers=headers)
         try:
-            u = urllib2.urlopen(r, timeout=65)
-            response = werkzeug.utils.unescape(u.read())
-        except (urllib2.URLError, ssl.SSLError):
+            r = requests.post('https://w1.mercurypay.com/ws/ws.asmx', data=xml_transaction, headers=headers, timeout=65)
+            r.raise_for_status()
+            response = werkzeug.utils.unescape(r.content)
+        except:
             response = "timeout"
 
         return response

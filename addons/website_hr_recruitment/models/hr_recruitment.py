@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urlparse import urljoin
-from werkzeug import url_encode
+from werkzeug import urls
 
 from odoo import api, fields, models
 from odoo.addons.website.models.website import slug
@@ -19,8 +18,8 @@ class RecruitmentSource(models.Model):
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for source in self:
-            source.url = urljoin(base_url, "%s?%s" % (source.job_id.website_url,
-                url_encode({
+            source.url = urls.url_join(base_url, "%s?%s" % (source.job_id.website_url,
+                urls.url_encode({
                     'utm_campaign': self.env.ref('hr_recruitment.utm_campaign_job').name,
                     'utm_medium': self.env.ref('utm.utm_medium_website').name,
                     'utm_source': source.source_id.name

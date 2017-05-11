@@ -3,8 +3,9 @@
 
 import datetime
 import logging
+
+import requests
 import werkzeug.urls
-import urllib2
 
 from ast import literal_eval
 
@@ -71,16 +72,12 @@ class PublisherWarrantyContract(AbstractModel):
         """
         msg = self._get_message()
         arguments = {'arg0': msg, "action": "update"}
-        arguments_raw = werkzeug.urls.url_encode(arguments)
 
         url = config.get("publisher_warranty_url")
 
-        uo = urllib2.urlopen(url, arguments_raw, timeout=30)
-        try:
-            submit_result = uo.read()
-            return literal_eval(submit_result)
-        finally:
-            uo.close()
+        r = requests.post(url, data=arguments, timeout=30)
+        r.raise_for_status()
+        return literal_eval(r.text)
 
     @api.multi
     def update_notification(self, cron_mode=True):

@@ -1,22 +1,20 @@
 # coding: utf-8
-
-from hashlib import sha1
-from lxml import etree, objectify
-from pprint import pformat
-from unicodedata import normalize
-from urllib import urlencode
-
 import datetime
 import logging
 import time
-import urllib2
-import urlparse
+from hashlib import sha1
+from pprint import pformat
+from unicodedata import normalize
+
+import requests
+from lxml import etree, objectify
+from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_ogone.controllers.main import OgoneController
 from odoo.addons.payment_ogone.data import ogone
-from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT, pycompat
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.tools.safe_eval import safe_eval
 
@@ -165,10 +163,10 @@ class PaymentAcquirerOgone(models.Model):
             'OWNERTOWN': values.get('partner_city'),
             'OWNERCTY': values.get('partner_country') and values.get('partner_country').code or '',
             'OWNERTELNO': values.get('partner_phone'),
-            'ACCEPTURL': '%s' % urlparse.urljoin(base_url, OgoneController._accept_url),
-            'DECLINEURL': '%s' % urlparse.urljoin(base_url, OgoneController._decline_url),
-            'EXCEPTIONURL': '%s' % urlparse.urljoin(base_url, OgoneController._exception_url),
-            'CANCELURL': '%s' % urlparse.urljoin(base_url, OgoneController._cancel_url),
+            'ACCEPTURL': urls.url_join(base_url, OgoneController._accept_url),
+            'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
+            'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
+            'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
             'PARAMPLUS': 'return_url=%s' % ogone_tx_values.pop('return_url') if ogone_tx_values.get('return_url') else False,
         }
         if self.save_token in ['ask', 'always']:
@@ -370,8 +368,7 @@ class PaymentTxOgone(models.Model):
         direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
 
         _logger.debug("Ogone data %s", pformat(data))
-        request = urllib2.Request(direct_order_url, urlencode(data))
-        result = urllib2.urlopen(request).read()
+        result = requests.post(direct_order_url, data=data).content
         _logger.debug('Ogone response = %s', result)
 
         try:
@@ -455,8 +452,7 @@ class PaymentTxOgone(models.Model):
         query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % (self.acquirer_id.environment)
 
         _logger.debug("Ogone data %s", pformat(data))
-        request = urllib2.Request(query_direct_url, urlencode(data))
-        result = urllib2.urlopen(request).read()
+        result = requests.post(query_direct_url, data=data).content
         _logger.debug('Ogone response = %s', result)
 
         try:
@@ -497,9 +493,7 @@ class PaymentToken(models.Model):
             }
 
             url = 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (acquirer.environment,)
-            request = urllib2.Request(url, urlencode(data))
-
-            result = urllib2.urlopen(request).read()
+            result = requests.post(url, data=data).content
 
             try:
                 tree = objectify.fromstring(result)

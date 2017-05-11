@@ -3,10 +3,11 @@
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.addons.payment_paypal.controllers.main import PaypalController
+from werkzeug import urls
+
 from odoo.tools import mute_logger
 
 from lxml import objectify
-import urlparse
 
 
 class PaypalCommon(PaymentAcquirerCommon):
@@ -60,9 +61,9 @@ class PaypalForm(PaypalCommon):
             'zip': '1000',
             'country': 'BE',
             'email': 'norbert.buyer@example.com',
-            'return': '%s' % urlparse.urljoin(base_url, PaypalController._return_url),
-            'notify_url': '%s' % urlparse.urljoin(base_url, PaypalController._notify_url),
-            'cancel_return': '%s' % urlparse.urljoin(base_url, PaypalController._cancel_url),
+            'return': urls.url_join(base_url, PaypalController._return_url),
+            'notify_url': urls.url_join(base_url, PaypalController._notify_url),
+            'cancel_return': urls.url_join(base_url, PaypalController._cancel_url),
         }
 
         # check form result

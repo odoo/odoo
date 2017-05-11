@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 """html2text: Turn HTML into equivalent Markdown-structured text."""
+from werkzeug import urls
+
 from odoo.tools import pycompat
 
 __version__ = "2.36"
@@ -10,9 +12,8 @@ __contributors__ = ["Martin 'Joey' Schulze", "Ricardo Reyes", "Kevin Jay North"]
 # TODO:
 #   Support decoded entities with unifiable.
 
-import re, sys, urllib, htmlentitydefs, codecs
+import re, sys, htmlentitydefs, codecs
 import sgmllib
-import urlparse
 sgmllib.charref = re.compile('&#([xX]?[0-9a-fA-F]+)[^0-9a-fA-F]')
 
 try: from textwrap import wrap
@@ -390,7 +391,7 @@ class _html2text(sgmllib.SGMLParser):
                 newa = []
                 for link in self.a:
                     if self.outcount > link['outcount']:
-                        self.out("   ["+repr(link['count'])+"]: " + urlparse.urljoin(self.baseurl, link['href']))
+                        self.out("   ["+repr(link['count'])+"]: " + urls.url_join(self.baseurl, link['href']))
                         if 'title' in link: self.out(" ("+link['title']+")")
                         self.out("\n")
                     else:
@@ -426,32 +427,3 @@ def html2text_file(html, out=wrapwrite, baseurl=''):
 
 def html2text(html, baseurl=''):
     return optwrap(html2text_file(html, None, baseurl))
-
-if __name__ == "__main__":
-    baseurl = ''
-    if sys.argv[1:]:
-        arg = sys.argv[1]
-        if arg.startswith('http://'):
-            baseurl = arg
-            j = urllib.urlopen(baseurl)
-            try:
-                from feedparser import _getCharacterEncoding as enc
-            except ImportError:
-                   enc = lambda x, y: ('utf-8', 1)
-            text = j.read()
-            encoding = enc(j.headers, text)[0]
-            if encoding == 'us-ascii': encoding = 'utf-8'
-            data = text.decode(encoding)
-
-        else:
-            encoding = 'utf8'
-            if len(sys.argv) > 2:
-                encoding = sys.argv[2]
-            f = open(arg, 'r')
-            try:
-                    data = f.read().decode(encoding)
-            finally:
-                    f.close()
-    else:
-        data = sys.stdin.read().decode('utf8')
-    wrapwrite(html2text(data, baseurl))

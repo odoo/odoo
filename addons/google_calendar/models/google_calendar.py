@@ -2,12 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+
+import requests
 from dateutil import parser
 import json
 import logging
 import operator
 import pytz
-import urllib2
+from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import exception_to_unicode, pycompat
@@ -258,7 +260,7 @@ class GoogleCalendar(models.AbstractModel):
         """
         data = self.generate_data(event, isCreating=True)
 
-        url = "/calendar/v3/calendars/%s/events?fields=%s&access_token=%s" % ('primary', urllib2.quote('id,updated'), self.get_token())
+        url = "/calendar/v3/calendars/%s/events?fields=%s&access_token=%s" % ('primary', urls.url_quote('id,updated'), self.get_token())
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = json.dumps(data)
         return self.env['google.service']._do_request(url, data_json, headers, type='POST')
@@ -289,8 +291,8 @@ class GoogleCalendar(models.AbstractModel):
 
         try:
             status, content, ask_time = self.env['google.service']._do_request(url, params, headers, type='GET')
-        except urllib2.HTTPError as e:
-            if e.code == 401:  # Token invalid / Acces unauthorized
+        except requests.HTTPError as e:
+            if e.response.status_code == 401:  # Token invalid / Acces unauthorized
                 error_msg = _("Your token is invalid or has been revoked !")
 
                 self.env.user.write({'google_calendar_token': False, 'google_calendar_token_validity': False})
@@ -674,13 +676,13 @@ class GoogleCalendar(models.AbstractModel):
         if lastSync:
             try:
                 all_event_from_google = self.get_event_synchro_dict(lastSync=lastSync)
-            except urllib2.HTTPError as e:
-                if e.code == 410:  # GONE, Google is lost.
+            except requests.HTTPError as e:
+                if e.response.code == 410:  # GONE, Google is lost.
                     # we need to force the rollback from this cursor, because it locks my res_users but I need to write in this tuple before to raise.
                     self.env.cr.rollback()
                     self.env.user.write({'google_calendar_last_sync_date': False})
                     self.env.cr.commit()
-                error_key = json.loads(str(e))
+                error_key = e.response.json()
                 error_key = error_key.get('error', {}).get('message', 'nc')
                 error_msg = _("Google is lost... the next synchro will be a full synchro. \n\n %s") % error_key
                 raise self.env['res.config.settings'].get_config_warning(error_msg)
