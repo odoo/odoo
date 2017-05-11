@@ -13,7 +13,7 @@ __contributors__ = ["Martin 'Joey' Schulze", "Ricardo Reyes", "Kevin Jay North"]
 #   Support decoded entities with unifiable.
 
 import re, sys, htmlentitydefs, codecs
-import sgmllib
+import sgmllib # pylint: disable=deprecated-module
 sgmllib.charref = re.compile('&#([xX]?[0-9a-fA-F]+)[^0-9a-fA-F]')
 
 try: from textwrap import wrap
