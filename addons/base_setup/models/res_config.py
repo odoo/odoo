@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models
+
+from odoo import api, fields, models, _
 
 
 class BaseConfigSettings(models.TransientModel):
@@ -97,10 +98,10 @@ class BaseConfigSettings(models.TransientModel):
     def edit_external_header(self):
         return self._prepare_report_view_action('web.external_layout_' + self.external_report_layout)
 
-    @api.model
+    @api.multi
     def change_report_template(self):
         self.ensure_one()
-        template = self.env.ref('report.view_company_report_form', False)
+        template = self.env.ref('base.view_company_report_form')
         return {
             'name': _('Choose Your Document Layout'),
             'type': 'ir.actions.act_window',

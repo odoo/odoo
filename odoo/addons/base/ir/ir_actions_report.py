@@ -676,7 +676,7 @@ class IrActionsReport(models.Model):
         :param report_name: Name of the template to generate an action for
         """
         if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout) or (not self.env.user.company_id.logo)) and config:
-            template = self.env.ref('report.view_company_report_form', False)
+            template = self.env.ref('base.view_company_report_form')
             return {
                 'name': _('Choose Your Document Layout'),
                 'type': 'ir.actions.act_window',
