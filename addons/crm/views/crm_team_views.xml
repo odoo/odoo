@@ -29,7 +29,7 @@
         <record id="crm_case_form_view_salesteams_lead" model="ir.actions.act_window">
             <field name="name">Leads</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
             <field name="view_id" ref="crm_case_tree_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>

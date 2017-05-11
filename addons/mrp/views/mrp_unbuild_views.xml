@@ -52,6 +52,45 @@
             <field name="domain">['|', ('unbuild_id', '=', active_id), ('consume_unbuild_id', '=', active_id)]</field>
         </record>
 
+        <record id="mrp_unbuild_kanban_view" model="ir.ui.view">
+            <field name="name">mrp.unbuild.kanban</field>
+            <field name="model">mrp.unbuild</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id"/>
+                    <field name="state"/>
+                    <field name="location_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><span><field name="name"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <strong><span class="pull-right text-right"><t t-esc="record.product_qty.value"/> <t t-esc="record.product_uom_id.value"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8 text-muted">
+                                        <span><t t-esc="record.product_id.value"/></span>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="mrp_unbuild_form_view" model="ir.ui.view">
             <field name="name">mrp.unbuild.form</field>
             <field name="model">mrp.unbuild</field>
@@ -124,7 +163,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.unbuild</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to start a new Unbuild Order

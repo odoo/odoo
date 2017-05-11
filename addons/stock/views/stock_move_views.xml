@@ -69,6 +69,50 @@
             </field>
         </record>
 
+        <record id="view_move_kandan" model="ir.ui.view">
+            <field name="name">stock.move.kanban</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="date"/>
+                    <field name="priority"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-xs-6">
+                                        <strong><span><field name="name"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger',
+                                            'assigned': 'success', 'confirmed': 'default'}}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mb4">
+                                    <field name="product_id"/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <strong><span><field name="priority" widget="priority"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <span class="pull-right">
+                                            <i class="fa fa-clock-o"/> <field name="date"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_move_picking_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
             <field name="model">stock.move</field>
@@ -278,6 +322,13 @@
             <field name="act_window_id" ref="stock_move_action"/>
         </record>
 
+        <record model="ir.actions.act_window.view" id="action_stock_move_graph_all">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_move_kandan"/>
+            <field name="act_window_id" ref="stock_move_action"/>
+        </record>
+
 
         <!--
             Receipt Picking (By Stock Move)
@@ -321,12 +372,50 @@
             </field>
         </record>
 
+        <record id="view_stock_move_kanban" model="ir.ui.view">
+            <field name="name">stock.move.kanban</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="product_id"/>
+                    <field name="state"/>
+                    <field name="product_uom_qty"/>
+                    <field name="priority"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-xs-6">
+                                        <strong><field name="product_id"/></strong>
+                                    </div>
+                                    <div class="col-xs-6 pull-right text-right">
+                                        <strong>Qty: </strong><field name="product_uom_qty"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 text-muted">
+                                        <field name="priority" widget="priority"/>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'info', 'cancel': 'default',
+                                            'assigned': 'success', 'done': 'success'}}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="action_receipt_picking_move" model="ir.actions.act_window">
             <field name="name">Incoming  Products</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="domain" eval="[('picking_id.picking_type_id.code','=','incoming'), ('location_id.usage','!=','internal'), ('location_dest_id.usage', '=', 'internal')]"/>
             <field name="view_id" ref="view_move_tree_receipt_picking"/>
             <field name="context">{'product_receive': True, 'search_default_future': True}</field>

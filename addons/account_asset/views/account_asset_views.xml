@@ -65,6 +65,33 @@
         </field>
     </record>
 
+    <record id="view_account_asset_asset_category_kanban" model="ir.ui.view">
+        <field name="name">account.asset.category.kanban</field>
+        <field name="model">account.asset.category</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="method"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div class="col-xs-6">
+                                    <strong><span><t t-esc="record.name.value"/></span></strong>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <span class="badge"><strong><t t-esc="record.method.value"/></strong></span>
+                                </div>
+                            </div>
+                            <div> <t t-esc="record.journal_id.value"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_account_asset_category_tree">
         <field name="name">account.asset.category.tree</field>
         <field name="model">account.asset.category</field>
@@ -191,6 +218,43 @@
         </field>
     </record>
 
+    <record id="view_account_asset_asset_kanban" model="ir.ui.view">
+        <field name="name">account.asset.asset.kanban</field>
+        <field name="model">account.asset.asset</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="date"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div class="col-xs-6">
+                                    <strong><span><t t-esc="record.name.value"/></span></strong>
+                                </div>
+                                <div class="col-xs-6 pull-right text-right">
+                                    <strong><t t-esc="record.date.value"/></strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 text-muted">
+                                    <span><t t-esc="record.category_id.value"/></span>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span class="pull-right text-right">
+                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'primary', 'open': 'success', 'close': 'default'}}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_account_asset_asset_purchase_tree">
         <field name="name">account.asset.asset.purchase.tree</field>
         <field name="model">account.asset.asset</field>
@@ -234,6 +298,7 @@
         <field name="name">Assets</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="view_account_asset_asset_purchase_tree"/>
         <field name="domain">[('category_id.type', '=', 'purchase')]</field>
     </record>
@@ -250,7 +315,7 @@
         <field name="res_model">account.asset.category</field>
         <field name="domain">[('type', '=', 'purchase')]</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="context">{'default_type': 'purchase'}</field>
     </record>
 

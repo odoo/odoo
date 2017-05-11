@@ -107,6 +107,30 @@
                 </tree>
             </field>
         </record>
+
+        <record id="product_pricelist_view_kanban" model="ir.ui.view">
+            <field name="name">product.pricelist.kanban</field>
+            <field name="model">product.pricelist</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div>
+                                    <strong><span><field name="name"/></span></strong>
+                                    <span class="text-primary pull-right">
+                                        <strong><i class="fa fa-money" aria-hidden="true"></i> <field name="currency_id"/></strong>
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="product_pricelist_view" model="ir.ui.view">
             <field name="name">product.pricelist.form</field>
             <field name="model">product.pricelist</field>
@@ -164,7 +188,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.pricelist</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="product_pricelist_view_search" />
             <field name="context">{"default_base":'list_price'}</field>
             <field name="help" type="html">

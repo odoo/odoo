@@ -100,6 +100,36 @@
                 </tree>
             </field>
         </record>
+
+        <record id="view_account_account_kanban" model="ir.ui.view">
+            <field name="name">account.account.kanban</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="user_type_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <span class="badge"><t t-esc="record.code.value"/></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong>Type: </strong><t t-esc="record.user_type_id.value"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_account_search" model="ir.ui.view">
             <field name="name">account.account.search</field>
             <field name="model">account.account</field>
@@ -119,7 +149,7 @@
             <field name="name">Chart of Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_account_search"/>
             <field name="view_id" ref="view_account_list"/>
             <field name="help" type="html">
@@ -332,7 +362,7 @@
         <record id="action_account_bank_journal_form" model="ir.actions.act_window">
             <field name="name">Bank Accounts</field>
             <field name="res_model">account.journal</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_bank_journal_tree')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_bank_journal_form')})]"/>
@@ -350,7 +380,7 @@
             <field name="name">Journals</field>
             <field name="res_model">account.journal</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a journal.
@@ -892,6 +922,30 @@
                 </tree>
             </field>
         </record>
+        <record id="view_tax_kanban" model="ir.ui.view">
+            <field name="name">account.tax.kanban</field>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="type_tax_use"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-xs-6">
+                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6 pull-right text-right">
+                                        <span class="badge"><t t-esc="record.type_tax_use.value"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="view_account_tax_search" model="ir.ui.view">
             <field name="name">account.tax.search</field>
             <field name="model">account.tax</field>
@@ -977,7 +1031,7 @@
             <field name="name">Taxes</field>
             <field name="res_model">account.tax</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="domain" eval="False"/> <!-- Force empty -->
             <field name="context">{'search_default_sale': True, 'search_default_purchase': True}</field>
             <field name="view_id" ref="view_tax_tree"/>
@@ -1259,6 +1313,44 @@
                 </tree>
             </field>
         </record>
+
+        <record id="view_account_move_kanban" model="ir.ui.view">
+            <field name="name">account.move.kanban</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="journal_id"/>
+                    <field name="ref"/>
+                    <field name="date"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-xs-6">
+                                        <strong><span><field name="journal_id"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <strong><i class="fa fa-clock-o"/> <t t-esc="record.date.value"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <span><field name="ref"/></span>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'posted': 'success'}}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">account.move.form</field>
             <field name="model">account.move</field>
@@ -1355,7 +1447,7 @@
             <field name="name">Journal Entries</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
             <field name="context">{'search_default_misc_filter':1, 'view_no_maturity': True}</field>
@@ -1487,11 +1579,29 @@
                 </form>
             </field>
         </record>
+        <record id="view_account_payment_term_kanban" model="ir.ui.view">
+            <field name="name">account.payment.term.kanban</field>
+            <field name="model">account.payment.term</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="note"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div><strong><t t-esc="record.name.value"/></strong></div>
+                                <div t-if="record.note.value"><strong>Note: </strong><t t-esc="record.note.value"/></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="action_payment_term_form" model="ir.actions.act_window">
             <field name="name">Payment Terms</field>
             <field name="res_model">account.payment.term</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_payment_term_search"/>
         </record>
 

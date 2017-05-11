@@ -29,12 +29,39 @@
             </tree>
         </field>
     </record>
+
+    <record id="view_pos_category_kanban" model="ir.ui.view">
+        <field name="name">pos.category.kanban</field>
+        <field name="model">pos.category</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="image_medium"/>
+                <field name="id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <img height="100" width="100" t-att-src="kanban_image('pos.category', 'image_medium', record.id.raw_value)"/>
+                                </div>
+                                <div class="col-xs-8">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="product_pos_category_action" model="ir.actions.act_window">
         <field name="name">PoS Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.category</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" eval="False"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
