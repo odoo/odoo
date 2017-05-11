@@ -30,7 +30,7 @@ var KanbanModel = BasicModel.extend({
             fieldsInfo: group.fieldsInfo,
             viewType: group.viewType,
         });
-        group.data.unshift(new_record);
+        group.data.unshift(new_record.id);
         group.count++;
         return this._fetchRecord(new_record)
             // .then(this._fetch_relational_data.bind(this))
