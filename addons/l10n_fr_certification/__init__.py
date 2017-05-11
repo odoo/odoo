@@ -19,7 +19,7 @@ def _setup_inalterability(cr, registry):
         for cancel_view in ir_views:
             cancel_view.write({'active': False})
 
-    fr_companies = env['res.company'].search([('partner_id.country_id', '=', env.ref('base.fr').id)])
+    fr_companies = env['res.company'].search([('partner_id.country_id.code', '=', 'FR')])
     if fr_companies:
         # create the securisation sequence per company
         fr_companies._create_secure_sequence()

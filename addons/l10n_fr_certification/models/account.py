@@ -16,7 +16,7 @@ LINE_FIELDS = ['debit', 'credit', 'account_id', 'move_id']  # invoice_id, partne
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    l10n_fr_secure_sequence_number = fields.Char(readonly=True)
+    l10n_fr_secure_sequence_number = fields.Integer(readonly=True)
     l10n_fr_hash = fields.Char(readonly=True)
     l10n_fr_string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True, store=False)
 
@@ -25,8 +25,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         #get the only one exact previous move in the securisation sequence
         prev_move = self.search([('state', '=', 'posted'),
-            ('company_id', '=', self.company_id.id),
-            ('l10n_fr_secure_sequence_number', '=', int(secure_seq_number) - 1)])
+                                 ('company_id', '=', self.company_id.id),
+                                 ('l10n_fr_secure_sequence_number', '=', int(secure_seq_number) - 1)])
         if prev_move and len(prev_move) != 1:
             raise UserError(
                _('Error occured when computing the hash. Impossible to get the unique previous posted move'))
@@ -56,7 +56,11 @@ class AccountMove(models.Model):
             for line in move.line_ids:
                 for field in LINE_FIELDS:
                     values[field] = _getattrstring(line, field)
-            move.l10n_fr_string_to_hash = dumps(values, sort_keys=True)
+            #make the json serialization canonical
+            #  (https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00)
+            move.l10n_fr_string_to_hash = dumps(values, sort_keys=True, encoding="utf-8",
+                                                ensure_ascii=True, indent=None,
+                                                separators=(',',':'))
 
     @api.multi
     def write(self, vals):
@@ -68,7 +72,7 @@ class AccountMove(models.Model):
                     has_been_posted = True
 
                 # restrict the operation in case we are trying to write a forbidden field
-                if (move.state == "posted" and set(vals.keys()).intersection(MOVE_FIELDS)):
+                if (move.state == "posted" and set(vals).intersection(MOVE_FIELDS)):
                     raise UserError(ERR_MSG % (self._name, ', '.join(MOVE_FIELDS)))
         res = super(AccountMove, self).write(vals)
         # write the hash and the secure_sequence_number when posting an account.move
@@ -96,9 +100,9 @@ class AccountMove(models.Model):
               (None otherwise)
         """
         moves = self.search([('state', '=', 'posted'),
-            ('company_id', '=', company_id.id),
-            ('l10n_fr_secure_sequence_number', '!=', False)],
-            order="l10n_fr_secure_sequence_number ASC")
+                             ('company_id', '=', company_id.id),
+                             ('l10n_fr_secure_sequence_number', '!=', False)],
+                            order="l10n_fr_secure_sequence_number ASC")
 
         previous_hash = ''
         for move in moves:
@@ -123,7 +127,7 @@ class AccountMoveLine(models.Model):
     @api.multi
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
-        if set(vals.keys()).intersection(LINE_FIELDS):
+        if set(vals).intersection(LINE_FIELDS):
             if any(l.company_id.country_id.code == 'FR' and l.move_id.state == 'posted' for l in self):
                 raise UserError(ERR_MSG % (self._name, ', '.join(LINE_FIELDS)))
         return super(AccountMoveLine, self).write(vals)
