@@ -122,7 +122,7 @@ class PaymentAcquirer(models.Model):
         help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase."
              "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
              "issue an invoice.")
-    token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support')
+    token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support', search='_search_is_tokenized')
     authorize_implemented = fields.Boolean('Authorize Mechanism Supported', compute='_compute_feature_support')
     fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
     fees_active = fields.Boolean('Add Extra Fees')
@@ -149,6 +149,13 @@ class PaymentAcquirer(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
+    def _search_is_tokenized(self, operator, value):
+        tokenized = self._get_feature_support()['tokenize']
+        if (operator, value) in [('=', True), ('!=', False)]:
+            return [('provider', 'in', tokenized)]
+        return [('provider', 'not in', tokenized)]
+
+    @api.multi
     def _compute_feature_support(self):
         feature_support = self._get_feature_support()
         for acquirer in self:
