@@ -5,7 +5,6 @@
 """
 Miscellaneous tools used by OpenERP.
 """
-
 from functools import wraps
 import babel
 from contextlib import contextmanager
@@ -14,11 +13,13 @@ import subprocess
 import io
 import os
 import passlib.utils
+import pickle as pickle_
 import re
 import socket
 import sys
 import threading
 import time
+import types
 import werkzeug.utils
 import zipfile
 from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
@@ -35,12 +36,6 @@ try:
     import cProfile
 except ImportError:
     import profile as cProfile
-
-try:
-    # pylint: disable=bad-python3-import
-    import cPickle as pickle_
-except ImportError:
-    import pickle as pickle_
 
 try:
     from html2text import html2text
@@ -1104,23 +1099,18 @@ def _consteq(str1, str2):
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
 
-class Pickle(object):
-    @classmethod
-    def load(cls, stream, errors=False):
-        unpickler = pickle_.Unpickler(stream)
-        # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
-        unpickler.find_global = None
-        try:
-            return unpickler.load()
-        except Exception:
-            _logger.warning('Failed unpickling data, returning default: %r', errors, exc_info=True)
-            return errors
-
-    @classmethod
-    def loads(cls, text):
-        return cls.load(io.BytesIO(text))
-
-    dumps = pickle_.dumps
-    dump = pickle_.dump
-
-pickle = Pickle
+def _pickle_load(stream, errors=False):
+    unpickler = pickle_.Unpickler(stream)
+    # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
+    unpickler.find_global = None
+    try:
+        return unpickler.load()
+    except Exception:
+        _logger.warning('Failed unpickling data, returning default: %r',
+                        errors, exc_info=True)
+        return errors
+pickle = types.ModuleType(__name__ + '.pickle')
+pickle.load = _pickle_load
+pickle.loads = lambda text: _pickle_load(io.BytesIO(text))
+pickle.dump = pickle_.dump
+pickle.dumps = pickle_.dumps
