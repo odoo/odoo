@@ -426,7 +426,7 @@ var FormController = BasicController.extend({
             res_id: record && record.res_id,
             res_model: data.field.relation,
             shouldSaveLocally: true,
-            title: (record ? _t("Open:") : _t("Create")) + data.field.string,
+            title: (record ? _t("Open: ") : _t("Create ")) + (event.target.string || data.field.string),
         }).open();
     },
     /**
