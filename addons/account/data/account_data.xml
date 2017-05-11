@@ -28,7 +28,7 @@
         <record id="account_payment_term_15days" model="account.payment.term">
             <field name="name">15 Days</field>
             <field name="note">Payment terms: 15 Days</field>
-            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <record forcecreate="True" id="decimal_payment" model="decimal.precision">
@@ -39,7 +39,7 @@
         <record id="account_payment_term_net" model="account.payment.term">
             <field name="name">30 Net Days</field>
             <field name="note">Payment terms: 30 Net Days</field>
-            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <!--

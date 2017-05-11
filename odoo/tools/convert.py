@@ -285,8 +285,14 @@ form: module.record_id""" % (xml_id,)
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.get(f,'').encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('attachment','attachment'),('attachment_use','attachment_use'), ('usage','usage'),
-                           ('file', 'report_file'), ('report_type', 'report_type'), ('parser', 'parser')):
+        for field, dest in (('attachment', 'attachment'),
+                            ('attachment_use', 'attachment_use'),
+                            ('usage', 'usage'),
+                            ('file', 'report_file'),
+                            ('report_type', 'report_type'),
+                            ('parser', 'parser'),
+                            ('print_report_name', 'print_report_name'),
+                            ):
             if rec.get(field):
                 res[dest] = rec.get(field).encode('utf8')
         if rec.get('auto'):
