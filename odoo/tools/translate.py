@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import codecs
-import csv
 import fnmatch
 import inspect
 import io
@@ -121,6 +120,8 @@ _LOCALE2WIN32 = {
 ENGLISH_SMALL_WORDS = set("as at by do go if in me no of ok on or to up us we".split())
 
 
+# these direct uses of CSV are ok.
+import csv # pylint: disable=deprecated-module
 class UNIX_LINE_TERMINATOR(csv.excel):
     lineterminator = '\n'
 
@@ -657,7 +658,7 @@ def trans_export(lang, modules, buffer, format, cr):
 
     def _process(format, modules, rows, buffer, lang):
         if format == 'csv':
-            writer = csv.writer(buffer, 'UNIX')
+            writer = pycompat.csv_writer(buffer, dialect='UNIX')
             # write header first
             writer.writerow(("module","type","name","res_id","src","value","comments"))
             for module, type, name, res_id, src, trad, comments in rows:
@@ -1035,11 +1036,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # now, the serious things: we read the language file
         fileobj.seek(0)
         if fileformat == 'csv':
-            reader = csv.reader(fileobj, quotechar='"', delimiter=',')
+            reader = pycompat.csv_reader(fileobj, quotechar='"', delimiter=',')
             # read the first line of the file (it contains columns titles)
-            for row in reader:
-                fields = row
-                break
+            fields = next(reader)
 
         elif fileformat == 'po':
             reader = PoFile(fileobj)

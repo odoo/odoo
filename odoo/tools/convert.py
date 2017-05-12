@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import io
-import csv
 import logging
 import os.path
 import re
@@ -844,28 +843,21 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         quote: "
         delimiter: ,
         encoding: utf-8'''
-    if not idref:
-        idref={}
-    model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
-    #remove folder path from model
-    head, model = os.path.split(model)
+    filename, _ext = os.path.splitext(os.path.basename(fname))
+    model = filename.split('-')[0]
 
-    input = io.BytesIO(csvcontent) #FIXME
-    reader = csv.reader(input, quotechar='"', delimiter=',')
+    reader = pycompat.csv_reader(io.BytesIO(csvcontent), quotechar='"', delimiter=',')
     fields = next(reader)
 
     if not (mode == 'init' or 'id' in fields):
         _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
         return
 
-    datas = []
-    for line in reader:
-        if not (line and any(line)):
-            continue
-        try:
-            datas.append([ustr(v) for v in line])
-        except Exception:
-            _logger.error("Cannot import the line: %s", line)
+    # filter out empty lines (any([]) == False) and lines containing only empty cells
+    datas = [
+        line for line in reader
+        if any(line)
+    ]
 
     context = {
         'mode': mode,

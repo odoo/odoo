@@ -30,7 +30,6 @@ from lxml import etree
 
 from .which import which
 import traceback
-import csv
 from operator import itemgetter
 
 try:
@@ -403,14 +402,15 @@ def scan_languages():
     csvpath = odoo.modules.module.get_resource_path('base', 'res', 'res.lang.csv')
     try:
         # read (code, name) from languages in base/res/res.lang.csv
-        result = []
-        with open(csvpath) as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        with open(csvpath, 'rb') as csvfile:
+            reader = pycompat.csv_reader(csvfile, delimiter=',', quotechar='"')
             fields = next(reader)
             code_index = fields.index("code")
             name_index = fields.index("name")
-            for row in reader:
-                result.append((ustr(row[code_index]), ustr(row[name_index])))
+            result = [
+                (row[code_index], row[name_index])
+                for row in reader
+            ]
     except Exception:
         _logger.error("Could not read %s", csvpath)
         result = []

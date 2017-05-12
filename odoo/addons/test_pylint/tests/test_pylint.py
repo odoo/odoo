@@ -87,6 +87,7 @@ class TestPyLint(TransactionCase):
     BAD_MODULES = [
         'commands',
         'cPickle',
+        'csv',
         'cStringIO',
         'md5',
         'urllib',
