@@ -135,6 +135,10 @@
         </html>
     </template>
 
+    <template id="show_watermark">
+        <div class= "watermark" style="position:absolute;opacity:0.25;font-size:250px; margin-top:350;width:100%;text-align:center;z-index:1000;-webkit-transform:rotate(320deg);"><img t-att-src="'data:image/png;base64,%s'% watermark_image"/></div>
+    </template>
+
     <!-- External layouts styles -->
 
     <template id="external_layout_background">
@@ -151,6 +155,9 @@
                     t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
             </div>
             <div class="clearfix mb8"/>
+            <t t-if="show_watermark">
+                <t t-call="web.show_watermark"><t t-raw="0"/></t>
+            </t>
         </div>
 
         <div class="article o_report_layout_background">
@@ -189,6 +196,9 @@
                             t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                     </div>
                 </div>
+                <t t-if="show_watermark">
+                    <t t-call="web.show_watermark"><t t-raw="0"/></t>
+                </t>
             </div>
         </div>
 
@@ -228,6 +238,9 @@
                     </ul>
                 </div>
             </div>
+            <t t-if="show_watermark">
+                <t t-call="web.show_watermark"><t t-raw="0"/></t>
+            </t>
         </div>
 
         <div class="article o_report_layout_clean">
@@ -275,6 +288,9 @@
                         style="border-bottom: 1px solid black; display:inline-block;"/>
                 </div>
             </div>
+            <t t-if="show_watermark">
+                <t t-call="web.show_watermark"><t t-raw="0"/></t>
+            </t>
         </div>
 
         <div class="article o_report_layout_standard">
@@ -355,6 +371,9 @@
                     </ul>
                 </div>
             </div>
+            <t t-if="show_watermark">
+                <t t-call="web.show_watermark"><t t-raw="0"/></t>
+            </t>
         </div>
         <div class="article">
           <t t-raw="0" />

@@ -101,6 +101,8 @@ class IrActionsReport(models.Model):
                                     help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
+    show_watermark = fields.Boolean(default=True)
+    watermark_id = fields.Many2one('ir.attachment', string='Watermark', help="Attach watermark image for pdf report")
 
     @api.multi
     def associated_view(self):
@@ -661,6 +663,7 @@ class IrActionsReport(models.Model):
                 'doc_model': self.model,
                 'docs': docs,
             }
+        data.update({'show_watermark': self.show_watermark, 'watermark_image': self.watermark_id.datas or self.env.user.company_id.watermark_id.datas or self.env.user.company_id.logo})
         return self.render_template(self.report_name, data), 'html'
 
     @api.multi
