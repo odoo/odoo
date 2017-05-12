@@ -247,6 +247,12 @@ var FormController = BasicController.extend({
      */
     _updateButtons: function () {
         if (this.$buttons) {
+            if (this.footerToButtons) {
+                var $footer = this.$('footer');
+                if ($footer.length) {
+                    this.$buttons.empty().append($footer);
+                }
+            }
             var edit_mode = (this.mode === 'edit');
             this.$buttons.find('.o_form_buttons_edit')
                          .toggleClass('o_hidden', !edit_mode);

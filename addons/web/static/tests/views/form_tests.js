@@ -3524,6 +3524,34 @@ QUnit.module('Views', {
         }
     });
 
+    QUnit.test('footers are not duplicated on rerender', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="foo"/>' +
+                    '<footer>' +
+                        '<button>Hello</button>' +
+                    '</footer>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                footer_to_buttons: true,
+            },
+        });
+
+        assert.strictEqual(form.$('footer').length, 0,
+            "footer should have been moved outside of the form view");
+        form.reload();
+        assert.strictEqual(form.$('footer').length, 0,
+            "footer should still have been moved outside of the form view");
+        form.destroy();
+    });
+
     QUnit.test('render stat button with string inline', function (assert) {
         assert.expect(1);
 
