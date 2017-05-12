@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import cgi
 import json
 import logging
 
@@ -10,6 +9,7 @@ import re
 import werkzeug.urls
 
 from odoo import api, models
+from odoo.tools import misc
 from odoo.addons.google_account import TIMEOUT
 
 _logger = logging.getLogger(__name__)
@@ -70,7 +70,7 @@ class GoogleDrive(models.Model):
       href="https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R60C15"/>
     <gs:cell row="60" col="15" inputValue="{config}"/>
   </entry>
-</feed>''' .format(key=spreadsheet_key, formula=cgi.escape(formula, quote=True), config=cgi.escape(config_formula, quote=True))
+</feed>''' .format(key=spreadsheet_key, formula=misc.html_escape(formula), config=misc.html_escape(config_formula))
 
         try:
             req = requests.post(
