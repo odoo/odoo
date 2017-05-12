@@ -28,6 +28,7 @@ var KanbanColumn = Widget.extend({
         'click .o_kanban_quick_add': '_onAddQuickCreate',
         'click .o_kanban_load_more': '_onLoadMore',
         'click .o_kanban_toggle_fold': '_onToggleFold',
+        'dblclick .o_column_title': '_onColumnTitleEdit',
     },
     /**
      * @override
@@ -253,6 +254,46 @@ var KanbanColumn = Widget.extend({
      */
     _onCancelQuickCreate: function () {
         this._cancelQuickCreate();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onColumnTitleEdit: function (event) {
+        if (!this.grouped_by_m2o){
+            return;
+        }
+        self = this;
+        var $title = this.$('.o_column_title')
+        var $input = this.$('.o_title_input');
+        var $inputWrapper = $input.parent();
+        $title.css('display', 'none');
+        $inputWrapper.css('display', 'block');
+        $input.val($title.text()).focus().select();
+        $input.off().on('focusout keydown', function (event) {
+            if (event.which === $.ui.keyCode.ESCAPE) {
+                $input.off('focusout')
+                $title.css('display', 'block');
+                $inputWrapper.css('display', 'none');
+            }
+            if (event.which === $.ui.keyCode.ENTER || event.type === 'focusout') {
+                var inputVal = $input.val().trim();
+                if (inputVal && inputVal != $title.text()) {
+                    if (!self.id) {//To handle undefined column edit
+                        self.trigger_up('create_undefined_column', {
+                            value: $input.val(),
+                        })
+                    } else { //To handle the columns having id
+                        self.trigger_up('kanban_column_edit', {
+                            name: inputVal
+                        });
+                    }
+                } else {
+                    $title.css('display', 'block');
+                    $inputWrapper.css('display', 'none');
+                }
+            }
+        });
     },
     /**
      * @private

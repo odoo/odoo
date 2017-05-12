@@ -740,7 +740,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create a column in grouped on m2o', function (assert) {
-        assert.expect(13);
+        assert.expect(11);
 
         var nbRPCs = 0;
         var kanban = createView({
@@ -767,23 +767,12 @@ QUnit.module('Views', {
             "the input should not be visible");
 
         kanban.$('.o_column_quick_create').click();
-
         assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
             "the input should be visible");
 
-        // discard the column creation and click it again
-        kanban.$('.o_column_quick_create').click();
-        assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
-            "the input should not be visible after discard");
+        kanban.$('.o_column_quick_create input').val('xyz').trigger('blur');
 
-        kanban.$('.o_column_quick_create').click();
-        assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
-            "the input should be visible");
-
-        kanban.$('.o_column_quick_create input').val('new value');
-        kanban.$('.o_column_quick_create button.o_kanban_add').click();
-
-        assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new value)').length, 1,
+        assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(xyz)').length, 1,
             "the last column should be the newly created one");
         assert.ok(_.isNumber(kanban.$('.o_kanban_group:last').data('id')),
             'the created column should have the correct id');
@@ -830,8 +819,7 @@ QUnit.module('Views', {
             "should have created a partner");
 
         kanban.$('.o_column_quick_create').click();
-        kanban.$('.o_column_quick_create input').val('new column');
-        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+        kanban.$('.o_column_quick_create input').val('new column').blur();
 
         assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column)').length, 1,
             "the last column should be the newly created one");
@@ -933,8 +921,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have two columns");
 
         kanban.$('.o_column_quick_create').click();
-        kanban.$('.o_column_quick_create input').val('new column 1');
-        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+        kanban.$('.o_column_quick_create input').val('new column 1').blur();
 
         assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have two columns");
 
@@ -944,8 +931,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have twos columns");
 
         kanban.$('.o_column_quick_create').click();
-        kanban.$('.o_column_quick_create input').val('new column 2');
-        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+        kanban.$('.o_column_quick_create input').val('new column 2').blur();
 
         assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have three columns");
         assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column 2)').length, 1,
@@ -954,7 +940,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('edit a column in grouped on m2o', function (assert) {
-        assert.expect(12);
+        assert.expect(14);
 
         var nbRPCs = 0;
         var kanban = createView({
@@ -973,6 +959,9 @@ QUnit.module('Views', {
             },
             mockRPC: function (route, args) {
                 nbRPCs++;
+                if(args.method === 'write' && args.args[1].name) {
+                    assert.strictEqual(args.args[1].name, 'suh', 'The column name should be now suh')
+                }
                 return this._super(route, args);
             },
         });
@@ -1010,6 +999,12 @@ QUnit.module('Views', {
         assert.ok(!$('.modal').length, 'the modal should be closed');
         assert.strictEqual(kanban.$('.o_kanban_group[data-id=5] .o_column_title').text(), 'ged',
             'title of the column should be "ged"');
+        assert.strictEqual(nbRPCs, 4, 'should have done 1 write, 1 read_group and 2 search_read');
+        //edit the title of column [5, 'xmo'] by dblcicking on column title
+        nbRPCs = 0;
+        kanban.$('.o_kanban_group[data-id=5] .o_column_title').dblclick();
+        kanban.$('.o_kanban_group[data-id=5] .o_title_input').val("suh");
+        kanban.$('.o_kanban_group[data-id=5] .o_title_input').blur();
         assert.strictEqual(nbRPCs, 4, 'should have done 1 write, 1 read_group and 2 search_read');
         kanban.destroy();
     });
@@ -1647,8 +1642,7 @@ QUnit.module('Views', {
             "Create button shouldn't be highlighted");
 
         kanban.$('.o_column_quick_create').click();
-        kanban.$('.o_column_quick_create input').val('new column');
-        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+        kanban.$('.o_column_quick_create input').val('new column').blur();
 
         assert.ok(kanban.$buttons.find('.o-kanban-button-new').hasClass('btn-primary'),
             "Create button should now be highlighted");
@@ -1726,12 +1720,10 @@ QUnit.module('Views', {
         });
 
         kanban.$('.o_column_quick_create').click();
-        kanban.$('.o_column_quick_create input').val('column1');
-        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+        kanban.$('.o_column_quick_create input').val('column1').blur();
 
         kanban.$('.o_column_quick_create').click();
-        kanban.$('.o_column_quick_create input').val('column2');
-        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+        kanban.$('.o_column_quick_create input').val('column2').blur();
 
         kanban.$('.o_kanban_group:eq(1) .o_kanban_quick_add i').click();
         var $quickCreate = kanban.$('.o_kanban_group:eq(1) .o_kanban_quick_create');
@@ -1792,6 +1784,37 @@ QUnit.module('Views', {
             "the add button should still be visible");
         kanban.destroy();
     });
+
+    QUnit.test('undefined column update in grouped m2o', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        // delete second column (first cancel the confirm request, then confirm)
+        kanban.$('.o_kanban_group:last .o_column_delete').click(); // click on delete
+        assert.ok($('.modal').length, 'a confirm modal should be displayed.');
+        $('.modal .modal-footer .btn-primary').click(); // click on confirm
+        //undefined column update
+        kanban.$('.o_kanban_group:first .o_column_title').dblclick();
+        kanban.$('.o_kanban_group:first .o_title_input').val("suh").blur();
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_column_title').text(), 'suh',
+            'second column should have correct title');
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 2,
+            "second column should have two records");
+        kanban.destroy();
+    });
+
 });
 
 });
