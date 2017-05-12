@@ -83,6 +83,8 @@ class StockMoveLine(models.Model):
 
     def _account_entry_move(self, move):
         """ Accounting Valuation Entries """
+        #TODO OCO move est un stock.move ! C'est donc bien pratique !
+
         if move.product_id.type != 'product' or move.product_id.valuation != 'real_time':
             # no stock valuation for consumable products
             return False
@@ -120,6 +122,9 @@ class StockMoveLine(models.Model):
             journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
             self.with_context(force_company=move.company_id.id)._create_account_move_line(move, acc_src, acc_dest, journal_id)
 
+        if move.company_id.anglo_saxon_accounting: #TODO OCO : voir si ça fonctionne comme tu le veux
+            move.reconcile_valuation_with_invoices()
+
     def _create_account_move_line(self, move, credit_account_id, debit_account_id, journal_id):
         # group quants by cost
         quant_cost_qty = defaultdict(lambda: 0.0)
@@ -141,6 +146,7 @@ class StockMoveLine(models.Model):
                         values={'self': new_account_move, 'origin': move.picking_id},
                         subtype_id=self.env.ref('mail.mt_note').id)
                 move.write({'stock_account_valuation_account_move_ids': [(4, new_account_move.id, None)]})
+
 
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
@@ -502,6 +508,13 @@ class StockMove(models.Model):
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
+
+    def _get_related_invoices(self): # To be overridden #TODO OCO: le faire dans sale et purchase (en ajoutant bien toujours au résultat du parent pour ménager l'héritage louche)
+        return []
+
+    def reconcile_valuation_with_invoices(self):
+        for invoice in self._get_related_invoices():
+            invoice.anglo_saxon_reconcile_valuation() #TODO OCO: devrait marcher, mais bien vérifier ça.
 
 
 class StockReturnPicking(models.TransientModel):

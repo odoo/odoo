@@ -91,7 +91,9 @@ class AccountInvoice(models.Model):
 
     def invoice_validate(self):
         super(AccountInvoice, self).invoice_validate()
+        self.anglo_saxon_reconcile_valuation()
 
+    def anglo_saxon_reconcile_valuation(self):
         for invoice in self:
             if invoice.company_id.anglo_saxon_accounting:
 
@@ -100,7 +102,7 @@ class AccountInvoice(models.Model):
                     if product.valuation == 'real_time' and product.cost_method == 'real':
                         product_interim_account = invoice._get_anglosaxon_interim_account(product)
 
-                        to_reconcile = self.env['account.move.line'].search([('move_id','=',invoice.move_id.id), ('product_id','=',product.id), ('account_id','=',product_interim_account.id)])
+                        to_reconcile = self.env['account.move.line'].search([('move_id','=',invoice.move_id.id), ('product_id','=',product.id), ('account_id','=',product_interim_account.id), ('reconciled','=',False)])
 
                         product_stock_moves = self.env['stock.move'].search([('id','in',invoice_stock_moves_id_list), ('product_id','=',product.id)])
                         for stock_move in product_stock_moves:
