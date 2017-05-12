@@ -13,4 +13,4 @@ def check_with_xsd(tree_or_str, xsd_path):
     except etree.DocumentInvalid as xml_errors:
         #import UserError only here to avoid circular import statements with tools.func being imported in exceptions.py
         from odoo.exceptions import UserError
-        raise UserError('\n'.join([e.message for e in xml_errors.error_log]))
+        raise UserError('\n'.join(str(e) for e in xml_errors.error_log))

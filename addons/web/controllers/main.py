@@ -1053,7 +1053,7 @@ class Binary(http.Controller):
             args = [len(data), ufile.filename,
                     ufile.content_type, base64.b64encode(data)]
         except Exception as e:
-            args = [False, e.message]
+            args = [False, str(e)]
         return out % (json.dumps(callback), json.dumps(args))
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
