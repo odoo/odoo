@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <!-- To redirect directly on discuss page in community and home page in enterprise -->
+    <record id="website_theme_install.theme_install_todo_action" model="ir.actions.server">
+        <field name="code">
+            action = {
+                'type': 'ir.actions.act_url',
+                'url': '/web',
+                'target': 'self',
+            }
+        </field>
+    </record>
+
     <!-- Mails & quote templates is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
