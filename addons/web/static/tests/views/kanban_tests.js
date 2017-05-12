@@ -586,7 +586,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create a column in grouped on m2o', function (assert) {
-        assert.expect(12);
+        assert.expect(13);
 
         var nbRPCs = 0;
         var kanban = createView({
@@ -645,6 +645,11 @@ QUnit.module('Views', {
         assert.ok(!kanban.$('.o_kanban_group:last').hasClass('o_column_folded'),
             'the created column should not be folded');
         assert.strictEqual(nbRPCs, 0, 'no rpc should have been done when folding/unfolding');
+
+        // quick create a record
+        kanban.$buttons.find('.o-kanban-button-new').click(); // Click on 'Create'
+        assert.ok(kanban.$('.o_kanban_group:first() > div:nth(1)').hasClass('o_kanban_quick_create'),
+            "clicking on create should open the quick_create in the first column");
         kanban.destroy();
     });
 
@@ -680,7 +685,7 @@ QUnit.module('Views', {
     }),
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
-        assert.expect(25);
+        assert.expect(26);
 
         var kanban = createView({
             View: KanbanView,
@@ -750,6 +755,8 @@ QUnit.module('Views', {
         assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive').length,
                         "should not be able to restore the records");
         assert.verifySteps(['read_group', 'unlink', 'read_group']);
+        assert.strictEqual(kanban.renderer.widgets.length, 2,
+            "the old widgets should have been correctly deleted");
         kanban.destroy();
     });
 
