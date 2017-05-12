@@ -94,7 +94,7 @@ def py2exe_options():
                         'pychart',
                         'pydot',
                         'pyparsing',
-                        'pyPdf',
+                        'PyPDF2',
                         'pytz',
                         'reportlab',
                         'requests',
@@ -153,7 +153,7 @@ setup(
         'pydot',
         'pyldap',  # optional
         'pyparsing',
-        'pypdf',
+        'pypdf2',
         'pyserial',
         'python-dateutil',
         'python-openid',
