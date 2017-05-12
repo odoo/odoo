@@ -3,14 +3,15 @@
 # * base_gengo
 # 
 # Translators:
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-12 11:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"POT-Creation-Date: 2016-09-29 14:00+0000\n"
+"PO-Revision-Date: 2016-09-29 14:00+0000\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,24 +19,30 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_company_inherit_base_gengo_form
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
 msgid "Add Gengo login Private Key..."
-msgstr ""
+msgstr "Добавить персональный ключ логина Gengo..."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_company_inherit_base_gengo_form
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
 msgid "Add Gengo login Public Key..."
-msgstr ""
+msgstr "Добавить публичный ключ логина Gengo..."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_company_inherit_base_gengo_form
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
 msgid "Add your comments here for translator...."
-msgstr ""
+msgstr "Добавьте здесь ваши комментарии к переводу"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_auto_approve
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_auto_approve
 msgid "Auto Approve Translation ?"
-msgstr ""
+msgstr "Автоматически утвердить перевод?"
+
+#. module: base_gengo
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
+msgid "Auto Approve Translation*"
+msgstr "Автоматически утвердить перевод *"
 
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
@@ -48,13 +55,27 @@ msgid "Cancel"
 msgstr "Отмена"
 
 #. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_base_config_settings_gengo_sandbox
 #: model:ir.model.fields,help:base_gengo.field_res_company_gengo_sandbox
 msgid ""
 "Check this box if you're using the sandbox mode of Gengo, mainly used for "
 "testing purpose."
 msgstr ""
+"Установите этот флажок, если вы используете изолированный режим Gengo, "
+"главным образом используется для тестирования."
 
 #. module: base_gengo
+#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+msgid "Click here to Configure Gengo Parameters"
+msgstr "Нажмите здесь, чтобы настроить параметры Gengo"
+
+#. module: base_gengo
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
+msgid "Comment*"
+msgstr "Комментарий*"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_comment
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_comment
 msgid "Comments"
 msgstr "Комментарии"
@@ -62,12 +83,7 @@ msgstr "Комментарии"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_ir_translation_gengo_comment
 msgid "Comments & Activity Linked to Gengo"
-msgstr ""
-
-#. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_company_inherit_base_gengo_form
-msgid "Comments for Translator"
-msgstr ""
+msgstr "Комментарии и мероприятия привязаны к Gengo"
 
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_res_company
@@ -77,79 +93,90 @@ msgstr "Компании"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_create_date
 msgid "Created on"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Comments & Activity..."
-msgstr ""
+msgstr "Комментарии и мероприятия Gengo..."
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_ir_translation_order_id
 msgid "Gengo Order ID"
-msgstr ""
+msgstr "Gengo заказ ID"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_company_inherit_base_gengo_form
-msgid "Gengo Parameters"
-msgstr ""
-
-#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_private_key
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_private_key
 msgid "Gengo Private Key"
-msgstr ""
+msgstr "Gengo приватный ключ"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_public_key
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_public_key
 msgid "Gengo Public Key"
-msgstr ""
+msgstr "Gengo публичный ключ"
+
+#. module: base_gengo
+#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+msgid "Gengo Public or Private keys are wrong or missing."
+msgstr "Gengo публичный или приватный ключи неправильные или отсутствуют."
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Request Form"
-msgstr ""
+msgstr "Форма запроса Gengo"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Translation Service"
-msgstr ""
+msgstr "Услуги Gengo перевода"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_ir_translation_gengo_translation
 msgid "Gengo Translation Service Level"
-msgstr ""
+msgstr "Уровень службы перевода Grengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:63
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
+msgid "Gengo Translator"
+msgstr "Gengo переводчик"
+
+#. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:84
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
 "authentication parameters under `Settings > Companies > Gengo Parameters`."
 msgstr ""
+"Отсутствует `Публичный ключ` или `Приватный ключ` Gengo. Введите параметры "
+"аутентификации Gengo в разделе `Настройки> Компании> Параметры Gengo`."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:74
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
 "``%s``"
 msgstr ""
+"Сбой подключения Gengo с этим сообщением:\n"
+"``%s``"
 
 #. module: base_gengo
 #: model:ir.actions.act_window,name:base_gengo.action_wizard_base_gengo_translations
 #: model:ir.ui.menu,name:base_gengo.menu_action_wizard_base_gengo_translations
 msgid "Gengo: Manual Request of Translation"
-msgstr ""
+msgstr "Grengo: Не автоматический запрос на перевод"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_id
@@ -157,9 +184,10 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_base_config_settings_gengo_auto_approve
 #: model:ir.model.fields,help:base_gengo.field_res_company_gengo_auto_approve
 msgid "Jobs are Automatically Approved by Gengo."
-msgstr ""
+msgstr "Вакансии автоматически одобрены Grengo"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_lang_id
@@ -174,7 +202,7 @@ msgstr "Последний раз изменено"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_write_date
@@ -184,7 +212,7 @@ msgstr "Последний раз обновлено"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_sync_limit
 msgid "No. of terms to sync"
-msgstr ""
+msgstr "No. Терминов для синхронизации"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
@@ -193,31 +221,40 @@ msgid ""
 "translation has to be approved to be uploaded in this system. You are "
 "supposed to do that directly by using your Gengo Account"
 msgstr ""
+"Примечание: Если состояние перевода ' В прогрессе', это означает, что "
+"перевод должен быть утвержден для загрузки в этой системе. Вы должны сделать"
+" это непосредственно с помощью вашей учетной записи Gengo"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_company_inherit_base_gengo_form
-msgid "Private Key"
-msgstr ""
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
+msgid "Private Key*"
+msgstr "Приватный ключ*"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Pro"
-msgstr ""
+msgstr "Про"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_company_inherit_base_gengo_form
-msgid "Public Key"
-msgstr ""
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
+msgid "Public Key*"
+msgstr "Публичный ключ*"
 
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
 msgid "Receive Translation"
-msgstr ""
+msgstr "Получить перевод"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_sandbox
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_sandbox
 msgid "Sandbox Mode"
-msgstr ""
+msgstr "Режим песочницы"
+
+#. module: base_gengo
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
+msgid "Sandbox Mode*"
+msgstr "Режим песочницы*"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
@@ -227,7 +264,7 @@ msgstr "Отправить"
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
 msgid "Send New Terms"
-msgstr ""
+msgstr "Отправлять новые термины"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -237,48 +274,52 @@ msgstr "Стандарт"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_sync_type
 msgid "Sync Type"
-msgstr ""
+msgstr "Тип синхронизации"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
 "translation services."
 msgstr ""
+"Количество терминов для синхронизации должно быть от 1 до 200 для работы с "
+"Gengo переводческих услуг."
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_authorized_credentials
+msgid "The private and public keys are valid"
+msgstr "Приватный и публичный ключи действительны"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_base_config_settings_gengo_comment
 #: model:ir.model.fields,help:base_gengo.field_res_company_gengo_comment
 msgid ""
 "This comment will be automatically be enclosed in each an every request sent"
 " to Gengo"
 msgstr ""
+"Этот комментарий будет автоматически отправлен вместе с запросом к Grengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:90
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:109
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
-msgstr ""
+msgstr "Этот язык не поддерживается службой перевода Grengo."
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_translation_search
 msgid "To Approve In Gengo"
-msgstr ""
+msgstr "Подтвердить в Gengo"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Translation By Machine"
-msgstr ""
-
-#. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_translation_search
-msgid "Translations"
-msgstr "Переводы"
+msgstr "Машинный перевод"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Ultra"
-msgstr ""
+msgstr "Ультра"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_ir_translation_gengo_translation
@@ -286,11 +327,18 @@ msgid ""
 "You can select here the service level you want for an automatic translation "
 "using Gengo."
 msgstr ""
+"Используя автоматический перевод Grengo, вы можете выбрать предпочтительный "
+"уровень обслуживания."
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
 
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_base_gengo_translations
 msgid "base.gengo.translations"
-msgstr ""
+msgstr "base.gengo.translations"
 
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_ir_translation

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.mail.tests.common import TestMail
-from openerp.tools.misc import mute_logger
+from odoo.addons.mail.tests.common import TestMail
+from odoo.tools.misc import mute_logger
 
 
-class test_portal(TestMail):
+class TestPortal(TestMail):
 
     def test_mail_compose_access_rights(self):
         self.group_pigs.write({'group_public_id': self.env.ref('base.group_portal').id})
@@ -32,7 +33,7 @@ class test_portal(TestMail):
             'body': 'Body text'})
         compose.send_mail()
 
-    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_invite_email_portal(self):
         group_pigs = self.group_pigs
         base_url = self.env['ir.config_parameter'].get_param('web.base.url', default='')

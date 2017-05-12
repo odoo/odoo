@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Page --> 
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="website_hr_assets">
+    <xpath expr="." position="inside">
+        <link rel='stylesheet' type="text/less" href='/website_hr/static/src/less/website_hr.less'/>
+    </xpath>
+</template>
+
+<template id="aboutus" inherit_id="website.aboutus" customize_show="True" name="Our Team">
+    <xpath expr="//div[@class='oe_structure']" position="after">
+        <section class="container" id="team">
+            <div class="col-sm-12 text-center" t-if="len(employees)">
+                <h2>Our Team</h2>
+            </div>
+            <div t-foreach="employees" t-as="employee" class="col-sm-3 col-lg-2 mt16 text-center o_avatar_info_container">
+                <t t-call="website.publish_management" class="text-center">
+                    <t t-set="object" t-value="employee"/>
+                    <t t-set="publish_edit" t-value="True"/>
+                </t>
+                <div class="clearfix"/>
+                <img t-att-src="website.image_url(employee, 'image_medium')" class="img shadow img-rounded"/>
+                <div class="mt8">
+                    <strong t-field="employee.name"></strong>
+                </div>
+                <div t-field="employee.job_id"/>
+                <div t-field="employee.public_info" class="text-muted mt16 center-block"/>
+            </div>
+        </section>
+    </xpath>
+</template>
+
+</odoo>

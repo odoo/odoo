@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import os
-import time
-import werkzeug
 import subprocess
-from os import listdir
+import werkzeug
 
-import openerp
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+import odoo
+from odoo import http
 
 _logger = logging.getLogger(__name__)
 
@@ -37,10 +35,10 @@ index_template = """
     <body>
         <h1>Your PosBox is up and running</h1>
         <p>
-        The PosBox is an hardware adapter that allows you to use 
+        The PosBox is a hardware adapter that allows you to use
         receipt printers and barcode scanners with Odoo's Point of
         Sale, <b>version 8.0 or later</b>. You can start an <a href='https://www.odoo.com/start'>online free trial</a>,
-        or <a href='https://www.odoo.com/start?download'>download and install</a> it yourself.
+        or <a href='https://www.odoo.com/page/download'>download and install</a> it yourself.
         </p>
         <p>
         For more information on how to setup the Point of Sale with
@@ -55,11 +53,17 @@ index_template = """
         Wi-Fi can be configured by visiting the <a href='/wifi'>Wi-Fi configuration page</a>.
         </p>
         <p>
-        The PosBox software installed on this posbox is <b>version 13</b>,
+        If you need to grant remote debugging access to a developer, you can do it <a href='/remote_connect'>here</a>.
+        </p>
+        <p>
+        If you need to display the current customer basket on another device, you can do it <a href='/point_of_sale/display'>here</a>.
+        </p>
+        <p>
+        The PosBox software installed on this posbox is <b>version 16</b>,
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>.
         </p>
-        <p>For any other question, please contact the Odoo support at <a href='mailto:support@odoo.com'>support@odoo.com</a>
+        <p>For any other question, please contact the Odoo support at <a href='mailto:help@odoo.com'>help@odoo.com</a>
         </p>
     </body>
 </html>
@@ -67,7 +71,7 @@ index_template = """
 """
 
 
-class PosboxHomepage(openerp.addons.web.controllers.main.Home):
+class PosboxHomepage(odoo.addons.web.controllers.main.Home):
     @http.route('/', type='http', auth='none', website=True)
     def index(self):
         #return request.render('hw_posbox_homepage.index',mimetype='text/html')

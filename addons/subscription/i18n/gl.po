@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * subscription
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2015-09-08 09:05+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Galician (http://www.transifex.com/odoo/odoo-9/language/gl/)\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: gl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: subscription
@@ -67,7 +67,8 @@ msgstr "Valor por defecto"
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
 msgid "Default value is considered for field when new document is generated."
-msgstr "Tense en conta o valor por defecto do campo cando se xera un novo documento."
+msgstr ""
+"Tense en conta o valor por defecto do campo cando se xera un novo documento."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_note
@@ -136,25 +137,23 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
-msgstr "Se se desmarca o campo activo, permite ocultar o documento de subscrición sen eliminalo."
+msgstr ""
+"Se se desmarca o campo activo, permite ocultar o documento de subscrición "
+"sen eliminalo."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
-msgstr "Se se desmarca o campo activo, permite ocultar a subscrición sen eliminala."
+msgstr ""
+"Se se desmarca o campo activo, permite ocultar a subscrición sen eliminala."
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Internal Notes"
 msgstr "Notas internas"
-
-#. module: subscription
-#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
-msgstr "Período: Cantidade de tempo"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_type
@@ -203,11 +202,6 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: subscription
-#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
-msgstr "Número de documentos"
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_model
 msgid "Object"
 msgstr "Obxecto"
@@ -219,12 +213,14 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:92
 #, python-format
 msgid ""
 "Please provide another source document.\n"
 "This one does not exist!"
-msgstr "Por favor, achegue outro documento fonte.\nEste non existe."
+msgstr ""
+"Por favor, achegue outro documento fonte.\n"
+"Este non existe."
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
@@ -322,11 +318,6 @@ msgid "Subscriptions"
 msgstr "Subscricións"
 
 #. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr "Datos da subscrición"
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "User"
@@ -336,7 +327,9 @@ msgstr "Usuario"
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr "O usuario pode seleccionar o documento orixinal sobre o cal desexa crear os documentos."
+msgstr ""
+"O usuario pode seleccionar o documento orixinal sobre o cal desexa crear os "
+"documentos."
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -344,7 +337,7 @@ msgid "Weeks"
 msgstr "Semanas"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:115
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr "¡Non pode eliminar unha subscrición activa!"

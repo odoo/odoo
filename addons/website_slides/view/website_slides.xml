@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<openerp>
+<odoo>
 <data>
 
 <!-- add link to the standard footer -->
@@ -44,7 +44,7 @@
                             <div>
                                 <a t-attf-href="/slides/#{slug(channel)}">
                                     <img t-if="channel.promoted_slide_id" t-attf-src="/web/image/slide.slide/#{channel.promoted_slide_id.id}/image_medium" class="img-responsive oe_slides_channel_thumbnail"/>
-                                    <img t-if="not channel.promoted_slide_id" src="/website_slides/static/description/channel-default.jpg" class="img-responsive oe_slides_opacity"/>
+                                    <img t-if="not channel.promoted_slide_id" src="/website_slides/static/src/img/channel-default.jpg" class="img-responsive oe_slides_opacity"/>
                                 </a>
                             </div>
                             <div>
@@ -187,7 +187,7 @@
 <!-- Channel main template -->
 <template id='home' name="Odoo Slides">
      <t t-set="head">
-        <t t-call-assets="website.pdf_js_lib" t-css="false"/>
+        <t t-call-assets="web.pdf_js_lib" t-css="false"/>
         <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
     </t>
     <t t-call="website.layout">
@@ -201,7 +201,7 @@
                     <t t-set="header_object" t-value="category"/>
                 </t>
             </t>
-            <section t-if="not channel.promoted_slide_id and not tag and not slide_type and not search and not is_public_user and not category and display_channel_settings" class="wrap mt16 mb0" groups="base.group_configuration">
+            <section t-if="not channel.promoted_slide_id and not tag and not slide_type and not search and not is_public_user and not category and display_channel_settings" class="wrap mt16 mb0" groups="website.group_website_designer">
                 <div class="container">
                     <div class="alert alert-danger alert-dismissable mb0">
                         <button type="button" class="close o_slides_hide_channel_settings" t-att-data-channel-id="channel.id" data-dismiss="alert">x</button>
@@ -337,7 +337,7 @@
             <a t-attf-href="/slides/slide/#{slug(slide)}">
                 <img t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" class="img-responsive img-thumbnail oe_slides_grid_thumbnail"/>
             </a>
-            <span t-if="not slide.website_published" class="label label-danger" style="position: absolute;right: 20px;top: 7px;">Not Published</span>
+            <span t-if="not slide.website_published" class="label label-danger" style="position: absolute;right: 20px;top: 7px;">Unpublished</span>
             <a t-if="not is_public_user and slide.website_published and slide.channel_id.promote_strategy == 'custom' and slide.channel_id.promoted_slide_id.id != slide.id"
                 groups="base.group_user"
                 t-attf-href="/slides/slide/#{slide.id}/promote"
@@ -396,7 +396,7 @@
                             <t t-if="slide.datas and slide.slide_type == 'infographic'">
                                 <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%"/>
                             </t>
-                        <div t-if="slide.slide_type in ('presentation', 'document')" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
+                        <div t-if="slide.slide_type in ('presentation', 'document')" class="embed-responsive embed-responsive-4by3 embed-responsive-item mb8">
                             <t t-raw="slide.embed_code"/>
                         </div>
                         <div t-if="slide.slide_type == 'video' and slide.document_id" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
@@ -425,7 +425,7 @@
                             <div class="col-sm-8 col-xs-12">
                                 <div class="pull-left">
                                     <a t-attf-href="/slides/#{slug(slide.channel_id)}">
-                                        <i class="fa fa-circle-o fa-5x" style="color: #a24689;font-weight: bold;"></i>
+                                        <i class="fa fa-circle-o fa-5x" style="color: #875A7B;font-weight: bold;"></i>
                                     </a>
                                 </div>
                                 <div style="margin-left: 80px">
@@ -494,7 +494,7 @@
                         </div>
                         <div class="mt8 mb32">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li t-att-class="not comments and 'active' or ''">
+                                <li t-att-class="not comments and 'active' or None">
                                     <a href="#about" role="tab" data-toggle="tab">
                                         <i class="fa fa-home"></i> About
                                     </a>
@@ -504,7 +504,7 @@
                                         <i class="fa fa-share-alt"></i> Share
                                     </a>
                                 </li>
-                                <li t-att-class="comments and 'active' or ''">
+                                <li t-att-class="comments and 'active' or None">
                                     <a href="#discuss" role="tab" data-toggle="tab">
                                         <i class="fa fa-comments-o"></i> Comments
                                     </a>
@@ -580,7 +580,7 @@
                                                 <t t-call="website.publish_short">
                                                     <t t-set="object" t-value="message"/>
                                                 </t>
-                                                <span t-field="message.author_id" style="display: inline-block;" t-field-options='{"widget": "contact", "fields": ["name"]}'/>
+                                                <span t-field="message.author_id" style="display: inline-block;" t-options='{"widget": "contact", "fields": ["name"]}'/>
                                                 <span class="text-muted">on<span t-field="message.date"/></span>
                                                 <div t-field="message.body" class="discussion_scroll_post"></div>
                                             </div>
@@ -785,4 +785,4 @@
 </template>
 
 </data>
-</openerp>
+</odoo>

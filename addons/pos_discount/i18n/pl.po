@@ -3,28 +3,31 @@
 # * pos_discount
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
+# zbik2607 <darek@krokus.com.pl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:39+0000\n"
-"PO-Revision-Date: 2015-09-08 06:42+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"POT-Creation-Date: 2016-09-07 08:55+0000\n"
+"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>, 2016\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
-msgstr ""
+msgstr "Pozwól kasjerowi dać upusty na całe zamówienie."
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/xml/discount.xml:6
+#: code:addons/pos_discount/static/src/xml/discount_templates.xml:6
 #, python-format
 msgid "Discount"
 msgstr "Upust"
@@ -47,12 +50,12 @@ msgstr "Upusty"
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
 msgid "Order Discounts"
-msgstr ""
+msgstr "Upusty dla zamówienia"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
 msgid "The default discount percentage"
-msgstr ""
+msgstr "Domyślny procent upustu"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
@@ -62,4 +65,4 @@ msgstr "Produkt stosowany do upustu"
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "pos.config"
-msgstr ""
+msgstr "pos.config"

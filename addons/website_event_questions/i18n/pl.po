@@ -3,29 +3,33 @@
 # * website_event_questions
 # 
 # Translators:
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-10-08 13:47+0000\n"
-"Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
-msgid "<strong>Last questions</strong>"
+msgid "<strong>Common Questions</strong>"
 msgstr ""
 
 #. module: website_event_questions
 #: model:event.question,title:website_event_questions.event_question_2
 msgid "Accommodation"
-msgstr ""
+msgstr "Nocleg"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_name
@@ -44,7 +48,7 @@ msgstr "Odpowiedzi"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_is_individual
 msgid "Ask each attendee"
-msgstr ""
+msgstr "Zapytaj każdego uczestnika"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
@@ -61,14 +65,14 @@ msgstr "Brązowy"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_create_uid
 msgid "Created by"
-msgstr "Utworzone przez"
+msgstr "Utworzona przez"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_create_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_create_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_create_date
 msgid "Created on"
-msgstr "Utworzono"
+msgstr "Data utworzenia"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_display_name
@@ -76,28 +80,33 @@ msgstr "Utworzono"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_display_name
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_display_name
 msgid "Display Name"
-msgstr "Wyświetlana nazwa "
+msgstr "Nazwa wyświetlana"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_event
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_event_id
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Event"
-msgstr "Zdarzenie"
+msgstr "Wydarzenie"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_answer_id
 msgid "Event answer id"
-msgstr ""
+msgstr "Odpowiedź wydarzenia id"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_event_id
 msgid "Event id"
-msgstr ""
+msgstr "Wydarzenie id"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_registration_id
 msgid "Event registration id"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
+msgid "General Questions"
 msgstr ""
 
 #. module: website_event_questions
@@ -108,7 +117,7 @@ msgstr "Złoty"
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Group By"
-msgstr "Pogrupuj wg"
+msgstr "Grupuj wg"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_id
@@ -133,7 +142,7 @@ msgstr ""
 #. module: website_event_questions
 #: model:event.question,title:website_event_questions.event_question_0
 msgid "Kind of partner"
-msgstr ""
+msgstr "Rodzaj partnera"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer___last_update
@@ -141,21 +150,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report___last_update
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer___last_update
 msgid "Last Modified on"
-msgstr "Ostatnio modyfikowano"
+msgstr "Data ostatniej modyfikacji"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio modyfikowane przez"
+msgstr "Ostatnio aktualizowane przez"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_write_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_write_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_write_date
 msgid "Last Updated on"
-msgstr "Ostatnia zmiana"
+msgstr "Data ostatniej aktualizacji"
 
 #. module: website_event_questions
 #: model:event.answer,name:website_event_questions.event_suggestion_1_1
@@ -165,7 +174,7 @@ msgstr "Nie"
 #. module: website_event_questions
 #: model:event.answer,name:website_event_questions.event_suggestion_2_0
 msgid "Personal"
-msgstr ""
+msgstr "osobisty"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_question_id
@@ -178,12 +187,10 @@ msgstr "Pytanie"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_question_id
 msgid "Question id"
-msgstr ""
+msgstr "pytanie id"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_question_ids
-#: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
 #: model:ir.ui.menu,name:website_event_questions.menu_report_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_form_inherit_question
 msgid "Questions"
@@ -195,7 +202,7 @@ msgstr "Pytania"
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_pivot
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Questions Analysis"
-msgstr ""
+msgstr "analiza pytań"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_attendee_id
@@ -215,6 +222,11 @@ msgid "Silver"
 msgstr "Srebrny"
 
 #. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
+msgid "Specific Questions"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_title
 msgid "Title"
 msgstr "Tytuł"
@@ -232,19 +244,19 @@ msgstr "Tak"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_answer
 msgid "event.answer"
-msgstr ""
+msgstr "event.answer"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question
 msgid "event.question"
-msgstr ""
+msgstr "event.question"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question_report
 msgid "event.question.report"
-msgstr ""
+msgstr "event.question.report"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
 msgid "event.registration.answer"
-msgstr ""
+msgstr "event.registration.answer"

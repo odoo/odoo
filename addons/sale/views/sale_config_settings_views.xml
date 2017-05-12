@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_sales_config" model="ir.ui.view">
+            <field name="name">sale settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="sales_team.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+                <div id="main" position="inside">
+                    <group string="Products">
+                        <field name="group_product_variant" widget="radio"/>
+                        <field name="group_uom" widget="radio"/>
+                        <field name="default_invoice_policy" widget="radio"/>
+                        <field name="deposit_product_id_setting" class="oe_inline"/>
+                        <label string="Digital Products"/>
+                        <div>
+                            <field name="module_website_sale_digital" class="oe_inline" />
+                            <label for="module_website_sale_digital"/>
+                        </div>
+                    </group>
+                    <group string="Pricing">
+                        <label for="sale_pricelist_setting" string="Sale Price"/>
+                        <div>
+                            <field name="sale_pricelist_setting" class="oe_inline" widget="radio"/>
+                            <field name="group_sale_pricelist" class="oe_inline" invisible="1"/>
+                            <field name="group_pricelist_item" class="oe_inline" invisible="1"/>
+                            <field name="group_product_pricelist" class="oe_inline" invisible="1"/>
+                        </div>
+                    </group>
+                    <group string="Quotations &amp; Sales" id="sale" name="quotations_sales">
+                        <field name="company_id" invisible="1"/>
+                        <field name="sale_note"/>
+                        <field name="group_sale_delivery_address" widget="radio"/>
+                        <field name="group_discount_per_so_line" widget="radio"/>
+                        <field name="module_sale_margin" widget="radio"/>
+                        <field name="group_sale_layout" widget="radio"/>
+                        <field name="auto_done_setting" widget="radio"/>
+                        <field name="group_warning_sale" widget="radio"/>
+                        <label for="sale_show_tax"/>
+                        <div>
+                            <field name="sale_show_tax" class="oe_inline" widget="radio"/>
+                            <field name="group_show_price_subtotal" class="oe_inline" invisible="1"/>
+                            <field name="group_show_price_total" class="oe_inline" invisible="1"/>
+                        </div>
+                        <label for="id" string="Subscriptions"/>
+                        <div>
+                            <field name="module_sale_contract" class="oe_inline" widget="upgrade_boolean"/>
+                            <label for="module_sale_contract"/>
+                            <a href="https://www.odoo.com/page/subscriptions" target="_blank"> More Info</a>
+                        </div>
+                    </group>
+                    <group string="Customers" name="customers">
+                        <field name="module_website_quote" widget="radio"/>
+                    </group>
+                </div>
+                <form name="sale_config_form" position="inside">
+                    <div>
+                        <span>(*) This configuration is related to the company you're logged into.</span>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+</odoo>

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
 class Followers(models.Model):
@@ -18,13 +19,13 @@ class Followers(models.Model):
     _description = 'Document Followers'
 
     res_model = fields.Char(
-        'Related Document Model', required=True, select=1, help='Model of the followed resource')
+        'Related Document Model', required=True, index=True, help='Model of the followed resource')
     res_id = fields.Integer(
-        'Related Document ID', select=1, help='Id of the followed resource')
+        'Related Document ID', index=True, help='Id of the followed resource')
     partner_id = fields.Many2one(
-        'res.partner', string='Related Partner', ondelete='cascade', select=1)
+        'res.partner', string='Related Partner', ondelete='cascade', index=True)
     channel_id = fields.Many2one(
-        'mail.channel', string='Listener', ondelete='cascade', select=1)
+        'mail.channel', string='Listener', ondelete='cascade', index=True)
     subtype_ids = fields.Many2many(
         'mail.message.subtype', string='Subtype',
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")
@@ -60,11 +61,16 @@ class Followers(models.Model):
         default_subtypes = self.env['mail.message.subtype'].search([
             ('default', '=', True),
             '|', ('res_model', '=', res_model), ('res_model', '=', False)])
+        external_default_subtypes = default_subtypes.filtered(lambda subtype: not subtype.internal)
 
         if force_mode:
+            employee_pids = self.env['res.users'].sudo().search([('partner_id', 'in', partner_data.keys()), ('share', '=', False)]).mapped('partner_id').ids
             for pid, data in partner_data.iteritems():
                 if not data:
-                    partner_data[pid] = default_subtypes.ids
+                    if pid not in employee_pids:
+                        partner_data[pid] = external_default_subtypes.ids
+                    else:
+                        partner_data[pid] = default_subtypes.ids
             for cid, data in channel_data.iteritems():
                 if not data:
                     channel_data[cid] = default_subtypes.ids
@@ -107,23 +113,31 @@ class Followers(models.Model):
     # Modifying followers change access rights to individual documents. As the
     # cache may contain accessible/inaccessible data, one has to refresh it.
     #
+    @api.multi
+    def _invalidate_documents(self):
+        """ Invalidate the cache of the documents followed by ``self``. """
+        for record in self:
+            if record.res_id:
+                self.env[record.res_model].invalidate_cache(ids=[record.res_id])
+
     @api.model
     def create(self, vals):
         res = super(Followers, self).create(vals)
-        self.invalidate_cache()
+        res._invalidate_documents()
         return res
 
     @api.multi
     def write(self, vals):
+        if 'res_model' in vals or 'res_id' in vals:
+            self._invalidate_documents()
         res = super(Followers, self).write(vals)
-        self.invalidate_cache()
+        self._invalidate_documents()
         return res
 
     @api.multi
     def unlink(self):
-        res = super(Followers, self).unlink()
-        self.invalidate_cache()
-        return res
+        self._invalidate_documents()
+        return super(Followers, self).unlink()
 
     _sql_constraints = [
         ('mail_followers_res_partner_res_model_id_uniq', 'unique(res_model,res_id,partner_id)', 'Error, a partner cannot follow twice the same object.'),

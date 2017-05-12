@@ -3,21 +3,57 @@
 # * marketing_campaign
 # 
 # Translators:
-# Ahmet Altınışık <aaltinisik@altinkaya.com.tr>, 2016
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2015-2016
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
+# gezgin biri <gezginbiri@hotmail.com>, 2016
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
+# Murat Kaplan <muratk@projetgrup.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Ediz Duman <neps1192@gmail.com>, 2016
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
+# Azar Huseynli <azerbay1984@gmail.com>, 2016
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
+# selim kartal <kartalselim37@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-03-24 18:48+0000\n"
-"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: selim kartal <kartalselim37@gmail.com>, 2016\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -29,7 +65,9 @@ msgstr "Etkinlik sayısı"
 msgid ""
 "<span class=\"o_stat_text\">Campaign</span>\n"
 "                            <span class=\"o_stat_text\">Statistics</span>"
-msgstr "<span class=\"o_stat_text\">Kampanya</span>\n                            <span class=\"o_stat_text\">İstatistikler</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Kampanya</span>\n"
+"                            <span class=\"o_stat_text\">İstatistikler</span>"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -38,7 +76,11 @@ msgid ""
 "            a letter, assigning to a team, etc. These activities are triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc."
-msgstr "Bir kampanya eposta gönderme, mektup yazdırma, bir takıma atama gibi\n            bir çok etkinliğe sahip olabilir. Bu etkinlikler belirli durumlardan\n            başlatılabilir; iletişim formu, ilk iletişimden 10 gün sonra,\n            eğer bir aday henüz kapatılmamışsa, vb."
+msgstr ""
+"Bir kampanya eposta gönderme, mektup yazdırma, bir takıma atama gibi\n"
+"            bir çok etkinliğe sahip olabilir. Bu etkinlikler belirli durumlardan\n"
+"            başlatılabilir; iletişim formu, ilk iletişimden 10 gün sonra,\n"
+"            eğer bir aday henüz kapatılmamışsa, vb."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -62,7 +104,7 @@ msgid "Activity"
 msgstr "Etkinlik"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:479
+#: code:addons/marketing_campaign/models/marketing_campaign.py:384
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "Sonra %(interval_nbr)d %(interval_type)s"
@@ -82,7 +124,9 @@ msgstr "Tüm kayıtların (yineleme yok)"
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr "Bir sinyal ile etkinlik programlı olarak çağrılabilir. Dikkat et, sinyal gönderilirken WorkItem her zaman oluşturulur."
+msgstr ""
+"Bir sinyal ile etkinlik programlı olarak çağrılabilir. Dikkat et, sinyal "
+"gönderilirken WorkItem her zaman oluşturulur."
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -100,7 +144,7 @@ msgid "Automatic"
 msgstr "Otomatik"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:478
+#: code:addons/marketing_campaign/models/marketing_campaign.py:383
 #, python-format
 msgid "Automatic transition"
 msgstr "Otomatik geçiş"
@@ -110,7 +154,9 @@ msgstr "Otomatik geçiş"
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr "Bu seçenek etkinleştirildiğinde, koşulu karşılanmadı çünkü idam değil workitems silmek yerine iptal edildi olarak işaretlenir."
+msgstr ""
+"Bu seçenek etkinleştirildiğinde, koşulu karşılanmadı çünkü idam değil "
+"workitems silmek yerine iptal edildi olarak işaretlenir."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_campaign_id
@@ -141,7 +187,7 @@ msgstr "Kampanya İncelemesi"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_diagram
 msgid "Campaign Editor"
-msgstr "Kampanya Düzenleyici"
+msgstr "Kampanya Editörü"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
@@ -175,7 +221,7 @@ msgstr "Kampanyalar"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Cancel"
-msgstr "Vazgeç"
+msgstr "İptal"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -200,7 +246,10 @@ msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_object_id
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_object_id
 msgid "Choose the resource on which you want this campaign to be run"
 msgstr "Bu kampanyanı yürütmek istediğiniz kaynağı seçin"
 
@@ -230,7 +279,7 @@ msgid "Congratulations! You are now one of our Gold Partners!"
 msgstr "Tebrikler! Gold Partner oldunuz!"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:480
+#: code:addons/marketing_campaign/models/marketing_campaign.py:385
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -263,10 +312,10 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_create_date
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_create_date
 msgid "Created on"
-msgstr "Oluşturuldu"
+msgstr "Oluşturulma"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Custom Action"
 msgstr "Özel Etkinlik"
 
@@ -275,7 +324,8 @@ msgstr "Özel Etkinlik"
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr "Üzerinde bu segmentteki son kez (otomatik veya manuel) eşitlendi: Tarih"
+msgstr ""
+"Üzerinde bu segmentteki son kez (otomatik veya manuel) eşitlendi: Tarih"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_done
@@ -285,7 +335,7 @@ msgstr "Bu segment son tarihi kapalı veya iptal edildi."
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Day(s)"
-msgstr "Gün"
+msgstr "Gün(ler)"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -301,7 +351,12 @@ msgid ""
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
 "records which have the same value for the unique field as other records that"
 " already entered the campaign."
-msgstr "Kampanyaya eklenecek yeni kayıtları seçerken için filtre eklemek ek bir kriter belirler. \"Yinelenen yok\" engeller kampanya daha önce girmiş kayıt seçme. Kampanya \"benzersiz alan\" varsa küme, \"yinelenen yok\" da engel hangi kampanya girmiş gibi diğer kayıtları benzersiz alan için aynı değeri kayıt seçme."
+msgstr ""
+"Kampanyaya eklenecek yeni kayıtları seçerken için filtre eklemek ek bir "
+"kriter belirler. \"Yinelenen yok\" engeller kampanya daha önce girmiş kayıt "
+"seçme. Kampanya \"benzersiz alan\" varsa küme, \"yinelenen yok\" da engel "
+"hangi kampanya girmiş gibi diğer kayıtları benzersiz alan için aynı değeri "
+"kayıt seçme."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_display_name
@@ -311,7 +366,7 @@ msgstr "Kampanyaya eklenecek yeni kayıtları seçerken için filtre eklemek ek 
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_display_name
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_display_name
 msgid "Display Name"
-msgstr "Adı Göster"
+msgstr "Adı Göstermek"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
@@ -326,7 +381,7 @@ msgstr "WorkItems silmeyin"
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Done"
-msgstr "Biten"
+msgstr "Tamamlanmış"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -335,18 +390,18 @@ msgid "Draft"
 msgstr "Taslak"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:170
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
 msgstr "Kampanyalar yinelemesi desteklenmiyor."
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Email"
-msgstr "E-posta"
+msgstr "E-Posta"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:752
+#: code:addons/marketing_campaign/models/marketing_campaign.py:586
 #, python-format
 msgid "Email Preview"
 msgstr "Eposta Önizle"
@@ -355,6 +410,11 @@ msgstr "Eposta Önizle"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
 msgstr "Eposta Şablonu"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "E-posta Şablonu Önizleme"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -415,7 +475,7 @@ msgstr "Şubat"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_ir_filter_id
 msgid "Filter"
-msgstr "Süzgeç"
+msgstr "Filtre"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_ir_filter_id
@@ -424,7 +484,11 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr "Bu segmente ait eşleşen kaynak kayıtları seçmek için filtre uygulayın. Yeni filtreler oluşturulabilir ve gelişmiş arama kaynak liste görünümünü kullanarak kaydetmiş. Bir filtre ayarlarsanız, tüm kayıtları süzme olmadan seçilir. Eşitleme modu da filtreye ölçüt ekleme."
+msgstr ""
+"Bu segmente ait eşleşen kaynak kayıtları seçmek için filtre uygulayın. Yeni "
+"filtreler oluşturulabilir ve gelişmiş arama kaynak liste görünümünü "
+"kullanarak kaydetmiş. Bir filtre ayarlarsanız, tüm kayıtları süzme olmadan "
+"seçilir. Eşitleme modu da filtreye ölçüt ekleme."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_fixed_cost
@@ -437,18 +501,21 @@ msgid ""
 "Fixed cost for running this campaign. You may also specify variable cost and"
 " revenue on each campaign activity. Cost and Revenue statistics are included"
 " in Campaign Reporting."
-msgstr "Bu kampanya çalıştırmak için sabit bir maliyet. Değişken maliyet ve gelir her kampanya aktivitesi da belirtebilirsiniz. Maliyet ve gelir istatistikleri kampanya raporlamaya dahil edilir."
+msgstr ""
+"Bu kampanya çalıştırmak için sabit bir maliyet. Değişken maliyet ve gelir "
+"her kampanya aktivitesi da belirtebilirsiniz. Maliyet ve gelir "
+"istatistikleri kampanya raporlamaya dahil edilir."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Follow-Up"
-msgstr "İzleme"
+msgstr "Takip"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
 #: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Follow-up"
-msgstr "İzleme"
+msgstr "Takip"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
@@ -457,24 +524,6 @@ msgstr "İzleme"
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Group By"
 msgstr "Grupla"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr "Merhaba, kısa bir süre hoşgeldin paketinizi e-posta yoluyla alacaksınız."
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle"
-" of our Gold Partners"
-msgstr "Merhaba, altın ortaklarımız arasına girdiğinizi bildirmekten mutluyuz"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr "Merhaba, bugün itibariyle gümüş ortaklarımız arasında sizi ağırlamaktan mutluyuz!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -512,7 +561,15 @@ msgid ""
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr "Eğer kuruluysa, bu alan \"çifte yok\" modunda çalışan bölümlerde benzer kayıtların iki defa seçilmesine engel olur. Benzer kayıtlar bu eşsiz alan için aynı değere sahip olan kayıtlardır. Örneğin, CRM Adayları için \"eposta_kimden\" alanı seçilerek aynı kampanya için aynı epostaya yeniden gönderim engellenir. Kurulu değilse, \"çifte yok\" bölümleri eğer kampanyaya daha önce girilmişse yalnızca aynı kaydın yeniden seçilmesi engellenir. Yalnızca metin alanları, tam sayılar, seçimler ya da tekli ilişkiler gibi kolaylıkla karşılaştırılabilir alanlar kullanılabilir."
+msgstr ""
+"Eğer kuruluysa, bu alan \"çifte yok\" modunda çalışan bölümlerde benzer "
+"kayıtların iki defa seçilmesine engel olur. Benzer kayıtlar bu eşsiz alan "
+"için aynı değere sahip olan kayıtlardır. Örneğin, CRM Adayları için "
+"\"eposta_kimden\" alanı seçilerek aynı kampanya için aynı epostaya yeniden "
+"gönderim engellenir. Kurulu değilse, \"çifte yok\" bölümleri eğer kampanyaya"
+" daha önce girilmişse yalnızca aynı kaydın yeniden seçilmesi engellenir. "
+"Yalnızca metin alanları, tam sayılar, seçimler ya da tekli ilişkiler gibi "
+"kolaylıkla karşılaştırılabilir alanlar kullanılabilir."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -527,12 +584,12 @@ msgstr "Bu segmentin başlangıç tarihi."
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_type
 msgid "Interval Unit"
-msgstr "Aralık Birimi"
+msgstr "İç Birim"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_nbr
 msgid "Interval Value"
-msgstr "Aralık değeri"
+msgstr "Aralık Değeri"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -557,7 +614,7 @@ msgstr "Haziran"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition___last_update
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem___last_update
 msgid "Last Modified on"
-msgstr "Son değiştirme tarihi"
+msgstr "Son Güncelleme"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_last_date
@@ -580,12 +637,12 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_write_date
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_write_date
 msgid "Last Updated on"
-msgstr "Son Güncellenen"
+msgstr "Son Güncelleme"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_run
 msgid "Launch Date"
-msgstr "Öğle Yemeği Tarihi"
+msgstr "Başlatma Tarihi"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
@@ -596,6 +653,11 @@ msgstr "Başlatma Ayı"
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_root
 msgid "Lead Automation"
 msgstr "Aday Otomasyonu"
+
+#. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_manager
+msgid "Manager"
+msgstr "Yönetici"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -654,9 +716,10 @@ msgid "Mode"
 msgstr "Kip"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.segment:0
-msgid "Model of filter must be same as resource model of Campaign "
-msgstr "Modeli filtre kampanya kaynak modeli olarak aynı olmalıdır."
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
+#, python-format
+msgid "Model of filter must be same as resource model of Campaign"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -669,7 +732,7 @@ msgstr "Ay(lar)"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_name
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_name
 msgid "Name"
-msgstr "Ad"
+msgstr "Adı"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,state:0
@@ -706,7 +769,8 @@ msgstr "Sonraki Senkronizasyon"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_next_sync
 msgid "Next time the synchronization job is scheduled to run automatically"
-msgstr "Bir daha ki sefere eşitleme otomatik olarak çalışmak üzere zamanlandığı"
+msgstr ""
+"Bir daha ki sefere eşitleme otomatik olarak çalışmak üzere zamanlandığı"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -733,8 +797,8 @@ msgstr "Ekim"
 msgid ""
 "Odoo's marketing campaign allows you to automate communication\n"
 "            to your prospects. You can define a segment (set of conditions) on\n"
-"            your leads and partners to fullfil the campaign."
-msgstr "Odoo pazarlama kampanyası umutlu olduklarınızla iletişiminizi otomatize\netmenizi sağlar. Kampanyanızı tamamlamanız için adaylarınız ve iş\nortaklarınız üzerinde bölümlemeler (bir dizi koşul) tanımlayabilirsiniz."
+"            your leads and partners to fulfill the campaign."
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -745,11 +809,6 @@ msgstr "Eşitleme modu: sadece son eşitlemeden sonra oluşturulan kayıtları"
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
 msgstr "Eşitleme modu: sadece son eşitlemeden sonra güncelleştirilen kayıtlar"
-
-#. module: marketing_campaign
-#: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
-msgid "Open Marketing Menu"
-msgstr "Pazarlama Menüsünü Aç"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -765,12 +824,12 @@ msgstr "İş Ortağı"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
-msgstr "Paydaş Alanı"
+msgstr "İş Ortağı Alanı"
 
 #. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
-msgstr "Partnerler"
+msgstr "İş Ortakları"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -805,10 +864,16 @@ msgid ""
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
 msgstr ""
+"Etkinliğin yürütülebilecek olup olmadığına karar veren Python ifadesi, aksi durumda silinecek veya iptal edilecektir. İfade aşağıdaki [gözatılabilir] değişkenleri kullanabilir:\n"
+"- etkinlik: kampanya etkinliği\n"
+"- iş öğesi: kampanya iş öğesi\n"
+"- kaynak: bu kampanyanın temsil ettiği kaynak nesnesi\n"
+"- geçişler: bu etkinlikten çıkan kampanya geçişleri listesi\n"
+"...- re: Python olağan ifade modülü"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Report"
 msgstr "Rapor"
 
@@ -883,7 +948,7 @@ msgstr "Bölüm"
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_tree
 msgid "Segments"
-msgstr "Parçalar"
+msgstr "Hedef Kitle"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -896,7 +961,10 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr "Eğer bu noktaya ulaşmış her kampanya öğesi belirli bir maliyet gerektirdiği düşünün bir değişken maliyet ayarla. Sen-ebilmek almak maliyet istatistikleri raporlama bölümünde"
+msgstr ""
+"Eğer bu noktaya ulaşmış her kampanya öğesi belirli bir maliyet gerektirdiği "
+"düşünün bir değişken maliyet ayarla. Sen-ebilmek almak maliyet "
+"istatistikleri raporlama bölümünde"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_revenue
@@ -904,13 +972,16 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr "Eğer bu noktaya ulaşmış her kampanya öğesi belirli bir gelir üretti düşünürsek beklenen gelir ayarlayın. Sen-ebilmek almak gelir istatistikleri raporlama bölümünde"
+msgstr ""
+"Eğer bu noktaya ulaşmış her kampanya öğesi belirli bir gelir üretti "
+"düşünürsek beklenen gelir ayarlayın. Sen-ebilmek almak gelir istatistikleri "
+"raporlama bölümünde"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Set to Draft"
-msgstr "Taslak Olarak Ayarla"
+msgstr "Taslak olarak ayarla"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_signal
@@ -962,9 +1033,10 @@ msgstr "Manuel Çalıştır"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
-"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports. \n"
 "Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to \n"
+" validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
 msgstr ""
 
@@ -984,9 +1056,10 @@ msgid "Test in Realtime"
 msgstr "Gerçekzamanlı Test"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.transition:0
-msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr "Geçişin Kime/Kimden Eylemi aynı Kampanyaya ait olmalı "
+#: code:addons/marketing_campaign/models/marketing_campaign.py:401
+#, python-format
+msgid "The To/From Activity of transition must be of the same Campaign"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -994,27 +1067,29 @@ msgid "The action to perform when this activity is activated"
 msgstr "Bu faaliyetin etkin olduğunda gerçekleştirilecek eylem"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:114
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr "Kampanya tüm kesimleri kapalı olduğundan önce olarak işaretlenemez."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:104
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr "Kampanya başlatılamıyor. Başlangıç herhangi bir faaliyet yok. Bir başlangıç noktası olarak işaretlemek için kampanya aktiviteleri değiştirin."
+msgstr ""
+"Kampanya başlatılamıyor. Başlangıç herhangi bir faaliyet yok. Bir başlangıç "
+"noktası olarak işaretlemek için kampanya aktiviteleri değiştirin."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:92
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr "Kampanya başlatılamıyor. Aktivite yok."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:777
+#: code:addons/marketing_campaign/models/marketing_campaign.py:609
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr "Bu öğenin geçerli adımında önizlenecek eposta ve rapor yok."
@@ -1031,7 +1106,10 @@ msgid ""
 " If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr "Oluşturulan WorkItems kayıtla ilgili ortak bağlanır. Kaydı ortağı varsa, bu alanı boş bırakın. Raporlama amacıyla kampanya analizi veya kampanya takip sayısı ile yararlıdır."
+msgstr ""
+"Oluşturulan WorkItems kayıtla ilgili ortak bağlanır. Kaydı ortağı varsa, bu "
+"alanı boş bırakın. Raporlama amacıyla kampanya analizi veya kampanya takip "
+"sayısı ile yararlıdır."
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1044,14 +1122,13 @@ msgid "The report to generate when this activity is activated"
 msgstr "Bu faaliyetin etkinleştirildiğinde üretmek için rapor"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
-"   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
-"  "
-msgstr "Bir öğeyi bu etkinliği gibi girdiğinde yürütülecek eylem türünü: \n - e-posta: önceden tanımlanmış e-posta template\n - rapor kullanarak e-posta gönder: kaynak öğesinde tanımlanmış varolan bir raporu yazdırmak ve belirli bir directory\n - özel eylem kaydetmek: Örneğin bir önceden tanımlanmış eylemi yürütmek kaynak record\n alanları değiştirmek için"
+"- Email: send an email using a predefined email template \n"
+"- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
+"- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
@@ -1077,14 +1154,19 @@ msgid "Trigger"
 msgstr "Tetik"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid "Type"
-msgstr "Tür"
+msgstr "Türü"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_unique_field_id
 msgid "Unique Field"
 msgstr "Benzersiz Alan"
+
+#. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_user
+msgid "User"
+msgstr "Kullanıcı"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost

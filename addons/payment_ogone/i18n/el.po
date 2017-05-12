@@ -3,15 +3,15 @@
 # * payment_ogone
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Kostas Goutoudis <goutoudis@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-12-13 23:11+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
-"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2016\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,43 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:239
+#: code:addons/payment_ogone/models/payment.py:241
 #, python-format
 msgid "; multiple order found"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:237
+#: code:addons/payment_ogone/models/payment.py:239
 #, python-format
 msgid "; no order found"
 msgstr ""
-
-#. module: payment_ogone
-#: model:payment.acquirer,cancel_msg:payment_ogone.payment_acquirer_ogone
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Άκυρο,</i> Η πληρωμή σας έχει ακυρωθεί.</span>"
-
-#. module: payment_ogone
-#: model:payment.acquirer,done_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr "<span><i>Ολοκληρώθηκε,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. Ευχαριστούμε για την παραγγελία σας.</span>"
-
-#. module: payment_ogone
-#: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr "<span><i>Σφάλμα,</i> Έχετε υπ 'όψιν ότι παρουσιάστηκε κάποιο σφάλμα κατά τη διάρκεια της συναλλαγής. Η παραγγελία έχει επιβεβαιωθεί, αλλά δεν θα μπορεί να πληρωθεί. Μην διστάσετε να επικοινωνήσετε μαζί μας αν έχετε απορίες σχετικά με την κατάσταση της παραγγελίας σας.</span>"
-
-#. module: payment_ogone
-#: model:payment.acquirer,pending_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr "<span><i>Εν αναμονή,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. Αλλά η παραγγελία σας δεν έχει επικυρωθεί ακόμη.</span>"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
@@ -100,10 +73,8 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer_ogone_alias_usage
 msgid ""
-"If you want to use Ogone Aliases,\n"
-"                                                                this default Alias Usage will be presented to\n"
-"                                                                the customer as the reason you want to\n"
-"                                                                keep his payment data"
+"If you want to use Ogone Aliases, this default Alias Usage will be presented"
+" to the customer as the reason you want to keep his payment data"
 msgstr ""
 
 #. module: payment_ogone
@@ -114,27 +85,22 @@ msgstr "ΜΜ / ΕΕ"
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Name"
-msgstr "Όνομα"
+msgstr "Περιγραφή"
 
 #. module: payment_ogone
-#: model:payment.acquirer,name:payment_ogone.payment_acquirer_ogone
-msgid "Ogone"
-msgstr ""
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:247
+#: code:addons/payment_ogone/models/payment.py:248
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:235
+#: code:addons/payment_ogone/models/payment.py:237
 #, python-format
 msgid "Ogone: received data for reference %s"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:228
+#: code:addons/payment_ogone/models/payment.py:230
 #, python-format
 msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
@@ -167,13 +133,6 @@ msgid "SHA Key OUT"
 msgstr ""
 
 #. module: payment_ogone
-#: model:payment.acquirer,pre_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"You will be redirected to the Ogone website after clicking on the payment "
-"button."
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_method
-msgid "payment.method"
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "payment.token"
 msgstr ""

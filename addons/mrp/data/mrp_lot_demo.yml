@@ -1,0 +1,12 @@
+-
+  !python {model: mrp.production, id: mrp_production_laptop_cust}: |
+    if self.state != 'done':
+        self.action_assign()
+        wiz_obj = self.env['mrp.product.produce']
+        ctx = dict(self.env.context, active_id=self.id)
+        produce_wiz = wiz_obj.with_context(ctx).create({'product_qty': self.product_qty, 'lot_id': ref('lot_product_27_0')})
+        produce_wiz.consume_line_ids.write({'quantity_done': produce_wiz.product_qty})
+        #Produce Product,Post Inventory and Set MO Done.
+        produce_wiz.do_produce()
+        self.post_inventory()
+        self.button_mark_done()

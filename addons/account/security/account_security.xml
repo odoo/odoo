@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data noupdate="0">
 
     <record id="group_account_invoice" model="res.groups">
         <field name="name">Billing</field>
         <field name="category_id" ref="base.module_category_accounting_and_finance"/>
-        <field name="users" eval="[(4, ref('base.user_root'))]"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- 2 steps to avoid making reference to xml id not defined yet -->
+    <record id="group_account_invoice" model="res.groups">
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
     <record id="group_account_user" model="res.groups">
@@ -21,14 +25,24 @@
         <field name="implied_ids" eval="[(4, ref('group_account_user'))]"/>
     </record>
 
+
     <record id="group_proforma_invoices" model="res.groups">
         <field name="name">Pro-forma Invoices</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_warning_account" model="res.groups">
+        <field name="name">A warning can be set on a partner (Account)</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
 </data>
 
 <data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('account.group_account_manager'))]"/>
+    </record>
+
     <record id="account_move_comp_rule" model="ir.rule">
         <field name="name">Account Entry</field>
         <field name="model_id" ref="model_account_move"/>
@@ -71,6 +85,13 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record id="invoice_analysis_comp_rule" model="ir.rule">
+        <field name="name">Invoice Analysis multi-company</field>
+        <field name="model_id" ref="model_account_invoice_report"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
     <record id="account_fiscal_position_comp_rule" model="ir.rule">
         <field name="name">Account fiscal Mapping company rule</field>
         <field name="model_id" ref="model_account_fiscal_position"/>
@@ -99,9 +120,9 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-    <record model="ir.rule" id="account_operation_template_comp_rule">
-        <field name="name">Account operation template company rule</field>
-        <field name="model_id" ref="model_account_operation_template"/>
+    <record model="ir.rule" id="account_reconcile_model_template_comp_rule">
+        <field name="name">Account reconcile model template company rule</field>
+        <field name="model_id" ref="model_account_reconcile_model"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
@@ -114,4 +135,4 @@
     </record>
 
 </data>
-</openerp>
+</odoo>

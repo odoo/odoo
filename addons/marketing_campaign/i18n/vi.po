@@ -3,21 +3,51 @@
 # * marketing_campaign
 # 
 # Translators:
+# fanha99 <fanha99@hotmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Hoang Loc Le Huu <loclhh@gmail.com>, 2016
-# Lan Pham <phamquanglan@gmail.com>, 2015
+# Phạm Lân <phamquanglan@gmail.com>, 2016
+# son dang <son.dang@doda100.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-02-23 06:34+0000\n"
-"Last-Translator: Hoang Loc Le Huu <loclhh@gmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: son dang <son.dang@doda100.com>, 2016\n"
+"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -29,7 +59,9 @@ msgstr "số lượng hành động"
 msgid ""
 "<span class=\"o_stat_text\">Campaign</span>\n"
 "                            <span class=\"o_stat_text\">Statistics</span>"
-msgstr "<span class=\"o_stat_text\">Chiến dịch</span>\n<span class=\"o_stat_text\">Thống kê</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Chiến dịch</span>\n"
+"<span class=\"o_stat_text\">Thống kê</span>"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -38,7 +70,11 @@ msgid ""
 "            a letter, assigning to a team, etc. These activities are triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc."
-msgstr "Một chiến dịch có thể có nhiều hoạt động như gửi một email, in một lá thư, chỉ định một nhóm, vân vân... Những hoạt động này được kích hoạt từ những tình huống cụ thể; mẫu đơn liên hệ, 10 ngày sau lần liên hệ đầu tiên, nếu một manh mối chưa được đóng, vân vân..."
+msgstr ""
+"Một chiến dịch có thể có nhiều hoạt động như gửi một email, in một lá thư, "
+"chỉ định một nhóm, vân vân... Những hoạt động này được kích hoạt từ những "
+"tình huống cụ thể; mẫu đơn liên hệ, 10 ngày sau lần liên hệ đầu tiên, nếu "
+"một manh mối chưa được đóng, vân vân..."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -62,7 +98,7 @@ msgid "Activity"
 msgstr "Hoạt động"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:479
+#: code:addons/marketing_campaign/models/marketing_campaign.py:384
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "Sau %(interval_nbr)d %(interval_type)s"
@@ -82,7 +118,9 @@ msgstr "Tất cả bản ghi (không trùng lặp)"
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr "Một hoạt động với một dấu hiệu có thể được gọi một cách khả trình. Hãy cẩn thận, workitem sẽ luôn được tạo khi một dấu hiệu được gửi"
+msgstr ""
+"Một hoạt động với một dấu hiệu có thể được gọi một cách khả trình. Hãy cẩn "
+"thận, workitem sẽ luôn được tạo khi một dấu hiệu được gửi"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -100,7 +138,7 @@ msgid "Automatic"
 msgstr "Tự động"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:478
+#: code:addons/marketing_campaign/models/marketing_campaign.py:383
 #, python-format
 msgid "Automatic transition"
 msgstr "Tự động chuyển đổi"
@@ -110,7 +148,9 @@ msgstr "Tự động chuyển đổi"
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr "Bằng việc kích hoạt tùy chọn này, các workitem mà không được thực thi do không đáp ứng đủ điều kiện sẽ được đánh dấu là Hủy bỏ thay vì Đang xóa."
+msgstr ""
+"Bằng việc kích hoạt tùy chọn này, các workitem mà không được thực thi do "
+"không đáp ứng đủ điều kiện sẽ được đánh dấu là Hủy bỏ thay vì Đang xóa."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_campaign_id
@@ -200,7 +240,10 @@ msgid "Cancelled"
 msgstr "Đã hủy"
 
 #. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_object_id
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_object_id
 msgid "Choose the resource on which you want this campaign to be run"
 msgstr "Lựa chọn tài nguyên mà bạn muốn chiến dịch này chạy trên đó"
 
@@ -230,7 +273,7 @@ msgid "Congratulations! You are now one of our Gold Partners!"
 msgstr "Chúc mừng! Bạn hiện là Thành viên Vàng!"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:480
+#: code:addons/marketing_campaign/models/marketing_campaign.py:385
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -263,10 +306,10 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_create_date
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_create_date
 msgid "Created on"
-msgstr "Được tạo vào"
+msgstr "Thời điểm tạo"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Custom Action"
 msgstr "Hành động tùy ý"
 
@@ -275,7 +318,9 @@ msgstr "Hành động tùy ý"
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr "Ngày tháng mà phân khúc này được đồng bộ lần cuối (một cách tự động hoặc thủ công)"
+msgstr ""
+"Ngày tháng mà phân khúc này được đồng bộ lần cuối (một cách tự động hoặc thủ"
+" công)"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_done
@@ -301,7 +346,10 @@ msgid ""
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
 "records which have the same value for the unique field as other records that"
 " already entered the campaign."
-msgstr "Xác định một tiêu chí bổ sung để thêm vào một bộ lọc khi chọn các bản ghi mới để đưa vào chiến dịch. \"Không trùng lặp\" ngăn ngừa việc chọn các bản ghi mà trươc đó đã được đưa vào chiến dịch."
+msgstr ""
+"Xác định một tiêu chí bổ sung để thêm vào một bộ lọc khi chọn các bản ghi "
+"mới để đưa vào chiến dịch. \"Không trùng lặp\" ngăn ngừa việc chọn các bản "
+"ghi mà trươc đó đã được đưa vào chiến dịch."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_display_name
@@ -335,18 +383,18 @@ msgid "Draft"
 msgstr "Bản thảo"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:170
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
 msgstr "Không hỗ trợ trùng lặp chiến dịch"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Email"
 msgstr "Tên đăng nhập / Email"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:752
+#: code:addons/marketing_campaign/models/marketing_campaign.py:586
 #, python-format
 msgid "Email Preview"
 msgstr "Xem trước Email"
@@ -355,6 +403,11 @@ msgstr "Xem trước Email"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
 msgstr "Mẫu Email"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_email_template_preview
+msgid "Email Template Preview"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -424,7 +477,12 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr "Bộ lọc để chọn các bản ghi phù hợp với phân khúc này. Các bộ lọc mới có thể được tạo và lưu lại sử dụng chức năng tìm kiếm nâng cao trên khung nhìn kiểu danh mục (list view) của Nguồn. Nếu không có bộ lọc nào được thiết lập, tất cả các bản ghi sẽ được chọn mà không lọc. Chế độ đồng bộ cũng có thể thêm các tiêu chí vào bộ lọc."
+msgstr ""
+"Bộ lọc để chọn các bản ghi phù hợp với phân khúc này. Các bộ lọc mới có thể "
+"được tạo và lưu lại sử dụng chức năng tìm kiếm nâng cao trên khung nhìn kiểu"
+" danh mục (list view) của Nguồn. Nếu không có bộ lọc nào được thiết lập, tất"
+" cả các bản ghi sẽ được chọn mà không lọc. Chế độ đồng bộ cũng có thể thêm "
+"các tiêu chí vào bộ lọc."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_fixed_cost
@@ -437,7 +495,10 @@ msgid ""
 "Fixed cost for running this campaign. You may also specify variable cost and"
 " revenue on each campaign activity. Cost and Revenue statistics are included"
 " in Campaign Reporting."
-msgstr "Kinh phí cố định để thực thi chiến dịch này. Bạn có thể xác định cụ thể biến phí và thu nhập trên mỗi hoạt động chiến dịch. Thống kê về Chi phí và Thu nhập được baio gồm trong Báo cáo Chiến dịch."
+msgstr ""
+"Kinh phí cố định để thực thi chiến dịch này. Bạn có thể xác định cụ thể biến"
+" phí và thu nhập trên mỗi hoạt động chiến dịch. Thống kê về Chi phí và Thu "
+"nhập được baio gồm trong Báo cáo Chiến dịch."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -457,24 +518,6 @@ msgstr "Theo sát"
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Group By"
 msgstr "Nhóm theo"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr "Xin chào, bạn sẽ nhận gói chào mừng thông qua email sớm thôi."
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle"
-" of our Gold Partners"
-msgstr "Chào bạn, chúng tôi hạnh phúc báo bạn biết rằng bạn đã gia nhập vào nhóm đối tác vàng của chúng tôi."
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr "Xin chào, chúng tôi vui mừng chào đón bạn như là đối tác bạc của chúng tôi ngày hôm nay!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -499,7 +542,8 @@ msgstr "ID"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_date
 msgid "If date is not set, this workitem has to be run manually"
-msgstr "Nếu ngày thàng không được cài đặt, workitem này phải được chạy thủ công"
+msgstr ""
+"Nếu ngày thàng không được cài đặt, workitem này phải được chạy thủ công"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_unique_field_id
@@ -512,7 +556,16 @@ msgid ""
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr "Nếu được cài đặt, trường này sẽ giúp các phân khúc mà đang hoạt động ở chế độ \"không trùng lắp\" tránh việc lựa chọn các bản ghi tương tự 2 lần. Các bản ghi tương tự là các bản ghi mà có cùng giá trị cho trường dữ liệu duy nhất này. Ví dụ, bằng việc chọn trường \"email_from\" cho các Nguồn dẫn CRM, bạn chắc sẽ muốn tránh việc gửi cùng một chiến dịch đến cùng một địa chỉ email. Nếu chưa cài đặt, các phân khúc \"không trùng lặp\" sẽ chỉ tránh việc chọn lại cùng một bản ghi nếu trước đó bản ghi đó đã được đưa vào chiến dịch rồi. Chỉ có các trường so sánh được (như textfields, integers, selections hoặc single relationships) mới có thể được sử dụng."
+msgstr ""
+"Nếu được cài đặt, trường này sẽ giúp các phân khúc mà đang hoạt động ở chế "
+"độ \"không trùng lắp\" tránh việc lựa chọn các bản ghi tương tự 2 lần. Các "
+"bản ghi tương tự là các bản ghi mà có cùng giá trị cho trường dữ liệu duy "
+"nhất này. Ví dụ, bằng việc chọn trường \"email_from\" cho các Nguồn dẫn CRM,"
+" bạn chắc sẽ muốn tránh việc gửi cùng một chiến dịch đến cùng một địa chỉ "
+"email. Nếu chưa cài đặt, các phân khúc \"không trùng lặp\" sẽ chỉ tránh việc"
+" chọn lại cùng một bản ghi nếu trước đó bản ghi đó đã được đưa vào chiến "
+"dịch rồi. Chỉ có các trường so sánh được (như textfields, integers, "
+"selections hoặc single relationships) mới có thể được sử dụng."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -571,7 +624,7 @@ msgstr "Lần đồng bộ cuối"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_write_uid
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_write_date
@@ -596,6 +649,11 @@ msgstr "Tháng khởi động"
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_root
 msgid "Lead Automation"
 msgstr "Tự động hóa Lead"
+
+#. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_manager
+msgid "Manager"
+msgstr "Quản trị dự án"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -654,9 +712,10 @@ msgid "Mode"
 msgstr "Chế độ"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.segment:0
-msgid "Model of filter must be same as resource model of Campaign "
-msgstr "Mô hình (model) của bộ lọc phải giống với mô hình Tài nguyên của chiến dịch "
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
+#, python-format
+msgid "Model of filter must be same as resource model of Campaign"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -733,8 +792,8 @@ msgstr "Tháng Mười"
 msgid ""
 "Odoo's marketing campaign allows you to automate communication\n"
 "            to your prospects. You can define a segment (set of conditions) on\n"
-"            your leads and partners to fullfil the campaign."
-msgstr "Chiến dịch quảng cáo của Odoo cho phép bạn tự động giao tiếp đến những khách hàng tiềm năng của bạn. Bạn có thể định nghĩa một phân vùng (thiết lập các điều kiện) cho những manh mối và những đối tác để hoàn thành chiến dịch này."
+"            your leads and partners to fulfill the campaign."
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -745,11 +804,6 @@ msgstr "Chỉ những bản ghi được tạo sau lần đồng bộ cuối"
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
 msgstr "Chỉ những bản ghi được sửa sau lần đồng bộ cuối (không trùng lặp)"
-
-#. module: marketing_campaign
-#: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
-msgid "Open Marketing Menu"
-msgstr "Mở Menu Marketing"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -804,11 +858,17 @@ msgid ""
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
-msgstr "Biểu thức Python để quyết định hoạt động có được thực thi hay không, người lại nó sẽ bị xóa hoặc hủy bỏ. Biểu thức có thể sử dụng các biến (có thể duyệt được) dưới đây:\n   - activity: hoạt động của chiến dịch\n   - workitem: workitem của chiến dịch\n   - resource: đối tượng tài nguyên mà hạng mục chiến dịch này đại diện\n   - transitions: danh mục các chuyển tiếp chiến dịch ra ngoài từ hoạt động này\n...- re: Python regular expression module"
+msgstr ""
+"Biểu thức Python để quyết định hoạt động có được thực thi hay không, người lại nó sẽ bị xóa hoặc hủy bỏ. Biểu thức có thể sử dụng các biến (có thể duyệt được) dưới đây:\n"
+"   - activity: hoạt động của chiến dịch\n"
+"   - workitem: workitem của chiến dịch\n"
+"   - resource: đối tượng tài nguyên mà hạng mục chiến dịch này đại diện\n"
+"   - transitions: danh mục các chuyển tiếp chiến dịch ra ngoài từ hoạt động này\n"
+"...- re: Python regular expression module"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Report"
 msgstr "Báo cáo"
 
@@ -896,7 +956,10 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr "Thiết lập biến phí nếu bạn coi tất cả các hạng mục chiến dịch chạm đến điểm này đã chạm một mức phí nhất định. Bạn có thể có bản phân tích chi phí trong phần Báo cáo"
+msgstr ""
+"Thiết lập biến phí nếu bạn coi tất cả các hạng mục chiến dịch chạm đến điểm "
+"này đã chạm một mức phí nhất định. Bạn có thể có bản phân tích chi phí trong"
+" phần Báo cáo"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_revenue
@@ -904,7 +967,10 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr "Thiết lập một mức thu nhập trông mong nếu bạn coi tất cả các hạng mục chiến dịch chạm đến điểm này đã tạo được thu nhập nhất định. Bạn có thể có bản phân tích thu nhập trong phần Báo cáo"
+msgstr ""
+"Thiết lập một mức thu nhập trông mong nếu bạn coi tất cả các hạng mục chiến "
+"dịch chạm đến điểm này đã tạo được thu nhập nhất định. Bạn có thể có bản "
+"phân tích thu nhập trong phần Báo cáo"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -942,12 +1008,15 @@ msgstr "Chế độ đồng bộ: tất cả các bản ghi"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records created after last sync"
-msgstr "Chế độ đồng bộ: chỉ những bản ghi được tạo sau thời điểm đồng bộ lần cuối"
+msgstr ""
+"Chế độ đồng bộ: chỉ những bản ghi được tạo sau thời điểm đồng bộ lần cuối"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
-msgstr "Chế độ đồng bộ: chỉ những bản ghi được cập nhật sau thời điểm đồng bộ lần cuối"
+msgstr ""
+"Chế độ đồng bộ: chỉ những bản ghi được cập nhật sau thời điểm đồng bộ lần "
+"cuối"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_mode
@@ -962,11 +1031,12 @@ msgstr "Đồng bộ thủ công"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
-"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports. \n"
 "Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to \n"
+" validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
-msgstr "Kiểm thử - Kiểm thử sẽ tạo và xử lý tất cả các hoạt động một cách trực tiếp (mà không đợi sự trễ lúc chuyển tiếp) nhưng sẽ không gửi email hay tạo ra các báo cáo.\nKiểm thử theo thời gian thực - Kiểm thử theo thời gian thực sẽ tạo và xử lý tất cả các hoạt động một cách trực tiếp nhưng sẽ không gửi email hay tạo ra các báo cáo.\nVới sự xác nhận thủ công - các chiến dịch chạy bình thường, nhưng người dùng phải thẩm định tất cả các workitem một cách thủ công.\nBình thường - các chiến dịch chạy bình thường và tự động gửi tất cả email và báo cáo (hãy thận trọng, đây là chế độ hoạt động thực sự/live, không phải là kiểm thử nữa!)"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -984,9 +1054,10 @@ msgid "Test in Realtime"
 msgstr "Kiểm thử theo thời gian thực"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.transition:0
-msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr "Hoạt động Tới/Từ của việc chuyển tiếp phải thuộc về cùng một Chiến dịch "
+#: code:addons/marketing_campaign/models/marketing_campaign.py:401
+#, python-format
+msgid "The To/From Activity of transition must be of the same Campaign"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -994,30 +1065,38 @@ msgid "The action to perform when this activity is activated"
 msgstr "Hành động để thực hiện khi hoạt động này được kích hoạt"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:114
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr "Chiến dịch không thể được đánh dấu là hoàn thành trước khi các phân khúc được đóng."
+msgstr ""
+"Chiến dịch không thể được đánh dấu là hoàn thành trước khi các phân khúc "
+"được đóng."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:104
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr "Chiến dịch không thể được khởi động vì nó không có bất kỳ một hoạt động khởi động nào cả. Hãy sửa các hoạt động của chiến dịch và đánh dấu một trong số chúng là điểm khởi động."
+msgstr ""
+"Chiến dịch không thể được khởi động vì nó không có bất kỳ một hoạt động khởi"
+" động nào cả. Hãy sửa các hoạt động của chiến dịch và đánh dấu một trong số "
+"chúng là điểm khởi động."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:92
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr "Chiến dịch không thể được khởi động vì nó không có bất kỳ một hoạt động nào bên trong."
+msgstr ""
+"Chiến dịch không thể được khởi động vì nó không có bất kỳ một hoạt động nào "
+"bên trong."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:777
+#: code:addons/marketing_campaign/models/marketing_campaign.py:609
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr "Bước hiện tại cho hạng mục này không có email hay báo cáo để xem trước."
+msgstr ""
+"Bước hiện tại cho hạng mục này không có email hay báo cáo để xem trước."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_email_template_id
@@ -1031,7 +1110,11 @@ msgid ""
 " If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr "Các workitem được tạo ra sẽ liên kết đến một đối tác liên quan đến bản ghi này. Nếu bản ghi bản thân nó là một partner, hay để trống trường này. Trường này hữu dụng cho mục đích báo cáo, thông qua khung nhìn Phân tích chiến dịch hoặc Theo dõi Chiến dịch"
+msgstr ""
+"Các workitem được tạo ra sẽ liên kết đến một đối tác liên quan đến bản ghi "
+"này. Nếu bản ghi bản thân nó là một partner, hay để trống trường này. Trường"
+" này hữu dụng cho mục đích báo cáo, thông qua khung nhìn Phân tích chiến "
+"dịch hoặc Theo dõi Chiến dịch"
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1044,14 +1127,13 @@ msgid "The report to generate when this activity is activated"
 msgstr "Báo cáo để tạo khi hoạt động này được kích hoạt"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
-"   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
-"  "
-msgstr "Loại hành động để thực thi khi một hạng mục nhập vào hoạt động này, ví như:\n   - Email: gửi email sử dụng một mẫu email được định nghĩa trước\n   - Báo cáo: in một Báo cáo có sẵn được định nghĩa theo hạng mục tài nguyên và lưu nó trong một thư mục cụ thể\n   - Hành động tự do: thực thi một hành động được định nghĩa trước, ví dụ: sửa các trường của một bản ghi tài nguyên\n  "
+"- Email: send an email using a predefined email template \n"
+"- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
+"- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
@@ -1077,7 +1159,7 @@ msgid "Trigger"
 msgstr "Tri-gơ"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid "Type"
 msgstr "Loại"
 
@@ -1085,6 +1167,11 @@ msgstr "Loại"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_unique_field_id
 msgid "Unique Field"
 msgstr "Trường giá trị duy nhất"
+
+#. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_user
+msgid "User"
+msgstr "Người dùng"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost

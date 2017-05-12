@@ -58,7 +58,7 @@ following attributes:
     Requires an :term:`external id`, defaults to ``True``.
 
 ``field``
-'''''''''
+----------
 
 Each record can be composed of ``field`` tags, defining values to set when
 creating the record. A ``record`` with no ``field`` will use all default
@@ -77,13 +77,13 @@ Nothing
 
     Will evaluate the domain, search the field's model using it and set the
     search's result as the field's value. Will only use the first result if
-    the field is a :class:`~openerp.fields.Many2one`
+    the field is a :class:`~odoo.fields.Many2one`
 ``ref``
     if a ``ref`` attribute is provided, its value must be a valid
     :term:`external id`, which will be looked up and set as the field's value.
 
-    Mostly for :class:`~openerp.fields.Many2one` and
-    :class:`~openerp.fields.Reference` fields
+    Mostly for :class:`~odoo.fields.Many2one` and
+    :class:`~odoo.fields.Reference` fields
 ``type``
     if a ``type`` attribute is provided, it is used to interpret and convert
     the field's content. The field's content can be provided through an
@@ -253,14 +253,14 @@ For this case, data files can also use csv_, this is often the case for
 Here's the first lines of the data file defining US states
 ``res.country.state.csv``
 
-.. literalinclude:: ../../openerp/addons/base/res/res.country.state.csv
+.. literalinclude:: ../../odoo/addons/base/res/res.country.state.csv
     :language: text
     :lines: 1-15
 
 rendered in a more readable format:
 
 .. csv-table::
-    :file: ../../openerp/addons/base/res/res.country.state.csv
+    :file: ../../odoo/addons/base/res/res.country.state.csv
     :header-rows: 1
     :class: table-striped table-hover table-condensed
 

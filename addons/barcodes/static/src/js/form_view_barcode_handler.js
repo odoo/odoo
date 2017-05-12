@@ -7,6 +7,7 @@ var common = require('web.form_common');
 var BarcodeEvents = require('barcodes.BarcodeEvents');
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
 var KanbanRecord = require('web_kanban.Record');
+var Dialog = require('web.Dialog');
 
 var _t = core._t;
 
@@ -26,6 +27,8 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
     init: function(parent, context) {
         this.__quantity_listener = _.bind(this._set_quantity_listener, this);
         BarcodeHandlerMixin.init.apply(this, arguments);
+
+        this.process_barcode_mutex = new utils.Mutex();
 
         return this._super.apply(this, arguments);
     },
@@ -52,6 +55,11 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         }
     },
 
+    destroy: function () {
+        this.stop_listening();
+        this._super.apply(this, arguments);
+    },
+
     _display_no_edit_mode_warning: function() {
         this.do_warn(_t('Error : Document not editable'), _t('To modify this document, please first start edition.'));
     },
@@ -72,22 +80,38 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
             } else {
                 var field = this.form_view.fields[this.m2x_field];
                 var view = field.viewmanager.active_view;
+                var $content = $('<div>').append($('<input>', {type: 'text', class: 'o_set_qty_input'}));
 
                 if (this.last_scanned_barcode) {
-                    var new_qty = window.prompt(_t('Set quantity'), character) || "0";
-                    new_qty = new_qty.replace(',', '.');
-                    var record = this._get_records(field).find(function(record) {
-                        return record.get('product_barcode') === self.last_scanned_barcode;
+                    this.dialog = new Dialog(this, {
+                        title: _t('Set quantity'),
+                        buttons: [{text: _t('Select'), classes: 'btn-primary', close: true, click: function () {
+                            var new_qty = this.$content.find('.o_set_qty_input').val();
+                            var record = _.find(self._get_records(field), function (record) {
+                                return record.get('product_barcode') === self.last_scanned_barcode;
+                            });
+                            if (record) {
+                                var values = {};
+                                values[self.quantity_field] = parseFloat(new_qty);
+                                field.data_update(record.get('id'), values).then(function () {
+                                    view.controller.reload_record(record);
+                                });
+                            } else {
+                                self._display_no_last_scanned_warning();
+                            }
+                        }}, {text: _t('Discard'), close: true}],
+                        $content: $content,
+                    }).open();
+                    // This line set the value of the key which triggered the _set_quantity in the input
+                    this.dialog.$content.find('.o_set_qty_input').focus().val(character);
+
+                    var $selectBtn = this.dialog.$footer.find('.btn-primary');
+                    core.bus.on('keypress', this.dialog, function(event){
+                        if (event.which === 13) {
+                            event.preventDefault();
+                            $selectBtn.click();
+                        }
                     });
-                    if (record) {
-                        var values = {};
-                        values[this.quantity_field] = parseFloat(new_qty);
-                        field.data_update(record.get('id'), values).then(function () {
-                            view.controller.reload_record(record);
-                        });
-                    } else {
-                        this._display_no_last_scanned_warning();
-                    }
                 } else {
                     this._display_no_last_scanned_warning();
                 }
@@ -131,31 +155,46 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         else if (this.form_view.get('actual_mode') === 'view')
             this._display_no_edit_mode_warning();
         else {
-            // Call hook method possibly implemented by subclass
-            this.pre_onchange_hook(barcode).then(function(proceed) {
-                if (proceed === true) {
-                    // Wait for hypothetical ongoing onchange to finish
-                    self.form_view.onchanges_mutex.exec(function() {
-                        // A real onchange is triggered when a value actually changes (which can correspond
-                        // to a widget's blur event per example). Commit the value of fields before
-                        // programmatically triggering an onchange to be consistent with this.
-                        var mutex_commit_value = new utils.Mutex();
-                        _.each(self.form_view.fields, function(field) {
-                            mutex_commit_value.exec(_.bind(field.commit_value, field));
-                        });
-                        return mutex_commit_value.def.then(function(){
-                            // Trigger the barcode onchange
-                            self.set_value(barcode);
-                        });
-                    });
+            var process_barcode = function () {
+                // this function can be passed to `Mutex.exec` in order to make sure
+                // that every ongoing onchanges in the form view are done
+                var form_onchanges_mutex = function () {
+                    return self.form_view.onchanges_mutex.def;
                 }
-            });
+
+                // before setting the barcode field with the received barcode, we commit
+                // every fields of the form view and we wait for their hypothetical ongoing
+                // onchanges to finish
+                var commit_mutex = new utils.Mutex();
+                _.each(self.form_view.fields, function (field) {
+                    commit_mutex.exec(function () {
+                        return field.commit_value();
+                    });
+                    commit_mutex.exec(form_onchanges_mutex);
+                });
+
+                return commit_mutex.def.then(function () {
+                    return self.pre_onchange_hook(barcode).then(function (proceed) {
+                        if (proceed) {
+                            self.set_value(barcode);       // set the barcode field with the received one
+                            return form_onchanges_mutex(); // wait for its onchange to finish
+                        }
+                    });
+                });
+            };
+
+            this.process_barcode_mutex.exec(process_barcode);
         }
     },
 
     _get_records: function(field) {
-        return field.viewmanager.active_view.controller.records || // tree view
-            field.viewmanager.active_view.controller.widgets; // kanban view
+        var active_view = field.viewmanager.active_view;
+        if (active_view.type === "kanban") {
+            return active_view.controller.widgets;
+        } else {
+             // tree view case
+            return active_view.controller.records.records;
+        }
     },
 });
 

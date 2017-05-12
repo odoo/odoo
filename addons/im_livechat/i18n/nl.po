@@ -3,16 +3,19 @@
 # * im_livechat
 # 
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-10-20 09:34+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-09-07 08:58+0000\n"
+"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,23 +23,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:222
-#, python-format
-msgid " for the following reason: %s"
-msgstr "voor de volgende reden: %s"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-"\", {modules:modules, use_cors: false});\n"
-"                    });"
-msgstr "\", {modules:modules, use_cors: false});\n                    });"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_nbr_channel
-msgid "# of channel"
-msgstr "# van kanaal"
+msgid "# of Sessions"
+msgstr "# sessies"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_speaker
@@ -50,27 +39,15 @@ msgid "% Happy"
 msgstr "% Blij"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "&lt;!DOCTYPE html&gt;"
-msgstr "&lt;!DOCTYPE html&gt;"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-");\n"
-"                        button.appendTo($('body'));\n"
-"                        window.livechat_button = button;\n"
-"                    });\n"
-"                });"
-msgstr ");\n                        button.appendTo($('body'));\n                        window.livechat_button = button;\n                    });\n                });"
-
-#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
 msgid ""
-"* Select 'Display the button' to simply display the chat button on the pages.\n"
-"* Select 'Auto popup' for to display the button, and automatically open the conversation window.\n"
-"* Select 'Hide the button' to hide the chat button on the pages."
-msgstr "* Selecteer de 'Toon de knop' om simpelweg de chatknop te tonen op de pagina's:\n* Selecteer 'Auto pop-up' om de knop te tonen en automatisch het conversatie venster te openen.\n* Selecteer 'Verberg de knop' om de chat knop te verbergen op de pagina's."
+"* 'Display the button' displays the chat button on the pages.\n"
+"* 'Auto popup' displays the button and automatically open the conversation pane.\n"
+"* 'Hide the button' hides the chat button on the pages."
+msgstr ""
+"* Selecteer 'Toon de knop' om simpelweg de chatknop te tonen op de pagina's:\n"
+"* Selecteer 'Auto pop-up' om de knop te tonen en automatisch het conversatie venster te openen.\n"
+"* Selecteer 'Verberg de knop' om de chat knop te verbergen op de pagina's."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -80,7 +57,12 @@ msgid ""
 "button available) for the given URL, and per country.<br/>To identify the "
 "country, GeoIP must be install on your server, otherwise, the countries of "
 "the rule will not be taken into account.</span>"
-msgstr "<span>Definieer regels voor uw live ondersteuningskanaal. U kan een actie toepassen (schakel ondersteuning uit, open automatisch de ondersteuning, of maak de knop beschikbaar) voor de gegeven URL, en dit per land.<br/>Om het land te identificeren moet GeoIP geïnstalleerd zijn op uw server, anders wordt de landactie niet mee in rekening genomen.</span>"
+msgstr ""
+"<span>Definieer regels voor uw live ondersteuningskanaal. U kan een actie "
+"toepassen (schakel ondersteuning uit, open automatisch de ondersteuning, of "
+"maak de knop beschikbaar) voor de gegeven URL, en dit per land.<br/>Om het "
+"land te identificeren moet GeoIP geïnstalleerd zijn op uw server, anders "
+"wordt de landactie niet mee in rekening genomen.</span>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_action
@@ -99,10 +81,16 @@ msgstr "Bent u in de matrix?"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:26
+#: code:addons/im_livechat/static/src/js/im_livechat.js:27
 #, python-format
 msgid "Ask something ..."
 msgstr "Vraag iets ..."
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Attendees"
+msgstr "Deelnemers"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
@@ -136,6 +124,25 @@ msgstr "Gemiddelde tijd voor de eerste reactie aan de bezoeker"
 #, python-format
 msgid "Bad"
 msgstr "Slecht"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+msgid "Canned Responses"
+msgstr "Standaard antwoorden"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid ""
+"Canned responses allow you to insert prewritten responses in\n"
+"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                replaced directly in your message, so that you can still edit\n"
+"                it before sending."
+msgstr ""
+"Met standaard antwoorden kunt u voorgeschreven reacties toevoegen in uw\n"
+"berichten door te typen <i>:snelkoppeling</i>. De snelkoppeling is\n"
+"direct vervangen in uw bericht, zodat u het nog kan bewerken\n"
+"voordat het verzonden wordt."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
@@ -176,10 +183,15 @@ msgstr "Chat invoerveld"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:28
+#: code:addons/im_livechat/static/src/js/im_livechat.js:29
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Chat met een van onze medewerkers"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Click to create a new canned response."
+msgstr "Klik om een nieuw standaard antwoord aan te maken."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -188,8 +200,14 @@ msgstr "Klik om een nieuwe website live chat kanaal aan te maken."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_technical_name
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Code"
 msgstr "Code"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.livechat_config
+msgid "Configuration"
+msgstr "Instellingen"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_id
@@ -200,9 +218,8 @@ msgstr "Conversatie"
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
-"Copy and paste this code into your website, within the &amp;lt;head&amp;gt; "
-"tag:"
-msgstr "Kopieer en plak deze code in uw website,  binnenin de &amp;lt;head&amp;gt; tag:"
+"Copy and paste this code into your website, within the &lt;head&gt; tag:"
+msgstr "Kopieer en plak deze code in uw website,  binnenin de <head> tag:"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_country_ids
@@ -263,10 +280,13 @@ msgstr "Standaard tekst die getoond wordt op de LiveChat ondersteuning knop"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
 msgid ""
-"Delay (in seconds) to automatically open the converssation window. Note : "
-"the selected action must be 'Auto popup', otherwise this parameter will not "
-"be take into account."
-msgstr "Vertraging (in seconden) om automatisch het conversatiescherm te openen. Opmerking: de geselecteerde actie moet 'Auto pop-up' zijn, anders zal de parameter niet meer in rekening worden genomen."
+"Delay (in seconds) to automatically open the conversation window. Note: the "
+"selected action must be 'Auto popup' otherwise this parameter will not be "
+"taken into account."
+msgstr ""
+"Vertraging (in seconden) om automatisch het conversatiescherm te openen. "
+"Opmerking: de geselecteerde actie moet 'Auto pop-up' zijn, anders zal de "
+"parameter niet mee in rekening worden genomen."
 
 #. module: im_livechat
 #. openerp-web
@@ -278,7 +298,7 @@ msgstr "Hebben we uw antwoord correct beantwoord?"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel
 msgid "Discussion channel"
-msgstr "Discussie kanaal"
+msgstr "Discussiekanaal"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_display_name
@@ -286,7 +306,7 @@ msgstr "Discussie kanaal"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergave naam"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
@@ -304,19 +324,16 @@ msgstr "Duur van de conversatie (in seconden)"
 msgid ""
 "Each channel has it's own URL that you can send by email to\n"
 "                your customers in order to start chatting with you."
-msgstr "Elk kanaal heeft zijn eigen URL dat u via e-mail kan verzenden naar\nuw klant om een chatsessie met deze klant te starten."
+msgstr ""
+"Elk kanaal heeft zijn eigen URL dat u via e-mail kan verzenden naar\n"
+"uw klant om een chatsessie met deze klant te starten."
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat.xml:16
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:19
 #, python-format
 msgid "Explain your note"
 msgstr "Verklaar uw notitie"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
-msgid "Feedback"
-msgstr "Feedback"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -324,19 +341,19 @@ msgid ""
 "For website built with Odoo CMS, please install the website_livechat module."
 " Then go to Settings &gt; Website Settings and select the Website Live Chat "
 "Channel you want to add on your website."
-msgstr "Voor website gemaakt met Odoo CMS, installeer aub de  website_livechat module. Ga dan naar  Instellingen > Website instellingen en selecteer het Website live chatkanaal wat u wilt gebruiken op uw website."
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
-msgid "General"
-msgstr "Algemeen"
+msgstr ""
+"Voor website gemaakt met Odoo CMS, installeer aub de  website_livechat "
+"module. Ga dan naar  Instellingen > Website instellingen en selecteer het "
+"Website live chatkanaal wat u wilt gebruiken op uw website."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
 msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
 "given url/country, the one with the lowest sequence will be chosen."
-msgstr "Gezien de volgorde van een matching regel. Als 2 regels overeenkomen voor de gegeven URL/land zal degene met de laagste reeks gekozen worden."
+msgstr ""
+"Gezien de volgorde van een matching regel. Als 2 regels overeenkomen voor de"
+" gegeven URL/land zal degene met de laagste reeks gekozen worden."
 
 #. module: im_livechat
 #. openerp-web
@@ -353,13 +370,17 @@ msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Has a Rating"
+msgstr "Heeft een beoordeling"
+
+#. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Hide the button"
 msgstr "Verberg de knop"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action
-#: model:ir.ui.menu,name:im_livechat.session_history
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "History"
@@ -372,7 +393,7 @@ msgstr "Uur van de startdatum van de sessie"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:29
+#: code:addons/im_livechat/static/src/js/im_livechat.js:30
 #, python-format
 msgid "How may I help you?"
 msgstr "Hoe kan ik u helpen?"
@@ -384,10 +405,10 @@ msgstr "Hoe de website live chat widget te gebruiken?"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:220
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:15
 #, python-format
-msgid "I rated you with :rating_%d"
-msgstr "Ik heb u beoordeeld met: rating_%d"
+msgid "I don't want to rate this conversation"
+msgstr "Ik wil deze conversatie niet beoordelen"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_id
@@ -427,6 +448,11 @@ msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Last Seen Many2many"
+msgstr "Laatst gezien Many2many"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
@@ -442,12 +468,22 @@ msgstr "Laatst bijgewerkt op"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Last Week"
-msgstr "Laatste week"
+msgstr "Vorige week"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Leave"
+msgstr "Verlof"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "Kanaal verlaten"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
+msgid "Live Chat"
+msgstr "Live Chat"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
@@ -456,7 +492,7 @@ msgstr "Live Support"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:8
+#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:9
 #, python-format
 msgid "Livechat"
 msgstr "Livechat"
@@ -471,14 +507,13 @@ msgstr "Livechat kanaal"
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
 msgid ""
 "Livechat Support Channel Statistics allows you to easily check and analyse "
-"your company livechat session performance. Extract informations about the "
+"your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
-msgstr "Live chat ondersteuningskanaal statistieken staan u toe om gemakkelijk de prestaties van uw bedrijf zijn live chat sessies te analyseren. Haal informatie uit de gemiste sessies, de doelgroep, de duur van een sessie, etc."
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Livechat Support Page"
-msgstr "Livechat support pagina"
+msgstr ""
+"Live chat ondersteuningskanaal statistieken staan u toe om gemakkelijk de "
+"prestaties van uw bedrijf zijn live chat sessies te analyseren. Haal "
+"informatie uit de gemiste sessies, de doelgroep, de duur van een sessie, "
+"etc."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -513,7 +548,7 @@ msgstr "Overeenkomende order"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image_medium
 msgid "Medium"
-msgstr "Gemiddeld"
+msgstr "Kanaal"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_medium
@@ -521,17 +556,15 @@ msgid ""
 "Medium-sized photo of the group. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr "Middelgrote foto van de groep. Deze wordt automatisch aangepast naar een 128x128px afbeelding, met behoud van verhouding. Gebruik dit veld in formulier- of in sommige kanban weergaves."
+msgstr ""
+"Middelgrote foto van de groep. Deze wordt automatisch aangepast naar een "
+"128x128px afbeelding, met behoud van verhouding. Gebruik dit veld in "
+"formulier- of in sommige kanban weergaves."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Missed sessions"
 msgstr "Gemiste sessies"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
-msgid "My sessions"
-msgstr "Mijn sessies"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_name
@@ -540,11 +573,13 @@ msgstr "Naam"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:76
+#: code:addons/im_livechat/static/src/js/im_livechat.js:117
 #, python-format
 msgid ""
 "None of our collaborators seems to be available, please try again later."
-msgstr "Geen van onze medewerkers is momenteel beschikbaar, probeer het later opnieuw."
+msgstr ""
+"Geen van onze medewerkers is momenteel beschikbaar, probeer het later "
+"opnieuw."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_nbr_channel
@@ -570,11 +605,7 @@ msgid "OK"
 msgstr "OK"
 
 #. module: im_livechat
-#: model:ir.actions.client,name:im_livechat.ir_action_client_open_livechat_menu
-msgid "Open Livechat Channel Menu"
-msgstr "Open livechat kanaal menu"
-
-#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_partner_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_partner_id
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
@@ -598,46 +629,61 @@ msgid ""
 "Operators\n"
 "                                            <br/>\n"
 "                                            <i class=\"fa fa-comments\"/>"
-msgstr "Operators\n                                            <br/>\n                                            <i class=\"fa fa-comments\"/>"
+msgstr ""
+"Operators\n"
+"                                            <br/>\n"
+"                                            <i class=\"fa fa-comments\"/>"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_partner_id
-msgid "Opertor"
-msgstr "Operator"
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Operators that do not show any activity In Odoo for more than 30 minutes "
+"will be considered as disconnected."
+msgstr ""
+"Operators die geen activiteiten toont in Odoo voor meer dan 30 minuten wordt"
+" beschouwd als niet meer verbonden."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Options"
-msgstr "Instellingen"
+msgstr "Opties"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Quit"
-msgstr "Afsluiten"
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
+msgid "Percentage of happy ratings over the past 7 days"
+msgstr ""
+"Percentage van mensen die blij hebben beoordeeld over de afgelopen 7 dagen"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
-#: model:ir.model.fields,field_description:im_livechat.field_mail_channel_rating_ids
 msgid "Rating"
 msgstr "Beoordeling"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:309
+#, python-format
+msgid "Rating: :rating_%d"
+msgstr "Beoordeling: :rating_%d"
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
 msgid ""
-"Regular expression identifying the web page on which the rules will be "
-"applied."
-msgstr "Reguliere expressie die de webpagina identificeert waarop de regels worden toegepast."
+"Regular expression specifying the web pages this rule will be applied on."
+msgstr ""
+"Reguliere expressie die de webpagina identificeert waarop de regels worden "
+"toegepast."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
 msgid "Report"
-msgstr "Rapport"
+msgstr "Rapportage"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_ids
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_tree
 msgid "Rules"
-msgstr "Rechten"
+msgstr "Regels"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_script_external
@@ -653,12 +699,13 @@ msgstr "Geschiedenis doorzoeken"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Search report"
-msgstr "Zoek rapport"
+msgstr "Zoek rapportage"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-msgid "Session"
-msgstr "Sessie"
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Session Date"
+msgstr "Sessie datum"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -679,12 +726,20 @@ msgid "Sessions"
 msgstr "Sessies"
 
 #. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.session_history
+msgid "Sessions History"
+msgstr "Sessie geschiedenis"
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_small
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "Kleine foto van de groep. Deze wordt automatisch aangepast naar een 64x64px afbeelding, met behoud van verhouding. Gebruik dit veld overal waar een kleine foto benodigd is."
+msgstr ""
+"Kleine foto van de groep. Deze wordt automatisch aangepast naar een 64x64px "
+"afbeelding, met behoud van verhouding. Gebruik dit veld overal waar een "
+"kleine foto benodigd is."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_start_date
@@ -704,15 +759,6 @@ msgid "Text of the Button"
 msgstr "Tekst van de knop"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_country_ids
-msgid ""
-"The actual rule will match only for this country. So if you set select "
-"'Belgium' and 'France' and you set the action to 'Hide Buttun', this 2 "
-"country will not be see the support button for the specified URL. This "
-"feature requires GeoIP installed on your server."
-msgstr "De werkelijke regel zal enkel overeenkomen voor dit land. Dus wanneer u de landen 'België' en 'Frankrijk' selecteert en de actie instelt op 'Verberg knop' zullen deze 2 landen de ondersteuningsknop voor de opgegeven URL niet zien. Deze optie vereist de installatie van GeoIP op uw server."
-
-#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_channel_id
 msgid "The channel of the rule"
 msgstr "Het kanaal van de regel"
@@ -721,6 +767,20 @@ msgstr "Het kanaal van de regel"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_name
 msgid "The name of the channel"
 msgstr "De naam van het kanaal"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_country_ids
+msgid ""
+"The rule will only be applied for these countries. Example: if you select "
+"'Belgium' and 'United States' and that you set the action to 'Hide Button', "
+"the chat button will be hidden on the specified URL from the visitors "
+"located in these 2 countries. This feature requires GeoIP installed on your "
+"server."
+msgstr ""
+"De werkelijke regel zal enkel overeenkomen voor dit land. Dus wanneer u de "
+"landen 'België' en 'Frankrijk' selecteert en de actie instelt op 'Verberg "
+"knop' zullen deze 2 landen de ondersteuningsknop voor de opgegeven URL niet "
+"zien. Deze optie vereist de installatie van GeoIP op uw server."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -737,14 +797,18 @@ msgstr "De gebruiker heeft de optie om aan te melden op support kanalen"
 msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
-msgstr "Dit veld bevat de afbeelding welke  wordt gebruikt als foto voor de groep, beperkt tot 1024x1024px."
+msgstr ""
+"Dit veld bevat de afbeelding welke  wordt gebruikt als foto voor de groep, "
+"beperkt tot 1024x1024px."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_default_message
 msgid ""
 "This is an automated 'welcome' message that your visitor will see when they "
 "initiate a new conversation."
-msgstr "Dit is een geautomatiseerd 'welkom' bericht dat uw bezoeker te zien krijgt wanneer ze een nieuwe conversatie starten."
+msgstr ""
+"Dit is een geautomatiseerd 'welkom' bericht dat uw bezoeker te zien krijgt "
+"wanneer ze een nieuwe conversatie starten."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image_small
@@ -771,7 +835,9 @@ msgstr "URL Regex"
 msgid ""
 "URL to a static page where you client can discuss with the operator of the "
 "channel."
-msgstr "URL naar een statische pagina waar uw klant met de operator van het kanaal kan spreken."
+msgstr ""
+"URL naar een statische pagina waar uw klant met de operator van het kanaal "
+"kan spreken."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_uuid
@@ -785,8 +851,8 @@ msgstr "Gebruiker"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/controllers/main.py:30
-#: code:addons/im_livechat/static/src/js/im_livechat.js:27
+#: code:addons/im_livechat/controllers/main.py:37
+#: code:addons/im_livechat/static/src/js/im_livechat.js:28
 #, python-format
 msgid "Visitor"
 msgstr "Bezoeker"
@@ -797,19 +863,9 @@ msgid "Web Page"
 msgstr "Webpagina"
 
 #. module: im_livechat
-#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
-msgid "Website Live Chat"
-msgstr "Website live chat"
-
-#. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
 msgstr "Website live chat kanalen"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Website Live Chat Powered by <strong>Odoo</strong>."
-msgstr "Website live chat is aangeboden door <strong>Odoo</strong>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_default_message
@@ -820,14 +876,21 @@ msgstr "Welkomstbericht"
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid ""
 "You can create channels for each website on which you want\n"
-"                to integrate the website live chat widget, allowing you website\n"
+"                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
-msgstr "U kan kanalen aanmaken voor elke website welke u de\nwebsite live chat widget wilt integreren, dit staat u toe om uw websitebezoekers\nlive te praten met uw operators."
+msgstr ""
+"U kan kanalen aanmaken voor elke website welke u de\n"
+"website live chat widget wilt integreren, dit staat u toe om uw websitebezoekers\n"
+"live te praten met uw operators."
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid "document.addEventListener(\"DOMContentLoaded\", function(event) {"
-msgstr "document.addEventListener(\"DOMContentLoaded\", function(event) {"
+#: model:ir.actions.act_window,help:im_livechat.mail_channel_action
+msgid ""
+"Your chatter history is empty. Create a channel and start chatting to fill "
+"up your history."
+msgstr ""
+"Uw chat geschiedenis is leeg. Maak een kanaal aan en start met chatten om uw"
+" historie op te bouwen."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -840,45 +903,18 @@ msgid "e.g. YourWebsite.com"
 msgstr "bijv. Uwwebsite.nl"
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:6
-#, python-format
-msgid "livechat"
-msgstr "livechat"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-"odoo.define('im_livechat.livesupport', function (require) {\n"
-"                        var im_livechat = require('im_livechat.im_livechat');\n"
-"                        var button = new im_livechat.LivechatButton(\n"
-"                            $('body'),\n"
-"                            \""
-msgstr "odoo.define('im_livechat.livesupport', function (require) {\n                        var im_livechat = require('im_livechat.im_livechat');\n                        var button = new im_livechat.LivechatButton(\n                            $('body'),\n                            \""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-"odoo.define('web.session', function (require) {\n"
-"                        var Session = require('web.Session');\n"
-"                        var modules = odoo._modules;\n"
-"                        return new Session(undefined, \""
-msgstr "odoo.define('web.session', function (require) {\n                        var Session = require('web.Session');\n                        var modules = odoo._modules;\n                        return new Session(undefined, \""
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
-msgstr "of kopieer deze URL en stuur deze via e-mail naar uw klanten of leveranciers:"
+msgstr ""
+"of kopieer deze URL en stuur deze via e-mail naar uw klanten of "
+"leveranciers:"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "seconds"
 msgstr "seconden"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:9
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:12
-#, python-format
-msgid "true"
-msgstr "waar"

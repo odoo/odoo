@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import IntegrityError
-from openerp.addons.mail.tests.common import TestMail
+
+from odoo.addons.mail.tests.common import TestMail
 
 
 class TestMailFollowers(TestMail):
@@ -73,6 +75,22 @@ class TestMailFollowers(TestMail):
             ('res_id', '=', self.group_pigs.id),
             ('partner_id', '=', self.user_employee.partner_id.id)])
         self.assertEqual(len(follower), 1)
+        self.assertEqual(follower.subtype_ids, self.default_group_subtypes)
+
+    def test_followers_subtypes_default_internal(self):
+        mt_mg_def_int = self.env['mail.message.subtype'].create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.channel', 'internal': True})
+        self.group_pigs.message_subscribe_users(user_ids=[self.user_employee.id])
+        follower = self.env['mail.followers'].search([
+            ('res_model', '=', 'mail.channel'),
+            ('res_id', '=', self.group_pigs.id),
+            ('partner_id', '=', self.user_employee.partner_id.id)])
+        self.assertEqual(follower.subtype_ids, self.default_group_subtypes | mt_mg_def_int)
+
+        self.group_pigs.message_subscribe_users(user_ids=[self.user_portal.id])
+        follower = self.env['mail.followers'].search([
+            ('res_model', '=', 'mail.channel'),
+            ('res_id', '=', self.group_pigs.id),
+            ('partner_id', '=', self.user_portal.partner_id.id)])
         self.assertEqual(follower.subtype_ids, self.default_group_subtypes)
 
     def test_followers_subtypes_specified(self):

@@ -3,14 +3,16 @@
 # * base_vat
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Boško Stojaković <bluesoft83@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-9/language/bs/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2016\n"
+"Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -27,13 +29,9 @@ msgstr "Kompanije"
 msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
-msgstr "Ako je označeno, partnerov PDV broj će biti u potpunosti provjeren sa EU VIES servisom umjesto jednostavnom provjerom formata (checksum)."
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:111
-#, python-format
-msgid "Importing VAT Number [%s] is not valid !"
 msgstr ""
+"Ako je označeno, partnerov PDV broj će biti u potpunosti provjeren sa EU "
+"VIES servisom umjesto jednostavnom provjerom formata (checksum)."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -41,7 +39,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:128
+#: code:addons/base_vat/models/res_partner.py:131
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
@@ -49,7 +47,7 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:127
+#: code:addons/base_vat/models/res_partner.py:130
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "

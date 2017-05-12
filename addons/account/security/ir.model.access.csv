@@ -1,5 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_product_product_account_user,product.product.account.user,product.model_product_product,group_account_user,1,0,0,0
+access_product_product_account_manager,product.product.account.manager,product.model_product_product,group_account_manager,1,1,1,1
+access_product_template_account_manager,product.template.account.manager,product.model_product_template,group_account_manager,1,1,1,1
+access_product_price_history_account_manager,prices.history.account.manager,product.model_product_price_history,group_account_manager,1,1,1,1
 access_account_payment_term,account.payment.term,model_account_payment_term,account.group_account_user,1,0,0,0
 access_account_payment_term_line,account.payment.term.line,model_account_payment_term_line,account.group_account_user,1,0,0,0
 access_account_account_type_manager,account.account.type,model_account_account_type,account.group_account_manager,1,1,1,1
@@ -37,7 +40,6 @@ access_account_invoice_user,account.invoice user,model_account_invoice,base.grou
 access_account_invoice_user,account.invoice.line user,model_account_invoice_line,base.group_user,1,0,0,0
 access_account_payment_term_partner_manager,account.payment.term partner manager,model_account_payment_term,base.group_user,1,0,0,0
 access_account_payment_term_line_partner_manager,account.payment.term.line partner manager,model_account_payment_term_line,base.group_user,1,0,0,0
-access_account_account_sale_manager,account.account sale manager,model_account_account,base.group_sale_manager,1,0,0,0
 access_account_fiscal_position_product_manager,account.fiscal.position account.manager,model_account_fiscal_position,account.group_account_manager,1,1,1,1
 access_account_fiscal_position_tax_product_manager,account.fiscal.position.tax account.manager,model_account_fiscal_position_tax,account.group_account_manager,1,1,1,1
 access_account_fiscal_position_account_product_manager,account.fiscal.position account.manager,model_account_fiscal_position_account,account.group_account_manager,1,1,1,1
@@ -49,6 +51,7 @@ access_account_fiscal_position_tax_template,account.fiscal.position.tax.template
 access_account_fiscal_position_account_template,account.fiscal.position.account.template,model_account_fiscal_position_account_template,account.group_account_manager,1,1,1,1
 access_account_invoice_report_user,account.invoice.report_user,model_account_invoice_report,account.group_account_user,1,0,0,0
 access_account_invoice_report,account.invoice.report,model_account_invoice_report,account.group_account_manager,1,1,1,1
+access_account_invoice_report_billing,account.invoice.report_billing,model_account_invoice_report,account.group_account_invoice,1,0,0,0
 access_res_partner_group_account_manager,res_partner group_account_manager,model_res_partner,account.group_account_manager,1,0,0,0
 access_account_invoice_accountant,account.invoice accountant,model_account_invoice,account.group_account_user,1,0,0,0
 access_account_move_line_manager,account.move.line manager,model_account_move_line,account.group_account_manager,1,0,0,0
@@ -59,16 +62,16 @@ access_account_invoice_line_accountant,account.invoice.line accountant,model_acc
 access_account_account_invoice,account.account invoice,model_account_account,account.group_account_invoice,1,0,0,0
 access_account_analytic_accountant,account.analytic.account accountant,analytic.model_account_analytic_account,account.group_account_user,1,1,1,1
 access_account_account_type_invoice,account.account.type invoice,model_account_account_type,account.group_account_invoice,1,0,0,0
-access_account_tax_sale_manager,account.tax sale manager,model_account_tax,base.group_sale_salesman,1,0,0,0
-access_account_journal_sale_manager,account.journal sale manager,model_account_journal,base.group_sale_salesman,1,0,0,0
-access_account_invoice_tax_sale_manager,account.invoice.tax  sale manager,model_account_invoice_tax,base.group_sale_salesman,1,0,0,0
 access_account_financial_report,account.financial.report,model_account_financial_report,account.group_account_user,1,1,1,1
 access_account_financial_report_invoice,account.financial.report invoice,model_account_financial_report,account.group_account_invoice,1,0,0,0
 access_account_account_tax,account.account.tag,model_account_account_tag,account.group_account_user,1,0,0,0
 access_account_account_tax_user,account.account.tag,model_account_account_tag,account.group_account_invoice,1,0,0,0
-access_account_operation_template,account.operation.template,model_account_operation_template,account.group_account_user,1,1,1,1
+access_account_reconcile_model,account.reconcile.model,model_account_reconcile_model,account.group_account_user,1,1,1,1
+access_account_reconcile_model_template,account.reconcile.model.template,model_account_reconcile_model_template,account.group_account_user,1,1,1,1
 access_account_partial_reconcile_group_invoice,account.partial.reconcile.group.invoice,model_account_partial_reconcile,account.group_account_invoice,1,1,1,0
 access_account_partial_reconcile,account.partial.reconcile,model_account_partial_reconcile,account.group_account_user,1,1,1,1
+access_account_full_reconcile_group_invoice,account.full.reconcile.group.invoice,model_account_full_reconcile,account.group_account_invoice,1,1,1,0
+access_account_full_reconcile,account.full.reconcile,model_account_full_reconcile,account.group_account_user,1,1,1,1
 access_account_payment_method,account.payment.method,model_account_payment_method,account.group_account_invoice,1,1,1,1
 access_account_payment,account.payment,model_account_payment,account.group_account_invoice,1,1,1,1
 access_account_cashbox,account.bank.statement.cashbox,model_account_bank_statement_cashbox,account.group_account_user,1,1,1,1
@@ -76,4 +79,3 @@ access_account_cashbox_line,account.bank.statement.cashbox.line,model_account_ca
 access_account_tax_group_internal_user,account.tax.group internal user,model_account_tax_group,base.group_user,1,0,0,0
 access_account_tax_group,account.tax.group,model_account_tax_group,account.group_account_invoice,1,0,0,0
 access_account_tax_group_manager,account.tax.group,model_account_tax_group,account.group_account_manager,1,1,1,1
-access_account_tax_group_sale_manager,account.tax.group sale manager,model_account_tax_group,base.group_sale_salesman,1,0,0,0

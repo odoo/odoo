@@ -1,37 +1,17 @@
 <?xml version="1.0"?>
 <odoo>
-    <data noupdate="1">
-        <!-- After installation of the module, open the related menu -->
-        <record id="ir_action_client_open_livechat_menu" model="ir.actions.client">
-            <field name="name">Open Livechat Channel Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('support_channels')}"/>
-        </record>
-
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="ir_action_client_open_livechat_menu"/>
-            <field name="state">open</field>
-        </record>
-
-        <!-- Remove automatically the empty anonoymous sessions -->
-        <record id="ir_cron_remove_empty_session" model="ir.cron">
-            <field name="name">[im_livechat] Remove empty anonymous sessions</field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="False"/>
-            <field name="model">mail.channel</field>
-            <field name="function">cron_remove_empty_session</field>
-            <field name="active" eval="True"/>
-        </record>
-
-    </data>
-
     <data>
         <!-- Smiley for rating to be displayed in the conversation -->
         <record id="mail_shortcode_rating_0" model="mail.shortcode">
             <field name="source">:rating_0</field>
             <field name="substitution">&lt;img src='/rating/static/src/img/rating_0.png'/&gt;</field>
+            <field name="description">Rating Empty Smiley</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_shortcode_rating_1" model="mail.shortcode">
+            <field name="source">:rating_1</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_1.png'/&gt;</field>
             <field name="description">Rating Smiley Bad</field>
             <field name="shortcode_type">image</field>
         </record>

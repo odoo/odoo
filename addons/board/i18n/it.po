@@ -3,16 +3,19 @@
 # * board
 # 
 # Translators:
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Simone Bernini <simone@aperturelabs.it>, 2016
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
+# Paolo Valier <paolo.valier@hotmail.it>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-03-24 21:51+0000\n"
-"Last-Translator: Massimo Bianchi <bianchi.massimo@gmail.com>\n"
-"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Paolo Valier <paolo.valier@hotmail.it>, 2016\n"
+"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,14 +24,14 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:24
+#: code:addons/board/static/src/xml/board.xml:25
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:406
+#: code:addons/board/static/src/js/dashboard.js:409
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' aggiunto al cruscotto"
@@ -54,7 +57,7 @@ msgstr "Aggiungi al mio cruscotto"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:139
+#: code:addons/board/static/src/js/dashboard.js:141
 #, python-format
 msgid "Are you sure you want to remove this item ?"
 msgstr "Sicuro di voler cancellare questo elemento?"
@@ -65,120 +68,64 @@ msgid "Board"
 msgstr "Board"
 
 #. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "Creazione board"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_name
-msgid "Board Name"
-msgstr "Nome board"
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Cancel"
-msgstr "Annulla"
-
-#. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
+#: code:addons/board/static/src/xml/board.xml:7
 #, python-format
 msgid "Change Layout"
 msgstr "Cambia Layout"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
+#: code:addons/board/static/src/xml/board.xml:5
 #, python-format
 msgid "Change Layout.."
 msgstr "Cambia Layout.."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:36
+#: code:addons/board/static/src/xml/board.xml:37
 #, python-format
 msgid "Choose dashboard layout"
 msgstr "Seleziona il layout dashboard"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:408
+#: code:addons/board/static/src/js/dashboard.js:411
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Non è possibile aggiungere il filtro alla dashboard"
 
 #. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create"
-msgstr "Crea"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Crea board"
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create New Dashboard"
-msgstr "Crea nuova dashboard"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_uid
-msgid "Created by"
-msgstr "Creato da"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_date
-msgid "Created on"
-msgstr "Creato il"
-
-#. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_display_name
-#: model:ir.model.fields,field_description:board.field_board_create_display_name
 msgid "Display Name"
-msgstr "Visualizza Nome"
+msgstr "Nome Visualizzato"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:94
+#: code:addons/board/static/src/js/dashboard.js:96
 #, python-format
 msgid "Edit Layout"
 msgstr "Modifica Layout"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_id
-#: model:ir.model.fields,field_description:board.field_board_create_id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board___last_update
-#: model:ir.model.fields,field_description:board.field_board_create___last_update
 msgid "Last Modified on"
-msgstr "Data di ultima modifica"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_uid
-msgid "Last Updated by"
-msgstr "Ultima modifica di"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_date
-msgid "Last Updated on"
 msgstr "Ultima modifica il"
 
 #. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:32
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model:ir.ui.view,arch_db:board.board_my_dash_view
+#, python-format
 msgid "My Dashboard"
 msgstr "La mia Dashboard"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
-msgid "Parent Menu"
-msgstr "Menu Superiore"
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
@@ -186,11 +133,16 @@ msgid ""
 "To add your first report into this dashboard, go to any\n"
 "                    menu, switch to list or graph view, and click <i>'Add to\n"
 "                    Dashboard'</i> in the extended search options."
-msgstr "Per aggiungere il tuo primo report nella dashboard, vai in\nun qualsiasi menù, cambia la vista in lista o grafico e seleziona \n<i>'Aggiungi alla Dashboard'</i> nelle opzioni della ricerca avanzata."
+msgstr ""
+"Per aggiungere il tuo primo report nella dashboard, vai in\n"
+"un qualsiasi menù, cambia la vista in lista o grafico e seleziona \n"
+"<i>'Aggiungi alla Dashboard'</i> nelle opzioni della ricerca avanzata."
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
 msgid ""
 "You can filter and group data before inserting into the\n"
 "                    dashboard using the search options."
-msgstr "Puoi filtrare e raggruppare i dati prima di inserirli nella \ndashboard usando le opzioni di ricerca."
+msgstr ""
+"Puoi filtrare e raggruppare i dati prima di inserirli nella \n"
+"dashboard usando le opzioni di ricerca."

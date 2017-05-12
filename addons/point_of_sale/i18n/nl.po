@@ -3,17 +3,21 @@
 # * point_of_sale
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
+# Eric Geens <eric.geens@vitabiz.be>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-03-24 19:26+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2017-02-13 09:53+0000\n"
+"PO-Revision-Date: 2017-02-13 09:53+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,39 +25,36 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_supplier_invoice_count
-msgid "# Vendor Bills"
-msgstr "# Leveranciers facturen"
+#: code:addons/point_of_sale/models/pos_order.py:679
+#, python-format
+msgid " REFUND"
+msgstr "CREDIT"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr_lines
 msgid "# of Lines"
 msgstr "# Regels"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_purchase_order_count
-msgid "# of Purchase Order"
-msgstr "# inkooporders"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1284
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1423
 #, python-format
 msgid "% discount"
-msgstr "% discount"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.index
-msgid "&lt;!DOCTYPE html&gt;"
-msgstr "&lt;!DOCTYPE html&gt;"
+msgstr "% korting"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1411
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1451
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1550
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1590
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:72
+#, python-format
+msgid "(RESCUE FOR %(session)s)"
+msgstr "(RESCUE FOR %(session)s)"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -67,36 +68,32 @@ msgstr "+ Transacties"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:277
+#: code:addons/point_of_sale/static/src/xml/pos.xml:287
 #, python-format
 msgid "123.14 €"
-msgstr "€ 123,14"
+msgstr "123.14 €"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.evian_2l
-#: model:product.template,name:point_of_sale.evian_2l_product_template
-msgid "2L Evian"
-msgstr "2L Evian"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.perrier_50cl
-#: model:product.template,name:point_of_sale.perrier_50cl_product_template
-msgid "50cl Perrier"
-msgstr "50cl Perrier"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_receipt
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/tour.js:17
+#, python-format
 msgid ""
-"<br/>\n"
-"                        Date:"
-msgstr "<br/>\n                        Datum:"
+"<p>Click to start the point of sale interface. It <b>runs on tablets</b>, "
+"laptops, or industrial hardware.</p><p>Once the session launched, the system"
+" continues to run without an internet connection.</p>"
+msgstr ""
+"<p>KIik om een nieuwe kassa sessie te starten <b>draait op tablets</b>, "
+"laptops, of industrieele hardware.</p><p>Wanneer de sessie is gestart, kan "
+"het systeem blijven draaien zonder een internet verbinding.</p>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid ""
 "<span class=\"o_stat_text\">Put</span>\n"
-"                                    <span class=\"o_stat_text\">Money In</span>"
-msgstr "<span class=\"o_stat_text\">Stop</span>\n                                    <span class=\"o_stat_text\">geld erin</span>"
+"                                <span class=\"o_stat_text\">Money In</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Stop</span>\n"
+"<span class=\"o_stat_text\">geld erin</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -112,8 +109,10 @@ msgstr "<span class=\"o_stat_text\">Stel openingssaldo in</span>"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid ""
 "<span class=\"o_stat_text\">Take</span>\n"
-"                                    <span class=\"o_stat_text\">Money Out</span>"
-msgstr "<span class=\"o_stat_text\">Neem</span>\n                                    <span class=\"o_stat_text\">geld uit</span>"
+"                                <span class=\"o_stat_text\">Money Out</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Neem</span>\n"
+"<span class=\"o_stat_text\">geld uit</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -128,7 +127,7 @@ msgstr "<span>Laatste sluitingsdatum</span>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Reports</span>"
-msgstr "<span>Rapporten</span>"
+msgstr "<span>Rapportages</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -136,69 +135,9 @@ msgid "<span>View</span>"
 msgstr "<span>Bekijk</span>"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Closing Date</strong>:<br/>"
-msgstr "<strong>Sluitdatum</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_payment
-msgid ""
-"<strong>Company</strong>:\n"
-"                            <br/>"
-msgstr "<strong>Bedrijf</strong>:\n                            <br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
-#: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 msgid "<strong>Company</strong>:<br/>"
 msgstr "<strong>Bedrijf</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Currency</strong>"
-msgstr "<strong>Valuta</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Date</strong>"
-msgstr "<strong>Datum</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
-msgid "<strong>Description</strong>"
-msgstr "<strong>Omschrijving</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Difference</strong>"
-msgstr "<strong>Verschil</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Disc(%)</strong>"
-msgstr "<strong>Krt(%)</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
-msgid "<strong>Disc. (%)</strong>"
-msgstr "<strong>Krt. (%)</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_payment
-msgid "<strong>Disc.(%)</strong>"
-msgstr "<strong>Krt.(%)</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>End Period</strong>:<br/>"
-msgstr "<strong>Eindperiode</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Ending Balance</strong>"
-msgstr "<strong>Eindsaldo</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -206,121 +145,14 @@ msgid "<strong>Ending Balance</strong>:<br/>"
 msgstr "<strong>Eindsaldo</strong>:<br/>"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Invoiced</strong>"
-msgstr "<strong>Gefactureerd</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Journal</strong>"
-msgstr "<strong>Dagboek</strong>"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Journal</strong>:<br/>"
 msgstr "<strong>Dagboek</strong>:<br/>"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_payment
-msgid "<strong>Net Total</strong>"
-msgstr "<strong>Netto Totaal</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
-msgid "<strong>No. Of Articles</strong>:<br/>"
-msgstr "<strong>Hvh. artikelen</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Opening Date</strong>:<br/>"
 msgstr "<strong>Openingsdatum</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Order</strong>"
-msgstr "<strong>Order</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Payment</strong>"
-msgstr "<strong>Betaling</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Point of Sale</strong>:<br/>"
-msgstr "<strong>Kassa</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
-msgid "<strong>Price</strong>"
-msgstr "<strong>Prijs</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-#: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
-msgid "<strong>Print Date</strong>:<br/>"
-msgstr "<strong>Afdrukdatum</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_payment
-msgid ""
-"<strong>Print date</strong>:\n"
-"                            <br/>"
-msgstr "<strong>Afdrukdatum</strong>:\n                            <br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
-msgid "<strong>Print date</strong>:<br/>"
-msgstr "<strong>Afdrukdatum</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-#: model:ir.ui.view,arch_db:point_of_sale.report_payment
-msgid "<strong>Product</strong>"
-msgstr "<strong>Product</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Qty of product</strong>"
-msgstr "<strong>Hvh van product</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-#: model:ir.ui.view,arch_db:point_of_sale.report_payment
-msgid "<strong>Qty</strong>"
-msgstr "<strong>Hvh</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
-msgid "<strong>Quantity</strong>"
-msgstr "<strong>Hoeveelheid</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Reference</strong>"
-msgstr "<strong>Referentie</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Responsible</strong>:<br/>"
-msgstr "<strong>Verantwoordelijke</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Sales total(Revenue)</strong>"
-msgstr "<strong>Verkooptotaal (omzet)</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Start Period</strong>:<br/>"
-msgstr "<strong>Startperiode</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Starting Balance</strong>"
-msgstr "<strong>Startsaldo</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -328,91 +160,19 @@ msgid "<strong>Starting Balance</strong>:<br/>"
 msgstr "<strong>Startsaldo</strong>:<br/>"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
-msgid "<strong>Starting Date</strong>:<br/>"
-msgstr "<strong>Startdatum</strong>:<br/>"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Statement Name</strong>:<br/>"
 msgstr "<strong>Naam afschrift</strong>:<br/>"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Status</strong>"
-msgstr "<strong>Status</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Summary</strong>"
-msgstr "<strong>Samenvatting</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
-msgid "<strong>Tax</strong>"
-msgstr "<strong>BTW</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-#: model:ir.ui.view,arch_db:point_of_sale.report_receipt
-msgid "<strong>Taxes</strong>"
-msgstr "<strong>Belastingen</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "<strong>Total Transactions</strong>"
-msgstr "<strong>Totaal Transacties</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
-msgid "<strong>Total Without Taxes</strong>"
-msgstr "<strong>Totaal zonder BTW</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Total discount</strong>"
-msgstr "<strong>Totale korting</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Total invoiced</strong>"
-msgstr "<strong>Totaal gefactureerd</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Total of the day</strong>"
-msgstr "<strong>Dagtotaal</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Total paid</strong>"
-msgstr "<strong>Totaal betaald</strong>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_payment
-#: model:ir.ui.view,arch_db:point_of_sale.report_receipt
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
-#: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 msgid "<strong>Total</strong>"
 msgstr "<strong>Totaal</strong>"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_payment
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
-msgid "<strong>Unit Price</strong>"
-msgstr "<strong>Eenheidsprijs</strong>"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
-#: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 msgid "<strong>User</strong>:<br/>"
 msgstr "<strong>Gebruiker</strong>:<br/>"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "<strong>Users</strong>:<br/>"
-msgstr "<strong>Gebruikers</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -421,14 +181,14 @@ msgstr "= Theoretische eindsaldo"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1854
+#: code:addons/point_of_sale/static/src/js/screens.js:1909
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
-msgstr "? Klikken op *Bevestigen* valideert de betaling."
+msgstr "? Klikken op *Bevestigen* bevestigd de betaling."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1145
+#: code:addons/point_of_sale/static/src/js/screens.js:1198
 #, python-format
 msgid "A Customer Name Is Required"
 msgstr "Een klantnaam is verplicht"
@@ -437,7 +197,9 @@ msgstr "Een klantnaam is verplicht"
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_security_pin
 msgid ""
 "A Security PIN used to protect sensible functionality in the Point of Sale"
-msgstr "Een beveiligingscode gebruikt om gevoelige functionaliteiten te beschermen in de Point of Sale"
+msgstr ""
+"Een beveiligingscode gebruikt om gevoelige functionaliteiten te beschermen "
+"in de Point of Sale"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -454,14 +216,18 @@ msgstr "Een aangepaste koptekst"
 msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data"
-msgstr "Een globale unieke identifier voor deze PoS configuratie, gebruikt om conflicten te voorkomen in cliënt gegenereerde data"
+msgstr ""
+"Een globale unieke identifier voor deze PoS configuratie, gebruikt om "
+"conflicten te voorkomen in cliënt gegenereerde data"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_login_number
 msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
-msgstr "Een reeks welke iedere keer, als en gebruiker de kassa sessie hervat, wordt opgehoogt"
+msgstr ""
+"Een reeks welke iedere keer, als en gebruiker de kassa sessie hervat, wordt "
+"opgehoogt"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_sequence_number
@@ -475,7 +241,11 @@ msgid ""
 "                you sell through the point of sale. The user has to check the\n"
 "                currencies in your cash registers at the beginning and the end\n"
 "                of each session."
-msgstr "Een sessie is een periode, meestal een dag, tijdens welke\nu verkoopt door de kassa. De gebruiker moet de valuta\ncontroleren in uw kassaregisters bij het begin en einde\nvan elke sessie."
+msgstr ""
+"Een sessie is een periode, meestal een dag, tijdens welke\n"
+"u verkoopt door de kassa. De gebruiker moet de valuta\n"
+"controleren in uw kassaregisters bij het begin en einde\n"
+"van elke sessie."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sequence_number
@@ -485,24 +255,26 @@ msgstr "Een sessie-uniek volgnummer voor de order"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt"
-msgstr "Een korte tekst die als voettekst in de afgedrukte bon zal worden ingevoegd"
+msgstr ""
+"Een korte tekst die als voettekst in de afgedrukte bon zal worden ingevoegd"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_header
 msgid "A short text that will be inserted as a header in the printed receipt"
-msgstr "Een korte tekst die als koptekst in de afgedrukte bon zal worden ingevoegd"
+msgstr ""
+"Een korte tekst die als koptekst in de afgedrukte bon zal worden ingevoegd"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1450
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1589
 #, python-format
 msgid "ABC"
 msgstr "ABC"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "Account"
-msgstr "Rekening"
+#: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
+msgid "Account Bank Statement Cashbox Details"
+msgstr "Kassadetails rekeningafschriften"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -510,7 +282,13 @@ msgid "Accounting Information"
 msgstr "Boekhoudinformatie"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config_invoice_journal_id
+msgid "Accounting journal used to create invoices."
+msgstr "Dagboek gebruikt voor het maken van facturen."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_journal_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_order_sale_journal
 msgid "Accounting journal used to post sales entries."
 msgstr "Financieel dagboek gebruikt voor het maken van de verkoopboekingen."
 
@@ -521,18 +299,7 @@ msgid "Acsone.eu"
 msgstr "Acsone.eu"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_portal
-msgid "Activate the customer portal"
-msgstr "Activeer het klantenportaal"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_activation
-msgid "Activation"
-msgstr "Activatie"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
-#: selection:pos.config,state:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_active
 msgid "Active"
 msgstr "Actief"
 
@@ -543,7 +310,7 @@ msgstr "Actief in kassa"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1698
+#: code:addons/point_of_sale/static/src/js/screens.js:1753
 #, python-format
 msgid "Add Tip"
 msgstr "Voeg fooi toe"
@@ -555,21 +322,11 @@ msgstr "Een algemene korting toevoegen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:372
-#: code:addons/point_of_sale/static/src/xml/pos.xml:450
+#: code:addons/point_of_sale/static/src/xml/pos.xml:382
+#: code:addons/point_of_sale/static/src/xml/pos.xml:470
 #, python-format
 msgid "Address"
 msgstr "Adres"
-
-#. module: point_of_sale
-#: model:pos.category,name:point_of_sale.alcohol
-msgid "Alcohol"
-msgstr "Alcohol"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_alias_domain
-msgid "Alias Domain"
-msgstr "Alias domein"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -587,34 +344,9 @@ msgid "Allow discounts on order lines only"
 msgstr "Sta alleen kortingen op orderregels toe"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_share
-msgid "Allow documents sharing"
-msgstr "Delen van documenten toestaan"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_auth_signup_uninvited
-msgid "Allow external users to sign up"
-msgstr "Toestaan dat externe gebruikers inloggen"
-
-#. module: point_of_sale
 #: selection:pos.config.settings,module_pos_discount:0
 msgid "Allow global discounts"
 msgstr "Sta globale kortingen toe"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_google_calendar
-msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "Toestaan dat gebruikers hun agenda synchroniseren met Google Agenda"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_base_import
-msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr "Sta gebruikers toe om data te importeren vanuit CSV/XLS/XLSX/ODS bestanden"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_auth_oauth_google_enabled
-msgid "Allow users to sign in with Google"
-msgstr "Toestaan dat gebruikers inloggen via Google."
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_mercury:0
@@ -626,22 +358,22 @@ msgstr "Sta klanten toe om te betalen met creditcards."
 msgid ""
 "Allows the cashier to quickly give a percentage sale discount for all the "
 "sales order to a customer"
-msgstr "Sta de kassière toe om snel een kortingspercentage op te geven voor de verkooporder aan een klant"
+msgstr ""
+"Sta de kassière toe om snel een kortingspercentage op te geven voor de "
+"verkooporder aan een klant"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_loyalty
 msgid ""
 "Allows you to define a loyalty program in the point of sale, where the "
 "customers earn loyalty points and get rewards"
-msgstr "Staat u toe een loyaliteitsprogramma te definiëren voor de kassa, waar de klant loyaliteitspunten en beloningen kan verdienen"
+msgstr ""
+"Staat u toe een loyaliteitsprogramma te definiëren voor de kassa, waar de "
+"klant loyaliteitspunten en beloningen kan verdienen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_amount
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_amount
-#: model:ir.ui.view,arch_db:point_of_sale.report_receipt
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
-#: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 msgid "Amount"
 msgstr "Bedrag"
 
@@ -652,7 +384,6 @@ msgstr "Toegestaan bedrag afwijking"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
-#: model:ir.ui.view,arch_db:point_of_sale.view_trans_pos_user_tree
 msgid "Amount total"
 msgstr "Totaalbedrag"
 
@@ -674,25 +405,10 @@ msgstr "Korting toekennen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1846
+#: code:addons/point_of_sale/static/src/js/screens.js:1901
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
 msgstr "Weet u zeker dat de klant wilt betalen"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_google_drive
-msgid "Attach Google documents to any record"
-msgstr "Voeg Google documenten toe aan ieder record"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_google_drive_authorization_code
-msgid "Authorization Code"
-msgstr "autorisatie code"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session_rescue
-msgid "Auto-generated session for orphan orders, ignored in constraints"
-msgstr "Automatisch gegenereerde sessie voor weesbestellingen, genegeerd in beperkingen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_auto
@@ -709,7 +425,12 @@ msgstr "Open de kassalade automatisch"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_journal_ids
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Available Payment Methods"
-msgstr "Beschikbare betaalmethoden."
+msgstr "Beschikbare betaalwijzes"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
+msgid "Available in POS"
+msgstr "Beschikbaar in kassa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_available_in_pos
@@ -723,11 +444,11 @@ msgstr "Gemiddelde prijs"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:265
-#: code:addons/point_of_sale/static/src/xml/pos.xml:585
+#: code:addons/point_of_sale/static/src/xml/pos.xml:275
+#: code:addons/point_of_sale/static/src/xml/pos.xml:605
 #, python-format
 msgid "Back"
-msgstr "Vorige"
+msgstr "Terug"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
@@ -742,8 +463,8 @@ msgstr "Bankafschriftregel"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:349
-#: code:addons/point_of_sale/static/src/xml/pos.xml:391
+#: code:addons/point_of_sale/static/src/xml/pos.xml:359
+#: code:addons/point_of_sale/static/src/xml/pos.xml:411
 #, python-format
 msgid "Barcode"
 msgstr "Barcode"
@@ -755,7 +476,7 @@ msgstr "Barcode nomenclaturen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1158
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1298
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 #, python-format
 msgid "Barcode Scanner"
@@ -767,13 +488,7 @@ msgid "Barcodes"
 msgstr "Barcodes"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.belle_vue_kriek_25cl
-#: model:product.template,name:point_of_sale.belle_vue_kriek_25cl_product_template
-msgid "Belle-Vue Kriek 25cl"
-msgstr "Belle-Vue Kriek 25cl"
-
-#. module: point_of_sale
-#: model:pos.category,name:point_of_sale.beverage
+#: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "Beverages"
 msgstr "Dranken"
 
@@ -791,7 +506,7 @@ msgstr "Boni sinasappelen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:857
+#: code:addons/point_of_sale/static/src/js/screens.js:895
 #, python-format
 msgid "Button"
 msgstr "Knop"
@@ -803,28 +518,28 @@ msgstr "Niet via de browser afdrukken, maar via de hardware proxy"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:782
+#: code:addons/point_of_sale/static/src/xml/pos.xml:806
 #, python-format
 msgid "CHANGE"
 msgstr "WISSELGELD"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:418
-#: code:addons/point_of_sale/static/src/xml/pos.xml:910
-#: code:addons/point_of_sale/static/src/xml/pos.xml:927
-#: code:addons/point_of_sale/static/src/xml/pos.xml:944
-#: code:addons/point_of_sale/static/src/xml/pos.xml:964
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1016
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_confirm
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_details
+#: code:addons/point_of_sale/static/src/xml/pos.xml:438
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1018
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1035
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1064
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1081
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1101
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1153
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_discount
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 #, python-format
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr "Annuleer"
 
 #. module: point_of_sale
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
@@ -833,7 +548,7 @@ msgstr "Geannuleerd"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1835
+#: code:addons/point_of_sale/static/src/js/screens.js:1890
 #, python-format
 msgid "Cannot return change without a cash payment method"
 msgstr "Kan geen wisselgeld terug geven bij een niet contant betaalwijze"
@@ -845,7 +560,10 @@ msgid "Carrots"
 msgstr "Wortelen"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:285
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
+#, python-format
 msgid "Cash Control"
 msgstr "Kas controle"
 
@@ -855,91 +573,93 @@ msgid "Cash Journal"
 msgstr "Kasboek"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_jl_id
-msgid "Cash Journals"
-msgstr "Kas dagboeken"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_id
 msgid "Cash Register"
 msgstr "Kasregister"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:364
+#: code:addons/point_of_sale/models/pos_session.py:121
 #, python-format
 msgid "Cash control can only be applied to cash journals."
 msgstr "Kassacontrole kan enkel toegepast worden op kassadagboeken."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
-msgid "Cashdrawer"
+#: model:ir.model,name:point_of_sale.model_account_cashbox_line
+msgid "CashBox Line"
+msgstr "Kasregel"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
+msgid "Cashbox"
 msgstr "Kassa"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1604
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
+msgid "Cashdrawer"
+msgstr "Kassalade"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/barcode_rule.py:16
 #, python-format
 msgid "Cashier"
-msgstr "kassière"
+msgstr "Kassière"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
 msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
-msgstr "Categorieën worden gebruikt om producten te doorzoeken via de\ntouchscreen interface."
+msgstr ""
+"Categorieën worden gebruikt om producten te doorzoeken via de\n"
+"touchscreen interface."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:491
+#: code:addons/point_of_sale/static/src/xml/pos.xml:511
 #, python-format
 msgid "Change"
 msgstr "Wisselgeld"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:101
+#: code:addons/point_of_sale/static/src/js/chrome.js:102
 #, python-format
 msgid "Change Cashier"
 msgstr "Wijzig kassière"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1090
+#: code:addons/point_of_sale/static/src/js/screens.js:1143
 #, python-format
 msgid "Change Customer"
 msgstr "Wijzig Klant"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1698
+#: code:addons/point_of_sale/static/src/js/screens.js:1753
 #, python-format
 msgid "Change Tip"
 msgstr "Wijzig fooi"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:647
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1340
+#: code:addons/point_of_sale/static/src/xml/pos.xml:667
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1479
 #, python-format
 msgid "Change:"
 msgstr "Wisselgeld:"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.chaudfontaine_petillante_1,5l
-#: model:product.template,name:point_of_sale.chaudfontaine_petillante_1,5l_product_template
-msgid "Chaudfontaine Petillante 1.5l"
-msgstr "Chaudfontaine Petillante 1.5l"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_template_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
-msgstr "Controleer of het product moet worden gewogen d.m.v. de weegschaalintegratie"
+msgstr ""
+"Controleer of het product moet worden gewogen d.m.v. de weegschaalintegratie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_template_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr "Vink deze optie aan als u het product wilt gebruiken op de kassa."
+msgstr "Vink deze optie aan als u het product wilt gebruiken in de kassa."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_cash_control
@@ -951,18 +671,22 @@ msgstr "Controleer het bedrag van de kas bij het openen en sluiten."
 msgid ""
 "Check this box if this journal define a payment method that can be used in a"
 " point of sale."
-msgstr "Vink deze optie aan indien dit dagboek een betaalmethode is voor gebruik binnen de kassa."
+msgstr ""
+"Vink deze optie aan indien dit dagboek een betaalmethode is voor gebruik "
+"binnen de kassa."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_by
 msgid ""
 "Check this if you want to group the Journal Items by Product while closing a"
 " Session"
-msgstr "Vink deze optie aan indien u alle boekingen wilt groeperen per product, bij het sluiten van een sessie."
+msgstr ""
+"Vink deze optie aan indien u alle boekingen wilt groeperen per product, bij "
+"het sluiten van een sessie."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1884
+#: code:addons/point_of_sale/static/src/js/screens.js:1941
 #, python-format
 msgid "Check your internet connection and try again."
 msgstr "Controleer uw internetverbinding en probeer het opnieuw."
@@ -973,21 +697,15 @@ msgid "Children Categories"
 msgstr "Onderliggende categorien"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.chimay_rouge_33cl
-#: model:product.template,name:point_of_sale.chimay_rouge_33cl_product_template
-msgid "Chimay Red 33cl"
-msgstr "Chimay Red 33cl"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:320
-#: code:addons/point_of_sale/static/src/xml/pos.xml:321
+#: code:addons/point_of_sale/static/src/xml/pos.xml:330
+#: code:addons/point_of_sale/static/src/xml/pos.xml:331
 #, python-format
 msgid "City"
 msgstr "Plaats"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.product_template_action
+#: model:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid "Click to add a new product."
 msgstr "Klik om een nieuw product toe te voegen."
 
@@ -1017,47 +735,34 @@ msgid "Click to start a new session."
 msgstr "Klik om een nieuwe sessie te starten."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_auth_oauth_google_client_id
-msgid "Client ID"
-msgstr "Client ID"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_cal_client_id
-msgid "Client_id"
-msgstr "Client_id"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_cal_client_secret
-msgid "Client_key"
-msgstr "Client_key"
+#: code:addons/point_of_sale/models/barcode_rule.py:15
+#, python-format
+msgid "Client"
+msgstr "Cliënt"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:642
-#: code:addons/point_of_sale/static/src/js/chrome.js:650
+#: code:addons/point_of_sale/static/src/js/chrome.js:701
+#: code:addons/point_of_sale/static/src/js/chrome.js:709
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Close"
-msgstr "Afsluiten"
+msgstr "Sluiten"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:167
 #: selection:pos.session,state:0
-#, python-format
 msgid "Closed & Posted"
 msgstr "Gesloten & geboekt"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/gui.js:333
+#: code:addons/point_of_sale/static/src/js/gui.js:335
 #, python-format
 msgid "Closing ..."
 msgstr "Sluiten ..."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:166
 #: selection:pos.session,state:0
-#, python-format
 msgid "Closing Control"
 msgstr "Afsluit controle"
 
@@ -1065,36 +770,6 @@ msgstr "Afsluit controle"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_stop_at
 msgid "Closing Date"
 msgstr "Afsluitdatum"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.coca_light_33cl
-#: model:product.template,name:point_of_sale.coca_light_33cl_product_template
-msgid "Coca-Cola Light 33cl"
-msgstr "Coca-Cola Light 33cl"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.coca_light_50cl
-#: model:product.template,name:point_of_sale.coca_light_50cl_product_template
-msgid "Coca-Cola Light 50cl"
-msgstr "Coca-Cola Light 50cl"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.coca_light_lemon_2l
-#: model:product.template,name:point_of_sale.coca_light_lemon_2l_product_template
-msgid "Coca-Cola Light Lemon 2L"
-msgstr "Coca-Cola Light Lemon 2L"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.coca_regular_33cl
-#: model:product.template,name:point_of_sale.coca_regular_33cl_product_template
-msgid "Coca-Cola Regular 33cl"
-msgstr "Coca-Cola Regular 33cl"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.coca_regular_50cl
-#: model:product.template,name:point_of_sale.coca_regular_50cl_product_template
-msgid "Coca-Cola Regular 50cl"
-msgstr "Coca-Cola Normaal 50cl"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_company_id
@@ -1125,19 +800,21 @@ msgstr "Configureer kassa"
 msgid ""
 "Configure at least one Point of Sale to be able to sell through the PoS "
 "interface."
-msgstr "Configureer minimaal één kassa om producten te kunnen verkopen via de kassa interface."
+msgstr ""
+"Configureer minimaal één kassa om producten te kunnen verkopen via de kassa "
+"interface."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:647
-#: code:addons/point_of_sale/static/src/xml/pos.xml:907
+#: code:addons/point_of_sale/static/src/js/chrome.js:706
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1015
 #, python-format
 msgid "Confirm"
-msgstr "Bevestig"
+msgstr "Bevestigen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:114
+#: code:addons/point_of_sale/static/src/js/models.js:115
 #, python-format
 msgid "Connecting to the PosBox"
 msgstr "Verbinden met de PosBox"
@@ -1149,21 +826,14 @@ msgstr "Verkoop hervatten"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1233
+#: code:addons/point_of_sale/static/src/js/screens.js:1285
 #, python-format
 msgid "Could Not Read Image"
 msgstr "Kan de afbeelding niet lezen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/gui.js:342
-#, python-format
-msgid "Could not close the point of sale."
-msgstr "Niet mogelijk de kassa te sluiten"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:328
+#: code:addons/point_of_sale/static/src/xml/pos.xml:338
 #, python-format
 msgid "Country"
 msgstr "Land"
@@ -1172,13 +842,13 @@ msgstr "Land"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_confirm_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
@@ -1187,12 +857,12 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_confirm_create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
@@ -1219,10 +889,15 @@ msgid "Current Session"
 msgstr "Huidige sessie"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_state
+msgid "Current session state"
+msgstr "Huidige status sessie"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1709
-#: code:addons/point_of_sale/static/src/xml/pos.xml:116
-#: code:addons/point_of_sale/static/src/xml/pos.xml:615
+#: code:addons/point_of_sale/static/src/js/screens.js:1764
+#: code:addons/point_of_sale/static/src/xml/pos.xml:124
+#: code:addons/point_of_sale/static/src/xml/pos.xml:635
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_partner_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
@@ -1230,7 +905,8 @@ msgid "Customer"
 msgstr "Klant"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1162
+#: code:addons/point_of_sale/models/pos_order.py:418
+#: code:addons/point_of_sale/models/pos_order.py:472
 #, python-format
 msgid "Customer Invoice"
 msgstr "Verkoopfactuur"
@@ -1247,49 +923,40 @@ msgid "Datalp.com"
 msgstr "Datalp.com"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_date_create
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "Date"
-msgstr "Datum"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_date_end
-msgid "Date End"
-msgstr "Einddatum"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_date
 msgid "Date Order"
 msgstr "Orderdatum"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_date_start
-msgid "Date Start"
-msgstr "Startdatum"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_details
-msgid "Dates"
-msgstr "Data"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1148
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1288
 #, python-format
 msgid "Debug Window"
 msgstr "Debugvenster"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_config
-msgid "Default Point of Sale"
-msgstr "Standaard kassa"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_cashbox_lines_ids
+msgid "Default Balance"
+msgstr "Standaard balans"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_account_id
+msgid "Default Debit Account"
+msgstr "Standaard debet grootboekrekening"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_fiscal_position_id
+msgid "Default Fiscal Position"
+msgstr "Standaard fiscale positie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_barcode_nomenclature_id
 msgid ""
 "Defines what kind of barcodes are available and how they are assigned to "
 "products, customers and cashiers"
-msgstr "Definieert welke barcodes beschikbaar zijn en hoe ze worden toegewezen aan producten, klanten en kassières"
+msgstr ""
+"Definieert welke barcodes beschikbaar zijn en hoe ze worden toegewezen aan "
+"producten, klanten en kassières"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_delay_validation
@@ -1298,67 +965,45 @@ msgstr "Vertraging validatie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1168
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1308
 #, python-format
 msgid "Delete Paid Orders"
 msgstr "Verwijder betaald orders"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:260
+#: code:addons/point_of_sale/static/src/js/chrome.js:261
 #, python-format
 msgid "Delete Paid Orders ?"
 msgstr "Verwijder betaalde orders?"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1169
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1309
 #, python-format
 msgid "Delete Unpaid Orders"
 msgstr "Verwijder onbetaalde orders"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:270
+#: code:addons/point_of_sale/static/src/js/chrome.js:271
 #, python-format
 msgid "Delete Unpaid Orders ?"
 msgstr "Verwijderd onbetaalde orders?"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_delivery_carrier_id
-msgid "Delivery Method"
-msgstr "Leveringsmethode"
-
-#. module: point_of_sale
-#: selection:pos.config,state:0
-msgid "Deprecated"
-msgstr "Verouderd"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_receipt
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "Description"
-msgstr "Omschrijving"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1093
+#: code:addons/point_of_sale/static/src/js/screens.js:1146
 #, python-format
 msgid "Deselect Customer"
 msgstr "Deselecteer Klant"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:52
+#: code:addons/point_of_sale/static/src/js/chrome.js:53
 #, python-format
 msgid "Destroy Current Order ?"
 msgstr "Verwijder huidige order?"
-
-#. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
-#: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
-msgid "Details of Sales"
-msgstr "Verkoopdetails"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_difference
@@ -1370,18 +1015,20 @@ msgstr "Verschil"
 msgid ""
 "Difference between the theoretical closing balance and the real closing "
 "balance."
-msgstr "Verschil tussen het theoretische afsluitsaldo en het werkelijke afsluitsaldo."
+msgstr ""
+"Verschil tussen het theoretische afsluitsaldo en het werkelijke "
+"afsluitsaldo."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:139
+#: code:addons/point_of_sale/static/src/xml/pos.xml:147
 #, python-format
 msgid "Disc"
 msgstr "Krt."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_disc
-msgid "Disc."
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+msgid "Disc:"
 msgstr "Kort."
 
 #. module: point_of_sale
@@ -1402,21 +1049,22 @@ msgstr "Korting opmerking"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:725
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1313
+#: code:addons/point_of_sale/static/src/xml/pos.xml:749
+#: code:addons/point_of_sale/static/src/xml/pos.xml:888
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1452
 #, python-format
 msgid "Discount:"
 msgstr "Korting:"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1602
+#: code:addons/point_of_sale/models/barcode_rule.py:14
 #, python-format
 msgid "Discounted Product"
 msgstr "Korting product"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:791
+#: code:addons/point_of_sale/static/src/xml/pos.xml:815
 #, python-format
 msgid "Discounts"
 msgstr "Kortingen"
@@ -1430,41 +1078,32 @@ msgstr "Toon categorie afbeeldingen"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_confirm_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_detailsofsales_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_payment_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_receipt_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saleslines_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_statement_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_usersproduct_display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergave naam"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_fullscreen
-msgid "Display the Point of Sale in full screen mode"
-msgstr "Toon de kassa in volledige scherm modus"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.product_template_action
+#: model:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid ""
 "Do not forget to set the price and the point of sale category\n"
 "                in which it should appear. If a product has no point of sale\n"
 "                category, you can not sell it through the point of sale\n"
 "                interface."
-msgstr "Vergeet niet de prijs in te stellen op de kassacategorie\nwelke deze moet voorkomen. Als een product geen kassacategorie\nheeft kan u het niet verkopen via de kassa\ninterface."
+msgstr ""
+"Vergeet niet de prijs in te stellen op de kassacategorie\n"
+"welke deze moet voorkomen. Als een product geen kassacategorie\n"
+"heeft kan u het niet verkopen via de kassa\n"
+"interface."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
@@ -1474,11 +1113,11 @@ msgstr "Wilt u de kasregisters openen?"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Done"
-msgstr "Voltooid"
+msgstr "Verwerkt"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:489
+#: code:addons/point_of_sale/static/src/xml/pos.xml:509
 #, python-format
 msgid "Due"
 msgstr "Tot"
@@ -1503,7 +1142,7 @@ msgstr "Ekomurz.nl"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1151
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1291
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_electronic_scale
 #, python-format
 msgid "Electronic Scale"
@@ -1511,28 +1150,31 @@ msgstr "Electronisch weegschaal"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:341
-#: code:addons/point_of_sale/static/src/xml/pos.xml:376
+#: code:addons/point_of_sale/static/src/xml/pos.xml:351
+#: code:addons/point_of_sale/static/src/xml/pos.xml:391
 #, python-format
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1806
+#: code:addons/point_of_sale/static/src/js/screens.js:1861
 #, python-format
 msgid "Empty Order"
 msgstr "Lege order"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_scan_via_proxy
-msgid "Enable barcode scanning with a remotely connected barcode scanner"
-msgstr "Activeer barcode scannen m.b.v. een op afstand verbonden barcode scanner"
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:420
+#, python-format
+msgid "Empty Serial/Lot Number"
+msgstr "Lege partij / lotnummer"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_auth_signup_reset_password
-msgid "Enable password reset from Login page"
-msgstr "Wachtwoord reset vanaf login pagina toestaan"
+#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_scan_via_proxy
+msgid "Enable barcode scanning with a remotely connected barcode scanner"
+msgstr ""
+"Activeer barcode scannen m.b.v. een op afstand verbonden barcode scanner"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_electronic_scale
@@ -1555,6 +1197,11 @@ msgid "Enables invoice generation from the Point of Sale"
 msgstr "Activeer het aanmaken van facturen door de kassa"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_end_date
+msgid "End date"
+msgstr "Einddatum"
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "End of Session"
 msgstr "Einde van de sessie"
@@ -1565,19 +1212,14 @@ msgid "Ending Balance"
 msgstr "Eindsaldo"
 
 #. module: point_of_sale
-#: constraint:pos.category:0
+#: code:addons/point_of_sale/models/pos_category.py:13
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Fout! het is niet mogelijk recursieve categorieën te maken!"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1553
-#, python-format
-msgid "Error!"
-msgstr "Fout!"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1162
+#: code:addons/point_of_sale/static/src/js/screens.js:1214
 #, python-format
 msgid "Error: Could not Save Changes"
 msgstr "Fout: Niet mogelijk om aanpassingen op te slaan"
@@ -1591,24 +1233,21 @@ msgid ""
 "of Sale. You are probably trying to load the point of sale as an "
 "administrator in a multi-company setup, with the administrator account set "
 "to the wrong company."
-msgstr "Fout: De kassa gebruiker moet behoren tot hetzelfde bedrijf als de kassa. U probeert waarschijnlijk de kassa te laden als administrator in een multi-company omgeving, met de administrator ingesteld op het verkeerde bedrijf."
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.evian_50cl
-#: model:product.template,name:point_of_sale.evian_50cl_product_template
-msgid "Evian 50cl"
-msgstr "Evian 50cl"
+msgstr ""
+"Fout: De kassa gebruiker moet behoren tot hetzelfde bedrijf als de kassa. U "
+"probeert waarschijnlijk de kassa te laden als administrator in een multi-"
+"company omgeving, met de administrator ingesteld op het verkeerde bedrijf."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1170
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1310
 #, python-format
 msgid "Export Paid Orders"
 msgstr "Exporteer betaalde orders"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1171
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1311
 #, python-format
 msgid "Export Unpaid Orders"
 msgstr "Exporteer onbetaalde orders"
@@ -1625,48 +1264,13 @@ msgid "Extra Info"
 msgstr "Extra info"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_fail_counter
-msgid "Fail Mail"
-msgstr "Mislukte mail"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.fanta_orange_25cl
-#: model:product.template,name:point_of_sale.fanta_orange_25cl_product_template
-msgid "Fanta Orange 25cl"
-msgstr "Fanta Orange 25cl"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.fanta_orange_33cl
-#: model:product.template,name:point_of_sale.fanta_orange_33cl_product_template
-msgid "Fanta Orange 33cl"
-msgstr "Fanta Orange 33cl"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.fanta_orange_50cl
-#: model:product.template,name:point_of_sale.fanta_orange_50cl_product_template
-msgid "Fanta Orange 50cl"
-msgstr "Fanta Orange 50cl"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.fanta_zero_orange_1,5l
-#: model:product.template,name:point_of_sale.fanta_zero_orange_1,5l_product_template
-msgid "Fanta Orange Zero 1.5L"
-msgstr "Fanta Orange Zero 1.5L"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.fanta_zero_orange_33cl
-#: model:product.template,name:point_of_sale.fanta_zero_orange_33cl_product_template
-msgid "Fanta Zero Orange 33cl"
-msgstr "Fanta Zero Orange 33cl"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Features"
 msgstr "Mogelijkheden"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1030
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1167
 #, python-format
 msgid "Finished Importing Orders"
 msgstr "Importeren van orders is voltooid"
@@ -1697,48 +1301,15 @@ msgid "Fruits and Vegetables"
 msgstr "Fruit en groenten"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_fullscreen
-msgid "Fullscreen"
-msgstr "Volledig scherm"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "General Information"
 msgstr "Algemene informatie"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_confirm
-msgid "Generate Entries"
-msgstr "Genereer boekingen"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_confirm
-msgid "Generate Journal Entries"
-msgstr "Aanmaken boekingen"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_confirm
-msgid ""
-"Generate all sale journal entries for non invoiced orders linked to a closed"
-" cash register or statement."
-msgstr "Genereer alle verkoop journaalpsoten van alle niet gefactureerde orders welke zijn gekoppeld aan een gesloten kasregister of kasverklaring."
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_portal
-msgid "Give your customers access to their documents."
-msgstr "Geef uw klanten toegang tot hun documenten."
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr "Geeft de waarschijnlijkheid om de lead aan deze relatie toe te kennen (0 betekent geen toekenning)."
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr "Geeft de volgorde weer waarin de product categorieën worden weergegeven."
+msgstr ""
+"Geeft de volgorde weer waarin de product categorieën worden weergegeven."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_golden_perlim
@@ -1759,17 +1330,11 @@ msgid "Green Peppers"
 msgstr "Groene paprika's"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.grisette_cerise_25cl
-#: model:product.template,name:point_of_sale.grisette_cerise_25cl_product_template
-msgid "Grisette Cherry 25cl"
-msgstr "Grisette Cherry 25cl"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Group By"
-msgstr "Groeperen op"
+msgstr "Groepeer op"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_by
@@ -1778,14 +1343,7 @@ msgstr "Groepeer boekingen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:706
-#, python-format
-msgid "Guests:"
-msgstr "Gasten:"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1182
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1322
 #, python-format
 msgid "Hardware Events"
 msgstr "Hardware Gebeurtenissen"
@@ -1797,7 +1355,7 @@ msgstr "Hardware Proxy / PosBox"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1178
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1318
 #, python-format
 msgid "Hardware Status"
 msgstr "Hardware status"
@@ -1810,31 +1368,23 @@ msgstr "Heeft kassa controle"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Header"
-msgstr "Hoofding"
+msgstr "Kop"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_confirm_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_detailsofsales_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_payment_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_receipt_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saleslines_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_statement_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_usersproduct_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_id
 msgid "ID"
 msgstr "ID"
 
@@ -1851,24 +1401,15 @@ msgid "IP Address"
 msgstr "IP-adres"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_auth_signup_uninvited
-msgid "If unchecked, only invited users may sign up."
-msgstr "Indien uitgevinkt kunnen  alleen uitgenodigde gebruikers aanmelden"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_alias_domain
-msgid ""
-"If you have setup a catch-all email domain redirected to the Odoo server, "
-"enter the domain name here."
-msgstr "Als u een 'catch-all' e-mail adres heeft aangemaakt, welke verwijst naar de Odoo server, vul dan hier de domein naam in."
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
 msgid ""
 "If you put a photo on the category, the layout of the\n"
 "                touchscreen interface will automatically. We suggest not to put\n"
 "                a photo on categories for small (1024x768) screens."
-msgstr "Als u een foto instelt op de categorie zal de lay-out van de\ntouchscreen interface automatisch gebeuren. We raden u aan om geen\nfoto te plaatsen op categorieën voor kleine (1024x768) schermen."
+msgstr ""
+"Als u een foto instelt op de categorie zal de lay-out van de\n"
+"touchscreen interface automatisch gebeuren. We raden u aan om geen\n"
+"foto te plaatsen op categorieën voor kleine (1024x768) schermen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image
@@ -1876,21 +1417,21 @@ msgid "Image"
 msgstr "Afbeelding"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr "Implementatie referenties"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr "Geïmplementeerd door"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1172
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1312
 #, python-format
 msgid "Import Orders"
 msgstr "Importeer orders"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_data_drinks
+msgid "Import common drinks data"
+msgstr "Importeer veel voorkomende data van dranken"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
+msgid "Importable Point of Sale Data"
+msgstr "Importeerbare kassa data"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.tomate_en_grappe
@@ -1899,21 +1440,19 @@ msgid "In Cluster Tomatoes"
 msgstr "Trostomaten"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:165
 #: selection:pos.session,state:0
-#, python-format
 msgid "In Progress"
-msgstr "In behandeling"
+msgstr "In Behandeling"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:784
+#: code:addons/point_of_sale/models/pos_order.py:400
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
-msgstr "Om een verkoop te kunnen verwijderen moet deze nieuw zijn of geannuleerd."
+msgstr ""
+"Om een verkoop te kunnen verwijderen moet deze nieuw zijn of geannuleerd."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
-#: selection:pos.config,state:0
 msgid "Inactive"
 msgstr "Inactief"
 
@@ -1924,7 +1463,7 @@ msgstr "Prijzen inclusief BTW"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/gui.js:264
+#: code:addons/point_of_sale/static/src/js/gui.js:266
 #, python-format
 msgid "Incorrect Password"
 msgstr "Foutief wachtwoord"
@@ -1936,18 +1475,18 @@ msgstr "Interne notities"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:623
+#: code:addons/point_of_sale/static/src/xml/pos.xml:643
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_invoice_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Invoice"
-msgstr "Factuuradres"
+msgstr "Factuur"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_invoice_am
-msgid "Invoice Amount"
-msgstr "Factuurbedrag"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_invoice_journal_id
+msgid "Invoice Journal"
+msgstr "Factuur dagboek"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_invoiced
@@ -1958,14 +1497,14 @@ msgid "Invoiced"
 msgstr "Gefactureerd"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
-msgid "Invoices"
-msgstr "Facturen"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_invoicing
 msgid "Invoicing"
 msgstr "Facturatie"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_account_id
+msgid "It acts as a default account for debit amount"
+msgstr "Dit is de standaard rekening voor het debet bedrag"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_jonagold
@@ -1977,12 +1516,12 @@ msgstr "Jonagold appels"
 #: model:ir.model,name:point_of_sale.model_account_journal
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_journal_id
 msgid "Journal"
-msgstr "Dagboek"
+msgstr "Kasboek"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_account_move
 msgid "Journal Entry"
-msgstr "Dagboek invoer"
+msgstr "Boeking"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -1998,25 +1537,17 @@ msgstr "Grote scrollbalken"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_confirm___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details___last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_discount___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line___last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_detailsofsales___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_payment___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_receipt___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saleslines___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_statement___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_usersproduct___last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos___last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
@@ -2024,13 +1555,13 @@ msgstr "Laatst gewijzigd op"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_confirm_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
@@ -2039,16 +1570,26 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_confirm_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_cash
+msgid "Last session closing cash"
+msgstr "Laatste sessie afsluiting contanten"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
+msgid "Last session closing date"
+msgstr "Laatste sessie afsluiting datum"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review
@@ -2062,38 +1603,10 @@ msgid "Leeks"
 msgstr "Prei"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.leffe_blonde_33cl
-#: model:product.template,name:point_of_sale.leffe_blonde_33cl_product_template
-msgid "Leffe Blonde 33cl"
-msgstr "Leffe Blonde 33cl"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.leffe_brune_33cl
-#: model:product.template,name:point_of_sale.leffe_brune_33cl_product_template
-msgid "Leffe Brune 33cl"
-msgstr "Leffe Brune 33cl"
-
-#. module: point_of_sale
 #: model:product.product,name:point_of_sale.citron
 #: model:product.template,name:point_of_sale.citron_product_template
 msgid "Lemon"
 msgstr "Citroen"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_grade_id
-msgid "Level"
-msgstr "Niveau"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_partner_weight
-msgid "Level Weight"
-msgstr "Gewicht van de lead"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.lindemans_kriek_37,5cl
-#: model:product.template,name:point_of_sale.lindemans_kriek_37,5cl_product_template
-msgid "Lindemans Kriek 37.5cl"
-msgstr "Lindemans Kriek 37.5cl"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_name
@@ -2106,18 +1619,18 @@ msgid "Lines of Point of Sale"
 msgstr "Kassa regels"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:59
+#: code:addons/point_of_sale/wizard/pos_open_statement.py:33
 #, python-format
 msgid "List of Cash Registers"
 msgstr "Lijst van kassa's"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:484
+#: code:addons/point_of_sale/static/src/js/models.js:477
 #: code:addons/point_of_sale/static/src/xml/pos.xml:38
 #, python-format
 msgid "Loading"
-msgstr "Bezig met laden…"
+msgstr "Laden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_location_id
@@ -2132,10 +1645,27 @@ msgstr "Login volgnummer"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/gui.js:291
+#: code:addons/point_of_sale/static/src/js/gui.js:293
 #, python-format
 msgid "Login as a Manager"
 msgstr "Inloggen als manager"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_lot_name
+msgid "Lot Name"
+msgstr "Partij naam"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:2016
+#, python-format
+msgid "Lot/Serial Number(s) Required"
+msgstr "Partij/Serienummer(s) verplicht"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_pack_lot_ids
+msgid "Lot/serial Number"
+msgstr "Partij/Serienummer"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_loyalty
@@ -2148,24 +1678,9 @@ msgid "Make Payment"
 msgstr "Betaling maken"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_inter_company_rules
-msgid "Manage Inter Company"
-msgstr "Beheerder inter-bedrijf"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_group_product_variant
-msgid "Manage Product Variants"
-msgstr "Beheer productvarianten"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "Manage loyalty program with points and rewards for customers"
 msgstr "Beheer layaliteitprogramma's met punten en beloningen voor klanten"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_group_light_multi_company
-msgid "Manage multiple companies"
-msgstr "Beheer meerdere bedrijven"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -2183,11 +1698,14 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "Middelgrote afbeelding van een categorie. Het wordt automatisch aangepast naar 128x128px, met behoud van de verhouding. Gebruik dit veld in formulierweergaves en sommige kanban weergaves"
+msgstr ""
+"Middelgrote afbeelding van een categorie. Het wordt automatisch aangepast "
+"naar 128x128px, met behoud van de verhouding. Gebruik dit veld in "
+"formulierweergaves en sommige kanban weergaves"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:492
+#: code:addons/point_of_sale/static/src/xml/pos.xml:512
 #, python-format
 msgid "Method"
 msgstr "Methode"
@@ -2196,7 +1714,7 @@ msgstr "Methode"
 #: model:product.product,name:point_of_sale.product_product_consumable
 #: model:product.template,name:point_of_sale.product_product_consumable_product_template
 msgid "Miscellaneous"
-msgstr "Overig"
+msgstr "Diversen"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2209,38 +1727,40 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Meer <i class=\"fa fa-caret-down\"/>"
 
 #. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
+msgid "More Info"
+msgstr "Meer info"
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "My Sales"
 msgstr "Mijn verkopen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:385
+#: code:addons/point_of_sale/static/src/xml/pos.xml:387
 #: code:addons/point_of_sale/static/src/xml/pos.xml:396
 #: code:addons/point_of_sale/static/src/xml/pos.xml:405
+#: code:addons/point_of_sale/static/src/xml/pos.xml:416
+#: code:addons/point_of_sale/static/src/xml/pos.xml:425
 #, python-format
 msgid "N/A"
-msgstr "N.v.t."
+msgstr "N/A"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:308
-#: code:addons/point_of_sale/static/src/xml/pos.xml:449
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_complete_name
+#: code:addons/point_of_sale/static/src/xml/pos.xml:318
+#: code:addons/point_of_sale/static/src/xml/pos.xml:469
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_name
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 #, python-format
 msgid "Name"
 msgstr "Naam"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_invoice_id
-msgid "Nbr Invoice"
-msgstr "Factuurnr."
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1816
+#: code:addons/point_of_sale/static/src/js/screens.js:1871
 #, python-format
 msgid "Negative Bank Payment"
 msgstr "Negatieve bank betaling"
@@ -2258,22 +1778,19 @@ msgstr "Nieuwe sessie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:648
+#: code:addons/point_of_sale/static/src/xml/pos.xml:668
 #, python-format
 msgid "Next Order"
 msgstr "Volgende order"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr "Volgende relatie beoordeling"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:725
+#: code:addons/point_of_sale/models/pos_order.py:129
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
-msgstr "Geen betaling gevonden voor deze sessie. Niet mogelijk om wisselgeld te registreren."
+msgstr ""
+"Geen betaling gevonden voor deze sessie. Niet mogelijk om wisselgeld te "
+"registreren."
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_mercury:0
@@ -2281,7 +1798,7 @@ msgid "No credit card"
 msgstr "Geen creditcard"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/report/pos_invoice.py:29
+#: code:addons/point_of_sale/report/pos_invoice.py:25
 #, python-format
 msgid "No link to an invoice for %s."
 msgstr "Geen link naar een factuur voor %s."
@@ -2292,14 +1809,15 @@ msgid "No reprint"
 msgstr "Geen herdruk"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:40
+#: code:addons/point_of_sale/wizard/pos_open_statement.py:24
 #, python-format
 msgid "No sequence defined on the journal"
 msgstr "Geen reeks gedefinieerd voor dit dagboek"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:330
+#: code:addons/point_of_sale/static/src/js/screens.js:1986
+#: code:addons/point_of_sale/static/src/xml/pos.xml:340
 #, python-format
 msgid "None"
 msgstr "Geen"
@@ -2314,12 +1832,14 @@ msgstr "Niet gefactureerd"
 msgid ""
 "Note that you may use the menu <i>Your Session</i>\n"
 "                to quickly open a new session."
-msgstr "Merk op dat u het menu <i>Uw sessie</i>\nkan gebruiken om snel een nieuwe sessie te openen."
+msgstr ""
+"Merk op dat u het menu <i>Uw sessie</i>\n"
+"kan gebruiken om snel een nieuwe sessie te openen."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Notes"
-msgstr "Notities"
+msgstr "Opmerkingen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_nb_print
@@ -2327,42 +1847,40 @@ msgid "Number of Print"
 msgstr "Aantal Kopieën"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_no_trans
-msgid "Number of Transaction"
-msgstr "Aantal transacties"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.index
-msgid "Odoo POS"
-msgstr "Odoo Point of Sale"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:387
+#: code:addons/point_of_sale/static/src/js/chrome.js:388
 #, python-format
 msgid "Offline"
 msgstr "Offline"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/gui.js:315
+#: code:addons/point_of_sale/static/src/js/gui.js:317
 #, python-format
 msgid "Offline Orders"
 msgstr "Offline orders"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:839
-#: code:addons/point_of_sale/static/src/xml/pos.xml:853
-#: code:addons/point_of_sale/static/src/xml/pos.xml:867
-#: code:addons/point_of_sale/static/src/xml/pos.xml:893
-#: code:addons/point_of_sale/static/src/xml/pos.xml:924
-#: code:addons/point_of_sale/static/src/xml/pos.xml:941
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1019
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1055
+#: code:addons/point_of_sale/static/src/xml/pos.xml:947
+#: code:addons/point_of_sale/static/src/xml/pos.xml:961
+#: code:addons/point_of_sale/static/src/xml/pos.xml:975
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1001
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1032
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1061
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1078
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1156
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1192
 #, python-format
 msgid "Ok"
 msgstr "Ok"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:421
+#, python-format
+msgid "One or more product(s) required serial/lot number."
+msgstr "Een of meerdere product(en) vereisen een serie/partij nummer."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.Onions
@@ -2372,10 +1890,11 @@ msgstr "Uien"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1219
+#: code:addons/point_of_sale/static/src/js/screens.js:1271
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
-msgstr "Alleen web-compatible afbeeldingssoorten zoals .png of .jpg zijn toegestaan"
+msgstr ""
+"Alleen web-compatible afbeeldingssoorten zoals .png of .jpg zijn toegestaan"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -2389,8 +1908,8 @@ msgstr "Open kasregister"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:634
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1184
+#: code:addons/point_of_sale/static/src/xml/pos.xml:654
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1324
 #, python-format
 msgid "Open Cashbox"
 msgstr "Open kassa"
@@ -2404,6 +1923,11 @@ msgstr "Open kassa menu"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 msgid "Open Registers"
 msgstr "Open registers"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_details_wizard
+msgid "Open Sale Details Report"
+msgstr "Open verkoop details rapport"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2424,9 +1948,7 @@ msgid "Opening Balance"
 msgstr "Openingssaldo"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:164
 #: selection:pos.session,state:0
-#, python-format
 msgid "Opening Control"
 msgstr "Opening controle"
 
@@ -2443,23 +1965,22 @@ msgstr "Orange Butterfly"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:280
+#: code:addons/point_of_sale/static/src/xml/pos.xml:290
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_order_id
 #, python-format
 msgid "Order"
 msgstr "Order"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:1512
-#: code:addons/point_of_sale/static/src/js/models.js:1539
+#: code:addons/point_of_sale/static/src/js/models.js:1658
+#: code:addons/point_of_sale/static/src/js/models.js:1689
 #, python-format
 msgid "Order "
 msgstr "Order "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_date_order
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_date_order
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month_date_order
 msgid "Order Date"
 msgstr "Orderdatum"
 
@@ -2482,6 +2003,7 @@ msgstr "Bestel maand"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_order_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_order_id
 msgid "Order Ref"
 msgstr "Order referentie"
 
@@ -2491,13 +2013,19 @@ msgid "Order Sequence Number"
 msgstr "Order volgnummer"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:430
+#, python-format
+msgid "Order is not paid."
+msgstr "Order is niet betaald."
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
 msgstr "Orderregels"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1165
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1305
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_session_orders
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_filtered
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
@@ -2517,30 +2045,10 @@ msgid "Orders Analysis"
 msgstr "Orderanalyse"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.orval_33cl
-#: model:product.template,name:point_of_sale.orval_33cl_product_template
-msgid "Orval 33cl"
-msgstr "Orval 33cl"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_trans_user_form
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_sales_by_user_pos_form
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_sales_by_user_pos_month_form
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_sales_by_user_pos_month_tree
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_sales_by_user_pos_tree
-#: model:ir.ui.view,arch_db:point_of_sale.view_trans_pos_user_tree
-msgid "POS"
-msgstr "Kassa"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_details
-msgid "POS Details"
-msgstr "Kassa details"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
-msgid "POS Lines"
-msgstr "POS regels"
+#: code:addons/point_of_sale/models/pos_config.py:212
+#, python-format
+msgid "POS Order %s"
+msgstr "Kassa order %s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
@@ -2563,12 +2071,15 @@ msgid "POS Orders lines"
 msgstr "Kassa orderregels"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_sales_by_user_pos_calendar
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_sales_by_user_pos_month_calendar
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_transaction_pos_calendar
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_transaction_pos_graph
-msgid "POS Report"
-msgstr "Kassa rapport"
+#: model:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
+msgid "POS Sales"
+msgstr "Kassaverkopen"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:223
+#, python-format
+msgid "POS order line %s"
+msgstr "Kassa orderregels %s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2594,7 +2105,6 @@ msgstr "Hoofdcategorie"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_partner_id
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "Partner"
 msgstr "Relatie"
@@ -2605,13 +2115,8 @@ msgid "Partner Services"
 msgstr "Relatiediensten"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_partnership
-msgid "Partnership Date"
-msgstr "Datum partnerovereenkomst"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/gui.js:261
+#: code:addons/point_of_sale/static/src/js/gui.js:263
 #, python-format
 msgid "Password ?"
 msgstr "Wachtwoord?"
@@ -2623,9 +2128,9 @@ msgstr "Betaal order"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:121
-#: code:addons/point_of_sale/static/src/xml/pos.xml:588
-#: code:addons/point_of_sale/wizard/pos_payment.py:57
+#: code:addons/point_of_sale/static/src/xml/pos.xml:129
+#: code:addons/point_of_sale/static/src/xml/pos.xml:608
+#: code:addons/point_of_sale/wizard/pos_payment.py:51
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
@@ -2641,11 +2146,10 @@ msgstr "Betaaldatum"
 #: model:ir.actions.act_window,name:point_of_sale.action_account_journal_form
 #: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
 msgid "Payment Methods"
-msgstr "Betalingsmethodes"
+msgstr "Betaalwijzes"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_journal_id
-#: model:ir.ui.view,arch_db:point_of_sale.report_receipt
 msgid "Payment Mode"
 msgstr "Betaalwijze"
 
@@ -2666,13 +2170,25 @@ msgid ""
 "                field <i>PoS Payment Method</i> checked. In order to be useable\n"
 "                from the touchscreen interface, you must set the payment method\n"
 "                on the <i>Point of Sale</i> configuration."
-msgstr "Betalingsmethodes zijn gedefinieerd door dagboeken die\nhet veld <i>Kassa betalingsmethode</i> hebben aangevinkt. Om bruikbaar te zijn\nvanuit de touchscreen interface moet u de betalingsmethode\nop de <i>kassa</i> configuratie instellen."
+msgstr ""
+"Betalingsmethodes zijn gedefinieerd door dagboeken die\n"
+"het veld <i>Kassa betalingsmethode</i> hebben aangevinkt. Om bruikbaar te zijn\n"
+"vanuit de touchscreen interface moet u de betalingsmethode\n"
+"op de <i>kassa</i> configuratie instellen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Payments"
 msgstr "Betalingen"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:898
+#, python-format
+msgid "Payments:"
+msgstr "Betalingen:"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.peche
@@ -2681,24 +2197,31 @@ msgid "Peaches"
 msgstr "Perziken"
 
 #. module: point_of_sale
+#: model:ir.filters,name:point_of_sale.filter_orders_per_session
+msgid "Per session"
+msgstr "Per sessie"
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_user_id
 msgid ""
 "Person who uses the cash register. It can be a reliever, a student or an "
 "interim employee."
-msgstr "Persoon die het kassaregister gebruikt. Het kan een helper, een student of een interim werknemer zijn."
+msgstr ""
+"Persoon die het kassaregister gebruikt. Het kan een helper, een student of "
+"een interim werknemer zijn."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:345
-#: code:addons/point_of_sale/static/src/xml/pos.xml:380
-#: code:addons/point_of_sale/static/src/xml/pos.xml:451
+#: code:addons/point_of_sale/static/src/xml/pos.xml:355
+#: code:addons/point_of_sale/static/src/xml/pos.xml:400
+#: code:addons/point_of_sale/static/src/xml/pos.xml:471
 #, python-format
 msgid "Phone"
 msgstr "Telefoon"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1262
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1402
 #, python-format
 msgid "Phone:"
 msgstr "Telefoon:"
@@ -2709,40 +2232,50 @@ msgid "Picking"
 msgstr "Verzamelen"
 
 #. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "Picking Errors"
+msgstr "Pick fouten"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_picking_type_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_picking_type_id
 msgid "Picking Type"
 msgstr "Type levering"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_picking_count
+msgid "Picking count"
+msgstr "Pick aantallen"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1845
+#: code:addons/point_of_sale/static/src/js/screens.js:1900
 #, python-format
 msgid "Please Confirm Large Amount"
 msgstr "Bevestig groot aantal aub"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1289
+#: code:addons/point_of_sale/models/pos_order.py:266
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Definieer een omzetrekening voor dit product:  \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1105
+#: code:addons/point_of_sale/models/pos_order.py:446
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Kies een relatie voor deze verkoop"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:472
+#: code:addons/point_of_sale/static/src/xml/pos.xml:492
 #, python-format
 msgid "Please select a payment method."
 msgstr "Selecteer een betalingsmethode aub."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1875
+#: code:addons/point_of_sale/static/src/js/screens.js:1932
 #, python-format
 msgid "Please select the Customer"
 msgstr "Selecteer een klant aub"
@@ -2755,7 +2288,6 @@ msgstr "Kassa orders"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
-#: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_config_id
@@ -2796,7 +2328,7 @@ msgstr "Kassa instellingen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr "Kassa beheerder groep"
+msgstr "Kassa manager groep"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_name
@@ -2804,6 +2336,7 @@ msgid "Point of Sale Name"
 msgstr "Kassa naam"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
@@ -2848,18 +2381,29 @@ msgid "Pos Product Categories"
 msgstr "Kassa product categorieën"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_confirm
-msgid "Post All Orders"
-msgstr "Boek alle orders"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_pos_config_ids
+msgid "Pos config ids"
+msgstr "Kassa instelling Ids"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_confirm
-msgid "Post POS Journal Entries"
-msgstr "Maak kassa boekingen"
+#: model:ir.model.fields,field_description:point_of_sale.field_res_partner_pos_order_count
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_order_count
+msgid "Pos order count"
+msgstr "Aantal kassa orders"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_pos_order_line_id
+msgid "Pos order line id"
+msgstr "Kassa orderregel id"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
+msgid "Pos session username"
+msgstr "Kassa sessie gebruikersnaam"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:324
+#: code:addons/point_of_sale/static/src/xml/pos.xml:334
 #, python-format
 msgid "Postcode"
 msgstr "Postcode"
@@ -2883,14 +2427,18 @@ msgstr "Vooraf contante betaling invullen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:144
-#: model:ir.ui.view,arch_db:point_of_sale.report_receipt
+#: code:addons/point_of_sale/static/src/xml/pos.xml:152
 #, python-format
 msgid "Price"
 msgstr "Prijs"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1601
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+msgid "Price Unit"
+msgstr "Prijs"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/barcode_rule.py:13
 #, python-format
 msgid "Priced Product"
 msgstr "Prijs product"
@@ -2903,17 +2451,17 @@ msgid "Pricelist"
 msgstr "Prijslijst"
 
 #. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
+msgid "Print"
+msgstr "Afdrukken"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:655
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1185
+#: code:addons/point_of_sale/static/src/xml/pos.xml:675
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1325
 #, python-format
 msgid "Print Receipt"
 msgstr "Afdrukken kassabon"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_details
-msgid "Print Report"
-msgstr "Kassabon afdrukken"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_via_proxy
@@ -2922,22 +2470,23 @@ msgstr "Afdrukken via proxy"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:376
+#: code:addons/point_of_sale/static/src/js/chrome.js:377
 #, python-format
 msgid "Printer"
 msgstr "Printer"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/devices.js:425
+#: code:addons/point_of_sale/static/src/js/devices.js:427
 #, python-format
 msgid "Printing Error: "
 msgstr "Afdrukfout: "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_product_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_id
-#: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product"
 msgstr "Product"
@@ -2949,11 +2498,6 @@ msgid "Product Category"
 msgstr "Productcategorie"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_product_nb
-msgid "Product Nb."
-msgstr "Product nr."
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
 msgstr "Product Product categorieën"
@@ -2961,7 +2505,7 @@ msgstr "Product Product categorieën"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_qty
 msgid "Product Quantity"
-msgstr "Hoeveelheid product"
+msgstr "Producthoeveelheid"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -2970,8 +2514,9 @@ msgid "Product Template"
 msgstr "Productsjabloon"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.product_template_action
+#: model:ir.actions.act_window,name:point_of_sale.product_product_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Products"
 msgstr "Producten"
@@ -2980,7 +2525,7 @@ msgstr "Producten"
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_pos_categ_id
 msgid "Public Category"
-msgstr "Publieke categorie"
+msgstr "Openbare categorie"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_in
@@ -2989,31 +2534,30 @@ msgstr "Stop geld erin"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:134
-#: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
+#: code:addons/point_of_sale/static/src/xml/pos.xml:142
 #, python-format
 msgid "Qty"
 msgstr "Hvhd"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_qty
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month_qty
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_qty
-#: model:ir.ui.view,arch_db:point_of_sale.report_receipt
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Quantity"
 msgstr "Hoeveelheid"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
-msgid "Re-Print"
-msgstr "Opnieuw afdrukken"
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1326
+#, python-format
+msgid "Read Weighing Scale"
+msgstr "Lees weegschaal"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1186
+#: code:addons/point_of_sale/static/src/js/tour.js:13
 #, python-format
-msgid "Read Weighting Scale"
-msgstr "Weegschaal uitlezen"
+msgid "Ready to launch your <b>point of sale</b>? <i>Click here</i>."
+msgstr "Klaar om de <b>kassa</b> te starten? <i>Klik hier</i>."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -3021,7 +2565,6 @@ msgid "Real Closing Balance"
 msgstr "Werkelijke eindsaldo"
 
 #. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.action_report_pos_receipt
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Receipt"
 msgstr "Kassabon"
@@ -3059,19 +2602,9 @@ msgid "Red grapefruit"
 msgstr "Rode grapefruit"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "Reference"
-msgstr "Referentie"
-
-#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
 msgid "Reports"
 msgstr "Rapportages"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
-msgid "Reprint"
-msgstr "Opnieuw afdrukken"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_reprint
@@ -3079,13 +2612,8 @@ msgid "Reprints"
 msgstr "Herdrukken"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_rescue
-msgid "Rescue session"
-msgstr "Red sessie"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1155
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1295
 #, python-format
 msgid "Reset"
 msgstr "Reset"
@@ -3111,7 +2639,7 @@ msgid "Resume"
 msgstr "Hervatten"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1075
+#: code:addons/point_of_sale/models/pos_order.py:690
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -3123,14 +2651,11 @@ msgid "Returned"
 msgstr "Geretourneerd"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.rochefort_8_33cl
-#: model:product.template,name:point_of_sale.rochefort_8_33cl_product_template
-msgid "Rochefort \"8\" 33cl"
-msgstr "Rochefort \"8\" 33cl"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_details
+#: model:ir.actions.report.xml,name:point_of_sale.sale_details_report
+#: model:ir.ui.menu,name:point_of_sale.menu_report_order_details
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 msgid "Sale Details"
 msgstr "Verkoop details"
 
@@ -3148,57 +2673,9 @@ msgid "Sale line"
 msgstr "Order regel"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_details
-msgid "Sales Details"
-msgstr "Verkoopdetails"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_journal_id
-msgid "Sales Journal"
-msgstr "Verkoopboek"
-
-#. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
-msgid "Sales Lines"
-msgstr "Verkoopregels"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Sales Orders"
 msgstr "Verkooporders"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_today
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_sales_by_user_pos_graph
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_sales_by_user_pos_month_graph
-msgid "Sales by User"
-msgstr "Verkopen per gebruiker"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
-msgid "Sales by User Monthly"
-msgstr "Maandelijkse verkopen per gebruiker"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
-msgid "Sales by day"
-msgstr "Verkopen per dag"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
-msgid "Sales by month"
-msgstr "Verkopen per maand"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
-#: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos
-msgid "Sales by user"
-msgstr "Verkopen per gebruiker"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
-msgid "Sales by user monthly"
-msgstr "Maandelijkse verkopen per gebruier"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_user_id
@@ -3207,39 +2684,28 @@ msgid "Salesman"
 msgstr "Verkoper"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_user_ids
-msgid "Salespeople"
-msgstr "Verkopers"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_user_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Salesperson"
 msgstr "Verkoper"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.san_pellegrino_1l
-#: model:product.template,name:point_of_sale.san_pellegrino_1l_product_template
-msgid "San Pellegrino 1L"
-msgstr "San Pellegrino 1L"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:384
+#: code:addons/point_of_sale/static/src/js/chrome.js:385
 #, python-format
 msgid "Scale"
 msgstr "Schaal"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1161
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1301
 #, python-format
 msgid "Scan"
 msgstr "Scan"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1162
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1302
 #, python-format
 msgid "Scan EAN-13"
 msgstr "Scan EAN-13"
@@ -3251,21 +2717,21 @@ msgstr "Scannen via Proxy"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:367
+#: code:addons/point_of_sale/static/src/js/chrome.js:368
 #, python-format
 msgid "Scanner"
 msgstr "Scanner"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:422
+#: code:addons/point_of_sale/static/src/xml/pos.xml:442
 #, python-format
 msgid "Search Customers"
 msgstr "Zoek Klanten"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:191
+#: code:addons/point_of_sale/static/src/xml/pos.xml:199
 #, python-format
 msgid "Search Products"
 msgstr "Zoek producten"
@@ -3281,33 +2747,34 @@ msgid "Security PIN"
 msgstr "Veiligdheidscode"
 
 #. module: point_of_sale
-#: constraint:res.users:0
+#: code:addons/point_of_sale/models/res_users.py:15
+#, python-format
 msgid "Security PIN can only contain digits"
 msgstr "Veiligheidscode kan enkel cijfers bevatten"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:430
+#: code:addons/point_of_sale/static/src/xml/pos.xml:450
 #, python-format
 msgid "Select Customer"
 msgstr "Selecteer Klant"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/gui.js:235
+#: code:addons/point_of_sale/static/src/js/gui.js:237
 #, python-format
 msgid "Select User"
 msgstr "Selecteer gebruiker"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1922
+#: code:addons/point_of_sale/static/src/js/screens.js:1997
 #, python-format
 msgid "Select tax"
-msgstr "Kies belasting"
+msgstr "Kies BTW"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1197
+#: code:addons/point_of_sale/models/pos_order.py:204
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr "Geselecteerde orders hebben niet dezelfde sessie!"
@@ -3324,22 +2791,30 @@ msgstr "Volgnummer"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:702
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1055
+#, python-format
+msgid "Serial/Lot Number"
+msgstr "Serie/Partijnummer"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:727
 #, python-format
 msgid "Served by"
 msgstr "Geholpen door"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1888
+#: code:addons/point_of_sale/static/src/js/screens.js:1945
 #, python-format
 msgid "Server Error"
 msgstr "Server Error"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:326
+#: code:addons/point_of_sale/models/pos_config.py:270
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_session_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_session_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
 msgid "Session"
@@ -3351,18 +2826,8 @@ msgid "Session ID"
 msgstr "Sessie-ID"
 
 #. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.action_report_pos_session_summary
-msgid "Session Summary"
-msgstr "Sessie samenvatting"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "Session Summary:"
-msgstr "Sessie samenvatting:"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1044
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1181
 #, python-format
 msgid "Session ids:"
 msgstr "Sessie ids:"
@@ -3384,81 +2849,23 @@ msgstr "Sessies"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1088
+#: code:addons/point_of_sale/static/src/js/screens.js:1141
 #, python-format
 msgid "Set Customer"
-msgstr "Klant instellen"
+msgstr "Selecteer klant"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1154
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1294
 #, python-format
 msgid "Set Weight"
 msgstr "Stel gewicht in"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
-msgid "Set to Active"
-msgstr "Instellen op actief"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
-msgid "Set to Deprecated"
-msgstr "Stel in als verouderd"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
-msgid "Set to Inactive"
-msgstr "Stel in op inactief"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_global_settings
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Settings"
 msgstr "Instellingen"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_share
-msgid "Share or embbed any screen of Odoo."
-msgstr "Deel of sluit een scherm van Odoo in."
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_company_share_partner
-msgid "Share partners to all companies"
-msgstr "Deel relaties met alle bedrijven"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_company_share_product
-msgid "Share product to all companies"
-msgstr "Deel producten met alle bedrijven"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_company_share_partner
-msgid ""
-"Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
-msgstr "Deel uw relaties met alle bedrijven gedefinieerd in uw instantie.\n* Aangevinkt: Relaties zijn zichtbaar voor elk bedrijf, zelfs als een bedrijf is gedefinieerd op de partner.\n* Uitgevinkt: Elk bedrijf kan elke zijn eigen relaties zien (relaties waar bedrijf is gedefinieerd). Relaties die niet gerelateerd zijn aan een bedrijf zijn zichtbaar voor alle bedrijven."
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_company_share_product
-msgid ""
-"Share your product to all companies defined in your instance.\n"
-" * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
-msgstr "Deel al uw relaties met alle bedrijven die binnen uw structuur zijn gedefinieerd.\n * Aangevinkt : Relaties zijn zichtbaar voor alle bedrijven, zelfs indien het bedrijf bij de relatie aangeduid is.\n * Niet aangevinkt : Elk bedrijf kan enkel de eigen relaties zien (relaties waarbij het bedrijf werd aangeduid). Relaties waarbij het bedrijf niet werd aangeduid zijn zichtbaar voor alle bedrijven."
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1264
-#, python-format
-msgid "Shop:"
-msgstr "Winkel:"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_google_cal_sync
-msgid "Show Tutorial"
-msgstr "Toon tutorial"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3483,19 +2890,22 @@ msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "\"Klein formaat afbeelding van een categorie. Afbeelding is automatisch geschaald naar een 64x64 afbeelding met behoud van de verhoudingen. Gebruik dit veld overal waar een kleine afbeelding vereist is.\""
-
-#. module: point_of_sale
-#: model:pos.category,name:point_of_sale.soft
-msgid "Soft"
-msgstr "Zachte"
+msgstr ""
+"Klein formaat afbeelding van een categorie. Afbeelding is automatisch "
+"geschaald naar een 64x64 afbeelding met behoud van de verhoudingen. Gebruik "
+"dit veld overal waar een kleine afbeelding vereist is."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/gui.js:320
+#: code:addons/point_of_sale/static/src/js/gui.js:322
 #, python-format
 msgid "Some orders could not be submitted to"
 msgstr "Sommige orders kunnen niet ingediend worden naar"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
+msgid "Specify product lot/serial number in pos order line"
+msgstr "Specificeer partijen/serienummers voor kassa regels"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_start_categ_id
@@ -3503,9 +2913,9 @@ msgid "Start Category"
 msgstr "Startcategorie"
 
 #. module: point_of_sale
-#: model:ir.actions.act_url,name:point_of_sale.action_pos_pos
-msgid "Start Point of Sale"
-msgstr "Start kassa"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_start_date
+msgid "Start date"
+msgstr "Startdatum"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_start
@@ -3516,22 +2926,12 @@ msgstr "Beginsaldo"
 #: model:ir.actions.report.xml,name:point_of_sale.action_report_account_statement
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "Statement"
-msgstr "Bankafschrift"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "Statement Details:"
-msgstr "Details afschrift"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
-msgid "Statement Summary"
-msgstr "Samenvatting afschrift"
+msgstr "Afschrift"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Statement lines"
-msgstr "Mutatieregels"
+msgstr "Afschriftregels"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -3539,7 +2939,6 @@ msgid "Statements"
 msgstr "Afschriften"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_state
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_state
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_state
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_state
@@ -3548,26 +2947,14 @@ msgid "Status"
 msgstr "Status"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.stella_33cl
-#: model:product.template,name:point_of_sale.stella_33cl_product_template
-msgid "Stella Artois 33cl"
-msgstr "Stella Artois 33cl"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.stella_50cl
-#: model:product.template,name:point_of_sale.stella_50cl_product_template
-msgid "Stella Artois 50cl"
-msgstr "Stella Artois 50cl"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_stock_location_id
 msgid "Stock Location"
 msgstr "Voorraadlocatie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:316
-#: code:addons/point_of_sale/static/src/xml/pos.xml:317
+#: code:addons/point_of_sale/static/src/xml/pos.xml:326
+#: code:addons/point_of_sale/static/src/xml/pos.xml:327
 #, python-format
 msgid "Street"
 msgstr "Straat"
@@ -3580,7 +2967,7 @@ msgstr "Stringers"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:753
+#: code:addons/point_of_sale/static/src/xml/pos.xml:777
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_subtotal_incl
 #, python-format
 msgid "Subtotal"
@@ -3598,21 +2985,21 @@ msgstr "Subtotaal zonder korting"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1299
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1438
 #, python-format
 msgid "Subtotal:"
 msgstr "Subtotaal:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1036
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1173
 #, python-format
 msgid "Successfully  imported"
 msgstr "Succesvol geïmporteerd"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1035
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1172
 #, python-format
 msgid "Successfully imported"
 msgstr "Succesvol geïmporteerd"
@@ -3633,13 +3020,8 @@ msgid "Summary by Payment Methods"
 msgstr "Samenvatting per betaalmethode"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_purchase_currency_id
-msgid "Supplier Currency"
-msgstr "Valuta leverancier"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:766
+#: code:addons/point_of_sale/static/src/xml/pos.xml:790
 #, python-format
 msgid "TOTAL"
 msgstr "TOTAAL"
@@ -3647,20 +3029,20 @@ msgstr "TOTAAL"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_out
 msgid "Take Money Out"
-msgstr "Haal geld uit"
+msgstr "Geld uitnemen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/point_of_sale.py:1319
-#: code:addons/point_of_sale/static/src/xml/pos.xml:105
+#: code:addons/point_of_sale/models/pos_order.py:294
+#: code:addons/point_of_sale/static/src/js/screens.js:2007
 #, python-format
 msgid "Tax"
-msgstr "Belasting"
+msgstr "BTW"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:353
-#: code:addons/point_of_sale/static/src/xml/pos.xml:400
+#: code:addons/point_of_sale/static/src/xml/pos.xml:363
+#: code:addons/point_of_sale/static/src/xml/pos.xml:420
 #, python-format
 msgid "Tax ID"
 msgstr "BTW Nr."
@@ -3669,115 +3051,145 @@ msgstr "BTW Nr."
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids_after_fiscal_position
-#: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Taxes"
-msgstr "Belastingen"
+msgstr "BTW"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1134
+#: code:addons/point_of_sale/static/src/xml/pos.xml:912
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1274
 #, python-format
 msgid "Taxes:"
-msgstr "Belastingen:"
+msgstr "BTW:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:682
+#: code:addons/point_of_sale/static/src/xml/pos.xml:707
 #, python-format
 msgid "Tel:"
 msgstr "Tel:"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_auth_signup_template_user_id
-msgid "Template user for new users created through signup"
-msgstr "Sjabloon gebruiker voor het aanmaken van nieuwe gebruikers, bij aanmelden"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:490
+#: code:addons/point_of_sale/static/src/xml/pos.xml:510
 #, python-format
 msgid "Tendered"
 msgstr "Ontvangen"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1276
+#: code:addons/point_of_sale/models/pos_order.py:254
 #, python-format
 msgid "The POS order must have lines when calling this method"
-msgstr "de Kassa order moet regels hebben wanneer deze methode wordt aangeroepen."
+msgstr ""
+"de Kassa order moet regels hebben wanneer deze methode wordt aangeroepen."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:888
+#: code:addons/point_of_sale/static/src/xml/pos.xml:996
 #, python-format
 msgid ""
 "The Point of Sale could not find any product, client, employee\n"
 "                    or action associated with the scanned barcode."
-msgstr "De kassa vond geen product, klant, medewerker\n                    of actie voor de gescande barcode."
+msgstr ""
+"De kassa vond geen product, klant, medewerker\n"
+"                    of actie voor de gescande barcode."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_google_drive_uri
-msgid "The URL to generate the authorization code from Google"
-msgstr "De URL om de authenticatiecode te genereren van Google"
-
-#. module: point_of_sale
-#: constraint:pos.config:0
+#: code:addons/point_of_sale/models/pos_config.py:182
+#, python-format
 msgid ""
 "The company of a payment method is different than the one of point of sale"
 msgstr "Het bedrijf van de betaalwijze is anders dan die van de kassa"
 
 #. module: point_of_sale
-#: constraint:pos.config:0
+#: code:addons/point_of_sale/models/pos_config.py:172
+#, python-format
 msgid ""
 "The company of the sale journal is different than the one of point of sale"
 msgstr "Het bedrijf van het verkoopboek is anders dan die van de kassa"
 
 #. module: point_of_sale
-#: constraint:pos.config:0
+#: code:addons/point_of_sale/models/pos_config.py:167
+#, python-format
 msgid ""
 "The company of the stock location is different than the one of point of sale"
 msgstr "Het bedrijf van het voorraadlocatie is anders dan die van de kassa"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:187
+#, python-format
+msgid ""
+"The default fiscal position must be included in the available fiscal "
+"positions of the point of sale"
+msgstr ""
+"De standaard fiscale positie moet worden toegevoegd aan de beschikbare "
+"fiscale posities in het kassa systeem."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_tax_included
 msgid ""
 "The displayed prices will always include all taxes, even if the taxes have "
 "been setup differently"
-msgstr "De weergegeven prijzen zijn altijd inclusief belastingen, zelfs als de belastingen anders zijn opgezet"
+msgstr ""
+"De weergegeven prijzen zijn altijd inclusief BTW, zelfs als de BTW anders "
+"zijn opgezet"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_proxy_ip
 msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty"
-msgstr "De hostnaam of het IP adres van de hardware proxy worden automatisch gedetecteerd als het veld leeg wordt gelaten."
+msgstr ""
+"De hostnaam of het IP adres van de hardware proxy worden automatisch "
+"gedetecteerd als het veld leeg wordt gelaten."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:177
+#, python-format
+msgid ""
+"The invoice journal and the point of sale must belong to the same company"
+msgstr "Het factuur dagboek en kassa moeten behoren tot hetzelfde bedrijf."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:93
 #: sql_constraint:pos.session:0
+#, python-format
 msgid "The name of this POS Session must be unique !"
 msgstr "De naam van de kassa moet uniek zijn per sessie."
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_res_partner_pos_order_count
+#: model:ir.model.fields,help:point_of_sale.field_res_users_pos_order_count
+msgid "The number of point of sale orders related to this customer"
+msgstr "Het aantal kassa orders gerelateerd aan deze klant"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1883
+#: code:addons/point_of_sale/static/src/js/screens.js:1940
 #, python-format
 msgid "The order could not be sent"
 msgstr "De order kon niet worden verzonden"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1894
+#: code:addons/point_of_sale/static/src/js/screens.js:1951
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
-msgstr "Het order kon niet naar de server worden verzonden door een onbekende fout"
+msgstr ""
+"Het order kon niet naar de server worden verzonden door een onbekende fout"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash
 msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
 "prefilled with the exact due amount"
-msgstr "De betalingsinput gedraagt zich gelijkaardig zoals bankafschrift input en wordt automatisch ingevuld met het exacte verschuldigde bedrag"
+msgstr ""
+"De betalingsingave gedraagt zich gelijkwaardig aan de bankafschrift ingave "
+"en wordt automatisch ingevuld met het exacte verschuldigde bedrag"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_order_config_id
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_config_id
 msgid "The physical point of sale you will use."
 msgstr "De fysieke kassa welke u gaat gebruiken."
@@ -3787,7 +3199,9 @@ msgstr "De fysieke kassa welke u gaat gebruiken."
 msgid ""
 "The point of sale will display this product category by default. If no "
 "category is specified, all available products will be shown"
-msgstr "De kassa toont de productcategorieën standaard. Als er geen categorie is gespecificeerd worden alle producten getoond"
+msgstr ""
+"De kassa toont de productcategorieën standaard. Als er geen categorie is "
+"gespecificeerd worden alle producten getoond"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_display_categ_images
@@ -3799,21 +3213,26 @@ msgstr "De productcategorieën worden getoond met afbeeldingen."
 msgid ""
 "The product used to encode the customer tip. Leave empty if you do not "
 "accept tips."
-msgstr "Het product te encoderen voor de klantenfooi. Laat dit leeg als u geen fooien accepteert."
+msgstr ""
+"Het product te encoderen voor de klantenfooi. Laat dit leeg als u geen "
+"fooien accepteert."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1234
+#: code:addons/point_of_sale/static/src/js/screens.js:1286
 #, python-format
 msgid "The provided file could not be read due to an unknown error"
-msgstr "Het aangeleverde bestand kon niet worden gelezen door een onbekende fout"
+msgstr ""
+"Het aangeleverde bestand kon niet worden gelezen door een onbekende fout"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_skip_screen
 msgid ""
 "The receipt screen will be skipped if the receipt can be printed "
 "automatically."
-msgstr "Het kassabon scherm wordt overgeslagen als de kassabon automatisch afgedrukt kan worden."
+msgstr ""
+"Het kassabon scherm wordt overgeslagen als de kassabon automatisch afgedrukt"
+" kan worden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_auto
@@ -3822,10 +3241,11 @@ msgstr "De kassabon wordt automatisch afgedrukt aan het einde van elke order"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1889
+#: code:addons/point_of_sale/static/src/js/screens.js:1946
 #, python-format
 msgid "The server encountered an error while receiving your order."
-msgstr "De server heeft een fout tegengekomen tijdens het ontvangen van uw order."
+msgstr ""
+"De server heeft een fout tegengekomen tijdens het ontvangen van uw order."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
@@ -3833,7 +3253,10 @@ msgid ""
 "The system will open all cash registers, so that you can start recording "
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
-msgstr "Het systeem zal alle kassa's openen, zodat u de betalingen kunt gaan registreren. We adviseren u om de kasinhoud bij openen te controleren van iedere kassa, door gebruik te maken van het kassa tabblad."
+msgstr ""
+"Het systeem zal alle kassa's openen, zodat u de betalingen kunt gaan "
+"registreren. We adviseren u om de kasinhoud bij openen te controleren van "
+"iedere kassa, door gebruik te maken van het kassa tabblad."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_mercury
@@ -3841,11 +3264,12 @@ msgid "The transactions are processed by MercuryPay"
 msgstr "De transacties worden verwerkt door MercuryPay"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:590
+#: code:addons/point_of_sale/models/pos_session.py:243
 #, python-format
 msgid ""
 "The type of the journal for your payment method should be bank or cash "
-msgstr "Het soort dagboek voor een betaling moet zijn van het soort bank of kas "
+msgstr ""
+"Het soort dagboek voor een betaling moet zijn van het soort bank of kas "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end
@@ -3854,67 +3278,68 @@ msgstr "Theoretisch eindsaldo"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:94
+#: code:addons/point_of_sale/static/src/xml/pos.xml:102
 #, python-format
 msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
-msgstr "Er zijn lopende opdrachten die niet kunnen worden opgeslagen in de database. Weet u zeker dat u wilt afsluiten?"
+msgstr ""
+"Er zijn lopende opdrachten die niet kunnen worden opgeslagen in de database."
+" Weet u zeker dat u wilt afsluiten?"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1836
+#: code:addons/point_of_sale/static/src/js/screens.js:1891
 #, python-format
 msgid ""
 "There is no cash payment method available in this point of sale to handle the change.\n"
 "\n"
 " Please pay the exact amount or add a cash payment method in the point of sale configuration"
-msgstr "Er is geen contant betaalwijze beschikbaar in deze kassa om wisselgeld te kunnen gebruiken.\n\n Betaal het exacte bedrag of voeg een contant betaalwijze toe bij de kassa instellingen"
+msgstr ""
+"Er is geen contant betaalwijze beschikbaar in deze kassa om wisselgeld te kunnen gebruiken.\n"
+"\n"
+" Betaal het exacte bedrag of voeg een contant betaalwijze toe bij de kassa instellingen"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_box.py:23
+#: code:addons/point_of_sale/wizard/pos_box.py:21
 #, python-format
 msgid "There is no cash register for this PoS Session"
 msgstr "Er is geen kasregister voor deze kassa sessie"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1022
+#: code:addons/point_of_sale/models/pos_order.py:644
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
-msgstr "Er is geen debiteuren rekening gedefinieerd om de betaling te verwerken voor klant: \"%s\" (id:%d)."
+msgstr ""
+"Er is geen debiteuren rekening gedefinieerd om de betaling te verwerken voor"
+" klant: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1020
+#: code:addons/point_of_sale/models/pos_order.py:642
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr "Er is geen debiteuren rekening ingesteld om een betaling te maken."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1807
+#: code:addons/point_of_sale/static/src/js/screens.js:1862
 #, python-format
 msgid ""
 "There must be at least one product in your order before it can be validated"
-msgstr "Er moet tenminste één product zijn in uw order, voordat u deze kunt bevestigen"
+msgstr ""
+"Er moet tenminste één product zijn in uw order, voordat u deze kunt "
+"bevestigen"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_auth_signup_reset_password
-msgid "This allows users to trigger a password reset from the Login page."
-msgstr "Dit geeft gebruikers de mogelijkheid om het wachtwoord te resetten vanaf de login pagina."
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_property_purchase_currency_id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_cashbox_line_default_pos_id
 msgid ""
-"This currency will be used, instead of the default one, for purchases from "
-"the current partner"
-msgstr "De valuta wordt gebruikt, in plaats van de standaard valuta, voor aankopen van de huidige relatie"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_property_delivery_carrier_id
-msgid "This delivery method will be used when invoicing from picking."
-msgstr "Deze verzendwijze wordt gebruikt bij facturatie vanaf verzamelopdracht."
+"This cashbox line is used by default when opening or closing a balance for "
+"this point of sale"
+msgstr ""
+"Deze kassa regel wordt standaard gebruikt bij het openen of sluiten van een "
+"balans voor deze kassa."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_journal_amount_authorized_diff
@@ -3923,45 +3348,47 @@ msgid ""
 " and the theoretical cash when closing a session, for non-POS managers. If "
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
-msgstr "Dit veld toont het maximale verschil toegestaan tussen de eindsaldo en het theoretische bedrag wanneer u de kassa sluit, voor niet-kassa managers. Als het maximum is bereikt krijgt de gebruiker een foutboodschap op het scherm om de manager te contacteren."
+msgstr ""
+"Dit veld toont het maximale verschil toegestaan tussen de eindsaldo en het "
+"theoretische bedrag wanneer u de kassa sluit, voor niet-kassa managers. Als "
+"het maximum is bereikt krijgt de gebruiker een foutboodschap op het scherm "
+"om de manager te contacteren."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_image
 msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
-msgstr "Dit veld bevat de afbeelding voor de categorie, beperkt op 1024x1024px."
+msgstr ""
+"Dit veld bevat de afbeelding voor de categorie, beperkt op 1024x1024px."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_manager_id
 msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client"
-msgstr "Dit veld is hier om de id door te geven van de kassa manager groep naar de kassacliënt"
+msgstr ""
+"Dit veld is hier om de id door te geven van de kassa manager groep naar de "
+"kassacliënt"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_user_id
 msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client"
-msgstr "Dit veld is hier om de id van de kassa gebruikersgroep door te geven aan de kassa client"
+msgstr ""
+"Dit veld is hier om de id van de kassa gebruikersgroep door te geven aan de "
+"kassa client"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_google_calendar
-msgid "This installs the module google_calendar."
-msgstr "Dit installeert de module google_calendar."
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_google_drive
-msgid "This installs the module google_docs."
-msgstr "Dit installeert de module google_drive"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_inter_company_rules
+#: code:addons/point_of_sale/models/pos_order.py:454
+#, python-format
 msgid ""
-"This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
-msgstr "Dit installeert de module inter_company_rules.\nConfigureer bedrijfsregels om automatisch SO/PO te genereren wanneer één van uw bedrijven verkoopt/koopt aan één van uw andere bedrijven."
+"This invoice has been created from the point of sale session: <a href=# "
+"data-oe-model=pos.order data-oe-id=%d>%s</a>"
+msgstr ""
+"Deze factuur is aangemaakt van de kassa sessie: <a href=# data-oe-"
+"model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_restaurant
@@ -3973,48 +3400,66 @@ msgid ""
 "- Bill Splitting: Allows you to split an order into different orders \n"
 "\n"
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers"
-msgstr "Deze module voegt verschillende restaurant functies toe aan de kassa:\n- Rekening afdrukken: Staat u toe om een kassabon af te drukken voordat het order is betaald\n- Rekening verdelen: Staat u toe om de rekening te verdelen in meerdere orders\n- Keukenticket afdrukken: Staat u toe om orderwijzigingen af te drukken in de keuken of bar"
+msgstr ""
+"Deze module voegt verschillende restaurant functies toe aan de kassa:\n"
+"- Rekening afdrukken: Staat u toe om een kassabon af te drukken voordat het order is betaald\n"
+"- Rekening verdelen: Staat u toe om de rekening te verdelen in meerdere orders\n"
+"- Keukenticket afdrukken: Staat u toe om orderwijzigingen af te drukken in de keuken of bar"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:261
+#: code:addons/point_of_sale/static/src/js/chrome.js:262
 #, python-format
 msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
-msgstr "Deze actie verwijdert permanent alle betaalde orders van de lokale opslag. Uw gegevens zullen verloren gaan. Deze bewerking kan niet ongedaan gemaakt worden."
+msgstr ""
+"Deze actie verwijdert permanent alle betaalde orders van de lokale opslag. "
+"Uw gegevens zullen verloren gaan. Deze bewerking kan niet ongedaan gemaakt "
+"worden."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:271
+#: code:addons/point_of_sale/static/src/js/chrome.js:272
 #, python-format
 msgid ""
 "This operation will permanently destroy all unpaid orders from all sessions "
 "that have been put in the local storage. You will lose all the data and exit"
 " the point of sale. This operation cannot be undone."
-msgstr "Deze actie verwijdert permanent alle onbetaalde orders van de lokale opslag. Uw gegevens zullen verloren gaan en u zal uit de kassa gaan. Deze actie kan niet ongedaan worden gemaakt."
+msgstr ""
+"Deze actie verwijdert permanent alle onbetaalde orders van de lokale opslag."
+" Uw gegevens zullen verloren gaan en u zal uit de kassa gaan. Deze actie kan"
+" niet ongedaan worden gemaakt."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_sequence_id
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
-msgstr "Deze nummering zal automatisch gegenereerd worden door Odoo, maar u kunt ook uw eigen nummering samenstellen."
+msgstr ""
+"Deze nummering zal automatisch gegenereerd worden door Odoo, maar u kunt ook"
+" uw eigen nummering samenstellen."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:566
+#, python-format
+msgid ""
+"This transfer has been created from the point of sale session: <a href=# "
+"data-oe-model=pos.order data-oe-id=%d>%s</a>"
+msgstr ""
+"Deze overboeking is aangemaakt van kassa sessie: <a href=# data-oe-"
+"model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_template_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
-msgstr "De categorieën worden gebruikt om gelijkaardige producten te groeperen bij de kassa."
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.timmermans_kriek_37,5cl
-#: model:product.template,name:point_of_sale.timmermans_kriek_37,5cl_product_template
-msgid "Timmermans Kriek 37.5cl"
-msgstr "Timmermans Kriek 37.5cl"
+msgstr ""
+"De categorieën worden gebruikt om gelijkwaardige producten te groeperen bij "
+"de kassa."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:629
+#: code:addons/point_of_sale/static/src/xml/pos.xml:649
 #, python-format
 msgid "Tip"
 msgstr "Tip"
@@ -4030,12 +3475,14 @@ msgid "To Weigh With Scale"
 msgstr "Te wegen met weegschaal"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1059
+#: code:addons/point_of_sale/models/pos_order.py:675
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
 "register the refund."
-msgstr "Om producten te retourneren moet u een sessie aanmaken die gebruikt worden om terugbetalingen te registreren."
+msgstr ""
+"Om producten te retourneren moet u een sessie aanmaken die gebruikt worden "
+"om terugbetalingen te registreren."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -4043,19 +3490,8 @@ msgid "Today"
 msgstr "Vandaag"
 
 #. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report
-msgid "Today's Payment"
-msgstr "Betaling van vandaag"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.report_payment
-msgid "Today's Payments"
-msgstr "Betalingen van vandaag"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_total
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_amount
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month_amount
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Total"
 msgstr "Totaal"
 
@@ -4072,19 +3508,14 @@ msgstr "Totale korting"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_price_total
 msgid "Total Price"
-msgstr "Totaalprijs"
+msgstr "Bedrag Incl. BTW"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:803
+#: code:addons/point_of_sale/static/src/xml/pos.xml:827
 #, python-format
 msgid "Total Taxes"
 msgstr "Totaal BTW"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_trans_pos_user_tree
-msgid "Total Transaction"
-msgstr "Totaal"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_total_entry_encoding
@@ -4108,72 +3539,55 @@ msgstr "Totaal aantal"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1133
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1319
+#: code:addons/point_of_sale/static/src/xml/pos.xml:926
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1273
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1458
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Total:"
 msgstr "Totaal:"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1331
+#: code:addons/point_of_sale/models/pos_order.py:306
 #, python-format
 msgid "Trade Receivables"
 msgstr "Handel debiteuren"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_google_drive_uri
-msgid "URI"
-msgstr "URL"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_server_uri
-msgid "URI for tuto"
-msgstr "URI voor tuto"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:985
-#, python-format
-msgid "Unable to cancel the picking."
-msgstr "Niet mogelijk om het verzamelen te stoppen."
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:505
+#: code:addons/point_of_sale/models/pos_session.py:150
 #, python-format
 msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
 "of sale."
-msgstr "Niet mogelijk om de sessie te openen. U dient een dagboek te koppelen aan uw kassa."
+msgstr ""
+"Niet mogelijk om de sessie te openen. U dient een dagboek te koppelen aan uw"
+" kassa."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_unit
 msgid "Unit Price"
-msgstr "Eenheidsprijs"
+msgstr "Prijs"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:884
+#: code:addons/point_of_sale/static/src/xml/pos.xml:992
 #, python-format
 msgid "Unknown Barcode"
 msgstr "Onbekende Barcode"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1893
+#: code:addons/point_of_sale/static/src/js/screens.js:1950
 #, python-format
 msgid "Unknown Error"
 msgstr "Onbekende fout"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1218
+#: code:addons/point_of_sale/static/src/js/screens.js:1270
 #, python-format
 msgid "Unsupported File Format"
 msgstr "Bestandsformaat niet ondersteund"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
-msgstr "Gebruik externe authenticatie-providers, log in via Google..."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
@@ -4181,12 +3595,12 @@ msgid ""
 "Use this menu to browse previous orders. To record new\n"
 "                orders, you may use the menu <i>Your Session</i> for\n"
 "                the touchscreen interface."
-msgstr "Gebruik dit menu om vorige orders te doorzoeken. Om nieuwe\norders aan te maken kan u het menu <i>Uw sessie</i> gebruiken\nvoor de touchscreen interface."
+msgstr ""
+"Gebruik dit menu om vorige orders te doorzoeken. Om nieuwe\n"
+"orders aan te maken kan u het menu <i>Uw sessie</i> gebruiken\n"
+"voor de touchscreen interface."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month_user_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_user_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_user_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:res.groups,name:point_of_sale.group_pos_user
 msgid "User"
@@ -4198,15 +3612,8 @@ msgid "User Labels"
 msgstr "Gebruiker labels"
 
 #. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.action_report_pos_users_product
-#: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
-msgid "User's Product"
-msgstr "Gebruikers producten"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1263
-#: model:ir.ui.view,arch_db:point_of_sale.report_receipt
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1403
 #, python-format
 msgid "User:"
 msgstr "Gebruiker:"
@@ -4217,15 +3624,20 @@ msgid "Users"
 msgstr "Gebruikers"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_uuid
+msgid "Uuid"
+msgstr "Uuid"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:685
+#: code:addons/point_of_sale/static/src/xml/pos.xml:710
 #, python-format
 msgid "VAT:"
 msgstr "BTW:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:589
+#: code:addons/point_of_sale/static/src/xml/pos.xml:609
 #, python-format
 msgid "Validate"
 msgstr "Bevestig"
@@ -4252,39 +3664,25 @@ msgid "Warehouse"
 msgstr "Magazijn"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1600
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1320
+#, python-format
+msgid "Weighing"
+msgstr "Wegen"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/barcode_rule.py:12
 #, python-format
 msgid "Weighted Product"
 msgstr "Gewogen product"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1180
-#, python-format
-msgid "Weighting"
-msgstr "Wegen"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1106
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1283
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1246
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1422
 #, python-format
 msgid "With a"
-msgstr "Met"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_group_light_multi_company
-msgid ""
-"Work in multi-company environments, with appropriate security access between"
-" companies."
-msgstr "Werk in multi-bedrijfsomgeving, met de nodige beveiligingrestricties tussen bedrijven."
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_group_product_variant
-msgid ""
-"Work with product variant allows you to define some variant of the same "
-"products, an ease the product management in the ecommerce for example"
-msgstr "Werken met productvarianten biedt u de mogelijkheid om varianten voor eenzelfde product te definiëren, en vergemakkelijkt het productbeheer voor bijv. e-Commerce"
+msgstr "Met een"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -4298,59 +3696,82 @@ msgid "Yellow Peppers"
 msgstr "Gele paprika's"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:771
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid ""
+"You can define another list of available currencies on the\n"
+"                                <i>Cash Registers</i> tab of the"
+msgstr ""
+"Het is mogelijk een andere lijst te maken van beschikbare valuta's bij de\n"
+"<i>Kassaregisters</i> tab van de"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:390
 #, python-format
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
 "already been issued."
-msgstr "Het is niet mogelijk om de relatie van een kassa order te wijzigen, waarvan al een factuur is aangemaakt."
+msgstr ""
+"Het is niet mogelijk om de relatie van een kassa order te wijzigen, waarvan "
+"al een factuur is aangemaakt."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:618
+#: code:addons/point_of_sale/models/pos_session.py:25
 #, python-format
 msgid ""
 "You cannot confirm all orders of this session, because they have not the "
 "'paid' status"
-msgstr "Het is niet mogelijk om alle orders van deze sessie te bevestigen. Dit omdat deze nog niet de status 'betaald' hebben."
+msgstr ""
+"Het is niet mogelijk om alle orders van deze sessie te bevestigen. Dit omdat"
+" deze nog niet de status 'betaald' hebben."
 
 #. module: point_of_sale
-#: constraint:pos.session:0
+#: code:addons/point_of_sale/models/pos_session.py:132
+#, python-format
 msgid ""
 "You cannot create two active sessions related to the same point of sale!"
 msgstr "U kunt geen twee actieve sessies maken voor dezelfde kassa!"
 
 #. module: point_of_sale
-#: constraint:pos.session:0
+#: code:addons/point_of_sale/models/pos_session.py:127
+#, python-format
 msgid "You cannot create two active sessions with the same responsible!"
-msgstr "U kunt geen twee actieve sessies maken met dezelfde verantwoordelijke!"
+msgstr ""
+"U kunt geen twee actieve sessies maken met dezelfde verantwoordelijke!"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1554
+#: code:addons/point_of_sale/models/product.py:21
 #, python-format
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
-msgstr "Het is niet mogelijk een verkoopbaar product van de kassa te verwijderen, zolang de kassa is geopend."
+msgstr ""
+"Het is niet mogelijk een verkoopbaar product van de kassa te verwijderen, "
+"zolang de kassa is geopend."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1817
+#: code:addons/point_of_sale/static/src/js/screens.js:1872
 #, python-format
 msgid ""
 "You cannot have a negative amount in a Bank payment. Use a cash payment "
 "method to return money to the customer."
-msgstr "Het is niet mogelijk om een negatief bedrag te hebben als bankbetaling. Gebruik een contant betaalwijze om wisselgeld te geven aan de klant."
+msgstr ""
+"Het is niet mogelijk om een negatief bedrag te hebben als bankbetaling. "
+"Gebruik een contant betaalwijze om wisselgeld te geven aan de klant."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:631
+#: code:addons/point_of_sale/models/pos_session.py:259
 #, python-format
 msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
 "Please first close this one to use this point of sale."
-msgstr "Het is niet mogelijk de sessie van een andere gebruiker te openen. Deze sessie is van %s. Sluit eerst deze sessie af om de point of sale te gebruiken."
+msgstr ""
+"Het is niet mogelijk de sessie van een andere gebruiker te openen. Deze "
+"sessie is van %s. Sluit eerst deze sessie af om de point of sale te "
+"gebruiken."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:32
+#: code:addons/point_of_sale/wizard/pos_open_statement.py:18
 #, python-format
 msgid ""
 "You have to define which payment method must be available in the point of "
@@ -4359,88 +3780,93 @@ msgid ""
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
-msgstr "U dien te bepalen welke betaalmethode beschikbaar moet zijn in de kassa. U kunt bestaande dagboeken gebruiken, via  Boekhouding/Instellingen/Dagboeken/Dagboeken. Selecteer een dagboek en controleer het veld 'Kassa betaalmethode' op het kassa tabblad. U kunt ook direct nieuwe betaalmethodes aanmaken in het menu  uit het menu Kassa/Instellingen/Betaalmethodes."
+msgstr ""
+"U dien te bepalen welke betaalmethode beschikbaar moet zijn in de kassa. U "
+"kunt bestaande dagboeken gebruiken, via  "
+"Boekhouding/Instellingen/Dagboeken/Dagboeken. Selecteer een dagboek en "
+"controleer het veld 'Kassa betaalmethode' op het kassa tabblad. U kunt ook "
+"direct nieuwe betaalmethodes aanmaken in het menu  uit het menu "
+"Kassa/Instellingen/Betaalmethodes."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1036
+#: code:addons/point_of_sale/models/pos_order.py:658
 #, python-format
 msgid "You have to open at least one cashbox."
 msgstr "U dient tenminste één kassa te openen."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1426
+#: code:addons/point_of_sale/models/pos_order.py:763
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
 msgstr "U moet een prijslijst selecteren in het verkoopformulier!"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1407
+#: code:addons/point_of_sale/models/pos_order.py:751
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
-msgstr "U dient een prijslijst te selecteren in het verkoopscherm!\nSelecteer er een voor het kiezen van een product."
+msgstr ""
+"U dient een prijslijst te selecteren in het verkoopscherm!\n"
+"Selecteer er een voor het kiezen van een product."
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.product_template_action
+#: model:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid ""
 "You must define a product for everything you sell through\n"
 "                the point of sale interface."
-msgstr "U moet een product definiëren voor alles dat u verkoopt via\nde kassa interface."
+msgstr ""
+"U moet een product definiëren voor alles dat u verkoopt via\n"
+"de kassa interface."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1876
+#: code:addons/point_of_sale/static/src/js/screens.js:1933
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
 msgstr "U moet eerst de klant aanduiden voordat u een order kan factureren."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:491
+#: code:addons/point_of_sale/models/pos_session.py:138
 #, python-format
 msgid "You should assign a Point of Sale to your session."
 msgstr "U dient een kassa aan uw sessie toe te wijzen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:53
+#: code:addons/point_of_sale/static/src/js/chrome.js:54
 #, python-format
 msgid "You will lose any data associated with the current order"
-msgstr "U verliest alle data die geassocieerd is met de huidige order"
+msgstr "U verliest alle data die gekoppeld is aan de huidige order"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1163
+#: code:addons/point_of_sale/static/src/js/screens.js:1215
 #, python-format
 msgid "Your Internet connection is probably down."
 msgstr "Uw internetverbinding is waarschijnlijk uitgevallen."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:588
+#: code:addons/point_of_sale/models/pos_session.py:241
 #, python-format
 msgid ""
 "Your ending balance is too different from the theoretical cash closing "
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
-msgstr "Uw eindsaldo verschilt te veel van het theoretische eindsaldo (%.2f), het maximum toegestane is: %.2f. U kunt uw manager vragen om dit door te voeren."
+msgstr ""
+"Uw eindsaldo verschilt te veel van het theoretische eindsaldo (%.2f), het "
+"maximum toegestane is: %.2f. U kunt uw manager vragen om dit door te voeren."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/gui.js:343
-#, python-format
-msgid "Your internet connection is probably down."
-msgstr "Uw internetverbinding is waarschijnlijk uitgevallen."
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1125
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1265
 #, python-format
 msgid "Your shopping cart is empty"
 msgstr "Nog geen verkopen."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:325
+#: code:addons/point_of_sale/static/src/xml/pos.xml:335
 #, python-format
 msgid "ZIP"
 msgstr "Postcode"
@@ -4453,10 +3879,10 @@ msgstr "Zucchini"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1098
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1238
 #, python-format
 msgid "at"
-msgstr "voor"
+msgstr "op"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_barcode_rule
@@ -4465,7 +3891,7 @@ msgstr "barcode.rule"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1041
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1178
 #, python-format
 msgid "belong to another session:"
 msgstr "behoort toe aan een andere sessie:"
@@ -4478,7 +3904,7 @@ msgstr "camptocamp.com"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1386
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1525
 #, python-format
 msgid "caps lock"
 msgstr "caps lock"
@@ -4495,46 +3921,51 @@ msgstr "cash.box.out"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1413
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1455
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1552
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1594
 #, python-format
 msgid "close"
 msgstr "sluiten"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1371
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1448
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1510
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1587
 #, python-format
 msgid "delete"
 msgstr "verwijderen"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1108
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1248
 #, python-format
 msgid "discount"
 msgstr "korting"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1850
+#: code:addons/point_of_sale/static/src/js/screens.js:1905
 #, python-format
 msgid "for an order of"
 msgstr "voor een order van"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:171
+#: code:addons/point_of_sale/models/pos_config.py:203
 #, python-format
 msgid "not used"
 msgstr "niet gebruikt"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1035
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1172
 #, python-format
 msgid "paid orders"
 msgstr "betaalde orders"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "payment method."
+msgstr "betaalmethode."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config
@@ -4552,100 +3983,56 @@ msgid "pos.session"
 msgstr "pos.session"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_detailsofsales
-msgid "report.point_of_sale.report_detailsofsales"
-msgstr "report.point_of_sale.report_detailsofsales"
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "report.point_of_sale.report_invoice"
 msgstr "report.point_of_sale.report_invoice"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_payment
-msgid "report.point_of_sale.report_payment"
-msgstr "report.point_of_sale.report_payment"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_receipt
-msgid "report.point_of_sale.report_receipt"
-msgstr "report.point_of_sale.report_receipt"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saleslines
-msgid "report.point_of_sale.report_saleslines"
-msgstr "report.point_of_sale.report_saleslines"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_statement
-msgid "report.point_of_sale.report_statement"
-msgstr "report.point_of_sale.report_statement"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_usersproduct
-msgid "report.point_of_sale.report_usersproduct"
-msgstr "report.point_of_sale.report_usersproduct"
+#: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
+msgid "report.point_of_sale.report_saledetails"
+msgstr "report.point_of_sale.report_saledetails"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/point_of_sale.py:730
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1398
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1453
+#: code:addons/point_of_sale/models/pos_order.py:141
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1537
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1592
 #, python-format
 msgid "return"
 msgstr "terug"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1399
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1410
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1538
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1549
 #, python-format
 msgid "shift"
 msgstr "shift"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1372
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1511
 #, python-format
 msgid "tab"
 msgstr "tab"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_transaction_pos
-msgid "transaction for the pos"
-msgstr "transactie voor de kassa"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_account_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_state
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_cash
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
-msgid "unknown"
-msgstr "onbekend"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1036
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1173
 #, python-format
 msgid "unpaid orders"
 msgstr "onbetaalde orders"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1038
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1175
 #, python-format
 msgid "unpaid orders could not be imported"
 msgstr "onbetaalde orders kunnen niet geïmporteerd worden"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_uuid
-msgid "uuid"
-msgstr "uuid"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1040
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1177
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "waren duplicaten van bestaande orders"

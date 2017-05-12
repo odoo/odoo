@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="group_mass_mailing_user" model="res.groups">
         <field name="name">User</field>
         <field name="category_id" ref="base.module_category_mass_mailing"/>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
-    <record id="group_website_popup_on_exit" model="res.groups">
-        <field name="name">Use subscription pop up on the website</field>
+    <!-- Group to manage campaigns -->
+    <record id="group_mass_mailing_campaign" model="res.groups">
+        <field name="name">Manage Mass Mailing Campaigns</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <data noupdate="1">
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('mass_mailing.group_mass_mailing_user'))]"/>
+        </record>
+    </data>
 </odoo>

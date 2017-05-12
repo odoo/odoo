@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
 <data noupdate="1">
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">
@@ -8,8 +8,8 @@
             <field name="message_type">notification</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Recruitment Process application installed!</field>
-            <field name="body"><![CDATA[<p>Manage job positions and your company's recruitment process. This application is integrated with the Survey application to help you define interviews for different jobs.</p>
-<p>You can automatically receive job application though an email gateway, see the Human Resources settings.</p>]]></field>
+            <field name="body"><![CDATA[<p>Manage job positions and your company's recruitment process. This application may be integrated with the Survey application to help you define interviews for different jobs.</p>
+<p>Job applications sent by email will automatically be integrated in Odoo.</p>]]></field>
         </record>
 
     <!-- Meeting Types (for interview meetings) -->
@@ -18,57 +18,52 @@
     </record>
 
     <!-- Templates for interest / refusing applicants -->
-    <record id="applicant_refuse" model="mail.template">
-        <field name="name">Application refused</field>
+    <record id="email_template_data_applicant_refuse" model="mail.template">
+        <field name="name">Applicant: Refuse</field>
         <field name="subject">Application refused</field>
         <field name="email_to">${object.email_from}</field>
         <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
         <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="user_signature" eval="0"/>
-        <field name="body_html"><![CDATA[<p>Dear ${object.partner_name or 'applicant'},</p>
-        <p>We thank you for your interest in our company and for your application.
-        Unfortunately, your profile does not match with our needs or our recruitment
-        campaign has reached its term.</p>
-        <p>If you want more details, feel free to contact us by phone.</p>
-        <p>Kind regards,</p>
-        <br/>
-         ${object.user_id and object.user_id.signature | safe or ''}]]></field>
-    </record>
-
-    <record id="hr_welcome_new_employee" model="mail.template">
-        <field name="name">Welcome New Employee</field>
-        <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="subject">Welcoming ${object.name} </field>
+        <field name="user_signature" eval="False"/>
         <field name="body_html"><![CDATA[
-            <p>
-                %if object.department_id:
-                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}
-                    in ${object.department_id.name}.
-                %else:
-                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}.
-                %endif
-            </p>
-            <p>Please welcome him/her and help him/her finding his/her marks.</p>
-            ]]></field>
+<p>Dear ${object.partner_name or 'applicant'},</p>
+<p>Thank you for your enquiry.<br />
+Unfortunately, your profile does not match with our needs</p>
+<p>If you have any questions, please let us know.</p>
+<p>Best regards,</p>]]></field>
     </record>
 
-    <record id="applicant_interest" model="mail.template">
-        <field name="name">Application approved</field>
+    <record id="email_template_data_applicant_interest" model="mail.template">
+        <field name="name">Applicant: Interest</field>
         <field name="subject">Application approved</field>
         <field name="email_to">${object.email_from}</field>
         <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
         <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="user_signature" eval="0"/>
-        <field name="body_html"><![CDATA[<p>Dear ${object.partner_name or 'applicant'},</p>
-        <p>Congrats! Your resume's got our interest!
-        I will call you as soon as possible to make a 10 minutes phone interview and  plan a first meeting.</p>
-        <p>If we can’t reach you or if you miss our call, feel free to reach me back on the number 001 312 349 3030
-        If I do not answer, please let me a message with some schedules to call you back.</p>
-        <p>Kind regards,</p>
-        <br/>
-         ${object.user_id.signature | safe}]]></field>
+        <field name="user_signature" eval="False"/>
+        <field name="body_html"><![CDATA[
+<p>Dear ${object.partner_name or 'applicant'},</p>
+<p>Thank you for your enquiry.<br />
+Your resume got our interest. I will contact you as soon as possible to plan
+next steps of the recruitment process.</p>
+<p>If you have any questions, please let us know.</p>
+<p>Best regards,</p>]]></field>
+    </record>
+
+    <record id="email_template_data_applicant_employee" model="mail.template">
+        <field name="name">Applicant: Welcome new employee</field>
+        <field name="subject">Welcome ${object.name} </field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="body_html"><![CDATA[
+<p>Dear all,</p>
+<p>I’m very pleased to announce that <strong> ${object.name} </strong> will be
+joining us as a ${object.job_id.name}
+%if object.department_id:
+    in ${object.department_id.name}.
+%endif
+.</p>
+<p>Please welcome him/her and help him/her finding his/her marks.</p>]]></field>
     </record>
 
         <!--    Resource(type_id)        -->
@@ -167,4 +162,4 @@
     </record>
 
 </data>
-</openerp>
+</odoo>

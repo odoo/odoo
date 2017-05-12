@@ -31,6 +31,7 @@ var Dialog = Widget.extend({
     */
     init: function (parent, options) {
         this._super(parent);
+        this._opened = $.Deferred();
 
         options = _.defaults(options || {}, {
             title: _t('Odoo'), subtitle: '',
@@ -59,7 +60,7 @@ var Dialog = Widget.extend({
         this.$footer = this.$modal.find(".modal-footer");
 
         this.set_buttons(options.buttons);
-        
+
         this.$modal.on('hidden.bs.modal', _.bind(this.destroy, this));
     },
 
@@ -68,6 +69,7 @@ var Dialog = Widget.extend({
         if(this.$content) {
             this.setElement(this.$content);
         }
+        this.$el.addClass('modal-body ' + this.dialogClass);
     },
 
     set_buttons: function(buttons) {
@@ -93,10 +95,10 @@ var Dialog = Widget.extend({
             self.$footer.append($b);
         });
     },
-    
+
     set_title: function(title, subtitle) {
         this.title = title || "";
-        if(subtitle !== undefined) {
+        if (subtitle !== undefined) {
             this.subtitle = subtitle || "";
         }
 
@@ -108,15 +110,19 @@ var Dialog = Widget.extend({
         return this;
     },
 
+    opened: function(handler) {
+        return (handler)? this._opened.then(handler) : this._opened;
+    },
+
     open: function() {
         $('.tooltip').remove(); // remove open tooltip if any to prevent them staying when modal is opened
 
         var self = this;
         this.replace(this.$modal.find(".modal-body")).then(function() {
-            self.$el.addClass('modal-body ' + self.dialogClass);
             self.$modal.modal('show');
+            self._opened.resolve();
         });
-        
+
         return self;
     },
 
@@ -124,11 +130,12 @@ var Dialog = Widget.extend({
         this.$modal.modal('hide');
     },
 
-    destroy: function() {
-        if(this.isDestroyed())
+    destroy: function(reason) {
+        if (this.isDestroyed()) {
             return;
+        }
 
-        this.trigger("closed");
+        this.trigger("closed", reason);
 
         this._super();
 

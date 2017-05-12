@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
-from openerp import http
-from openerp.http import request
-from openerp import tools
-from openerp.tools.translate import _
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import http
+from odoo.http import request
+from odoo import tools
+from odoo.tools.translate import _
+
+from odoo.fields import Date
 
 
 class website_account(http.Controller):
-    @http.route(['/my', '/my/home'], type='http', auth="public", website=True)
-    def account(self):
-        partner = request.env.user.partner_id
 
+    MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]
+    OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "company_name"]
+
+    _items_per_page = 20
+
+    def _prepare_portal_layout_values(self):
+        """ prepare the values to render portal layout """
+        partner = request.env.user.partner_id
         # get customer sales rep
         if partner.user_id:
             sales_rep = partner.user_id
@@ -20,12 +29,35 @@ class website_account(http.Controller):
             'company': request.website.company_id,
             'user': request.env.user
         }
+        return values
 
-        return request.website.render("website_portal.account", values)
+    def _get_archive_groups(self, model, domain=None, fields=None, groupby="create_date", order="create_date desc"):
+        if not model:
+            return []
+        if domain is None:
+            domain = []
+        if fields is None:
+            fields = ['name', 'create_date']
+        groups = []
+        for group in request.env[model]._read_group_raw(domain, fields=fields, groupby=groupby, orderby=order):
+            dates, label = group[groupby]
+            date_begin, date_end = dates.split('/')
+            groups.append({
+                'date_begin': Date.to_string(Date.from_string(date_begin)),
+                'date_end': Date.to_string(Date.from_string(date_end)),
+                'name': label,
+                'item_count': group[groupby + '_count']
+            })
+        return groups
+
+    @http.route(['/my', '/my/home'], type='http', auth="user", website=True)
+    def account(self, **kw):
+        values = self._prepare_portal_layout_values()
+        return request.render("website_portal.portal_my_home", values)
 
     @http.route(['/my/account'], type='http', auth='user', website=True)
     def details(self, redirect=None, **post):
-        partner = request.env['res.users'].browse(request.uid).partner_id
+        partner = request.env.user.partner_id
         values = {
             'error': {},
             'error_message': []
@@ -36,8 +68,10 @@ class website_account(http.Controller):
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
-                post.update({'zip': post.pop('zipcode', '')})
-                partner.sudo().write(post)
+                values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS}
+                values.update({key: post[key] for key in self.OPTIONAL_BILLING_FIELDS if key in post})
+                values.update({'zip': values.pop('zipcode', '')})
+                partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)
                 return request.redirect('/my/home')
@@ -53,16 +87,14 @@ class website_account(http.Controller):
             'redirect': redirect,
         })
 
-        return request.website.render("website_portal.details", values)
+        return request.render("website_portal.details", values)
 
     def details_form_validate(self, data):
         error = dict()
         error_message = []
 
-        mandatory_billing_fields = ["name", "phone", "email", "street2", "city", "country_id"]
-
         # Validation
-        for field_name in mandatory_billing_fields:
+        for field_name in self.MANDATORY_BILLING_FIELDS:
             if not data.get(field_name):
                 error[field_name] = 'missing'
 
@@ -73,7 +105,7 @@ class website_account(http.Controller):
 
         # vat validation
         if data.get("vat") and hasattr(request.env["res.partner"], "check_vat"):
-            if request.website.company_id.vat_check_vies:
+            if request.website.company_id.sudo().vat_check_vies:
                 # force full VIES online check
                 check_func = request.env["res.partner"].vies_vat_check
             else:
@@ -82,8 +114,14 @@ class website_account(http.Controller):
             vat_country, vat_number = request.env["res.partner"]._split_vat(data.get("vat"))
             if not check_func(vat_country, vat_number):  # simple_vat_check
                 error["vat"] = 'error'
+
         # error message for empty required fields
         if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
+
+        unknown = [k for k in data.iterkeys() if k not in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS]
+        if unknown:
+            error['common'] = 'Unknown field'
+            error_message.append("Unknown field '%s'" % ','.join(unknown))
 
         return error, error_message

@@ -12,7 +12,7 @@
         <field name="name">hr.job.kanban</field>
         <field name="model">hr.job</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey o_kanban_dashboard o_hr_recruitment_kanban">
+            <kanban class="oe_background_grey o_kanban_dashboard o_hr_recruitment_kanban" on_create="hr_recruitment.create_job_simple">
                 <field name="name"/>
                 <field name="alias_name"/>
                 <field name="alias_domain"/>
@@ -22,7 +22,6 @@
                 <field name="document_ids"/>
                 <field name="no_of_hired_employee"/>
                 <field name="manager_id"/>
-                <field name="survey_id"/>
                 <field name="state"/>
                 <field name="user_id"/>
                 <templates>
@@ -31,10 +30,8 @@
                             <div class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary"><t t-esc="record.name.value"/></div>
-                                    <div class="o_secondary">
-                                        <span><t t-esc="record.department_id.value"/></span>
-                                        <span t-if="record.manager_id.value">(<t t-esc="record.manager_id.value"/>)</span>
-                                        <small t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'"><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                                    <div t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'" class="o_secondary o_job_alias">
+                                        <small> <i class="fa fa-envelope-o"></i> <field name="alias_id"/> </small>
                                     </div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
@@ -59,15 +56,9 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row">
+                                            <div class="row" name="recruitment">
                                                 <div class="col-xs-12">
-                                                    <a t-if="record.survey_id.raw_value" name="action_print_survey" type="object" title="Display Interview Form">Display Interview Form</a>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-xs-12">
-                                                    <a t-if="record.state.raw_value == 'recruit'" name="job_open" type="object">Recruitment Done</a>
+                                                    <a t-if="record.state.raw_value == 'recruit'" name="set_open" type="object">Recruitment Done</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -81,7 +72,7 @@
                                 <t t-if="record.state.raw_value == 'open'">
                                     <div class="row">
                                         <div class="col-xs-12 o_kanban_primary_left">
-                                            <button class="btn btn-primary" name="job_recruitment" type="object">Start Recruitment</button>
+                                            <button class="btn btn-primary" name="set_recruit" type="object">Start Recruitment</button>
                                         </div>
                                     </div>
                                 </t>
@@ -95,12 +86,8 @@
                                         <div>
                                             <a name="%(action_hr_job_applications)d" type="action">Applications</a>
                                         </div>
-                                        <div>
+                                        <div name="documents">
                                             <a name="action_get_attachment_tree_view" type="object">Documents</a>
-                                        </div>
-                                        <div>
-                                            <a t-if="record.survey_id.raw_value" name="action_print_survey" type="object" title="Display Interview Form">Display Interview Form</a>
-                                            <span t-if="!record.survey_id.raw_value">No Interview Form</span>
                                         </div>
                                     </div>
                                     <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_new">

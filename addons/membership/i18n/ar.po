@@ -3,15 +3,29 @@
 # * membership
 # 
 # Translators:
-# Sadig Adam <sadig41@gmail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# Mustafa Rawi <mustafa@cubexco.com>, 2016
+# hoxhe aits <hoxhe0@gmail.com>, 2016
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
+# Ahmed Almokashfi siddeg <mokashfi200@yahoo.com>, 2016
+# Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
+# AMAAL RU <Fabu1410@yahoo.com>, 2016
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
+# Akram Alfusayal <akram_ma@hotmail.com>, 2016
+# Khaled Menof <kifcaliph@hotmail.com>, 2016
+# Ali zuaby <ali@zuaby.net>, 2016
+# amrnegm <amrnegm.01@gmail.com>, 2016
+# aya mostafa <ayaahmedmostafa201@gmail.com>, 2016
+# SaFi J. <safi2266@gmail.com>, 2016
+# Shaima Safar <shaima.safar@open-inside.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-02-16 10:01+0000\n"
-"Last-Translator: Sadig Adam <sadig41@gmail.com>\n"
-"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -36,9 +50,9 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
-msgstr "عضو تريد ربط عضويتك معه. سينظر في حالة العضوية للعضو المرتبط"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -70,18 +84,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_res_partner_associate_member
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr ""
+msgstr "عضو مشارك"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
 msgstr "شريك متحد"
-
-#. module: membership
-#: model:product.product,name:membership.membership_2
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "عضوية أساسية"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
@@ -96,7 +104,7 @@ msgstr "إلغاء"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "إلغاء تاريخ العضوية"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
@@ -118,12 +126,12 @@ msgstr "الفئة"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_template_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "أشر إذا كان المنتج مؤهلا ان يكون عضوية."
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid "Click to add a new Member"
-msgstr ""
+msgstr "إضغط لإضافة عضو جديد"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_company_id
@@ -131,6 +139,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
 msgstr "المؤسسة"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_marketing_config_association
+msgid "Configuration"
+msgstr "الإعدادات"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_tree
@@ -158,7 +171,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_state
 msgid "Current Membership Status"
-msgstr ""
+msgstr "حالة العضوية الحالية"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -169,7 +182,7 @@ msgstr "العملاء"
 #: model:ir.model.fields,help:membership.field_product_template_membership_date_from
 #: model:ir.model.fields,help:membership.field_res_partner_membership_start
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "تاريخ تنشيط العضوية"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_date
@@ -179,13 +192,13 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "تاريخ انهاء العضوية"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_template_membership_date_to
 #: model:ir.model.fields,help:membership.field_res_partner_membership_stop
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "التأريخ الى متى تبقى العضوية فعالة."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_display_name
@@ -227,17 +240,13 @@ msgstr ""
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "خطأ ! لا يمكن وضع تاريخ الإنتهاء قبل تاريخ البدء"
 
 #. module: membership
-#: constraint:res.partner:0
+#: code:addons/membership/models/partner.py:159
+#, python-format
 msgid "Error ! You cannot create recursive associated members."
 msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."
-
-#. module: membership
-#: constraint:membership.membership_line:0
-msgid "Error, this membership product is out of date"
-msgstr ""
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -250,7 +259,7 @@ msgstr "التوقعات"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
-msgstr ""
+msgstr "العضو الحر"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_from
@@ -260,12 +269,6 @@ msgstr "مِن"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "From Month"
-msgstr ""
-
-#. module: membership
-#: model:product.product,name:membership.membership_0
-#: model:product.template,name:membership.membership_0_product_template
-msgid "Gold Membership"
 msgstr ""
 
 #. module: membership
@@ -336,12 +339,12 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any membership.\n"
-"                        -Cancelled Member: A member who has cancelled his membership.\n"
-"                        -Old Member: A member whose membership date has expired.\n"
-"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been created.\n"
-"                        -Paid Member: A member who has paid the membership amount."
+"-Non Member: A member who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paid Member: A member who has paid the membership amount."
 msgstr ""
 
 #. module: membership
@@ -380,6 +383,7 @@ msgstr ""
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_association
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model:ir.ui.view,arch_db:membership.membership_members_tree
 msgid "Members"
@@ -400,12 +404,12 @@ msgstr "تحليل الأعضاء"
 #: model:ir.ui.view,arch_db:membership.view_report_membership_pivot
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Membership"
-msgstr ""
+msgstr "العضوية"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "المبلغ العضوية"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
@@ -421,7 +425,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_product_template_membership_date_to
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_stop
 msgid "Membership End Date"
-msgstr ""
+msgstr "موعد نهاية العضوية"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_member_price
@@ -458,7 +462,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_product_template_membership_date_from
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_start
 msgid "Membership Start Date"
-msgstr ""
+msgstr "موعد بداية العضوية"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -484,7 +488,7 @@ msgstr ""
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Month"
-msgstr "الشهر"
+msgstr "شهر"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -523,16 +527,16 @@ msgstr "عضو دافع"
 #: model:ir.model,name:membership.model_res_partner
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_partner
 msgid "Partner"
-msgstr "الشريك"
+msgstr "شريك"
 
 #. module: membership
-#: code:addons/membership/membership.py:351
+#: code:addons/membership/models/partner.py:181
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr ""
 
 #. module: membership
-#: code:addons/membership/membership.py:349
+#: code:addons/membership/models/partner.py:179
 #, python-format
 msgid "Partner is a free Member."
 msgstr ""
@@ -550,7 +554,7 @@ msgstr "قالب المنتج"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_quantity
 msgid "Quantity"
-msgstr "الكمية"
+msgstr "كمية"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
@@ -572,13 +576,7 @@ msgstr "مسئول المبيعات"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
-
-#. module: membership
-#: model:product.product,name:membership.membership_1
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr ""
+msgstr "اختار اذا كنت تريد الحصول على عضويه مجانية"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date
@@ -588,7 +586,7 @@ msgstr "تاريخ البدء"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Start Month"
-msgstr "شهر البداية "
+msgstr "بدايه الشهر "
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -603,7 +601,7 @@ msgstr "الضرائب"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_amount
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "السعر قابل للتفاوض من قبل الشريك"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form

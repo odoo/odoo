@@ -1,24 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-
-        <record id="view_goal_wizard_update_current" model="ir.ui.view">
-            <field name="name">Update the current value of the Goal</field>
-            <field name="model">gamification.goal.wizard</field>
-            <field name="arch" type="xml">
-                <form string="Grant Badge To">
-                    Set the current value you have reached for this goal
-                    <group>
-                        <field name="goal_id" invisible="1"/>
-                        <field name="current" />
-                    </group>
-                    <footer>
-                        <button string="Update" type="object" name="action_update_current" class="btn-primary" />
-                        <button string="Cancel" special="cancel" class="btn-default"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-    </data>
-</openerp>
+<odoo>
+    <record id="view_goal_wizard_update_current" model="ir.ui.view">
+        <field name="name">Update the current value of the Goal</field>
+        <field name="model">gamification.goal.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Grant Badge To">
+                Set the current value you have reached for this goal
+                <group>
+                    <field name="goal_id" invisible="1"/>
+                    <field name="current" />
+                </group>
+                <footer>
+                    <button string="Update" type="object" name="action_update_current" class="btn-primary" />
+                    <button string="Cancel" special="cancel" class="btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

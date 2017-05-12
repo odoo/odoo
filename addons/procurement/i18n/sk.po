@@ -3,15 +3,18 @@
 # * procurement
 # 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015-2016
+# Stefan Stieranka <stieranka@itec.sk>, 2017
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-03-12 10:27+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,25 +24,15 @@ msgstr ""
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
-"<b>Procurement Orders</b> represent the need for a certain quantity of "
-"products, at a given time, in a given location."
-msgstr "<b>Obstarávacie objednávky</b> predstavujú potrebu istého množstva produktov, v určitom čase, v určitej lokácii."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
-"                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr "<b>Predajné objednávky</b> sú typickým zdrojom Obstrávacích objednávok (ale sú to rozdilne dokumenty). \n\n<br>Záležiac od obstarávacích parametrov a konfigurácií produktov, obstarávaci mechanizmus sa pokúsi uspokojiť potrebu rezervovaním produktov zo skladu, objednaním produktov od dodávateľa, alebo odovzdaním výrobnej objednávky, atď..."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
 "A <b>Procurement Exception</b> occurs when the system cannot find a way to "
 "fulfill a procurement. Some exceptions will resolve themselves "
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
-msgstr " <b>Obstarávacia výnimka</b> vzniká keď systém nemôže nájsť spôsob pre splnenie obstarávania. Niektoé výnimky sa vyriešia samé automaticky, ale ostatné vyžadujú manuálny zásah (tie su identifikované špecifickou chybovou správou v komunikácii)."
+msgstr ""
+" <b>Obstarávacia výnimka</b> vzniká keď systém nemôže nájsť spôsob pre "
+"splnenie obstarávania. Niektoé výnimky sa vyriešia samé automaticky, ale "
+"ostatné vyžadujú manuálny zásah (tie su identifikované špecifickou chybovou "
+"správou v komunikácii)."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -50,17 +43,19 @@ msgid ""
 "                product at a specific location. Procurement orders are usually\n"
 "                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
-msgstr "<b>Obstarávacia objednávka</b> sa používa pre záznam potreby konkrétneho \n\nproduktu na konkrétnej lokácii. Obstarávacie objednávky sú zvyčajne\n\nvytvárané automaticky z <i>predajných objednávok, ťahaním logistických pravidiel alebo\n\npravidlami minimálnych zásob.</i>"
+msgstr ""
+"<b>Obstarávacia objednávka</b> sa používa pre záznam potreby konkrétneho \n"
+"\n"
+"produktu na konkrétnej lokácii. Obstarávacie objednávky sú zvyčajne\n"
+"\n"
+"vytvárané automaticky z <i>predajných objednávok, ťahaním logistických pravidiel alebo\n"
+"\n"
+"pravidlami minimálnych zásob.</i>"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
 msgstr "Akcia"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
-msgid "Action Needed"
-msgstr "Potrebná akcia"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
@@ -71,6 +66,11 @@ msgstr "Aktívny"
 #: selection:procurement.group,move_type:0
 msgid "All at once"
 msgstr "Všetko naraz"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Archivovaný"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -88,12 +88,6 @@ msgid "Cancelled"
 msgstr "Zrušené"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:139
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Nemožno zrušiť obstarávciu objednávku(y) ktoré sú v  %s stave."
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Check Procurement"
 msgstr "Skontrolovať obstarávanie"
@@ -104,14 +98,10 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but"
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
-msgstr "Zvolené pravidlo pre rozlíšenie obstarávania. Zvyčajne zvolené systémom, ale môže byť nastavené manuálne správcom obstarávania pre vynútenie neobvyklého správania."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"Click to create a Procurement order in exception state, or remove the filter"
-" on the search bar to display all the procurements."
-msgstr "Kliknite pre vytvorenie obstarávacej objednávky v stave výnimky, alebo odstránťe filter na vyhľadávacom paneli pre zobrazenie všetkých obstarávaní. "
+msgstr ""
+"Zvolené pravidlo pre rozlíšenie obstarávania. Zvyčajne zvolené systémom, ale"
+" môže byť nastavené manuálne správcom obstarávania pre vynútenie neobvyklého"
+" správania."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -124,7 +114,7 @@ msgstr "Kliknutím vytvoríte obstarávaciu objednávku."
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_company_id
 msgid "Company"
-msgstr "Spoločnost"
+msgstr "Spoločnosť"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -147,7 +137,7 @@ msgstr "Potvrdené"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_create_uid
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_create_date
@@ -155,17 +145,12 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_create_date
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
 msgid "Created on"
-msgstr "Vytvorené"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Dátum poslednej správy zaslanej záznamu."
+msgstr "Created on "
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-msgid "Delivery Method"
-msgstr "Dodacia metóda"
+msgid "Delivery Type"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -178,12 +163,12 @@ msgstr "Popis"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Done"
-msgstr "Dokončiť"
+msgstr "Dokončené"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -216,21 +201,6 @@ msgid "Fixed Procurement Group"
 msgstr "Fixná skupina obstarávania"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
-msgid "Followers"
-msgstr "Odberatelia"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
 msgstr "Globálny"
@@ -238,7 +208,7 @@ msgstr "Globálny"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Group By"
-msgstr "Zoskupiť podľa"
+msgstr "Zoskupiť podľa..."
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
@@ -255,16 +225,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
 msgstr "Pokiaľ je trasa globálna"
@@ -273,16 +233,6 @@ msgstr "Pokiaľ je trasa globálna"
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "Ak neodškrtnuté, budete môcť skryť pravidlo bez jeho odstránenia."
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
-msgid "Is Follower"
-msgstr "Je odberateľ"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
-msgid "Last Message Date"
-msgstr "Dátum poslednej správy"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -319,19 +269,12 @@ msgid "Leave Empty"
 msgstr "Nechať prázdne"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Logistika"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
-msgid "Messages"
-msgstr "Správy"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_ids
-msgid "Messages and communication history"
-msgstr "Správa a história komunikácie"
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -339,7 +282,7 @@ msgid "Name"
 msgstr "Meno"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:206
+#: code:addons/procurement/models/procurement.py:189
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Žiadne pravidlo zodpovedajúce tomuto obstarávaniu"
@@ -360,24 +303,9 @@ msgid "Notes"
 msgstr "Poznámky"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Počet akcií"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
-
-#. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "Partial"
-msgstr "Čiastočný"
+msgstr "Čiastočné"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_priority
@@ -488,14 +416,14 @@ msgstr "Znovu potvrdiť obstarávanie"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_name
 msgid "Reference"
-msgstr "Odkaz"
+msgstr "Referencia"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
-msgstr "Odkaz na dokument ktorý vytvoril toto obstarávanie.\n\nTotot automaticky doplní Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -552,7 +480,7 @@ msgstr "Hľadať obstarávanie"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_sequence
 msgid "Sequence"
-msgstr "Postupnosť"
+msgstr "Sekvencia"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
@@ -576,16 +504,6 @@ msgid "Unit of Measure"
 msgstr "Merná jednotka"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread
-msgid "Unread Messages"
-msgstr "Neprečítané správy"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
-
-#. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
 msgstr "Súrne"
@@ -596,24 +514,20 @@ msgid "Very Urgent"
 msgstr "Veľmi súrne"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
-msgid "Website Messages"
-msgstr "Správy webovej stránky"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
-msgid "Website communication history"
-msgstr "História komunikácie webovej stránky"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: purchase\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
-msgstr "Keď je obstarávacia objednávka potvrdená, automaticky\n\nvytvorí potrebné operácie pre naplnenie potrieb: návrh\n\nnákupnej objednávky, výrobná objednávka, atď."
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:144
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr ""
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form

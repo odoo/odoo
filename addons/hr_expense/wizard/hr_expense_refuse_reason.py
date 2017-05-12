@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
 class HrExpenseRefuseWizard(models.TransientModel):
@@ -17,6 +17,6 @@ class HrExpenseRefuseWizard(models.TransientModel):
 
         context = dict(self._context or {})
         active_ids = context.get('active_ids', [])
-        expense = self.env['hr.expense'].browse(active_ids)
-        expense.refuse_expenses(self.description)
+        expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
+        expense_sheet.refuse_expenses(self.description)
         return {'type': 'ir.actions.act_window_close'}

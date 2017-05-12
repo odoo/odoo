@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="event_track_tag1" model="event.track.tag">
             <field name="name">Technical</field>
@@ -20,7 +19,6 @@
         <record id="event.event_0" model="event.event">
             <field name="show_tracks">True</field>
             <field name="show_track_proposal">True</field>
-            <field name="show_blog">True</field>
         </record>
 
         <!-- Show menu after so that the menu is created with tracks -->
@@ -35,14 +33,14 @@
             <field name="event_id" ref="event.event_0"/>
             <field name="sponsor_type_id" ref="event_sponsor_type1"/>
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="url">http://openerp.com</field>
+            <field name="url">http://odoo.com</field>
         </record>
 
         <record id="event_sponsor_1" model="event.sponsor">
             <field name="event_id" ref="event.event_0"/>
             <field name="sponsor_type_id" ref="event_sponsor_type2"/>
             <field name="partner_id" ref="base.res_partner_12"/>
-            <field name="url">http://openerp.com</field>
+            <field name="url">http://odoo.com</field>
         </record>
 
         <record id="event_sponsor_2" model="event.sponsor">
@@ -55,12 +53,12 @@
             <field name="event_id" ref="event.event_0"/>
             <field name="sponsor_type_id" ref="event_sponsor_type3"/>
             <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="url">http://openerp.com</field>
+            <field name="url">http://odoo.com</field>
         </record>
 
         <!-- Tracks -->
         <record id="base.res_partner_address_16" model="res.partner">
-            <field name="website">http://facebook.com/openerp</field>
+            <field name="website">http://facebook.com/odoo</field>
             <field name="website_description" type="xml">
                 <p>
                     Ayaan has in the IT sector <b>since 20 years</b>. He
@@ -74,5 +72,4 @@
                 </p>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>

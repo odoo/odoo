@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fetchmail
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-03-21 02:07+0000\n"
 "Last-Translator: Juliano Henriquez <juliano@consultoriahenca.com>\n"
-"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
+"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
+"odoo-9/language/es_DO/)\n"
+"Language: es_DO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_DO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fetchmail
@@ -59,7 +60,7 @@ msgid "Confirmed"
 msgstr "Confirmado"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Prueba de conexión error: %s"
@@ -69,7 +70,9 @@ msgstr "Prueba de conexión error: %s"
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
-msgstr "Las conexiones son encriptadas con SSL/TLS a través de un puerto dedicado (por defecto: IMAPS = 993, POP3S = 995)"
+msgstr ""
+"Las conexiones son encriptadas con SSL/TLS a través de un puerto dedicado "
+"(por defecto: IMAPS = 993, POP3S = 995)"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
@@ -77,13 +80,11 @@ msgid "Create a New Record"
 msgstr "Cree un nuevo registro"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Creado en"
@@ -94,7 +95,6 @@ msgid "Defines the order of processing, lower values mean higher priority"
 msgstr "Define el orden de procesamiento, bajo valores de prioridad media"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
@@ -110,7 +110,6 @@ msgid "Hostname or IP of the mail server"
 msgstr "Nombre de host o IP del servidor de correo"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -163,19 +162,16 @@ msgid "Last Fetch Date"
 msgstr "Última fecha de extracción"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Última actualización de"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Última actualización en"
@@ -211,7 +207,9 @@ msgstr "Sin confirmar"
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
-msgstr "Acción de servidor personalizado opcional para activar por cada correo entrante, en el record que fue creado o actualizado por este correo"
+msgstr ""
+"Acción de servidor personalizado opcional para activar por cada correo "
+"entrante, en el record que fue creado o actualizado por este correo"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -254,7 +252,11 @@ msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
-msgstr "Proceso de cada correo entrante como parte de una conversación correspondiente a este tipo de documento. Esto crea nuevos documentos para nuevas conversaciones, o adjuntar emails de seguimiento a las conversaciones existentes (documentos)."
+msgstr ""
+"Proceso de cada correo entrante como parte de una conversación "
+"correspondiente a este tipo de documento. Esto crea nuevos documentos para "
+"nuevas conversaciones, o adjuntar emails de seguimiento a las conversaciones "
+"existentes (documentos)."
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -337,21 +339,11 @@ msgid "Username"
 msgstr "Nombre de usuario"
 
 #. module: fetchmail
-#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
-msgid ""
-"Whether a full original copy of each email should be kept for referenceand "
-"attached to each processed message. This will usually double the size of "
-"your message database."
-msgstr "Si debe tener una copia original completa de cada correo electrónico para referenceand adjunta a cada mensaje procesado. Esto generalmente será doble el tamaño de su base de datos de mensaje."
-
-#. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr "Si deben descargarse los archivos adjuntos. Si no correos electrónicos habilitados, entrantes serán despojados de cualquier accesorio antes de ser procesada"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr "fetchmail.config.settings"
+msgstr ""
+"Si deben descargarse los archivos adjuntos. Si no correos electrónicos "
+"habilitados, entrantes serán despojados de cualquier accesorio antes de ser "
+"procesada"

@@ -3,15 +3,16 @@
 # * stock_account
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2016-03-16 21:57+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
-"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,31 +30,17 @@ msgid "Account Stock Properties"
 msgstr "Λογαριασμός Ιδιοτήτων Αποθέματος"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Accounting"
-msgstr "Λογιστική"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "Λογιστική Πληροφόρηση"
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_change_standard_price.py:58
-#, python-format
-msgid "Active ID is not set in Context."
-msgstr "Ενεργό Αναγνωριστικό δεν έχει ρυθμιστεί στο Πλαίσιο"
-
-#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
-msgstr "Επιτρέπει να διαμορφώσετε τις αποτιμήσεις των αποθεμάτων για τα προϊόντα και κατηγορίες προϊόντων."
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_asset_category_id
-msgid "Asset Type"
 msgstr ""
+"Επιτρέπει να διαμορφώσετε τις αποτιμήσεις των αποθεμάτων για τα προϊόντα και"
+" κατηγορίες προϊόντων."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -62,15 +49,27 @@ msgid "Average Price"
 msgstr "Μέση Τιμή"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
-msgid "Can be expensed"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
-msgstr "Ακύρωση"
+msgstr "Άκυρο"
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:244
+#, python-format
+msgid ""
+"Cannot find a stock input account for the product %s. You must define one on"
+" the product category, or on the location, before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:246
+#, python-format
+msgid ""
+"Cannot find a stock output account for the product %s. You must define one "
+"on the product category, or on the location, before processing this "
+"operation."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -82,7 +81,7 @@ msgstr "Αλλαγή Τιμής"
 #: model:ir.model,name:stock_account.model_stock_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Change Standard Price"
-msgstr "Αλλάγή Πρότυπης Τιμής"
+msgstr "Αλλαγή Τυπικής Τιμής"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
@@ -102,21 +101,23 @@ msgid "Choose your date"
 msgstr "Επιλέξτε την ημερομηνία σας"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
-"coeff"
-msgstr "Συντελεστής για τη μετατροπή προεπιλεγμένης Μονάδας Μέτρησης (UOM) σε Μονάδα Πώλησης (UOS) UOS = UoM * συντελεστής"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Company"
-msgstr "Εταιρεία"
+msgstr "Εταιρία"
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Compute from average price"
+msgstr "Υπολογισμός από την μέση τιμή"
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:319
+#, python-format
+msgid ""
+"Configuration error. Please configure the price difference account on the "
+"product or its category to process this operation."
 msgstr ""
 
 #. module: stock_account
@@ -125,11 +126,22 @@ msgid "Cost"
 msgstr "Κόστος"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
+msgid "Cost method"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
 msgid "Costing Method"
 msgstr "Μέθοδος Κοστολόγησης"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
+msgid "Counter-Part Account"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -149,11 +161,6 @@ msgid "Date"
 msgstr "Ημερομηνία"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_deferred_revenue_category_id
-msgid "Deferred Revenue Type"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
@@ -168,21 +175,23 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Group By"
-msgstr "Ομαδοποίηση Ανά"
+msgstr "Ομαδοποίηση Κατά"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_id
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_id
 msgid "ID"
-msgstr "ID"
+msgstr "Κωδικός"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
 msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
-msgstr "Εάν η τιμή κόστους είναι αυξημένη, ο λογαριασμός μεταβολής αποθεμάτων θα χρεώνεται και ο λογαριασμός παραγωγής των αποθεμάτων θα πρέπει να πιστώνεται με την αξία = (διαφορά του ποσού * διαθέσιμη ποσότητα) .\n\nΕάν η τιμή κόστους είναι μειωμένη, ο λογαριασμός μεταβολής των αποθεμάτων θα πιστώνεται και ο λογαριασμός  εισροής των αποθεμάτων θα χρεώνεται."
+msgstr ""
+"Εάν η τιμή κόστους είναι αυξημένη, ο λογαριασμός μεταβολής αποθεμάτων θα χρεώνεται και ο λογαριασμός παραγωγής των αποθεμάτων θα πρέπει να πιστώνεται με την αξία = (διαφορά του ποσού * διαθέσιμη ποσότητα) .\n"
+"Εάν η τιμή κόστους είναι μειωμένη, ο λογαριασμός μεταβολής των αποθεμάτων θα πιστώνεται και ο λογαριασμός  εισροής των αποθεμάτων θα χρεώνεται."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -217,7 +226,9 @@ msgstr ""
 msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
-msgstr "Εγκαταστήστε ένα άρθρωμα που επιτρέπει να επηρεάσετε τα συνολικά κόστη μεταφοράς σε υπολείματα και θα τις μοιράσει σε διάφορα προϊόντα."
+msgstr ""
+"Εγκαταστήστε ένα άρθρωμα που σας επιτρέπει να επηρεάσετε τα συνολικά κόστη "
+"μεταφοράς κατά επιλογές και θα τις μοιράσει σε διάφορα προϊόντα."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -270,7 +281,7 @@ msgstr "Κόστη Παράδοσης"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history___last_update
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history___last_update
 msgid "Last Modified on"
-msgstr "Τελευταία αλλαγή στις"
+msgstr "Τελευταία τροποποίηση στις"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
@@ -291,17 +302,19 @@ msgid "Location"
 msgstr "Τοποθεσία"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Lot/Serial Number"
+msgstr "Παρτίδα/Σειριακός Αριθμός"
+
+#. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
-msgstr "Διαχειριστείτε την Αποτίμηση των Αποθεμάτων και τις Μεθόδους Κοστολόγησης"
+msgstr ""
+"Διαχειριστείτε την Αποτίμηση των Αποθεμάτων και τις Μεθόδους Κοστολόγησης"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Move"
-msgstr "Μετακίνηση"
-
-#. module: stock_account
-#: code:addons/stock_account/product.py:124
+#: code:addons/stock_account/models/product.py:109
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr "Καμία διαφορά μεταξύ της πρότυπης τιμής και της νέας τιμής!"
@@ -349,12 +362,7 @@ msgstr "Τιμή"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product"
-msgstr "Προϊόν"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
-msgid "Product Alert Time"
-msgstr "Ύπενθύμιση Προϊόντος"
+msgstr "Είδος"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -364,19 +372,9 @@ msgid "Product Category"
 msgstr "Κατηγορία Προϊόντος"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
-msgid "Product Life Time"
-msgstr "Διάρκεια Ζωής του προϊόντος"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
 msgstr "Ποσότητα Προϊόντος"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
-msgid "Product Removal Time"
-msgstr "Χρόνος απομάκρυνσης Προϊόντος"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -384,11 +382,6 @@ msgstr "Χρόνος απομάκρυνσης Προϊόντος"
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product Template"
 msgstr "Πρότυπο Προϊόντος"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
-msgid "Product Use Time"
-msgstr "Χρόνος Χρήσης Προϊόντος"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -412,48 +405,36 @@ msgid "Retrieve the curent stock valuation."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Serial Number"
-msgstr "Σειριακός Αριθμός"
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Set standard price"
+msgstr "Ορισμός Τυπικής τιμής"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
-msgstr "Πηγή"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr "Καθορίστε εδώ μια μονάδα μέτρησης εάν η τιμολόγηση γίνεται σε άλλη μονάδα μέτρησης από την Αποθήκη. \nΕάν είναι κενό τότε θα χρησιμοποιηθεί η προεπιλεγμένη μονάδα μέτρησης."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Κώδικας"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Standard Price"
-msgstr "Σταθερή Τιμή"
+msgstr "Τυπική τιμή"
 
 #. module: stock_account
-#: code:addons/stock_account/product.py:145
-#: code:addons/stock_account/product.py:152
+#: code:addons/stock_account/models/product.py:126
+#: code:addons/stock_account/models/product.py:131
 #, python-format
 msgid "Standard Price changed"
-msgstr "Η Πρότυπη Τιμή άλλαξε"
+msgstr "Η Τυπική Τιμή άλλαξε"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
 msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
@@ -465,6 +446,11 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Stock Accounting"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -472,7 +458,7 @@ msgid "Stock Input Account"
 msgstr "Λογαριασμός Εισερχομένων Αποθεμάτων"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:418
+#: code:addons/stock_account/models/account_chart_template.py:15
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -481,6 +467,7 @@ msgstr "Ημερολόγιο Αποθέματος"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
 msgstr "Κίνηση Αποθέματος"
 
@@ -507,7 +494,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Λογαριασμός Αποτιμήσης Αποθέματος (εξερχόμενο)"
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_valuation_history.py:31
+#: code:addons/stock_account/wizard/wizard_valuation_history.py:24
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -522,19 +509,18 @@ msgid "Templates for Account Chart"
 msgstr "Πρότυπα για Λογιστικά Σχέδια"
 
 #. module: stock_account
+#: code:addons/stock_account/models/stock.py:273
+#, python-format
+msgid ""
+"The found valuation amount for product %s is zero. Which means there is "
+"probably a configuration error. Check the costing method and the standard "
+"price"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
 msgstr "Συνολική Αξία"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Μονάδα Μέτρησης -> UOS Coeff"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
-msgid "Unit of Sale"
-msgstr "Μονάδα Πωλήσεων"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
@@ -544,7 +530,13 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr "Χρησιμοποιείται για την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο. Όταν ρυθμιστεί σε μια εικονική θέση (μη εσωτερικού τύπου), αυτός ο λογαριασμός θα χρησιμοποιείται για να κρατήσει την αξία των προϊόντων που μετακινούνται από μια εσωτερική θέση σε αυτήν τη θέση, αντί του γενικού Λογαριασμού Εξερχόμενου Αποθέματος που  ρυθμίστηκε επί του προϊόντος. Αυτό δεν έχει καμία επίδραση για τις εσωτερικές θέσεις."
+msgstr ""
+"Χρησιμοποιείται για την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο. Όταν "
+"ρυθμιστεί σε μια εικονική θέση (μη εσωτερικού τύπου), αυτός ο λογαριασμός θα"
+" χρησιμοποιείται για να κρατήσει την αξία των προϊόντων που μετακινούνται "
+"από μια εσωτερική θέση σε αυτήν τη θέση, αντί του γενικού Λογαριασμού "
+"Εξερχόμενου Αποθέματος που  ρυθμίστηκε επί του προϊόντος. Αυτό δεν έχει "
+"καμία επίδραση για τις εσωτερικές θέσεις."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -554,40 +546,24 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr "Χρησιμοποιείται για την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο. Όταν ρυθμιστεί σε μια εικονική θέση (μη εσωτερικού τύπου), αυτός ο λογαριασμός θα χρησιμοποιείται για να κρατήσει την αξία των προϊόντων που μετακινούνται από αυτή την θέση σε μια εσωτερική θέση, αντί του γενικού Λογαριασμού Εξερχόμενου Αποθέματος που  ρυθμίστηκε επί του προϊόντος. Αυτό δεν έχει καμία επίδραση για τις εσωτερικές θέσεις."
+msgstr ""
+"Χρησιμοποιείται για την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο. Όταν "
+"ρυθμιστεί σε μια εικονική θέση (μη εσωτερικού τύπου), αυτός ο λογαριασμός θα"
+" χρησιμοποιείται για να κρατήσει την αξία των προϊόντων που μετακινούνται "
+"από αυτή την θέση σε μια εσωτερική θέση, αντί του γενικού Λογαριασμού "
+"Εξερχόμενου Αποθέματος που  ρυθμίστηκε επί του προϊόντος. Αυτό δεν έχει "
+"καμία επίδραση για τις εσωτερικές θέσεις."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
+msgid "Valuation"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
 msgid "Value"
 msgstr "Τιμή"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr "Όταν ένα νέος Σειριακός Αριθμός εκδοθεί, αυτός είναι ο αριθμός των ημερών πριν τα αγαθά μπορεί να γίνουν επικίνδυνα και δεν πρέπει να καταναλωθούν."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -597,7 +573,13 @@ msgid ""
 "specific valuation account set on the source location. This is the default "
 "value for all products in this category. It can also directly be set on each"
 " product"
-msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, αντιστοίχα είδη του ημερολογίου για όλες τις εισερχόμενες κινήσεις αποθέματος θα αναρτηθεί σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στη θέση προέλευσης. Αυτή είναι η προεπιλεγμένη τιμή για όλα τα προϊόντα σε αυτή την κατηγορία. Μπορεί επίσης άμεσα να ρυθμιστεί για κάθε προϊόν"
+msgstr ""
+"Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, αντιστοίχα είδη"
+" του ημερολογίου για όλες τις εισερχόμενες κινήσεις αποθέματος θα αναρτηθεί "
+"σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός "
+"αποτίμησης στη θέση προέλευσης. Αυτή είναι η προεπιλεγμένη τιμή για όλα τα "
+"προϊόντα σε αυτή την κατηγορία. Μπορεί επίσης άμεσα να ρυθμιστεί για κάθε "
+"προϊόν"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
@@ -607,7 +589,12 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, τα αντίστοιχα είδη του ημερολογίου για όλες τις εισερχόμενες κινήσεις αποθέματος θα αναρτηθεί σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στη θέση προέλευσης. Όταν δεν έχει οριστεί επί του προϊόντος, ένα από την κατηγορία προϊόντος θα  χρησιμοποιηθεί."
+msgstr ""
+"Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, τα αντίστοιχα "
+"είδη του ημερολογίου για όλες τις εισερχόμενες κινήσεις αποθέματος θα "
+"αναρτηθεί σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος "
+"λογαριασμός αποτίμησης στη θέση προέλευσης. Όταν δεν έχει οριστεί επί του "
+"προϊόντος, ένα από την κατηγορία προϊόντος θα  χρησιμοποιηθεί."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -617,7 +604,13 @@ msgid ""
 "specific valuation account set on the destination location. This is the "
 "default value for all products in this category. It can also directly be set"
 " on each product"
-msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, τα αντίστοιχα στοιχεία του ημερολογίου για όλες τις εξερχόμενες κινήσεις των αποθεμάτων θα αναρτηθούν σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στην τοποθεσία προορισμού. Αυτή είναι η προεπιλεγμένη τιμή για όλα τα προϊόντα σε αυτή την κατηγορία. Μπορεί επίσης άμεσα να ρυθμιστεί για κάθε προϊόν"
+msgstr ""
+"Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, τα αντίστοιχα "
+"στοιχεία του ημερολογίου για όλες τις εξερχόμενες κινήσεις των αποθεμάτων θα"
+" αναρτηθούν σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος "
+"λογαριασμός αποτίμησης στην τοποθεσία προορισμού. Αυτή είναι η προεπιλεγμένη"
+" τιμή για όλα τα προϊόντα σε αυτή την κατηγορία. Μπορεί επίσης άμεσα να "
+"ρυθμιστεί για κάθε προϊόν"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -627,21 +620,31 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο,τα αντίστοιχά είδη του ημερολογίου  για όλες τις εξερχόμενες κινήσεις των αποθεμάτων θα αναρτηθούν σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στην τοποθεσία προορισμού. Όταν δεν έχει οριστεί επί του προϊόντος, ένα από την κατηγορία προϊόντος θα χρησιμοποιηθεί."
+msgstr ""
+"Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο,τα αντίστοιχά "
+"είδη του ημερολογίου  για όλες τις εξερχόμενες κινήσεις των αποθεμάτων θα "
+"αναρτηθούν σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος "
+"λογαριασμός αποτίμησης στην τοποθεσία προορισμού. Όταν δεν έχει οριστεί επί "
+"του προϊόντος, ένα από την κατηγορία προϊόντος θα χρησιμοποιηθεί."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, αυτό  είναι το Ημερολόγιο Λογιστικής στο οποίο οι εγγραφές θα αναρτηθούν αυτόματα όταν οι κινήσεις του αποθέματος επεξεργάζονται."
+msgstr ""
+"Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, αυτό  είναι το "
+"Ημερολόγιο Λογιστικής στο οποίο οι εγγραφές θα αναρτηθούν αυτόματα όταν οι "
+"κινήσεις του αποθέματος επεξεργάζονται."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr "Όταν η αποτίμηση αποθέματος σε πραγματικό χρόνο είναι ενεργοποιημένη σε ένα προϊόν, αυτός ο λογαριασμός θα κρατήσει την τρέχουσα αξία των προϊόντων."
+msgstr ""
+"Όταν η αποτίμηση αποθέματος σε πραγματικό χρόνο είναι ενεργοποιημένη σε ένα "
+"προϊόν, αυτός ο λογαριασμός θα κρατήσει την τρέχουσα αξία των προϊόντων."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
@@ -649,11 +652,20 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Οδηγός που ανοίγει τον πίνακα του ιστορικού της αποτίμησης αποθέματος"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:275
+#: code:addons/stock_account/models/stock.py:242
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:111
+#: code:addons/stock_account/models/stock.py:248
+#, python-format
+msgid ""
+"You don't have any stock valuation account defined on your product category."
+" You must define one before processing this operation."
 msgstr ""
 
 #. module: stock_account
@@ -670,11 +682,3 @@ msgstr ""
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
 msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
-msgid "unknown"
-msgstr "άγνωστο"

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" inherit_id="web.assets_backend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/sale_stock/static/src/js/tour.js"></script>
+            </xpath>
+        </template>
+
+        <menuitem id="menu_aftersale" name="After-Sale"
+            groups="sales_team.group_sale_salesman"
+            parent="sales_team.menu_base_partner" sequence="5" />
+        <menuitem id="menu_invoiced" name="Invoicing" parent="menu_aftersale" sequence="1"/>
+
+        <record id="stock_location_route_form_view_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">stock.location.route.form</field>
+            <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
+            <field name="model">stock.location.route</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='warehouse_ids']" position="after">
+                    <br/><field name="sale_selectable" string="Sale Order Lines"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_stock_return_picking_form_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">stock.return.picking.sale.stock.form</field>
+            <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
+            <field name="model">stock.return.picking</field>
+            <field name="arch" type="xml">
+                <field name="quantity" position="after">
+                    <field name="to_refund_so"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -3,15 +3,16 @@
 # * base_vat
 # 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-02-07 20:23+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,13 +29,10 @@ msgstr "Spoločnosti"
 msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
-msgstr "Ak zaškrtnuté, DPH číslo partnera bude plne porovnané s EÚ službou VIES namiesto prostredníctvom jednoduchého overovacieho formátu (kontrolný súčet)."
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:111
-#, python-format
-msgid "Importing VAT Number [%s] is not valid !"
-msgstr "Import DPH čísla [%s] nie je platný !"
+msgstr ""
+"Ak zaškrtnuté, DPH číslo partnera bude plne porovnané s EÚ službou VIES "
+"namiesto prostredníctvom jednoduchého overovacieho formátu (kontrolný "
+"súčet)."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -42,20 +40,24 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:128
+#: code:addons/base_vat/models/res_partner.py:131
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
-msgstr "DPH číslo [%s] pre partnera [%s] sa zdá byť neplatné.\nPoznámka: očakávaný formát je %s"
+msgstr ""
+"DPH číslo [%s] pre partnera [%s] sa zdá byť neplatné.\n"
+"Poznámka: očakávaný formát je %s"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:127
+#: code:addons/base_vat/models/res_partner.py:130
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
-msgstr "DPH číslo [%s] pre partnera [%s] buďto neprešlo VIES DPH overovaciou kontrolou, alebo nebolo v očakávanom formáte %s."
+msgstr ""
+"DPH číslo [%s] pre partnera [%s] buďto neprešlo VIES DPH overovaciou "
+"kontrolou, alebo nebolo v očakávanom formáte %s."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies

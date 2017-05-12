@@ -1,12 +1,14 @@
 odoo.define('web.FormView', function (require) {
 "use strict";
 
+var common = require('web.form_common');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
-var common = require('web.form_common');
+var FormRenderingEngine = require('web.FormRenderingEngine');
 var Model = require('web.DataModel');
+var Pager = require('web.Pager');
 var Sidebar = require('web.Sidebar');
 var utils = require('web.utils');
 var View = require('web.View');
@@ -14,10 +16,6 @@ var View = require('web.View');
 var _t = core._t;
 var _lt = core._lt;
 var QWeb = core.qweb;
-var Class = core.Class;
-
-/** @namespace */
-// instance.web.form = instance.web.form || {};
 
 /**
  * Properties:
@@ -25,40 +23,38 @@ var Class = core.Class;
  *      the mode used by the view.
  */
 var FormView = View.extend(common.FieldManagerMixin, {
-    /**
-     * Indicates that this view is not searchable, and thus that no search
-     * view should be displayed (if there is one active).
-     */
-    searchable: false,
-    template: "FormView",
+    className: "o_form_view",
+    defaults: _.extend({}, View.prototype.defaults, {
+        not_interactible_on_create: false,
+        initial_mode: "view",
+        disable_autofocus: false,
+        footer_to_buttons: false,
+    }),
     display_name: _lt('Form'),
-    view_type: "form",
-    multi_record: false,
-    accesskey: "F",
     icon: 'fa-edit',
+    multi_record: false,
+    // Indicates that this view is not searchable, and thus that no search view should be displayed.
+    searchable: false,
+
     /**
-     * @constructs instance.web.FormView
-     * @extends instance.web.View
-     *
-     * @param {instance.web.Session} session the current openerp session
-     * @param {instance.web.DataSet} dataset the dataset this view will work with
-     * @param {String} view_id the identifier of the OpenERP view object
-     *
-     * @property {instance.web.Registry} registry=instance.web.form.widgets widgets registry for this form view instance
+     * Called each time the form view is attached into the DOM
      */
-    init: function(parent, dataset, view_id, options) {
+    on_attach_callback: function() {
+        this.trigger('attached');
+        this.autofocus();
+    },
+    /**
+     * Called each time the form view is detached from the DOM
+     */
+    on_detach_callback: function() {
+        this.trigger('detached');
+    },
+    init: function() {
         var self = this;
-        this._super(parent);
-        this.ViewManager = parent;
-        this.set_default_options(options);
-        this.dataset = dataset;
-        this.model = dataset.model;
-        this.view_id = view_id || false;
-        this.fields_view = {};
+        this._super.apply(this, arguments);
         this.fields = {};
         this.fields_order = [];
         this.datarecord = {};
-        this._onchange_specs = {};
         this.onchanges_mutex = new utils.Mutex();
         this.default_focus_field = null;
         this.default_focus_button = null;
@@ -67,12 +63,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.widgets_registry = core.form_custom_registry;
         this.has_been_loaded = $.Deferred();
         this.translatable_fields = [];
-        _.defaults(this.options, {
-            "not_interactible_on_create": false,
-            "initial_mode": "view",
-            "disable_autofocus": false,
-            "footer_to_buttons": false,
-        });
         this.is_initialized = $.Deferred();
         this.record_loaded = $.Deferred();
         this.mutating_mutex = new utils.Mutex();
@@ -82,31 +72,45 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.__clicked_inside = false;
         this.__blur_timeout = null;
         this.rendering_engine = new FormRenderingEngine(this);
-        self.set({actual_mode: self.options.initial_mode});
+        this.set({actual_mode: this.options.initial_mode});
         this.has_been_loaded.done(function() {
-            self._build_onchange_specs();
-            self.check_actual_mode();
-            self.on("change:actual_mode", self, self.check_actual_mode);
             self.on("change:actual_mode", self, self.toggle_buttons);
             self.on("change:actual_mode", self, self.toggle_sidebar);
-            self.on("change:actual_mode", self, self.do_update_pager);
         });
         self.on("load_record", self, self.load_record);
         core.bus.on('clear_uncommitted_changes', this, function(chain_callbacks) {
             var self = this;
             chain_callbacks(function() {
-                var def = $.Deferred();
-                self.can_be_discarded().then(function() {
-                    def.resolve();
-                }).fail(function() {
-                    def.reject();
-                });
-                return def;
+                return self.can_be_discarded();
             });
         });
     },
-    view_loading: function(r) {
-        return this.load_form(r);
+    start: function() {
+        if (this.$pager) {
+            this.$pager.off();
+        }
+        var self = this;
+
+        this.rendering_engine.set_fields_registry(this.fields_registry);
+        this.rendering_engine.set_tags_registry(this.tags_registry);
+        this.rendering_engine.set_widgets_registry(this.widgets_registry);
+        this.rendering_engine.set_fields_view(this.fields_view);
+        this.rendering_engine.render_to(this.$el);
+
+        this.$el.on('mousedown.formBlur', function () {
+            self.__clicked_inside = true;
+        });
+
+        this.has_been_loaded.resolve();
+
+        // Add bounce effect on button 'Edit' when click on readonly page view.
+        this.$(".oe_title,.o_group").on('click', function (e) {
+            if(self.get("actual_mode") === "view" && self.$buttons && !$(e.target).is('[data-toggle]')) {
+                self.$buttons.find(".o_form_button_edit").openerpBounce();
+                core.bus.trigger('click', e);
+            }
+        });
+        return this._super();
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -118,88 +122,37 @@ var FormView = View.extend(common.FieldManagerMixin, {
         }
         this._super();
     },
-    load_form: function(data) {
-        var self = this;
-        if (!data) {
-            throw new Error(_t("No data provided."));
-        }
-        if (this.arch) {
-            throw "Form view does not support multiple calls to load_form";
-        }
-        this.fields_order = [];
-        this.fields_view = data;
-
-        this.rendering_engine.set_fields_registry(this.fields_registry);
-        this.rendering_engine.set_tags_registry(this.tags_registry);
-        this.rendering_engine.set_widgets_registry(this.widgets_registry);
-        this.rendering_engine.set_fields_view(data);
-        var $dest = this.$el.hasClass("oe_form_container") ? this.$el : this.$el.find('.oe_form_container');
-        this.rendering_engine.render_to($dest);
-
-        this.$el.on('mousedown.formBlur', function () {
-            self.__clicked_inside = true;
-        });
-
-        this.has_been_loaded.resolve();
-
-        // Add bounce effect on button 'Edit' when click on readonly page view.
-        this.$el.find(".oe_form_group_row,.oe_form_field,label,h1,.oe_title,.oe_notebook_page, .oe_list_content").on('click', function (e) {
-            if(self.get("actual_mode") == "view" && self.$buttons && !$(e.target).is('[data-toggle]')) {
-                var $button = self.$buttons.find(".oe_form_button_edit");
-                $button.openerpBounce();
-                e.stopPropagation();
-                core.bus.trigger('click', e);
-            }
-        });
-        //bounce effect on red button when click on statusbar.
-        this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
-            if((self.get("actual_mode") == "view")) {
-                var $button = self.$el.find(".oe_highlight:not(.o_form_invisible)").css({'float':'left','clear':'none'});
-                $button.openerpBounce();
-                e.stopPropagation();
-            }
-         });
-        this.trigger('form_view_loaded', data);
-        return $.when();
-    },
     /**
      * Render the buttons according to the FormView.buttons template and add listeners on it.
      * Set this.$buttons with the produced jQuery element
      * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
      * $node may be undefined, in which case the FormView inserts them into this.options.$buttons
-     * or into a div of its template
+     * if it exists
      */
     render_buttons: function($node) {
-        this.$buttons = $(QWeb.render("FormView.buttons", {'widget': this}));
+        this.$buttons = $('<div/>');
+
+        var $footer = this.$('footer');
+        if (this.options.action_buttons !== false || this.options.footer_to_buttons && $footer.children().length === 0) {
+            this.$buttons.append(QWeb.render("FormView.buttons", {'widget': this}));
+        }
+        if (this.options.footer_to_buttons) {
+            $footer.appendTo(this.$buttons);
+        }
 
         // Show or hide the buttons according to the view mode
         this.toggle_buttons();
-        this.$buttons.on('click', '.oe_form_button_create',
-                         this.guard_active(this.on_button_create));
-        this.$buttons.on('click', '.oe_form_button_edit',
-                         this.guard_active(this.on_button_edit));
-        this.$buttons.on('click', '.oe_form_button_save',
-                         this.guard_active(this.on_button_save));
-        this.$buttons.on('click', '.oe_form_button_cancel',
-                         this.guard_active(this.on_button_cancel));
+        this.$buttons.on('click', '.o_form_button_create', this.on_button_create);
+        this.$buttons.on('click', '.o_form_button_edit', this.on_button_edit);
+        this.$buttons.on('click', '.o_form_button_save', this.on_button_save);
+        this.$buttons.on('click', '.o_form_button_cancel', this.on_button_cancel);
 
-        if (this.options.footer_to_buttons) {
-            this.$el.find('footer').appendTo(this.$buttons);
-        }
-
-        $node = $node || this.options.$buttons;
-        if ($node) {
-            this.$buttons.appendTo($node);
-        } else {
-            this.$('.oe_form_buttons').replaceWith(this.$buttons);
-        }
+        this.$buttons.appendTo($node);
     },
     /**
      * Instantiate and render the sidebar if a sidebar is requested
      * Sets this.sidebar
      * @param {jQuery} [$node] a jQuery node where the sidebar should be inserted
-     * $node may be undefined, in which case the FormView inserts the sidebar in a
-     * div of its template
      **/
     render_sidebar: function($node) {
         if (!this.sidebar && this.options.sidebar) {
@@ -212,7 +165,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 this.is_action_enabled('create') && { label: _t('Duplicate'), callback: this.on_button_duplicate }
             ]));
 
-            $node = $node || this.$('.oe_form_sidebar');
             this.sidebar.appendTo($node);
 
             // Show or hide the sidebar according to the view mode
@@ -220,41 +172,33 @@ var FormView = View.extend(common.FieldManagerMixin, {
         }
     },
     /**
-     * Render the pager according to the FormView.pager template and add listeners on it.
-     * Set this.$pager with the produced jQuery element
-     * @param {jQuery} [$node] a jQuery node where the rendered pager should be inserted
+     * Instantiate and render the pager and add listeners on it.
+     * Set this.pager
+     * @param {jQuery} [$node] a jQuery node where the pager should be inserted
      * $node may be undefined, in which case the FormView inserts the pager into this.options.$pager
-     * or into a div of its template
      */
     render_pager: function($node) {
         if (this.options.pager) {
             var self = this;
-            if (this.$pager) {
-                this.$pager.remove();
-            }
-            if (this.get("actual_mode") === "create") {
-                return;
-            }
-            this.$pager = $(QWeb.render("FormView.pager", {'widget': self}));
-            this.$pager.on('click','a[data-pager-action]',function() {
-                var $el = $(this);
-                if ($el.attr("disabled")) {
-                    return;
-                }
-                var action = $el.data('pager-action');
-                var def = $.when(self.execute_pager_action(action));
-                $el.attr("disabled");
-                def.always(function() {
-                    $el.removeAttr("disabled");
+            var options = {
+                validate: _.bind(this.can_be_discarded, this),
+            };
+
+            this.pager = new Pager(this, this.dataset.ids.length, this.dataset.index + 1, 1, options);
+            this.pager.on('pager_changed', this, function (new_state) {
+                this.pager.disable();
+                this.dataset.index = new_state.current_min - 1;
+                this.trigger('pager_action_executed');
+                $.when(this.reload()).then(function () {
+                    self.pager.enable();
                 });
             });
-            this.do_update_pager();
 
-            $node = $node || this.options.$pager;
-            if ($node) {
-                this.$pager.appendTo($node);
-            } else {
-                this.$('.oe_form_pager').replaceWith(this.$pager);
+            this.pager.appendTo($node = $node || this.options.$pager);
+
+            // Hide the pager in create mode
+            if (this.get("actual_mode") === "create") {
+                this.pager.do_hide();
             }
         }
     },
@@ -274,6 +218,16 @@ var FormView = View.extend(common.FieldManagerMixin, {
     toggle_sidebar: function() {
         if (this.sidebar) {
             this.sidebar.do_toggle(this.get("actual_mode") === "view");
+        }
+    },
+    update_pager: function() {
+        if (this.pager) {
+            // Hide the pager in create mode
+            if (this.get("actual_mode") === "create") {
+                this.pager.do_hide();
+            } else {
+                this.pager.update_state({size: this.dataset.ids.length, current_min: this.dataset.index + 1});
+            }
         }
     },
     widgetFocused: function() {
@@ -309,20 +263,13 @@ var FormView = View.extend(common.FieldManagerMixin, {
         }
     },
     /**
-     *
-     * @param {Object} [options]
-     * @param {Boolean} [mode=undefined] If specified, switch the form to specified mode. Can be "edit" or "view".
-     * @param {Boolean} [reload=true] whether the form should reload its content on show, or use the currently loaded record
+     * @param {Boolean} [options.mode=undefined] If specified, switch the form to specified mode. Can be "edit" or "view".
+     * @param {Boolean} [options.reload=true] whether the form should reload its content on show, or use the currently loaded record
      * @return {$.Deferred}
      */
     do_show: function (options) {
         var self = this;
         options = options || {};
-        this._super();
-        this.$el.css({
-            opacity: '0',
-            filter: 'alpha(opacity = 0)'
-        });
         this.$el.removeClass('oe_form_dirty');
 
         var shown = this.has_been_loaded;
@@ -344,10 +291,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
         }
         return $.when(shown, this._super()).then(function() {
             self._actualize_mode(options.mode || self.options.initial_mode);
-            self.$el.css({
-                opacity: '1',
-                filter: 'alpha(opacity = 100)'
-            });
             core.bus.trigger('form_view_shown', self);
         });
     },
@@ -359,8 +302,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
             return $.Deferred().reject();
         }
         this.datarecord = record;
-        this._actualize_mode();
-        this.set({ 'title' : record.id ? record.display_name : _t("New") });
 
         this.record_loaded = $.Deferred();
         _(this.fields).each(function (field, f) {
@@ -370,18 +311,23 @@ var FormView = View.extend(common.FieldManagerMixin, {
             field._inhibit_on_change_flag = false;
             set_values.push(result);
         });
+        this._actualize_mode(); // call after updating the fields as it may trigger a re-rendering
+        this.set({ 'title' : record.id ? record.display_name : _t("New") });
+        this.update_pager(); // the mode must be actualized before updating the pager
         return $.when.apply(null, set_values).then(function() {
             if (!record.id) {
-                // trigger onchanges
-                self.do_onchange(null);
+                // trigger onchange for new record after x2many with non-embedded views are loaded
+                var fields_loaded = _.pluck(self.fields, 'is_loaded');
+                $.when.apply(null, fields_loaded).done(function() {
+                    self.do_onchange(null);
+                });
             }
             self.on_form_changed();
             self.rendering_engine.init_fields().then(function() {
                 self.is_initialized.resolve();
                 self.record_loaded.resolve();
-                self.do_update_pager(record.id === null || record.id === undefined);
                 if (self.sidebar) {
-                   self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
+                    self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
                 }
                 if (record.id) {
                     self.do_push_state({id:record.id});
@@ -389,9 +335,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     self.do_push_state({});
                 }
                 self.$el.removeClass('oe_form_dirty');
-                self.autofocus();
             });
-        });
+         });
     },
     /**
      * Loads and sets up the default values for the model as the current
@@ -407,7 +352,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 self.trigger('load_record', _.clone(r));
             });
         }
-        return self.trigger('load_record', {});
+        return $.when().then(this.trigger.bind(this, 'load_record', {}));
     },
     on_form_changed: function() {
         this.trigger("view_content_has_changed");
@@ -415,40 +360,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
     do_notify_change: function() {
         this.$el.addClass('oe_form_dirty');
     },
-    execute_pager_action: function(action) {
-        var self = this;
-        return this.can_be_discarded().then(function() {
-            switch (action) {
-                case 'first':
-                    self.dataset.index = 0;
-                    break;
-                case 'previous':
-                    self.dataset.previous();
-                    break;
-                case 'next':
-                    self.dataset.next();
-                    break;
-                case 'last':
-                    self.dataset.index = self.dataset.ids.length - 1;
-                    break;
-            }
-            self.trigger('pager_action_executed');
-            return self.reload();
-        });
-    },
-    do_update_pager: function(hide_index) {
-        if (this.$pager) {
-            // Hide the pager in create mode or when there is only one record
-            var pager_visible = (this.get("actual_mode") !== "create") && (this.dataset.ids.length > 1);
-            this.$pager.toggle(pager_visible);
-            if (hide_index === true) {
-                this.$pager.find(".oe_form_pager_state").html("");
-            } else {
-                this.$pager.find(".oe_form_pager_state").html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
-            }
-        }
-    },
-
     _build_onchange_specs: function() {
         var self = this;
         var find = function(field_name, root) {
@@ -471,7 +382,24 @@ var FormView = View.extend(common.FieldManagerMixin, {
         _.each(this.fields, function(field, name) {
             self._onchange_fields.push(name);
             self._onchange_specs[name] = find(name, field.node);
-            _.each(field.field.views, function(view) {
+
+            // we get the list of first-level fields of x2many firstly by
+            // getting them from the field embedded views, then if no embedded
+            // view is present for a loaded view, we get them from the default
+            // view that has been loaded
+
+            // gather embedded view objects
+            var views = _.clone(field.field.views);
+            // also gather default view objects
+            if (field.viewmanager) {
+                _.each(field.viewmanager.views, function(view, view_type) {
+                    // add default view if it was not embedded and it is loaded
+                    if (views[view_type] === undefined && view.controller) {
+                        views[view_type] = view.controller.fields_view;
+                    }
+                });
+            }
+            _.each(views, function(view) {
                 _.each(view.fields, function(_, subname) {
                     self._onchange_specs[name + '.' + subname] = find(subname, view.arch);
                 });
@@ -500,6 +428,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
 
     do_onchange: function(widget) {
         var self = this;
+        if (self._onchange_specs === undefined) {
+            self._build_onchange_specs();
+        }
         var onchange_specs = self._onchange_specs;
         try {
             var def = $.when({});
@@ -522,7 +453,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     // In case of a o2m virtual id, we should pass an empty ids list
                     ids.push(self.datarecord.id);
                 }
-                def = self.alive(new Model(self.dataset.model).call(
+                def = self.alive(self.dataset.call(
                     "onchange", [ids, values, trigger_field_name, onchange_specs, context]));
             }
             this.onchanges_mutex.exec(function(){
@@ -673,6 +604,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
      */
     to_view_mode: function() {
         this._actualize_mode("view");
+        this.trigger('to_view_mode');
     },
     /**
      * Ask the view to switch to edit mode if possible. The view may not do it
@@ -681,6 +613,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
     to_edit_mode: function() {
         this.onchanges_mutex = new utils.Mutex();
         this._actualize_mode("edit");
+        this.trigger('to_edit_mode');
     },
     /**
      * Ask the view to switch to a precise mode if possible. The view is free to
@@ -699,15 +632,15 @@ var FormView = View.extend(common.FieldManagerMixin, {
         } else if (mode === "create") {
             mode = "edit";
         }
+
+        var viewMode = (mode === "view");
+        this.$el.toggleClass('o_form_readonly', viewMode).toggleClass('o_form_editable', !viewMode);
+
         this.render_value_defs = [];
         this.set({actual_mode: mode});
-    },
-    check_actual_mode: function(source, options) {
-        if(this.get("actual_mode") === "view") {
-            this.$el.removeClass('oe_form_editable').addClass('oe_form_readonly');
-        } else {
-            this.$el.removeClass('oe_form_readonly').addClass('oe_form_editable');
-            _.defer(_.bind(this.autofocus, this));
+
+        if(!viewMode) {
+            this.autofocus();
         }
     },
     autofocus: function() {
@@ -727,31 +660,33 @@ var FormView = View.extend(common.FieldManagerMixin, {
         }
     },
     disable_button: function () {
-        this.$('.oe_form_buttons').add(this.$buttons).find('button').addClass('o_disabled').prop('disabled', true);
+        this.$('.oe_form_buttons,.o_statusbar_buttons').add(this.$buttons).find('button').addClass('o_disabled').prop('disabled', true);
         this.is_disabled = true;
     },
     enable_button: function () {
-        this.$('.oe_form_buttons').add(this.$buttons).find('button.o_disabled').removeClass('o_disabled').prop('disabled', false);
+        this.$('.oe_form_buttons,.o_statusbar_buttons').add(this.$buttons).find('button.o_disabled').removeClass('o_disabled').prop('disabled', false);
         this.is_disabled = false;
     },
-    on_button_save: function(e) {
+    on_button_save: function() {
         var self = this;
         if (this.is_disabled) {
             return;
         }
         this.disable_button();
-        return this.save().done(function(result) {
+        return this.save().then(function(result) {
             self.trigger("save", result);
-            self.reload().then(function() {
+            return self.reload().then(function() {
                 self.to_view_mode();
                 core.bus.trigger('do_reload_needaction');
                 core.bus.trigger('form_view_saved', self);
+            }).always(function() {
+                self.enable_button();
             });
-        }).always(function(){
+        }).fail(function(){
             self.enable_button();
         });
     },
-    on_button_cancel: function(event) {
+    on_button_cancel: function() {
         var self = this;
         this.can_be_discarded().then(function() {
             if (self.get('actual_mode') === 'create') {
@@ -767,13 +702,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
         return false;
     },
     on_button_new: function() {
-        var self = this;
-        this.to_edit_mode();
-        return $.when(this.has_been_loaded).then(function() {
-            return self.can_be_discarded().then(function() {
-                return self.load_defaults();
-            });
-        });
+        return $.when(this.has_been_loaded)
+            .then(this.can_be_discarded.bind(this))
+            .then(this.load_defaults.bind(this));
     },
     on_button_edit: function() {
         return this.to_edit_mode();
@@ -798,14 +729,15 @@ var FormView = View.extend(common.FieldManagerMixin, {
             if (self.datarecord.id && confirm(_t("Do you really want to delete this record?"))) {
                 self.dataset.unlink([self.datarecord.id]).done(function() {
                     if (self.dataset.size()) {
-                        self.execute_pager_action('next');
+                        self.reload();
+                        self.update_pager();
                     } else {
                         self.do_action('history_back');
                     }
                     def.resolve();
                 });
             } else {
-                $.async_when().done(function () {
+                utils.async_when().done(function () {
                     def.reject();
                 });
             }
@@ -825,13 +757,18 @@ var FormView = View.extend(common.FieldManagerMixin, {
             title: _t("Warning"),
             confirm_callback: function() {
                 self.$el.removeClass('oe_form_dirty');
-                def.resolve();
+                this.on('closed', null, function() { // 'this' is the dialog widget
+                    def.resolve();
+                });
             },
             cancel_callback: function() {
                 def.reject();
             },
         };
-        Dialog.confirm(this, message, options);
+        var dialog = Dialog.confirm(this, message, options);
+        dialog.$modal.on('hidden.bs.modal', function() {
+            def.reject();
+        });
         return def;
     },
     /**
@@ -908,6 +845,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     if (!self.datarecord.id) {
                         // Creation save
                         save_deferral = self.dataset.create(values, {readonly_fields: readonly_values}).then(function(r) {
+                            self.display_translation_alert(values);
                             return self.record_created(r, prepend_on_create);
                         }, null);
                     } else if (_.isEmpty(values)) {
@@ -916,6 +854,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     } else {
                         // Write save
                         save_deferral = self.dataset.write(self.datarecord.id, values, {readonly_fields: readonly_values}).then(function(r) {
+                            self.display_translation_alert(values);
                             return self.record_saved(r);
                         }, null);
                     }
@@ -984,7 +923,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 this.dataset.alter_ids([this.datarecord.id].concat(this.dataset.ids));
                 this.dataset.index = 0;
             }
-            this.do_update_pager();
+            this.update_pager();
             if (this.sidebar) {
                 this.sidebar.do_attachement_update(this.dataset, this.datarecord.id);
             }
@@ -1076,6 +1015,56 @@ var FormView = View.extend(common.FieldManagerMixin, {
     sidebar_eval_context: function () {
         return $.when(this.build_eval_context());
     },
+    /*
+     * Show a warning message if the user modified a translated field.  For each
+     * field, the notification provides a link to edit the field's translations.
+     */
+    display_translation_alert: function(values) {
+        if (_t.database.multi_lang) {
+            var alert_fields = _.filter(this.translatable_fields, function(field) {
+                return _.has(values, field.name)
+            });
+            if (alert_fields.length) {
+                var $content = $(QWeb.render('translation-alert', {
+                        fields: alert_fields,
+                        lang: _t.database.parameters.name
+                    }));
+                // bind click event on "Update translations" links
+                $content.find('.oe_field_translate').click(function(ev) {
+                    ev.preventDefault();
+                    _.find(alert_fields, {'name': ev.target.name}).on_translate();
+                });
+                // show notification
+                this.once('to_view_mode', this, function () {
+                    this.notify_in_form($content);
+                });
+            }
+        }
+    },
+    /**
+     * Add a notification box inside the form. The notification automatically
+     * goes away (by default when switching to edit mode or changing the form
+     * content.)
+     *
+     * @param {jQuery} $content
+     * @param {Object} [options]
+     * @param {String} [options.type], one of: "success", "info", "warning", "danger"
+     * @param {String} [options.events], when to remove notification
+     */
+    notify_in_form: function ($content, options) {
+        options = options || {};
+        var type = options.type || 'info';
+        var $box = $(QWeb.render('notification-box', {type: type}));
+        $box.append($content);
+        // create handler to remove notification box
+        var events = options.events || 'to_edit_mode view_content_has_changed';
+        this.once(events, null, function() {
+            $box.remove();
+        });
+        // add content inside notification box on top of the sheet/form
+        var $target = this.$('.o_form_sheet_bg').length ? this.$('.o_form_sheet_bg') : this.$el;
+        $target.prepend($box);
+    },
     open_defaults_dialog: function () {
         var self = this;
         var display = function (field, value) {
@@ -1136,14 +1125,14 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     var $defaults = d.$el.find('#formview_default_fields');
                     var field_to_set = $defaults.val();
                     if (!field_to_set) {
-                        $defaults.parent().addClass('oe_form_invalid');
+                        $defaults.parent().addClass('o_form_invalid');
                         return;
                     }
                     var condition = d.$el.find('#formview_default_conditions').val(),
                         all_users = d.$el.find('#formview_default_all').is(':checked');
                     new data.DataSet(self, 'ir.values').call(
                         'set_default', [
-                            self.dataset.model,
+                            self.model,
                             field_to_set,
                             self.fields[field_to_set].get_value(),
                             all_users,
@@ -1217,21 +1206,29 @@ var FormView = View.extend(common.FieldManagerMixin, {
     },
 });
 
-/**
- * Interface to be implemented by rendering engines for the form view.
- */
-var FormRenderingEngineInterface = Class.extend({
-    set_fields_view: function(fields_view) {},
-    set_fields_registry: function(fields_registry) {},
-    render_to: function($el) {},
+core.view_registry.add('form', FormView);
+
+return FormView;
+
 });
+
+
+odoo.define('web.FormRenderingEngine', function (require) {
+"use strict";
+
+var common = require('web.form_common');
+var core = require('web.core');
+var utils = require('web.utils');
+
+var _t = core._t;
+var QWeb = core.qweb;
 
 /**
  * Default rendering engine for the form view.
  *
  * It is necessary to set the view using set_view() before usage.
  */
-var FormRenderingEngine = FormRenderingEngineInterface.extend({
+return core.Class.extend({
     init: function(view) {
         this.view = view;
     },
@@ -1272,7 +1269,7 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
         $('board', doc).each(function() {
             $(this).attr('layout', $(this).attr('style'));
         });
-        return $('<div class="oe_form"/>').append(utils.xml_to_str(doc));
+        return $(utils.xml_to_str(doc));
     },
     render_to: function($target) {
         var self = this;
@@ -1288,7 +1285,8 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
         this.labels = {};
         this.process(this.$form);
 
-        this.$form.appendTo(this.$target);
+        this.$form.contents().appendTo(this.$target);
+        this.handle_common_properties(this.$target, this.$form);
 
         this.to_replace = [];
 
@@ -1365,9 +1363,6 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
             args[0] = $tag;
             return fn.apply(self, args);
         } else {
-            if( tagname === 'header') {
-                $tag.addClass('o_statusbar_buttons');
-            }
             // generic tag handling, just process children
             $tag.children().each(function() {
                 self.process($(this));
@@ -1391,14 +1386,14 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
     process_sheet: function($sheet) {
         var $new_sheet = this.render_element('FormRenderingSheet', $sheet.getAttributes());
         this.handle_common_properties($new_sheet, $sheet);
-        var $dst = $new_sheet.find('.oe_form_sheet');
+        var $dst = $new_sheet.find('.o_form_sheet');
         $sheet.contents().appendTo($dst);
         $sheet.before($new_sheet).remove();
         this.process($new_sheet);
     },
     process_form: function($form) {
         if ($form.find('> sheet').length === 0) {
-            $form.addClass('oe_form_nosheet');
+            $form.addClass('o_form_nosheet');
         }
         var $new_form = this.render_element('FormRenderingForm', $form.getAttributes());
         this.handle_common_properties($new_form, $form);
@@ -1462,119 +1457,99 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
     },
     process_group: function($group) {
         var self = this;
+
+        // Processes a group containing nested groups
+        // Renders a div for each nested group, into a div that is the outer group
+        // The nested groups's width is a percentage according to col and colspan attributes
+        var _process_outer_group = function(col) {
+            var $new_group = self.render_element('FormRenderingOuterGroup', $group.getAttributes());
+            $group.children().each(function() {
+                var $child = $(this);
+                var tagName = $child[0].tagName.toLowerCase();
+                var colspan = parseInt($child.attr('colspan') || 1, 10);
+
+                if (tagName === 'newline') {
+                    $new_group.append($('<br>')); // Skip to the next line
+                    return;
+                }
+                // compute child's classname from col and colspan attributes
+                $child.addClass('o_group_col_' + Math.min(Math.floor(colspan/col*12), 12));
+                $new_group.append($child);
+
+                children.push($child[0]);
+            });
+            return $new_group;
+        };
+        // Processes a group containing no nested group
+        // Renders an HTML table
+        var _process_inner_group = function(col) {
+            var $new_group = self.render_element('FormRenderingInnerGroup', $group.getAttributes());
+            $new_group.find('td').attr('colspan', col); // Group's title spans all column
+            var row_col = col;
+            var $row = null;
+
+            $group.children().each(function() {
+                var $child = $(this);
+                var tagName = $child[0].tagName.toLowerCase();
+                var colspan = parseInt($child.attr('colspan') || 1, 10);
+
+                if (tagName === 'newline') {
+                    $row = null; // Start with a new row
+                    return;
+                }
+                row_col -= colspan;
+                if (!$row || row_col < 0) { // Append a new row to the group
+                    $row = $('<tr>').appendTo($new_group);
+                    row_col = col-colspan;
+                }
+                $('<td>').attr('colspan', colspan).append($child).appendTo($row);
+
+                children.push($child[0]);
+            });
+
+            // Some kind of an hack
+            // Add width on table's cell to avoid automatic layout of table which
+            // makes first col to take full width available (typically, first col contains label)
+            $new_group.find('tr').each(function() {
+                var $tr = $(this);
+                var nonlabel_width = 100/(col - $tr.find('td > label:first-child').length);
+                $tr.find('td').each(function() {
+                    var $td = $(this);
+                    var $child = $td.children(':first');
+                    if ($child.is("label")) {
+                        $td.addClass("o_td_label");
+                    } else {
+                        $td.css("width", (nonlabel_width*parseInt($td.attr('colspan')))+"%");
+                    }
+                });
+
+            });
+            return $new_group;
+        };
+
+        // Preprocess field children
         $group.children('field').each(function() {
             self.preprocess_field($(this));
         });
-        var $new_group = this.render_element('FormRenderingGroup', $group.getAttributes());
-        var $table;
-        if ($new_group.first().is('table.oe_form_group')) {
-            $table = $new_group;
-        } else if ($new_group.filter('table.oe_form_group').length) {
-            $table = $new_group.filter('table.oe_form_group').first();
-        } else {
-            $table = $new_group.find('table.oe_form_group').first();
-        }
 
-        var $tr, $td,
-            cols = parseInt($group.attr('col') || 2, 10),
-            row_cols = cols;
-
+        // Process group
+        var nested_groups = $group.children('group').length; // Detect possible nested groups
         var children = [];
-        $group.children().each(function() {
-            var $child = $(this);
-            var colspan = parseInt($child.attr('colspan') || 1, 10);
-            var tagName = $child[0].tagName.toLowerCase();
-            var $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
-            var newline = tagName === 'newline';
-
-            // Note FME: those classes are used in layout debug mode
-            if ($tr && row_cols > 0 && (newline || row_cols < colspan)) {
-                $tr.addClass('oe_form_group_row_incomplete');
-                if (newline) {
-                    $tr.addClass('oe_form_group_row_newline');
-                }
-            }
-            if (newline) {
-                $tr = null;
-                return;
-            }
-            if (!$tr || row_cols < colspan) {
-                $tr = $('<tr/>').addClass('oe_form_group_row').appendTo($table);
-                row_cols = cols;
-            } else if (tagName==='group') {
-                // When <group> <group/><group/> </group>, we need a spacing between the two groups
-                $td.addClass('oe_group_right');
-            }
-            row_cols -= colspan;
-
-            // invisibility transfer
-            var field_modifiers = JSON.parse($child.attr('modifiers') || '{}');
-            var invisible = field_modifiers.invisible;
-            self.handle_common_properties($td, $("<dummy>").attr("modifiers", JSON.stringify({invisible: invisible})));
-
-            $tr.append($td.append($child));
-            children.push($child[0]);
-        });
-        if (row_cols && $td) {
-            $td.attr('colspan', parseInt($td.attr('colspan'), 10) + row_cols);
+        var col = parseInt($group.attr('col') || 2, 10);
+        var $new_group;
+        if (nested_groups) {
+            $new_group = _process_outer_group(col);
+        } else {
+            $new_group = _process_inner_group(col);
         }
+        this.handle_common_properties($new_group, $group);
+
+        // Process group's children
         $group.before($new_group).remove();
-
-        $table.find('> tbody > tr').each(function() {
-            var to_compute = [],
-                row_cols = cols,
-                total = 100;
-            $(this).children().each(function() {
-                var $td = $(this),
-                    $child = $td.children(':first');
-                if ($child.attr('cell-class')) {
-                    $td.addClass($child.attr('cell-class'));
-                }
-                switch ($child[0].tagName.toLowerCase()) {
-                    case 'separator':
-                        break;
-                    case 'label':
-                        if ($child.attr('for')) {
-                            $td.attr('width', '1%').addClass('oe_form_group_cell_label');
-                            row_cols-= $td.attr('colspan') || 1;
-                            total--;
-                        }
-                        break;
-                    default:
-                        var width = _.str.trim($child.attr('width') || ''),
-                            iwidth = parseInt(width, 10);
-                        if (iwidth) {
-                            if (width.substr(-1) === '%') {
-                                total -= iwidth;
-                                width = iwidth + '%';
-                            } else {
-                                // Absolute width
-                                $td.css('min-width', width + 'px');
-                            }
-                            $td.attr('width', width);
-                            $child.removeAttr('width');
-                            row_cols-= $td.attr('colspan') || 1;
-                        } else {
-                            to_compute.push($td);
-                        }
-
-                }
-            });
-            if (row_cols) {
-                var unit = Math.floor(total / row_cols);
-                if (!$(this).is('.oe_form_group_row_incomplete')) {
-                    _.each(to_compute, function($td) {
-                        var width = parseInt($td.attr('colspan'), 10) * unit;
-                        $td.attr('width', width + '%');
-                        total -= width;
-                    });
-                }
-            }
-        });
         _.each(children, function(el) {
             self.process($(el));
         });
-        this.handle_common_properties($new_group, $group);
+
         return $new_group;
     },
     process_notebook: function($notebook) {
@@ -1641,17 +1616,8 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
         var dict = {
             string: $label.attr('string') || (field_orm || {}).string || '',
             help: $label.attr('help') || (field_orm || {}).help || '',
-            _for: name ? _.uniqueId('oe-field-input-') : undefined,
+            _for: name ? _.uniqueId('o_field_input_') : undefined,
         };
-        var align = parseFloat(dict.align);
-        if (isNaN(align) || align === 1) {
-            align = 'right';
-        } else if (align === 0) {
-            align = 'left';
-        } else {
-            align = 'center';
-        }
-        dict.align = align;
         var $new_label = this.render_element('FormRenderingLabel', dict);
         $label.before($new_label).remove();
         this.handle_common_properties($new_label, $label);
@@ -1680,9 +1646,5 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
         $new_element.data(attr, $node.attr(attr));
     }
 });
-
-core.view_registry.add('form', FormView);
-
-return FormView;
 
 });

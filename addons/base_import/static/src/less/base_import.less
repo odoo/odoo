@@ -1,0 +1,142 @@
+.oe_import {
+    .o-webclient-padding(@top: 8px);
+    background-color: white;
+    overflow: auto;
+    position: absolute; // Needed for chrome
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    @media (max-width: @screen-xs-max) {
+        position: static;
+    }
+
+    > p {
+        text-align: justify
+    }
+    h2 {
+        margin-top: 0;
+        font-size: large; // override h2 font-size which is too large
+    }
+    .oe_padding {
+        padding: 13px 0;
+    }
+
+    .oe_import_advanced_mode {
+        margin-left: 20px;
+    }
+
+    .oe_import_box {
+        padding: 16px;
+        background: #F0EEEE;
+        border-radius: @border-radius-base;
+        border: solid 1px #dddddd;
+        label {
+            font-weight: normal;
+        }
+        .oe_import_file {
+            display: inline-block;
+        }
+    }
+
+    .oe_import_toggle {
+        margin-top: 8px;
+    }
+    a.oe_import_toggle {
+        display: block;
+        &:before {
+            content: '+'
+        }
+    }
+    .oe_import_options {
+        margin-top: 8px;
+        p {
+            margin: 0;
+        }
+        label {
+            width: 150px;
+            line-height: 32px;
+            text-align: right;
+        }
+    }
+    /* ----------- INITIAL SETUP ------------ */
+    dd,
+    .oe_import_toggled,
+    .oe_import_grid,
+    .oe_import_error_report,
+    .oe_import_with_file,
+    .oe_import_noheaders,
+    .oe_import_report_more {
+        display: none;
+    }
+
+    .oe_import_with_file label {
+        font-weight: normal;
+    }
+
+    &.oe_import_preview .oe_import_grid {
+        display: table;
+    }
+    &.oe_import_error .oe_import_error_report,
+    &.oe_import_with_file .oe_import_with_file,
+    &.oe_import_noheaders .oe_import_noheaders,
+    .oe_import_report_showmore .oe_import_report_more {
+        display: block;
+    }
+
+    .oe_import_noheaders {
+        .text-muted();
+    }
+
+    /* ------------- ERRORS AND WARNINGS REPORT ------------ */
+    .oe_import_error_report {
+        > ul {
+            padding: 0;
+        }
+        .oe_import_report {
+            padding: 4px;
+            margin: 2px 0;
+            list-style: none;
+            border-radius: @border-radius-base;
+        }
+        .oe_import_report_error {
+            .bg-danger();
+            .text-danger();
+        }
+        .oe_import_report_warning {
+            .bg-warning();
+            .text-warning();
+        }
+        .oe_import_report_info {
+            .bg-info();
+            .text-info();
+        }
+    }
+
+    /* ------------- THE CSV TABLE ------------ */
+    .oe_import_grid {
+        tr {
+            &.oe_import_grid-header:first-child {
+                line-height: 24px;
+                font-weight: normal;
+            }
+            td {
+                padding: 4px;
+            }
+        }
+    }
+
+}
+
+/* Field dropdown */
+.oe_import_selector {
+    font-size: @font-size-small;
+    ul, li {
+        margin: 0; padding: 0;
+    }
+    width: 250px !important;
+}
+
+.o-list-buttons.o-editing .o_button_import {
+    display: none; // hidden for list view editable
+}

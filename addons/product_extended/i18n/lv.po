@@ -3,14 +3,15 @@
 # * product_extended
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 07:21+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Latvian (http://www.transifex.com/odoo/odoo-9/language/lv/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,103 +19,44 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:24
-#: code:addons/product_extended/wizard/wizard_price.py:40
-#, python-format
-msgid "Active ID is not set in Context."
+#: model:ir.model.fields,field_description:product_extended.field_product_product_available_in_pos
+msgid "Available in the Point of Sale"
 msgstr ""
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Recepte"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Cancel"
-msgstr "Atcelt"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Price"
-msgstr "Mainīt Cenu"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Standard Price"
-msgstr "Mainīt Standarta Cenu"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_recursive
-msgid "Change prices of child BoMs too"
+#: model:ir.model.fields,help:product_extended.field_product_product_to_weight
+msgid ""
+"Check if the product should be weighted using the hardware scale integration"
 msgstr ""
 
 #. module: product_extended
-#: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
-msgid "Compute Price Wizard"
+#: model:ir.model.fields,help:product_extended.field_product_product_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
 msgstr ""
 
 #. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid "Compute from BOM"
 msgstr ""
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute price wizard"
-msgstr ""
-
-#. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
-msgid "Created by"
-msgstr "Izveidoja"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_date
-msgid "Created on"
-msgstr "Izveidots"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_display_name
-msgid "Display Name"
+#: model:ir.model.fields,field_description:product_extended.field_product_product_pos_categ_id
+msgid "Point of Sale Category"
 msgstr ""
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
-msgid "Generate accounting entries when real-time"
-msgstr ""
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_id
-msgid "ID"
-msgstr "ID"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_info_field
-msgid "Info"
-msgstr "Informācija"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price___last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_uid
-msgid "Last Updated by"
-msgstr "Pēdējo reizi atjaunoja"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_date
-msgid "Last Updated on"
-msgstr "Pēdējās izmaiņas"
+#: model:ir.model,name:product_extended.model_product_product
+msgid "Product"
+msgstr "Produkts"
 
 #. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
@@ -122,26 +64,11 @@ msgid "Product Template"
 msgstr "Produkta Veidne"
 
 #. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Set price on BoM"
+#: model:ir.model.fields,help:product_extended.field_product_product_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
 msgstr ""
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_standard_price
-msgid "Standard Price"
-msgstr "Standarta cena"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid ""
-"The price is computed from the bill of material lines which are not variant "
-"specific"
-msgstr ""
-
-#. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:38
-#, python-format
-msgid ""
-"This wizard is build for product templates, while you are currently running "
-"it from a product variant."
+#: model:ir.model.fields,field_description:product_extended.field_product_product_to_weight
+msgid "To Weigh With Scale"
 msgstr ""

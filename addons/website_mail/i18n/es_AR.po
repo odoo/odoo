@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mail
-# 
+#
 # Translators:
 # Leonardo Germán Chianea <noamixcontenidos@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
 "PO-Revision-Date: 2015-09-30 09:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-9/language/es_AR/)\n"
+"Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-9/"
+"language/es_AR/)\n"
+"Language: es_AR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_AR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mail
@@ -24,24 +25,18 @@ msgid "Discussion Group"
 msgstr "Grupo de Debate"
 
 #. module: website_mail
-#: model:ir.model,name:website_mail.model_mail_thread
-msgid "Email Thread"
-msgstr "Hilo de Mensajes"
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "Leave a comment"
-msgstr ""
-
-#. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_message
 msgid "Message"
 msgstr "Mensaje"
 
 #. module: website_mail
+#: model:ir.model.fields,help:website_mail.field_mail_compose_message_description
 #: model:ir.model.fields,help:website_mail.field_mail_message_description
+#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message_description
 msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Descripción del mensaje: o bien el asunto, o el comienzo del cuerpo del mensaje"
+msgstr ""
+"Descripción del mensaje: o bien el asunto, o el comienzo del cuerpo del "
+"mensaje"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread
@@ -49,7 +44,9 @@ msgid "Oops! Something went wrong. Try to reload the page and to log in."
 msgstr "¡Huy! Algo salió mal. Trate de recargar la página e inicie sesión."
 
 #. module: website_mail
+#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message_website_published
 #: model:ir.model.fields,field_description:website_mail.field_mail_message_website_published
+#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message_website_published
 msgid "Published"
 msgstr "Publicado"
 
@@ -64,13 +61,18 @@ msgid "Subscribe"
 msgstr "Suscribirse"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:69
+#: code:addons/website_mail/models/mail_message.py:57
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr "La operación no ha podido ser completada por restricciones de seguridad. Por favor contacte con su administrador de sistema.\n\n(Tipo de documento: %s, Operación: %s)"
+msgstr ""
+"La operación no ha podido ser completada por restricciones de seguridad. Por "
+"favor contacte con su administrador de sistema.\n"
+"\n"
+"(Tipo de documento: %s, Operación: %s)"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow
@@ -78,29 +80,11 @@ msgid "Unsubscribe"
 msgstr "Desuscribirse"
 
 #. module: website_mail
+#: model:ir.model.fields,help:website_mail.field_mail_compose_message_website_published
 #: model:ir.model.fields,help:website_mail.field_mail_message_website_published
+#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message_website_published
 msgid "Visible on the website as a comment"
 msgstr "Visible en el sitio web como un comentario"
-
-#. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_mail_thread_website_message_ids
-msgid "Website Messages"
-msgstr "Mensajes del sitio web"
-
-#. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_thread_website_message_ids
-msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "Write a message..."
-msgstr ""
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "You must be"
-msgstr ""
 
 #. module: website_mail
 #. openerp-web
@@ -111,11 +95,6 @@ msgstr "En este momento"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "logged in"
-msgstr ""
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
 msgid "on"
 msgstr "en"
 
@@ -123,16 +102,6 @@ msgstr "en"
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
 msgid "publisher_warranty.contract"
 msgstr "publisher_warranty.contract"
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "to post a comment."
-msgstr ""
-
-#. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_mail_message_description
-msgid "unknown"
-msgstr "desconocido"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow

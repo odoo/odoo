@@ -1,75 +1,70 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website_sale.controllers.main import website_sale
+from odoo import http
+from odoo.http import request
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
-class website_sale_options(website_sale):
+class WebsiteSaleOptions(WebsiteSale):
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
-        r = super(website_sale_options, self).product(product, category, search, **kwargs)
-
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        template_obj = pool['product.template']
-
-        optional_product_ids = []
-        for p in product.optional_product_ids:
-            ctx = dict(context, active_id=p.id)
-            optional_product_ids.append(template_obj.browse(cr, uid, p.id, context=ctx))
-
-        r.qcontext['optional_product_ids'] = optional_product_ids
+        r = super(WebsiteSaleOptions, self).product(product, category, search, **kwargs)
+        r.qcontext['optional_product_ids'] = map(lambda p: p.with_context({'active_id': p.id}), product.optional_product_ids)
         return r
 
     @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
     def cart_options_update_json(self, product_id, add_qty=1, set_qty=0, goto_shop=None, lang=None, **kw):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         if lang:
-            context = dict(context, lang=lang)
-            request.website = request.website.with_context(context)
+            request.website = request.website.with_context(lang=lang)
 
         order = request.website.sale_get_order(force_create=1)
-        product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
+        product = request.env['product.product'].browse(int(product_id))
 
-
-        option_ids = [p.id for tmpl in product.optional_product_ids for p in tmpl.product_variant_ids]
+        option_ids = product.optional_product_ids.mapped('product_variant_ids').ids
         optional_product_ids = []
         for k, v in kw.items():
             if "optional-product-" in k and int(kw.get(k.replace("product", "add"))) and int(v) in option_ids:
                 optional_product_ids.append(int(v))
 
+        attributes = self._filter_attributes(**kw)
+
         value = {}
         if add_qty or set_qty:
-            value = order._cart_update(product_id=int(product_id),
-                add_qty=int(add_qty), set_qty=int(set_qty),
-                optional_product_ids=optional_product_ids)
+            value = order._cart_update(
+                product_id=int(product_id),
+                add_qty=int(add_qty),
+                set_qty=int(set_qty),
+                attributes=attributes,
+                optional_product_ids=optional_product_ids
+            )
 
         # options have all time the same quantity
         for option_id in optional_product_ids:
-            order._cart_update(product_id=option_id,
+            order._cart_update(
+                product_id=option_id,
                 set_qty=value.get('quantity'),
-                linked_line_id=value.get('line_id'))
+                attributes=attributes,
+                linked_line_id=value.get('line_id')
+            )
 
         return str(order.cart_quantity)
 
     @http.route(['/shop/modal'], type='json', auth="public", methods=['POST'], website=True)
     def modal(self, product_id, **kw):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        pricelist = self.get_pricelist()
-        if not context.get('pricelist'):
-            context['pricelist'] = int(pricelist)
+        pricelist = request.website.get_current_pricelist()
+        product_context = dict(request.context)
+        if not product_context.get('pricelist'):
+            product_context['pricelist'] = pricelist.id
+        # fetch quantity from custom context
+        product_context.update(kw.get('kwargs', {}).get('context', {}))
 
-        website_context = kw.get('kwargs', {}).get('context', {})
-        context = dict(context or {}, **website_context)
-        from_currency = pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id
+        from_currency = request.env.user.company_id.currency_id
         to_currency = pricelist.currency_id
-        compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
-        product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
-        request.website = request.website.with_context(context)
-
-        return request.website._render("website_sale_options.modal", {
-                'product': product,
-                'compute_currency': compute_currency,
-                'get_attribute_value_ids': self.get_attribute_value_ids,
-            })
+        compute_currency = lambda price: request.env['res.currency']._compute(from_currency, to_currency, price)
+        product = request.env['product.product'].with_context(product_context).browse(int(product_id))
+        return request.env['ir.ui.view'].render_template("website_sale_options.modal", {
+            'product': product,
+            'compute_currency': compute_currency,
+            'get_attribute_value_ids': self.get_attribute_value_ids,
+        })

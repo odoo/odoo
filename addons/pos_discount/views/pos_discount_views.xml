@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="view_pos_config_form">
+            <field name="name">pos.config.form.inherit</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_config_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='receipt']" position="after">
+                    <group string="Discounts">
+                        <field name='iface_discount' />
+                        <label string="" colspan="2" />
+                        <field name='discount_product_id' attrs="{'required': [('iface_discount', '=', True)]}" />
+                        <field name='discount_pc' />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+</odoo>

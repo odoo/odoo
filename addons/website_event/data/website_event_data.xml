@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="menu_events" model="website.menu">
+            <field name="name">Events</field>
+            <field name="url">/event</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">30</field>
+        </record>
+        <record id="action_open_website" model="ir.actions.act_url">
+            <field name="name">Website Home</field>
+            <field name="target">self</field>
+            <field name="url">/event</field>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_website"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="mt_event_published" model="mail.message.subtype">
+            <field name="name">Event published</field>
+            <field name="res_model">event.event</field>
+            <field name="default" eval="False"/>
+            <field name="description">Event published</field>
+        </record>
+        <record id="mt_event_unpublished" model="mail.message.subtype">
+            <field name="name">Event unpublished</field>
+            <field name="res_model">event.event</field>
+            <field name="default" eval="False"/>
+            <field name="description">Event unpublished</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * subscription
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2015-09-08 09:06+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Telugu (http://www.transifex.com/odoo/odoo-9/language/te/)\n"
+"Language: te\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: te\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: subscription
@@ -153,7 +153,7 @@ msgstr ""
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
+msgid "Internal Qty"
 msgstr ""
 
 #. module: subscription
@@ -204,7 +204,7 @@ msgstr "గమనికలు"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
+msgid "Number of Documents"
 msgstr ""
 
 #. module: subscription
@@ -219,7 +219,7 @@ msgid "Partner"
 msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:92
 #, python-format
 msgid ""
 "Please provide another source document.\n"
@@ -322,11 +322,6 @@ msgid "Subscriptions"
 msgstr ""
 
 #. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr ""
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "User"
@@ -344,7 +339,7 @@ msgid "Weeks"
 msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:115
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr ""

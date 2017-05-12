@@ -3,6 +3,7 @@ odoo.define('web.form_common', function (require) {
 
 var core = require('web.core');
 var data = require('web.data');
+var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
 var ListView = require('web.ListView');
 var pyeval = require('web.pyeval');
@@ -165,7 +166,7 @@ var ReinitializeFieldMixin =  _.extend({}, ReinitializeWidgetMixin, {
 
 /**
     A mixin containing some useful methods to handle completion inputs.
-    
+
     The widget containing this option can have these arguments in its widget options:
     - no_quick_create: if true, it will disable the quick create
 */
@@ -191,13 +192,13 @@ var CompletionFieldMixin = {
 
         return this.orderer.add(dataset.name_search(
                 search_val, new data.CompoundDomain(self.build_domain(), exclusion_domain),
-                'ilike', this.limit + 1, self.build_context())).then(function(data) {
-            self.last_search = data;
+                'ilike', this.limit + 1, self.build_context())).then(function(_data) {
+            self.last_search = _data;
             // possible selections for the m2o
-            var values = _.map(data, function(x) {
+            var values = _.map(_data, function(x) {
                 x[1] = x[1].split("\n")[0];
                 return {
-                    label: _.str.escapeHTML(x[1]),
+                    label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
                     value: x[1],
                     name: x[1],
                     id: x[0],
@@ -210,15 +211,15 @@ var CompletionFieldMixin = {
                 values.push({
                     label: _t("Search More..."),
                     action: function() {
-                        dataset.name_search(search_val, self.build_domain(), 'ilike', 160).done(function(data) {
-                            self._search_create_popup("search", data);
+                        dataset.name_search(search_val, self.build_domain(), 'ilike', 160).done(function(_data) {
+                            self._search_create_popup("search", _data);
                         });
                     },
-                    classname: 'oe_m2o_dropdown_option'
+                    classname: 'o_m2o_dropdown_option'
                 });
             }
             // quick create
-            var raw_result = _(data.result).map(function(x) {return x[1];});
+            var raw_result = _(_data.result).map(function(x) {return x[1];});
             if (search_val.length > 0 && !_.include(raw_result, search_val) &&
                 ! (self.options && (self.options.no_create || self.options.no_quick_create))) {
                 self.can_create && values.push({
@@ -227,7 +228,7 @@ var CompletionFieldMixin = {
                     action: function() {
                         self._quick_create(search_val);
                     },
-                    classname: 'oe_m2o_dropdown_option'
+                    classname: 'o_m2o_dropdown_option'
                 });
             }
             // create...
@@ -237,14 +238,14 @@ var CompletionFieldMixin = {
                     action: function() {
                         self._search_create_popup("form", undefined, self._create_context(search_val));
                     },
-                    classname: 'oe_m2o_dropdown_option'
+                    classname: 'o_m2o_dropdown_option'
                 });
             }
             else if (values.length === 0) {
                 values.push({
                     label: _t("No results to show..."),
                     action: function() {},
-                    classname: 'oe_m2o_dropdown_option'
+                    classname: 'o_m2o_dropdown_option'
                 });
             }
 
@@ -274,7 +275,7 @@ var CompletionFieldMixin = {
     // all search/create popup handling
     _search_create_popup: function(view, ids, context) {
         var self = this;
-        new SelectCreateDialog(this, {
+        new SelectCreateDialog(this, _.extend({}, (this.options || {}), {
             res_model: self.field.relation,
             domain: self.build_domain(),
             context: new data.CompoundContext(self.build_context(), context || {}),
@@ -286,7 +287,7 @@ var CompletionFieldMixin = {
                 self.add_id(element_ids[0]);
                 self.focus();
             }
-        }).open();
+        })).open();
     },
     /**
      * To implement.
@@ -429,6 +430,7 @@ var FormWidget = Widget.extend(InvisibilityChangerMixin, {
         this.process_modifiers();
         this._super();
         this.$el.addClass(this.node.attrs["class"] || "");
+        this.$el.attr('style', this.node.attrs.style);
     },
     destroy: function() {
         $.fn.tooltip('destroy');
@@ -473,7 +475,7 @@ var FormWidget = Widget.extend(InvisibilityChangerMixin, {
                         debug: session.debug,
                         widget: widget
                     });
-                },
+                }
             }, options || {});
         //only show tooltip if we are in debug or if we have a help to show, otherwise it will display
         //as empty
@@ -665,16 +667,16 @@ var AbstractField = FormWidget.extend(FieldInterface, {
             this._check_css_flags();
         });
 
-        this.$translate = $(); // Enterprise compatibility
+        this.$translate = (_t.database.multi_lang && this.field.translate) ? $('<button/>', {
+            type: 'button',
+        }).addClass('o_field_translate fa fa-globe btn btn-link') : $();
     },
+
     renderElement: function() {
         var self = this;
         this._super();
-        if (this.field.translate && this.view) {
-            this.$el.addClass('oe_form_field_translatable');
-            this.$el.find('.oe_field_translate').click(this.on_translate);
-        }
-        this.$label = this.view ? this.view.$el.find('label[for=' + this.id_for_label + ']') : $();
+        this.$el.addClass('o_form_field');
+        this.$label = this.view ? this.view.$('label[for=' + this.id_for_label + ']') : $();
         this.do_attach_tooltip(this, this.$label[0] || this.$el);
         if (session.debug) {
             this.$label.off('dblclick').on('dblclick', function() {
@@ -706,16 +708,23 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         });
         this.render_value();
         this._toggle_label();
+
+        if (this.view) {
+            this.$translate
+                .insertAfter(this.$el)
+                .on('click', _.bind(this.on_translate, this));
+        }
     },
     _toggle_label: function() {
         var empty = this.get('effective_readonly') && this.is_false();
+        this.$label.toggleClass('o_form_label_empty', empty).toggleClass('o_form_label_false', this.get('effective_readonly') && this.get('value') === false);
         this.$el.toggleClass('o_form_field_empty', empty);
     },
     /**
      * Private. Do not use.
      */
     _set_required: function() {
-        this.$el.toggleClass('oe_form_required', this.get("required"));
+        this.$el.toggleClass('o_form_required', this.get("required"));
     },
     set_value: function(value_) {
         this.set({'value': value_});
@@ -751,10 +760,11 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         return this.get('value') === false;
     },
     _check_css_flags: function() {
-        if (this.field.translate) {
-            this.$el.find('.oe_field_translate').toggle(this.field_manager.get('actual_mode') !== "create");
-        }
-        this.$el.toggleClass('oe_form_invalid', !this.disable_utility_classes && !!this.field_manager.get('display_invalid_fields') && !this.is_valid());
+        var show_translate = (!this.get('effective_readonly') && this.field_manager.get('actual_mode') !== "create");
+        this.$translate.toggleClass('o_translate_active', !!show_translate);
+
+        this.$el.add(this.$label)
+            .toggleClass('o_form_invalid', !this.disable_utility_classes && !!this.field_manager.get('display_invalid_fields') && !this.is_valid());
     },
     focus: function() {
         return false;
@@ -765,15 +775,14 @@ var AbstractField = FormWidget.extend(FieldInterface, {
     on_translate: function() {
         var self = this;
         var trans = new data.DataSet(this, 'ir.translation');
-        return trans.call_button('translate_fields', [this.view.dataset.model, this.view.datarecord.id, this.name, this.view.dataset.get_context()]).done(function(r) {
+        return trans.call_button('translate_fields', [this.view.model, this.view.datarecord.id, this.name, this.view.dataset.get_context()]).done(function(r) {
             self.do_action(r);
         });
     },
-
-    set_dimensions: function (height, width) {
+    set_dimensions: function(height, width) {
         this.$el.css({
             width: width,
-            minHeight: height
+            height: height,
         });
     },
     commit_value: function() {
@@ -789,7 +798,6 @@ var ViewDialog = Dialog.extend({ // FIXME should use ViewManager
      *  options:
      *  -readonly: only applicable when not in creation mode, default to false
      * - alternative_form_view
-     * - view_id
      * - write_function
      * - read_function
      * - create_function
@@ -802,7 +810,7 @@ var ViewDialog = Dialog.extend({ // FIXME should use ViewManager
         options.dialogClass = options.dialogClass || '';
         options.dialogClass += ' o_act_window';
 
-        this._super(parent, _.clone(options));
+        this._super(parent, $.extend(true, {}, options));
 
         this.res_model = options.res_model || null;
         this.res_id = options.res_id || null;
@@ -810,7 +818,6 @@ var ViewDialog = Dialog.extend({ // FIXME should use ViewManager
         this.context = options.context || {};
         this.options = _.extend(this.options || {}, options || {});
 
-        this.on('closed', this, this.select);
         this.on_selected = options.on_selected || (function() {});
     },
 
@@ -834,6 +841,8 @@ var ViewDialog = Dialog.extend({ // FIXME should use ViewManager
         };
         this.dataset.parent_view = this.options.parent_view;
         this.dataset.child_name = this.options.child_name;
+
+        this.on('closed', this, this.select);
     },
 
     select: function() {
@@ -863,7 +872,7 @@ var FormViewDialog = ViewDialog.extend({
             ];
 
             if(!readonly) {
-                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? " " + _t(" & Close") : ""), classes: "btn-primary o_formdialog_save", click: function() { // o_formdialog_save class for web_tests!
+                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? " " + _t(" & Close") : ""), classes: "btn-primary", click: function() {
                         self.view_form.onchanges_mutex.def.then(function() {
                             if (!self.view_form.warning_displayed) {
                                 $.when(self.view_form.save()).done(function() {
@@ -894,33 +903,37 @@ var FormViewDialog = ViewDialog.extend({
 
     open: function() {
         var self = this;
-        self._super();
-        self.init_dataset();
-        
-        if (self.res_id) {
-            self.dataset.ids = [self.res_id];
-            self.dataset.index = 0;
+        var _super = this._super.bind(this);
+        this.init_dataset();
+
+        if (this.res_id) {
+            this.dataset.ids = [this.res_id];
+            this.dataset.index = 0;
         } else {
-            self.dataset.index = null;
+            this.dataset.index = null;
         }
-        var options = _.clone(self.options.form_view_options) || {};
-        if (self.res_id !== null) {
-            options.initial_mode = self.options.readonly ? "view" : "edit";
+        var options = _.clone(this.options.form_view_options) || {};
+        if (this.res_id !== null) {
+            options.initial_mode = this.options.readonly ? "view" : "edit";
         }
         _.extend(options, {
-            $buttons: self.$buttons,
+            $buttons: this.$buttons,
         });
         var FormView = core.view_registry.get('form');
-        self.view_form = new FormView(self, self.dataset, self.options.view_id || false, options);
-        if (self.options.alternative_form_view) {
-            self.view_form.set_embedded_view(self.options.alternative_form_view);
+        var fields_view_def;
+        if (this.options.alternative_form_view) {
+            fields_view_def = $.when(this.options.alternative_form_view);
+        } else {
+            fields_view_def = data_manager.load_fields_view(this.dataset, this.options.view_id, 'form', false);
         }
-
-        self.do_hide();
-        self.view_form.appendTo(self.$el);
-        self.view_form.on("form_view_loaded", self, function() {
-            self.view_form.do_show().then(function() {
-                self.do_show();
+        fields_view_def.then(function (fields_view) {
+            self.view_form = new FormView(self, self.dataset, fields_view, options);
+            var fragment = document.createDocumentFragment();
+            self.view_form.appendTo(fragment).then(function () {
+                self.view_form.do_show().then(function() {
+                    _super().$el.append(fragment);
+                    self.view_form.autofocus();
+                });
             });
         });
 
@@ -937,7 +950,7 @@ var SelectCreateListView = ListView.extend({
         this.popup.close();
     },
     do_select: function(ids, records) {
-        this._super(ids, records);
+        this._super.apply(this, arguments);
         this.popup.on_click_element(ids);
     }
 });
@@ -959,55 +972,66 @@ var SelectCreateDialog = ViewDialog.extend({
         _.defaults(this.options, { initial_view: "search" });
         this.initial_ids = this.options.initial_ids;
     },
-    
+
     open: function() {
-        this._super();
-        this.init_dataset();
-        if (this.options.initial_view == "search") {
-            var context = pyeval.sync_eval_domains_and_contexts({
-                domains: [],
-                contexts: [this.context]
-            }).context;
-            var search_defaults = {};
-            _.each(context, function (value_, key) {
-                var match = /^search_default_(.*)$/.exec(key);
-                if (match) {
-                    search_defaults[match[1]] = value_;
-                }
-            });
-            this.setup(search_defaults);
-        } else { // "form"
-            this.create_edit_record();
+        if(this.options.initial_view !== "search") {
+            return this.create_edit_record();
         }
+
+        var _super = this._super.bind(this);
+        this.init_dataset();
+        var context = pyeval.sync_eval_domains_and_contexts({
+            domains: [],
+            contexts: [this.context]
+        }).context;
+        var search_defaults = {};
+        _.each(context, function (value_, key) {
+            var match = /^search_default_(.*)$/.exec(key);
+            if (match) {
+                search_defaults[match[1]] = value_;
+            }
+        });
+        data_manager
+            .load_views(this.dataset, [[false, 'list'], [false, 'search']], {})
+            .then(this.setup.bind(this, search_defaults))
+            .then(function (fragment) {
+                _super().$el.append(fragment);
+            });
         return this;
     },
 
-    setup: function(search_defaults) {
+    setup: function(search_defaults, fields_views) {
         var self = this;
         if (this.searchview) {
             this.searchview.destroy();
         }
-        var $header = $('<div/>').addClass('o_modal_header').appendTo(this.$el);
+        var fragment = document.createDocumentFragment();
+        var $header = $('<div/>').addClass('o_modal_header').appendTo(fragment);
         var $pager = $('<div/>').addClass('o_pager').appendTo($header);
-        var $buttons = $('<div/>').addClass('o_search_options').appendTo($header);
-        this.searchview = new SearchView(this, this.dataset, false,  search_defaults, {$buttons: $buttons});
-        this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
-            if (self.initial_ids) {
-                self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
-                    contexts.concat(self.context), groupbys);
-                self.initial_ids = undefined;
+        var options = {
+            $buttons: $('<div/>').addClass('o_search_options').appendTo($header),
+            search_defaults: search_defaults,
+        };
+
+        this.searchview = new SearchView(this, this.dataset, fields_views.search, options);
+        this.searchview.on('search_data', this, function(domains, contexts, groupbys) {
+            if (this.initial_ids) {
+                this.do_search(domains.concat([[["id", "in", this.initial_ids]], this.domain]),
+                    contexts.concat(this.context), groupbys);
+                this.initial_ids = undefined;
             } else {
-                self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
+                this.do_search(domains.concat([this.domain]), contexts.concat(this.context), groupbys);
             }
         });
-        this.searchview.prependTo($header).done(function() {
+        return this.searchview.prependTo($header).then(function() {
             self.searchview.toggle_visibility(true);
+
             self.view_list = new SelectCreateListView(self,
-                self.dataset, false,
+                self.dataset, fields_views.list,
                 _.extend({'deletable': false,
                     'selectable': !self.options.disable_multiple_selection,
                     'import_enabled': false,
-                    '$buttons': self.$footer,
+                    '$buttons': self.$buttons,
                     'disable_editable_mode': true,
                     'pager': true,
                 }, self.options.list_view_options || {}));
@@ -1015,16 +1039,8 @@ var SelectCreateDialog = ViewDialog.extend({
                 e.cancel = true;
             });
             self.view_list.popup = self;
-            self.view_list.appendTo(self.$el).then(function() {
-                self.view_list.do_show();
-                self.view_list.render_pager($pager);
-            }).then(function() {
-                if (self.options.initial_facet) {
-                    self.searchview.query.reset([self.options.initial_facet], {
-                        preventSearch: true,
-                    });
-                }
-                self.searchview.do_search();
+            self.view_list.on('list_view_loaded', self, function() {
+                this.on_view_list_loaded();
             });
 
             var buttons = [
@@ -1041,6 +1057,19 @@ var SelectCreateDialog = ViewDialog.extend({
                 }});
             }
             self.set_buttons(buttons);
+
+            return self.view_list.appendTo(fragment).then(function() {
+                self.view_list.do_show();
+                self.view_list.render_pager($pager);
+                if (self.options.initial_facet) {
+                    self.searchview.query.reset([self.options.initial_facet], {
+                        preventSearch: true,
+                    });
+                }
+                self.searchview.do_search();
+
+                return fragment;
+            });
         });
     },
     do_search: function(domains, contexts, groupbys) {
@@ -1056,9 +1085,10 @@ var SelectCreateDialog = ViewDialog.extend({
         this.$footer.find(".o_selectcreatepopup_search_select").prop('disabled', this.selected_ids.length <= 0);
     },
     create_edit_record: function() {
-        new FormViewDialog(this.getParent(), this.options).open();
         this.close();
+        return new FormViewDialog(this.__parentedParent, this.options).open();
     },
+    on_view_list_loaded: function() {},
 });
 
 var DomainEditorDialog = SelectCreateDialog.extend({
@@ -1071,18 +1101,18 @@ var DomainEditorDialog = SelectCreateDialog.extend({
                 get_groupby: function () { return []; },
                 get_domain: function () { return options.default_domain; },
             },
-            values: [{label: _t("Selected domain"), value: null}],            
+            values: [{label: _t("Selected domain"), value: null}],
         }});
 
         this._super(parent, options);
     },
 
     get_domain: function (selected_ids) {
-        var group_domain = [],
-            domain;
-        if (this.$('input.oe_list_record_selector').prop('checked')) {
+        var group_domain = [];
+        var domain;
+        if (this.$('.o_list_record_selector input').prop('checked')) {
             if (this.view_list.grouped) {
-                var group_domain = _.chain(_.values(this.view_list.groups.children))
+                group_domain = _.chain(_.values(this.view_list.groups.children))
                                         .filter(function (child) { return child.records.length; })
                                         .map(function (c) { return c.datagroup.domain;})
                                         .value();
@@ -1100,6 +1130,11 @@ var DomainEditorDialog = SelectCreateDialog.extend({
             domain = [["id", "in", selected_ids]];
         }
         return this.dataset.domain.concat(group_domain).concat(domain || []);
+    },
+
+    on_view_list_loaded: function() {
+        this.$('.o_list_record_selector input').prop('checked', true);
+        this.$footer.find(".o_selectcreatepopup_search_select").prop('disabled', false);
     },
 });
 

@@ -1,0 +1,119 @@
+
+.o_homepage_editor_welcome_message {
+    padding-top: 128px;
+    padding-bottom: 128px;
+    font-family: Roboto, @font-family-sans-serif;
+
+    .o_tooltip_container {
+        .o-inline-flex-display();
+        .o-align-items(center);
+
+        > .o_tooltip {
+            .o-position-absolute();
+            position: relative;
+            display: inline-block;
+            margin: 0 8px;
+            opacity: 1;
+            z-index: auto;
+        }
+    }
+}
+
+.o_editable {
+    &:not(:empty), &[data-oe-type] {
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover {
+            box-shadow: @odoo-brand-primary 0 0 5px 2px inset;
+        }
+    }
+    &:focus, &[data-oe-type] {
+        min-height: 0.8em;
+        min-width: 8px;
+    }
+    &.o_is_inline_editable {
+        display: inline-block;
+    }
+    .btn, &.btn {
+        .user-select(auto);
+        cursor: text!important;
+    }
+    /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
+    &[placeholder]:empty:not(:focus):before {
+        content: attr(placeholder);
+        opacity: 0.3;
+    }
+
+    &.oe_structure.oe_empty, &[data-oe-type=html] {
+        > p:empty:only-child {
+            color: #aaa;
+        }
+    }
+}
+.editor_enable [data-oe-readonly]:hover {
+    cursor: default;
+}
+
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+    .user-select(none);
+}
+
+.oe_editable:focus,
+.css_editable_hidden,
+.editor_enable .css_editable_mode_hidden {
+    outline: none!important;
+}
+
+.css_editable_display,
+.editor_enable .css_non_editable_mode_hidden,
+.o_editable .media_iframe_video .css_editable_mode_display {
+    display: block!important;
+}
+
+[data-oe-type=html].oe_no_empty:empty {
+    height: 16px!important;
+}
+
+// EDITOR BAR
+table.editorbar-panel {
+    cursor: pointer;
+    width: 100%;
+    td { border: 1px solid #aaa}
+    td.selected { background-color: #b1c9d9}
+}
+.link-style {
+    .dropdown > .btn {
+        min-width: 160px;
+    }
+    .link-style {
+        display: none;
+    }
+    li {
+        text-align: center;
+        label {
+            width: 100px;
+            margin: 0 5px;
+        }
+    }
+    .col-sm-2 > * {
+        line-height: 2em;
+    }
+}
+
+// fontawesome
+.note-editable .fa {
+    cursor: pointer;
+}
+
+// parallax dropzones are in conflict with outside of parallax dropzones
+.parallax .oe_structure > .oe_drop_zone {
+    &:first-child {
+        top: 16px;
+    }
+    &:last-child {
+        bottom: 16px;
+    }
+}
+
+.editor_enable .js_language_selector {
+    display: none;
+}

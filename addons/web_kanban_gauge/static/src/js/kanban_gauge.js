@@ -3,6 +3,7 @@ odoo.define('web_kanban_gauge.widget', function (require) {
 
 var core = require('web.core');
 var kanban_widgets = require('web_kanban.widgets');
+var utils = require('web.utils');
 
 var AbstractField = kanban_widgets.AbstractField;
 var fields_registry = kanban_widgets.registry;
@@ -53,29 +54,81 @@ var GaugeWidget = AbstractField.extend({
         if (this.options.gauge_value_field) {
             gauge_value = this.getParent().record[this.options.gauge_value_field].raw_value;
         }
-        // var unique_id = _.uniqueId("JustGage");
+
+        var degree = Math.PI/180,
+            width = 200,
+            height = 150,
+            outerRadius = Math.min(width, height)*0.5,
+            innerRadius = outerRadius*0.7,
+            fontSize = height/7;
 
         this.$el.empty().attr('style', this.$node.attr('style') + ';position:relative; display:inline-block;');
-        this.gage = new JustGage({
-            parentNode: this.$el[0],
-            // id: unique_id,
-            value: value,
-            title: title,
-            min: 0,
-            max: max_value,
-            relativeGaugeSize: true,
-            humanFriendly: true,
-            titleFontColor: '#333333',
-            valueFontColor: '#333333',
-            labelFontColor: '#000',
-            label: label,
-            levelColors: self.options.levelcolors || [
-                "#ff0000",
-                "#f9c802",
-                "#a9d70b"
-            ],
-        });
-        this.gage.refresh(value, max_value);
+
+        var arc = d3.svg.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius)
+                .startAngle(-90*degree);
+
+        var svg = d3.select(this.$el[0])
+            .append("svg")
+            .attr("width", '100%')
+            .attr("height", '100%')
+            .attr('viewBox','0 0 '+width +' '+height )
+            .attr('preserveAspectRatio','xMinYMin')
+            .append("g")
+            .attr("transform", "translate(" + (width/2) + "," + (height-(width-height)/2-12) + ")");
+
+        function addText(text, fontSize, dx, dy) {
+            return svg.append("text")
+                .attr("text-anchor", "middle")
+                .style("font-size", fontSize+'px')
+                .attr("dy", dy)
+                .attr("dx", dx)
+                .text(text);
+        }
+        // top title
+
+        addText(title, 16, 0, -outerRadius-16).style("font-weight",'bold');
+
+        // center value
+
+        var text = addText(utils.human_number(value, 1), fontSize, 0, -2).style("font-weight",'bold');
+
+        // bottom label
+
+        addText(0, 8, -(outerRadius+innerRadius)/2, 12);
+        addText(label, 8, 0, 12);
+        addText(utils.human_number(max_value, 1), 8, (outerRadius+innerRadius)/2, 12);
+
+        // chart
+
+        svg.append("path")
+            .datum({endAngle: Math.PI/2})
+            .style("fill", "#ddd")
+            .attr("d", arc);
+
+        var foreground = svg.append("path")
+            .datum({endAngle: 0})
+            .style("fill", "hsl(0,80%,50%)")
+            .attr("d", arc);
+
+        var ratio = max_value ? value/max_value : 0;
+        var hue = Math.round(ratio*120);
+
+        foreground.transition()
+            .style("fill", "hsl(" + hue + ",80%,50%)")
+            .duration(1500)
+            .call(arcTween, (ratio-0.5)*Math.PI);
+
+        function arcTween (transition, newAngle) {
+            transition.attrTween("d", function(d) {
+                var interpolate = d3.interpolate(d.endAngle, newAngle);
+                return function (t) {
+                    d.endAngle = interpolate(t);
+                    return arc(d);
+                };
+            });
+        }
 
         var flag_open = false;
         if (this.options.on_change) {
@@ -91,8 +144,8 @@ var GaugeWidget = AbstractField.extend({
                 $svg.fadeTo(0, 0.2);
 
                 // add input
-                if (!self.$el.find(".oe_justgage_edit").size()) {
-                    var $div = $('<div class="oe_justgage_edit" style="z-index:1"/>');
+                if (!self.$el.find(".o_gauge_edit").size()) {
+                    var $div = $('<div class="o_gauge_edit" style="z-index:1"/>');
                     $div.css({
                         'text-align': 'center',
                         'position': 'absolute',
@@ -139,7 +192,7 @@ var GaugeWidget = AbstractField.extend({
                         })
                         .blur(function () {
                             if(!flag_open) {
-                                self.$el.find(".oe_justgage_edit").remove();
+                                self.$el.find(".o_gauge_edit").remove();
                                 $svg.fadeTo(0, 1);
                             } else {
                                 $svg.fadeTo(0, 1);

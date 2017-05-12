@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Partner and address -->
+        <record id="res_partner_grade_access" model="ir.model.access">
+            <field name="name">odoo.portal.res.partner.grade</field>
+            <field name="model_id" ref="website_crm_partner_assign.model_res_partner_grade"/>
+            <field name="group_id" ref="base.group_portal"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- CRM Lead portal -->
+        <record id="assigned_lead_portal_rule_1" model="ir.rule">
+            <field name="name">odoo.portal.crm.lead</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="groups" eval="[(6,0,[ref('base.group_portal')])]"/>
+            <field name="domain_force">[('partner_assigned_id','child_of',user.commercial_partner_id.id)]</field>
+        </record>
+        <record id="lead_portal_access" model="ir.model.access">
+            <field name="name">odoo.portal.crm.lead</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="group_id" ref="base.group_portal"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+</odoo>

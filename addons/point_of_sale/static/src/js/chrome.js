@@ -6,10 +6,12 @@ var gui = require('point_of_sale.gui');
 var keyboard = require('point_of_sale.keyboard');
 var models = require('point_of_sale.models');
 var core = require('web.core');
+var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager');
 
 
 var _t = core._t;
+var _lt = core._lt;
 var QWeb = core.qweb;
 
 /* -------- The Order Selector -------- */
@@ -277,13 +279,19 @@ var DebugWidget = PosBaseWidget.extend({
         });
 
         this.$('.button.export_unpaid_orders').click(function(){
-            self.gui.download_file(self.pos.export_unpaid_orders(),
-                "unpaid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+            self.gui.prepare_download_link(
+                self.pos.export_unpaid_orders(),
+                _t("unpaid orders") + ' ' + moment().format('YYYY-MM-DD-HH-mm-ss') + '.json',
+                ".export_unpaid_orders", ".download_unpaid_orders"
+            );
         });
 
         this.$('.button.export_paid_orders').click(function() {
-            self.gui.download_file(self.pos.export_paid_orders(),
-                "paid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+            self.gui.prepare_download_link(
+                self.pos.export_paid_orders(),
+                _t("paid orders") + ' ' + moment().format('YYYY-MM-DD-HH-mm-ss') + '.json',
+                ".export_paid_orders", ".download_paid_orders"
+            );
         });
 
         this.$('.button.import_orders input').on('change', function(event) {
@@ -405,6 +413,23 @@ var ProxyStatusWidget = StatusWidget.extend({
     },
 });
 
+
+/* --------- The Sale Details --------- */
+
+// Generates a report to print the sales of the
+// day on a ticket
+
+var SaleDetailsButton = PosBaseWidget.extend({
+    template: 'SaleDetailsButton',
+    start: function(){
+        var self = this;
+        this.$el.click(function(){
+            self.pos.proxy.print_sale_details();
+        });
+    },
+});
+
+
 /*--------------------------------------*\
  |             THE CHROME               |
 \*======================================*/
@@ -478,6 +503,14 @@ var Chrome = PosBaseWidget.extend({
     build_chrome: function() { 
         var self = this;
         FastClick.attach(document.body);
+
+        if ($.browser.chrome) {
+            var chrome_version = $.browser.version.split('.')[0];
+            if (parseInt(chrome_version, 10) >= 50) {
+                ajax.loadCSS('/point_of_sale/static/src/css/chrome50.css');
+            }
+        }
+
         this.renderElement();
 
         this.$('.pos-logo').click(function(){
@@ -654,6 +687,11 @@ var Chrome = PosBaseWidget.extend({
             'widget': OrderSelectorWidget,
             'replace':  '.placeholder-OrderSelectorWidget',
         },{
+            'name':   'sale_details',
+            'widget': SaleDetailsButton,
+            'append':  '.pos-rightheader',
+            'condition': function(){ return this.pos.config.use_proxy; },
+        },{
             'name':   'proxy_status',
             'widget': ProxyStatusWidget,
             'append':  '.pos-rightheader',
@@ -667,7 +705,7 @@ var Chrome = PosBaseWidget.extend({
             'widget': HeaderButtonWidget,
             'append':  '.pos-rightheader',
             'args': {
-                label: _t('Close'),
+                label: _lt('Close'),
                 action: function(){ 
                     var self = this;
                     if (!this.confirmed) {
@@ -760,6 +798,7 @@ return {
     HeaderButtonWidget: HeaderButtonWidget,
     OrderSelectorWidget: OrderSelectorWidget,
     ProxyStatusWidget: ProxyStatusWidget,
+    SaleDetailsButton: SaleDetailsButton,
     StatusWidget: StatusWidget,
     SynchNotificationWidget: SynchNotificationWidget,
     UsernameWidget: UsernameWidget,

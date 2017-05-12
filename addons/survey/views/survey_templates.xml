@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data>
     <!-- "Thank you" message when the survey is completed -->
     <template id="sfinished" name="Survey Finished">
@@ -63,7 +63,7 @@
 
     <!-- Back Button to redirect in form view of survey -->
     <template id="back" name="Back">
-        <div groups="base.group_website_publisher" t-ignore="true" class="pull-right">
+        <div groups="website.group_website_publisher" t-ignore="true" class="pull-right">
             <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-default">Back to Survey</a>
         </div>
     </template>
@@ -111,7 +111,7 @@
     <!-- A page -->
     <template id="page" name="Page">
         <div class="page-header">
-            <p class="pull-right">Page <span t-raw='page_nr + 1'/> on <span t-raw="len(survey.page_ids)"/></p>
+            <p class="pull-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
             <h1 t-field='page.title' />
             <div t-field='page.description' class="oe_no_empty"/>
         </div>
@@ -204,7 +204,7 @@
         </div>
         <div t-if="question.display_mode == 'columns' or not token" class="row js_radio">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
+                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
                     <input type="radio" t-att-name="prefix" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
@@ -226,7 +226,7 @@
     <template id="multiple_choice" name="Multiple choice">
         <div class="row">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
+                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
@@ -320,4 +320,4 @@
         </t>
     </template>
 </data>
-</openerp>
+</odoo>

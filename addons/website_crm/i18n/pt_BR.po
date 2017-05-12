@@ -3,14 +3,18 @@
 # * website_crm
 # 
 # Translators:
+# Mateus Lopes <mateus1@gmail.com>, 2016
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Grazziano Duarte <gra.negocia@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-10-12 03:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Grazziano Duarte <gra.negocia@gmail.com>, 2016\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,9 +22,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:35
+#, python-format
+msgid "% Leads"
+msgstr ""
+
+#. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "&amp;times;"
 msgstr "&amp;times;"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -30,7 +48,8 @@ msgstr "E-mail"
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "If you have an emergency, do not hesitate to contact us by phone:"
-msgstr "Se você tiver uma emergência, não hesite em contactar-nos por telefone:"
+msgstr ""
+"Se você tiver uma emergência, não hesite em contactar-nos por telefone:"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
@@ -38,14 +57,30 @@ msgid "Lead/Opportunity"
 msgstr "Prospecção/Oportunidade"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Phone Number"
-msgstr "Número De Telefone"
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:34
+#, python-format
+msgid "Leads"
+msgstr "Prospectos"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:8
+#, python-format
+msgid "Leads Acquisition /"
+msgstr ""
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:13
+#, python-format
+msgid "Leads Analysis"
+msgstr "Análise de Prospectos"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Send"
-msgstr "Enviar"
+msgid "Phone Number"
+msgstr "Número De Telefone"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -56,6 +91,13 @@ msgstr "Assunto"
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "Thanks!"
 msgstr "Obrigado!"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:15
+#, python-format
+msgid "There is no recent lead."
+msgstr ""
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
@@ -86,8 +128,3 @@ msgstr "Sua Pergunta"
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "Your message has been sent successfully."
 msgstr "Sua mensagem foi enviada com sucesso."
-
-#. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "e.g. (+32).81.81.37.00"
-msgstr "ex. (11) 1234-9999"

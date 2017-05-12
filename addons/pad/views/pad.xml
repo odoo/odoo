@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <template id="assets_backend" name="pad assets" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/pad/static/src/css/etherpad.css"/>
-                <script type="text/javascript" src="/pad/static/src/js/pad.js"></script>
-            </xpath>
-        </template>
-    </data>
-</openerp>
+<odoo>
+    <template id="assets_backend" name="pad assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/pad/static/src/css/etherpad.css" />
+            <script type="text/javascript" src="/pad/static/src/js/pad.js" />
+        </xpath>
+    </template>
+</odoo>

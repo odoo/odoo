@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields
-from openerp import tools
+from odoo import api, models, fields
+from odoo import tools
 
 
-class report_event_registration(models.Model):
+class ReportEventRegistration(models.Model):
     """Events Analysis"""
     _name = "report.event.registration"
     _order = 'event_date desc'
@@ -27,12 +27,13 @@ class report_event_registration(models.Model):
     name_registration = fields.Char('Participant / Contact Name', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         """Initialize the sql view for the event registration """
-        tools.drop_view_if_exists(cr, 'report_event_registration')
+        tools.drop_view_if_exists(self.env.cr, 'report_event_registration')
 
         # TOFIX this request won't select events that have no registration
-        cr.execute(""" CREATE VIEW report_event_registration AS (
+        self.env.cr.execute(""" CREATE VIEW report_event_registration AS (
             SELECT
                 e.id::varchar || '/' || coalesce(r.id::varchar,'') AS id,
                 e.id AS event_id,

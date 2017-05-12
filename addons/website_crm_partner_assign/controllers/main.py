@@ -1,11 +1,161 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import datetime
 import werkzeug
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website.models.website import slug, unslug
-from openerp.addons.website_partner.controllers.main import WebsitePartnerPage
-from openerp.tools.translate import _
+
+from collections import OrderedDict
+
+from odoo import fields
+from odoo import http
+from odoo.http import request
+from odoo.addons.website.models.website import slug, unslug
+from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
+from odoo.tools.translate import _
+
+from odoo.addons.website_portal.controllers.main import website_account
+
+
+class WebsiteAccount(website_account):
+
+    def get_domain_my_lead(self, user):
+        return [
+            ('partner_assigned_id', 'child_of', user.commercial_partner_id.id),
+            ('type', '=', 'lead')
+        ]
+
+    def get_domain_my_opp(self, user):
+        return [
+            ('partner_assigned_id', 'child_of', user.commercial_partner_id.id),
+            ('type', '=', 'opportunity')
+        ]
+
+    @http.route()
+    def account(self, **kw):
+        response = super(WebsiteAccount, self).account(**kw)
+        lead_count = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
+        opp_count = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
+        response.qcontext.update({'lead_count': lead_count, 'opp_count': opp_count})
+        return response
+
+    @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
+    def portal_my_leads(self, page=1, date_begin=None, date_end=None, lead=None, sortby=None, **kw):
+        values = self._prepare_portal_layout_values()
+        CrmLead = request.env['crm.lead']
+        domain = self.get_domain_my_lead(request.env.user)
+
+        sortings = {
+            'date': {'label': _('Newest'), 'order': 'create_date desc'},
+            'name': {'label': _('Name'), 'order': 'name'},
+            'contact_name': {'label': _('Contact Name'), 'order': 'contact_name'},
+        }
+
+        order = sortings.get(sortby, sortings['date'])['order']
+
+        # archive groups - Default Group By 'create_date'
+        archive_groups = self._get_archive_groups('crm.lead', domain)
+        if date_begin and date_end:
+            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+        # pager
+        lead_count = CrmLead.search_count(domain)
+        pager = request.website.pager(
+            url="/my/leads",
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'lead': lead},
+            total=lead_count,
+            page=page,
+            step=self._items_per_page
+        )
+        # content according to pager and archive selected
+        leads = CrmLead.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+
+        values.update({
+            'date': date_begin,
+            'leads': leads,
+            'page_name': 'lead',
+            'lead': lead,
+            'sortings': sortings,
+            'sortby': sortby,
+            'archive_groups': archive_groups,
+            'default_url': '/my/leads',
+            'pager': pager
+        })
+        return request.render("website_crm_partner_assign.portal_my_leads", values)
+
+    @http.route(['/my/opportunities', '/my/opportunities/page/<int:page>'], type='http', auth="user", website=True)
+    def portal_my_opportunities(self, page=1, date_begin=None, date_end=None, opportunity=None, sortby=None, **kw):
+        values = self._prepare_portal_layout_values()
+        CrmLead = request.env['crm.lead']
+        domain = self.get_domain_my_opp(request.env.user)
+
+        today = fields.Date.today()
+        this_week_end_date = fields.Date.to_string(fields.Date.from_string(today) + datetime.timedelta(days=7))
+
+        filters = {
+            'all': {'label': _('All'), 'domain': []},
+            'today': {'label': _('Today Activities'), 'domain': [('date_action', '=', today)]},
+            'week': {'label': _('This Week Activities'),
+                     'domain': [('date_action', '>=', today), ('date_action', '<=', this_week_end_date)]},
+            'overdue': {'label': _('Overdue Activities'), 'domain': [('date_action', '<', today)]},
+            'won': {'label': _('Won'), 'domain': [('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]},
+            'lost': {'label': _('Lost'), 'domain': [('active', '=', False)]},
+        }
+
+        sortings = {
+            'date': {'label': _('Newest'), 'order': 'create_date desc'},
+            'name': {'label': _('Name'), 'order': 'name'},
+            'contact_name': {'label': _('Contact Name'), 'order': 'contact_name'},
+            'revenue': {'label': _('Expected Revenue'), 'order': 'planned_revenue desc'},
+            'probability': {'label': _('Probability'), 'order': 'probability desc'},
+            'stage': {'label': _('Stage'), 'order': 'stage_id'},
+        }
+
+        domain += filters.get(opportunity, filters['all'])['domain']
+        order = sortings.get(sortby, sortings['date'])['order']
+
+        # archive groups - Default Group By 'create_date'
+        archive_groups = self._get_archive_groups('crm.lead', domain)
+        if date_begin and date_end:
+            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+        # pager
+        opp_count = CrmLead.search_count(domain)
+        pager = request.website.pager(
+            url="/my/opportunities",
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'opportunity': opportunity},
+            total=opp_count,
+            page=page,
+            step=self._items_per_page
+        )
+        # content according to pager and archive selected
+        opportunities = CrmLead.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+
+        values.update({
+            'date': date_begin,
+            'opportunities': opportunities,
+            'page_name': 'opportunity',
+            'filters': OrderedDict(sorted(filters.items())),
+            'opportunity': opportunity,
+            'sortings': sortings,
+            'sortby': sortby,
+            'archive_groups': archive_groups,
+            'default_url': '/my/opportunities',
+            'pager': pager
+        })
+        return request.render("website_crm_partner_assign.portal_my_opportunities", values)
+
+    @http.route(['/my/lead/<model("crm.lead"):lead>'], type='http', auth="user", website=True)
+    def portal_my_lead(self, lead=None, **kw):
+        return request.render("website_crm_partner_assign.portal_my_lead", {'lead': lead})
+
+    @http.route(['/my/opportunity/<model("crm.lead"):lead>'], type='http', auth="user", website=True)
+    def portal_my_opportunity(self, lead=None, **kw):
+        return request.render(
+            "website_crm_partner_assign.portal_my_opportunity", {
+                'opportunity': lead,
+                'stages': request.env['crm.stage'].search([('probability', '!=', '100')], order='sequence desc'),
+                'activities': request.env['crm.activity'].sudo().search([], order='sequence desc'),
+                'states': request.env['res.country.state'].sudo().search([]),
+                'countries': request.env['res.country'].sudo().search([]),
+            })
 
 
 class WebsiteCrmPartnerAssign(WebsitePartnerPage):
@@ -26,12 +176,12 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
     ], type='http', auth="public", website=True)
     def partners(self, country=None, grade=None, page=0, **post):
         country_all = post.pop('country_all', False)
-        partner_obj = request.registry['res.partner']
-        country_obj = request.registry['res.country']
+        partner_obj = request.env['res.partner']
+        country_obj = request.env['res.country']
         search = post.get('search', '')
 
         base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
-        if not request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_website_publisher'):
+        if not request.env['res.users'].has_group('website.group_website_publisher'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
             base_partner_domain += ['|', ('name', 'ilike', search), ('website_description', 'ilike', search)]
@@ -41,17 +191,13 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         if not country and not country_all:
             country_code = request.session['geoip'].get('country_code')
             if country_code:
-                country_ids = country_obj.search(request.cr, request.uid, [('code', '=', country_code)], context=request.context)
-                if country_ids:
-                    country = country_obj.browse(request.cr, request.uid, country_ids[0], context=request.context)
+                country = country_obj.search([('code', '=', country_code)], limit=1)
         if country:
             grade_domain += [('country_id', '=', country.id)]
-        grades = partner_obj.read_group(
-            request.cr, SUPERUSER_ID, grade_domain, ["id", "grade_id"],
-            groupby="grade_id", orderby="grade_id DESC", context=request.context)
-        grades_partners = partner_obj.search(
-            request.cr, SUPERUSER_ID, grade_domain,
-            context=request.context, count=True)
+        grades = partner_obj.sudo().read_group(
+            grade_domain, ["id", "grade_id"],
+            groupby="grade_id", orderby="grade_id DESC")
+        grades_partners = partner_obj.sudo().search_count(grade_domain)
         # flag active grade
         for grade_dict in grades:
             grade_dict['active'] = grade and grade_dict['grade_id'][0] == grade.id
@@ -65,12 +211,10 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         country_domain = list(base_partner_domain)
         if grade:
             country_domain += [('grade_id', '=', grade.id)]
-        countries = partner_obj.read_group(
-            request.cr, SUPERUSER_ID, country_domain, ["id", "country_id"],
-            groupby="country_id", orderby="country_id", context=request.context)
-        countries_partners = partner_obj.search(
-            request.cr, SUPERUSER_ID, country_domain,
-            context=request.context, count=True)
+        countries = partner_obj.sudo().read_group(
+            country_domain, ["id", "country_id"],
+            groupby="country_id", orderby="country_id")
+        countries_partners = partner_obj.sudo().search_count(country_domain)
         # flag active country
         for country_dict in countries:
             country_dict['active'] = country and country_dict['country_id'] and country_dict['country_id'][0] == country.id
@@ -101,24 +245,21 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         if country_all:
             url_args['country_all'] = True
 
-        partner_count = partner_obj.search_count(
-            request.cr, SUPERUSER_ID, base_partner_domain,
-            context=request.context)
+        partner_count = partner_obj.sudo().search_count(base_partner_domain)
         pager = request.website.pager(
             url=url, total=partner_count, page=page, step=self._references_per_page, scope=7,
             url_args=url_args)
 
         # search partners matching current search parameters
-        partner_ids = partner_obj.search(
-            request.cr, SUPERUSER_ID, base_partner_domain,
-            order="grade_id DESC, display_name ASC",
-            context=request.context)  # todo in trunk: order="grade_id DESC, implemented_count DESC", offset=pager['offset'], limit=self._references_per_page
-        partners = partner_obj.browse(request.cr, SUPERUSER_ID, partner_ids, request.context)
+        partner_ids = partner_obj.sudo().search(
+            base_partner_domain, order="grade_id DESC, display_name ASC")  # todo in trunk: order="grade_id DESC, implemented_count DESC", offset=pager['offset'], limit=self._references_per_page
+        partners = partner_ids.sudo()
         # remove me in trunk
         partners = sorted(partners, key=lambda x: (x.grade_id.sequence if x.grade_id else 0, len([i for i in x.implemented_partner_ids if i.website_published])), reverse=True)
         partners = partners[pager['offset']:pager['offset'] + self._references_per_page]
 
         google_map_partner_ids = ','.join(map(str, [p.id for p in partners]))
+        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
 
         values = {
             'countries': countries,
@@ -130,11 +271,12 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             'pager': pager,
             'searches': post,
             'search_path': "%s" % werkzeug.url_encode(post),
+            'google_maps_api_key': google_maps_api_key,
         }
         return request.render("website_crm_partner_assign.index", values, status=partners and 200 or 404)
 
 
-    # Do not use semantic controller due to SUPERUSER_ID
+    # Do not use semantic controller due to sudo()
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
         _, partner_id = unslug(partner_id)
@@ -142,16 +284,12 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         grade_id = post.get('grade_id')
         country_id = post.get('country_id')
         if grade_id:
-            grade_ids = request.registry['res.partner.grade'].exists(request.cr, request.uid, int(grade_id), context=request.context)
-            if grade_ids:
-                current_grade = request.registry['res.partner.grade'].browse(request.cr, request.uid, grade_ids[0], context=request.context)
+            current_grade = request.env['res.partner.grade'].browse(int(grade_id)).exists()
         if country_id:
-            country_ids = request.registry['res.country'].exists(request.cr, request.uid, int(country_id), context=request.context)
-            if country_ids:
-                current_country = request.registry['res.country'].browse(request.cr, request.uid, country_ids[0], context=request.context)
+            current_country = request.env['res.country'].browse(int(country_id)).exists()
         if partner_id:
-            partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
-            is_website_publisher = request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_website_publisher')
+            partner = request.env['res.partner'].sudo().browse(partner_id)
+            is_website_publisher = request.env['res.users'].has_group('website.group_website_publisher')
             if partner.exists() and (partner.website_published or is_website_publisher):
                 values = {
                     'main_object': partner,
@@ -159,5 +297,5 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
                     'current_grade': current_grade,
                     'current_country': current_country
                 }
-                return request.website.render("website_crm_partner_assign.partner", values)
+                return request.render("website_crm_partner_assign.partner", values)
         return self.partners(**post)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- wizard view -->
@@ -14,10 +14,12 @@
                         <field name="partner_ids" widget="many2many_tags_email"
                                 placeholder="Add contacts to notify..."
                                 context="{'force_email':True, 'show_email':True}"
-                                invisible="context.get('mail_invite_follower_channel_only')"/>
+                                invisible="context.get('mail_invite_follower_channel_only')"
+                                options="{'no_create': True}"/>
                         <field name="channel_ids" widget="many2many_tags"
                                 placeholder="Add channels to notify..."
-                                invisible="not context.get('mail_invite_follower_channel_only')"/>
+                                invisible="not context.get('mail_invite_follower_channel_only')"
+                                options="{'no_create': True}"/>
                         <field name="send_mail" invisible="context.get('mail_invite_follower_channel_only')"/>
                         <field name="message" attrs="{'invisible': [('send_mail','!=',True)]}" options="{'style-inline': true}" class="test_message"/>
                     </group>
@@ -31,4 +33,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

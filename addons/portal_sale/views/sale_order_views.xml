@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <record id="view_account_invoice_filter_share" model="ir.ui.view">
+            <field name="name">account.invoice.select.share</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr='//field[@name="user_id"]' position="attributes">
+                    <attribute name="domain">[('share','=', False)]</attribute>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

@@ -12,9 +12,9 @@ var _lt = core._lt;
 var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
     events: {
-        'change .searchview_extended_prop_field': 'changed',
-        'change .searchview_extended_prop_op': 'operator_changed',
-        'click .searchview_extended_delete_prop': function (e) {
+        'change .o_searchview_extended_prop_field': 'changed',
+        'change .o_searchview_extended_prop_op': 'operator_changed',
+        'click .o_searchview_extended_delete_prop': function (e) {
             e.stopPropagation();
             this.getParent().remove_proposition(this);
         },
@@ -40,21 +40,13 @@ var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.Ext
         return this._super().done(this.proxy('changed'));
     },
     changed: function() {
-        var nval = this.$(".searchview_extended_prop_field").val();
+        var nval = this.$(".o_searchview_extended_prop_field").val();
         if(this.attrs.selected === null || this.attrs.selected === undefined || nval != this.attrs.selected.name) {
             this.select_field(_.detect(this.fields, function(x) {return x.name == nval;}));
         }
     },
     operator_changed: function (e) {
-        var $value = this.$('.searchview_extended_prop_value');
-        switch ($(e.target).val()) {
-        case '∃':
-        case '∄':
-            $value.hide();
-            break;
-        default:
-            $value.show();
-        }
+        this.value.show_inputs($(e.target));
     },
     /**
      * Selects the provided field object
@@ -66,7 +58,7 @@ var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.Ext
         if(this.attrs.selected !== null && this.attrs.selected !== undefined) {
             this.value.destroy();
             this.value = null;
-            this.$('.searchview_extended_prop_op').html('');
+            this.$('.o_searchview_extended_prop_op').html('');
         }
         this.attrs.selected = field;
         if(field === null || field === undefined) {
@@ -80,9 +72,9 @@ var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.Ext
         _.each(this.value.operators, function(operator) {
             $('<option>', {value: operator.value})
                 .text(String(operator.text))
-                .appendTo(self.$('.searchview_extended_prop_op'));
+                .appendTo(self.$('.o_searchview_extended_prop_op'));
         });
-        var $value_loc = this.$('.searchview_extended_prop_value').show().empty();
+        var $value_loc = this.$('.o_searchview_extended_prop_value').show().empty();
         this.value.appendTo($value_loc);
 
     },
@@ -90,12 +82,12 @@ var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.Ext
         if (this.attrs.selected === null || this.attrs.selected === undefined)
             return null;
         var field = this.attrs.selected,
-            op_select = this.$('.searchview_extended_prop_op')[0],
+            op_select = this.$('.o_searchview_extended_prop_op')[0],
             operator = op_select.options[op_select.selectedIndex];
 
         return {
             attrs: {
-                domain: [this.value.get_domain(field, operator)],
+                domain: this.value.get_domain(field, operator),
                 string: this.value.get_label(field, operator),
             },
             children: [],
@@ -131,14 +123,21 @@ ExtendedSearchProposition.Field = Widget.extend({
     },
     get_domain: function (field, operator) {
         switch (operator.value) {
-        case '∃': return this.make_domain(field.name, '!=', false);
-        case '∄': return this.make_domain(field.name, '=', false);
-        default: return this.make_domain(
-            field.name, operator.value, this.get_value());
+        case '∃': return [[field.name, '!=', false]];
+        case '∄': return [[field.name, '=', false]];
+        default: return [[field.name, operator.value, this.get_value()]];
         }
     },
-    make_domain: function (field, operator, value) {
-        return [field, operator, value];
+    show_inputs: function ($operator) {
+        var $value = this.$el.parent();
+        switch ($operator.val()) {
+            case '∃':
+            case '∄':
+                $value.hide();
+                break;
+            default:
+                $value.show();
+        }
     },
     /**
      * Returns a human-readable version of the value, in case the "logical"
@@ -155,7 +154,10 @@ ExtendedSearchProposition.Field = Widget.extend({
 });
 
 ExtendedSearchProposition.Char = ExtendedSearchProposition.Field.extend({
-    template: 'SearchView.extended_search.proposition.char',
+    tagName: 'input',
+    attributes: {
+        type: 'text'
+    },
     operators: [
         {value: "ilike", text: _lt("contains")},
         {value: "not ilike", text: _lt("doesn't contain")},
@@ -170,7 +172,10 @@ ExtendedSearchProposition.Char = ExtendedSearchProposition.Field.extend({
 });
 
 ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
-    template: 'SearchView.extended_search.proposition.empty',
+    tagName: 'span',
+    attributes: {
+        type: 'datetime'
+    },
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
@@ -178,33 +183,71 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
         {value: "<", text: _lt("less than")},
         {value: ">=", text: _lt("greater than or equal to")},
         {value: "<=", text: _lt("less than or equal to")},
+        {value: "between", text: _lt("is between")},
         {value: "∃", text: _lt("is set")},
         {value: "∄", text: _lt("is not set")}
     ],
     widget: function () { return datepicker.DateTimeWidget; },
     get_value: function() {
-        return this.datewidget.get_value();
+        return this.datewidget_1.get_value();
+    },
+    get_domain: function (field, operator) {
+        switch (operator.value) {
+        case '∃': 
+            return [[field.name, '!=', false]];
+        case '∄': 
+            return [[field.name, '=', false]];
+        case 'between':
+            return [[field.name, '>=', this.datewidget_1.get_value()], [field.name,'<=', this.datewidget_2.get_value()]];
+        default: 
+            return [[field.name, operator.value, this.get_value()]];
+        }
+    },
+    show_inputs: function ($operator) {
+        this._super($operator);
+        if ($operator.val() === 'between') {
+            if (!this.datewidget_2) {
+                this.datewidget_2 = new (this.widget())(this);
+                this.datewidget_2.appendTo(this.$el);
+            }
+            else {
+                this.datewidget_2.$el.show();
+            }
+        }
+        else {
+            if (this.datewidget_2) {
+                this.datewidget_2.$el.hide();
+            }
+        }
     },
     toString: function () {
-        return formats.format_value(this.get_value(), { type:"datetime" });
+        var str = formats.format_value(this.get_value(), { type:this.attributes['type'] });
+        if (this.datewidget_2 && this.datewidget_2.get_value()) {
+            str += ' and ' + formats.format_value(this.datewidget_2.get_value(), { type:this.attributes['type'] });
+        }
+        return str;
     },
     start: function() {
         var ready = this._super();
-        this.datewidget = new (this.widget())(this);
-        this.datewidget.appendTo(this.$el);
+        this.datewidget_1 = new (this.widget())(this);
+        this.datewidget_1.appendTo(this.$el);
         return ready;
     }
 });
 
 ExtendedSearchProposition.Date = ExtendedSearchProposition.DateTime.extend({
+    attributes: {
+        type: 'date'
+    },
     widget: function () { return datepicker.DateWidget; },
-    toString: function () {
-        return formats.format_value(this.get_value(), { type:"date" });
-    }
 });
 
 ExtendedSearchProposition.Integer = ExtendedSearchProposition.Field.extend({
-    template: 'SearchView.extended_search.proposition.integer',
+    tagName: 'input',
+    attributes: {
+        type: 'number',
+        value: '0',
+    },
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
@@ -280,7 +323,7 @@ ExtendedSearchProposition.Selection = ExtendedSearchProposition.Field.extend({
 });
 
 ExtendedSearchProposition.Boolean = ExtendedSearchProposition.Field.extend({
-    template: 'SearchView.extended_search.proposition.empty',
+    tagName: 'span',
     operators: [
         {value: "=", text: _lt("is true")},
         {value: "!=", text: _lt("is false")}

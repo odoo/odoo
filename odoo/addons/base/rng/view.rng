@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
+             xmlns:a="http://relaxng.org/ns/annotation/1.0"
+             datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- Handling of element overloading when inheriting from a base
+         template
+    -->
+    <rng:define name="overload">
+        <rng:optional>
+            <!--
+                Alter matched element with content
+            -->
+            <rng:choice>
+                <rng:attribute name="position">
+                    <rng:choice>
+                        <!-- Insert content before first child -->
+                        <rng:value>before</rng:value>
+                        <!-- Insert content after last child -->
+                        <rng:value>after</rng:value>
+                        <!-- Replace all children with content -->
+                        <rng:value>inside</rng:value>
+                        <!-- Replace matched element itself with content -->
+                        <rng:value>replace</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+                <rng:group>
+                    <rng:attribute name="position">
+                        <!-- Edit element attributes -->
+                        <rng:value>attributes</rng:value>
+                    </rng:attribute>
+                    <rng:oneOrMore>
+                        <rng:element name="attribute">
+                            <rng:attribute name="name"><rng:text/></rng:attribute>
+                            <rng:text />
+                        </rng:element>
+                    </rng:oneOrMore>
+                </rng:group>
+            </rng:choice>
+        </rng:optional>
+    </rng:define>
+
+    <rng:define name="modifiable">
+        <rng:optional>
+            <!-- @modifiers contains a JSON map unifying the various
+                 modifier attributes: @readonly, @required, @invisible.
+                 Each attribute is a key, mapped to a JSON list representing
+                 a condition expressed as an OpenERP `domain` filter
+                 Only some of the modifier keys make sense on some
+                 elements, for example <filter> and <group> only support
+                 `invisible`. -->
+            <rng:attribute name="modifiers"/>
+        </rng:optional>
+    </rng:define>
+
+    <rng:define name="access_rights">
+        <rng:optional>
+            <rng:attribute name="groups"/>
+        </rng:optional>
+    </rng:define>
+
+    <rng:define name="dashboard-column">
+        <rng:element name="column">
+            <rng:zeroOrMore>
+                <rng:element name="action">
+                    <!-- Action identifier, used by clients to get the
+                         actual action from db -->
+                    <rng:attribute name="name"/>
+                    <!-- Displayed name of dashboard item (above idem) -->
+                    <rng:optional><rng:attribute name="string"/></rng:optional>
+                    <!-- Merged into the action descriptor's own
+                         context before executing the action -->
+                    <rng:optional><rng:attribute name="context"/></rng:optional>
+                    <!-- Added to the action descriptor's own domain
+                         before executing the action -->
+                    <rng:optional><rng:attribute name="domain"/></rng:optional>
+                    <!-- In case the action is an act_window,
+                         overrides its own @views. -->
+                    <rng:optional><rng:attribute name="view_mode"/></rng:optional>
+                    <!-- Add a 'Create' button in order to create a new resource of the action's model
+                         values :  [true|false|<ID of specific action view>]. -->
+                    <rng:optional><rng:attribute name="creatable"/></rng:optional>
+                </rng:element>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+    <rng:define name="dashboard">
+        <rng:choice>
+            <rng:element name="board">
+                <a:documentation>
+                  New-style (6.1) dashboard definition
+                </a:documentation>
+                <rng:choice>
+                    <rng:group>
+                        <a:documentation>
+                          Single-column dashboard style
+                        </a:documentation>
+                        <rng:attribute name="style">
+                            <rng:value>1</rng:value>
+                        </rng:attribute>
+                        <rng:ref name="dashboard-column"/>
+                    </rng:group>
+                    <rng:group>
+                        <a:documentation>
+                          Three different 2-column dashboard styles:
+                          50|50, 33|66 and 66|33.
+                        </a:documentation>
+                        <rng:attribute name="style">
+                            <rng:choice>
+                                <rng:value>1-1</rng:value>
+                                <rng:value>1-2</rng:value>
+                                <rng:value>2-1</rng:value>
+                            </rng:choice>
+                        </rng:attribute>
+                        <rng:ref name="dashboard-column"/>
+                        <rng:ref name="dashboard-column"/>
+                    </rng:group>
+                    <rng:group>
+                        <a:documentation>
+                          Three-column dashboard style: 33|33|33
+                        </a:documentation>
+                        <rng:attribute name="style">
+                            <rng:value>1-1-1</rng:value>
+                        </rng:attribute>
+                        <rng:ref name="dashboard-column"/>
+                        <rng:ref name="dashboard-column"/>
+                        <rng:ref name="dashboard-column"/>
+                    </rng:group>
+                </rng:choice>
+            </rng:element>
+            <!--
+                DEPRECATED old-style dashboards
+            -->
+            <rng:element>
+                <rng:choice>
+                    <rng:name>hpaned</rng:name>
+                    <rng:name>vpaned</rng:name>
+                </rng:choice>
+                <rng:optional>
+                    <rng:attribute name="position">
+                        <rng:data type="int"/>
+                    </rng:attribute>
+                </rng:optional>
+                <rng:zeroOrMore>
+                    <rng:optional><rng:ref name="any"/></rng:optional>
+                    <rng:optional><rng:ref name="html"/></rng:optional>
+                </rng:zeroOrMore>
+            </rng:element>
+        </rng:choice>
+    </rng:define>
+
+    <rng:define name="container">
+        <rng:optional><rng:attribute name="col"/></rng:optional>
+        <rng:zeroOrMore>
+            <rng:choice>
+                <rng:ref name="notebook"/>
+                <rng:ref name="field"/>
+                <rng:ref name="group"/>
+                <rng:ref name="button"/>
+                <rng:ref name="label" />
+                <rng:ref name="separator"/>
+                <rng:ref name="image"/>
+                <rng:ref name="form"/>
+                <rng:ref name="dashboard"/>
+                <rng:ref name="filter"/>
+                <rng:ref name="html"/>
+                <rng:element name="newline"><rng:empty/></rng:element>
+                <rng:element name="properties"><rng:empty/></rng:element>
+            </rng:choice>
+        </rng:zeroOrMore>
+    </rng:define>
+
+    <rng:define name="form">
+        <rng:element name="form">
+            <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="create" /></rng:optional>
+            <rng:optional><rng:attribute name="delete" /></rng:optional>
+            <rng:optional><rng:attribute name="edit" /></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="type"/></rng:optional>
+            <rng:optional><rng:attribute name="link"/></rng:optional>
+            <rng:optional><rng:attribute name="version"/></rng:optional>
+            <rng:ref name="container"/>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="diagram">
+        <rng:element name="diagram">
+            <rng:optional><rng:attribute name="create" /></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:ref name="node"/>
+            <rng:ref name="arrow"/>            
+            <rng:zeroOrMore>
+                <rng:ref name="label"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="node">
+        <rng:element name="node">
+            <rng:attribute name="object"/>
+            <rng:optional><rng:attribute name="shape"/></rng:optional>
+            <rng:optional><rng:attribute name="bgcolor"/></rng:optional>
+            <rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
+            <rng:oneOrMore>
+              <rng:ref name="field"/>
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="arrow">
+        <rng:element name="arrow">
+            <rng:attribute name="object" />
+            <rng:attribute name="source" />
+            <rng:attribute name="destination" />
+            <rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
+            <rng:optional><rng:attribute name="label"/></rng:optional>
+            <rng:oneOrMore>
+              <rng:ref name="field"/>
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="kanban">
+        <rng:element name="kanban">
+            <rng:optional>
+                <!-- group-by field to apply in the kanban view when no other
+                     grouping is selected in the search view -->
+                <rng:attribute name="default_group_by" />
+            </rng:optional>
+            <rng:optional><rng:attribute name="create" /></rng:optional>
+            <rng:optional><rng:attribute name="delete" /></rng:optional>
+            <rng:optional><rng:attribute name="edit" /></rng:optional>
+            <rng:optional><rng:attribute name="quick_create" /></rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+            <rng:element name="templates">
+                <rng:oneOrMore>
+                    <rng:ref name="any"/>
+                </rng:oneOrMore>
+            </rng:element>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="tree">
+        <rng:element name="tree">
+            <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="create" /></rng:optional>
+            <rng:optional><rng:attribute name="delete" /></rng:optional>
+            <rng:optional><rng:attribute name="edit" /></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="colors"/></rng:optional>
+            <rng:optional><rng:attribute name="fonts"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-bf"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-it"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-danger"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-info"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-muted"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-primary"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-success"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="limit">
+                    <rng:data type="int"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+              <rng:attribute name="editable">
+                <rng:choice>
+                  <rng:value>top</rng:value>
+                  <rng:value>bottom</rng:value>
+                </rng:choice>
+              </rng:attribute>
+              <rng:optional><rng:attribute name="on_write"/></rng:optional>
+            </rng:optional>
+            <rng:optional>
+              <rng:attribute name="toolbar">
+                <rng:choice>
+                  <rng:value>1</rng:value>
+                  <rng:value>True</rng:value>
+                </rng:choice>
+              </rng:attribute>
+            </rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="field"/>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="tree"/>
+                    <rng:ref name="group"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="search">
+        <rng:element name="search">
+            <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="field"/>
+                    <rng:ref name="group"/>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="filter"/>
+                    <rng:ref name="search"/>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                    <rng:element name="properties"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="image">
+        <rng:element name="image">
+            <rng:attribute name="name"/>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="html">
+        <rng:element name="html">
+            <rng:zeroOrMore>
+                    <rng:text/>
+                    <rng:ref name="any"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="label">
+        <rng:element name="label">
+            <rng:ref name="overload"/>
+            <rng:ref name="access_rights"/>
+            <rng:ref name="modifiable"/>
+            <rng:optional><rng:attribute name="invisible"/></rng:optional>
+            <rng:optional><rng:attribute name="align"/></rng:optional>
+            <rng:optional><rng:attribute name="nolabel"/></rng:optional>
+            <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="angle"/></rng:optional>
+            <rng:optional><rng:attribute name="fill"/></rng:optional>
+            <rng:optional><rng:attribute name="help"/></rng:optional>
+            <rng:optional><rng:attribute name="width"/></rng:optional>
+            <rng:optional><rng:attribute name="wrap"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional>
+                <!-- @for: allows to explicitely link a label to a field -->
+                <rng:attribute name="for"/>
+            </rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:text/>
+                    <rng:ref name="notebook"/>
+                    <rng:ref name="field"/>
+                    <rng:ref name="group"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="label" />
+                    <rng:ref name="separator"/>
+                    <rng:ref name="image"/>
+                    <rng:ref name="form"/>
+                    <rng:ref name="dashboard"/>
+                    <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                    <rng:element name="properties"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="gantt">
+        <rng:element name="gantt">
+            <rng:attribute name="date_start"/>
+            <rng:choice>
+                <rng:attribute name="date_stop"/>
+                <rng:attribute name="date_delay"/>
+            </rng:choice>
+            <rng:optional>
+                <rng:attribute name="progress">
+                    <rng:data type="int"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional><rng:attribute name="default_group_by"/></rng:optional>
+            <rng:optional><rng:attribute name="create"/></rng:optional>
+            <rng:optional><rng:attribute name="delete"/></rng:optional>
+            <rng:optional><rng:attribute name="edit"/></rng:optional>
+            <rng:empty/>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="any">
+        <rng:element>
+            <rng:anyName/>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:attribute>
+                        <rng:anyName/>
+                    </rng:attribute>
+                    <rng:text/>
+                    <rng:ref name="any"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="page">
+        <rng:element name="page">
+            <rng:ref name="overload"/>
+            <rng:ref name="access_rights"/>
+            <rng:ref name="modifiable"/>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional><rng:attribute name="attrs"/></rng:optional>
+            <rng:optional><rng:attribute name="invisible"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                    <rng:element name="properties"><rng:empty/></rng:element>
+                    <rng:ref name="label" />
+                    <rng:ref name="field"/>
+                    <rng:ref name="group"/>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="form" />
+                    <rng:ref name="page" />
+                    <rng:ref name="notebook"/>
+                    <rng:ref name="dashboard"/>
+                    <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="notebook">
+        <rng:element name="notebook">
+            <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional>
+              <rng:attribute name="tabpos">
+                <!-- position of the notebook's tabs bar, support is
+                     optional and implementation-dependent -->
+                <rng:choice>
+                  <rng:value>up</rng:value>
+                  <rng:value>down</rng:value>
+                  <rng:value>left</rng:value>
+                  <rng:value>right</rng:value>
+                </rng:choice>
+              </rng:attribute>
+            </rng:optional>
+            <rng:oneOrMore>
+                <rng:ref name="page"/>
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="separator">
+        <rng:element name="separator">
+            <rng:ref name="overload"/>
+            <rng:ref name="access_rights"/>
+            <rng:ref name="modifiable"/>
+            <rng:optional><rng:attribute name="invisible"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional><rng:attribute name="rowspan"/></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="col"/></rng:optional>
+            <rng:optional><rng:attribute name="select"/></rng:optional>
+            <rng:optional><rng:attribute name="orientation"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="field"/>
+                    <rng:ref name="label" />
+                    <rng:ref name="group" />
+                    <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
+                    <rng:element name="properties"><rng:empty/></rng:element>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="xpath">
+        <rng:element name="xpath">
+            <rng:optional><rng:attribute name="expr"/></rng:optional>
+            <rng:ref name="overload"/>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="any"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="html"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="data">
+        <rng:element name="data">
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="form"/>
+                    <rng:ref name="tree"/>
+                    <rng:ref name="field"/>
+                    <rng:ref name="label"/>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="notebook"/>
+                    <rng:ref name="page"/>
+                    <rng:ref name="xpath"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="group"/>
+                    <rng:ref name="filter"/>
+                    <rng:ref name="graph"/>
+                    <rng:ref name="html"/>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="field">
+        <rng:element name="field">
+            <rng:attribute name="name" />
+            <rng:ref name="overload"/>
+            <rng:ref name="access_rights"/>
+            <rng:ref name="modifiable"/>
+            <rng:optional><rng:attribute name="domain_filter"/></rng:optional>
+            <rng:optional><rng:attribute name="attrs"/></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="completion"/></rng:optional>
+            <rng:optional><rng:attribute name="width"/></rng:optional>
+            <rng:optional><rng:attribute name="type"/></rng:optional>
+            <rng:optional><rng:attribute name="ref"/></rng:optional>
+            <rng:optional><rng:attribute name="eval"/></rng:optional>
+            <rng:optional><rng:attribute name="search"/></rng:optional>
+            <rng:optional><rng:attribute name="model"/></rng:optional>
+            <rng:optional><rng:attribute name="use"/></rng:optional>
+            <rng:optional><rng:attribute name="on_change"/></rng:optional>
+            <rng:optional><rng:attribute name="domain"/></rng:optional>
+            <rng:optional><rng:attribute name="filter_domain"/></rng:optional>
+            <rng:optional><rng:attribute name="invisible"/></rng:optional>
+            <rng:optional><rng:attribute name="password"/></rng:optional>
+            <rng:optional><rng:attribute name="comparator"/></rng:optional>
+            <rng:optional><rng:attribute name="sum"/></rng:optional>
+            <rng:optional><rng:attribute name="bold"/></rng:optional>
+            <rng:optional><rng:attribute name="avg"/></rng:optional>
+            <rng:optional><rng:attribute name="select"/></rng:optional>
+            <rng:optional><rng:attribute name="group"/></rng:optional>
+            <rng:optional><rng:attribute name="operator"/></rng:optional>
+            <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional><rng:attribute name="nolabel"/></rng:optional>
+            <rng:optional><rng:attribute name="default_get"/></rng:optional>
+            <rng:optional><rng:attribute name="required"/></rng:optional>
+            <rng:optional><rng:attribute name="readonly"/></rng:optional>
+            <rng:optional><rng:attribute name="view_mode"/></rng:optional>
+            <rng:optional><rng:attribute name="widget"/></rng:optional>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:optional><rng:attribute name="states"/></rng:optional>
+            <rng:optional><rng:attribute name="digits"/></rng:optional>
+            <rng:optional><rng:attribute name="icon"/></rng:optional>
+            <rng:optional><rng:attribute name="mode"/></rng:optional>
+            <rng:optional><rng:attribute name="img_width"/></rng:optional>
+            <rng:optional><rng:attribute name="img_height"/></rng:optional>
+            <rng:optional><rng:attribute name="size"/></rng:optional>
+            <rng:optional><rng:attribute name="filename"/></rng:optional>
+            <rng:optional><rng:attribute name="height"/></rng:optional>
+            <rng:optional><rng:attribute name="rowspan"/></rng:optional>
+            <rng:optional><rng:attribute name="align"/></rng:optional>
+            <rng:optional><rng:attribute name="selection"/></rng:optional>
+            <rng:optional><rng:attribute name="default_focus"/></rng:optional>
+            <rng:optional><rng:attribute name="filters"/></rng:optional>
+            <rng:optional><rng:attribute name="statusbar_visible"/></rng:optional>
+            <rng:optional><rng:attribute name="can_create" /></rng:optional>
+            <rng:optional><rng:attribute name="can_write" /></rng:optional>
+            <rng:optional><rng:attribute name="interval" /></rng:optional>
+            <!-- Widget *static* options defined as an arbitrary JSON dict, with
+                 widget-dependent parameters. To be ignored if widget/client does
+                 not support them. -->
+            <rng:optional><rng:attribute name="options"/></rng:optional>
+            <rng:optional><rng:attribute name="placeholder"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="diagram"/>
+                    <rng:ref name="kanban"/>
+                    <rng:ref name="form"/>
+                    <rng:ref name="data"/>
+                    <rng:ref name="tree"/>
+                    <rng:ref name="field"/>
+                    <rng:ref name="label"/>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="xpath"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="group"/>
+                    <rng:ref name="graph"/>
+                    <rng:ref name="filter"/>
+                    <rng:ref name="notebook"/>
+                    <rng:ref name="html"/>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="group">
+        <rng:element name="group">
+            <rng:ref name="overload"/>
+            <rng:ref name="access_rights"/>
+            <rng:ref name="modifiable"/>
+            <rng:optional><rng:attribute name="attrs"/></rng:optional>
+            <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional><rng:attribute name="rowspan"/></rng:optional>
+            <rng:optional><rng:attribute name="expand"/></rng:optional>
+            <rng:optional><rng:attribute name="states"/></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="fill"/></rng:optional>
+            <rng:optional><rng:attribute name="height"/></rng:optional>
+            <rng:optional><rng:attribute name="width"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional><rng:attribute name="color" /></rng:optional>
+            <rng:optional><rng:attribute name="invisible"/></rng:optional>
+            <rng:ref name="container"/>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="calendar">
+        <rng:element name="calendar">
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional><rng:attribute name="color" /></rng:optional>
+            <rng:optional><rng:attribute name="date_start" /></rng:optional>
+            <rng:optional><rng:attribute name="date_stop" /></rng:optional>
+            <rng:optional><rng:attribute name="day_length" /></rng:optional>
+            <rng:optional><rng:attribute name="date_delay" /></rng:optional>
+            <rng:optional><rng:attribute name="all_day" /></rng:optional>
+            <rng:optional><rng:attribute name="event_open_popup" /></rng:optional>            
+            <rng:optional><rng:attribute name="attendee" /></rng:optional>
+            <rng:optional><rng:attribute name="color_is_attendee" /></rng:optional>
+            <rng:optional><rng:attribute name="avatar_filter" /></rng:optional>
+            <rng:optional><rng:attribute name="avatar_model" /></rng:optional>
+            <rng:optional><rng:attribute name="avatar_title" /></rng:optional>
+            <rng:optional><rng:attribute name="use_contacts" /></rng:optional>
+            <rng:optional><rng:attribute name="quick_add" /></rng:optional>
+            <rng:optional><rng:attribute name="display" /></rng:optional>            
+            <rng:optional><rng:attribute name="type" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="mode">
+                    <rng:choice>
+                        <rng:value>month</rng:value>
+                        <rng:value>week</rng:value>
+                        <rng:value>day</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
+            <rng:oneOrMore>
+                <rng:ref name="field"/>
+            </rng:oneOrMore>
+            <rng:zeroOrMore>
+                <rng:ref name="html"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="graph">
+        <rng:element name="graph">
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="type">
+                    <rng:choice>
+                        <rng:value>bar</rng:value>
+                        <rng:value>pie</rng:value>
+                        <rng:value>line</rng:value>
+                        <rng:value>pivot</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="stacked"><rng:value>True</rng:value></rng:attribute>
+            </rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="pivot">
+        <rng:element name="pivot">
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="display_quantity"><rng:value>False</rng:value></rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="disable_linking"><rng:value>False</rng:value></rng:attribute>
+            </rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="button">
+        <rng:element name="button">
+            <rng:ref name="overload"/>
+            <rng:ref name="access_rights"/>
+            <rng:ref name="modifiable"/>
+            <rng:optional><rng:attribute name="attrs"/></rng:optional>
+            <rng:optional><rng:attribute name="invisible"/></rng:optional>
+            <rng:optional><rng:attribute name="name" /></rng:optional>
+            <rng:optional><rng:attribute name="icon" /></rng:optional>
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional><rng:attribute name="states" /></rng:optional>
+            <rng:optional><rng:attribute name="type" /></rng:optional>
+            <rng:optional><rng:attribute name="special" /></rng:optional>
+            <rng:optional><rng:attribute name="align" /></rng:optional>
+            <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional><rng:attribute name="target"/></rng:optional>
+            <rng:optional><rng:attribute name="readonly"/></rng:optional>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:optional><rng:attribute name="confirm"/></rng:optional>
+            <rng:optional><rng:attribute name="help"/></rng:optional>
+            <rng:optional><rng:attribute name="class"/></rng:optional>
+            <rng:optional><rng:attribute name="default_focus"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="form" />
+                    <rng:ref name="field" />
+                    <rng:ref name="tree" />
+                    <rng:ref name="notebook" />
+                    <rng:ref name="graph" />
+                    <rng:ref name="calendar" />
+                    <rng:ref name="gantt" />
+                    <rng:ref name="xpath" />
+                    <rng:ref name="page" />
+                    <rng:ref name="separator"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="group"/>
+                    <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
+                    <rng:element name="properties"><rng:empty/></rng:element>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="filter">
+        <rng:element name="filter">
+            <rng:ref name="overload"/>
+            <rng:ref name="access_rights"/>
+            <rng:ref name="modifiable"/>
+            <rng:optional><rng:attribute name="attrs"/></rng:optional>
+            <rng:optional><rng:attribute name="invisible"/></rng:optional>
+            <rng:optional><rng:attribute name="name" /></rng:optional>
+            <rng:optional><rng:attribute name="separator" /></rng:optional>
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional><rng:attribute name="type" /></rng:optional>
+            <rng:optional><rng:attribute name="align" /></rng:optional>
+            <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional><rng:attribute name="readonly"/></rng:optional>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:optional><rng:attribute name="help"/></rng:optional>
+            <rng:optional><rng:attribute name="domain"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="form" />
+                    <rng:ref name="field" />
+                    <rng:ref name="tree" />
+                    <rng:ref name="notebook" />
+                    <rng:ref name="graph" />
+                    <rng:ref name="pivot" />
+                    <rng:ref name="calendar" />
+                    <rng:ref name="gantt" />
+                    <rng:ref name="xpath" />
+                    <rng:ref name="page" />
+                    <rng:ref name="separator"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
+                    <rng:element name="properties"><rng:empty/></rng:element>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+
+        </rng:element>
+    </rng:define>
+
+    <rng:start>
+        <rng:choice>
+            <rng:ref name="diagram" />
+            <rng:ref name="kanban" />
+            <rng:ref name="form" />
+            <rng:ref name="search" />
+            <rng:ref name="group" />
+            <rng:ref name="field" />
+            <rng:ref name="tree" />
+            <rng:ref name="notebook" />
+            <rng:ref name="graph" />
+            <rng:ref name="pivot" />
+            <rng:ref name="calendar" />
+            <rng:ref name="data" />
+            <rng:ref name="gantt" />
+            <rng:ref name="xpath" />
+            <rng:ref name="page" />
+            <rng:ref name="separator"/>
+            <rng:ref name="button"/>
+            <rng:ref name="filter"/>
+            <rng:ref name="label" />
+            <rng:ref name="html"/>
+        </rng:choice>
+    </rng:start>
+</rng:grammar>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_account_payment_form_inherit_payment" model="ir.ui.view">
+                <field name="name">view.account.payment.form.inherit.payment</field>
+                <field name="model">account.payment</field>
+                <field name="inherit_id" ref="account.view_account_payment_form"/>
+                <field name="arch" type="xml">
+                    <xpath expr='//group[2]' position="inside">
+                        <field name="payment_transaction_id"/>
+                    </xpath>
+                </field>
+        </record>
+
+        <record id="view_account_payment_invoice_form_inherit_payment" model="ir.ui.view">
+                <field name="name">view.account.payment.invoice.form.inherit.payment</field>
+                <field name="model">account.payment</field>
+                <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
+                <field name="arch" type="xml">
+                    <field name="payment_method_id" position="after">
+                        <field name="payment_method_code" invisible="1"/>
+                        <field name="payment_token_id" attrs="{'invisible': [('payment_method_code', '!=', 'electronic')],
+                                                              'required': [('payment_method_code', '=', 'electronic')]}"/>
+                    </field>
+                </field>
+        </record>
+
+    </data>
+</odoo>

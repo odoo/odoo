@@ -1,0 +1,63 @@
+.ui-autocomplete .ui-menu-item {
+    &.ui-state-focus {
+        background-color: @odoo-brand-primary;
+    }
+    &.o_m2o_dropdown_option > a {
+        color: @odoo-brand-primary;
+    }
+    &.ui-state-focus > a,
+    &.ui-state-focus.o_m2o_dropdown_option > a {
+        color: white;
+    }
+}
+
+@tag-border: #afafb6;
+.oe_dropdown, .oe_dropdown_toggle {
+    position: relative;
+    cursor: pointer;
+}
+.oe_dropdown_toggle {
+    color: #2B2B2B;
+    font-weight: normal;
+}
+.oe_dropdown_menu {
+    display: none;
+    position: absolute;
+    z-index: 3;
+    margin: 0;
+    border: 1px solid @tag-border;
+    background: white;
+    padding: 4px 0;
+    min-width: 140px;
+    text-align: left;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    &.oe_opened {
+        display: block;
+    }
+    > li {
+        list-style-type: none;
+        float: none;
+        display: block;
+        position: relative;
+        margin: 0;
+        padding: 2px 8px;
+        &:hover {
+            .o-vertical-gradient(#f0f0fa, #eeeef6);
+            box-shadow: none;
+        }
+        > a {
+            white-space: nowrap;
+            display: block;
+            color: #4c4c4c;
+            text-decoration: none;
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+// Buttons used as dropdown toggler
+.o_dropdown_toggler_btn {
+    .btn-default;
+}

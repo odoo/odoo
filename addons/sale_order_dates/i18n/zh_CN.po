@@ -3,14 +3,15 @@
 # * sale_order_dates
 # 
 # Translators:
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 08:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,14 +29,17 @@ msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
-msgstr "客户要求的发运日期。\n当这个订单被确认后，发货的期望的日期将被基于这个日期和公司安全延迟计算。\n如果你希望这个发货越快越好，你就将此字段留空。这样期望的日期将使用默认的方法计算：基于产品提前期和公司的安全延迟。"
+msgstr ""
+"客户要求的发运日期。\n"
+"当这个订单被确认后，发货的期望的日期将被基于这个日期和公司安全延迟计算。\n"
+"如果你希望这个发货越快越好，你就将此字段留空。这样期望的日期将使用默认方法计算：基于产品前置时间和公司的安全天数。"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
-msgstr "确认的产品发货的日期。该日期是基于产品的各种提前期计算出来的承诺给客户的提货日期。"
+msgstr "确认的产品发货的日期。该日期是基于产品的各种提前期计算出来的承诺给客户的交货日期。"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
@@ -53,7 +57,7 @@ msgid "Requested Date"
 msgstr "要求日期"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:51
+#: code:addons/sale_order_dates/models/sale_order.py:56
 #, python-format
 msgid "Requested date is too soon!"
 msgstr "要求日期太早！"
@@ -69,7 +73,7 @@ msgid "Sales Order Line"
 msgstr "销售订单行"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:52
+#: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "

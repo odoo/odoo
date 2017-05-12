@@ -23,18 +23,22 @@
 - 
   Confirm delivery order.
 - 
-  !python {model: stock.picking}: |
-    self.action_confirm(cr, uid,  [ref('pick_output')])
+  !python {model: stock.picking, id: pick_output}: |
+    self.action_confirm()
 -
   I run the scheduler.
 -
-  !python {model: procurement.order}: |
-    self.run_scheduler(cr, uid)
+  !python {model: procurement.order, id: False}: |
+    self.run_scheduler()
 - 
   Check a picking was created from stock to output.
 - 
-  !python {model: stock.move }: |
-    picking = self.pool.get("stock.picking").browse(cr, uid, ref("pick_output"))
-    move_id = self.search(cr, uid, [('product_id', '=', ref('product.product_product_3')),('location_id', '=', ref('stock.stock_location_stock')),
-    ('location_dest_id', '=', ref('stock.stock_location_output')), ('move_dest_id', '=', picking.move_lines[0].id)])
-    assert len(move_id) == 1, "It should have created a picking from Stock to Output with the original picking as destination"
+  !python {model: stock.move, id: False}: |
+    picking = self.env["stock.picking"].browse(ref("pick_output"))
+    moves = self.search([
+      ('product_id', '=', ref('product.product_product_3')),
+      ('location_id', '=', ref('stock.stock_location_stock')),
+      ('location_dest_id', '=', ref('stock.stock_location_output')),
+      ('move_dest_id', '=', picking.move_lines[0].id)
+    ])
+    assert len(moves.ids) == 1, "It should have created a picking from Stock to Output with the original picking as destination"

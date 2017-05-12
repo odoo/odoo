@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.stock.tests.common import TestStockCommon
-from openerp.tools import mute_logger, float_round
+from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.tools import mute_logger, float_round
 
 
 class TestStockFlow(TestStockCommon):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
         """ Basic stock operation on incoming and outgoing shipment. """
         LotObj = self.env['stock.production.lot']
@@ -205,19 +205,21 @@ class TestStockFlow(TestStockCommon):
             self.assertEqual(move.state, 'confirmed', 'Wrong state of move line.')
         # Product assign to outgoing shipments
         picking_out.action_assign()
-        for move in picking_out.move_lines:
-            self.assertEqual(move.state, 'assigned', 'Wrong state of move line.')
+        self.assertEqual(picking_out.move_lines[0].state, 'confirmed', 'Wrong state of move line.')
+        self.assertEqual(picking_out.move_lines[1].state, 'assigned', 'Wrong state of move line.')
+        self.assertEqual(picking_out.move_lines[2].state, 'assigned', 'Wrong state of move line.')
+        self.assertEqual(picking_out.move_lines[3].state, 'confirmed', 'Wrong state of move line.')
         # Check availability for product A
-        aval_a_qty = self.MoveObj.search([('product_id', '=', self.productA.id), ('picking_id', '=', picking_out.id)], limit=1).availability
+        aval_a_qty = self.MoveObj.search([('product_id', '=', self.productA.id), ('picking_id', '=', picking_out.id)], limit=1).reserved_availability
         self.assertEqual(aval_a_qty, 4.0, 'Wrong move quantity availability of product A (%s found instead of 4)' % (aval_a_qty))
         # Check availability for product B
-        aval_b_qty = self.MoveObj.search([('product_id', '=', self.productB.id), ('picking_id', '=', picking_out.id)], limit=1).availability
+        aval_b_qty = self.MoveObj.search([('product_id', '=', self.productB.id), ('picking_id', '=', picking_out.id)], limit=1).reserved_availability
         self.assertEqual(aval_b_qty, 5.0, 'Wrong move quantity availability of product B (%s found instead of 5)' % (aval_b_qty))
         # Check availability for product C
-        aval_c_qty = self.MoveObj.search([('product_id', '=', self.productC.id), ('picking_id', '=', picking_out.id)], limit=1).availability
+        aval_c_qty = self.MoveObj.search([('product_id', '=', self.productC.id), ('picking_id', '=', picking_out.id)], limit=1).reserved_availability
         self.assertEqual(aval_c_qty, 3.0, 'Wrong move quantity availability of product C (%s found instead of 3)' % (aval_c_qty))
         # Check availability for product D
-        aval_d_qty = self.MoveObj.search([('product_id', '=', self.productD.id), ('picking_id', '=', picking_out.id)], limit=1).availability
+        aval_d_qty = self.MoveObj.search([('product_id', '=', self.productD.id), ('picking_id', '=', picking_out.id)], limit=1).reserved_availability
         self.assertEqual(aval_d_qty, 7.0, 'Wrong move quantity availability of product D (%s found instead of 7)' % (aval_d_qty))
 
         # ----------------------------------------------------------------------
@@ -309,7 +311,7 @@ class TestStockFlow(TestStockCommon):
 
         # Confirm back order of incoming shipment.
         back_order_in.action_confirm()
-        self.assertEqual(back_order_in.state, 'assigned', 'Wrong state of incoming shipment back order.')
+        self.assertEqual(back_order_in.state, 'assigned', 'Wrong state of incoming shipment back order: %s instead of %s' % (back_order_in.state, 'assigned'))
         for move in back_order_in.move_lines:
             self.assertEqual(move.state, 'assigned', 'Wrong state of move line.')
 
@@ -815,23 +817,21 @@ class TestStockFlow(TestStockCommon):
         for move in picking_out.move_lines:
             self.assertEqual(move.state, 'assigned', 'Wrong state of move line.')
         # Check product A available quantity
-        DozA_qty = self.MoveObj.search([('product_id', '=', self.DozA.id), ('picking_id', '=', picking_out.id)], limit=1).availability
+        DozA_qty = self.MoveObj.search([('product_id', '=', self.DozA.id), ('picking_id', '=', picking_out.id)], limit=1).reserved_availability
         self.assertEqual(DozA_qty, 4.5, 'Wrong move quantity availability (%s found instead of 4.5)' % (DozA_qty))
         # Check product B available quantity
-        SDozA_qty = self.MoveObj.search([('product_id', '=', self.SDozA.id), ('picking_id', '=', picking_out.id)], limit=1).availability
+        SDozA_qty = self.MoveObj.search([('product_id', '=', self.SDozA.id), ('picking_id', '=', picking_out.id)], limit=1).reserved_availability
         self.assertEqual(SDozA_qty, 2, 'Wrong move quantity availability (%s found instead of 2)' % (SDozA_qty))
         # Check product C available quantity
-        SDozARound_qty = self.MoveObj.search([('product_id', '=', self.SDozARound.id), ('picking_id', '=', picking_out.id)], limit=1).availability
+        SDozARound_qty = self.MoveObj.search([('product_id', '=', self.SDozARound.id), ('picking_id', '=', picking_out.id)], limit=1).reserved_availability
         self.assertEqual(SDozARound_qty, 3, 'Wrong move quantity availability (%s found instead of 3)' % (SDozARound_qty))
         # Check product D available quantity
-        gB_qty = self.MoveObj.search([('product_id', '=', self.gB.id), ('picking_id', '=', picking_out.id)], limit=1).availability
+        gB_qty = self.MoveObj.search([('product_id', '=', self.gB.id), ('picking_id', '=', picking_out.id)], limit=1).reserved_availability
         self.assertEqual(gB_qty, 503, 'Wrong move quantity availability (%s found instead of 503)' % (gB_qty))
         # Check product D available quantity
-        kgB_qty = self.MoveObj.search([('product_id', '=', self.kgB.id), ('picking_id', '=', picking_out.id)], limit=1).availability
+        kgB_qty = self.MoveObj.search([('product_id', '=', self.kgB.id), ('picking_id', '=', picking_out.id)], limit=1).reserved_availability
         self.assertEqual(kgB_qty, 0.020, 'Wrong move quantity availability (%s found instead of 0.020)' % (kgB_qty))
 
-        picking_out.action_confirm()
-        picking_out.action_assign()
         picking_out.do_prepare_partial()
         picking_out.do_transfer()
 
@@ -917,7 +917,7 @@ class TestStockFlow(TestStockCommon):
         #-----------------------------------------------------------------------
 
         # Check incoming shipment state.
-        self.assertEqual(picking_in.state, 'done', 'Incoming shipment state should be done.')
+        self.assertEqual(picking_in.state, 'done', 'Incoming shipment state: %s instead of %s' % (picking_in.state, 'done'))
         # Check incoming shipment move lines state.
         for move in picking_in.move_lines:
             self.assertEqual(move.state, 'done', 'Wrong state of move lines.')
@@ -1168,7 +1168,48 @@ class TestStockFlow(TestStockCommon):
         total_qty = sum([quant.qty for quant in quants])
         self.assertEqual(total_qty, 0, 'Expecting 0 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))
 
-
+        # check product available of saleable category in stock location
+        category_id = self.ref('product.product_category_5')
+        inventory3 = self.InvObj.create({
+                                    'name': 'Test Category',
+                                    'filter': 'category',
+                                    'location_id': self.stock_location,
+                                    'category_id': category_id
+                                })
+        # Start Inventory
+        inventory3.prepare_inventory()
+        # check all products have given category id
+        products_category = inventory3.line_ids.mapped('product_id.categ_id')
+        self.assertEqual(len(products_category), 1, "Inventory line should have only one category")
+        inventory3.action_done()
+        # check category with exhausted in stock location
+        inventory4 = self.InvObj.create({
+                                    'name': 'Test Exhausted Product',
+                                    'filter': 'category',
+                                    'location_id': self.stock_location,
+                                    'category_id': category_id,
+                                    'exhausted': True,
+                                })
+        inventory4.prepare_inventory()
+        inventory4._get_inventory_lines_values()
+        inventory4_lines_count = len(inventory4.line_ids)
+        inventory4.action_done()
+        # Add one product in this product category
+        product = self.ProductObj.create({'name': 'Product A', 'type': 'product', 'categ_id': category_id})
+        # Check that this exhausted product is in the product category inventory adjustment
+        inventory5 = self.InvObj.create({
+                                    'name': 'Test Exhausted Product',
+                                    'filter': 'category',
+                                    'location_id': self.stock_location,
+                                    'category_id': category_id,
+                                    'exhausted': True,
+                                })
+        inventory5.prepare_inventory()
+        inventory5._get_inventory_lines_values()
+        inventory5_lines_count = len(inventory5.line_ids)
+        inventory5.action_done()
+        self.assertEqual(inventory5_lines_count, inventory4_lines_count + 1, "The new product is not taken into account in the inventory valuation.")
+        self.assertTrue(product.id in inventory5.line_ids.mapped('product_id').ids, "The new product is not take into account in the inventory valuation.")
     def test_30_check_with_no_incoming_lot(self):
         """ Picking in without lots and picking out with"""
 
@@ -1235,3 +1276,519 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(sum([x.qty for x in quants if x.lot_id.id == lot1.id]), 1.0, 'Wrong sum of quants with lot 1')
         self.assertEqual(sum([x.qty for x in quants if x.lot_id.id == lot2.id]), 1.0, 'Wrong sum of quants with lot 2')
         self.assertEqual(sum([x.qty for x in quants if x.lot_id.id == lot3.id]), 2.0, 'Wrong sum of quants with lot 3')
+
+    def test_40_pack_in_pack(self):
+        """ Put a pack in pack"""
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location})
+        move_out = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location})
+        picking_pack = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location   ,
+            'location_dest_id': self.pack_location})
+        move_pack = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_pack.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'move_dest_id': move_out.id})
+        picking_in = self.PickingObj.create({
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        move_in = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_in.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'move_dest_id': move_pack.id})
+
+        # Check incoming shipment move lines state.
+        for move in picking_in.move_lines:
+            self.assertEqual(move.state, 'draft', 'Wrong state of move line.')
+        # Confirm incoming shipment.
+        picking_in.action_confirm()
+        # Check incoming shipment move lines state.
+        for move in picking_in.move_lines:
+            self.assertEqual(move.state, 'assigned', 'Wrong state of move line.')
+
+        # Check incoming shipment move lines state.
+        for move in picking_pack.move_lines:
+            self.assertEqual(move.state, 'draft', 'Wrong state of move line.')
+        # Confirm incoming shipment.
+        picking_pack.action_confirm()
+        # Check incoming shipment move lines state.
+        for move in picking_pack.move_lines:
+            self.assertEqual(move.state, 'waiting', 'Wrong state of move line.')
+
+        # Check incoming shipment move lines state.
+        for move in picking_out.move_lines:
+            self.assertEqual(move.state, 'draft', 'Wrong state of move line.')
+        # Confirm incoming shipment.
+        picking_out.action_confirm()
+        # Check incoming shipment move lines state.
+        for move in picking_out.move_lines:
+            self.assertEqual(move.state, 'waiting', 'Wrong state of move line.')
+
+        # Set the quantity done on the pack operation
+        picking_in.pack_operation_product_ids.qty_done = 3.0
+        # Put in a pack
+        picking_in.put_in_pack()
+        # Get the new package
+        picking_in_package = picking_in.pack_operation_ids.result_package_id
+        # Validate picking
+        picking_in.do_new_transfer()
+
+        # Check first picking state changed to done
+        for move in picking_in.move_lines:
+            self.assertEqual(move.state, 'done', 'Wrong state of move line.')
+        # Check next picking state changed to 'assigned'
+        for move in picking_pack.move_lines:
+            self.assertEqual(move.state, 'assigned', 'Wrong state of move line.')
+
+        # set the pack in pack operation to 'done'
+        for pack in picking_pack.pack_operation_pack_ids:
+            pack.is_done = True
+            pack.on_change_is_done()
+
+        # Put in a pack
+        picking_pack.put_in_pack()
+        # Get the new package
+        picking_pack_package = picking_pack.pack_operation_ids.result_package_id
+        # Validate picking
+        picking_pack.do_new_transfer()
+
+        # Check second picking state changed to done
+        for move in picking_pack.move_lines:
+            self.assertEqual(move.state, 'done', 'Wrong state of move line.')
+        # Check next picking state changed to 'assigned'
+        for move in picking_out.move_lines:
+            self.assertEqual(move.state, 'assigned', 'Wrong state of move line.')
+
+        # set the pack in pack operation to 'done'
+        for pack in picking_out.pack_operation_pack_ids:
+            pack.is_done = True
+            pack.on_change_is_done()
+
+        # Validate picking
+        picking_out.do_new_transfer()
+
+        # check all pickings are done
+        for move in picking_in.move_lines:
+            self.assertEqual(move.state, 'done', 'Wrong state of move line.')
+        for move in picking_pack.move_lines:
+            self.assertEqual(move.state, 'done', 'Wrong state of move line.')
+        for move in picking_out.move_lines:
+            self.assertEqual(move.state, 'done', 'Wrong state of move line.')
+
+        # Check picking_in_package is in picking_pack_package
+        self.assertEqual(picking_in_package.parent_id.id, picking_pack_package.id, 'The package created in the picking in is not in the one created in picking pack')
+        # Check that both packages are in the customer location
+        self.assertEqual(picking_pack_package.location_id.id, self.customer_location, 'The package created in picking pack is not in the customer location')
+        self.assertEqual(picking_in_package.location_id.id, self.customer_location, 'The package created in picking in is not in the customer location')
+        # Check that we have a quant in customer location, for the productA with qty 3
+        quant = self.StockQuantObj.search([('location_id', '=', self.customer_location), ('product_id', '=', self.productA.id)])
+        self.assertTrue(quant.id, 'There is no quant in customer location for productA')
+        self.assertEqual(quant.qty, 3.0, 'The quant in customer location for productA has not a quantity of 3.0')
+        # Check that the  parent package of the quant is the picking_in_package
+        self.assertEqual(quant.package_id.id, picking_in_package.id, 'The quant in customer location is not in its package created in picking in')
+
+    def test_50_create_in_out_with_product_pack_lines(self):
+        picking_in = self.PickingObj.create({
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        self.MoveObj.create({
+            'name': self.productE.name,
+            'product_id': self.productE.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productE.uom_id.id,
+            'picking_id': picking_in.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+
+        picking_in.action_confirm()
+        picking_in.action_assign()
+        pack_obj = self.env['stock.quant.package']
+        pack1 = pack_obj.create({'name': 'PACKINOUTTEST1'})
+        pack2 = pack_obj.create({'name': 'PACKINOUTTEST2'})
+        picking_in.pack_operation_ids[0].result_package_id = pack1
+        picking_in.pack_operation_ids[0].product_qty = 4
+        packop2 = picking_in.pack_operation_ids[0].copy()
+        packop2.product_qty = 6
+        packop2.result_package_id = pack2
+        picking_in.do_transfer()
+        self.assertEqual(sum([x.qty for x in picking_in.move_lines[0].quant_ids]), 10.0, 'Expecting 10 pieces in stock')
+        #check the quants are in the package
+        self.assertEqual(sum(x.qty for x in pack1.quant_ids), 4.0, 'Pack 1 should have 4 pieces')
+        self.assertEqual(sum(x.qty for x in pack2.quant_ids), 6.0, 'Pack 2 should have 6 pieces')
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        self.MoveObj.create({
+            'name': self.productE.name,
+            'product_id': self.productE.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productE.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        picking_out.action_confirm()
+        picking_out.action_assign()
+        packout1 = picking_out.pack_operation_ids[0]
+        packout2 = picking_out.pack_operation_ids[0].copy()
+        packout1.product_qty = 2
+        packout1.package_id = pack1
+        packout2.package_id = pack2
+        packout2.product_qty = 1
+        picking_out.do_transfer()
+        #Check there are no negative quants
+        neg_quants = self.env['stock.quant'].search([('product_id', '=', self.productE.id), ('qty', '<', 0.0)])
+        self.assertEqual(len(neg_quants), 0, 'There are negative quants!')
+        self.assertEqual(len(picking_out.move_lines[0].linked_move_operation_ids), 2, 'We should have 2 links in the matching between the move and the operations')
+        self.assertEqual(len(picking_out.move_lines[0].quant_ids), 2, 'We should have exactly 2 quants in the end')
+
+    def test_60_create_in_out_with_product_pack_lines(self):
+        picking_in = self.PickingObj.create({
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        self.MoveObj.create({
+            'name': self.productE.name,
+            'product_id': self.productE.id,
+            'product_uom_qty': 200,
+            'product_uom': self.productE.uom_id.id,
+            'picking_id': picking_in.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+
+        picking_in.action_confirm()
+        picking_in.action_assign()
+        pack_obj = self.env['stock.quant.package']
+        pack1 = pack_obj.create({'name': 'PACKINOUTTEST1'})
+        pack2 = pack_obj.create({'name': 'PACKINOUTTEST2'})
+        picking_in.pack_operation_ids[0].result_package_id = pack1
+        picking_in.pack_operation_ids[0].product_qty = 120
+        packop2 = picking_in.pack_operation_ids[0].copy()
+        packop2.product_qty = 80
+        packop2.result_package_id = pack2
+        picking_in.do_transfer()
+        self.assertEqual(sum([x.qty for x in picking_in.move_lines[0].quant_ids]), 200.0, 'Expecting 200 pieces in stock')
+        #check the quants are in the package
+        self.assertEqual(sum(x.qty for x in pack1.quant_ids), 120, 'Pack 1 should have 120 pieces')
+        self.assertEqual(sum(x.qty for x in pack2.quant_ids), 80, 'Pack 2 should have 80 pieces')
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        self.MoveObj.create({
+            'name': self.productE.name,
+            'product_id': self.productE.id,
+            'product_uom_qty': 200,
+            'product_uom': self.productE.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        picking_out.action_confirm()
+        picking_out.action_assign()
+        #Convert entire packs into taking out of packs
+        packout0 = picking_out.pack_operation_ids[0]
+        packout1 = picking_out.pack_operation_ids[1]
+        packout0.write({
+            'package_id': pack1.id,
+            'product_id': self.productE.id,
+            'product_qty': 120.0,
+            'product_uom_id': self.productE.uom_id.id,
+        })
+        packout1.write({
+            'package_id': pack2.id,
+            'product_id': self.productE.id,
+            'product_qty': 80.0,
+            'product_uom_id': self.productE.uom_id.id,
+        })
+        picking_out.do_transfer()
+        #Check there are no negative quants
+        neg_quants = self.env['stock.quant'].search([('product_id', '=', self.productE.id), ('qty', '<', 0.0)])
+        self.assertEqual(len(neg_quants), 0, 'There are negative quants!')
+        # We should also make sure that when matching stock moves with pack operations, it takes the correct
+        self.assertEqual(len(picking_out.move_lines[0].linked_move_operation_ids), 2, 'We should only have 2 links beween the move and the 2 operations')
+        self.assertEqual(len(picking_out.move_lines[0].quant_ids), 2, 'We should have exactly 2 quants in the end')
+
+    def test_70_picking_state_all_at_once_reserve(self):
+        """ This test will check that the state of the picking is correctly computed according
+        to the state of its move lines and its move type.
+        """
+        # move_type: direct == partial, one == all at once
+        # picking: confirmed == waiting availability, partially_available = partially available
+
+        # -----------------------------------------------------------
+        # "all at once" and "reserve" scenario
+        # -----------------------------------------------------------
+        # get one product in stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory Product Table',
+            'filter': 'partial',
+            'line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'product_qty': 1,
+                'location_id': self.stock_location
+            })]
+        })
+        inventory.action_done()
+
+        # create a "all at once" delivery order for two products
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        picking_out.move_type = 'one'
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+
+        # validate this delivery order, it should be in the waiting state
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "confirmed")
+
+        # receive one product in stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory Product Table',
+            'filter': 'partial',
+            'line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'product_qty': 2,
+                'location_id': self.stock_location
+            })]
+        })
+        inventory.action_done()
+
+        # recheck availability of the delivery order, it should be assigned
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "assigned")
+
+    def test_71_picking_state_all_at_once_force_assign(self):
+        """ This test will check that the state of the picking is correctly computed according
+        to the state of its move lines and its move type.
+        """
+        # move_type: direct == partial, one == all at once
+        # picking: confirmed == waiting availability, partially_available = partially available
+
+        # -----------------------------------------------------------
+        # "all at once" and "force assign" scenario
+        # -----------------------------------------------------------
+        # create a "all at once" delivery order for two products
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        picking_out.move_type = 'direct'
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+
+        # validate this delivery order, it should be in the waiting state
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "confirmed")
+
+        # force assign on the delivery order, it should be assigned
+        picking_out.force_assign()
+        self.assertEquals(picking_out.state, "assigned")
+
+    def test_72_picking_state_partial_reserve(self):
+        """ This test will check that the state of the picking is correctly computed according
+        to the state of its move lines and its move type.
+        """
+        # move_type: direct == partial, one == all at once
+        # picking: confirmed == waiting availability, partially_available = partially available
+
+        # -----------------------------------------------------------
+        # "partial" and "reserve" scenario
+        # -----------------------------------------------------------
+        # get one product in stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory Product Table',
+            'filter': 'partial',
+            'line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'product_qty': 1,
+                'location_id': self.stock_location
+            })]
+        })
+        inventory.action_done()
+
+        # create a "partial" delivery order for two products
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        picking_out.move_type = 'direct'
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+
+        # validate this delivery order, it should be in partially available
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "partially_available")
+
+        # receive one product in stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory Product Table',
+            'filter': 'partial',
+            'line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'product_qty': 2,
+                'location_id': self.stock_location
+            })]
+        })
+        inventory.action_done()
+
+        # recheck availability of the delivery order, it should be assigned
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "assigned")
+
+    def test_73_picking_state_partial_force_assign(self):
+        """ This test will check that the state of the picking is correctly computed according
+        to the state of its move lines and its move type.
+        """
+        # move_type: direct == partial, one == all at once
+        # picking: confirmed == waiting availability, partially_available = partially available
+
+        # -----------------------------------------------------------
+        # "partial" and "force assign" scenario
+        # -----------------------------------------------------------
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        picking_out.move_type = 'direct'
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+
+        # validate this delivery order, it should be in the waiting state
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "confirmed")
+
+        # force assign on the delivery order, it should be assigned
+        picking_out.force_assign()
+        self.assertEquals(picking_out.state, "assigned")
+
+    def test_74_move_state_waiting_mto(self):
+        """ This test will check that when a move is unreserved, it state change to 'waiting' if
+        it has ancestors or is has a 'procure_method' equal to 'make_to_order' else the state
+        changes to 'confirmed'.
+        """
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        move_mto_alone = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'procure_method':'make_to_order'})
+        move_with_ancestors = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        the_ancestor = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'move_dest_id': move_with_ancestors.id})
+        other_move = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+
+        move_mto_alone.action_confirm()
+        move_with_ancestors.action_confirm()
+        other_move.action_confirm()
+
+        move_mto_alone.do_unreserve()
+        move_with_ancestors.do_unreserve()
+        other_move.do_unreserve()
+
+        self.assertEquals(move_mto_alone.state, "waiting")
+        self.assertEquals(move_with_ancestors.state, "waiting")
+        self.assertEquals(other_move.state, "confirmed")
+
+        move_mto_alone.recalculate_move_state()
+        move_with_ancestors.recalculate_move_state()
+        other_move.recalculate_move_state()
+
+        self.assertEquals(move_mto_alone.state, "waiting")
+        self.assertEquals(move_with_ancestors.state, "waiting")
+        self.assertEquals(other_move.state, "confirmed")

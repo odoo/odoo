@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data noupdate="0">
 
     <record id="group_purchase_user" model="res.groups">
@@ -21,18 +21,21 @@
         <field name="implied_ids" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
     </record>
 
-    <record id="group_advance_bidding" model="res.groups">
-        <field name="name">Advance bidding process</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
     <record id="group_manage_vendor_price" model="res.groups">
         <field name="name">Manage Vendor Price</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_warning_purchase" model="res.groups">
+        <field name="name">A warning can be set on a product or a customer (Purchase)</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
 </data>
 <data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('purchase.group_purchase_manager'))]"/>
+    </record>
 
     <record model="ir.rule" id="purchase_order_comp_rule">
         <field name="name">Purchase Order multi-company</field>
@@ -49,4 +52,4 @@
     </record>
 
 </data>
-</openerp>
+</odoo>

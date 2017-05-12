@@ -3,14 +3,17 @@
 # * website_twitter
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2016
+# jl2035 <jaka.luthar@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-09 17:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
+"POT-Creation-Date: 2016-09-07 08:58+0000\n"
+"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"Last-Translator: jl2035 <jaka.luthar@gmail.com>, 2016\n"
+"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -48,7 +51,7 @@ msgid "Accept terms of use and click on the Create button at the bottom"
 msgstr "Sprejmi pogoje uporabe in klikni na gumb Ustvari na dnu"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:38
+#: code:addons/website_twitter/models/website_twitter_config.py:14
 #, python-format
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
@@ -78,14 +81,16 @@ msgstr "Ustvarjeno"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid ""
 "Enter the screen name from which you want to load favorite Tweets (does not "
 "need to be the same as the API keys)"
-msgstr "Ustvari naziv zaslona iz katerega želite naložiti priljubljene tvite (ni treba, da je isti kot API ključi)"
+msgstr ""
+"Ustvari naziv zaslona iz katerega želite naložiti priljubljene tvite (ni "
+"treba, da je isti kot API ključi)"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_screen_name
@@ -94,7 +99,7 @@ msgid "Get favorites from this screen name"
 msgstr "Pridobi priljubljene iz tega naziva zaslona"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:49
+#: code:addons/website_twitter/models/website_twitter_config.py:46
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
 msgstr ""
@@ -110,7 +115,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:62
+#: code:addons/website_twitter/models/website_twitter_config.py:57
 #, python-format
 msgid "Internet connection refused"
 msgstr ""
@@ -131,22 +136,24 @@ msgid "Last Updated on"
 msgstr "Zadnjič posodobljeno"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:64
-#: code:addons/website_twitter/models/twitter_config.py:65
+#: code:addons/website_twitter/models/website_twitter_config.py:59
+#: code:addons/website_twitter/models/website_twitter_config.py:60
 #, python-format
 msgid "Please double-check your Twitter API Key and Secret!"
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:25
+#: code:addons/website_twitter/controllers/main.py:27
 #, python-format
 msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
 "Settings (it does not have to be yours)"
-msgstr "Nastavite Twitter zaslonsko ime za nalaganje priljubljenih v nastavitve spletne strani (ni potrebno, da je vaše)"
+msgstr ""
+"Nastavite Twitter zaslonsko ime za nalaganje priljubljenih v nastavitve "
+"spletne strani (ni potrebno, da je vaše)"
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:21
+#: code:addons/website_twitter/controllers/main.py:23
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
 msgstr "Določite Twitter API ključ in skrivnost v nastavitvah spletne strani"
@@ -159,7 +166,7 @@ msgid "Reload"
 msgstr "Ponovno naloži"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:40
+#: code:addons/website_twitter/models/website_twitter_config.py:16
 #, python-format
 msgid ""
 "Request cannot be served due to the applications rate limit having been "
@@ -176,7 +183,9 @@ msgstr "Zaslonsko ime"
 msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
-msgstr "Zaslonsko ime Twitter računa, iz katerega nalagamo priljubljene. Ni potrebno, da se ujema z API ključem/skrivnostjo."
+msgstr ""
+"Zaslonsko ime Twitter računa, iz katerega nalagamo priljubljene. Ni "
+"potrebno, da se ujema z API ključem/skrivnostjo."
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
@@ -196,14 +205,14 @@ msgid "Switch to the API Keys tab: <br/>"
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:43
+#: code:addons/website_twitter/models/website_twitter_config.py:19
 #, python-format
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:44
+#: code:addons/website_twitter/models/website_twitter_config.py:20
 #, python-format
 msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
@@ -211,7 +220,7 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:39
+#: code:addons/website_twitter/models/website_twitter_config.py:15
 #, python-format
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
@@ -219,7 +228,7 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:37
+#: code:addons/website_twitter/models/website_twitter_config.py:13
 #, python-format
 msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
@@ -227,7 +236,7 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:36
+#: code:addons/website_twitter/models/website_twitter_config.py:12
 #, python-format
 msgid "There was no new data to return."
 msgstr ""
@@ -288,24 +297,19 @@ msgid "Twitter Configuration"
 msgstr "Twitter nastavitve"
 
 #. module: website_twitter
-#: model:ir.model,name:website_twitter.model_website_twitter_tweet
-msgid "Twitter Tweets"
-msgstr "Twitter tviti"
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:65
+#: code:addons/website_twitter/models/website_twitter_config.py:60
 #, python-format
 msgid "Twitter authorization error!"
 msgstr "Twitter napaka overjanja!"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:42
+#: code:addons/website_twitter/models/website_twitter_config.py:18
 #, python-format
 msgid "Twitter is down or being upgraded."
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:41
+#: code:addons/website_twitter/models/website_twitter_config.py:17
 #, python-format
 msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
@@ -313,16 +317,18 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:36
+#: code:addons/website_twitter/controllers/main.py:37
 #, python-format
 msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
-msgstr "Twitter uporabnik @%(username)s ima manj kot 12 priljubljenih tvitov. Dodajte jih več ali pa izberite drugo zaslonsko ime."
+msgstr ""
+"Twitter uporabnik @%(username)s ima manj kot 12 priljubljenih tvitov. "
+"Dodajte jih več ali pa izberite drugo zaslonsko ime."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:61
-#: code:addons/website_twitter/models/twitter_config.py:62
+#: code:addons/website_twitter/models/website_twitter_config.py:56
+#: code:addons/website_twitter/models/website_twitter_config.py:57
 #, python-format
 msgid "We failed to reach a twitter server."
 msgstr ""
@@ -346,6 +352,11 @@ msgstr "https://www.odoo.com"
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_config_settings
 msgid "website.config.settings"
+msgstr "website.config.settings"
+
+#. module: website_twitter
+#: model:ir.model,name:website_twitter.model_website_twitter_tweet
+msgid "website.twitter.tweet"
 msgstr ""
 
 #. module: website_twitter

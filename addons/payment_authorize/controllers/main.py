@@ -2,9 +2,10 @@
 import pprint
 import logging
 import urlparse
+import werkzeug
 
-from openerp import http
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -30,3 +31,16 @@ class AuthorizeController(http.Controller):
         return request.render('payment_authorize.payment_authorize_redirect', {
             'return_url': '%s' % urlparse.urljoin(base_url, return_url)
         })
+
+    @http.route(['/payment/authorize/s2s/create_json'], type='json', auth='public')
+    def authorize_s2s_create_json(self, **kwargs):
+        acquirer_id = int(kwargs.get('acquirer_id'))
+        acquirer = request.env['payment.acquirer'].browse(acquirer_id)
+        return acquirer.s2s_process(kwargs)
+
+    @http.route(['/payment/authorize/s2s/create'], type='http', auth='public')
+    def authorize_s2s_create(self, **post):
+        acquirer_id = int(post.get('acquirer_id'))
+        acquirer = request.env['payment.acquirer'].browse(acquirer_id)
+        acquirer.s2s_process(post)
+        return werkzeug.utils.redirect(post.get('return_url', '/'))

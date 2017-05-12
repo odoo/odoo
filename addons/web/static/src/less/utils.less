@@ -1,17 +1,4 @@
 // ------------------------------------------------------------------
-// Margin
-// ------------------------------------------------------------------
-.utils-margin-loop(@index) when (@index < 256) {
-    .o-mt@{index} {margin-top: @index px;}
-    .o-mb@{index} {margin-bottom: @index px;}
-    .o-mr@{index} {margin-right: @index px;}
-    .o-ml@{index} {margin-left: @index px;}
-
-    .utils-margin-loop(@index * 2);
-}
-.utils-margin-loop(2);
-
-// ------------------------------------------------------------------
 // Padding
 // ------------------------------------------------------------------
 .o-webclient-padding(@top: 0px, @right: @odoo-horizontal-padding, @bottom: 0px, @left: @odoo-horizontal-padding) {
@@ -122,7 +109,6 @@
 }
 
 // Background-size
-// https://css-tricks.com/perfect-full-page-background-image/
 .o-background-size(@size) {
     -webkit-background-size: @size;
     -moz-background-size: @size;
@@ -197,26 +183,6 @@
 }
 
 // ------------------------------------------------------------------
-// Animation
-// ------------------------------------------------------------------
-.o-animation(@name: none, @duration: 0s, @timing-function: ease, @delay: 0s, @iteration-count: 1, @direction: normal, @fill-mode: none, @play-state: running) {
-    -webkit-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
-    -moz-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
-    -o-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
-    animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
-}
-
-// ------------------------------------------------------------------
-// Transition
-// ------------------------------------------------------------------
-.o-transition(@property: all, @duration: 0s, @timing-function: easy, @transition-delay: 0s) {
-    -webkit-transition: @property @duration @timing-function @transition-delay;
-    -moz-transition: @property @duration @timing-function @transition-delay;
-    -o-transition: @property @duration @timing-function @transition-delay;
-    transition: @property @duration @timing-function @transition-delay;
-}
-
-// ------------------------------------------------------------------
 // Columns
 // ------------------------------------------------------------------
 .o-columns(@width: auto, @col: auto) {
@@ -246,4 +212,41 @@
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: top; // To update display context changed by overflow:hidden
+}
+
+// ------------------------------------------------------------------
+// Gradients
+// ------------------------------------------------------------------
+.o-linear-gradient(@deg: 45deg, @start-color: #555, @end-color: #333) {
+    background-repeat: repeat-x;
+    background-image: -webkit-linear-gradient(@deg, @start-color, @end-color);
+    background-image: -o-linear-gradient(@deg, @start-color, @end-color);
+    background-image: linear-gradient(@deg, @start-color, @end-color);
+}
+.o-vertical-gradient(@startColor: #555, @endColor: #333) {
+    background-color: mix(@startColor, @endColor);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
+    background-image: -webkit-linear-gradient(top, @startColor, @endColor);
+    background-image: -moz-linear-gradient(top, @startColor, @endColor);
+    background-image: -ms-linear-gradient(top, @startColor, @endColor);
+    background-image: -o-linear-gradient(top, @startColor, @endColor);
+    background-image: linear-gradient(to bottom, @startColor, @endColor);
+}
+.o-skew-gradient(@startColor: #555, @endColor: #333) {
+    background-color: @endColor;
+    background: -moz-linear-gradient(135deg, @endColor, @startColor);
+    background: -o-linear-gradient(135deg, @startColor, @endColor);
+    background: -webkit-gradient(linear, left top, right bottom, from(@startColor), to(@endColor));
+    background: -ms-linear-gradient(top, @startColor, @endColor);
+}
+
+// ------------------------------------------------------------------
+// Transform
+// ------------------------------------------------------------------
+.o-transform(@transform) {
+    -webkit-transform: @transform;
+    -moz-transform: @transform;
+    -ms-transform: @transform;
+    -o-transform: @transform;
+    transform: @transform;
 }

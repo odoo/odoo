@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo noupdate="1">
+
     <record id="product_template_public" model="ir.rule">
         <field name="name">Public product template</field>
         <field name="model_id" ref="product.model_product_template"/>
@@ -11,7 +11,7 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
-    
+
     <record id="product_supplierinfo_public" model="ir.rule">
         <field name="name">Public product supplierinfo</field>
         <field name="model_id" ref="product.model_product_supplierinfo"/>
@@ -22,5 +22,26 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
-</data>
-</openerp>
+
+    <record id="payment_transaction_salesman_rule" model="ir.rule">
+        <field name="name">Access every payment transaction</field>
+        <field name="model_id" ref="payment.model_payment_transaction"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="payment_token_salesman_rule" model="ir.rule">
+        <field name="name">Access every payment token</field>
+        <field name="model_id" ref="payment.model_payment_token"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="website_sale.group_website_multi_image" model="res.groups">
+        <field name="name">Show multi image on eCommerce</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="sales_team.group_sale_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('website.group_website_publisher'))]"/>
+    </record>
+</odoo>

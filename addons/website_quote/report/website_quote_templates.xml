@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <template id="report_quote">
+            <t t-call="report.html_container">
+                <t t-set="data_report_margin_top" t-value="45"/>
+                <t t-set="data_report_header_spacing" t-value="40"/>
+                <t t-call="report.external_layout">
+                    <t t-set="o" t-value="docs[0]"/>
+                    <t t-foreach="docs" t-as="quotation">
+                        <div class="page">
+                            <t t-call="website_quote.so_quotation_content"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+</odoo>

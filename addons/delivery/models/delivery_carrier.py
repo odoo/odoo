@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError, ValidationError
+
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -35,10 +37,9 @@ class DeliveryCarrier(models.Model):
 
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
-    delivery_type = fields.Selection([('fixed', 'Fixed Price'), ('base_on_rule', 'Based on Rules')], string='Price Computation', default='fixed', required=True)
+    delivery_type = fields.Selection([('fixed', 'Fixed Price'), ('base_on_rule', 'Based on Rules')], string='Provider', default='fixed', required=True)
     product_type = fields.Selection(related='product_id.type', default='service')
     product_sale_ok = fields.Boolean(related='product_id.sale_ok', default=False)
-    partner_id = fields.Many2one('res.partner', string='Transporter Company', required=True, help="The partner that is doing the delivery service.")
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete="cascade")
     price = fields.Float(compute='get_price')
     available = fields.Boolean(compute='get_price')
@@ -50,7 +51,30 @@ class DeliveryCarrier(models.Model):
     zip_to = fields.Char('Zip To')
     price_rule_ids = fields.One2many('delivery.price.rule', 'carrier_id', 'Pricing Rules', copy=True)
     fixed_price = fields.Float(compute='_compute_fixed_price', inverse='_set_product_fixed_price', store=True, string='Fixed Price',help="Keep empty if the pricing depends on the advanced pricing per destination")
-    shipping_enabled = fields.Boolean(string="Shipping enabled", default=True, help="Uncheck this box to disable package shipping while validating Delivery Orders")
+    integration_level = fields.Selection([('rate', 'Get Rate'), ('rate_and_ship', 'Get Rate and Create Shipment')], string="Integration Level", default='rate_and_ship', help="Action while validating Delivery Orders")
+    prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")
+    margin = fields.Integer(help='This percentage will be added to the shipping price.')
+
+    _sql_constraints = [
+        ('margin_not_under_100_percent', 'CHECK (margin >= -100)', 'Margin cannot be lower than -100%'),
+    ]
+
+    @api.one
+    def toggle_prod_environment(self):
+        self.prod_environment = not self.prod_environment
+
+    @api.multi
+    def install_more_provider(self):
+        return {
+            'name': 'New Providers',
+            'view_mode': 'kanban',
+            'res_model': 'ir.module.module',
+            'domain': [['name', 'ilike', 'delivery_']],
+            'type': 'ir.actions.act_window',
+            'help': _('''<p class="oe_view_nocontent">
+                    Buy Odoo Enterprise now to get more providers.
+                </p>'''),
+        }
 
     @api.multi
     def name_get(self):
@@ -94,24 +118,26 @@ class DeliveryCarrier(models.Model):
             order = SaleOrder.browse(order_id)
             if self.delivery_type not in ['fixed', 'base_on_rule']:
                 try:
-                    self.price = self.get_shipping_price_from_so(order)[0]
+                    computed_price = self.get_shipping_price_from_so(order)[0]
                     self.available = True
-                except UserError as e:
+                except ValidationError as e:
                     # No suitable delivery method found, probably configuration error
                     _logger.info("Carrier %s: %s, not found", self.name, e.name)
-                    self.price = 0.0
+                    computed_price = 0.0
             else:
                 carrier = self.verify_carrier(order.partner_shipping_id)
                 if carrier:
                     try:
-                        self.price = carrier.get_price_available(order)
+                        computed_price = carrier.get_price_available(order)
                         self.available = True
-                    except UserError, e:
+                    except UserError as e:
                         # No suitable delivery method found, probably configuration error
                         _logger.info("Carrier %s: %s", carrier.name, e.name)
-                        self.price = 0.0
+                        computed_price = 0.0
                 else:
-                    self.price = 0.0
+                    computed_price = 0.0
+
+            self.price = computed_price * (1.0 + (float(self.margin) / 100.0))
 
     # -------------------------- #
     # API for external providers #
@@ -239,7 +265,6 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         total = weight = volume = quantity = 0
         total_delivery = 0.0
-        ProductUom = self.env['product.uom']
         for line in order.order_line:
             if line.state == 'cancel':
                 continue
@@ -247,7 +272,7 @@ class DeliveryCarrier(models.Model):
                 total_delivery += line.price_total
             if not line.product_id or line.is_delivery:
                 continue
-            qty = ProductUom._compute_qty(line.product_uom.id, line.product_uom_qty, line.product_id.uom_id.id)
+            qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
             quantity += qty
@@ -262,7 +287,7 @@ class DeliveryCarrier(models.Model):
         criteria_found = False
         price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
         for line in self.price_rule_ids:
-            test = eval(line.variable + line.operator + str(line.max_value), price_dict)
+            test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:
                 price = line.list_base_price + line.list_price * price_dict[line.variable_factor]
                 criteria_found = True

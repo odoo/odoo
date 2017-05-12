@@ -3,15 +3,17 @@
 # * crm_project_issue
 # 
 # Translators:
-# Kris Krnacs, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-19 16:09+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,12 +25,14 @@ msgstr ""
 msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
 "                            <span class=\"o_stat_text\">Issue</span>"
-msgstr "<span class=\"o_stat_text\">Átalakít erre</span>\n                            <span class=\"o_stat_text\">Ügy</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Átalakít erre</span>\n"
+"                            <span class=\"o_stat_text\">Ügy</span>"
 
 #. module: crm_project_issue
 #: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
 msgid "Cancel"
-msgstr "Megszakítás"
+msgstr "Érvénytelenít"
 
 #. module: crm_project_issue
 #: model:ir.actions.act_window,name:crm_project_issue.convert_lead2projectissue_wizard_action
@@ -43,11 +47,6 @@ msgid "Create Issue"
 msgstr "Reklamációs hibajegy létrehozása"
 
 #. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Create a new customer"
-msgstr "Új vevő létrehozása"
-
-#. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_uid
 msgid "Created by"
 msgstr "Készítette"
@@ -58,29 +57,14 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_partner_id
-msgid "Customer"
-msgstr "Vevő"
-
-#. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Do not link to a customer"
-msgstr "Ne kapcsolja ügyfélhez"
-
-#. module: crm_project_issue
-#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
-msgid "Handle partner binding or generation in CRM wizards."
-msgstr "Partner kikötés vagy létrehozás a CMR varázslókban."
-
-#. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító ID"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard___last_update
@@ -90,12 +74,12 @@ msgstr "Utoljára frissítve ekkor"
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára frissítve "
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_lead_id
@@ -103,16 +87,11 @@ msgid "Lead"
 msgstr "Érdeklődő"
 
 #. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Link to an existing customer"
-msgstr "Összekapcsolás egy meglévő vevőhöz"
-
-#. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_project_id
 msgid "Project"
-msgstr "Projekt"
+msgstr "Projekt téma"
 
 #. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_action
-msgid "Related Customer"
-msgstr "Ide vonatkozó vevő"
+#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
+msgid "crm.lead2projectissue.wizard"
+msgstr "crm.lead2projectissue.wizard"

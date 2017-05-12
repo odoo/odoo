@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
                     <span t-field="o.name"/><br/>
-                    <span t-raw="o._address_display(None, None)[o.id].replace('\n\n', '\n').replace('\n', '&lt;br&gt;')"/>
+                    <span t-raw="o.contact_address.replace('\n\n', '\n').replace('\n', '&lt;br&gt;')"/>
                     <span t-field="o.vat"/>
                 </div>
                 <p>
@@ -44,10 +44,10 @@
                                 <span t-esc="line['ref']"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="line['debit']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                <span t-esc="line['debit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="line['credit']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                <span t-esc="line['credit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                             </td>
                             <td class="text-center">
                                 <span t-if="line['blocked']">x</span>
@@ -55,17 +55,17 @@
                         </tr>
                         <tr>
                             <td colspan="3"></td>
-                            <td><strong>Sub-Total :</strong></td>
-                            <td class="text-right"><span t-esc="Totals[o.id][currency]['due']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/></td>
-                            <td class="text-right"><span t-esc="Totals[o.id][currency]['paid']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/></td>
-                            <td class="text-right"><span t-esc="Totals[o.id][currency]['mat']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/></td>
+                            <td><strong>Subtotal :</strong></td>
+                            <td class="text-right"><span t-esc="Totals[o.id][currency]['due']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                            <td class="text-right"><span t-esc="Totals[o.id][currency]['paid']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                            <td class="text-right"><span t-esc="Totals[o.id][currency]['mat']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
                             <td><strong>Balance :</strong></td>
                             <td class="text-right">
-                                <span t-esc="Totals[o.id][currency]['due'] - Totals[o.id][currency]['paid']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                <span t-esc="Totals[o.id][currency]['due'] - Totals[o.id][currency]['paid']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                             </td>
                         </tr>
                     </table>

@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import os
-import time
-
-import openerp
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
-import threading
 import subprocess
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+import threading
+
+from odoo import http
+
+import odoo.addons.hw_proxy.controllers.main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 

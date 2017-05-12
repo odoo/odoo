@@ -3,14 +3,18 @@
 # * membership
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Nasan-Ochir L <nasaaskii@gmail.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-11-15 12:29+0000\n"
-"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -35,9 +39,9 @@ msgstr "# Хүлээж буй"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
-msgstr "Өөрийн гишүүнчлэлийг холбохыг хүсч буй гишүүн. Энэ нь холбогдсон гишүүний гишүүнчлэлийг тооцож үзнэ."
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -75,12 +79,6 @@ msgstr "Гишүүнийг холбох"
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
 msgstr "Холбогдсон харилцагч"
-
-#. module: membership
-#: model:product.product,name:membership.membership_2
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "Энгийн гишүүнчлэл"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
@@ -129,7 +127,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_report_membership_company_id
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
-msgstr "Компани"
+msgstr "Байгууллага"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_marketing_config_association
+msgid "Configuration"
+msgstr "Тохиргоо"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_tree
@@ -229,14 +232,10 @@ msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr "Алдаа ! Дуусах огноо нь эхлэх огнооноос өмнө байж болохгүй."
 
 #. module: membership
-#: constraint:res.partner:0
+#: code:addons/membership/models/partner.py:159
+#, python-format
 msgid "Error ! You cannot create recursive associated members."
 msgstr "Алдаа ! Тойрч холбогдсон гишүүдийг үүсгэх боломжгүй."
-
-#. module: membership
-#: constraint:membership.membership_line:0
-msgid "Error, this membership product is out of date"
-msgstr "Алдаа, энэ бараа хугацаа хэтэрсэн байна"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -259,12 +258,6 @@ msgstr "Хаанаас"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "From Month"
-msgstr ""
-
-#. module: membership
-#: model:product.product,name:membership.membership_0
-#: model:product.template,name:membership.membership_0_product_template
-msgid "Gold Membership"
 msgstr ""
 
 #. module: membership
@@ -335,13 +328,13 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any membership.\n"
-"                        -Cancelled Member: A member who has cancelled his membership.\n"
-"                        -Old Member: A member whose membership date has expired.\n"
-"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been created.\n"
-"                        -Paid Member: A member who has paid the membership amount."
-msgstr "Энэ нь гишүүнчлэлийн төлөвийг илэрхийлнэ.\n                    -Гишүүн бус: Гишүүн болох хүсэлт гаргаагүй гишүүд.\n                    -Цуцлагдсан гишүүн: Гишүүнчлэлээ цуцлсан гишүүн.\n                    -Хуучин харилцагч: Гишүүнлэлийн хугацаа нь дууссан гишүүн.\n                    -Хүлээж байгаа гишүүн: Гишүүн болох хүсэлт гаргасан бөгөөд нэхэмжлэл үүсэхийг хүлээж байгаа гишүүн.\n                    -Нэхэмжлэгдсэн Гишүүн: Нэхэмжлэл нь үүссэн гишүүд\n                    -Төлсөн гишүүн: Гишүүнчлэлийн төлбөрөө төлсөн гишүүд."
+"-Non Member: A member who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paid Member: A member who has paid the membership amount."
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
@@ -379,6 +372,7 @@ msgstr "Гишүүний үнэ"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_association
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model:ir.ui.view,arch_db:membership.membership_members_tree
 msgid "Members"
@@ -525,13 +519,13 @@ msgid "Partner"
 msgstr "Харилцагч"
 
 #. module: membership
-#: code:addons/membership/membership.py:351
+#: code:addons/membership/models/partner.py:181
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr "Харилцагч нэхэмлжлэх хаяг байхгүй байна."
 
 #. module: membership
-#: code:addons/membership/membership.py:349
+#: code:addons/membership/models/partner.py:179
 #, python-format
 msgid "Partner is a free Member."
 msgstr "Харилцагч нь төлбөргүй гишүүн."
@@ -572,12 +566,6 @@ msgstr "Худалдагч"
 #: model:ir.model.fields,help:membership.field_res_partner_free_member
 msgid "Select if you want to give free membership."
 msgstr "Хэрэв үнэгүй гишүүнчлэл өгөхөөр бол сонгоно"
-
-#. module: membership
-#: model:product.product,name:membership.membership_1
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr "Мөнгөн гишүүнчлэл"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date
@@ -627,7 +615,7 @@ msgstr "Хүртэл"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Vendors"
-msgstr "Нийлүүлэгч"
+msgstr "Нийлүүлэгчид"
 
 #. module: membership
 #: selection:membership.membership_line,state:0

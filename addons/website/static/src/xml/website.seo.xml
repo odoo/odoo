@@ -10,86 +10,59 @@
             <option t-att-value="lang[0]" t-att-selected="lang[0] == def_lang ? 'selected' : null"><t t-esc="lang[1]" /></option>
         </t>
     </t>
-    
-    <t t-name="website.seo_configuration">
-        <div class="modal fade oe_seo_configuration js_seo_configuration" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
-                        <div class="h2">Promote This Page</div>
-                        <div class="text-muted">
-                            Get this page efficiently referenced in Google to attract more visitors.
+
+    <div t-name="website.seo_configuration">
+        <div class="js_seo_tips" />
+        <section class="js_seo_keywords_list">
+            <h3 class="page-header mt16">1. Define Keywords <small>describing your page content</small></h3>
+            <div class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="seo_page_keywords" class="col-sm-3 control-label">Add keyword:</label>
+                    <div class="col-sm-4">
+                        <div>
+                          <input type="text" name="seo_page_keywords" class="form-control" maxlength="30"/>
                         </div>
                     </div>
-                    <div class="modal-body">
-                        <div class="js_seo_tips" />
-                        <section class="js_seo_keywords_list">
-                            <h3 class="page-header mt16">1. Define Keywords <small>describing your page content</small></h3>
-                            <div class="form-horizontal" role="form">
-                                <div class="form-group">
-                                    <label for="seo_page_keywords" class="col-sm-3 control-label">Add keyword:</label>
-                                    <div class="col-sm-4">
-                                        <div>
-                                          <input type="text" name="seo_page_keywords" class="form-control" maxlength="30"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mt8">
-                                    <label for="seo_page_language" class="col-sm-3 control-label">Language:</label>
-                                    <div>
-                                        <div class="col-sm-4">
-                                            <select name="seo_page_language" id="language-box" class="form-control"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mt8">
-                                    <div class="col-md-10 text-center">
-                                        <button data-action="add" class="btn btn-default" type="button">Add</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="text-muted">Most searched topics related to your keywords, ordered by importance:</span>
-                            <!-- filled in JS -->
-                        </section>
-                        <section>
-                            <h3 class="page-header">2. Reference Your Page <small>using above suggested keywords</small></h3>
-                            <div class="form-horizontal mt16" role="form">
-                                <div class="form-group">
-                                    <label for="seo_page_title" class="col-sm-2 control-label">Title</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="seo_page_title" class="form-control" maxlength="70" size="70"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="seo_page_description" class="col-sm-2 control-label">Description</label>
-                                    <div class="col-sm-8">
-                                        <textarea name="seo_page_description" class="form-control" rows="3" cols="70" t-att-maxlength="widget.maxDescriptionSize"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <section>
-                            <h3 class="page-header">3. Preview <small>how your page will be listed on Google</small></h3>
-                            <div class="js_seo_preview"></div>
-                        </section>
-                        <!--
-                        <section class="js_image_section">
-                            <h3 class="page-header">4. Describe your images</h3>
-                            <div class="row js_seo_image_list">
-                            </div>
-                        </section>
-                        -->
+                </div>
+                <div class="row mt8">
+                    <label for="seo_page_language" class="col-sm-3 control-label">Language:</label>
+                    <div>
+                        <div class="col-sm-4">
+                            <select name="seo_page_language" id="language-box" class="form-control"/>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" data-action="update" class="btn btn-primary">Save</button>
-                        or
-                        <a data-action="discard" data-dismiss="modal" href="#" >Discard</a>
+                </div>
+                <div class="row mt8">
+                    <div class="col-md-10 text-center">
+                        <button data-action="add" class="btn btn-default" type="button">Add</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </t>
+            <span class="text-muted">Most searched topics related to your keywords, ordered by importance:</span>
+            <!-- filled in JS -->
+        </section>
+        <section>
+            <h3 class="page-header">2. Reference Your Page <small>using above suggested keywords</small></h3>
+            <div class="form-horizontal mt16" role="form">
+                <div class="form-group">
+                    <label for="seo_page_title" class="col-sm-2 control-label">Title</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="seo_page_title" class="form-control" maxlength="70" size="70"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="seo_page_description" class="col-sm-2 control-label">Description</label>
+                    <div class="col-sm-8">
+                        <textarea name="seo_page_description" class="form-control" rows="3" cols="70" t-att-maxlength="widget.maxDescriptionSize"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h3 class="page-header">3. Preview <small>how your page will be listed on Google</small></h3>
+            <div class="js_seo_preview"></div>
+        </section>
+    </div>
 
     <t t-name="website.seo_suggestion_list">
         <ul class="list-inline mb0">

@@ -3,15 +3,18 @@
 # * utm
 # 
 # Translators:
-# Manuela Silva <h_manuela_rodsilva@gmail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
+# Manuela Silva <manuela.silva@sky.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-11-02 16:14+0000\n"
-"Last-Translator: Manuela Silva <h_manuela_rodsilva@gmail.com>\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Manuela Silva <manuela.silva@sky.com>, 2016\n"
+"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -25,6 +28,11 @@ msgstr "Ativo"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
+#: model:ir.model.fields,field_description:utm.field_account_invoice_campaign_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_campaign_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_campaign_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_campaign_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_campaign_id
 #: model:ir.ui.view,arch_db:utm.utm_campaign_form
 #: model:ir.ui.view,arch_db:utm.utm_campaign_tree
@@ -34,7 +42,7 @@ msgstr "Campanha"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign_name
 msgid "Campaign Name"
-msgstr "Nome da campanha"
+msgstr "Nome da Campanha"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_campaign_act
@@ -61,7 +69,7 @@ msgstr "Canais"
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_christmas_special
 msgid "Christmas Special"
-msgstr ""
+msgstr "Especial de Natal"
 
 #. module: utm
 #: model:ir.actions.act_window,help:utm.utm_medium_action
@@ -71,7 +79,7 @@ msgstr ""
 #. module: utm
 #: model:ir.actions.act_window,help:utm.utm_source_action
 msgid "Click to define a new source."
-msgstr ""
+msgstr "Clique para definir uma nova fonte."
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign_create_uid
@@ -93,12 +101,7 @@ msgstr "Criado em"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_display_name
 #: model:ir.model.fields,field_description:utm.field_utm_source_display_name
 msgid "Display Name"
-msgstr "Nome a Mostrar"
-
-#. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
-msgid "Email Campaign - Products"
-msgstr "Campanha de Email - Produtos"
+msgstr "Nome a Exibir"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
@@ -108,7 +111,7 @@ msgstr "Campanha de Email - Serviços"
 #. module: utm
 #: model:utm.source,name:utm.utm_source_facebook
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
@@ -121,7 +124,7 @@ msgstr "HTTP routing"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_id
 #: model:ir.model.fields,field_description:utm.field_utm_source_id
 msgid "ID"
-msgstr "ID"
+msgstr "Id."
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign___last_update
@@ -136,19 +139,19 @@ msgstr "Última Modificação em"
 #: model:ir.model.fields,field_description:utm.field_utm_medium_write_uid
 #: model:ir.model.fields,field_description:utm.field_utm_source_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualização por"
+msgstr "Última Atualização por"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign_write_date
 #: model:ir.model.fields,field_description:utm.field_utm_medium_write_date
 #: model:ir.model.fields,field_description:utm.field_utm_source_write_date
 msgid "Last Updated on"
-msgstr "Última Actualização em"
+msgstr "Última Atualização em"
 
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
 msgid "Link Tracker"
-msgstr "Acompanhamento de Hiperligações"
+msgstr "Monitorizador de Hiperligação"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
@@ -157,6 +160,11 @@ msgstr "Parceiro de Mailing"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
+#: model:ir.model.fields,field_description:utm.field_account_invoice_medium_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_medium_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_medium_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_medium_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_medium_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_medium_id
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
@@ -165,6 +173,7 @@ msgid "Medium"
 msgstr "Médio"
 
 #. module: utm
+#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
 msgstr "Notícias"
@@ -172,7 +181,7 @@ msgstr "Notícias"
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_fall_drive
 msgid "Sale"
-msgstr ""
+msgstr "Venda"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_search_engine
@@ -181,6 +190,11 @@ msgstr "Motor de busca"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
+#: model:ir.model.fields,field_description:utm.field_account_invoice_source_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_source_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_source_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_source_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_source_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_source_id
 msgid "Source"
 msgstr "Origem"
@@ -197,23 +211,40 @@ msgid "Sources"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_campaign_id
+#: model:ir.model.fields,help:utm.field_crm_lead_campaign_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_campaign_id
+#: model:ir.model.fields,help:utm.field_link_tracker_campaign_id
+#: model:ir.model.fields,help:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_campaign_id
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts "
 "Ex: Fall_Drive, Christmas_Special"
-msgstr "Este é um nome que ajuda a manter o controle de seus esforços das diferentes campanhas  Ex: Fall_Drive, Christmas_Special"
+msgstr ""
+"Este é um nome que ajuda-o a manter o controle dos seus esforços das "
+"diferentes campanhas, por exemplo, Fall_Drive, Christmas_Special"
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_medium_id
+#: model:ir.model.fields,help:utm.field_crm_lead_medium_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_medium_id
+#: model:ir.model.fields,help:utm.field_link_tracker_medium_id
+#: model:ir.model.fields,help:utm.field_sale_order_medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Este é o método de entrega. Ex: Cartão postal, e-mail, ou anúncio da bandeira"
+msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
+msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_source_id
+#: model:ir.model.fields,help:utm.field_crm_lead_source_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_source_id
+#: model:ir.model.fields,help:utm.field_link_tracker_source_id
+#: model:ir.model.fields,help:utm.field_sale_order_source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_source_id
 msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Esta é a origem do link Ex: Search Engine, um outro domínio ou nome de lista de e-mail"
+"This is the source of the link Ex:Search Engine, another domain,or name of "
+"email list"
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_twitter

@@ -1,26 +1,22 @@
 # -*- coding: utf-8 -*-
 
 import babel.dates
-import time
 import re
-import werkzeug.urls
+import werkzeug
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from openerp import http
-from openerp import tools, SUPERUSER_ID
-from openerp.addons.website.models.website import slug
-from openerp.http import request
-from openerp.tools.translate import _
+from odoo import fields, http, _
+from odoo.addons.website.models.website import slug
+from odoo.http import request
 
 
-class website_event(http.Controller):
+class WebsiteEventController(http.Controller):
+
     @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True)
     def events(self, page=1, **searches):
-        cr, uid, context = request.cr, request.uid, request.context
-        event_obj = request.registry['event.event']
-        type_obj = request.registry['event.type']
-        country_obj = request.registry['res.country']
+        Event = request.env['event.event']
+        EventType = request.env['event.type']
 
         searches.setdefault('date', 'all')
         searches.setdefault('type', 'all')
@@ -29,10 +25,10 @@ class website_event(http.Controller):
         domain_search = {}
 
         def sdn(date):
-            return date.replace(hour=23, minute=59, second=59).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            return fields.Datetime.to_string(date.replace(hour=23, minute=59, second=59))
 
         def sd(date):
-            return date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            return fields.Datetime.to_string(date)
         today = datetime.today()
         dates = [
             ['all', _('Next Events'), [("date_end", ">", sd(today))], 0],
@@ -72,11 +68,11 @@ class website_event(http.Controller):
                 if date[0] != 'all':
                     current_date = date[1]
         if searches["type"] != 'all':
-            current_type = type_obj.browse(cr, uid, int(searches['type']), context=context)
+            current_type = EventType.browse(int(searches['type']))
             domain_search["type"] = [("event_type_id", "=", int(searches["type"]))]
 
         if searches["country"] != 'all' and searches["country"] != 'online':
-            current_country = country_obj.browse(cr, uid, int(searches['country']), context=context)
+            current_country = request.env['res.country'].browse(int(searches['country']))
             domain_search["country"] = ['|', ("country_id", "=", int(searches["country"])), ("country_id", "=", False)]
         elif searches["country"] == 'online':
             domain_search["country"] = [("country_id", "=", False)]
@@ -91,36 +87,24 @@ class website_event(http.Controller):
         # count by domains without self search
         for date in dates:
             if date[0] != 'old':
-                date[3] = event_obj.search(
-                    request.cr, request.uid, dom_without('date') + date[2],
-                    count=True, context=request.context)
+                date[3] = Event.search_count(dom_without('date') + date[2])
 
         domain = dom_without('type')
-        types = event_obj.read_group(
-            request.cr, request.uid, domain, ["id", "event_type_id"], groupby="event_type_id",
-            orderby="event_type_id", context=request.context)
-        type_count = event_obj.search(request.cr, request.uid, domain,
-                                      count=True, context=request.context)
+        types = Event.read_group(domain, ["id", "event_type_id"], groupby=["event_type_id"], orderby="event_type_id")
         types.insert(0, {
-            'event_type_id_count': type_count,
+            'event_type_id_count': sum([int(type['event_type_id_count']) for type in types]),
             'event_type_id': ("all", _("All Categories"))
         })
 
         domain = dom_without('country')
-        countries = event_obj.read_group(
-            request.cr, request.uid, domain, ["id", "country_id"],
-            groupby="country_id", orderby="country_id", context=request.context)
-        country_id_count = event_obj.search(request.cr, request.uid, domain,
-                                            count=True, context=request.context)
+        countries = Event.read_group(domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
         countries.insert(0, {
-            'country_id_count': country_id_count,
+            'country_id_count': sum([int(country['country_id_count']) for country in countries]),
             'country_id': ("all", _("All Countries"))
         })
 
         step = 10  # Number of events per page
-        event_count = event_obj.search(
-            request.cr, request.uid, dom_without("none"), count=True,
-            context=request.context)
+        event_count = Event.search_count(dom_without("none"))
         pager = request.website.pager(
             url="/event",
             url_args={'date': searches.get('date'), 'type': searches.get('type'), 'country': searches.get('country')},
@@ -132,17 +116,13 @@ class website_event(http.Controller):
         order = 'website_published desc, date_begin'
         if searches.get('date', 'all') == 'old':
             order = 'website_published desc, date_begin desc'
-        obj_ids = event_obj.search(
-            request.cr, request.uid, dom_without("none"), limit=step,
-            offset=pager['offset'], order=order, context=request.context)
-        events_ids = event_obj.browse(request.cr, request.uid, obj_ids,
-                                      context=request.context)
+        events = Event.search(dom_without("none"), limit=step, offset=pager['offset'], order=order)
 
         values = {
             'current_date': current_date,
             'current_country': current_country,
             'current_type': current_type,
-            'event_ids': events_ids,
+            'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
             'dates': dates,
             'types': types,
             'countries': countries,
@@ -151,7 +131,7 @@ class website_event(http.Controller):
             'search_path': "?%s" % werkzeug.url_encode(searches),
         }
 
-        return request.website.render("website_event.index", values)
+        return request.render("website_event.index", values)
 
     @http.route(['/event/<model("event.event"):event>/page/<path:page>'], type='http', auth="public", website=True)
     def event_page(self, event, page, **post):
@@ -171,7 +151,7 @@ class website_event(http.Controller):
             values['from_template'] = 'website_event.default_page'  # .strip('website_event.')
             page = 'website.page_404'
 
-        return request.website.render(page, values)
+        return request.render(page, values)
 
     @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True)
     def event(self, event, **post):
@@ -185,68 +165,63 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True)
     def event_register(self, event, **post):
+        if event.state == 'done':
+            return request.redirect("/event/%s" % slug(event))
+
         values = {
             'event': event,
             'main_object': event,
             'range': range,
         }
-        return request.website.render("website_event.event_description_full", values)
+        return request.render("website_event.event_description_full", values)
 
     @http.route('/event/add_event', type='http', auth="user", methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):
-        return self._add_event(event_name, request.context, **kwargs)
+        event = self._add_event(event_name, request.context)
+        return request.redirect("/event/%s/register?enable_editor=1" % slug(event))
 
-    def _add_event(self, event_name=None, context={}, **kwargs):
+    def _add_event(self, event_name=None, context=None, **kwargs):
         if not event_name:
             event_name = _("New Event")
-        Event = request.registry.get('event.event')
         date_begin = datetime.today() + timedelta(days=(14))
         vals = {
             'name': event_name,
-            'date_begin': date_begin.strftime('%Y-%m-%d'),
-            'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
+            'date_begin': fields.Date.to_string(date_begin),
+            'date_end': fields.Date.to_string((date_begin + timedelta(days=(1)))),
             'seats_available': 1000,
         }
-        event_id = Event.create(request.cr, request.uid, vals, context=context)
-        event = Event.browse(request.cr, request.uid, event_id, context=context)
-        return request.redirect("/event/%s/register?enable_editor=1" % slug(event))
+        return request.env['event.event'].with_context(context or {}).create(vals)
 
     def get_formated_date(self, event):
-        context = request.context
-        start_date = datetime.strptime(event.date_begin, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-        end_date = datetime.strptime(event.date_end, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-        month = babel.dates.get_month_names('abbreviated', locale=context.get('lang', 'en_US'))[start_date.month]
-        return _('%(month)s %(start_day)s%(end_day)s') % {
-            'month': month,
-            'start_day': start_date.strftime("%e"),
-            'end_day': (end_date != start_date and ("-"+end_date.strftime("%e")) or "")
-        }
+        start_date = fields.Datetime.from_string(event.date_begin).date()
+        end_date = fields.Datetime.from_string(event.date_end).date()
+        month = babel.dates.get_month_names('abbreviated', locale=event.env.context.get('lang', 'en_US'))[start_date.month]
+        return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-" + end_date.strftime("%e")) or ""))
 
     @http.route('/event/get_country_event_list', type='http', auth='public', website=True)
     def get_country_events(self, **post):
-        cr, uid, context, event_ids = request.cr, request.uid, request.context, []
-        country_obj = request.registry['res.country']
-        event_obj = request.registry['event.event']
+        Event = request.env['event.event']
         country_code = request.session['geoip'].get('country_code')
         result = {'events': [], 'country': False}
+        events = None
         if country_code:
-            country_ids = country_obj.search(cr, uid, [('code', '=', country_code)], context=context)
-            event_ids = event_obj.search(cr, uid, ['|', ('address_id', '=', None), ('country_id.code', '=', country_code), ('date_begin', '>=', time.strftime('%Y-%m-%d 00:00:00')), ('state', '=', 'confirm')], order="date_begin", context=context)
-        if not event_ids:
-            event_ids = event_obj.search(cr, uid, [('date_begin', '>=', time.strftime('%Y-%m-%d 00:00:00')), ('state', '=', 'confirm')], order="date_begin", context=context)
-        for event in event_obj.browse(cr, uid, event_ids, context=context)[:6]:
+            country = request.env['res.country'].search([('code', '=', country_code)], limit=1)
+            events = Event.search(['|', ('address_id', '=', None), ('country_id.code', '=', country_code), ('date_begin', '>=', '%s 00:00:00' % fields.Date.today()), ('state', '=', 'confirm')], order="date_begin")
+        if not events:
+            events = Event.search([('date_begin', '>=', '%s 00:00:00' % fields.Date.today()), ('state', '=', 'confirm')], order="date_begin")
+        for event in events:
             if country_code and event.country_id.code == country_code:
-                result['country'] = country_obj.browse(cr, uid, country_ids[0], context=context)
+                result['country'] = country
             result['events'].append({
                 "date": self.get_formated_date(event),
                 "event": event,
                 "url": event.website_url})
-        return request.website.render("website_event.country_events_list", result)
+        return request.render("website_event.country_events_list", result)
 
     def _process_tickets_details(self, data):
         nb_register = int(data.get('nb_register-0', 0))
         if nb_register:
-            return [{'id': 0, 'name': 'Subscription', 'quantity': nb_register, 'price': 0}]
+            return [{'id': 0, 'name': 'Registration', 'quantity': nb_register, 'price': 0}]
         return []
 
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
@@ -254,7 +229,7 @@ class website_event(http.Controller):
         tickets = self._process_tickets_details(post)
         if not tickets:
             return request.redirect("/event/%s" % slug(event))
-        return request.website._render("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
+        return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
 
     def _process_registration_details(self, details):
         ''' Process data posted from the attendee details form. '''
@@ -273,21 +248,15 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/registration/confirm'], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        Registration = request.registry['event.registration']
+        Attendees = request.env['event.registration']
         registrations = self._process_registration_details(post)
 
-        registration_ids = []
         for registration in registrations:
             registration['event_id'] = event
-            registration_ids.append(
-                Registration.create(
-                    cr, SUPERUSER_ID,
-                    Registration._prepare_attendee_values(cr, uid, registration),
-                    context=context))
+            Attendees += Attendees.sudo().create(
+                Attendees._prepare_attendee_values(registration))
 
-        attendees = Registration.browse(cr, uid, registration_ids, context=context)
-        return request.website.render("website_event.registration_complete", {
-            'attendees': attendees,
+        return request.render("website_event.registration_complete", {
+            'attendees': Attendees,
             'event': event,
         })

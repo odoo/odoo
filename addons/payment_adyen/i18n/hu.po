@@ -3,15 +3,16 @@
 # * payment_adyen
 # 
 # Translators:
-# Kris Krnacs, 2015
+# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-07 16:44+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,74 +20,44 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:123
+#: code:addons/payment_adyen/models/payment.py:181
 #, python-format
 msgid "; multiple order found"
 msgstr "; többszörös rendelést talált"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:121
+#: code:addons/payment_adyen/models/payment.py:179
 #, python-format
 msgid "; no order found"
 msgstr "; nem talált rendelést"
 
 #. module: payment_adyen
-#: model:payment.acquirer,cancel_msg:payment_adyen.payment_acquirer_adyen
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Mégse,</i> A fizetése elutasítva.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,done_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr "<span><i>Elvégezve,</i> Az online fizetése sikeresen végrehajtva. Köszönjük a megrendelsést.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,error_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr "<span><i>Hiba,</i> Vegye figyelembe, hogy a tranzakció alatt hiba történt. A megrendelés visszaigazolt, de nem lett kifizetve. A megrendelésének állapotával kapcsolatos kérdésekben, kérjük vegye fel velünk a kapcsolatot.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,pending_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr "<span><i>Függőben,</i> Az online fizetése sikeresen teljesítve. De a megrendelését még nem hagyták jóvá.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,name:payment_adyen.payment_acquirer_adyen
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:169
+#: code:addons/payment_adyen/models/payment.py:229
 #, python-format
 msgid "Adyen: feedback error"
 msgstr "Adyen: visszajelzési hiba"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:131
+#: code:addons/payment_adyen/models/payment.py:191
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
 msgstr "Adyen: érvénytelen merchantSig, fogadott %s, kiszámított %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:119
+#: code:addons/payment_adyen/models/payment.py:177
 #, python-format
 msgid "Adyen: received data for reference %s"
 msgstr "Adyen: fogadott adat ehhez a referenciához %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:112
+#: code:addons/payment_adyen/models/payment.py:170
 #, python-format
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
 "(%s)"
-msgstr "Adyen: beérkeztetett adat hiányzó hivatkozással (%s) vagy hiányzó pspReference (%s)"
+msgstr ""
+"Adyen: beérkeztetett adat hiányzó hivatkozással (%s) vagy hiányzó "
+"pspReference (%s)"
 
 #. module: payment_adyen
 #: model:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
@@ -101,7 +72,7 @@ msgstr "Kereskedelmi számla"
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Fizetést kézhezvevő"
+msgstr "Fizetést lebonyolító"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction
@@ -117,10 +88,3 @@ msgstr "Külső kód"
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
 msgid "Skin HMAC Key"
 msgstr "Külső HMAC kulcs"
-
-#. module: payment_adyen
-#: model:payment.acquirer,pre_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"You will be redirected to the Adyen website after clicking on the payment "
-"button."
-msgstr "Át lesz irányítva az Adyen weboldalra miután a fizetés gombra kattintott."

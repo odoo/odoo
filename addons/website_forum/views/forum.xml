@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
         <!-- MAIN FORUM MENU -->
         <menuitem name="Forum" id="menu_website_forum"
-            parent="website.menu_website_configuration" sequence="50" groups="base.group_website_designer"/>
+            parent="website.menu_website_configuration" sequence="50" groups="website.group_website_designer"/>
 
 
         <!-- FORUM VIEWS -->
@@ -13,6 +13,7 @@
             <field name="arch" type="xml">
                 <tree string="Forums">
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                     <field name="allow_question"/>
                     <field name="allow_link"/>
                     <field name="allow_discussion"/>
@@ -26,6 +27,11 @@
             <field name="arch" type="xml">
                 <form string="Forum">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" confirm="(Un)archiving a forum automatically (un)archives its posts. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name"/>
@@ -86,6 +92,8 @@
                                         <field name="karma_post"/>
                                         <field name="karma_flag"/>
                                         <field name="karma_moderate"/>
+                                        <field name="karma_edit_retag"/>
+                                        <field name="karma_tag_create"/>
                                     </group>
                                 </group>
                             </page>
@@ -93,9 +101,19 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
+            </field>
+        </record>
+
+        <record id="forum_view_search" model="ir.ui.view">
+            <field name="name">forum.forum.search</field>
+            <field name="model">forum.forum</field>
+            <field name="arch" type="xml">
+                <search string="Forum">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 
@@ -115,6 +133,7 @@
             <field name="arch" type="xml">
                 <tree string="Forum Posts">
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                     <field name="forum_id"/>
                 </tree>
             </field>
@@ -126,6 +145,11 @@
             <field name="arch" type="xml">
                 <form string="Forum Post">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" confirm="(Un)archiving a post automatically (un)archives its answers. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" placeholder="Name"/>
@@ -167,7 +191,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
@@ -186,6 +210,8 @@
                     <filter string="Answers" domain="[('parent_id', '!=', False)]" />
                     <filter string="Accepted Answer" domain="[('is_correct' , '!=', False), ('parent_id', '!=', False)]" />
                     <filter string="Answered Questions" domain="[('child_count', '!=', 0), ('parent_id', '=', False)]" />
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Forum" domain="[]" context="{'group_by': 'forum_id'}"/>
                         <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
@@ -218,5 +244,45 @@
 
         <menuitem id="menu_forum_posts" parent="menu_website_forum" name="Posts" action="action_forum_post" sequence="20"/>
 
+        <!-- TAG VIEWS -->
+        <record id="forum_tag_view_list" model="ir.ui.view">
+            <field name="name">forum.tag.list</field>
+            <field name="model">forum.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tag">
+                    <field name="name"/>
+                    <field name="forum_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="forum_tag_view_form" model="ir.ui.view">
+            <field name="name">forum.tag.form</field>
+            <field name="model">forum.tag</field>
+            <field name="arch" type="xml">
+                <form string="Tag">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="forum_id"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="forum_tag_action" model="ir.actions.act_window">
+            <field name="name">Tag</field>
+            <field name="res_model">forum.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_forum_tag" parent="menu_website_forum" name="Tag" action="forum_tag_action" sequence="30"/>
+
     </data>
-</openerp>
+</odoo>

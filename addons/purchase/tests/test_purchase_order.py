@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tests import common
 
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+
 
 class TestPurchaseOrder(AccountingTestCase):
 
@@ -22,6 +22,7 @@ class TestPurchaseOrder(AccountingTestCase):
         self.product_id_1 = self.env.ref('product.product_product_8')
         self.product_id_2 = self.env.ref('product.product_product_11')
 
+        (self.product_id_1 | self.product_id_2).write({'purchase_method': 'purchase'})
         # Ensure product_id_2 doesn't have res_partner_1 as supplier
         if self.partner_id in self.product_id_2.seller_ids.mapped('name'):
             id_to_remove = self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id).ids[0] if self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id) else False
@@ -63,7 +64,7 @@ class TestPurchaseOrder(AccountingTestCase):
 
         self.assertTrue(self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id), 'Purchase: the partner should be in the list of the product suppliers')
 
-        seller = self.product_id_2._select_seller(self.product_id_2, partner_id=self.partner_id, quantity=2.0, date=self.po.date_planned, uom_id=self.product_id_2.uom_po_id)
+        seller = self.product_id_2._select_seller(partner_id=self.partner_id, quantity=2.0, date=self.po.date_planned, uom_id=self.product_id_2.uom_po_id)
         price_unit = seller.price if seller else 0.0
         if price_unit and seller and self.po.currency_id and seller.currency_id != self.po.currency_id:
             price_unit = seller.currency_id.compute(price_unit, self.po.currency_id)
@@ -80,6 +81,7 @@ class TestPurchaseOrder(AccountingTestCase):
             'partner_id': self.partner_id.id,
             'purchase_id': self.po.id,
             'account_id': self.partner_id.property_account_payable_id.id,
+            'type': 'in_invoice',
         })
         self.invoice.purchase_order_change()
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')

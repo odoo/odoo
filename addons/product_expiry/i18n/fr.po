@@ -3,19 +3,27 @@
 # * product_expiry
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Nancy Bolognesi <nb@microcom.ca>, 2016
+# Richard Mathot <rim@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 07:20+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
+msgid "<span class=\"pull-right\">Expiry Date</span>"
+msgstr "<span class=\"pull-right\">Date de péremption</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
@@ -107,53 +115,72 @@ msgstr "Date de retrait"
 msgid ""
 "This is the date on which an alert should be notified about the goods with "
 "this Serial Number."
-msgstr "Ceci est la date à laquelle une alerte doit être remontée à propos des marchandises avec ce numéro de série."
+msgstr ""
+"Ceci est la date à laquelle une alerte doit être remontée à propos des "
+"marchandises avec ce numéro de série."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
-msgstr "Ceci est la date à laquelle les marchandises avec ce numéro de série deviennent dangereux et ne doivent plus être consommées."
+msgstr ""
+"Ceci est la date à laquelle les marchandises avec ce numéro de série "
+"deviennent dangereux et ne doivent plus être consommées."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant_removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
-msgstr "Ceci est la date à laquelle les marchandises avec ce numéro de série doivent être enlevées du stock."
+msgstr ""
+"Ceci est la date à laquelle les marchandises avec ce numéro de série doivent"
+" être enlevées du stock."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
-msgstr "Ceci est la date à laquelle les marchandises avec ce numéro de série commencent à se détériorer, sans pour autant être dangereuses."
+msgstr ""
+"Ceci est la date à laquelle les marchandises avec ce numéro de série "
+"commencent à se détériorer, sans pour autant être dangereuses."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr "Quand un nouveau numéro de lot est créé, c'est le nombre de jours avant qu'une alerte soit remontée."
+msgstr ""
+"Quand un nouveau numéro de lot est créé, c'est le nombre de jours avant "
+"qu'une alerte soit remontée."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr "Quand un nouveau numéro de série est créé, c'est le nombre de jours avant que les marchandises deviennent dangereuses et ne doivent plus être consommées."
+msgstr ""
+"Quand un nouveau numéro de série est créé, c'est le nombre de jours avant "
+"que les marchandises deviennent dangereuses et ne doivent plus être "
+"consommées."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr "Quand un nouveau numéro de série est créé, c'est le nombre de jours après lesquels les marchandises doivent être enlevées du stock."
+msgstr ""
+"Quand un nouveau numéro de série est créé, c'est le nombre de jours après "
+"lesquels les marchandises doivent être enlevées du stock."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_use_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr "Quand un nouveau numéro de série est créé, c'est le nombre de jours avant que les marchandises commencent à se détériorer, sans pour autant être dangereuses."
+msgstr ""
+"Quand un nouveau numéro de série est créé, c'est le nombre de jours avant "
+"que les marchandises commencent à se détériorer, sans pour autant être "
+"dangereuses."

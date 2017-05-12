@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="ogone_acquirer_button">
+            <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
+                <!-- seller -->
+                <input type='hidden' name='PSPID' t-att-value='PSPID'/>
+                <input type='hidden' name='ORDERID' t-att-value='ORDERID'/>
+                <!-- cart -->
+                <input type='hidden' name='AMOUNT' t-att-value='AMOUNT or "0.0"'/>
+                <input type='hidden' name='CURRENCY' t-att-value='CURRENCY'/>
+                <!-- buyer -->
+                <input type='hidden' name='LANGUAGE' t-att-value='LANGUAGE'/>
+                <input type='hidden' name='CN' t-att-value='CN'/>
+                <input type='hidden' name='EMAIL' t-att-value='EMAIL'/>
+                <input type='hidden' name='OWNERZIP' t-att-value='OWNERZIP'/>
+                <input type='hidden' name='OWNERADDRESS' t-att-value='OWNERADDRESS'/>
+                <input type='hidden' name='OWNERCTY' t-att-value='OWNERCTY'/>
+                <input type='hidden' name='OWNERTOWN' t-att-value='OWNERTOWN'/>
+                <input type='hidden' name='OWNERTELNO' t-att-value='OWNERTELNO'/>
+                <t t-if="acquirer.save_token in ['ask', 'always']">
+                    <input type='hidden' name='ALIAS' t-att-value='ALIAS'/>
+                    <input type='hidden' name='ALIASUSAGE' t-att-value='ALIASUSAGE'/>
+                </t>
+                <!-- before payment verification -->
+                <input type='hidden' name='SHASIGN' t-att-value='SHASIGN'/>
+                <!-- look and print -->
+                <!-- <input type='hidden' name='TITLE' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='BGCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='TXTCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='TBLBGCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='TBLTXTCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='BUTTONBGCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='BUTTONTXTCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='LOGO' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='FONTTYPE' t-att-value='tx_dict["currency_name"]'/> -->
+                <!-- after payment parameters -->
+                <t t-if='PARAMPLUS'>
+                    <input type='hidden' name="PARAMPLUS" t-att-value='PARAMPLUS'/>
+                </t>
+                <!-- redirection -->
+                <input type='hidden' name='ACCEPTURL' t-att-value='ACCEPTURL'/>
+                <input type='hidden' name='DECLINEURL' t-att-value='DECLINEURL'/>
+                <input type='hidden' name='EXCEPTIONURL' t-att-value='EXCEPTIONURL'/>
+                <input type='hidden' name='CANCELURL' t-att-value='CANCELURL'/>
+                <!-- submit -->
+                <button type="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_ogone/static/src/img/ogone_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </form>
+        </template>
+
+        <template id="ogone_s2s_form">
+            <form method="post" t-att-action="'/payment/ogone/s2s/create' if not json else '/payment/ogone/s2s/create_json'">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div t-att-class="'row' if bootstrap_formatting else None">
+                    <div t-att-class="'form-group col-md-8' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_number">Card number</label>
+                        <input type="tel" name="cc_number" id="cc_number" class="form-control" placeholder="&#8226;&#8226;&#8226;&#8226;&#32;&#8226;&#8226;&#8226;&#8226;&#32;&#8226;&#8226;&#8226;&#8226;&#32;&#8226;&#8226;&#8226;&#8226;&#32;"/>
+                        <div class="card_placeholder"></div>
+                        <div class="visa"></div>
+                        <input type="hidden" name="cc_brand" value=""/>
+                    </div>
+                    <div t-att-class="'form-group col-md-4' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_cvc">CVC</label>
+                        <input type="text" name="cc_cvc" id="cc_cvc" class="form-control" maxlength="4" placeholder="CVC"/>
+                    </div>
+                    <div t-att-class="'form-group col-md-7' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_holder_name">Name</label>
+                        <input type="text" name="cc_holder_name" id="cc_holder_name" class="form-control"/>
+                    </div>
+                    <div t-att-class="'form-group col-md-5' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_expires_mm">Expires</label>
+                        <input type="text" name="cc_expiry" id="cc_expiry" class="form-control" maxlength="7" placeholder="MM / YY"/>
+                    </div>
+                    <input type="hidden" name="acquirer_id" t-att-value="id"/>
+                    <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
+                    <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+                    <div class="clearfix"/>
+                </div>
+                <button t-att-class="submit_class" class="btn btn-primary" type="submit">
+                    <span t-if="not submit_txt">Confirm <span class="fa fa-long-arrow-right"></span></span>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/></span>
+                </button>
+            </form>
+        </template>
+
+    </data>
+</odoo>

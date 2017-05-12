@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="website_sale.dashboard_sales">
+        <div t-if="widget.dashboards_data.sales" class="row o_dashboard_sales">
+            <div class="col-xs-12 o_box">
+                <div class="col-md-6 col-xs-12">
+                    <h2>Sales / <t t-esc="widget.date_range"></t></h2>
+                    <div id="o_graph_sales" class="o_graph" data-type="sales"/>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <t t-call="website_sale.products_table"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_sale.products_table">
+        <h4>Best Sellers</h4>
+        <div t-if="!widget.dashboards_data.sales.best_sellers || !widget.dashboards_data.sales.best_sellers.length">
+            <i>There is no recent online sale.</i>
+        </div>
+
+        <div t-if="widget.dashboards_data.sales.best_sellers &amp;&amp; widget.dashboards_data.sales.best_sellers.length" class="table-responsive">
+            <table class="table table-hover">
+                <tr>
+                    <th>Product</th>
+                    <th>Qty Sold</th>
+                    <th>Amount</th>
+                </tr>
+                <tr class="o_product_template" t-foreach="widget.dashboards_data.sales.best_sellers" t-as="product" t-att-data-product-id="product.id">
+                    <td><t t-esc="product.name"/></td>
+                    <td><t t-esc="product.qty"/></td>
+                    <td><t t-esc="widget.format_number(product.sales, 'currency')"/></td>
+                </tr>
+            </table>
+        </div>
+    </t>
+</templates>

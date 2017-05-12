@@ -616,7 +616,6 @@ define([
       var linkUrl = linkInfo.url;
       var linkText = linkInfo.text;
       var isNewWindow = linkInfo.isNewWindow;
-      var className = linkInfo.className || null; // ODOO: addition
       var rng = linkInfo.range || this.createRange($editable);
       var isTextChanged = rng.toString() !== linkText;
 
@@ -647,7 +646,8 @@ define([
 
       $.each(anchors, function (idx, anchor) {
         $(anchor).attr('href', linkUrl);
-        $(anchor).attr('class', className); // ODOO: addition
+        $(anchor).attr('class', linkInfo.className || null); // ODOO: addition
+        $(anchor).css(linkInfo.style || {}); // ODOO: addition
         if (isNewWindow) {
           $(anchor).attr('target', '_blank');
         } else {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <record id="forum_help" model="forum.forum">
             <field name="name">Help</field>
@@ -136,34 +136,49 @@
 
         <!-- Email template for email validation (for karma purpose) -->
         <record id="validation_email" model="mail.template">
-            <field name="name">Email Verification</field>
+            <field name="name">Forum: Email Verification</field>
             <field name="model_id" ref="base.model_res_users"/>
-            <field name="email_from"><![CDATA[${object.company_id.name} <${(object.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_from"><![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.email|safe}</field>
             <field name="subject"><![CDATA[${object.company_id.name} Forums validation]]></field>
             <field name="body_html"><![CDATA[
-<p>
-    Hello ${object.name},
-</p>
-<p>
-    You have been invited to validate your email in order to get access to "${object.company_id.name}" Q/A Forums.
-</p>
-<p>
-    To validate your email, please click on the following link:
-</p>
-<ul>
-    <li><a href="${ctx.get('token_url')}">Validate my account for "${object.company_id.name}" Q/A Forums</a></li>
-</ul>
-<p>
-    Thanks,
-</p>
-<pre>
---
-${object.company_id.name or ''}
-${object.company_id.email or ''}
-${object.company_id.phone or ''}
-</pre>]]></field>
+<div summary="o_mail_notification" style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td valign="center" width="200" style="padding:0px 10px 5px 5px; font-size: 12px">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+            </td>
+        </tr></tbody>
+    </table>
+</div>
+<div summary="o_mail_notification" style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td valign="top" style="width:600px; padding:0px 10px 5px 5px;">
+                <div>
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0">
+                </div>
+            </td>
+        </tr></tbody>
+    </table>
+</div>
+<div style="padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td style="padding:0px 10px 5px 5px;font-size: 14px;">
+                <p>Dear ${object.name},</p>
+                <p>You have been invited to validate your email in order to get access to
+                "${object.company_id.name}" Q/A Forums.</p>
+                <p>To validate your email, please click on the following link:</p>
+                <a style="margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="${ctx.get('token_url')}">
+                    Validate my account for "${object.company_id.name}" Q/A Forums
+                </a>
+                <p>Thanks for your participation!</p>
+            </td>
+        </tr></tbody>
+    </table>
+</div>]]></field>
         </record>
 
     </data>
-</openerp>
+</odoo>

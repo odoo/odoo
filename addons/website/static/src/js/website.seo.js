@@ -4,6 +4,7 @@ odoo.define('website.seo', function (require) {
 var core = require('web.core');
 var ajax = require('web.ajax');
 var Class = require('web.Class');
+var Dialog = require('web.Dialog');
 var mixins = require('web.mixins');
 var Model = require('web.Model');
 var Widget = require('web.Widget');
@@ -84,11 +85,11 @@ var SuggestionList = Widget.extend({
         ajax.jsonRpc('/website/seo_suggest', 'call', {
             'keywords': self.root,
             'lang': language,
-        }).then(function(keyword_list){
+        }).then(function (keyword_list) {
             self.addSuggestions(JSON.parse(keyword_list));
         });
     },
-    addSuggestions: function(keywords) {
+    addSuggestions: function (keywords) {
         var self = this;
         self.$el.empty();
         // TODO Improve algorithm + Ajust based on custom user keywords
@@ -222,7 +223,6 @@ var Image = Widget.extend({
     },
 });
 
-
 var ImageList = Widget.extend({
     init: function (parent, options) {
         this.htmlPage = options.page;
@@ -339,70 +339,72 @@ var Tip = Widget.extend({
     },
 });
 
-var Configurator = Widget.extend({
+var Configurator = Dialog.extend({
     template: 'website.seo_configuration',
     events: {
         'keyup input[name=seo_page_keywords]': 'confirmKeyword',
-        'keyup input[name=seo_page_title]': 'titleChanged',
-        'keyup textarea[name=seo_page_description]': 'descriptionChanged',
+        'blur input[name=seo_page_title]': 'titleChanged',
+        'blur textarea[name=seo_page_description]': 'descriptionChanged',
         'click button[data-action=add]': 'addKeyword',
-        'click button[data-action=update]': 'update',
-        'hidden.bs.modal': 'destroy',
     },
     canEditTitle: false,
     canEditDescription: false,
     canEditKeywords: false,
     canEditLanguage: false,
     maxTitleSize: 65,
-    maxDescriptionSize: 150,
+    maxDescriptionSize: 160,  // TODO master: remove me and add warning
+
+    init: function (parent, options) {
+        options = options || {};
+        _.defaults(options, {
+            title: _t('Promote This Page'),
+            subtitle: _t('Get this page efficiently referenced in Google to attract more visitors.'),
+            buttons: [
+                {text: _t('Save'), classes: 'btn-primary', click: this.update},
+                {text: _t('Discard'), close: true},
+            ],
+        });
+
+        this._super(parent, options);
+    },
     start: function () {
         var self = this;
-        var $modal = self.$el;
-        var htmlPage = this.htmlPage = new HtmlPage();
-        $modal.find('.js_seo_page_url').text(htmlPage.url());
-        $modal.find('input[name=seo_page_title]').val(htmlPage.title());
-        $modal.find('textarea[name=seo_page_description]').val(htmlPage.description());
-        // self.suggestImprovements();
-        // self.imageList = new ImageList(self, { page: htmlPage });
-        // if (htmlPage.images().length === 0) {
-        //     $modal.find('.js_image_section').remove();
-        // } else {
-        //     self.imageList.appendTo($modal.find('.js_seo_image_list'));
-        // }
-        self.keywordList = new KeywordList(self, { page: htmlPage });
-        self.keywordList.on('list-full', self, function () {
-            $modal.find('input[name=seo_page_keywords]')
-                .attr('readonly', "readonly")
-                .attr('placeholder', "Remove a keyword first");
-            $modal.find('button[data-action=add]')
-                .prop('disabled', true).addClass('disabled');
+
+        this.$modal.addClass('oe_seo_configuration js_seo_configuration');
+
+        this.htmlPage = new HtmlPage();
+        this.$('.js_seo_page_url').text(this.htmlPage.url());
+        this.$('input[name=seo_page_title]').val(this.htmlPage.title());
+        this.$('textarea[name=seo_page_description]').val(this.htmlPage.description());
+
+        this.keywordList = new KeywordList(self, { page: this.htmlPage });
+        this.keywordList.on('list-full', self, function () {
+            self.$('input[name=seo_page_keywords]').attr({
+                readonly: "readonly",
+                placeholder: "Remove a keyword first"
+            });
+            self.$('button[data-action=add]').prop('disabled', true).addClass('disabled');
         });
-        self.keywordList.on('list-not-full', self, function () {
-            $modal.find('input[name=seo_page_keywords]')
-                .removeAttr('readonly').attr('placeholder', "");
-            $modal.find('button[data-action=add]')
-                .prop('disabled', false).removeClass('disabled');
+        this.keywordList.on('list-not-full', self, function () {
+            self.$('input[name=seo_page_keywords]').removeAttr('readonly').attr('placeholder', "");
+            self.$('button[data-action=add]').prop('disabled', false).removeClass('disabled');
         });
-        self.keywordList.on('selected', self, function (word, language) {
+        this.keywordList.on('selected', self, function (word, language) {
             self.keywordList.add(word, language);
         });
-        self.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
-        self.disableUnsavableFields();
-        self.renderPreview();
-        $modal.modal();
-        self.getLanguages();
+        this.keywordList.appendTo(this.$('.js_seo_keywords_list'));
+        this.disableUnsavableFields();
+        this.renderPreview();
+        this.getLanguages();
     },
-    getLanguages: function(){
+    getLanguages: function () {
         var self = this;
         ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'website',
             method: 'get_languages',
-            args: [],
-            kwargs: {
-                ids: [base.get_context().website_id],
-                context: base.get_context()
-            }
-        }).then( function(data) {
+            args: [[base.get_context().website_id]],
+            kwargs: {context: base.get_context()}
+        }).then( function (data) {
             self.$('#language-box').html(core.qweb.render('Configurator.language_promote', {
                 'language': data,
                 'def_lang': base.get_context().lang
@@ -411,46 +413,33 @@ var Configurator = Widget.extend({
     },
     disableUnsavableFields: function () {
         var self = this;
-        var $modal = self.$el;
-        self.loadMetaData().then(function (data) {
+        this.loadMetaData().then(function (data) {
             self.canEditTitle = data && ('website_meta_title' in data);
             self.canEditDescription = data && ('website_meta_description' in data);
             self.canEditKeywords = data && ('website_meta_keywords' in data);
             if (!self.canEditTitle) {
-                $modal.find('input[name=seo_page_title]').attr('disabled', true);
+                self.$('input[name=seo_page_title]').attr('disabled', true);
             }
             if (!self.canEditDescription) {
-                $modal.find('textarea[name=seo_page_description]').attr('disabled', true);
+                self.$('textarea[name=seo_page_description]').attr('disabled', true);
             }
             if (!self.canEditTitle && !self.canEditDescription && !self.canEditKeywords) {
-                $modal.find('button[data-action=update]').attr('disabled', true);
+                self.$footer.find('button[data-action=update]').attr('disabled', true);
             }
         });
     },
     suggestImprovements: function () {
-        var tips = [];
         var self = this;
+        var tips = [];
+        _.each(tips, function (tip) {
+            displayTip(tip.message, tip.type);
+        });
+
         function displayTip(message, type) {
             new Tip(self, {
                message: message,
                type: type,
             }).appendTo(self.$('.js_seo_tips'));
-        }
-        var htmlPage = this.htmlPage;
-
-        // Add message suggestions at the top of the dialog
-        // if necessary....
-        // if (htmlPage.headers('h1').length === 0) {
-        //     tips.push({
-        //         type: 'warning',
-        //         message: "This page seems to be missing a title.",
-        //     });
-        // }
-
-        if (tips.length > 0) {
-            _.each(tips, function (tip) {
-                displayTip(tip.message, tip.type);
-            });
         }
     },
     confirmKeyword: function (e) {
@@ -469,17 +458,17 @@ var Configurator = Widget.extend({
     update: function () {
         var self = this;
         var data = {};
-        if (self.canEditTitle) {
-            data.website_meta_title = self.htmlPage.title();
+        if (this.canEditTitle) {
+            data.website_meta_title = this.htmlPage.title();
         }
-        if (self.canEditDescription) {
-            data.website_meta_description = self.htmlPage.description();
+        if (this.canEditDescription) {
+            data.website_meta_description = this.htmlPage.description();
         }
-        if (self.canEditKeywords) {
-            data.website_meta_keywords = self.keywordList.keywords().join(", ");
+        if (this.canEditKeywords) {
+            data.website_meta_keywords = this.keywordList.keywords().join(", ");
         }
-        self.saveMetaData(data).then(function () {
-           self.$el.modal('hide');
+        this.saveMetaData(data).then(function () {
+           self.close();
         });
     },
     getMainObject: function () {
@@ -495,7 +484,6 @@ var Configurator = Widget.extend({
         }
     },
     loadMetaData: function () {
-        var self = this;
         var obj = this.getMainObject();
         var def = $.Deferred();
         if (!obj) {
@@ -527,19 +515,19 @@ var Configurator = Widget.extend({
     },
     titleChanged: function () {
         var self = this;
-        setTimeout(function () {
+        _.defer(function () {
             var title = self.$('input[name=seo_page_title]').val();
             self.htmlPage.changeTitle(title);
             self.renderPreview();
-        }, 0);
+        });
     },
     descriptionChanged: function () {
         var self = this;
-        setTimeout(function () {
+        _.defer(function () {
             var description = self.$('textarea[name=seo_page_description]').val();
             self.htmlPage.changeDescription(description);
             self.renderPreview();
-        }, 0);
+        });
     },
     renderPreview: function () {
         var preview = new Preview(this, {
@@ -553,14 +541,14 @@ var Configurator = Widget.extend({
     },
     destroy: function () {
         this.htmlPage.changeKeywords(this.keywordList.keywords());
-        this._super();
+        this._super.apply(this, arguments);
     },
 });
 
 website.TopBar.include({
     start: function () {
-        this.$el.on('click', 'a[data-action=promote-current-page]', function() {
-            new Configurator(this).appendTo($(document.body));
+        this.$el.on('click', 'a[data-action=promote-current-page]', function () {
+            new Configurator(this).open();
         });
         return this._super();
     }

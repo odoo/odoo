@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.tools import float_is_zero
+from odoo.tools import float_is_zero
 
-from openerp.addons.sale.tests.test_sale_common import TestSale
+from odoo.addons.sale.tests.test_sale_common import TestSale
 
 
 class TestSaleTimesheet(TestSale):
     def test_timesheet_order(self):
         """ Test timesheet invoicing with 'invoice on order' timetracked products """
         # intial so
-        prod_ts = self.env.ref('product.product_product_0')
+        prod_ts = self.env.ref('product.service_order_01')
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -24,30 +24,27 @@ class TestSaleTimesheet(TestSale):
         # let's log some timesheets
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_project_id.id,
             'unit_amount': 10.5,
             'user_id': self.manager.id,
-            'is_timesheet': True,
         })
         self.assertEqual(so.order_line.qty_delivered, 10.5, 'Sale Timesheet: timesheet does not increase delivered quantity on so line')
         self.assertEqual(so.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_project_id.id,
             'unit_amount': 39.5,
             'user_id': self.user.id,
-            'is_timesheet': True,
         })
         self.assertEqual(so.order_line.qty_delivered, 50, 'Sale Timesheet: timesheet does not increase delivered quantity on so line')
         self.assertEqual(so.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_project_id.id,
             'unit_amount': 10,
             'user_id': self.user.id,
-            'is_timesheet': True,
         })
         self.assertEqual(so.order_line.qty_delivered, 60, 'Sale Timesheet: timesheet does not increase delivered quantity on so line')
         self.assertEqual(so.invoice_status, 'upselling', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
@@ -70,10 +67,9 @@ class TestSaleTimesheet(TestSale):
         # let's log some timesheets
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_project_id.id,
             'unit_amount': 10.5,
             'user_id': self.manager.id,
-            'is_timesheet': True,
         })
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so in "to invoice" status when logged')
         inv_id = so.action_invoice_create()
@@ -82,10 +78,9 @@ class TestSaleTimesheet(TestSale):
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_project_id.id,
             'unit_amount': 39.5,
             'user_id': self.user.id,
-            'is_timesheet': True,
         })
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
         so.action_invoice_create()
@@ -93,10 +88,9 @@ class TestSaleTimesheet(TestSale):
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_project_id.id,
             'unit_amount': 10,
             'user_id': self.user.id,
-            'is_timesheet': True,
         })
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale Timesheet: supplementary timesheets do not change the status of the SO')
 
@@ -117,19 +111,17 @@ class TestSaleTimesheet(TestSale):
         # let's log some timesheets
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_project_id.id,
             'unit_amount': 16,
             'user_id': self.manager.id,
-            'is_timesheet': True,
         })
         self.assertEqual(so.order_line.qty_delivered, 2, 'Sale: uom conversion of timesheets is wrong')
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'account_id': so.project_id.id,
+            'project_id': so.project_project_id.id,
             'unit_amount': 24,
             'user_id': self.user.id,
-            'is_timesheet': True,
         })
         so.action_invoice_create()
         self.assertEqual(so.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')

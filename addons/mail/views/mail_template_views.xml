@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
     <data>
         <record model="ir.ui.view" id="email_template_form">
             <field name="name">email.template.form</field>
@@ -59,6 +59,7 @@
                                     <field name="reply_to"
                                             placeholder="Preferred reply address"/>
                                     <field name="user_signature" string="Author Signature (mass mail only)"/>
+                                    <field name="scheduled_date" string="Scheduled Send Date"/>
                                 </group>
                             </page>
                             <page string="Advanced Settings">
@@ -134,4 +135,4 @@
                   sequence="20"/>
 
     </data>
-</openerp>
+</odoo>

@@ -10,6 +10,7 @@ var form_common = require('web.form_common');
 var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var ViewManager = require('web.ViewManager');
+var data_manager = require('web.data_manager');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -29,6 +30,7 @@ var DashBoard = form_common.FormWidget.extend({
         this.form_template = 'DashBoard';
         this.actions_attrs = {};
         this.action_managers = [];
+        this.set_title = _t('My Dashboard');
     },
     start: function() {
         var self = this;
@@ -42,6 +44,7 @@ var DashBoard = form_common.FormWidget.extend({
         }).bind('sortstop', self.do_save_dashboard);
 
         var old_title = this.__parentedParent.get('title');
+        self.__parentedParent.set({ 'title': this.set_title});
         this.__parentedParent.on('load_record', self, function(){
             self.__parentedParent.set({ 'title': old_title});
         });
@@ -137,7 +140,11 @@ var DashBoard = form_common.FormWidget.extend({
     },
     on_close_action: function(e) {
         if (confirm(_t("Are you sure you want to remove this item ?"))) {
-            $(e.currentTarget).parents('.oe_action:first').remove();
+            var $container = $(e.currentTarget).parents('.oe_action:first');
+            var am = _.findWhere(this.action_managers, { am_id: $container.data('am_id') });
+            am.destroy();
+            this.action_managers.splice(_.indexOf(this.action_managers, am), 1);
+            $container.remove();
             this.do_save_dashboard();
         }
     },
@@ -168,12 +175,16 @@ var DashBoard = form_common.FormWidget.extend({
         this.rpc('/web/view/add_custom', {
             view_id: this.view.fields_view.view_id,
             arch: arch
+        }).then(function() {
+            data_manager.invalidate();
         });
     },
     on_load_action: function(result, index, action_attrs) {
         var self = this,
             action = result,
             view_mode = action_attrs.view_mode;
+
+        if (!action) { return; }
 
         // evaluate action_attrs context and domain
         action_attrs.context_string = action_attrs.context;
@@ -221,48 +232,55 @@ var DashBoard = form_common.FormWidget.extend({
         var am = new ActionManager(this),
             // FIXME: ideally the dashboard view shall be refactored like kanban.
             $action = $('#' + this.view.element_id + '_action_' + index);
-        $action.parent().data('action_attrs', action_attrs);
+        var $action_container = $action.closest('.oe_action');
+        var am_id = _.uniqueId('action_manager_');
+        am.am_id = am_id;
+        $action_container.data({
+            action_attrs: action_attrs,
+            am_id: am_id,
+        });
         this.action_managers.push(am);
-        am.appendTo($action);
-        am.do_action(action);
-        am.do_action = function (action) {
-            self.do_action(action);
-        };
-        if (am.inner_widget) {
-            var new_form_action = function(id, editable) {
-                var new_views = [];
-                _.each(action_orig.views, function(view) {
-                    new_views[view[1] === 'form' ? 'unshift' : 'push'](view);
-                });
-                if (!new_views.length || new_views[0][1] !== 'form') {
-                    new_views.unshift([false, 'form']);
-                }
-                action_orig.views = new_views;
-                action_orig.res_id = id;
-                action_orig.flags = {
-                    form: {
-                        "initial_mode": editable ? "edit" : "view",
-                    }
-                };
-                self.do_action(action_orig);
-            };
-            var list = am.inner_widget.views.list;
-            if (list) {
-                list.created.done(function() {
-                    $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
-                        new_form_action(id);
-                    });
-                });
-            }
-            var kanban = am.inner_widget.views.kanban;
-            if (kanban) {
-                kanban.created.done(function() {
-                    kanban.controller.open_record = function(event, editable) {
-                        new_form_action(event.data.id, editable);
+        am.appendTo($action).then(function () {
+            am.do_action(action).then(function () {
+                if (am.inner_widget) {
+                    var new_form_action = function(id, editable) {
+                        var new_views = [];
+                        _.each(action_orig.views, function(view) {
+                            new_views[view[1] === 'form' ? 'unshift' : 'push'](view);
+                        });
+                        if (!new_views.length || new_views[0][1] !== 'form') {
+                            new_views.unshift([false, 'form']);
+                        }
+                        action_orig.views = new_views;
+                        action_orig.res_id = id;
+                        action_orig.flags = {
+                            form: {
+                                "initial_mode": editable ? "edit" : "view",
+                            }
+                        };
+                        self.do_action(action_orig);
                     };
-                });
-            }
-        }
+                    var list = am.inner_widget.views.list;
+                    if (list) {
+                        list.loaded.done(function() {
+                            $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
+                                new_form_action(id);
+                            });
+                        });
+                    }
+                    var kanban = am.inner_widget.views.kanban;
+                    if (kanban) {
+                        kanban.loaded.done(function() {
+                            kanban.controller.open_record = function(event, editable) {
+                                new_form_action(event.data.id, editable);
+                            };
+                        });
+                    }
+                }
+            });
+            am.do_action = self.do_action.bind(self);
+            am.current_action_updated = function() {};
+        });
     },
     renderElement: function() {
         this._super();
@@ -333,9 +351,11 @@ core.form_tag_registry
 
 
 FavoriteMenu.include({
-    prepare_dropdown_menu: function (filters) {
+    start: function () {
         var self = this;
-        this._super(filters);
+        if(this.action_id === undefined) {
+            return this._super();
+        }
         var am = this.findAncestor(function (a) {
             return a instanceof ActionManager;
         });
@@ -355,6 +375,7 @@ FavoriteMenu.include({
             });
             this.$add_dashboard_btn.click(this.proxy('add_dashboard'));
         }
+        return this._super();
     },
     toggle_dashboard_menu: function (is_open) {
         this.$add_dashboard_link
@@ -397,7 +418,7 @@ FavoriteMenu.include({
             name = self.$add_dashboard_input.val();
         
         return self.rpc('/board/add_to_dashboard', {
-            action_id: self.action_id,
+            action_id: self.action_id || false,
             context_to_save: c,
             domain: d,
             view_mode: self.view_manager.active_view.type,
@@ -405,6 +426,7 @@ FavoriteMenu.include({
         }).then(function (r) {
             if (r) {
                 self.do_notify(_.str.sprintf(_t("'%s' added to dashboard"), name), '');
+                data_manager.invalidate();
             } else {
                 self.do_warn(_t("Could not add filter to dashboard"));
             }

@@ -22,7 +22,7 @@
     <t t-name="web_editor.FieldTextHtml.button.translate">
         <div class="btn-group pull-right">
             <button t-if="widget.field.translate" class="oe_field_translate btn btn-default btn-sm btn-small" style="height: 24px; padding: 1px 3px 0px 5px">
-                <img border="0" class="oe_input_icon" height="16" width="16" src="/web/static/src/img/icons/terp-translate.png" style="margin: 2px 0px -2px 0px;"/>
+                <span class="fa fa-language fa-lg oe_input_icon"/>
             </button>
         </div>
     </t>
@@ -38,11 +38,11 @@
                     -webkit-border-radius: 3px;
                     border-radius: 3px;
                     background: white;">
+                <option value="en_US" t-att-selected="'en_US' == widget.lang ? 'selected' : null">
+                    <t t-if="!widget.get('effective_readonly')">English (edit mode)</t>
+                    <t t-if="widget.get('effective_readonly')">English</t>
+                </option>
                 <t t-foreach="widget.languages" t-as="lang">
-                    <option value="en_US" t-att-selected="'en_US' == widget.lang ? 'selected' : null">
-                        <t t-if="!widget.get('effective_readonly')">English (edit mode)</t>
-                        <t t-if="widget.get('effective_readonly')">English</t>
-                    </option>
                     <option t-att-value="lang.code" t-att-selected="lang.code == widget.lang ? 'selected' : null"><t t-esc="lang.name"/></option>
                 </t>
             </select>
@@ -50,8 +50,8 @@
     </t>
     <t t-name="web_editor.FieldTextHtml.fullscreen">
         <span style="margin: 5px; position: fixed; top: 0; right: 0; z-index: 2000;">
-            <button class="o_fullscreen btn btn-primary" style="height: 24px; padding: 1px 2px 1px 3px;">
-                <img border="0" class="oe_input_icon" height="16" width="16" src="/web/static/src/img/icons/STOCK_FULLSCREEN.png" style="margin: 2px 0px -2px 0px;"/>
+            <button class="o_fullscreen btn btn-primary" style="width: 24px; height: 24px; background-color: #337ab7; border: 1px solid #2e6da4; border-radius: 4px; padding: 0; position: relative;">
+                <img src="/web_editor/font_to_img/61541/rgb(255,255,255)/16" style="position: absolute; top: 3px; left: 4px;"/>
             </button>
         </span>
     </t>

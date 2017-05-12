@@ -3,16 +3,18 @@
 # * stock_calendar
 # 
 # Translators:
-# Ana Juaristi <ajuaristio@gmail.com>, 2015
-# Antonio Trueba, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-01-25 18:16+0000\n"
-"Last-Translator: Antonio Trueba\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Miguel Orueta <mo@landoo.es>, 2016\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -32,10 +34,14 @@ msgstr "Calendario"
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
 msgid ""
-"In the calendar you can define the days that the goods will be delivered.  "
+"In the calendar you can define the days that the goods will be delivered. "
 "That way the scheduler will only take into account the goods needed until "
-"the second delivery and put the procurement date as the first delivery.  "
-msgstr "En el calendario usted puede definir los días en que se entregarán las mercancías. De esta forma, el planificador solo tendrá en cuenta los productos necesarios hasta la segunda entrega, y fijará la fecha de aprovisionamiento como la primera entrega."
+"the second delivery and put the procurement date as the first delivery."
+msgstr ""
+"En el calendario puede definir los días en que se entregarán las mercancías."
+" De esta manera el planificador sólo tendrá en cuenta los productos "
+"necesarios hasta la segunda entrega y pondrá la fecha de adquisición como la"
+" primera entrega."
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_last_execution_date
@@ -63,11 +69,6 @@ msgid "Next Purchase Date"
 msgstr "Próxima fecha de compra"
 
 #. module: stock_calendar
-#: model:ir.model.fields,field_description:stock_calendar.field_resource_calendar_next_day
-msgid "Next day it should trigger"
-msgstr "Próximo día en que debería activarse"
-
-#. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_procurement_order
 msgid "Procurement"
 msgstr "Abastecimiento"
@@ -93,7 +94,9 @@ msgstr "Calendario recurso"
 msgid ""
 "The date of the next delivery for this procurement group, when this group is"
 " on the purchase calendar of the orderpoint"
-msgstr "La fecha de la siguiente entrega para este grupo de aprovisionamiento, cuando el grupo esté en el calendario de compras del nivel de reposición"
+msgstr ""
+"La fecha de la siguiente entrega para este grupo de aprovisionamiento, "
+"cuando el grupo esté en el calendario de compras del nivel de reposición"
 
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_purchase_date

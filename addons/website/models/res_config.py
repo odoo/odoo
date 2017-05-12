@@ -1,51 +1,56 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from odoo import fields, models
 
-class website_config_settings(osv.osv_memory):
+
+class WebsiteConfigSettings(models.TransientModel):
+
     _name = 'website.config.settings'
     _inherit = 'res.config.settings'
 
-    _columns = {
-        'website_id': fields.many2one('website', string="website", required=True),
-        'website_name': fields.related('website_id', 'name', type="char", string="Website Name"),
+    def _default_website(self):
+        return self.env['website'].search([], limit=1)
 
-        'language_ids': fields.related('website_id', 'language_ids', type='many2many', relation='res.lang', string='Languages'),
-        'default_lang_id': fields.related('website_id', 'default_lang_id', type='many2one', relation='res.lang', string='Default language'),
-        'default_lang_code': fields.related('website_id', 'default_lang_code', type="char", string="Default language code"),
-        'google_analytics_key': fields.related('website_id', 'google_analytics_key', type="char", string='Google Analytics Key'),
-        
-        'social_twitter': fields.related('website_id', 'social_twitter', type="char", string='Twitter Account'),
-        'social_facebook': fields.related('website_id', 'social_facebook', type="char", string='Facebook Account'),
-        'social_github': fields.related('website_id', 'social_github', type="char", string='GitHub Account'),
-        'social_linkedin': fields.related('website_id', 'social_linkedin', type="char", string='LinkedIn Account'),
-        'social_youtube': fields.related('website_id', 'social_youtube', type="char", string='Youtube Account'),
-        'social_googleplus': fields.related('website_id', 'social_googleplus', type="char", string='Google+ Account'),
-        'compress_html': fields.related('website_id', 'compress_html', type="boolean", string='Compress rendered HTML for a better Google PageSpeed result'),
-        'cdn_activated': fields.related('website_id', 'cdn_activated', type="boolean", string='Use a Content Delivery Network (CDN)'),
-        'cdn_url': fields.related('website_id', 'cdn_url', type="char", string='CDN Base URL'),
-        'cdn_filters': fields.related('website_id', 'cdn_filters', type="text", string='CDN Filters'),
-        'module_website_form_editor': fields.boolean("Form builder: create and customize forms"),
-        'module_website_version': fields.boolean("A/B testing and versioning"),
-    }
+    website_id = fields.Many2one('website', string="website", default=_default_website, required=True)
+    website_name = fields.Char('Website Name', related='website_id.name')
 
-    def on_change_website_id(self, cr, uid, ids, website_id, context=None):
-        if not website_id:
-            return {'value': {}}
-        website_data = self.pool.get('website').read(cr, uid, [website_id], [], context=context)[0]
-        values = {'website_name': website_data['name']}
-        for fname, v in website_data.items():
-            if fname in self._columns:
-                values[fname] = v[0] if v and self._columns[fname]._type == 'many2one' else v
-        return {'value' : values}
+    language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang')
+    default_lang_id = fields.Many2one(related='website_id.default_lang_id', relation='res.lang', required=True)
+    default_lang_code = fields.Char('Default language code', related='website_id.default_lang_code')
+    google_analytics_key = fields.Char('Google Analytics Key', related='website_id.google_analytics_key')
 
-    # FIXME in trunk for god sake. Change the fields above to fields.char instead of fields.related, 
-    # and create the function set_website who will set the value on the website_id
-    # create does not forward the values to the related many2one. Write does.
-    def create(self, cr, uid, vals, context=None):
-        config_id = super(website_config_settings, self).create(cr, uid, vals, context=context)
-        self.write(cr, uid, config_id, vals, context=context)
-        return config_id
+    social_twitter = fields.Char(related='website_id.social_twitter')
+    social_facebook = fields.Char(related='website_id.social_facebook')
+    social_github = fields.Char(related='website_id.social_github')
+    social_linkedin = fields.Char(related='website_id.social_linkedin')
+    social_youtube = fields.Char(related='website_id.social_youtube')
+    social_googleplus = fields.Char(related='website_id.social_googleplus')
+    cdn_activated = fields.Boolean('Use a Content Delivery Network (CDN)', related='website_id.cdn_activated')
+    cdn_url = fields.Char(related='website_id.cdn_url')
+    cdn_filters = fields.Text(related='website_id.cdn_filters')
+    module_website_form_editor = fields.Selection([
+        (0, 'Use standard forms'),
+        (1, 'Create and customize forms to generate emails, leads, issues and extra information in the checkout process (new snippet available)')
+    ], "Form Builder")
+    module_website_version = fields.Selection([
+        (0, 'No version management and A/B testing (easy)'),
+        (1, 'Allow multiple versions of the same page (advanced)')
+    ], "A/B Testing")
+    favicon = fields.Binary('Favicon', related='website_id.favicon')
 
-    _defaults = {
-        'website_id': lambda self,cr,uid,c: self.pool.get('website').search(cr, uid, [], context=c)[0],
-    }
+    # Set as global config parameter since methods using it are not website-aware. To be changed
+    # when multi-website is implemented
+    google_maps_api_key = fields.Char(string='Google Maps API Key')
+
+    # TODO: remove me in master / saas-14
+    compress_html = fields.Boolean('Compress rendered HTML', related='website_id.compress_html')
+
+
+    def set_google_maps_api_key(self):
+        self.env['ir.config_parameter'].set_param(
+            'google_maps_api_key', (self.google_maps_api_key or '').strip(), groups=['base.group_system'])
+
+    def get_default_google_maps_api_key(self, fields):
+        google_maps_api_key = self.env['ir.config_parameter'].get_param('google_maps_api_key', default='')
+        return dict(google_maps_api_key=google_maps_api_key)

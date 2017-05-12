@@ -1,0 +1,79 @@
+.o_pivot {
+    height: 100%;
+    overflow: auto;
+
+    // Inform the user that he may click on a cell to be redirected to a list view of the
+    // items corresponding to the clicked cell
+    &.o_enable_linking {
+        .o_pivot_cell_value:hover {
+            color: @odoo-brand-optional;
+            cursor: pointer;
+        }
+    }
+
+    table {
+        background-color: @odoo-view-background-color;
+        width: auto;  // bootstrap override
+
+        th {
+            font-weight: normal;  // bootstrap override
+            background-color: lighten(@odoo-brand-secondary, 40%);
+        }
+
+        .o-pivot-header-cell() {
+            background-color: lighten(@odoo-brand-secondary, 40%);
+            cursor: pointer;
+            white-space: nowrap;
+            .user-select(none);
+            &:hover {
+                background-color: lighten(@odoo-brand-secondary, 30%);
+            }
+        }
+
+        .o_pivot_measure_row {
+            .o-pivot-header-cell;
+        }
+
+        .o_pivot_header_cell_closed {
+            .o-pivot-header-cell;
+            &::before {
+                font-family: FontAwesome;
+                content: "";
+                margin-right: 8px;
+            }
+        }
+
+        .o_pivot_header_cell_opened {
+            .o-pivot-header-cell;
+            &::before {
+                font-family: FontAwesome;
+                content: "";
+                margin-right: 8px;
+            }
+        }
+
+        .o_pivot_measure_row_sorted_asc::after {
+            .o-caret-down;
+            margin-left: 5px;
+        }
+
+        .o_pivot_measure_row_sorted_desc::after {
+            .o-caret-up;
+            margin-left: 5px;
+        }
+    }
+
+    .o_pivot_field_selection::after {
+        .o-caret-right;
+        position: absolute;
+        right: 6px;
+        top: 9px;
+    }
+}
+
+// ------------------------------------------------------------------
+// Control panel buttons
+// ------------------------------------------------------------------
+.o_pivot_measures_list {
+    .o-selected-li;
+}

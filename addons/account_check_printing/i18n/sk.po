@@ -3,15 +3,17 @@
 # * account_check_printing
 # 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2016-02-01 21:00+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,20 +21,20 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_journal.py:55
+#: code:addons/account_check_printing/models/account_journal.py:57
 #, python-format
 msgid " : Check Number Sequence"
 msgstr ": Číselná sekvencia šeku"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:35
-#: code:addons/account_check_printing/account_payment.py:72
+#: code:addons/account_check_printing/models/account_payment.py:37
+#: code:addons/account_check_printing/models/account_payment.py:74
 #, python-format
 msgid " and %s/100"
 msgstr " a %s/100"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:81
+#: code:addons/account_check_printing/models/account_payment.py:83
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
 msgstr "Poznámka šeku nemôže presiahnuť 60 znakov."
@@ -92,7 +94,7 @@ msgid "Checks numbering sequence."
 msgstr "Číselná sekvencia šekov."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_journal_dashboard.py:23
+#: code:addons/account_check_printing/models/account_journal.py:96
 #, python-format
 msgid "Checks to Print"
 msgstr "Šeky na tlačenie"
@@ -105,17 +107,17 @@ msgstr "Šeky na tlačenie"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_id
@@ -123,12 +125,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:101
+#: code:addons/account_check_printing/models/account_payment.py:103
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
-msgstr "Pre tlač viacerých šekov zároveň, musia patriť do rovnakej účtovnej knihy."
+msgstr ""
+"Pre tlač viacerých šekov zároveň, musia patriť do rovnakej účtovnej knihy."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -169,7 +172,10 @@ msgid ""
 "Number of the check corresponding to this payment. If your pre-printed check"
 " are not already numbered, you can manage the numbering in the journal "
 "configuration page."
-msgstr "Číslo šeku zodpovedajúce tejto platbe. Ak vaše predtlačené šeky nie sú číslované, môžete spravovať číslovanie na konfiguračnej stránke účtovnej knihy."
+msgstr ""
+"Číslo šeku zodpovedajúce tejto platbe. Ak vaše predtlačené šeky nie sú "
+"číslované, môžete spravovať číslovanie na konfiguračnej stránke účtovnej "
+"knihy."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -177,19 +183,22 @@ msgid "Payments"
 msgstr "Platby"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:98
+#: code:addons/account_check_printing/models/account_payment.py:100
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr "Platby na vytlačenie ako šeky musia mať zvolené 'Šek'ako platobnú metódu a nem§žu už byť zladené"
+msgstr ""
+"Platby na vytlačenie ako šeky musia mať zvolené 'Šek'ako platobnú metódu a "
+"nem§žu už byť zladené"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
-msgstr "Prosím zadajte číslo prvého predtlačeného šeku na ktorý sa chystáte tlačiť."
+msgstr ""
+"Prosím zadajte číslo prvého predtlačeného šeku na ktorý sa chystáte tlačiť."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -207,7 +216,7 @@ msgid "Print Checks"
 msgstr "Vytlačiť šeky"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:114
+#: code:addons/account_check_printing/models/account_payment.py:116
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -229,15 +238,19 @@ msgstr "Sekvenčné číslo nasledujúceho vytlačeného šeku."
 msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
-msgstr "Techniká funkcia používaná na zistenie či tlač šekov bola povolená ako spôsob platby."
+msgstr ""
+"Techniká funkcia používaná na zistenie či tlač šekov bola povolená ako "
+"spôsob platby."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_journal.py:25
+#: code:addons/account_check_printing/models/account_journal.py:26
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
-msgstr "Posledné číslo šeku bolo %s. Aby sa predišlo zamietnutiu šeku bankou, môžete použiť iba vyššie číslo."
+msgstr ""
+"Posledné číslo šeku bolo %s. Aby sa predišlo zamietnutiu šeku bankou, môžete"
+" použiť iba vyššie číslo."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_number
@@ -245,15 +258,20 @@ msgid ""
 "The selected journal is configured to print check numbers. If your pre-"
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
-msgstr "Zvolená účtovná kniha je nakonfiguovaná na tlač čísiel šekov. Ak váš predtlačený šekový papier už čísla má, alebo ak je súčasné číslovanie zlé, môžete to zmeniť na stránke konfigurácií účtovnej knihy."
+msgstr ""
+"Zvolená účtovná kniha je nakonfiguovaná na tlač čísiel šekov. Ak váš "
+"predtlačený šekový papier už čísla má, alebo ak je súčasné číslovanie zlé, "
+"môžete to zmeniť na stránke konfigurácií účtovnej knihy."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:135
+#: code:addons/account_check_printing/models/account_payment.py:137
 #, python-format
 msgid ""
 "There is no check layout configured.\n"
 "Make sure the proper check printing module is installed and its configuration (in company settings > 'Configuration' tab) is correct."
-msgstr "Neexistuje žiadna konfigurácia usporiadania šeku.\nUistite sa že správny modul tlače šekov je nainštalovaný a jeho konfigurácia (v nastaveniach spoločnosti > záložka 'Konfigurácia') je správna."
+msgstr ""
+"Neexistuje žiadna konfigurácia usporiadania šeku.\n"
+"Uistite sa že správny modul tlače šekov je nainštalovaný a jeho konfigurácia (v nastaveniach spoločnosti > záložka 'Konfigurácia') je správna."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view

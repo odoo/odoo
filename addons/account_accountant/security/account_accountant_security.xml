@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="base.user_root" model="res.users">
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager')),(4, ref('account.group_account_user'))]"/>
+        </record>
+</odoo>

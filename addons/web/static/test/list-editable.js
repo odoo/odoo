@@ -43,7 +43,7 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
                 tag: 'form',
                 attrs: {
                     version: '7.0',
-                    'class': 'oe_form_container'
+                    'class': 'o_list_editable_form'
                 },
                 children: children
             },
@@ -171,7 +171,7 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
     });
 });
 
-odoo.define_section('list.edition', ['web.data', 'web.ListView'], function (test, mock) {
+odoo.define_section('list.edition', ['web.data', 'web.ListView', 'web.data_manager'], function (test, mock) {
 
     function setup () {
         var records = {};
@@ -193,23 +193,19 @@ odoo.define_section('list.edition', ['web.data', 'web.ListView'], function (test
             }
             return [];
         });
-        mock.add('demo:fields_view_get', function () {
-            return {
-                type: 'tree',
-                fields: {
-                    a: {type: 'char', string: "A"},
-                    b: {type: 'char', string: "B"},
-                    c: {type: 'char', string: "C"}
-                },
-                arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
-            };
-        });
         mock.add('demo:onchange', function () {
             return {};
         });
+        mock.add('demo:fields_get', function () {
+            return {
+                a: {type: 'char', string: "A"},
+                b: {type: 'char', string: "B"},
+                c: {type: 'char', string: "C"}
+            };
+        });
     }
 
-    test('newrecord', function (assert, data, ListView) {
+    test('newrecord', function (assert, data, ListView, data_manager) {
         setup();
         assert.expect(6);
         var got_defaults = false;
@@ -224,7 +220,16 @@ odoo.define_section('list.edition', ['web.data', 'web.ListView'], function (test
         });
 
         var ds = new data.DataSetStatic(null, 'demo', null, [1]);
-        var l = new ListView({}, ds, false, {editable: 'top'});
+        var fields_view = data_manager._postprocess_fvg({
+            type: 'tree',
+            fields: {
+                a: {type: 'char', string: "A"},
+                b: {type: 'char', string: "B"},
+                c: {type: 'char', string: "C"}
+            },
+            arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
+        });
+        var l = new ListView({}, ds, fields_view, {editable: 'top'});
 
         var $fix = $( "#qunit-fixture");
         return l.appendTo($fix)
@@ -249,26 +254,32 @@ odoo.define_section('list.edition', ['web.data', 'web.ListView'], function (test
     });
 });
 
-odoo.define_section('list.edition.events', ['web.data', 'web.ListView'], function (test, mock) {
-
+odoo.define_section('list.edition.events', ['web.data', 'web.ListView', 'web.data_manager'], function (test, mock) {
+    function fields_view_get () {
+        return {
+            type: 'tree',
+            fields: {
+                a: {type: 'char', string: "A"},
+                b: {type: 'char', string: "B"},
+                c: {type: 'char', string: "C"}
+            },
+            arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
+        };
+    }
     function setup () {
         mock.add('demo:read', function () {
             return [{ id: 1, a: 'foo', b: 'bar', c: 'baz' }];
         });
-        mock.add('demo:fields_view_get', function () {
+        mock.add('demo:fields_get', function () {
             return {
-                type: 'tree',
-                fields: {
-                    a: {type: 'char', string: "A"},
-                    b: {type: 'char', string: "B"},
-                    c: {type: 'char', string: "C"}
-                },
-                arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
+                a: {type: 'char', string: "A"},
+                b: {type: 'char', string: "B"},
+                c: {type: 'char', string: "C"}
             };
         });
     }
 
-    test('edition events',function (assert, data, ListView) {
+    test('edition events',function (assert, data, ListView, data_manager) {
         setup();
         assert.expect(4);
         var ds = new data.DataSetStatic(null, 'demo', null, [1]);
@@ -276,7 +287,8 @@ odoo.define_section('list.edition.events', ['web.data', 'web.ListView'], functio
             counter: 0,
             onEvent: function (e) { this.counter++; }
         };
-        var l = new ListView({}, ds, false, {editable: 'top'});
+        var fields_view = data_manager._postprocess_fvg(fields_view_get());
+        var l = new ListView({}, ds, fields_view, {editable: 'top'});
         l.on('edit:before edit:after', o, o.onEvent);
 
         var $fix = $( "#qunit-fixture");
@@ -293,11 +305,12 @@ odoo.define_section('list.edition.events', ['web.data', 'web.ListView'], functio
             });
     });
 
-    test('edition events: cancelling', function (assert, data, ListView) {
+    test('edition events: cancelling', function (assert, data, ListView, data_manager) {
         setup();
         var edit_after = false;
         var ds = new data.DataSetStatic(null, 'demo', null, [1]);
-        var l = new ListView({}, ds, false, {editable: 'top'});
+        var fields_view = data_manager._postprocess_fvg(fields_view_get());
+        var l = new ListView({}, ds, fields_view, {editable: 'top'});
         l.on('edit:before', {}, function (e) {
             e.cancel = true;
         });
@@ -321,23 +334,13 @@ odoo.define_section('list.edition.events', ['web.data', 'web.ListView'], functio
     });
 });
 
-odoo.define_section('list.edition.onwrite', ['web.data', 'web.ListView'], function (test, mock) {
+odoo.define_section('list.edition.onwrite', ['web.data', 'web.ListView', 'web.data_manager'], function (test, mock) {
 
-    test('record-to-read', function (assert, data, ListView) {
+    test('record-to-read', function (assert, data, ListView, data_manager) {
         assert.expect(4);
 
         mock.add('demo:onchange', function () {
             return {};
-        });
-
-        mock.add('demo:fields_view_get', function () {
-            return {
-                type: 'tree',
-                fields: {
-                    a: {type: 'char', string: "A"}
-                },
-                arch: '<tree on_write="on_write" colors="red:a == \'foo\'"><field name="a"/></tree>',
-            };
         });
         mock.add('demo:read', function (args, kwargs) {
             if (_.isEmpty(args[0])) {
@@ -356,9 +359,23 @@ odoo.define_section('list.edition.onwrite', ['web.data', 'web.ListView'], functi
         mock.add('demo:default_get', function () { return {}; });
         mock.add('demo:create', function () { return 1; });
         mock.add('demo:on_write', function () { return [42]; });
+        mock.add('demo:fields_get', function () {
+            return {
+                a: {type: 'char', string: "A"},
+                b: {type: 'char', string: "B"},
+                c: {type: 'char', string: "C"}
+            };
+        });
 
         var ds = new data.DataSetStatic(null, 'demo', null, []);
-        var l = new ListView({}, ds, false, {editable: 'top'});
+        var fields_view = data_manager._postprocess_fvg({
+            type: 'tree',
+            fields: {
+                a: {type: 'char', string: "A"}
+            },
+            arch: '<tree on_write="on_write" colors="red:a == \'foo\'"><field name="a"/></tree>',
+        });
+        var l = new ListView({}, ds, fields_view, {editable: 'top'});
 
         var $fix = $( "#qunit-fixture");
         return l.appendTo($fix)

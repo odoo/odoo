@@ -216,13 +216,12 @@ define([
       color: function (lang, options) {
         var colorButtonLabel = '<i class="' +
                                   options.iconPrefix + options.icons.color.recent +
-                                '" style="color:black;background-color:yellow;"></i>';
-
+                                '" id="colors_preview" style="color:white;background-color:#B35E9B"></i>';
         var colorButton = tplButton(colorButtonLabel, {
           className: 'note-recent-color',
           title: lang.color.recent,
           event: 'color',
-          value: '{"backColor":"yellow"}'
+          value: '{"backColor":"#B35E9B"}'
         });
 
         var items = [
@@ -412,6 +411,10 @@ define([
       };
 
       var tplImagePopover = function () {
+        var autoButton = tplButton('<span class="note-fontsize-10">Auto</span>', {
+          event: 'resize',
+          value: 'auto'
+        });
         var fullButton = tplButton('<span class="note-fontsize-10">100%</span>', {
           title: lang.image.resizeFull,
           event: 'resize',
@@ -471,7 +474,7 @@ define([
           value: 'none'
         });
 
-        var content = (options.disableResizeImage ? '' : '<div class="btn-group">' + fullButton + halfButton + quarterButton + '</div>') +
+        var content = (options.disableResizeImage ? '' : '<div class="btn-group">' + autoButton + fullButton + halfButton + quarterButton + '</div>') +
                       '<div class="btn-group">' + leftButton + rightButton + justifyButton + '</div>' +
                       '<div class="btn-group">' + roundedButton + circleButton + thumbnailButton + noneButton + '</div>' +
                       '<div class="btn-group">' + removeButton + '</div>';
@@ -793,12 +796,13 @@ define([
       });
 
       var body = document.body;
+      var $container = $('#web_editor-toolbars')
 
       // create Popover
       var $popover = $(this.tplPopovers(langInfo, options)); // ODOO: user (maybe) overrided method
       $popover.addClass('note-air-layout');
       $popover.attr('id', 'note-popover-' + id);
-      $popover.appendTo(body);
+      $popover.appendTo($container);
       createTooltip($popover, keyMap);
       this.createPalette($popover, options); // ODOO: use (maybe) overrided method
 
@@ -806,7 +810,7 @@ define([
       var $handle = $(tplHandles(options));
       $handle.addClass('note-air-layout');
       $handle.attr('id', 'note-handle-' + id);
-      $handle.appendTo(body);
+      $handle.appendTo($container);
 
       // create Dialog
       var $dialog = $(tplDialogs(langInfo, options));
@@ -815,7 +819,7 @@ define([
       $dialog.find('button.close, a.modal-close').click(function () {
         $(this).closest('.modal').modal('hide');
       });
-      $dialog.appendTo(body);
+      $dialog.appendTo($container);
     };
 
     /**
@@ -843,7 +847,7 @@ define([
       //03. create editable
       var isContentEditable = !$holder.is(':disabled');
       var $editable = $('<div class="note-editable panel-body" contentEditable="' + isContentEditable + '"></div>').prependTo($editingArea);
-      
+
       if (options.height) {
         $editable.height(options.height);
       }

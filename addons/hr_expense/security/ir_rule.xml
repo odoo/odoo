@@ -6,7 +6,7 @@
             <field name="name">Manager Expense</field>
             <field name="model_id" ref="model_hr_expense"/>
             <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('account.group_account_user')), (4, ref('base.group_hr_manager')), (4, ref('base.group_hr_user'))]"/>
+            <field name="groups" eval="[(4, ref('account.group_account_user')), (4, ref('hr_expense.group_hr_expense_manager')), (4, ref('hr_expense.group_hr_expense_user'))]"/>
         </record>
         <record id="property_rule_expense_employee" model="ir.rule">
             <field name="name">Employee Expense</field>
@@ -17,6 +17,12 @@
         <record id="hr_expense_comp_rule" model="ir.rule">
             <field name="name">Expense multi company rule</field>
             <field name="model_id" ref="model_hr_expense"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+        </record>
+        <record id="hr_expense_report_comp_rule" model="ir.rule">
+            <field name="name">Expense Report multi company rule</field>
+            <field name="model_id" ref="model_hr_expense_sheet"/>
             <field eval="True" name="global"/>
             <field name="domain_force">['|',('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
         </record>

@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from openerp.osv import fields, osv
+from odoo import fields, models
 
 
-class product_template(osv.Model):
+class ProductTemplate(models.Model):
     """ Product Template inheritance to add an optional email.template to a
     product.template. When validating an invoice, an email will be send to the
     customer based on this template. The customer will receive an email for each
     product linked to an email template. """
     _inherit = "product.template"
 
-    _columns = {
-        'email_template_id': fields.many2one(
-            'mail.template', 'Product Email Template',
-            help='When validating an invoice, an email will be sent to the customer '
-                 'based on this template. The customer will receive an email for each '
-                 'product linked to an email template.'),
-    }
+    email_template_id = fields.Many2one('mail.template', string='Product Email Template',
+        help='When validating an invoice, an email will be sent to the customer '
+             'based on this template. The customer will receive an email for each '
+             'product linked to an email template.')

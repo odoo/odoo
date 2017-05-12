@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, api, _
-from openerp.exceptions import Warning
+from odoo import models, api, _
+from odoo.exceptions import UserError
 
 
 class BankStatement(models.Model):
@@ -25,5 +25,5 @@ class BankStatementLine(models.Model):
         if not self.env.context.get('bank_statement_cancel'):
             for line in self:
                 if line.statement_id.state == 'confirm':
-                    raise Warning(_("Please set the bank statement to New before canceling."))
+                    raise UserError(_("Please set the bank statement to New before canceling."))
         return super(BankStatementLine, self).cancel()

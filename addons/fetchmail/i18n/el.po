@@ -3,15 +3,17 @@
 # * fetchmail
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Kostas Goutoudis <goutoudis@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Γιώργος Μηντζιλώνης <gi_orgos1986@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-12-18 17:43+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
-"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Γιώργος Μηντζιλώνης <gi_orgos1986@hotmail.com>, 2017\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -31,7 +33,7 @@ msgstr "Ενέργειες προς Εκτέλεση σε Εισερχόμενα
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
 msgid "Active"
-msgstr "Ενεργό"
+msgstr "Ενεργή"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -47,7 +49,7 @@ msgstr "Ρυθμίσεις για προχωρημένους"
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Configuration"
-msgstr "Ρυθμίσεις"
+msgstr "Διαμόρφωση"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
@@ -60,17 +62,19 @@ msgid "Confirmed"
 msgstr "Επιβεβαιωμένο"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
-msgstr ""
+msgstr "Δοκιμή σύνδεσης απέτυχε: %s"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_is_ssl
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
-msgstr "Οι συνδέσεις κρυπτογραφούνται με SSL/TLS μέσω αποκλειστικής θύρας (προεπιλογή: IMAPS=993, POP3S=995)"
+msgstr ""
+"Οι συνδέσεις κρυπτογραφούνται με SSL/TLS μέσω αποκλειστικής θύρας "
+"(προεπιλογή: IMAPS=993, POP3S=995)"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
@@ -78,13 +82,11 @@ msgid "Create a New Record"
 msgstr "Δημιουργία Νέας Εγγραφής"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Δημιουργήθηκε από"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Δημιουργήθηκε στις"
@@ -92,10 +94,11 @@ msgstr "Δημιουργήθηκε στις"
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr "Καθορίζει την σειρά επεξεργασίας, χαμηλότερες τιμές σημαίνουν υψηλότερη προτεραιότητα"
+msgstr ""
+"Καθορίζει την σειρά επεξεργασίας, χαμηλότερες τιμές σημαίνουν υψηλότερη "
+"προτεραιότητα"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
@@ -108,13 +111,13 @@ msgstr "Παραλαβή Τώρα"
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_server
 msgid "Hostname or IP of the mail server"
-msgstr "Όνομα κεντρικού υπολογιστή ή η διεύθυνση IP του διακομιστή αλληλογραφίας"
+msgstr ""
+"Όνομα κεντρικού υπολογιστή ή η διεύθυνση IP του διακομιστή αλληλογραφίας"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
-msgstr "ID"
+msgstr "Κωδικός"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -164,19 +167,16 @@ msgid "Last Fetch Date"
 msgstr "Ημερομηνία Τελευταίας Παραλαβής"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
-msgstr "Τελευταία αλλαγή στις"
+msgstr "Τελευταία τροποποίηση στις"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Τελευταία Ενημέρωση από"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Τελευταία Ενημέρωση στις"
@@ -200,7 +200,7 @@ msgstr "Μηνύματα"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_name
 msgid "Name"
-msgstr "Όνομα"
+msgstr "Περιγραφή"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -212,7 +212,10 @@ msgstr "Μη Επιβεβαιωμένο"
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
-msgstr "Προαιρετική προσαρμοσμένη ενέργεια διακομιστή για την ενεργοποίηση για κάθε εισερχόμενο email, σχετικά με την δημιουργία ή ενημέρωση εγγραφής από αυτό το email"
+msgstr ""
+"Προαιρετική προσαρμοσμένη ενέργεια διακομιστή για την ενεργοποίηση για κάθε "
+"εισερχόμενο email, σχετικά με την δημιουργία ή ενημέρωση εγγραφής από αυτό "
+"το email"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -255,7 +258,11 @@ msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
-msgstr "Επεξεργασία κάθε εισερχόμενου μηνύματος ως τμήμα μια συζήτησης που αντιστοιχεί σε αυτόν τον τύπο εγγράφου. Αυτό θα δημιουργήσει νέα έγγραφα για νέες συζητήσεις, ή θα επισυνάψει τα επακόλουθα e-mails στην υπάρχουσα συνομιλία (έγγραφα). "
+msgstr ""
+"Επεξεργασία κάθε εισερχόμενου μηνύματος ως τμήμα μια συζήτησης που "
+"αντιστοιχεί σε αυτόν τον τύπο εγγράφου. Αυτό θα δημιουργήσει νέα έγγραφα για"
+" νέες συζητήσεις, ή θα επισυνάψει τα επακόλουθα e-mails στην υπάρχουσα "
+"συνομιλία (έγγραφα). "
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -335,24 +342,25 @@ msgstr "Δοκιμή & Επιβεβαίωση"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
 msgid "Username"
-msgstr "Όνομα χρήστη"
+msgstr "Όνομα Χρήστη"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
 msgid ""
-"Whether a full original copy of each email should be kept for referenceand "
+"Whether a full original copy of each email should be kept for reference and "
 "attached to each processed message. This will usually double the size of "
 "your message database."
-msgstr "Εάν ένα πλήρες αρχικό αντίγραφο από κάθε e-mail πρέπει να διατηρείται για αναφορά και επισύναψη σε κάθε επεξεργασμένο μήνυμα. Συνήθως διπλασιάζει το μέγεθος της βάσης δεδομένων των μηνυμάτων. "
+msgstr ""
+"Εάν ένα πλήρες αρχικό αντίγραφο από κάθε e-mail πρέπει να διατηρείται για "
+"αναφορά και επισύναψη σε κάθε επεξεργασμένο μήνυμα. Συνήθως διπλασιάζει το "
+"μέγεθος της βάσης δεδομένων των μηνυμάτων. "
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr "Εάν τα συνημμένα πρέπει να κατεβαίνουν. Εάν δεν ενεργοποιηθεί, από την εισερχόμενη αλληλογραφία θα αφαιρεθούν όλα τα συνημμένα πριν την επεξεργασία. "
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
 msgstr ""
+"Εάν τα συνημμένα πρέπει να κατεβαίνουν. Εάν δεν ενεργοποιηθεί, από την "
+"εισερχόμενη αλληλογραφία θα αφαιρεθούν όλα τα συνημμένα πριν την "
+"επεξεργασία. "

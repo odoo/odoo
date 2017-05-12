@@ -3,33 +3,20 @@
 # * auth_oauth
 # 
 # Translators:
-# Gennady Marchenko <gennadym@gmail.com>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-03-19 11:24+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"<br/>\n"
-"                                    - Ceate a new project<br/>\n"
-"                                    - Go to Api Access<br/>\n"
-"                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
-"                                    <br/>\n"
-"                                    Now copy paste the client_id here:"
-msgstr "<br/>\n                                    - Создайте новый проект<br/>\n                                    - Перейдите к Api Access<br/>\n                                    - Создайте oauth client_id<br/>\n                                    - Настройте все Authorized Redirect URIs и Authorized JavaScript Origins для Вашего хоста.<br/>\n                                    <br/>\n                                    Затем скопируйте и вставьте the client_id сюда:"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:99
@@ -45,10 +32,11 @@ msgstr "Счета к оплате"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_receivable_id
 msgid "Account Receivable"
-msgstr "Счет к получению"
+msgstr "Дебиторская задолженность"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
 msgstr "Разрешить вход при помощи учетной записи Google"
 
@@ -56,6 +44,11 @@ msgstr "Разрешить вход при помощи учетной запи�
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
 msgid "Allowed"
 msgstr "Разрешено"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Authentication"
+msgstr "Авторизация"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -78,6 +71,29 @@ msgid "CSS class"
 msgstr "Класс CSS"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Check that the application type is set on <b>Web Application</b>. \n"
+"                                        Now configure the allowed pages on which you will be redirected."
+msgstr ""
+"Проверьте, что тип приложения установлено на <b>Веб-приложения</b>. \n"
+"                                        Теперь настройте разрешенные страниц, на которых вы будете перенаправлены."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Click on <b>Create Project</b> and enter the project name and \n"
+"                                        other details."
+msgstr ""
+"Нажмите на <b>Создание проекта</b> и введите имя проекта и \n"
+"                                      другие детали."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Click on <b>Use Google APIs</b>"
+msgstr "Нажмите на <b>Использование Google APIs</b>"
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_client_id
 msgid "Client ID"
@@ -89,6 +105,11 @@ msgid "Companies that refers to partner"
 msgstr "Связанные с партнёром организации"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Connect to your Google account and go to"
+msgstr "Подключите свой аккаунт Google и перейдите к"
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contracts_count
 msgid "Contracts"
@@ -97,22 +118,22 @@ msgstr "Договоры"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_date
 msgid "Created on"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-msgid "Currency id"
-msgstr "id Валюты"
+msgid "Currency"
+msgstr "Валюта"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
-msgid "Customer Payment Term"
-msgstr "Срок платежа заказчика"
+msgid "Customer Payment Terms"
+msgstr "Условия оплаты для покупателя"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
@@ -120,19 +141,33 @@ msgid "Data URL"
 msgstr "URL данных"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
+msgid "Degree of trust you have in this debtor"
+msgstr "Степень доверия у вас к этому должнику"
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Fill in your address, email and the product name (for example odoo) \n"
+"                                        and then save."
+msgstr ""
+"Заполните ваш адрес, электронной почты и название продукта (например, odoo) \n"
+"                                        и затем сохраните."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
 msgid "Fiscal Position"
-msgstr "Состояние бюджета"
+msgstr "Система налогов"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google APIs console"
-msgstr "Консоль Google APIs"
+msgid "Google Client ID:"
+msgstr "Google Client ID"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
@@ -143,6 +178,11 @@ msgstr "Имеет несогласованные проводки"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
 msgstr "ID"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
+msgid "Invoice"
+msgstr "Счет"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -163,7 +203,7 @@ msgstr "Последний раз изменено"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_date
@@ -176,12 +216,20 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr "Последний раз  было выполнено сопоставление  счетов-фактур и платежей для данного партнера. Он устанавливается или если нет, по крайней мере, не согласован дебет и кредит или если вы нажмете кнопку \"Готово\"."
+msgstr ""
+"Последний раз  было выполнено сопоставление  счетов-фактур и платежей для "
+"данного партнера. Он устанавливается или если нет, по крайней мере, не "
+"согласован дебет и кредит или если вы нажмете кнопку \"Готово\"."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
 msgstr "Последние Счета & Платежи, Соответствующие Дате"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr "Сообщение при выставлении счета"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -224,9 +272,29 @@ msgid "Oauth Provider user_id"
 msgstr "Oauth Провайдер user_id"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"On the left side menu, select the sub menu <b>Credentials</b> \n"
+"                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
+msgstr ""
+"На левой стороне меню подменю <b>Полномочия</b> \n"
+"                                        (от <b>API менеджера</b>) выберите <b>OAuth согласие экрана</b>."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
+"                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
+"                                        the field below."
+msgstr ""
+"После этого, вы получите два информацию ( <b>ID клиента</b> и <b>\n"
+"                                        Секрет клиента</b>). Вам необходимо вставить свой <b>Клиент ID</b>\n"
+"                                        в поле ниже."
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
 msgid "Payable Limit"
-msgstr "Лимит оплаты"
+msgstr "Лимит Кредиторской Задолженности"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_name
@@ -239,9 +307,45 @@ msgid "Providers"
 msgstr "Провайдеры"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Return to Top"
+msgstr "Вернуться на уровень вверх"
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
 msgstr "Область доступа"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"\"Предупреждение\" - сообщить пользователю. \"Блокирующее сообщение\" - "
+"исключительная ситуация, сообщить пользователю и заблокировать рабочий "
+"процесс. Текст сообщения должен быть записан в следующее поле."
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
+msgid "Sequence"
+msgstr "Последовательность"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
+msgid "Server uri"
+msgstr "Сервер uri"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Show Tutorial"
+msgstr "Показать Туториал "
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
+msgid "Show tutorial"
+msgstr "Показать учебник"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:97
@@ -253,75 +357,110 @@ msgstr "Запрещен вход для этой базы данных."
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "Финансовое положение будет определять налоги и счета, используемые для партнера."
+msgstr ""
+"Система налогов будет определять налоги и счета, используемые для партнера."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr "У партнера есть по крайней мере один невыверенный дебет и кредит с прошлого раза, когда согласование счет-фактур и платежей были выполнены."
+msgstr ""
+"У партнера есть по крайней мере один невыверенный дебет и кредит с прошлого "
+"раза, когда согласование счет-фактур и платежей были выполнены."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Then click on <b>Add Credentials</b> and select the second option \n"
+"                                        (OAuth 2.0 Client ID)."
+msgstr ""
+"Затем нажмите на <b>Добавить учетные данные</b> и выберите второй вариант\n"
+"                                        (ID клиента OAuth 2.0)."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Then click on <b>Create</b>."
+msgstr "Затем нажмите на кнопку <b>Создать</b>."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "Этот счет будет использоваться, вместо счета по умолчанию, как кредитовый для текущего контрагента"
+msgstr ""
+"Этот счет будет использоваться, вместо счета по умолчанию, как кредитовый "
+"для текущего контрагента"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr "Этот счет будет использоваться, вместо счета по умолчанию, для дебиторской задолженности по текущему контрагенту."
+msgstr ""
+"Этот счёт будет использоваться вместо счёта по умолчанию в качестве счёта "
+"дебиторской задолженности по текущему партнеру."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr "Это условие оплаты будет использоваться вместо установленного по умолчанию для заказов на покупку и счетов поставщика"
+msgstr ""
+"Это условие оплаты для заказов на покупку и счетов поставщика будет "
+"использоваться вместо установленного по умолчанию"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr "Это условие оплаты будет использоваться вместо используемого по умолчанию для заказов продаж и счетов."
+msgstr ""
+"Это уловие оплаты для заказов продаж и счетов-фактур покупателей будет "
+"использоваться вместо используемого по умолчанию"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To setup the signin process with Google, first you have to perform the following steps:<br/>\n"
-"                                    <br/>\n"
-"                                    - Go to the"
-msgstr "Для настройки процесса подписи Google, сперва выполните следующие шаги:<br/>\n                                    <br/>\n                                    - Перейдите к"
+"To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
+"                                        Copy paste the following link in the box"
+msgstr ""
+"Для достижения этой цели, заполните поле <b>Авторизованные перенаправить URIs</b>.\n"
+"                                        Копировать вставить ссылку в поле"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"To setup the sign in process with Google, you have to perform \n"
+"                                    the following steps first."
+msgstr ""
+"Для настройки входа в процесс с Google, вы должны сначала выполнить\n"
+"                                   следующие шаги."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
 msgid "Total Invoiced"
-msgstr "Всего по счетам"
+msgstr "Итого по счетам"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit
 msgid "Total Payable"
-msgstr "Всего к оплате"
+msgstr "Итого кредиторской задолженности"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_credit
 msgid "Total Receivable"
-msgstr "Всего к получению"
+msgstr "Итого дебиторской задолженности"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_credit
 msgid "Total amount this customer owes you."
-msgstr "Общая сумма долга покупателя перед вами"
+msgstr "Итоговый долг покупателя перед вами."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr "Общая сумма к оплате этому продавцу."
+msgstr "Итоговая сумма к уплате этому поставщику."
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -340,8 +479,8 @@ msgstr "URL валидации"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
-msgid "Vendor Payment Term"
-msgstr "Срок Оплаты Поставщику"
+msgid "Vendor Payment Terms"
+msgstr "Условия оплаты поставщика"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:101
@@ -350,11 +489,14 @@ msgid ""
 "You do not have access to this database or your invitation has expired. "
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
-msgstr "У вас нет права доступа к этой базе данных или ваше приглашение истекло. Пожалуйста запросите новое приглашение и обязательно используйте ссылку из письма с приглашением."
+msgstr ""
+"У вас нет права доступа к этой базе данных или ваше приглашение истекло. "
+"Пожалуйста запросите новое приглашение и обязательно используйте ссылку из "
+"письма с приглашением."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_list
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
 msgstr "архитектура"
 
@@ -369,11 +511,11 @@ msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "например 1234-xyz.apps.googleusercontent.com"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "https://console.developers.google.com/"
+msgstr "https://console.developers.google.com/"
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
-msgid "unknown"
-msgstr "неизвестен"

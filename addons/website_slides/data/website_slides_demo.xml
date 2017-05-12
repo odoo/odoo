@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <record id="category_1" model="slide.category">
@@ -21,14 +21,6 @@
             <field name="name">Marketing</field>
         </record>
 
-        <record id="tag3" model="slide.tag">
-            <field name="name">POS</field>
-        </record>
-
-        <record id="tag4" model="slide.tag">
-            <field name="name">Customer Voice</field>
-        </record>
-
         <record id="tag5" model="slide.tag">
             <field name="name">Odoo Days</field>
         </record>
@@ -42,36 +34,28 @@
             <field name="tag_ids" eval="[(4, ref('tag2'))]"/>
         </record>
         <record id="slide_1" model="slide.slide">
-            <field name="name">Open Source Website Builder and eCommerce: Odoo</field>
-            <field name="url">https://www.youtube.com/watch?v=pp7OCqWoRjQ</field>
+            <field name="name">Odoo Website &amp; E-commerce Demonstration</field>
+            <field name="url">https://www.youtube.com/watch?v=tR0xandHlhU</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_1"/>
             <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(4, ref('tag1'))]"/>
         </record>
         <record id="slide_2" model="slide.slide">
-            <field name="name">Odoo Open Days 2014</field>
-            <field name="url">https://www.youtube.com/watch?v=ILTPZUTWKhg&amp;list=UUkQPikELWZFLgQNHd73jkdg</field>
+            <field name="name">Odoo All-in-One Software Demonstration</field>
+            <field name="url">https://www.youtube.com/watch?v=tUx39vAENy0</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_2"/>
             <field name="website_published" eval="True"/>
-            <field name="tag_ids" eval="[(4, ref('tag3'))]"/>
+            <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
         </record>
         <record id="slide_3" model="slide.slide">
-            <field name="name">Odoo - The Voice of the Customer: Alpinter</field>
-            <field name="url">https://www.youtube.com/watch?v=5DPGnN9_uKU&amp;list=UUkQPikELWZFLgQNHd73jkdg</field>
+            <field name="name">Odoo Sign Demonstration</field>
+            <field name="url">https://www.youtube.com/watch?v=8DBabYQ1nUE</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_2"/>
             <field name="website_published" eval="True"/>
-            <field name="tag_ids" eval="[(4, ref('tag4'))]"/>
-        </record>
-        <record id="slide_4" model="slide.slide">
-            <field name="name">Odoo SEO - Boost Your Website Trafic</field>
-            <field name="url">https://www.youtube.com/watch?v=5PKqZpl0TcA</field>
-            <field name="channel_id" ref="channel_public"/>
-            <field name="category_id" ref="category_1"/>
-            <field name="website_published" eval="True"/>
-            <field name="tag_ids" eval="[(4, ref('tag1'))]"/>
+            <field name="tag_ids" eval="[(4, ref('tag2'))]"/>
         </record>
         <record id="slide_5" model="slide.slide">
             <field name="name">Awesome Timesheet by Odoo</field>
@@ -79,7 +63,7 @@
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_1"/>
             <field name="website_published" eval="True"/>
-            <field name="tag_ids" eval="[(4, ref('tag3'))]"/>
+            <field name="tag_ids" eval="[(4, ref('tag2'))]"/>
         </record>
         <record id="slide_6" model="slide.slide">
             <field name="name">Odoo Marketing - part 1: ATTRACT</field>
@@ -244,5 +228,5 @@
         </record>
 
   </data>
-</openerp>
+</odoo>
 

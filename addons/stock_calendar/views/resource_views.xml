@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Procurement group to be used on the calendar attendance to match triggers and purchases-->
+    <record id="view_resource_calendar_attendance_tree_procurement_group" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.tree.procurement</field>
+        <field name="inherit_id" ref="resource.view_resource_calendar_attendance_tree"/>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="arch" type="xml">
+            <field name="date_to" position="after">
+                <field name="group_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

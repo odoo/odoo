@@ -13,42 +13,29 @@
         </li>
     </t>
 
-    <t t-name="web_editor.snippets">
-        <div id='oe_snippets' class="hidden-xs o_open">
-            <div id="o_arrow">
-                <span class="fa fa-angle-double-right fa-1x" style="top: 10px;"></span>
-                <div>Insert Blocks</div>
-                <span class="fa fa-angle-double-right fa-1x" style="bottom: 10px;"></span>
-            </div>
-            <div id="o_left_bar">
-                <span class='snippets_loading'>Snippets are loading...</span>
-            </div>
-        </div>
-    </t>
-
     <t t-name="web_editor.snippet_overlay">
         <div class="oe_overlay">
+            <div class="oe_handles">
+                <div class="oe_handle n readonly"/>
+                <div class="oe_handle e readonly"/>
+                <div class="oe_handle w readonly"/>
+                <div class="oe_handle s readonly"/>
+                <div class="oe_handle size readonly">
+                    <div class="oe_handle_button auto_size">Auto size</div>
+                    <div class="oe_handle_button size" title="Resize to force the height of this block">Fixed size</div>
+                </div>
+            </div>
             <div class="oe_overlay_options" contentEditable="false">
                 <div class="btn-group">
-                    <a href="#" class="btn btn-default btn-sm oe_snippet_parent" title="Select Container Block"><i class="fa fa-upload"></i></a>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_parent" title="Select Parent Container"><i class="fa fa-lg fa-level-up"/></a>
                     <div class="dropdown oe_options hidden btn-group">
-                        <a href="#" data-toggle="dropdown" class="btn btn-primary btn-sm" title="Customize">Customize <span class="caret"/></a>
-                        <ul class="dropdown-menu" role="menu"></ul>
+                        <a href="#" data-toggle="dropdown" class="btn btn-primary btn-sm" title="Customize">Customize</a>
+                        <ul class="dropdown-menu" role="menu"/>
                     </div>
                     <a href="#" class="btn btn-default btn-sm oe_snippet_move" title="Drag to Move"><i class="fa fa-arrows ml4 mr4"></i></a>
                     <a href="#" class="btn btn-default btn-sm oe_snippet_clone" title="Duplicate Container"><i class="fa fa-files-o ml4 mr4"></i></a>
                     <a href="#" class="btn btn-default btn-sm oe_snippet_remove" title="Remove Block"><i class="fa fa-trash-o ml4 mr4"></i></a>
                 </div>
-            </div>
-            <div class='oe_handles'>
-                <div class='oe_handle n readonly'><div></div></div>
-                <div class='oe_handle e readonly'><div></div></div>
-                <div class='oe_handle w readonly'><div></div></div>
-                <div class='oe_handle size readonly'>
-                    <div class="oe_handle_button auto_size">Auto Resize</div>
-                    <div class="oe_handle_button size">Resize</div>
-                </div>
-                <div class='oe_handle s readonly'><div></div></div>
             </div>
         </div>
     </t>
@@ -57,10 +44,23 @@
         <div class='oe_snippet_manipulator'></div>
     </t>
 
-    <!-- t-field options -->
+    <!-- options -->
+    <div t-name="web_editor.snippet.option.colorpicker" class="colorpicker">
+        <div class="note-palette-title">Background Color</div>
+        <div class="btn-group palette-reset">
+            <div class="note-color-reset" data-event="foreColor" data-value="inherit" title="None">
+                <i class="fa fa-ban"/>
+            </div>
+        </div>
+        <div class="o_colorpicker_sections">
+            <ul class="nav nav-pills o_colorpicker_section_menu"/>
+            <div class="tab-content o_colorpicker_section_tabs"/>
+        </div>
+    </div>
 
+    <!-- t-field options -->
     <t t-name="web_editor.many2one.button">
-        <div class="dropdown">
+        <div class="btn-group">
             <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact"><i class="fa fa-search"></i></a>
             <ul class="dropdown-menu contact_menu" role="menu">
                 <li><a><input href="#" type="email" placeholder="Search"/></a></li>

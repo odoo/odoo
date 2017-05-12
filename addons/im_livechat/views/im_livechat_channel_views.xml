@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
         <record id="im_livechat_channel_action" model="ir.actions.act_window">
@@ -11,7 +11,7 @@
                 Click to define a new website live chat channel.
               </p><p>
                 You can create channels for each website on which you want
-                to integrate the website live chat widget, allowing you website
+                to integrate the website live chat widget, allowing your website
                 visitors to talk in real time with your operators.
               </p><p>
                 Each channel has it's own URL that you can send by email to
@@ -48,7 +48,7 @@
                                         </p>
                                     </div>
                                     <div class="o_kanban_button">
-                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-sm btn-primary">Quit</button>
+                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-sm btn-primary">Leave</button>
                                         <button t-if="!record.are_you_inside.raw_value" name="action_join" type="object" class="btn btn-sm btn-primary">Join</button>
                                     </div>
                                 </div>
@@ -104,6 +104,9 @@
                                     </templates>
                                 </kanban>
                             </field>
+                            <p class="text-muted">
+                                Operators that do not show any activity In Odoo for more than 30 minutes will be considered as disconnected.
+                            </p>
                         </group>
                         <group string="Options">
                             <field name="button_text"/>
@@ -171,11 +174,40 @@
             </field>
         </record>
 
+        <!-- Canned responses -->
+        <record id="im_livechat_canned_response_view_tree" model="ir.ui.view">
+            <field name="name">im_livechat.canned_response.tree</field>
+            <field name="model">mail.shortcode</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="source"/>
+                    <field name="substitution"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="im_livechat_canned_response_action" model="ir.actions.act_window">
+            <field name="name">Canned Responses</field>
+            <field name="res_model">mail.shortcode</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="im_livechat_canned_response_view_tree"/>
+            <field name="domain">[('shortcode_type','=','text')]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new canned response.
+              </p><p>
+                Canned responses allow you to insert prewritten responses in
+                your messages by typing <i>:shortcut</i>. The shortcut is
+                replaced directly in your message, so that you can still edit
+                it before sending.
+              </p>
+            </field>
+        </record>
 
         <!-- Menu items -->
         <menuitem
             id="menu_livechat_root"
-            name="Website Live Chat"
+            name="Live Chat"
             web_icon="im_livechat,static/description/icon.png"
             groups="im_livechat_group_user"
             sequence="205"/>
@@ -189,12 +221,34 @@
             sequence="5"/>
 
         <menuitem
-            id="session_history"
-            name="History"
+            id="menu_reporting_livechat"
+            name="Report"
             parent="menu_livechat_root"
+            sequence="50"
+            groups="im_livechat_group_manager"/>
+
+
+        <menuitem
+            id="session_history"
+            name="Sessions History"
+            parent="menu_reporting_livechat"
             action="mail_channel_action"
             groups="im_livechat_group_user"
-            sequence="10"/>
+            sequence="1"/>
+
+        <menuitem
+            id="livechat_config"
+            name="Configuration"
+            parent="menu_livechat_root"
+            sequence="55"/>
+
+        <menuitem
+            id="canned_responses"
+            name="Canned Responses"
+            parent="livechat_config"
+            action="im_livechat_canned_response_action"
+            groups="im_livechat_group_user"
+            sequence="15"/>
 
     </data>
-</openerp>
+</odoo>

@@ -1,65 +1,61 @@
 -
     Creating demo data that require looking for accounts
 -
-    !python {model: ir.model.data} : |
-        import time
+    !python {model: ir.model.data, id: False} : |
+        from datetime import datetime
+        from dateutil.relativedelta import relativedelta
         vals = {
             'name': 'Requirements analysis and specification',
             'user_id': ref('base.user_root'),
-            'date': time.strftime('%Y-%m-%d'),
+            'date': (datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d'),
             'unit_amount': 2.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
-            'account_id': ref('analytic.analytic_administratif'),
+            'project_id': ref('project.project_project_2'),
             'amount': -60.00,
-            'is_timesheet': True,
         }
-        self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_requirements')
+        self._update('account.analytic.line', 'hr_timesheet', vals, 'working_hours_requirements')
         vals = {
             'name': 'Design and specification',
             'user_id': ref('base.user_root'),
-            'date': time.strftime('%Y-%m-%d'),
+            'date': (datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d'),
             'unit_amount': 1.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
-            'account_id': ref('analytic.analytic_administratif'),
+            'project_id': ref('project.project_project_2'),
             'amount': -30.00,
-            'is_timesheet': True,
         }
-        self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_design')
+        self._update('account.analytic.line', 'hr_timesheet', vals, 'working_hours_design')
         vals = {
             'name': 'Coding and module testing',
             'user_id': ref('base.user_root'),
-            'date': time.strftime('%Y-%m-%d'),
+            'date': (datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d'),
             'unit_amount': 3.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
-            'account_id': ref('analytic.analytic_administratif'),
+            'project_id': ref('project.project_project_2'),
             'amount': -90.00,
-            'is_timesheet': True,
         }
-        self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_coding')
+        self._update('account.analytic.line', 'hr_timesheet', vals, 'working_hours_coding')
         vals = {
             'name': 'Integration and system testing',
             'user_id': ref('base.user_root'),
-            'date': time.strftime('%Y-%m-%d'),
+            'date': (datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d'),
             'unit_amount': 1.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
-            'account_id': ref('analytic.analytic_administratif'),
+            'project_id': ref('project.project_project_2'),
             'amount': -30.00,
-            'is_timesheet': True,
         }
-        self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_testing')
+        self._update('account.analytic.line', 'hr_timesheet', vals, 'working_hours_testing')
         vals = {
             'name': 'Delivery and maintenance',
             'user_id': ref('base.user_root'),
-            'date': time.strftime('%Y-%m-%d'),
+            'date': (datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d'),
             'unit_amount': 1.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
-            'account_id': ref('analytic.analytic_administratif'),
+            'project_id': ref('project.project_project_2'),
             'amount': -30.00,
-            'is_timesheet': True,
         }
-        self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_maintenance')
+        self._update('account.analytic.line', 'hr_timesheet', vals, 'working_hours_maintenance')

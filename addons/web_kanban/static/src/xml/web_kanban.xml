@@ -1,13 +1,11 @@
 <template>
 
 <t t-name="KanbanView.buttons">
-    <t t-if="display">
-        <div>
-            <button type="button" class="btn btn-primary btn-sm o-kanban-button-new" accesskey="C">
-                <t t-esc="widget.options.create_text || _t('Create')"/>
-            </button>
-        </div>
-    </t>
+    <div>
+        <button type="button" class="btn btn-primary btn-sm o-kanban-button-new" accesskey="c">
+            <t t-esc="widget.options.create_text || _t('Create')"/>
+        </button>
+    </div>
 </t>
 
 <t t-name="KanbanView.Group">
@@ -20,7 +18,7 @@
                 <ul class="dropdown-menu" role="menu">
                     <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
                     <t t-if="widget.grouped_by_m2o">
-                        <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit</a></li>
+                        <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
                         <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
                     </t>
                     <t t-if="widget.has_active_field">

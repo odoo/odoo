@@ -1,83 +1,86 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.addons import decimal_precision as dp
+from odoo.exceptions import UserError
+import math
 
-class change_production_qty(osv.osv_memory):
+class ChangeProductionQty(models.TransientModel):
     _name = 'change.production.qty'
     _description = 'Change Quantity of Products'
 
-    _columns = {
-        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
-    }
+    # TDE FIXME: add production_id field
+    mo_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True)
+    product_qty = fields.Float(
+        'Quantity To Produce',
+        digits=dp.get_precision('Product Unit of Measure'), required=True)
 
-    def default_get(self, cr, uid, fields, context=None):
-        """ To get default values for the object.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values
-        @param context: A standard dictionary
-        @return: A dictionary which of fields with values.
-        """
-        if context is None:
-            context = {}
-        res = super(change_production_qty, self).default_get(cr, uid, fields, context=context)
-        prod_obj = self.pool.get('mrp.production')
-        prod = prod_obj.browse(cr, uid, context.get('active_id'), context=context)
-        if 'product_qty' in fields:
-            res.update({'product_qty': prod.product_qty})
+    @api.model
+    def default_get(self, fields):
+        res = super(ChangeProductionQty, self).default_get(fields)
+        if 'mo_id' in fields and not res.get('mo_id') and self._context.get('active_model') == 'mrp.production' and self._context.get('active_id'):
+            res['mo_id'] = self._context['active_id']
+        if 'product_qty' in fields and not res.get('product_qty') and res.get('mo_id'):
+            res['product_qty'] = self.env['mrp.production'].browse(res.get['mo_id']).product_qty
         return res
 
-    def _update_product_to_produce(self, cr, uid, prod, qty, context=None):
-        move_lines_obj = self.pool.get('stock.move')
-        for m in prod.move_created_ids:
-            move_lines_obj.write(cr, uid, [m.id], {'product_uom_qty': qty})
+    @api.model
+    def _update_product_to_produce(self, production, qty):
+        production_move = production.move_finished_ids.filtered(lambda x:x.product_id.id == production.product_id.id and x.state not in ('done', 'cancel'))
+        if production_move:
+            production_move.write({'product_uom_qty': qty})
+        else:
+            production_move = production._generate_finished_moves()
+            production_move = production.move_finished_ids.filtered(lambda x : x.state not in ('done', 'cancel') and production.product_id.id == x.product_id.id)
+            production_move.write({'product_uom_qty': qty})
 
-    def change_prod_qty(self, cr, uid, ids, context=None):
-        """
-        Changes the Quantity of Product.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected
-        @param context: A standard dictionary
-        @return:
-        """
-        record_id = context and context.get('active_id',False)
-        assert record_id, _('Active Id not found')
-        prod_obj = self.pool.get('mrp.production')
-        bom_obj = self.pool.get('mrp.bom')
-        move_obj = self.pool.get('stock.move')
-        uom_obj = self.pool.get('product.uom')
-        for wiz_qty in self.browse(cr, uid, ids, context=context):
-            prod = prod_obj.browse(cr, uid, record_id, context=context)
-            prod_obj.write(cr, uid, [prod.id], {'product_qty': wiz_qty.product_qty})
-            prod_obj.action_compute(cr, uid, [prod.id])
-
-            for move in prod.move_lines:
-                bom_point = prod.bom_id
-                bom_id = prod.bom_id.id
-                if not bom_point:
-                    bom_id = bom_obj._bom_find(cr, uid, product_id=prod.product_id.id, context=context)
-                    if not bom_id:
-                        raise UserError(_("Cannot find bill of material for this product."))
-                    prod_obj.write(cr, uid, [prod.id], {'bom_id': bom_id})
-                    bom_point = bom_obj.browse(cr, uid, [bom_id])[0]
-
-                if not bom_id:
-                    raise UserError(_("Cannot find bill of material for this product."))
-
-                factor = uom_obj._compute_qty(cr, uid, prod.product_uom.id, prod.product_qty, bom_point.product_uom.id)
-                product_details, workcenter_details = \
-                    bom_obj._bom_explode(cr, uid, bom_point, prod.product_id, factor / bom_point.product_qty, [], context=context)
-                for r in product_details:
-                    if r['product_id'] == move.product_id.id:
-                        move_obj.write(cr, uid, [move.id], {'product_uom_qty': r['product_qty']})
-            if prod.move_prod_id:
-                move_obj.write(cr, uid, [prod.move_prod_id.id], {'product_uom_qty' :  wiz_qty.product_qty})
-            self._update_product_to_produce(cr, uid, prod, wiz_qty.product_qty, context=context)
+    @api.multi
+    def change_prod_qty(self):
+        for wizard in self:
+            production = wizard.mo_id
+            produced = sum(production.move_finished_ids.mapped('quantity_done'))
+            if wizard.product_qty < produced:
+                raise UserError(_("You have already processed %d. Please input a quantity higher than %d ")%(produced, produced))
+            production.write({'product_qty': wizard.product_qty})
+            done_moves = production.move_finished_ids.filtered(lambda x: x.state == 'done' and x.product_id == production.product_id)
+            qty_produced = production.product_id.uom_id._compute_quantity(sum(done_moves.mapped('product_qty')), production.product_uom_id)
+            factor = production.product_uom_id._compute_quantity(production.product_qty - qty_produced, production.bom_id.product_uom_id) / production.bom_id.product_qty
+            boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
+            for line, line_data in lines:
+                production._update_raw_move(line, line_data)
+            operation_bom_qty = {}
+            for bom, bom_data in boms:
+                for operation in bom.routing_id.operation_ids:
+                    operation_bom_qty[operation.id] = bom_data['qty']
+            self._update_product_to_produce(production, production.product_qty - qty_produced)
+            moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            moves.do_unreserve()
+            moves.action_assign()
+            for wo in production.workorder_ids:
+                operation = wo.operation_id
+                if operation_bom_qty.get(operation.id):
+                    cycle_number = math.ceil(operation_bom_qty[operation.id] / operation.workcenter_id.capacity)  # TODO: float_round UP
+                    wo.duration_expected = (operation.workcenter_id.time_start +
+                                 operation.workcenter_id.time_stop +
+                                 cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
+                if production.product_id.tracking == 'serial':
+                    quantity = 1.0
+                else:
+                    quantity = wo.qty_production - wo.qty_produced
+                    quantity = quantity if (quantity > 0) else 0
+                wo.qty_producing = quantity
+                if wo.qty_produced < wo.qty_production and wo.state == 'done':
+                    wo.state = 'progress'
+                # assign moves; last operation receive all unassigned moves
+                # TODO: following could be put in a function as it is similar as code in _workorders_create
+                # TODO: only needed when creating new moves
+                moves_raw = production.move_raw_ids.filtered(lambda move: move.operation_id == operation and move.state not in ('done', 'cancel'))
+                if wo == production.workorder_ids[-1]:
+                    moves_raw |= production.move_raw_ids.filtered(lambda move: not move.operation_id)
+                moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
+                moves_raw.mapped('move_lot_ids').write({'workorder_id': wo.id})
+                (moves_finished + moves_raw).write({'workorder_id': wo.id})
+                if wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_lot_ids:
+                    wo._generate_lot_ids()
         return {}

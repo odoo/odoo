@@ -71,28 +71,46 @@
 
         <!-- Page : Rating of a particular project -->
         <template id="project_rating_data" name="Project Issue Rating Page">
-            <div class="oe_rate">
-                <img src='/rating/static/src/img/rating_10.png' alt="Happy Feedback" class="pull-left" style="width:24px"/>
-                <div class="progress mt4">
-                    <div t-attf-class="progress-bar progress-bar-success" role="progressbar" t-attf-style="width: #{stats[duration][10]}%;">
-                        <t t-esc="stats[duration][10]"/>%%
-                    </div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success" t-attf-style="width: #{stats[duration][10]}%;" title="Happy">
+                    <t t-esc="int(stats[duration][10])"/>%
                 </div>
-            </div><div class="oe_rate mt16">
-                <img src='/rating/static/src/img/rating_5.png' alt="Normal Feedback" class="pull-left" style="width:24px"/>
-                <div class="progress mt4">
-                    <div t-attf-class="progress-bar progress-bar-warning" role="progressbar" t-attf-style="width: #{stats[duration][5]}%;">
-                        <t t-esc="stats[duration][5]"/>%%
-                    </div>
+                <div class="progress-bar progress-bar-warning" t-attf-style="width: #{stats[duration][5]}%;" title="Average">
+                    <t t-esc="int(stats[duration][5])"/>%
                 </div>
-            </div><div class="oe_rate mt16">
-                <img src='/rating/static/src/img/rating_0.png' alt="Bad Feedback" class="pull-left" style="width:24px"/>
-                <div class="progress mt4">
-                    <div t-attf-class="progress-bar progress-bar-danger" role="progressbar" t-attf-style="width: #{stats[duration][0]}%;">
-                        <t t-esc="stats[duration][0]"/>%%
-                    </div>
+                <div class="progress-bar progress-bar-danger" t-attf-style="width: #{stats[duration][1]}%;" title="Bad">
+                    <t t-esc="int(stats[duration][1])"/>%
                 </div>
             </div>
+        </template>
+
+        <template id="project_data_satisfaction">
+            <h3 class="page-header">Customer Satisfaction of <t t-esc="type"/></h3>
+            <div class="row">
+                <div class="col-sm-4">
+                    <h5>Last 7 days</h5>
+                    <t t-set="duration" t-value="7"/>
+                    <t t-set="stats" t-value="data['stats']"/>
+                    <t t-call="website_rating_project_issue.project_rating_data"/>
+                </div>
+                <div class="col-sm-4">
+                    <h5>Last 30 days</h5>
+                    <t t-set="duration" t-value="30"/>
+                    <t t-set="stats" t-value="data['stats']"/>
+                    <t t-call="website_rating_project_issue.project_rating_data"/>
+                </div>
+                <div class="col-sm-4">
+                    <h5>Last 3 months</h5>
+                    <t t-set="duration" t-value="90"/>
+                    <t t-set="stats" t-value="data['stats']"/>
+                    <t t-call="website_rating_project_issue.project_rating_data"/>
+                </div>
+
+            </div>
+            <h5 class="page-header">Latest Feedbacks</h5>
+            <t t-foreach="data['ratings']" t-as="rating" class="media">
+                <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" t-att-title="rating.res_name"/>
+            </t>
         </template>
 
         <template id="project_rating_page" name="Project Issue Rating Page">
@@ -110,29 +128,12 @@
                                 </t>
                             </div>
                             <div class="col-md-8">
-                                <h3 class="page-header">Customer Satisfaction</h3>
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <h4>Last 7 days</h4>
-                                        <t t-set="duration" t-value="7"/>
-                                        <t t-call="website_rating_project_issue.project_rating_data"/>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <h4>Last 30 days</h4>
-                                        <t t-set="duration" t-value="30"/>
-                                        <t t-call="website_rating_project_issue.project_rating_data"/>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <h4>Last 3 months</h4>
-                                        <t t-set="duration" t-value="90"/>
-                                        <t t-call="website_rating_project_issue.project_rating_data"/>
-                                    </div>
-
-                                </div>
-                                <h3 class="page-header">Latest Feedbacks</h3>
-                                <t t-foreach="ratings" t-as="rating" class="media">
-                                    <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" t-att-title="rating.res_name"/>
-                                </t>
+                                <t t-set="type" t-value="'Tasks'"/>
+                                <t t-set="data" t-value="task_data"/>
+                                <t t-call="website_rating_project_issue.project_data_satisfaction"/>
+                                <t t-set="type" t-value="'Issues'"/>
+                                <t t-set="data" t-value="issue_data"/>
+                                <t t-call="website_rating_project_issue.project_data_satisfaction"/>
                             </div>
                         </div>
                     </div>

@@ -32,7 +32,6 @@
       - delay: 1
         name: base.res_partner_2
         min_qty: 2.0
-        qty: 5.0
     standard_price: 189.0
     type: product
     uom_id: product.product_uom_unit
@@ -40,20 +39,19 @@
 - 
   I add the routes manufacture and mto to the product
 - 
-  !python {model: product.product}: |
-    route_warehouse0_manufacture = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).manufacture_pull_id.route_id.id 
-    route_warehouse0_mto = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).mto_pull_id.route_id.id 
-    self.write(cr, uid, ref('product_product_slidermobile0'), { 'route_ids': [(6, 0, [route_warehouse0_mto,route_warehouse0_manufacture])]}, context=context)
+  !python {model: product.product, id: product_product_slidermobile0}: |
+    route_warehouse0_manufacture_id = self.env['stock.warehouse'].browse(ref('stock.warehouse0')).manufacture_pull_id.route_id.id 
+    route_warehouse0_mto_id = self.env['stock.warehouse'].browse(ref('stock.warehouse0')).mto_pull_id.route_id.id 
+    self.write({'route_ids': [(6, 0, [route_warehouse0_mto_id,route_warehouse0_manufacture_id])]})
 -
   I create a Bill of Material record for Slider Mobile
 -
   !record {model: mrp.bom, id: mrp_bom_slidermobile0}:
     company_id: base.main_company
-    product_efficiency: 1.0
     product_tmpl_id: product_product_slidermobile0_product_template
     product_id: product_product_slidermobile0
     product_qty: 1.0
-    product_uom: product.product_uom_unit
+    product_uom_id: product.product_uom_unit
     sequence: 0.0
     type: normal
 -
@@ -79,42 +77,36 @@
 -
   I confirm the sale order
 -
-  !python {model: sale.order}: |
-    self.action_confirm(cr, uid, ref("sale_order_so0"), context=context)
+  !python {model: sale.order, id: sale_order_so0}: |
+    self.action_confirm()
 -
   I verify that a procurement has been generated for sale order
 -
-  !python {model: procurement.order}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
-    assert proc_ids, 'No Procurements!'
+  !python {model: procurement.order, id: False}: |
+    so = self.env['sale.order'].browse(ref("sale_order_so0"))
+    procs = self.search([('origin','=',so.name)])
+    assert procs, 'No Procurements!'
 -
   Then I click on the "Run Procurement" button
 -
-  !python {model: procurement.order}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    proc_ids = self.search(cr, uid, [('origin','like',so.name)])
-    self.run(cr, uid, proc_ids)
+  !python {model: procurement.order, id: False}: |
+    so = self.env['sale.order'].browse(ref("sale_order_so0"))
+    procs = self.search([('origin','like',so.name)])
+    procs.run()
 -
   I verify that a procurement state is "running"
 -
-  !python {model: procurement.order}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    proc_ids = self.search(cr, uid, [('origin','like',so.name)])
+  !python {model: procurement.order, id: False}: |
+    so = self.env['sale.order'].browse(ref("sale_order_so0"))
+    procs = self.search([('origin','like',so.name)])
     # Check that all procurement are running
-    for procu in self.browse(cr,uid,proc_ids,context=context):        
+    for procu in procs:        
         assert procu.state == u'running', 'Procurement with id %d should be with a state "running" but is with a state : %s!' %(procu.id,procu.state)
 -
   I verify that a manufacturing order has been generated, and that its name and reference are correct
 -
-  !python {model: sale.order}: |
-    mnf_obj = self.pool.get('mrp.production')
-    so = self.browse(cr, uid, ref("sale_order_so0"))
-    mnf_id = mnf_obj.search(cr, uid, [('origin','like',so.name)])
-    assert mnf_id, 'Manufacturing order has not been generated'
-    mo = mnf_obj.browse(cr, uid, mnf_id)[0]
-    assert mo.sale_name == so.name, 'Wrong Name for the Manufacturing Order. Expected %s, Got %s' % (so.name, mo.sale_name)
-    assert mo.sale_ref == so.client_order_ref, 'Wrong Sale Reference for the Manufacturing Order'
+  !python {model: sale.order, id: sale_order_so0}: |
+    mo = self.env['mrp.production'].search([('origin','like',self.name)], limit=1)
+    assert mo, 'Manufacturing order has not been generated'
+    assert mo.sale_name == self.name, 'Wrong Name for the Manufacturing Order. Expected %s, Got %s' % (self.name, mo.sale_name)
+    assert mo.sale_ref == self.client_order_ref, 'Wrong Sale Reference for the Manufacturing Order'

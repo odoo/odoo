@@ -2,6 +2,7 @@ odoo.define('im_livechat.im_livechat', function (require) {
 "use strict";
 
 var bus = require('bus.bus').bus;
+var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var time = require('web.time');
@@ -31,6 +32,7 @@ var LivechatButton = Widget.extend({
         this.channel = null;
         this.chat_window = null;
         this.messages = [];
+        this.server_url = server_url;
     },
 
     willStart: function () {
@@ -46,7 +48,7 @@ var LivechatButton = Widget.extend({
             });
         } else {
             var channel = JSON.parse(cookie);
-            ready = session.rpc("/im_livechat/history", {channel_id: channel.id, limit: 100}).then(function (history) {
+            ready = session.rpc("/mail/chat_history", {uuid: channel.uuid, limit: 100}).then(function (history) {
                 self.history = history;
             });
         }
@@ -55,10 +57,11 @@ var LivechatButton = Widget.extend({
 
     start: function () {
         this.$el.text(this.options.button_text);
+        var small_screen = config.device.size_class === config.device.SIZES.XS;
         if (this.history) {
             _.each(this.history.reverse(), this.add_message.bind(this));
             this.open_chat();
-        } else if (this.rule.action === 'auto_popup') {
+        } else if (!small_screen && this.rule.action === 'auto_popup') {
             var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup');
             if (!auto_popup_cookie || JSON.parse(auto_popup_cookie)) {
                 this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
@@ -79,7 +82,7 @@ var LivechatButton = Widget.extend({
         return this._super();
     },
 
-    load_qweb_template: function () {
+    load_qweb_template: function(){
         var xml_files = ['/mail/static/src/xml/chat_window.xml',
                          '/mail/static/src/xml/thread.xml',
                          '/im_livechat/static/src/xml/im_livechat.xml'];
@@ -142,7 +145,7 @@ var LivechatButton = Widget.extend({
             self.$el.hide();
         });
         this.chat_window.on("close_chat_session", this, function () {
-            var input_disabled = this.chat_window.$(".o_chat_input input").prop('disabled');
+            var input_disabled = this.chat_window.$(".o_chat_composer input").prop('disabled');
             var ask_fb = !input_disabled && _.find(this.messages, function (msg) {
                 return msg.id !== '_welcome';
             });
@@ -193,6 +196,7 @@ var LivechatButton = Widget.extend({
             date: moment(time.str_to_datetime(data.date)),
             is_needaction: false,
             is_note: data.is_note,
+            customer_email_data: []
         };
 
         // Compute displayed author name or email
@@ -200,10 +204,11 @@ var LivechatButton = Widget.extend({
                                this.options.default_username;
 
         // Compute the avatar_url
+        msg.avatar_src = this.server_url;
         if (msg.author_id && msg.author_id[0]) {
-            msg.avatar_src = "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
+            msg.avatar_src += "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
         } else {
-            msg.avatar_src = "/mail/static/src/img/smiley/avatar.jpg";
+            msg.avatar_src += "/mail/static/src/img/smiley/avatar.jpg";
         }
 
         if (options && options.prepend) {
@@ -236,7 +241,7 @@ var LivechatButton = Widget.extend({
     },
 
     ask_feedback: function () {
-        this.chat_window.$(".o_chat_input input").prop('disabled', true);
+        this.chat_window.$(".o_chat_composer input").prop('disabled', true);
 
         var feedback = new Feedback(this, this.channel.uuid);
         feedback.replace(this.chat_window.thread.$el);

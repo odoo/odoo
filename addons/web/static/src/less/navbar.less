@@ -1,0 +1,163 @@
+
+.o_main_navbar {
+    height: @odoo-navbar-height;
+    border: 1px solid @odoo-navbar-inverse-link-hover-bg;
+    background-color: @odoo-brand-primary;
+    color: white;
+    .box-shadow(0px 0px 8px @odoo-main-text-color);
+
+    > a, > button {
+        float: left;
+        width: @odoo-navbar-height - 2;
+        height: @odoo-navbar-height - 2;
+        border: none;
+        padding: 0;
+        line-height: @odoo-navbar-height - 2;
+        background-color: transparent;
+        text-align: center;
+        color: inherit;
+
+        font-size: 18px;
+        .user-select(none);
+
+        &:hover, &:focus {
+            background-color: @odoo-navbar-inverse-link-hover-bg;
+            color: inherit;
+        }
+        &:focus, &:active, &:focus:active {
+            outline: none;
+        }
+    }
+
+    > .o_menu_toggle {
+        margin-right: 5px;
+    }
+
+    > ul {
+        display: block;
+        float: left;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        > li {
+            position: relative;
+            display: block;
+            float: left;
+
+            > a {
+                display: block;
+                height: @odoo-navbar-height - 2;
+                padding: 0 10px;
+                color: white;
+                line-height: @odoo-navbar-height - 2;
+
+                &:hover {
+                    background-color: @odoo-navbar-inverse-link-hover-bg;
+                }
+
+                &:focus, &:active, &:focus:active {
+                    outline: none;
+                }
+            }
+        }
+
+        &.o_menu_systray {
+            float: right;
+            .open .dropdown-menu {
+                left: auto;
+                right: 0;
+            }
+        }
+    }
+
+    .o_menu_brand {
+        display: none;
+    }
+
+    .open .dropdown-menu {
+        max-height: 90vh; // the dropdown should not overstep the viewport
+        overflow: auto;
+        margin-top: 0;
+
+        .o-menu-indentation(@index) when (@index < 6) {
+            > li.o_menu_header_lvl_@{index}, > li .o_menu_entry_lvl_@{index} {
+                padding-left: @odoo-dropdown-hpadding + (@index - 2)*12px;
+            }
+            .o-menu-indentation(@index + 1);
+        }
+        .o-menu-indentation(3);
+    }
+
+    @media (max-width: @screen-xs-max) {
+        .o-transition(height, 200ms, linear);
+
+        position: relative;
+        height: @odoo-navbar-height;
+        overflow: hidden;
+
+        > ul {
+            > li {
+                float: none;
+                .dropdown-backdrop {
+                    display: none;
+                }
+
+                &.open .dropdown-menu {
+                    max-height: none;
+                }
+            }
+
+            &.o_menu_sections {
+                width: 100%;
+
+                > li.open .dropdown-menu {
+                    position: static;
+                    float: none;
+                    background-color: transparent;
+                    box-shadow: none;
+                    border: none;
+                    overflow: visible;
+
+                    > li > a {
+                        background-color: transparent;
+                        color: inherit;
+                    }
+                }
+            }
+
+            &.o_menu_systray {
+                .o-position-absolute(0px, @odoo-navbar-height - 2, auto, @odoo-navbar-height - 2);
+                height: @odoo-navbar-height - 2;
+                text-align: right;
+
+                > li {
+                    display: inline-block;
+
+                    &.open .dropdown-menu {
+                        .o-position-absolute(@odoo-navbar-height, 0, 0, 0);
+                        position: fixed;
+                        width: auto;
+                    }
+                }
+
+                .o_user_menu .oe_topbar_name {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: @screen-xs-max) {
+    body.o_mobile_menu_opened {
+        overflow: hidden;
+        height: 100%;
+        height: 100vh;
+
+        .o_main_navbar {
+            height: 100%;
+            overflow: auto;
+        }
+    }
+}

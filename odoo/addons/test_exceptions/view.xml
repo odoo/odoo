@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_test_exceptions_model" model="ir.ui.view">
+            <field name="name">Test exceptions</field>
+            <field name="model">test.exceptions.model</field>
+            <field name="arch" type="xml">
+                <form string="Test exceptions" version="6.1">
+                    <label string="Each button generates a specific exception on the server. The text on the right is the expected representation of the exception when displayed on the client. Button marked with a '*' use safe_eval()."/>
+                    <separator string="" colspan="8"/>
+                    <group colspan="8" col="8">
+                    <group colspan="4" col="8">
+                      <group colspan="8" col="8">
+                          <button name="generate_except_osv" string="except_osv" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_except_orm" string="except_orm" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_warning" string="Warning" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_redirect_warning" string="RedirectWarning" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Warning-description-redirection button"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_access_denied" string="AccessDenied" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Access denied-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_access_error" string="AccessError" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Access rights error-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_exc_access_denied" string="Exc AccessDenied" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Access denied-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_undefined" string="Undefined" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Server error-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_user_error" string="UserError" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_missing_error" string="MissingError" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Missing Error-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_validation_error" string="ValidationError" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Validation Error-description"/>
+                      </group>
+                    </group>
+                    <group colspan="4" col="8">
+                      <group colspan="8" col="8">
+                          <button name="generate_except_osv_safe_eval" string="except_osv*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_except_orm_safe_eval" string="except_orm*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_warning_safe_eval" string="Warning*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_redirect_warning_safe_eval" string="RedirectWarning*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Warning-description-redirection button"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_access_denied_safe_eval" string="AccessDenied*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Access denied-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_access_error_safe_eval" string="AccessError*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Access rights error-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_exc_access_denied_safe_eval" string="Exc AccessDenied*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Access denied-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_undefined_safe_eval" string="Undefined*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Server error-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_user_error_safe_eval" string="UserError*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_missing_error_safe_eval" string="MissingError*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Missing Error-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_validation_error_safe_eval" string="ValidationError*" type="object" icon="fa-refresh text-primary" colspan="1"/>
+                          <label string="Validation Error-description"/>
+                      </group>
+                    </group>
+                    </group>
+                </form>
+           </field>
+        </record>
+
+        <record id="action_test_exceptions" model="ir.actions.act_window">
+            <field name="name">Test exceptions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">test.exceptions.model</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_test_exceptions" parent="base.menu_tests" name="Test exceptions"/>
+
+        <menuitem id="menu_test_exceptions_leaf"
+            name="Test exceptions"
+            action="action_test_exceptions"
+            parent="menu_test_exceptions"/>
+    </data>
+</odoo>

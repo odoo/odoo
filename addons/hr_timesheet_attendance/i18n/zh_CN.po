@@ -1,0 +1,268 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet_attendance
+# 
+# Translators:
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Bo Cao <cao.poobo@hotmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Bo Cao <cao.poobo@hotmail.com>, 2017\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_timesheet_attendance
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
+msgid "<span class=\"o_stat_text\">Timesheet</span>"
+msgstr "<span class=\"o_stat_text\">工时表</span>"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,help:hr_timesheet_attendance.field_project_config_settings_timesheet_max_difference
+#: model:ir.model.fields,help:hr_timesheet_attendance.field_res_company_timesheet_max_difference
+msgid ""
+"Allowed difference in hours between the sign in/out and the timesheet "
+"computation for one sheet. Set this to 0 if you do not want any control."
+msgstr "登录/注销和在一个工时表里的容许的差异小时。如果你不想这样控制设为0."
+
+#. module: hr_timesheet_attendance
+#: model:ir.model,name:hr_timesheet_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_total_attendance
+msgid "Attendance"
+msgstr "出勤"
+
+#. module: hr_timesheet_attendance
+#: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_2_hr_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_attendance_count
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_attendances_ids
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
+msgid "Attendances"
+msgstr "出勤"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model,name:hr_timesheet_attendance.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_date
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_name
+msgid "Date"
+msgstr "日期"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_total_difference
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_total_difference
+msgid "Difference"
+msgstr "差异"
+
+#. module: hr_timesheet_attendance
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
+msgid "Differences"
+msgstr "差异"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_display_name
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: hr_timesheet_attendance
+#: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
+msgid "HR Timesheet/Attendance Report"
+msgstr "HR工时表/出勤报告"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_id
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report___last_update
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day___last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_period_ids
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_day_tree
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
+msgid "Period"
+msgstr "期间"
+
+#. module: hr_timesheet_attendance
+#: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:76
+#, python-format
+msgid ""
+"Please verify that the total difference of the sheet is lower than %.2f."
+msgstr "请核实表格的总差异低于%.2f。"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_attendance_sheet_id
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_attendance_sheet_id_computed
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_sheet_id
+msgid "Sheet"
+msgstr "表格"
+
+#. module: hr_timesheet_attendance
+#: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:85
+#, python-format
+msgid ""
+"The timesheet cannot be validated as it contains an attendance record with "
+"no Check Out)."
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "This Month"
+msgstr "本月"
+
+#. module: hr_timesheet_attendance
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "This Week"
+msgstr "本周"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_sheet_sheet
+msgid "Timesheet"
+msgstr "工时表"
+
+#. module: hr_timesheet_attendance
+#: model:ir.ui.menu,name:hr_timesheet_attendance.menu_hr_timesheet_attendance_report
+msgid "Timesheet / Attendance"
+msgstr "工时表/出勤"
+
+#. module: hr_timesheet_attendance
+#: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
+msgid "Timesheet Activities"
+msgstr "工时表活动"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_res_company_timesheet_max_difference
+msgid "Timesheet allowed difference(Hours)"
+msgstr "工时表允许的差异（小时）"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_project_config_settings_timesheet_max_difference
+msgid "Timesheet allowed difference(Hours) *"
+msgstr "计工单允许的差异（小时）*"
+
+#. module: hr_timesheet_attendance
+#: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_by_account
+msgid "Timesheet by Account"
+msgstr "工时表，按账户"
+
+#. module: hr_timesheet_attendance
+#: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_by_day
+msgid "Timesheet by Day"
+msgstr "工时表按天"
+
+#. module: hr_timesheet_attendance
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
+msgid "Timesheets"
+msgstr "工时表"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_sheet_sheet_day
+msgid "Timesheets by Period"
+msgstr "工时表，按期间"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_total_attendance
+msgid "Total Attendance"
+msgstr "出勤总计"
+
+#. module: hr_timesheet_attendance
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_day_tree
+msgid "Total Attendances"
+msgstr "出勤总计"
+
+#. module: hr_timesheet_attendance
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_day_tree
+msgid "Total Difference"
+msgstr "差异合计"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_total_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_total_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_day_tree
+msgid "Total Timesheet"
+msgstr "总工时表"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_attendance
+msgid "Total attendance"
+msgstr "出勤总计"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_difference
+msgid "Total difference"
+msgstr "差异合计"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_timesheet
+msgid "Total timesheet"
+msgstr "总计工单"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_user_id
+msgid "User id"
+msgstr "用户 ID"
+
+#. module: hr_timesheet_attendance
+#: code:addons/hr_timesheet_attendance/models/hr_attendance.py:98
+#, python-format
+msgid ""
+"You can not enter an attendance date outside the current timesheet dates."
+msgstr "你无法录入当前工时表日期外的出勤。"
+
+#. module: hr_timesheet_attendance
+#: code:addons/hr_timesheet_attendance/models/hr_attendance.py:96
+#, python-format
+msgid ""
+"You can not enter an attendance in a submitted timesheet. Ask your manager "
+"to reset it before adding attendance."
+msgstr "在一张已提交的工时表上你无法录入出勤。在添加出勤信息前，联系你的主管将它重置。"
+
+#. module: hr_timesheet_attendance
+#: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:53
+#, python-format
+msgid "You cannot delete a timesheet that has attendance entries."
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: code:addons/hr_timesheet_attendance/models/hr_attendance.py:113
+#, python-format
+msgid ""
+"You cannot enter an attendance date outside the current timesheet dates."
+msgstr "无法录入当前时间表以外的出勤日期"
+
+#. module: hr_timesheet_attendance
+#: code:addons/hr_timesheet_attendance/models/hr_attendance.py:119
+#, python-format
+msgid "You cannot modify an entry in a confirmed timesheet"
+msgstr "你无法修改一个确认的工时表"
+
+#. module: hr_timesheet_attendance
+#: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
+msgid "hr.timesheet.attendance.report"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model:ir.model,name:hr_timesheet_attendance.model_project_config_settings
+msgid "project.config.settings"
+msgstr "项目配置"
+
+#. module: hr_timesheet_attendance
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
+#: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "timesheet attendance"
+msgstr "工时表出勤"

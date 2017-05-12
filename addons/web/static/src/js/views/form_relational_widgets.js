@@ -6,13 +6,12 @@ var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var common = require('web.form_common');
-var FormView = require('web.FormView');
 var ListView = require('web.ListView');
+require('web.ListEditor'); // one must be sure that the include of ListView are done (for eg: add start_edition methods)
 var Model = require('web.DataModel');
 var session = require('web.session');
 var utils = require('web.utils');
 var ViewManager = require('web.ViewManager');
-var formats = require('web.formats');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -27,7 +26,7 @@ var M2ODialog = Dialog.extend({
             title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
             buttons: [
-                {text: _t('Create'), classes: 'btn-primary', click: function() {
+                {text: _t('Create'), classes: 'btn-primary', click: function(e) {
                     if (this.$("input").val() !== ''){
                         this.getParent()._quick_create(this.$("input").val());
                         this.close();
@@ -57,16 +56,15 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
     events: {
         'keydown input': function (e) {
             switch (e.which) {
-            case $.ui.keyCode.UP:
-            case $.ui.keyCode.DOWN:
-                e.stopPropagation();
+                case $.ui.keyCode.UP:
+                case $.ui.keyCode.DOWN:
+                    e.stopPropagation();
             }
         },
     },
     init: function(field_manager, node) {
         this._super(field_manager, node);
         common.CompletionFieldMixin.init.call(this);
-        this.set({'value': false});
         this.display_value = {};
         this.display_value_backup = {};
         this.last_search = [];
@@ -92,8 +90,9 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
         common.ReinitializeFieldMixin.initialize_field.call(this);
     },
     initialize_content: function() {
-        if (!this.get("effective_readonly"))
+        if (!this.get("effective_readonly")) {
             this.render_editable();
+        }
     },
     destroy_content: function () {
         if (this.$dropdown) {
@@ -101,6 +100,9 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             delete this.$dropdown;
         }
         if (this.$input) {
+            if (this.$input.data('ui-autocomplete')) {
+                this.$input.autocomplete("destroy");
+            }
             this.$input.closest(".modal .modal-content").off('scroll');
             this.$input.off('keyup blur autocompleteclose autocompleteopen ' +
                             'focus focusout change keydown');
@@ -126,16 +128,15 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
     },
     render_editable: function() {
         var self = this;
-        this.$input = this.$el.find("input");
+        this.$input = this.$("input");
 
         this.init_error_displayer();
-
         self.$input.on('focus', function() {
             self.hide_error_displayer();
         });
 
-        this.$dropdown = this.$el.find(".oe_m2o_drop_down_button");
-        this.$follow_button = $(".oe_m2o_cm_button", this.$el);
+        this.$dropdown = this.$(".o_dropdown_button");
+        this.$follow_button = this.$(".o_external_button");
 
         this.$follow_button.click(function(ev) {
             ev.preventDefault();
@@ -145,7 +146,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             }
             var context = self.build_context().eval();
             var model_obj = new Model(self.field.relation);
-            model_obj.call('get_formview_id', [self.get("value"), context]).then(function(view_id){
+            model_obj.call('get_formview_id', [[self.get("value")], context]).then(function(view_id){
                 var pop = new common.FormViewDialog(self, {
                     res_model: self.field.relation,
                     res_id: self.get("value"),
@@ -178,10 +179,9 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
         };
         this.$input.keydown(input_changed);
         this.$input.change(input_changed);
-        this.$dropdown.click(function() {
-            self.$input.focus();
+        this.$input.on('click', function() {
             if (self.$input.autocomplete("widget").is(":visible")) {
-                self.$input.autocomplete("close");                
+                self.$input.autocomplete("close");
             } else {
                 if (self.get("value") && ! self.floating) {
                     self.$input.autocomplete("search", "");
@@ -299,7 +299,6 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
         });
         // set position for list of suggestions box
         this.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
-        this.$input.autocomplete("widget").openerpClass();
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
             if (e.which === 13) { // ENTER
@@ -312,8 +311,8 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
     },
     render_value: function(no_recurse) {
         var self = this;
-        if (! this.get("value")) {
-            this.display_string("");
+        if (!this.get("value")) {
+            this.display_string(null);
             return;
         }
         var display = this.display_value["" + this.get("value")];
@@ -321,11 +320,12 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             this.display_string(display);
             return;
         }
-        if (! no_recurse) {
+        if (!no_recurse) {
             var dataset = new data.DataSetStatic(this, this.field.relation, self.build_context());
             var def = this.alive(dataset.name_get([self.get("value")])).done(function(data) {
                 if (!data[0]) {
-                    self.do_warn(_t("Render"), _t("No value found for the field "+self.field.string+" for value "+self.get("value")));
+                    self.do_warn(_t("Render"),
+                        _.str.sprintf(_t("No value found for the field %s for value %s"), self.field.string, self.get("value")));
                     return;
                 }
                 self.display_value["" + self.get("value")] = data[0][1];
@@ -341,38 +341,34 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             }
         }
     },
-    display_string: function(str) {
-        var self = this;
+    display_string: function (str) {
+        var noValue = (str === null);
         if (!this.get("effective_readonly")) {
-            this.$input.val(str.split("\n")[0]);
+            this.$input.val(noValue ? "" : (str.split("\n")[0].trim() || $(data.noDisplayContent).text()));
             this.current_display = this.$input.val();
-            if (this.is_false()) {
-                this.$('.oe_m2o_cm_button').css({'display':'none'});
-            } else {
-                this.$('.oe_m2o_cm_button').css({'display':'inline'});
-            }
+            this.$follow_button.toggle(!this.is_false());
+            this.$el.toggleClass('o_with_button', !!this.$follow_button && this.$follow_button.length > 0 && !this.is_false());
         } else {
-            var lines = _.escape(str).split("\n");
-            var link = "";
-            var follow = "";
-            link = lines[0];
-            follow = _.rest(lines).join("<br />");
-            if (follow)
-                link += "<br />";
-            var $link = this.$el.find('.oe_form_uri')
-                 .unbind('click')
-                 .html(link);
-            if (! this.options.no_open)
-                $link.click(function () {
-                    var context = self.build_context().eval();
-                    var model_obj = new Model(self.field.relation);
-                    model_obj.call('get_formview_action', [self.get("value"), context]).then(function(action){
-                        self.do_action(action);
-                    });
-                    return false;
-                 });
-            $(".oe_form_m2o_follow", this.$el).html(follow);
+            this.$el.html(noValue ? "" : (_.escape(str.trim()).split("\n").join("<br/>") || data.noDisplayContent));
+            // Define callback to perform when clicking on the field
+            if (!this.options.no_open) {
+                // Remove potential previously added event handler
+                this.$el.off('click');
+                // Ensure that the callback is performed only once even with multiple clicks
+                var execute_formview_action_once = _.once(this.execute_formview_action.bind(this));
+                this.$el.click(function (ev) {
+                    ev.preventDefault();
+                    execute_formview_action_once();
+                });
+            }
         }
+    },
+    execute_formview_action: function() {
+        var self = this;
+        var context = self.build_context().eval();
+        (new Model(self.field.relation)).call('get_formview_action', [[self.get("value")], context]).then(function(action) {
+            self.do_action(action);
+        });
     },
     set_value: function(value_) {
         if (value_ instanceof Array) {
@@ -419,11 +415,6 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
         this.no_ed = false;
         return res;
     },
-    set_dimensions: function (height, width) {
-        this._super(height, width);
-        if (!this.get("effective_readonly") && this.$input)
-            this.$input.css('height', height);
-    }
 });
 
 /**
@@ -587,40 +578,39 @@ var AbstractManyField = common.AbstractField.extend({
         _.each(command_list, function(command) {
             self.mutex.exec(function() {
                 var id = command[1];
-                if (!id || _.isString(id) || _.isNumber(id)) {
-                    switch (command[0]) {
-                        case COMMANDS.CREATE:
-                            var data = _.clone(command[2]);
-                            delete data.id;
-                            return dataset.create(data, internal_options).then(function (id) {
+                switch (command[0]) {
+                    case COMMANDS.CREATE:
+                        var data = _.clone(command[2]);
+                        delete data.id;
+                        return dataset.create(data, internal_options).then(function (id) {
+                            dataset.ids.push(id);
+                            res = id;
+                        });
+                    case COMMANDS.UPDATE:
+                        return dataset.write(id, command[2], internal_options).then(function () {
+                            if (dataset.ids.indexOf(id) === -1) {
                                 dataset.ids.push(id);
                                 res = id;
-                            });
-                        case COMMANDS.UPDATE:
-                            return dataset.write(id, command[2], internal_options).then(function () {
-                                if (dataset.ids.indexOf(id) === -1) {
-                                    dataset.ids.push(id);
-                                    res = id;
-                                }
-                            });
-                        case COMMANDS.FORGET:
-                            return dataset.unlink([id]);
-                        case COMMANDS.DELETE:
-                            return dataset.unlink([id]);
-                        case COMMANDS.LINK_TO:
-                            if (dataset.ids.indexOf(id) === -1) {
-                                return dataset.add_ids([id], internal_options);
                             }
-                            return;
-                        case COMMANDS.DELETE_ALL:
-                            return dataset.reset_ids([], {keep_read_data: true});
-                        case COMMANDS.REPLACE_WITH:
-                            dataset.ids = [];
-                            return dataset.alter_ids(command[2], internal_options);
-                    }
+                        });
+                    case COMMANDS.FORGET:
+                        return dataset.unlink([id]);
+                    case COMMANDS.DELETE:
+                        return dataset.unlink([id]);
+                    case COMMANDS.LINK_TO:
+                        if (dataset.ids.indexOf(id) === -1) {
+                            return dataset.add_ids([id], internal_options);
+                        }
+                        return;
+                    case COMMANDS.DELETE_ALL:
+                        return dataset.reset_ids([], {keep_read_data: true});
+                    case COMMANDS.REPLACE_WITH:
+                        dataset.ids = [];
+                        return dataset.alter_ids(command[2], internal_options);
+                    default:
+                        throw new Error("send_commands to '"+self.name+"' receive a non command value." +
+                            "\n" + JSON.stringify(command_list));
                 }
-                throw new Error("send_commands to '"+self.name+"' receive a non command value." +
-                    "\n" + JSON.stringify(command_list));
             });
         });
 
@@ -643,7 +633,7 @@ var AbstractManyField = common.AbstractField.extend({
             add_ids = [],
             command_list = [],
             id, index, record;
-        
+
         _.each(this.get('value'), function (id) {
             index = starting_ids.indexOf(id);
             if (index !== -1) {
@@ -661,10 +651,6 @@ var AbstractManyField = common.AbstractField.extend({
                 if (record.to_create) {
                     command_list.push(COMMANDS.create(values));
                 } else {
-                    if (index === -1) {
-                        // because the UPDATE below does not imply LINK_TO
-                        command_list.push(COMMANDS.link_to(id));
-                    }
                     command_list.push(COMMANDS.update(record.id, values));
                 }
                 return;
@@ -717,7 +703,7 @@ var FieldX2Many = AbstractManyField.extend({
     default_view: 'tree',
     init: function(field_manager, node) {
         this._super(field_manager, node);
-        
+
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.is_started = false;
@@ -725,13 +711,12 @@ var FieldX2Many = AbstractManyField.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$el.addClass('oe_form_field');
-
         var self = this;
 
         this.load_views();
         var destroy = function() {
             self.is_loaded = self.is_loaded.then(function() {
+                self.renderElement();
                 self.viewmanager.destroy();
                 return $.when(self.load_views()).done(function() {
                     self.reload_current_view();
@@ -758,13 +743,12 @@ var FieldX2Many = AbstractManyField.extend({
             var view = {
                 view_id: false,
                 view_type: view_type === "tree" ? "list" : view_type,
-                options: {}
+                fields_view: self.field.views && self.field.views[view_type],
+                options: {},
             };
-            if (self.field.views && self.field.views[view_type]) {
-                view.embedded_view = self.field.views[view_type];
-            }
             if(view.view_type === "list") {
                 _.extend(view.options, {
+                    action_buttons: false, // to avoid 'Save' and 'Discard' buttons to appear in X2M fields
                     addable: null,
                     selectable: self.multi_selection,
                     sortable: true,
@@ -779,6 +763,7 @@ var FieldX2Many = AbstractManyField.extend({
                 }
             } else if (view.view_type === "kanban") {
                 _.extend(view.options, {
+                    action_buttons: true,
                     confirm_on_delete: false,
                 });
                 if (self.get("effective_readonly")) {
@@ -822,16 +807,15 @@ var FieldX2Many = AbstractManyField.extend({
         this.viewmanager.on("switch_mode", self, function(n_mode) {
             $.when(self.commit_value()).done(function() {
                 if (n_mode === "list") {
-                    $.async_when().done(function() {
+                    utils.async_when().done(function() {
                         self.reload_current_view();
                     });
                 }
             });
         });
-        $.async_when().done(function () {
-            if (!self.isDestroyed()) {
-                self.viewmanager.appendTo(self.$el);
-            }
+        utils.async_when().done(function () {
+            self.$el.addClass('o_view_manager_content');
+            self.alive(self.viewmanager.attachTo(self.$el));
         });
         return def;
     },
@@ -840,6 +824,7 @@ var FieldX2Many = AbstractManyField.extend({
         self.is_loaded = self.is_loaded.then(function() {
             var view = self.get_active_view();
             if (view.type === "list") {
+                view.controller.current_min = 1;
                 return view.controller.reload_content();
             } else if (view.controller.do_search) {
                 return view.controller.do_search(self.build_domain(), self.dataset.get_context(), []);
@@ -884,6 +869,9 @@ var FieldX2Many = AbstractManyField.extend({
         }
         return true;
     },
+    is_false: function() {
+        return _(this.dataset.ids).isEmpty();
+    },
 });
 
 var X2ManyDataSet = data.BufferedDataSet.extend({
@@ -894,13 +882,18 @@ var X2ManyDataSet = data.BufferedDataSet.extend({
             self.context.add(context);
         });
         return this.context;
-    }
+    },
 });
 
 var X2ManyViewManager = ViewManager.extend({
+    custom_events: {
+        // Catch event scrollTo to prevent scrolling to the top when using the
+        // pager of List and Kanban views in One2Many fields
+        'scrollTo': function() {},
+    },
     init: function(parent, dataset, views, flags, x2many_views) {
         // By default, render buttons and pager in X2M fields, but no sidebar
-        var flags = _.extend({}, flags, {
+        flags = _.extend({}, flags, {
             headless: false,
             search_view: false,
             action_buttons: true,
@@ -926,7 +919,6 @@ var X2ManyViewManager = ViewManager.extend({
             res_model: self.x2m.field.relation,
             res_id: id,
             context: self.x2m.build_context(),
-
             title: _t("Open: ") + self.x2m.string,
             create_function: function(data, options) {
                 return self.x2m.data_create(data, options);
@@ -953,7 +945,6 @@ var X2ManyViewManager = ViewManager.extend({
 
 var X2ManyListView = ListView.extend({
     is_valid: function () {
-        var self = this;
         if (!this.fields_view || !this.editable()){
             return true;
         }
@@ -968,7 +959,8 @@ var X2ManyListView = ListView.extend({
             field.no_rerender = true;
             current_values[field.name] = field.get('value');
         });
-        var cached_records = _.filter(this.dataset.cache, function(item){return !_.isEmpty(item.values)});
+        var ids = _.map(this.records.records, function (item) { return item.attributes.id; });
+        var cached_records = _.filter(this.dataset.cache, function(item){return _.contains(ids, item.id) && !_.isEmpty(item.values) && !item.to_delete;});
         var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
@@ -988,6 +980,15 @@ var X2ManyListView = ListView.extend({
             field.no_rerender = field.__no_rerender;
         });
         return valid;
+    },
+    render_pager: function($node, options) {
+        options = _.extend(options || {}, {
+            single_page_hidden: true,
+        });
+        this._super($node, options);
+    },
+    display_nocontent_helper: function () {
+        return false;
     },
 });
 
@@ -1013,20 +1014,22 @@ var X2ManyList = ListView.List.extend({
 
         var $cell = $('<td>', {
             colspan: columns,
-            'class': 'oe_form_field_x2many_list_row_add'
+            'class': 'o_form_field_x2many_list_row_add'
         }).append(
             $('<a>', {href: '#'}).text(_t("Add an item"))
                 .click(function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    // FIXME: there should also be an API for that one
-                    if (self.view.editor.form.__blur_timeout) {
-                        clearTimeout(self.view.editor.form.__blur_timeout);
-                        self.view.editor.form.__blur_timeout = false;
+                    var def;
+                    if (self.view.editable()) {
+                        // FIXME: there should also be an API for that one
+                        if (self.view.editor.form.__blur_timeout) {
+                            clearTimeout(self.view.editor.form.__blur_timeout);
+                            self.view.editor.form.__blur_timeout = false;
+                        }
+                        def = self.view.save_edition();
                     }
-                    self.view.save_edition().done(function () {
-                        self.view.do_add_record();
-                    });
+                    $.when(def).done(self.view.do_add_record.bind(self));
                 }));
 
         var $padding = this.$current.find('tr:not([data-id]):first');
@@ -1040,13 +1043,12 @@ var X2ManyList = ListView.List.extend({
 });
 
 var One2ManyListView = X2ManyListView.extend({
-    _template: 'One2Many.listview',
-    init: function (parent, dataset, view_id, options) {
-        var self = this;
-        this._super(parent, dataset, view_id, _.extend(options || {}, {
+    init: function () {
+        this._super.apply(this, arguments);
+        this.options = _.extend(this.options, {
             GroupsType: One2ManyGroups,
             ListType: X2ManyList
-        }));
+        });
         this.on('edit:after', this, this.proxy('_after_edit'));
         this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
 
@@ -1061,8 +1063,10 @@ var One2ManyListView = X2ManyListView.extend({
             this._dataset_changed = false;
         });
 
-        this.on('warning', this, function(e) { // In case of a one2many, we do not want any warning which comes from the editor
-            e.stop_propagation();
+        this.on('warning', this, function(e) { // In case of editable list view, we do not want any warning which comes from the editor
+            if (this.editable()) {
+                e.stop_propagation();
+            }
         });
     },
     do_add_record: function () {
@@ -1180,7 +1184,7 @@ var One2ManyListView = X2ManyListView.extend({
         var click_outside = ($target.closest('.ui-autocomplete,.btn,.modal-backdrop').length === 0);
 
         // Check if click inside the current list editable
-        var $o2m = $target.closest(".oe_list_editable");
+        var $o2m = $target.closest(".o_list_editable");
         if($o2m.length && $o2m[0] === this.el) {
             click_outside = false;
         }
@@ -1208,7 +1212,7 @@ var One2ManyListView = X2ManyListView.extend({
         this.dataset.x2m.internal_dataset_changed = false;
 
         var self = this;
-        return this.save_edition().done(function () {
+        return this.save_edition(true).done(function () {
             if (self._dataset_changed) {
                 self.dataset.trigger('dataset_changed');
             }
@@ -1254,58 +1258,43 @@ var One2ManyGroups = ListView.Groups.extend({
     }
 });
 
-var One2ManyFormView = FormView.extend({
-    form_template: 'One2Many.formview',
-    load_form: function(data) {
-        this._super(data);
-        var self = this;
-        this.$buttons.find('button.oe_form_button_create').click(function() {
-            self.save().done(self.on_button_new);
-        });
-    },
-    do_notify_change: function() {
-        if (this.dataset.parent_view) {
-            this.dataset.parent_view.do_notify_change();
-        } else {
-            this._super.apply(this, arguments);
-        }
-    }
-});
-
 var FieldOne2Many = FieldX2Many.extend({
     init: function() {
         this._super.apply(this, arguments);
         this.x2many_views = {
-            form: One2ManyFormView,
             kanban: core.view_registry.get('one2many_kanban'),
             list: One2ManyListView,
         };
     },
     start: function() {
-        this.$el.addClass('oe_form_field_one2many');
+        this.$el.addClass('o_form_field_one2many');
         return this._super.apply(this, arguments);
     },
     commit_value: function() {
         var self = this;
-        var view = this.viewmanager.active_view;
-        if(view.type === "list" && view.controller.editable()) {
-            return this.mutex.def.then(function () {
-                return view.controller.save_edition();
-            });
-        }
-        return this.mutex.def;
+        return this.is_loaded.then(function() {
+            var view = self.viewmanager.active_view;
+            if(view.type === "list" && view.controller.editable()) {
+                return self.mutex.def.then(function () {
+                    return view.controller.save_edition();
+                });
+            }
+            return self.mutex.def;
+        });
+    },
+    is_false: function() {
+        return false;
     },
 });
 
-/**
- * @class
- * @extends instance.web.ListView
- */
-var Many2ManyListView = X2ManyListView.extend(/** @lends instance.web.form.Many2ManyListView# */{
-    init: function (parent, dataset, view_id, options) {
-        this._super(parent, dataset, view_id, _.extend(options || {}, {
+var Many2ManyListView = X2ManyListView.extend({
+    init: function () {
+        this._super.apply(this, arguments);
+        this.options = _.extend(this.options, {
             ListType: X2ManyList,
-        }));
+        });
+        this.on('edit:after', this, this.proxy('_after_edit'));
+        this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
     },
     do_add_record: function () {
         var self = this;
@@ -1316,7 +1305,7 @@ var Many2ManyListView = X2ManyListView.extend(/** @lends instance.web.form.Many2
             context: this.x2m.build_context(),
             title: _t("Add: ") + this.x2m.string,
             alternative_form_view: this.x2m.field.views ? this.x2m.field.views.form : undefined,
-            no_create: this.x2m.options.no_create,
+            no_create: this.x2m.options.no_create || !this.is_action_enabled('create'),
             on_selected: function(element_ids) {
                 return self.x2m.data_link_multi(element_ids).then(function() {
                     self.x2m.reload_current_view();
@@ -1327,7 +1316,7 @@ var Many2ManyListView = X2ManyListView.extend(/** @lends instance.web.form.Many2
     do_activate_record: function(index, id) {
         var self = this;
         var pop = new common.FormViewDialog(this, {
-            res_model: this.dataset.model, 
+            res_model: this.model,
             res_id: id,
             context: this.x2m.build_context(),
             title: _t("Open: ") + this.x2m.string,
@@ -1352,6 +1341,20 @@ var Many2ManyListView = X2ManyListView.extend(/** @lends instance.web.form.Many2
             });
         }
     },
+    _after_edit: function () {
+        this.editor.form.on('blurred', this, this._on_blur_many2many);
+    },
+    _before_unedit: function () {
+        this.editor.form.off('blurred', this, this._on_blur_many2many);
+    },
+    _on_blur_many2many: function() {
+        return this.save_edition().done(function () {
+            if (self._dataset_changed) {
+                self.dataset.trigger('dataset_changed');
+            }
+        });
+    },
+
 });
 
 var FieldMany2Many = FieldX2Many.extend({
@@ -1363,7 +1366,7 @@ var FieldMany2Many = FieldX2Many.extend({
         };
     },
     start: function() {
-        this.$el.addClass('oe_form_field_many2many');
+        this.$el.addClass('o_form_field_many2many');
         return this._super.apply(this, arguments);
     }
 });
@@ -1379,7 +1382,7 @@ var FieldMany2ManyKanban = FieldMany2Many.extend({
 });
 
 var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, common.ReinitializeFieldMixin, {
-    className: "oe_form_field o_form_field_many2manytags",
+    className: "o_form_field_many2manytags",
     tag_template: "FieldMany2ManyTag",
 
     events: {
@@ -1441,7 +1444,6 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         }
     },
     get_render_data: function(ids){
-        var self = this;
         this.dataset.cancel_read();
         var fields = this.fields.color ? ['display_name', 'name', 'color'] : ['display_name', 'name']; // TODO master: remove useless 'name'
         return this.dataset.read_ids(ids, fields);
@@ -1452,19 +1454,15 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     },
     render_value: function() {
         var self = this;
-        var values = self.get("value");
-        var handle_names = function(data) {
-            if (self.isDestroyed())
-                return;
-            var indexed = {};
-            _.each(data, function(el) {
-                indexed[el['id']] = el;
+        var values = this.get("value");
+        var handle_names = function(_data) {
+            _.each(_data, function(el) {
+                el.display_name = el.display_name.trim() ? _.str.escapeHTML(el.display_name) : data.noDisplayContent;
             });
-            data = _.map(values, function(el) { return indexed[el]; });
-            self.render_tag(data);
+            self.render_tag(_data);
         };
         if (!values || values.length > 0) {
-            return self.get_render_data(values).done(handle_names);
+            return this.alive(this.get_render_data(values)).done(handle_names);
         } else {
             handle_names([]);
         }
@@ -1481,26 +1479,30 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         }
         return false;
     },
-    set_dimensions: function (height, width) {
-        this._super(height, width);
-        var $input = this.$('input');
-        if (!this.get("effective_readonly") && $input) {
-            $input.css('height', height);
+    set_dimensions: function(height, width) {
+        if(this.many2one) {
+            this.many2one.$el.css('height', 'auto');
+        }
+        this.$el.css({
+            width: width,
+            minHeight: height,
+        });
+        if(this.many2one) {
+            this.many2one.$el.css('height', this.$el.height());
         }
     },
     open_color_picker: function(ev){
-        this.mutex.exec(function(){
-            if (this.fields.color) {
-                this.$color_picker = $(QWeb.render('FieldMany2ManyTag.colorpicker', {
-                    'widget': this,
-                    'tag_id': $(ev.currentTarget).data('id'),
-                }));
 
-                $(ev.currentTarget).append(this.$color_picker);
-                this.$color_picker.dropdown('toggle');
-                this.$color_picker.attr("tabindex", 1).focus();
-            }
-        }.bind(this));
+        if (this.fields.color) {
+            this.$color_picker = $(QWeb.render('FieldMany2ManyTag.colorpicker', {
+                'widget': this,
+                'tag_id': $(ev.currentTarget).data('id'),
+            }));
+
+            $(ev.currentTarget).append(this.$color_picker);
+            this.$color_picker.dropdown('toggle');
+            this.$color_picker.attr("tabindex", 1).focus();
+        }
     },
     close_color_picker: function(){
         this.$color_picker.remove();
@@ -1522,21 +1524,73 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
             tag.addClass('o_tag_color_' + color);
         });
     },
-
 });
 
 /**
  * Widget for (many2many field) to upload one or more file in same time and display in list.
  * The user can delete his files.
- * Options on attribute ; "blockui" {Boolean} block the UI or not
- * during the file is uploading
+ * Options on attribute ; "blockui" {Boolean} block the UI or not during the file is uploading
  */
 var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.ReinitializeFieldMixin, {
     template: "FieldBinaryFileUploader",
+    events: {
+        'click .o_attach': function(e) {
+            this.$('.o_form_input_file').click();
+        },
+        'change .o_form_input_file': function(e) {
+            e.stopPropagation();
+
+            var $target = $(e.target);
+            var value = $target.val();
+
+            if(value !== '') {
+                if(this.data[0] && this.data[0].upload) { // don't upload more of one file in same time
+                    return false;
+                }
+
+                var filename = value.replace(/.*[\\\/]/, '');
+                for(var id in this.get('value')) {
+                    // if the files exits, delete the file before upload (if it's a new file)
+                    if(this.data[id] && (this.data[id].filename || this.data[id].name) == filename && !this.data[id].no_unlink) {
+                        this.ds_file.unlink([id]);
+                    }
+                }
+
+                if(this.node.attrs.blockui > 0) { // block UI or not
+                    framework.blockUI();
+                }
+
+                // TODO : unactivate send on wizard and form
+
+                // submit file
+                this.$('form.o_form_binary_form').submit();
+                this.$(".oe_fileupload").hide();
+                // add file on data result
+                this.data[0] = {
+                    id: 0,
+                    name: filename,
+                    filename: filename,
+                    url: '',
+                    upload: true,
+                };
+            }
+        },
+        'click .oe_delete': function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var file_id = $(e.currentTarget).data("id");
+            if(file_id) {
+                var files = _.without(this.get('value'), file_id);
+                if(!this.data[file_id].no_unlink) {
+                    this.ds_file.unlink([file_id]);
+                }
+                this.set({'value': files});
+            }
+        },
+    },
     init: function(field_manager, node) {
-        this._super(field_manager, node);
-        this.field_manager = field_manager;
-        this.node = node;
+        this._super.apply(this, arguments);
         this.session = session;
         if(this.field.type != "many2many" || this.field.relation != 'ir.attachment') {
             throw _.str.sprintf(_t("The type of the field '%s' must be a many2many field with a relation to 'ir.attachment' model."), this.field.string);
@@ -1547,40 +1601,39 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
         $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
     },
-    initialize_content: function() {
-        this.$el.on('change', 'input.o_form_input_file', this.on_file_change );
-    },
-    get_file_url: function (attachment) {
+    get_file_url: function(attachment) {
         return '/web/content/' + attachment.id + '?download=true';
     },
-    read_name_values : function () {
+    read_name_values : function() {
         var self = this;
         // don't reset know values
         var ids = this.get('value');
-        var _value = _.filter(ids, function (id) { return typeof self.data[id] == 'undefined'; } );
+        var _value = _.filter(ids, function(id) { return self.data[id] === undefined; });
         // send request for get_name
-        if (_value.length) {
-            return this.ds_file.call('read', [_value, ['id', 'name', 'datas_fname', 'mimetype']]).then(function (datas) {
-                _.each(datas, function (data) {
-                    data.no_unlink = true;
-                    data.url = self.get_file_url(data);
-                    self.data[data.id] = data;
-                });
-                return ids;
-            });
+        if(_value.length) {
+            return this.ds_file.call('read', [_value, ['id', 'name', 'datas_fname', 'mimetype']])
+                               .then(process_data);
         } else {
             return $.when(ids);
         }
+
+        function process_data(datas) {
+            _.each(datas, function(data) {
+                data.no_unlink = true;
+                data.url = self.get_file_url(data);
+                self.data[data.id] = data;
+            });
+            return ids;
+        }
     },
-    render_value: function () {
+    render_value: function() {
         var self = this;
         this.read_name_values().then(function (ids) {
-            var render = $(QWeb.render('FieldBinaryFileUploader.files', {'widget': self, 'values': ids}));
-            render.on('click', '.oe_delete', _.bind(self.on_file_delete, self));
-            self.$('.oe_placeholder_files, .oe_attachments').replaceWith( render );
+            self.$('.oe_placeholder_files, .oe_attachments')
+                .replaceWith($(QWeb.render('FieldBinaryFileUploader.files', {'widget': self, 'values': ids})));
 
             // reinit input type file
-            var $input = self.$('input.o_form_input_file');
+            var $input = self.$('.o_form_input_file');
             $input.after($input.clone(true)).remove();
             self.$(".oe_fileupload").show();
 
@@ -1593,76 +1646,25 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
             });
         });
     },
-    on_file_change: function (event) {
-        event.stopPropagation();
-        var self = this;
-        var $target = $(event.target);
-        if ($target.val() !== '') {
-            var filename = $target.val().replace(/.*[\\\/]/,'');
-            // don't uplode more of one file in same time
-            if (self.data[0] && self.data[0].upload ) {
-                return false;
-            }
-            for (var id in this.get('value')) {
-                // if the files exits, delete the file before upload (if it's a new file)
-                if (self.data[id] && (self.data[id].filename || self.data[id].name) == filename && !self.data[id].no_unlink ) {
-                    self.ds_file.unlink([id]);
-                }
-            }
-
-            // block UI or not
-            if(this.node.attrs.blockui>0) {
-                framework.blockUI();
-            }
-
-            // TODO : unactivate send on wizard and form
-
-            // submit file
-            this.$('form.o_form_binary_form').submit();
-            this.$(".oe_fileupload").hide();
-            // add file on data result
-            this.data[0] = {
-                'id': 0,
-                'name': filename,
-                'filename': filename,
-                'url': '',
-                'upload': true
-            };
-        }
-    },
-    on_file_loaded: function (event, result) {
-        var files = this.get('value');
-
-        // unblock UI
-        if(this.node.attrs.blockui>0) {
+    on_file_loaded: function(e, result) {
+        if(this.node.attrs.blockui > 0) { // unblock UI
             framework.unblockUI();
         }
 
-        if (result.error || !result.id ) {
-            this.do_warn( _t('Uploading Error'), result.error);
+        if(result.error || !result.id) {
+            this.do_warn(_t('Uploading Error'), result.error);
             delete this.data[0];
         } else {
-            if (this.data[0] && this.data[0].filename == result.filename && this.data[0].upload) {
+            if(this.data[0] && this.data[0].filename === result.filename && this.data[0].upload) {
                 delete this.data[0];
             }
             result.url = this.get_file_url(result);
             this.data[result.id] = result;
             var values = _.clone(this.get('value'));
             values.push(result.id);
-            this.set({'value': values});
+            this.set({value: values});
         }
         this.render_value();
-    },
-    on_file_delete: function (event) {
-        event.stopPropagation();
-        var file_id=$(event.target).closest('.oe_delete').data("id");
-        if (file_id) {
-            var files = _.filter(this.get('value'), function (id) {return id != file_id;});
-            if(!this.data[file_id].no_unlink) {
-                this.ds_file.unlink([file_id]);
-            }
-            this.set({'value': files});
-        }
     },
 });
 
@@ -1678,7 +1680,7 @@ var FieldMany2ManyCheckBoxes = AbstractManyField.extend(common.ReinitializeField
         this.set("records", []);
         this.field_manager.on("view_content_has_changed", this, function() {
             var domain = new data.CompoundDomain(this.build_domain()).eval();
-            if (! _.isEqual(domain, this.get("domain"))) {
+            if (!_.isEqual(domain, this.get("domain"))) {
                 this.set("domain", domain);
             }
         });
@@ -1700,18 +1702,22 @@ var FieldMany2ManyCheckBoxes = AbstractManyField.extend(common.ReinitializeField
         });
     },
     render_value: function() {
-        this.$().html(QWeb.render("FieldMany2ManyCheckBoxes", {widget: this}));
-        var inputs = this.$("input");
-        inputs.change(_.bind(this.from_dom, this));
-        if (this.get("effective_readonly"))
-            inputs.attr("disabled", "true");
+        this.$el.html(QWeb.render("FieldMany2ManyCheckBoxes", {widget: this}));
+        var $inputs = this.$("input");
+        $inputs.change(_.bind(this.from_dom, this));
+        if (this.get("effective_readonly")) {
+            $inputs.attr("disabled", "true");
+        }
     },
     from_dom: function() {
         var new_value = this.$("input:checked").map(function() { return +$(this).data("record-id"); }).get();
-        if (! _.isEqual(new_value, this.get("value"))) {
+        if (!_.isEqual(new_value, this.get("value"))) {
             this.internal_set_value(new_value);
         }
-    }
+    },
+    is_false: function() {
+        return false;
+    },
 });
 
 core.form_widget_registry
@@ -1724,9 +1730,13 @@ core.form_widget_registry
     .add('many2many_binary', FieldMany2ManyBinaryMultiFiles)
     .add('many2many_checkboxes', FieldMany2ManyCheckBoxes);
 
+core.one2many_view_registry
+    .add('list', One2ManyListView);
+
 return {
     FieldMany2ManyTags: FieldMany2ManyTags,
     AbstractManyField: AbstractManyField,
+    FieldMany2One: FieldMany2One,
 };
 
 });

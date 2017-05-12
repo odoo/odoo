@@ -3,15 +3,21 @@
 # * fetchmail
 # 
 # Translators:
-# Harry <harrierr@mail.ru>, 2015
+# dr&mx <dronmax@gmail.com>, 2016
+# KingOPl Slav <87slava13@gmail.com>, 2016
+# Masha Koc <mariya.kos.ua@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Harry <harrierr@mail.ru>, 2016
+# Denis Trepalin <zekarious@gmail.com>, 2016
+# Sergey Vilizhanin <sv@grimmette.ru>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 18:22+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -31,7 +37,7 @@ msgstr "Действия над входящей почтой"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
 msgid "Active"
-msgstr "Активен"
+msgstr "Активно"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -41,7 +47,7 @@ msgstr "Расширенный"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
-msgstr "Расширенные настройки"
+msgstr "Расширенные опции"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
@@ -60,7 +66,7 @@ msgid "Confirmed"
 msgstr "Подтверждено"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Проверка соединения не удалась: %s"
@@ -70,7 +76,9 @@ msgstr "Проверка соединения не удалась: %s"
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
-msgstr "Соединения зашифрованы с SSL/TLS через выделенный порт (по умолчанию: IMAPS=993, POP3S=995)"
+msgstr ""
+"Соединения зашифрованы с SSL/TLS через выделенный порт (по умолчанию: "
+"IMAPS=993, POP3S=995)"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
@@ -78,27 +86,24 @@ msgid "Create a New Record"
 msgstr "Создать новую запись"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr "Определяет порядок обработки, меньшие значения означают больший приоритет"
+msgstr "Задаёт порядок обработки — у меньших значений больший приоритет"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -111,7 +116,6 @@ msgid "Hostname or IP of the mail server"
 msgstr "Имя хоста или IP сервера электронной почты"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -164,19 +168,16 @@ msgid "Last Fetch Date"
 msgstr "Последняя дата получения"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Последний раз изменено"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Последний раз обновлено"
@@ -200,7 +201,7 @@ msgstr "Сообщения"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_name
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -212,7 +213,9 @@ msgstr "Не подтверждено"
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
-msgstr "Необязательное действие сервера запускаемое для каждого входящего письма, по записи, которая была создана или обновлена этим письмом"
+msgstr ""
+"Необязательное действие сервера, запускаемое для каждого входящего письма, "
+"по записи, которая была создана или обновлена этим письмом"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -237,7 +240,7 @@ msgstr "Сервер POP/IMAP"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
-msgstr "Сервера POP/IMAP"
+msgstr "Серверы POP/IMAP"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_password
@@ -255,7 +258,10 @@ msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
-msgstr "Обработать каждое входящее письмо как часть переговоров относящихся к этому типу документа. Это создаст новые документы для новых переговоров или прикрепит исходящие письма к существующим переговорам (документам)."
+msgstr ""
+"Обработать каждое входящее письмо как часть переговоров относящихся к этому "
+"типу документа. Это создаст новые документы для новых переговоров или "
+"прикрепит исходящие письма к существующим переговорам (документам)."
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -340,19 +346,19 @@ msgstr "Имя пользователя"
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
 msgid ""
-"Whether a full original copy of each email should be kept for referenceand "
+"Whether a full original copy of each email should be kept for reference and "
 "attached to each processed message. This will usually double the size of "
 "your message database."
-msgstr "Должна ли быть сохранена для ссылки полная копия каждого письма и прикреплена для каждого обработанного сообщения. Обычно это будет удваивать размер базы данных сообщений."
+msgstr ""
+"Нужна ли полная исходная копия писем в ссылках и приложениях к  "
+"обрабатываемым сообщениям. Увеличит как минимум в два раза размер вашей базы"
+" данных сообщений."
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr "Должны ли быть загружены вложения. Если не позволено, перед обработкой у входящей почты будут отрезаны любые вложения"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr "Настройки эл. почты"
+msgstr ""
+"Должны ли быть загружены вложения. Если нет, то перед обработкой у входящей "
+"почты будут удалены любые вложения"

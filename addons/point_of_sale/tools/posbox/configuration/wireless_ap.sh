@@ -28,7 +28,7 @@ if [ -z "${WIRED_IP}" ] ; then
 
 			service hostapd restart
 
-			ip addr add 10.10.0.1/24 dev wlan0
+			ip addr add 10.11.12.1/24 dev wlan0
 
 			service isc-dhcp-server restart
 

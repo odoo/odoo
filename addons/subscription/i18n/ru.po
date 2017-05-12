@@ -3,15 +3,22 @@
 # * subscription
 # 
 # Translators:
-# Harry <harrierr@mail.ru>, 2015
+# Максим Дронь <dronmax@gmail.com>, 2016
+# KingOPl Slav <87slava13@gmail.com>, 2016
+# Masha Koc <mariya.kos.ua@gmail.com>, 2016
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
+# Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Gennady Marchenko <gennadym@gmail.com>, 2016
+# Denis Trepalin <zekarious@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 09:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Denis Trepalin <zekarious@gmail.com>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,7 +29,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_active
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_active
 msgid "Active"
-msgstr "Активен"
+msgstr "Активно"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_create_uid
@@ -30,7 +37,7 @@ msgstr "Активен"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_create_uid
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_create_date
@@ -38,12 +45,12 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_create_date
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_create_date
 msgid "Created on"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_cron_id
 msgid "Cron Job"
-msgstr "Задание cron"
+msgstr "Cron Job"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -63,12 +70,13 @@ msgstr "Дней"
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_value
 msgid "Default Value"
-msgstr "Значение по умолчанию"
+msgstr "Значение по умолчанию "
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
 msgid "Default value is considered for field when new document is generated."
-msgstr "Значение по умолчанию используется для поля при создании нового документа."
+msgstr ""
+"Значение по умолчанию используется для поля при создании нового документа."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_note
@@ -81,7 +89,7 @@ msgstr "Описание содержания подписки"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_display_name
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_lines
@@ -92,7 +100,7 @@ msgstr "Создано документов"
 #. module: subscription
 #: selection:subscription.subscription,state:0
 msgid "Done"
-msgstr "Сделано"
+msgstr "Выполнено"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -122,7 +130,7 @@ msgstr "Первая дата"
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировать"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_id
@@ -137,25 +145,29 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
-msgstr "Если поле \"Активно\" не установлено, то можно скрыть документ подписки без удаления."
+msgstr ""
+"Если активное поле имеет значение «ложь», то можно скрыть документ подписки "
+"без удаления."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
-msgstr "Если поле \"Активно\" не установлено, то можно скрыть подписку без ее удаления."
+msgstr ""
+"Если поле \"Активно\" не установлено, то можно скрыть подписку без ее "
+"удаления."
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Internal Notes"
-msgstr "Внутренние примечания"
+msgstr "Внутренние заметки"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
-msgstr "Интервал кол-во"
+msgid "Internal Qty"
+msgstr "Внутреннее кол-во"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_type
@@ -176,7 +188,7 @@ msgstr "Последний раз изменено"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_write_uid
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_write_date
@@ -195,18 +207,18 @@ msgstr "Месяцы"
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_name
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_name
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_note
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Notes"
-msgstr "Примечания"
+msgstr "Заметки"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
-msgstr "Кол-во документов"
+msgid "Number of Documents"
+msgstr "Количество документов"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_model
@@ -217,15 +229,17 @@ msgstr "Объект"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_partner_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Partner"
-msgstr "Контрагент"
+msgstr "Партнёр"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:92
 #, python-format
 msgid ""
 "Please provide another source document.\n"
 "This one does not exist!"
-msgstr "Пожалуйста представьте другой исходный документ. \nЭтого не существует!"
+msgstr ""
+"Пожалуйста представьте другой исходный документ. \n"
+"Этого не существует!"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
@@ -263,7 +277,7 @@ msgstr "Поиск подписки"
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Set to Draft"
-msgstr "Сделать черновиком"
+msgstr "Установить в Черновик"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_source
@@ -288,6 +302,11 @@ msgstr "Стоп"
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Subscription"
 msgstr "Подписка"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Subscription Data"
+msgstr "Дата подписки"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
@@ -323,11 +342,6 @@ msgid "Subscriptions"
 msgstr "Подписки"
 
 #. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr "Дата подписки"
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "User"
@@ -337,7 +351,9 @@ msgstr "Пользователь"
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr "Пользователь может выбрать исходный документ, по которому он хочет создавать документы"
+msgstr ""
+"Пользователь может выбрать исходный документ, по которому он хочет создавать"
+" документы"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -345,7 +361,7 @@ msgid "Weeks"
 msgstr "Недели"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:115
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr "Вы не можете удалить активную подписку!"

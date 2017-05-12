@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.mail.tests.common import TestMail
+from odoo.addons.mail.tests.common import TestMail
 
 
 class test_message_compose(TestMail):

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!--
@@ -18,9 +18,9 @@
             </xpath>
         </template>
         <template id="loader" inherit_id="website.layout" name="Livechat : include loader on Website">
-            <xpath expr="//body" position="inside">
+            <xpath expr="//div[@id='wrapwrap']" position="after">
                 <t t-if="website and website.channel_id">
-                     <script>
+                    <script>
                         <t t-call="im_livechat.loader">
                             <t t-set="channel" t-value="website.channel_id.id"/>
                         </t>
@@ -88,7 +88,7 @@
                                         <div class="col-md-3">
                                             <div class="panel panel-danger">
                                                 <div class="panel-body text-center bg-danger">
-                                                    <img src="/rating/static/src/img/rating_0.png" style="height:40px"/>
+                                                    <img src="/rating/static/src/img/rating_1.png" style="height:40px"/>
                                                 </div>
                                                 <div class="panel-body text-center bg-danger">
                                                     <h2 style="margin: 0">
@@ -124,8 +124,9 @@
                             <h3>The Team</h3>
                             <t t-foreach="team" t-as="user" class="media">
                                 <div class="media">
-                                    <div class="pull-left">
-                                        <img t-att-src="'data:image/png;base64,' + user.image_small" class="img-rounded" t-att-alt="user.name"/>
+                                    <div class="pull-left" t-if='user.image_small'>
+                                        <img t-att-src="user.image_small and ('data:image/png;base64,' + user.image_small) or '/web/static/src/img/placeholder.png'"
+                                            class="img-rounded" t-att-alt="user.name"/>
                                     </div>
                                     <div class="media-body">
                                         <h5><t t-esc="user.name"/></h5>
@@ -157,7 +158,7 @@
                                     <t t-foreach="channels" t-as="channel">
                                         <div class="media">
                                             <a class="pull-left" t-attf-href="/livechat/channel/#{ slug(channel)}">
-                                                <img t-att-src="'data:image/png;base64,' + channel.image_small" t-att-alt="channel.name" />
+                                                <img t-att-src="channel.image_small and ('data:image/png;base64,' + channel.image_small) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
                                             </a>
                                             <div class="media-body">
                                                 <h4 class="media-heading"><t t-esc="channel.name"/></h4>
@@ -174,4 +175,4 @@
         </template>
 
     </data>
-</openerp>
+</odoo>

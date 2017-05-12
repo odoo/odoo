@@ -3,12 +3,12 @@
 
 <!-- These templates are accessible in backend and frontend -->
 
-<div t-name="Dialog" class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
+<div t-name="Dialog" class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true" t-att-id="_.uniqueId('modal_')">
     <div class="modal-dialog">
-        <div class="modal-content openerp">
+        <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted"><t t-esc="subtitle"/></span></h4>
+                <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted small"><t t-esc="subtitle"/></span></h4>
             </div>
             <div class="modal-body"/>
             <div class="modal-footer"/>
@@ -17,7 +17,7 @@
 </div>
 
 <t t-name="WidgetButton">
-    <button type="button" t-attf-class="btn btn-sm oe_button #{widget.node.attrs.class or ''}"
+    <button type="button" t-attf-class="btn btn-sm #{widget.node.attrs.class or ''}"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
@@ -121,6 +121,15 @@
             <t t-esc="widget.node.attrs.name"/>
         </li>
     </t>
+</t>
+
+<t t-name="SwitchCompanyMenu">
+    <li class="o_switch_company_menu">
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
+            <span class="oe_topbar_name"/> <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu"/>
+    </li>
 </t>
 
 </templates>

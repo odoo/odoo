@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tests import common
 from datetime import datetime
+
+from odoo.tests import common
+from odoo.exceptions import UserError
 
 
 class TestSaleMrpFlow(common.TransactionCase):
@@ -42,20 +45,19 @@ class TestSaleMrpFlow(common.TransactionCase):
                 'uom_po_id': uom_id,
                 'route_ids': route_ids})
 
-        def create_bom_lines(bom_id, product_id, qty, uom_id):
+        def create_bom_lines(bom_id, product_id, qty, uom_id, procure_method): #TODO: remove procure_method
             self.MrpBomLine.create({
                 'product_id': product_id,
                 'product_qty': qty,
                 'bom_id': bom_id,
-                'product_uom': uom_id})
+                'product_uom_id': uom_id})
 
-        def create_bom(product_tmpl_id, qty, uom_id, bom_type):
+        def create_bom(product_tmpl_id, qty, uom_id, type):
             return self.MrpBom.create({
                 'product_tmpl_id': product_tmpl_id,
                 'product_qty': qty,
-                'type': bom_type,
-                'product_efficiency': 1.0,
-                'product_uom': uom_id})
+                'type': type,
+                'product_uom_id': uom_id})
 
         self.uom_kg = self.ProductUom.create({
             'name': 'Test-KG',
@@ -96,17 +98,17 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # Bill of materials for Product A.
         bom_a = create_bom(product_a.product_tmpl_id.id, 2, self.uom_dozen.id, 'normal')
-        create_bom_lines(bom_a.id, product_b.id, 3, self.uom_unit.id)
-        create_bom_lines(bom_a.id, product_c.id, 300.5, self.uom_gm.id)
-        create_bom_lines(bom_a.id, product_d.id, 4, self.uom_unit.id)
+        create_bom_lines(bom_a.id, product_b.id, 3, self.uom_unit.id, 'make_to_order')
+        create_bom_lines(bom_a.id, product_c.id, 300.5, self.uom_gm.id, 'make_to_stock')
+        create_bom_lines(bom_a.id, product_d.id, 4, self.uom_unit.id, 'make_to_order')
 
         # Bill of materials for Product B.
         bom_b = create_bom(product_b.product_tmpl_id.id, 1, self.uom_unit.id, 'phantom')
-        create_bom_lines(bom_b.id, product_c.id, 0.400, self.uom_kg.id)
+        create_bom_lines(bom_b.id, product_c.id, 0.400, self.uom_kg.id, 'make_to_stock')
 
         # Bill of materials for Product D.
         bom_d = create_bom(product_d.product_tmpl_id.id, 1, self.uom_unit.id, 'normal')
-        create_bom_lines(bom_d.id, product_c.id, 1, self.uom_kg.id)
+        create_bom_lines(bom_d.id, product_c.id, 1, self.uom_kg.id, 'make_to_stock')
 
         # ----------------------------------------
         # Create sale order of 10 Dozen product A.
@@ -172,7 +174,7 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         self.assertTrue(mnf_product_a, 'Manufacturing order not created.')
         self.assertEqual(mnf_product_a.product_qty, 10, 'Wrong product quantity in manufacturing order.')
-        self.assertEqual(mnf_product_a.product_uom.id, self.uom_dozen.id, 'Wrong unit of measure in manufacturing order.')
+        self.assertEqual(mnf_product_a.product_uom_id.id, self.uom_dozen.id, 'Wrong unit of measure in manufacturing order.')
         self.assertEqual(mnf_product_a.state, 'confirmed', 'Manufacturing order should be confirmed.')
 
         # ------------------------------------------------------------------------------------------
@@ -236,7 +238,6 @@ class TestSaleMrpFlow(common.TransactionCase):
         # -----------------------------------------------------------------------------
 
         move = self.StockMove.search([('raw_material_production_id', '=', mnf_product_d.id), ('product_id', '=', product_c.id)])
-
         self.assertEqual(move.product_uom_qty, 20, "Wrong product quantity in 'To consume line' of manufacturing order.")
         self.assertEqual(move.product_uom.id, self.uom_kg.id, "Wrong unit of measure in 'To consume line' of manufacturing order.")
         self.assertEqual(move.state, 'confirmed', "Wrong state in 'To consume line' of manufacturing order.")
@@ -267,7 +268,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         # --------------------------------------------------
 
         mnf_product_d.action_assign()
-        self.assertEqual(mnf_product_d.state, 'ready', 'Manufacturing order should be ready.')
+        self.assertEqual(mnf_product_d.availability, 'assigned', 'Availability should be assigned')
         self.assertEqual(move.state, 'assigned', "Wrong state in 'To consume line' of manufacturing order.")
 
         # ------------------
@@ -275,14 +276,13 @@ class TestSaleMrpFlow(common.TransactionCase):
         # ------------------
 
         produce_d = self.ProductProduce.with_context({'active_ids': [mnf_product_d.id], 'active_id': mnf_product_d.id}).create({
-            'mode': 'consume_produce',
             'product_qty': 20})
-        lines = produce_d.on_change_qty(mnf_product_d.product_qty, [])
-        produce_d.write(lines['value'])
+        # produce_d.on_change_qty()
         produce_d.do_produce()
+        mnf_product_d.post_inventory()
 
         # Check state of manufacturing order.
-        self.assertEqual(mnf_product_d.state, 'done', 'Manufacturing order should be done.')
+        self.assertEqual(mnf_product_d.state, 'progress', 'Manufacturing order should still be in progress state.')
         # Check available quantity of product D.
         self.assertEqual(product_d.qty_available, 20, 'Wrong quantity available of product D.')
 
@@ -294,7 +294,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         move = self.StockMove.search([('raw_material_production_id', '=', mnf_product_a.id), ('product_id', '=', product_d.id)])
         self.assertEqual(move.state, 'assigned', "Wrong state in 'To consume line' of manufacturing order.")
 
-        # Create inventry for product C.
+        # Create inventory for product C.
         # ------------------------------
         # Need product C ( 20 kg + 6 kg + 1502.5 gm = 27.5025 kg)
         # -------------------------------------------------------
@@ -317,7 +317,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         # ---------------------------------------------------
 
         mnf_product_a.action_assign()
-        self.assertEqual(mnf_product_a.state, 'ready', 'Manufacturing order should be ready.')
+        self.assertEqual(mnf_product_a.availability, 'assigned', 'Manufacturing order inventory state should be available.')
         moves = self.StockMove.search([('raw_material_production_id', '=', mnf_product_a.id), ('product_id', '=', product_c.id)])
 
         # Check product c move line state.
@@ -327,13 +327,14 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Produce product A.
         # ------------------
         produce_a = self.ProductProduce.with_context(
-            {'active_ids': [mnf_product_a.id], 'active_id': mnf_product_a.id}).create({'mode': 'consume_produce'})
-        lines = produce_a.on_change_qty(mnf_product_a.product_qty, [])
-        produce_a.write(lines['value'])
+            # {'active_ids': [mnf_product_a.id], 'active_id': mnf_product_a.id}).create({'mode': 'consume_produce', 'product_qty': mnf_product_a.product_qty})
+        # produce_a.on_change_qty()
+            {'active_ids': [mnf_product_a.id], 'active_id': mnf_product_a.id}).create({})
         produce_a.do_produce()
+        mnf_product_a.post_inventory()
 
         # Check state of manufacturing order product A.
-        self.assertEqual(mnf_product_a.state, 'done', 'Manufacturing order should be done.')
+        self.assertEqual(mnf_product_a.state, 'progress', 'Manufacturing order should still be in the progress state.')
         # Check product A avaialble quantity should be 120.
         self.assertEqual(product_a.qty_available, 120, 'Wrong quantity available of product A.')
 
@@ -341,7 +342,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         """ Test delivered quantity on SO based on delivered quantity in pickings."""
         # intial so
         self.partner = self.env.ref('base.res_partner_1')
-        self.product = self.env.ref('product.product_product_3')
+        self.product = self.env.ref('mrp.product_product_build_kit')
+        self.product.invoice_policy = 'delivery'
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -356,7 +358,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.assertTrue(self.so.picking_ids, 'Sale MRP: no picking created for "invoice on delivery" stockable products')
 
         # invoice in on delivery, nothing should be invoiced
-        self.so.action_invoice_create()
+        with self.assertRaises(UserError):
+            self.so.action_invoice_create()
         self.assertEqual(self.so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "nothing to invoice" after invoicing')
 
         # deliver partially (1 of each instead of 5), check the so's invoice_status and delivered quantities
@@ -370,7 +373,6 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.assertEqual(self.so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
         del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
         self.assertEqual(del_qty, 0.0, 'Sale MRP: delivered quantity should be zero after partial delivery of a kit')
-
         # deliver remaining products, check the so's invoice_status and delivered quantities
         self.assertEqual(len(self.so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
         pick_2 = self.so.picking_ids[0]

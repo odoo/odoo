@@ -1,111 +1,80 @@
-odoo.define('website.tour.banner', function (require) {
-'use strict';
+odoo.define("website.tour.banner", function (require) {
+    "use strict";
 
-var core = require('web.core');
-var Tour = require('web.Tour');
-var base = require('web_editor.base');
+    var core = require("web.core");
+    var tour = require("web_tour.tour");
+    var base = require("web_editor.base");
 
-var _t = core._t;
+    var _t = core._t;
 
-base.ready().done(function () {
-
-    Tour.register({
-        id:   'banner',
-        name: _t("Build a page"),
-        path: '/page/homepage',
-        steps: [
-            {
-                title:     _t("Welcome to your website!"),
-                content:   _t("This tutorial will guide you to build your home page. We will start by adding a banner."),
-                popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
-            },
-            {
-                waitNot:   '.popover.tour',
-                element:   'button[data-action=edit]',
-                placement: 'bottom',
-                title:     _t("Edit this page"),
-                content:   _t("Every page of your website can be modified through the <i>Edit</i> button."),
-                popover:   { fixed: true },
-            },
-            {
-                snippet:   '#snippet_structure .oe_snippet:first',
-                placement: 'bottom',
-                title:     _t("Drag & Drop a Banner"),
-                content:   _t("Drag the Banner block and drop it in your page."),
-                popover:   { fixed: true },
-            },
-            {
-                waitFor:   '.oe_overlay_options .oe_options:visible',
-                element:   '#wrapwrap .carousel:first div.carousel-content',
-                placement: 'top',
-                title:     _t("Customize banner's text"),
-                content:   _t("Click in the text and start editing it."),
-                sampleText: 'Here, a customized text',
-            },
-            {
-                waitNot:   '#wrap .carousel:first div.carousel-content:has(h2:'+
-                    'containsExact('+_t('Your Banner Title')+')):has(h3:'+
-                    'containsExact('+_t('Click to customize this text')+'))',
-                element:   '.oe_snippet_parent:visible',
-                placement: 'bottom',
-                title:     _t("Get banner properties"),
-                content:   _t("Select the parent container to get the global options of the banner."),
-                popover:   { fixed: true },
-            },
-            {
-                element:   '.oe_overlay_options .oe_options:visible',
-                placement: 'left',
-                title:     _t("Customize the banner"),
-                content:   _t("Customize any block through this menu. Try to change the background of the banner."),
-                popover:   { next: _t("Continue") },
-            },
-            {
-                waitNot:   '.popover.tour',
-                snippet:   '#snippet_structure .oe_snippet:eq(7)',
-                placement: 'bottom',
-                title:     _t("Drag & Drop This Block"),
-                content:   _t("Drag the <em>'Features'</em> block and drop it below the banner."),
-                popover:   { fixed: true },
-            },
-            {
-                waitFor:   '.oe_overlay_options .oe_options:visible',
-                element:   'button[data-action=save]',
-                placement: 'right',
-                title:     _t("Save your modifications"),
-                content:   _t("Publish your page by clicking on the <em>'Save'</em> button."),
-                popover:   { fixed: true },
-            },
-            {
-                waitFor:   'button[data-action=edit]:visible',
-                title:     _t("Good Job!"),
-                content:   _t("Well done, you created your homepage."),
-                popover:   { next: _t("Continue") },
-            },
-            {
-                waitNot:   '.popover.tour',
-                element:   'a[data-action=show-mobile-preview]',
-                placement: 'bottom',
-                title:     _t("Test Your Mobile Version"),
-                content:   _t("Let's check how your homepage looks like on mobile devices."),
-                popover:   { fixed: true },
-            },
-            {
-                element:   '.modal-dialog:has(#mobile-viewport) button[data-dismiss=modal]',
-                placement: 'right',
-                title:     _t("Check Mobile Preview"),
-                content:   _t("Scroll to check rendering and then close the mobile preview."),
-                popover:   { next: _t("Continue") },
-            },
-            {
-                waitNot:   '.modal-dialog:has(#mobile-viewport)',
-                element:   '#content-menu-button',
-                placement: 'left',
-                title:     _t("Add new pages and menus"),
-                content:   _t("The 'Content' menu allows you to add pages or add the top menu."),
-                popover:   { next: _t("Close Tutorial") },
-            },
-        ]
-    });
+    tour.register("banner", {
+        url: "/",
+        wait_for: base.ready(),
+    }, [{
+        trigger: "a[data-action=edit]",
+        content: _t("<b>Click Edit</b> to start designing your homepage."),
+        position: "bottom",
+    }, {
+        trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
+        content: _t("Drag the <i>Cover</i> block and drop it in your page."),
+        position: "bottom",
+        run: "drag_and_drop",
+    }, {
+        trigger: "#wrapwrap .s_text_block_image_fw h2",
+        content: _t("<b>Click on a text</b> to start editing it. <i>It's that easy to edit your content!</i>"),
+        position: "left",
+        width: 150,
+        run: "text",
+    }, {
+        trigger: ".oe_overlay_options .oe_options",
+        extra_trigger: "#wrapwrap .s_text_block_image_fw h2:not(:containsExact(\"Headline\"))",
+        content: _t("Customize any block through this menu. Try to change the background of the banner."),
+        position: "bottom",
+    }, {
+        trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
+        content: _t("Drag another block in your page, below the cover."),
+        position: "bottom",
+        run: "drag_and_drop",
+    }, {
+        trigger: "button[data-action=save]",
+        extra_trigger: ".oe_overlay_options .oe_options",
+        content: _t("Publish your page by clicking on the <b>Save</b> button."),
+        position: "bottom",
+    }, {
+        trigger: "a[data-action=show-mobile-preview]",
+        content: _t("Good Job! You created your first page. Let's check how this page looks like on <b>mobile devices</b>."),
+        position: "bottom",
+    }, {
+        trigger: ".modal-dialog:has(#mobile-viewport) button[data-dismiss=modal]",
+        content: _t("After having checked how it looks on mobile, <b>close the preview</b>."),
+        position: "right",
+    }, {
+        trigger: "#oe_main_menu_navbar a[data-action=new_page]",
+        content: _t("<p><b>That's it.</b> Your homepage is live.</p><p>Continue adding more pages to your site or edit this page to make it even more awesome.</p>"),
+        position: "bottom",
+    }]);
 });
 
+
+odoo.define("website.tour.contact", function (require) {
+    "use strict";
+
+    var core = require("web.core");
+    var tour = require("web_tour.tour");
+    var base = require("web_editor.base");
+    var _t = core._t;
+
+    tour.register("contact", {
+        url: "/page/contactus",
+        wait_for: base.ready(),
+    }, [{
+        trigger: "li#customize-menu",
+        content: _t("<b>Install a contact form</b> to improve this page."),
+        extra_trigger: "#o_contact_mail",
+        position: "bottom",
+    }, {
+        trigger: "li#install_apps",
+        content: _t("<b>Install new apps</b> to get more features. Let's install the <i>'Contact form'</i> app."),
+        position: "bottom",
+    }]);
 });

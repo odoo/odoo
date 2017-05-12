@@ -3,16 +3,19 @@
 # * sale_stock
 # 
 # Translators:
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Cas Vissers <casvissers@brahoo.nl>, 2016
+# wilcobergacker <wilcobergacker@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-03-08 19:02+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: wilcobergacker <wilcobergacker@gmail.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,10 +23,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "<strong>Customer Reference:</strong>"
+msgstr "<strong>Klant referentie:</strong>"
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr "<strong>Incotermen:</strong>"
+msgstr "<strong>Incoterms:</strong>"
+
+#. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_aftersale
+msgid "After-Sale"
+msgstr "Nazorg"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -33,12 +46,23 @@ msgstr "Sta toevoegen verzendkosten toe"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
-msgstr "Sta productieorder eigenschap instellingen toe per orderregel (gevorderd)"
+msgstr ""
+"Sta productieorder eigenschap instellingen toe per orderregel (gevorderd)"
+
+#. module: sale_stock
+#: selection:sale.config.settings,module_sale_order_dates:0
+msgid ""
+"Allow to modify the sales order dates to postpone deliveries and "
+"procurements"
+msgstr ""
+"Toestaan om de verkooporderdatums aan te passen om leveringen en inkopen uit"
+" te stellen."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Allows you to tag sales order lines with properties."
-msgstr "Geeft u de mogelijkheid om verkooporderregels te labellen met eigenschappen"
+msgstr ""
+"Geeft u de mogelijkheid om verkooporderregels te labellen met eigenschappen"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
@@ -49,6 +73,11 @@ msgstr "Kies specifieke routes voor verkooporderregels (geavanceerd)"
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
 msgstr "Bedrijven"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_sale_order_dates
+msgid "Date"
+msgstr "Datum"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
@@ -78,7 +107,8 @@ msgstr "Uitgaande leveringen"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Don't use manufacturing properties (recommended as its easier)"
-msgstr "Gebruik geen fabricage eigenschappen (aanbevolen omdat het gemakkelijker is)"
+msgstr ""
+"Gebruik geen fabricage eigenschappen (aanbevolen omdat het gemakkelijker is)"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -97,14 +127,20 @@ msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
-msgstr "Incoterms zijn een reeks van verkoop condities.   Deze worden gebruikt om de transactiekosten en de verantwoordelijkheden tussen koper en verkoper te verdelen."
+msgstr ""
+"Incoterms zijn een reeks van verkoop condities.   Deze worden gebruikt om de"
+" transactiekosten en de verantwoordelijkheden tussen koper en verkoper te "
+"verdelen."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "International Commercial Terms (INCOTERMS) zijn een set van voorgedefinieerde commerciële voorwaarden, welke worden gebruikt bij internationaal transport."
+msgstr ""
+"International Commercial Terms (INCOTERMS) zijn een set van "
+"voorgedefinieerde commerciële voorwaarden, welke worden gebruikt bij "
+"internationaal transport."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -114,7 +150,7 @@ msgstr "Voorraad routes"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
 msgid "Invoice"
-msgstr "Factuuradres"
+msgstr "Factuur"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice_line
@@ -122,17 +158,26 @@ msgid "Invoice Line"
 msgstr "Factuurregel"
 
 #. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_invoiced
+msgid "Invoicing"
+msgstr "Facturatie"
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
-msgstr "Foutmarge op een leverdatum beloofd aan klanten. Producten worden ingepland voor verwerving en levering, zo veel dagen eerder dan de werkelijk beloofde datum om zo onverwachte vertragingen te kunnen opvangen."
+msgstr ""
+"Foutmarge op een leverdatum beloofd aan klanten. Producten worden ingepland "
+"voor verwerving en levering, zo veel dagen eerder dan de werkelijk beloofde "
+"datum om zo onverwachte vertragingen te kunnen opvangen."
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "No order specific routes like MTO or drop shipping"
-msgstr "Geen specifieke orderproductie zoals MTO of dropshipping"
+msgstr "Geen specifieke routes, zoals Maak op Order of Dropshipping"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -140,24 +185,18 @@ msgid "No shipping costs on sales orders"
 msgstr "Geen verzendkosten op verkooporders"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:141
+#: code:addons/sale_stock/models/sale_order.py:145
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Niet genoeg voorraad!"
 
 #. module: sale_stock
-#: code:addons/sale_stock/res_config.py:42
-#, python-format
-msgid "Only administrators can change the settings"
-msgstr "Alleen administrators kunnen deze instelling wijzigen"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
 msgid "Order Routing"
-msgstr "Orderproductie"
+msgstr "Route"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:152
+#: code:addons/sale_stock/models/sale_order.py:156
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Bestelde hoeveelheid is verminderd!"
@@ -178,6 +217,16 @@ msgid "Procurement"
 msgstr "Verwerving"
 
 #. module: sale_stock
+#: selection:sale.config.settings,module_sale_order_dates:0
+msgid "Procurements and deliveries dates are based on the sales order dates"
+msgstr "Verwervingen en leverdata zijn gebaseerd op de verkoopdatum."
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+msgid "Product"
+msgstr "Product"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
 msgid "Product Template"
 msgstr "Productsjabloon"
@@ -186,6 +235,11 @@ msgstr "Productsjabloon"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Properties on SO Lines"
 msgstr "Eigenschappen op verkooporderregels"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Retour boeken"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -205,7 +259,7 @@ msgstr "Verkooporderregels"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "Verkooporders"
+msgstr "Verkooporder"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -220,6 +274,11 @@ msgstr "Verkooporder analyses"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
+msgstr "Verkopen veiligheidsdagen"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
+msgid "Sales Safety Days *"
 msgstr "Verkopen veiligheidsdagen"
 
 #. module: sale_stock
@@ -259,15 +318,34 @@ msgid "Stock Move"
 msgstr "Voorraadmutatie"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:194
+#: code:addons/sale_stock/models/sale_order.py:202
 #, python-format
-msgid "This product is packaged by %d . You should sell %d ."
-msgstr "Dit product is verpakt door %d. U moet %d verkopen."
+msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
+msgstr "Dit product is verpakt door %.2f %s.. U moet %.2f %s verkopen."
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
+msgid "To Refund"
+msgstr "Te crediteren"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
+msgid "To Refund in SO"
+msgstr "Te crediteren in verkooporder"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Verplaatsing"
+msgstr "Overplaatsing"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_move_to_refund_so
+#: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
+msgid ""
+"Trigger a decrease of the delivered quantity in the associated Sale Order"
+msgstr ""
+"Leidt tot een daling van de geleverde hoeveelheid in de bijbehorende "
+"verkooporder"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -276,28 +354,37 @@ msgid "Warehouse"
 msgstr "Magazijn"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:193
+#: code:addons/sale_stock/models/sale_order.py:201
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:153
+#: code:addons/sale_stock/models/sale_order.py:157
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr "U verminderd de order hoeveelheid! Vergeet niet om handmatig uw leveringsorder te updaten indien dit nodig is."
+msgstr ""
+"U vermindert de order hoeveelheid! Vergeet niet om handmatig uw "
+"leveringsorder te updaten indien dit nodig is."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:142
+#: code:addons/sale_stock/models/sale_order.py:146
 #, python-format
 msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available!\n"
-"The stock on hand is %.2f %s."
-msgstr "U plant om %.2f %s te verkopen maar u heeft maar %.2f %s beschikbaar!\nDe beschikbare voorraad is %.2f %s."
+"You plan to sell %s %s but you only have %s %s available!\n"
+"The stock on hand is %s %s."
+msgstr ""
+"Je bent van plan om %s %s te verkopen, maar je hebt maar %s %s beschikbaar!\n"
+"De beschikbare voorraad is %s %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking_line
+msgid "stock.return.picking.line"
+msgstr "stock.return.picking.line"

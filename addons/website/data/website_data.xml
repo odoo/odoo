@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="default_website" model="website">
+            <field name="name">My Website</field>
+            <field name="domain">localhost</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="user_id" ref="base.public_user"/>
+            <field name="favicon" type="base64" file="web/static/src/img/favicon.ico"/>
+        </record>
+
+        <record id="main_menu" model="website.menu">
+            <field name="name">Top Menu</field>
+            <field name="website_id" ref="default_website"/>
+        </record>
+
+        <record id="menu_homepage" model="website.menu">
+            <field name="name">Home</field>
+            <field name="url">/page/homepage</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">10</field>
+            <field name="website_id" ref="default_website"/>
+        </record>
+
+        <record id="menu_contactus" model="website.menu">
+            <field name="name">Contact us</field>
+            <field name="url">/page/contactus</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">60</field>
+            <field name="website_id" ref="default_website"/>
+        </record>
+
+        <record id="action_module_website" model="ir.actions.act_window">
+            <field name="name">Website Apps</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="context" eval="'{\'search_default_category_id\':'+str(ref('base.module_category_website'))+'}'"/>
+            <field name="help" type="html">
+              <p><b>No website module found!</b></p>
+              <p>You should try other search criteria.</p>
+            </field>
+        </record>
+
+        <record id="action_module_theme" model="ir.actions.act_window">
+            <field name="name">Website Theme</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="context" eval="'{\'search_default_category_id\':'+str(ref('base.module_category_theme'))+'}'"/>
+            <field name="help" type="html">
+              <p><b>No theme module found!</b></p>
+              <p>You should try other search criteria.</p>
+            </field>
+        </record>
+
+        <record id="action_website" model="ir.actions.act_url">
+            <field name="name">Website</field>
+            <field name="url">/</field>
+            <field name="target">self</field>
+        </record>
+        <record id="action_website_homepage" model="ir.actions.act_url">
+            <field name="name">Website Homepage</field>
+            <field name="url">/page/homepage</field>
+            <field name="target">self</field>
+        </record>
+
+        <record id="menu_website" model="ir.ui.menu">
+            <field name="name">Website</field>
+            <field name="sequence" eval="200"/>
+            <field name="web_icon">website,static/description/icon.png</field>
+            <field name="action" ref="action_website"/>
+        </record>
+
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_website"/>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Pre loaded images -->
+
+        <!-- base64-encoded on ir.attachment, to allow to load image with the xmlid -->
+        <record id="website.business_conference" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">business_conference</field>
+            <field name="datas_fname">business_conference.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="website/static/src/img/library/business_conference.jpg"/>
+        </record>
+
+        <record id="website.library_image_01" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 01</field>
+            <field name="datas_fname">bridge.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/bridge.jpg</field>
+        </record>
+
+        <record id="website.library_image_02" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 02</field>
+            <field name="datas_fname">deliver.png</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/deliver.jpg</field>
+        </record>
+
+        <record id="website.library_image_03" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 03</field>
+            <field name="datas_fname">clock.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/clock.jpg</field>
+        </record>
+
+        <record id="website.library_image_04" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 04</field>
+            <field name="datas_fname">manufacturing.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/manufacturing.jpg</field>
+        </record>
+
+        <record id="website.library_image_05" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 05</field>
+            <field name="datas_fname">compass.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/compass.jpg</field>
+        </record>
+
+        <record id="website.library_image_06" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 06</field>
+            <field name="datas_fname">gift.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/gift.jpg</field>
+        </record>
+
+        <record id="website.library_image_07" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 07</field>
+            <field name="datas_fname">mobile_device.png</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/mobile_device.jpg</field>
+        </record>
+
+        <record id="website.library_image_08" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 08</field>
+            <field name="datas_fname">mobile.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/mobile.jpg</field>
+        </record>
+
+        <record id="website.library_image_09" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 09</field>
+            <field name="datas_fname">office.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/office.jpg</field>
+        </record>
+
+        <record id="website.library_image_10" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 10</field>
+            <field name="datas_fname">ice_coffe.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/ice_coffe.jpg</field>
+        </record>
+
+        <record id="website.library_image_11" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 11</field>
+            <field name="datas_fname">rocket.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/rocket.jpg</field>
+        </record>
+
+        <record id="website.library_image_12" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 12</field>
+            <field name="datas_fname">sell.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/sell.jpg</field>
+        </record>
+
+        <record id="website.library_image_13" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 13</field>
+            <field name="datas_fname">shop.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/shop.jpg</field>
+        </record>
+
+        <record id="website.library_image_14" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 14</field>
+            <field name="datas_fname">sign.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/sign.jpg</field>
+        </record>
+
+        <record id="website.library_image_15" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 15</field>
+            <field name="datas_fname">sweet.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/sweet.jpg</field>
+        </record>
+
+        <record id="website.library_image_16" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Library Image 16</field>
+            <field name="datas_fname">wine.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/wine.jpg</field>
+        </record>
+
+        <!-- Website Builder Background Images -->
+        <record id="website.s_background_image_01" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Background Image 01</field>
+            <field name="datas_fname">s_background_image_01.jpg</field>
+            <field name="type">url</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="url">/website/static/src/img/backgrounds/peak.jpg</field>
+        </record>
+        <record id="website.s_background_image_02" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Background Image 02</field>
+            <field name="datas_fname">s_background_image_02.jpg</field>
+            <field name="type">url</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="url">/website/static/src/img/backgrounds/la.jpg</field>
+        </record>
+        <record id="website.s_background_image_03" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Background Image 03</field>
+            <field name="datas_fname">s_background_image_03.jpg</field>
+            <field name="type">url</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="url">/website/static/src/img/backgrounds/panama-sky.jpg</field>
+        </record>
+        <record id="website.s_background_image_04" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Background Image 04</field>
+            <field name="datas_fname">s_background_image_04.jpg</field>
+            <field name="type">url</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="url">/website/static/src/img/backgrounds/cubes.jpg</field>
+        </record>
+        <record id="website.s_background_image_05" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Background Image 05</field>
+            <field name="datas_fname">s_background_image_05.jpg</field>
+            <field name="type">url</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="url">/website/static/src/img/backgrounds/building-profile.jpg</field>
+        </record>
+        <record id="website.s_background_image_06" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Background Image 06</field>
+            <field name="datas_fname">s_background_image_06.jpg</field>
+            <field name="type">url</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="url">/website/static/src/img/backgrounds/type.jpg</field>
+        </record>
+        <record id="website.s_background_image_07" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Background Image 07</field>
+            <field name="datas_fname">s_background_image_07.jpg</field>
+            <field name="type">url</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="url">/website/static/src/img/backgrounds/people.jpg</field>
+        </record>
+        <record id="website.s_background_image_08" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Background Image 08</field>
+            <field name="datas_fname">s_background_image_08.jpg</field>
+            <field name="type">url</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="url">/website/static/src/img/backgrounds/city.jpg</field>
+        </record>
+        <record id="website.s_background_image_09" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Website Background Image 09</field>
+            <field name="datas_fname">s_background_image_09.jpg</field>
+            <field name="type">url</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="url">/website/static/src/img/backgrounds/sails.jpg</field>
+        </record>
+
+
+        <!-- Snippets' Default Images (to be replaced by themes) -->
+
+        <record id="website.s_cover_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Cover Snippet - Default Image</field>
+            <field name="datas_fname">s_cover_default_image.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/web/image/website.s_background_image_03</field>
+        </record>
+
+        <record id="website.s_parallax_slider_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Parallax Slider Snippet - Default Image</field>
+            <field name="datas_fname">s_parallax_slider_default_image.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_parallax_slider.png</field>
+        </record>
+
+        <record id="website.s_image_text_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Image Text Snippet - Default Image</field>
+            <field name="datas_fname">s_image_text_default_image.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_image_text.png</field>
+        </record>
+
+        <record id="website.s_text_image_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Text Image Snippet - Default Image</field>
+            <field name="datas_fname">s_text_image_default_image.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_text_image.png</field>
+        </record>
+
+        <record id="website.s_image_floating_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Image Floating Snippet - Default Image</field>
+            <field name="datas_fname">s_image_floating_default_image.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_image_floating.png</field>
+        </record>
+
+        <record id="website.s_banner_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Banner Snippet - Default Image</field>
+            <field name="datas_fname">s_banner_default_image.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_banner.png</field>
+        </record>
+
+        <record id="website.s_big_picture_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Big Image Snippet - Default Image</field>
+            <field name="datas_fname">s_big_picture_default_image.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_big_picture.png</field>
+        </record>
+
+        <record id="website.s_reference_demo_image_1" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Reference Snippet - Demo Image 1</field>
+            <field name="datas_fname">s_reference_demo_image_1.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_references_1.png</field>
+        </record>
+
+        <record id="website.s_reference_demo_image_2" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Reference Snippet - Demo Image 2</field>
+            <field name="datas_fname">s_reference_demo_image_2.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_references_2.png</field>
+        </record>
+
+        <record id="website.s_reference_demo_image_3" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Reference Snippet - Demo Image 3</field>
+            <field name="datas_fname">s_reference_demo_image_3.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_references_3.png</field>
+        </record>
+
+        <record id="website.s_reference_demo_image_4" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Reference Snippet - Demo Image 4</field>
+            <field name="datas_fname">s_reference_demo_image_4.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_references_4.png</field>
+        </record>
+
+        <record id="website.s_reference_demo_image_5" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Reference Snippet - Demo Image 5</field>
+            <field name="datas_fname">s_reference_demo_image_5.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_references_5.png</field>
+        </record>
+
+    </data>
+</odoo>

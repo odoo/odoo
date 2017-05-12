@@ -3,15 +3,16 @@
 # * product_margin
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Kostas Goutoudis <goutoudis@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-01-02 21:59+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
-"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,12 +27,12 @@ msgstr "# Τιμολογούνται στην Αγορά"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr "# Τιμολογούνται σε Πώληση"
+msgstr "# Τιμολογούνται στην Πώληση"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
-msgid "#Purchased"
-msgstr "#Αγορών"
+msgid "# Purchased"
+msgstr ""
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -46,7 +47,7 @@ msgstr "Μέση Τιμή στα Τιμολόγια Πελατών"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "Μέση Τιμή σε Πληρωμές Προμηθευτών"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_avg_price
@@ -57,7 +58,7 @@ msgstr "Μέση Τιμή Τεμαχ."
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Cancel"
-msgstr "Ακύρωση"
+msgstr "Άκυρο"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -153,7 +154,7 @@ msgstr "Γενικές Πληροφορίες"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_id
 msgid "ID"
-msgstr "ID"
+msgstr "Κωδικός"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_income_id
@@ -169,7 +170,7 @@ msgstr "Κατάσταση Τιμολογίου"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin___last_update
 msgid "Last Modified on"
-msgstr "Τελευταία αλλαγή στις"
+msgstr "Τελευταία τροποποίηση στις"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_write_uid
@@ -241,7 +242,7 @@ msgstr "Εξοφλημένο"
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
-msgstr "Προϊόν"
+msgstr "Είδος"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
@@ -254,7 +255,7 @@ msgid "Product Margin"
 msgstr "Περιθόριο Προϊόντος"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:66
+#: code:addons/product_margin/wizard/product_margin.py:49
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -293,7 +294,7 @@ msgstr "Κενό Πωλήσεων"
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Standard Price"
-msgstr "Σταθερή Τιμή"
+msgstr "Τυπική τιμή"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_normal_cost
@@ -333,14 +334,18 @@ msgstr "Άθροισμα Ποσότητας σε λογαριασμούς Προ
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr "Αυτός ο λογαριασμός θα χρησιμοποιείται για τα τιμολόγια αντί για την προκαθορισμένη αξιολόγηση των εξόδων για το τρέχον προϊόν."
+msgstr ""
+"Αυτός ο λογαριασμός θα χρησιμοποιείται για τα τιμολόγια αντί για την "
+"προκαθορισμένη αξιολόγηση των εξόδων για το τρέχον προϊόν."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr "Αυτός ο λογαριασμός θα χρησιμοποιείται για τα τιμολόγια αντί για την προκαθορισμένη αξιολόγηση των πωλήσεων για το τρέχον προϊόν."
+msgstr ""
+"Αυτός ο λογαριασμός θα χρησιμοποιείται για τα τιμολόγια αντί για την "
+"προκαθορισμένη αξιολόγηση των πωλήσεων για το τρέχον προϊόν."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
@@ -377,7 +382,7 @@ msgstr "Τζίρος"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin
 msgid "Turnover - Standard price"
-msgstr ""
+msgstr "Κύκλου εργασιών - Τυπική τιμή"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_supplier_taxes_id

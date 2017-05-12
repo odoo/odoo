@@ -9,7 +9,8 @@ var _t = core._t;
 Sidebar.include({
     init : function(){
         this._super.apply(this, arguments);
-        if (this.getParent().view_type == "form"){
+        var view = this.getParent();
+        if (view.fields_view && view.fields_view.type === "form") {
             this.sections.splice(1, 0, { 'name' : 'files', 'label' : _t('Attachment(s)'), });
             this.items.files = [];
         }

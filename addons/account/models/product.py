@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ProductCategory(models.Model):
@@ -57,6 +57,13 @@ class ProductTemplate(models.Model):
             'income': self.property_account_income_id or self.categ_id.property_account_income_categ_id,
             'expense': self.property_account_expense_id or self.categ_id.property_account_expense_categ_id
         }
+
+    @api.multi
+    def _get_asset_accounts(self):
+        res = {}
+        res['stock_input'] = False
+        res['stock_output'] = False
+        return res
 
     @api.multi
     def get_product_accounts(self, fiscal_pos=None):

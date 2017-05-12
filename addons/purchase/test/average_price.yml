@@ -12,6 +12,7 @@
     cost_method: average
     property_stock_account_input: o_expense
     property_stock_account_output: o_income
+    supplier_taxes_id: []
     description: Average Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
   I create a draft Purchase Order for first incoming shipment for 10 pieces at 60€
@@ -28,8 +29,8 @@
 - 
   I confirm the first purchase order
 -
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_average1")])
+  !python {model: purchase.order, id: purchase_order_average1}: |
+    self.button_confirm()
 - 
   I check the "Approved" status of purchase order 1
 -
@@ -38,16 +39,15 @@
 - 
   Process the reception of purchase order 1
 -
-  !python {model: stock.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average1")).picking_ids
-    self.do_transfer(cr, uid, [pick_ids[0].id])
+  !python {model: purchase.order, id: purchase_order_average1}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
 - 
   Check the standard price of the product (average icecream).
 - 
-  !python {model: product.product}: |
-    product = self.browse(cr, uid, ref("product_average_icecream"))
-    assert product.qty_available == 10.0, 'Wrong quantity in stock after first reception'
-    assert product.standard_price == 60.0, 'Standard price should be the price of the first reception!'
+  !python {model: product.product, id: product_average_icecream}: |
+    assert self.qty_available == 10.0, 'Wrong quantity in stock after first reception'
+    assert self.standard_price == 60.0, 'Standard price should be the price of the first reception!'
 - 
   I create a draft Purchase Order for second incoming shipment for 30 pieces at 80€
 - 
@@ -63,19 +63,19 @@
 - 
   I confirm the second purchase order
 - 
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_average2")])
+  !python {model: purchase.order, id: purchase_order_average2}: |
+    self.button_confirm()
 -
   Process the reception of purchase order 2
 - 
-  !python {model: stock.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average2")).picking_ids
-    self.do_transfer(cr, uid, [pick_ids[0].id])
+  !python {model: purchase.order, id: purchase_order_average2}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
 - 
   Check the standard price
 - 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_average_icecream")).standard_price == 75.0, 'After second reception, we should have an average price of 75.0 on the product'
+  !python {model: product.product, id: product_average_icecream}: |
+    assert self.standard_price == 75.0, 'After second reception, we should have an average price of 75.0 on the product'
 - 
   Create picking to send some goods
 - 
@@ -94,15 +94,15 @@
 - 
   I assign this outgoing shipment and process the delivery
 - 
-  !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("outgoing_average_shipment")])
-    self.do_transfer(cr, uid, [ref("outgoing_average_shipment")])
+  !python {model: stock.picking, id: outgoing_average_shipment}: |
+    self.action_assign()
+    self.do_transfer()
 - 
   Check the standard price (60 * 10 + 30 * 80) / 40 = 75.0 did not change
 - 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_average_icecream")).standard_price == 75.0, 'Standard price should not have changed with outgoing picking!'
-    assert self.browse(cr, uid, ref("product_average_icecream")).qty_available == 20.0, 'Pieces were not picked correctly as the quantity on hand is wrong'
+  !python {model: product.product, id: product_average_icecream}: |
+    assert self.standard_price == 75.0, 'Standard price should not have changed with outgoing picking!'
+    assert self.qty_available == 20.0, 'Pieces were not picked correctly as the quantity on hand is wrong'
 - 
   Make a new purchase order with 500 g Average Ice Cream at a price of 0.2€/g
 - 
@@ -118,18 +118,17 @@
 - 
   I confirm the first purchase order
 -
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_average3")])
+  !python {model: purchase.order, id: purchase_order_average3}: |
+    self.button_confirm()
 - 
   Process the reception of purchase order 3 in grams
 - 
-  !python {model: stock.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average3")).picking_ids
-    self.do_transfer(cr, uid, [pick_ids[0].id])
+  !python {model: purchase.order, id: purchase_order_average3}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
 - 
   Check price is (75.0*20 + 200*0.5) / 20.5 = 78.04878
 - 
-  !python {model: product.product}: |
-    product = self.browse(cr, uid, ref("product_average_icecream"))
-    assert product.qty_available == 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock'
-    assert round(self.browse(cr, uid, ref("product_average_icecream")).standard_price, 2) == 78.05, 'Standard price as average price of third reception with other UoM incorrect! Got %s instead of 78.05' % (round(self.browse(cr, uid, ref("product_average_icecream")).standard_price, 2),)
+  !python {model: product.product, id: product_average_icecream}: |
+    assert self.qty_available == 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock'
+    assert round(self.standard_price, 2) == 78.05, 'Standard price as average price of third reception with other UoM incorrect! Got %s instead of 78.05' % (round(self.standard_price, 2),)

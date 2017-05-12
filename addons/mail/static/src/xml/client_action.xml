@@ -26,6 +26,8 @@
             <div t-attf-class="o_mail_chat_channel_item #{(active_channel_id == 'channel_starred') ? 'o_active': ''}"
                  data-channel-id="channel_starred">
                 <span class="o_channel_name"> <i class="fa fa-star-o"/> Starred </span>
+                <t t-set="counter" t-value="starred_counter"/>
+                <t t-call="mail.chat.SidebarNeedaction"/>
             </div>
 
             <t t-set="channel_type" t-value="'public'"/>
@@ -74,7 +76,7 @@
         </t>
         <t t-if="!disable_add_channel || !empty">
             <div class="o_mail_sidebar_title">
-                <h4><t t-esc="channel_title"/></h4>
+                <h4 t-att-class="channel_type == 'public' ? 'o_mail_open_channels' : ''"><t t-esc="channel_title"/></h4>
                 <span t-if="!disable_add_channel" class="fa fa-plus o_add" title="Add" t-attf-data-type="#{channel_type}"/>
             </div>
         </t>
@@ -130,9 +132,8 @@
         <div>
             <button type="button" class="btn btn-primary btn-sm o_mail_toggle_channels visible-xs-inline" title="Toggle Channels">Channels</button>
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite" title="Invite people">Invite</button>
-            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_mark_read" title="Mark all as read">Mark all read</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_mark_read" title="Mark all as read">Mark all read</button>
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_unstar_all" title="Unstar all messages">Unstar all</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_new_message" title="Compose a new message">Send mail</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unsubscribe" title="Unsubscribe from channel">Unsubscribe</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_settings" title="Open channel settings">Settings</button>
         </div>

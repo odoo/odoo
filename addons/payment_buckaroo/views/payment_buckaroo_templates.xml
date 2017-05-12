@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <template id="buckaroo_acquirer_button">
+            <form t-if="acquirer.brq_websitekey" t-att-action="tx_url" method="post" target="_self">
+                <input type="hidden" name="Brq_websitekey" t-att-value="Brq_websitekey"/>
+                <input type="hidden" name="Brq_amount" t-att-value="Brq_amount"/>
+                <input type="hidden" name="Brq_currency" t-att-value="Brq_currency"/>
+                <input type="hidden" name="Brq_invoicenumber" t-att-value="Brq_invoicenumber"/>
+                <input type="hidden" name="Brq_signature" t-att-value="Brq_signature"/>
+                <input type="hidden" name="brq_test" t-att-value="brq_test"/>
+                <input type="hidden" name="Brq_culture" t-att-value="Brq_culture"/>
+                <!-- URLs -->
+                <input t-if="Brq_return" type='hidden' name='Brq_return'
+                    t-att-value="Brq_return"/>
+                <input t-if="Brq_returncancel" type='hidden' name='Brq_returncancel'
+                    t-att-value="Brq_returncancel"/>
+                <input t-if="Brq_returnerror" type='hidden' name='Brq_returnerror'
+                    t-att-value="Brq_returnerror"/>
+                <input t-if="Brq_returnreject" type='hidden' name='Brq_returnreject'
+                    t-att-value="Brq_returnreject"/>
+                <input type='hidden' name='add_returndata' t-att-value="add_returndata"/>
+                <!-- submit -->
+                <button type="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_buckaroo/static/src/img/buckaroo_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </form>
+        </template>
+
+    </data>
+</odoo>

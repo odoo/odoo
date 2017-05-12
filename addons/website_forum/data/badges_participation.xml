@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <!-- Biography: complet your profile -->
@@ -137,46 +137,6 @@
             <field name="target_goal">100</field>
         </record>
 
-        <!-- Expert: tag-based activity -->
-<!--         <record id="badge_10" model="gamification.badge">
-            <field name="name">Expert</field>
-            <field name="description">Posted more than 10 questions or answers in one tag</field>
-            <field name="level">silver</field>
-        </record>
-        <record model="gamification.goal.definition" id="definition_expert">
-            <field name="name">Expert</field>
-            <field name="description">Post more than 10 questions in one tag</field>
-            <field name="computation_mode">python</field>
-            <field name="compute_code">def get_counter(cr, uid, context=None):
-    res = 1
-    Post = pool['forum.post']
-    Tag = pool['forum.tag']
-    for tag_id in Tag.search(cr, uid, [], context=context):
-        post_count = Post.search_count(cr, uid , [('tag_ids', 'in', tag_id), ('user_id', '=', object.user_id.id)], context=context)
-        if post_count >= 10:
-             res += 1
-    return res
-result = get_counter(cr, uid, context=context)
-            </field>
-            <field name="display_mode">boolean</field>
-            <field name="condition">higher</field>
-        </record>
-        <record model="gamification.challenge" id="challenge_expert">
-            <field name="name">Expert</field>
-            <field name="period">once</field>
-            <field name="visibility_mode">personal</field>
-            <field name="report_message_frequency">never</field>
-            <field name="reward_id" eval="ref('badge_10')" />
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
-            <field name="state">inprogress</field>
-            <field name="category">forum</field>
-        </record>
-        <record model="gamification.challenge.line" id="line_expert">
-            <field name="definition_id" eval="ref('definition_expert')" />
-            <field name="target_goal">2</field>
-            <field name="challenge_id" eval="ref('challenge_expert')" />
-        </record> -->
-
         <record id="badge_32" model="gamification.badge">
             <field name="name">Taxonomist</field>
             <field name="description">Created a tag used by 15 questions</field>
@@ -213,4 +173,4 @@ result = get_counter(cr, uid, context=context)
         </record>
 
     </data>
-</openerp>
+</odoo>

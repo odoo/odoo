@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <record id="badge_good_job" model="gamification.badge">
             <field name="name">Good Job</field>
@@ -41,7 +40,6 @@
             <field name="description">Badge Granted</field>
         </record>
 
-
         <record id="email_template_badge_received" model="mail.template">
             <field name="name">Received Badge</field>
             <field name="model_id" ref="gamification.model_gamification_badge_user"/>
@@ -59,4 +57,4 @@
         ]]></field>
         </record>
     </data>
-</openerp>
+</odoo>

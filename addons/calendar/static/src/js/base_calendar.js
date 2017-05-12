@@ -1,6 +1,7 @@
 odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
+var bus = require('bus.bus').bus;
 var core = require('web.core');
 var CalendarView = require('web_calendar.CalendarView');
 var data = require('web.data');
@@ -17,72 +18,11 @@ var _t = core._t;
 var _lt = core._lt;
 var QWeb = core.qweb;
 
-function reload_favorite_list(result) {
-    var self = result;
-    var current = result;
-    if (result.view) {
-        self = result.view;
-    }
-    return new Model("res.users")
-    .query(["partner_id"])
-    .filter([["id", "=", self.dataset.context.uid]])
-    .first()
-    .done(function(result) {
-        var sidebar_items = {};
-        var filter_value = result.partner_id[0];
-        var filter_item = {
-            value: filter_value,
-            label: result.partner_id[1] + _lt(" [Me]"),
-            color: self.get_color(filter_value),
-            avatar_model: self.avatar_model,
-            is_checked: true,
-            is_remove: false,
-        };
-        sidebar_items[filter_value] = filter_item;
-
-        filter_item = {
-            value: -1,
-            label: _lt("Everybody's calendars"),
-            color: self.get_color(-1),
-            avatar_model: self.avatar_model,
-            is_checked: false
-        };
-        sidebar_items[-1] = filter_item;
-        //Get my coworkers/contacts
-        new Model("calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
-            _.each(result, function(item) {
-                filter_value = item.partner_id[0];
-                filter_item = {
-                    value: filter_value,
-                    label: item.partner_id[1],
-                    color: self.get_color(filter_value),
-                    avatar_model: self.avatar_model,
-                    is_checked: true
-                };
-                sidebar_items[filter_value] = filter_item;
-            });
-
-            self.all_filters = sidebar_items;
-            self.now_filter_ids = $.map(self.all_filters, function(o) { return o.value; });
-            
-            self.sidebar.filter.events_loaded(self.get_all_filters_ordered());
-            self.sidebar.filter.set_filters();
-            self.sidebar.filter.add_favorite_calendar();
-            self.sidebar.filter.destroy_filter();
-        }).done(function () {
-            self.$calendar.fullCalendar('refetchEvents');
-            if (current.ir_model_m2o) {
-                current.ir_model_m2o.set_value(false);
-            }
-        });
-    });
-}
-
 CalendarView.include({
     extraSideBar: function() {
         var result = this._super();
         if (this.useContacts) {
-            return result.then(reload_favorite_list(this));
+            return result.then(this.sidebar.filter.initialize_favorites.bind(this.sidebar.filter));
         }
         return result;
     },
@@ -97,33 +37,39 @@ CalendarView.include({
     }
 });
 
+var FieldMany2One = core.form_widget_registry.get('many2one');
+var SidebarFilterM2O = FieldMany2One.extend({
+    get_search_blacklist: function () {
+        return this._super.apply(this, arguments).concat(this.filter_ids);
+    },
+    set_filter_ids: function (filter_ids) {
+        this.filter_ids = filter_ids;
+    },
+});
+
 widgets.SidebarFilter.include({
-    events_loaded: function() {
+    events: _.extend(widgets.SidebarFilter.prototype.events, {
+        'click .o_remove_contact': 'on_remove_filter',
+    }),
+
+    init: function () {
         this._super.apply(this, arguments);
-        this.reinitialize_m2o();
+        this.ds_contacts = new data.DataSet(this, 'calendar.contacts', session.context);
     },
-    add_favorite_calendar: function() {
-        if (this.dfm)
-            return;
-        this.initialize_m2o();
-    },
-    reinitialize_m2o: function() {
-        if (this.dfm) {
-            this.dfm.destroy();
-            this.dfm = undefined;
-        }
-        this.initialize_m2o();
+    initialize_favorites: function () {
+        return this.load_favorite_list().then(this.initialize_m2o.bind(this));
     },
     initialize_m2o: function() {
-        var self = this;
-        this.dfm = new form_common.DefaultFieldManager(self);
+        this.dfm = new form_common.DefaultFieldManager(this);
+        if (!this.view.useContacts) {
+            return;
+        }
         this.dfm.extend_field_desc({
             partner_id: {
                 relation: "res.partner",
             },
         });
-        var FieldMany2One = core.form_widget_registry.get('many2one');
-        this.ir_model_m2o = new FieldMany2One(self.dfm, {
+        this.m2o = new SidebarFilterM2O(this.dfm, {
             attrs: {
                 class: 'o_add_favorite_calendar',
                 name: "partner_id",
@@ -132,45 +78,91 @@ widgets.SidebarFilter.include({
                 placeholder: _t("Add Favorite Calendar"),
             },
         });
-        this.ir_model_m2o.appendTo(this.$el);
-        this.ir_model_m2o.on('change:value', self, function() { 
-            self.add_filter();
+        this.m2o.set_filter_ids(_.pluck(this.view.all_filters, 'value'));
+        this.m2o.appendTo(this.$el);
+        var self = this;
+        this.m2o.on('change:value', this, function() {
+            // once selected, we reset the value to false.
+            if (self.m2o.get_value()) {
+                self.on_add_filter();
+            }
         });
     },
-    add_filter: function() {
+    load_favorite_list: function () {
+        var self = this;
+        // Untick sidebar's filters if there is an active partner in the context
+        var active_partner = (this.view.dataset.context.active_model === 'res.partner');
+        return session.is_bound.then(function() {
+            self.view.all_filters = {};
+            self.view.now_filter_ids = [];
+            self._add_filter(session.partner_id, session.name + _lt(" [Me]"), !active_partner);
+            self._add_filter(-1, _lt("Everybody's calendars"), false, false);
+            //Get my coworkers/contacts
+            return new Model("calendar.contacts")
+                .query(["partner_id"])
+                .filter([["user_id", "=", session.uid]])
+                .all()
+                .then(function(result) {
+                    _.each(result, function(item) {
+                        self._add_filter(item.partner_id[0], item.partner_id[1], !active_partner, true);
+                    });
+
+                    self.view.now_filter_ids = _.pluck(self.view.all_filters, 'value');
+
+                    self.render();
+                });
+        });
+    },
+    reload: function () {
+        this.trigger_up('reload_events');
+        this.render();
+        this.m2o.set_filter_ids(_.pluck(this.view.all_filters, 'value'));
+        this.m2o.set_value(false);
+    },
+    _add_filter: function (value, label, is_checked, can_be_removed) {
+        this.view.all_filters[value] = {
+            value: value,
+            label: label,
+            color: this.view.get_color(value),
+            avatar_model: this.view.avatar_model,
+            is_checked: is_checked || false,
+            can_be_removed: can_be_removed || false,
+        };
+        if (is_checked) {
+            this.view.now_filter_ids.push(value);
+        }
+    },
+    _remove_filter: function (value) {
+        delete this.view.all_filters[value];
+        var index = this.view.now_filter_ids.indexOf(value);
+        if (index >= 0) {
+            this.view.now_filter_ids.splice(index, 1);
+        }
+    },
+    on_add_filter: function() {
         var self = this;
         var defs = [];
-        defs.push(new Model("res.users")
-        .query(["partner_id"])
-        .filter([["id", "=",this.view.dataset.context.uid]])
-        .first()
-        .done(function(result){
-            $.map(self.ir_model_m2o.display_value, function(element,index) {
-                if (result.partner_id[0] != index){
-                    self.ds_message = new data.DataSetSearch(self, 'calendar.contacts');
-                    defs.push(self.ds_message.call("create", [{'partner_id': index}]));
-                }
-            });
-        }));
-        return $.when.apply(null, defs).then(function() {
-            return reload_favorite_list(self);
+        _.each(this.m2o.display_value, function(element, index) {
+            if (session.partner_id !== index) {
+                defs.push(self.ds_contacts.call("create", [{'partner_id': index}]).then(function () {
+                    self._add_filter(parseInt(index), element, true, true);
+                    self.reload();
+                }));
+            }
         });
+        return $.when.apply(null, defs).then(this.reload.bind(this));
     },
-    destroy_filter: function(e) {
+    on_remove_filter: function(e) {
         var self = this;
-        this.$(".oe_remove_follower").on('click', function(e) {
-            self.ds_message = new data.DataSetSearch(self, 'calendar.contacts');
-            var id = $(e.currentTarget)[0].dataset.id;
+        var id = $(e.currentTarget).data('id');
 
-            Dialog.confirm(self, _t("Do you really want to delete this filter from favorite?"), {
-                confirm_callback: function() {
-                    self.ds_message.call('search', [[['partner_id', '=', parseInt(id)]]]).then(function(record) {
-                        return self.ds_message.unlink(record);
-                    }).done(function() {
-                        reload_favorite_list(self);
-                    });
-                },
-            });
+        Dialog.confirm(this, _t("Do you really want to delete this filter from favorites ?"), {
+            confirm_callback: function() {
+                self.ds_contacts.call('unlink_from_partner_id', [id]).then(function () {
+                    self._remove_filter(id);
+                    self.reload();
+                });
+            },
         });
     },
 });
@@ -207,44 +199,60 @@ var CalendarNotification = Notification.extend({
 });
 
 WebClient.include({
-    get_next_notif: function() {
+    display_calendar_notif: function(notifications) {
         var self = this;
+        var last_notif_timer = 0;
 
-        this.rpc("/calendar/notify")
-        .done(function(result) {
-            _.each(result, function(res) {
-                setTimeout(function() {
-                    // If notification not already displayed, we create and display it (FIXME is this check usefull?)
-                    if(self.$(".eid_" + res.event_id).length === 0) {
-                        self.notification_manager.display(new CalendarNotification(self.notification_manager, res.title, res.message, res.event_id));
-                    }
-                }, res.timer * 1000);
-            });
-        })
-        .fail(function(err, ev) {
-            if(err.code === -32098) {
-                // Prevent the CrashManager to display an error
-                // in case of an xhr error not due to a server error
-                ev.preventDefault();
+        // Clear previously set timeouts and destroy currently displayed calendar notifications
+        clearTimeout(this.get_next_calendar_notif_timeout);
+        _.each(this.calendar_notif_timeouts, clearTimeout);
+        _.each(this.calendar_notif, function(notif) {
+            if (!notif.isDestroyed()) {
+                notif.destroy();
             }
         });
+        this.calendar_notif_timeouts = {};
+        this.calendar_notif = {};
+
+        // For each notification, set a timeout to display it
+        _.each(notifications, function(notif) {
+            self.calendar_notif_timeouts[notif.event_id] = setTimeout(function() {
+                var notification = new CalendarNotification(self.notification_manager, notif.title, notif.message, notif.event_id);
+                self.notification_manager.display(notification);
+                self.calendar_notif[notif.event_id] = notification;
+            }, notif.timer * 1000);
+            last_notif_timer = Math.max(last_notif_timer, notif.timer);
+        });
+
+        // Set a timeout to get the next notifications when the last one has been displayed
+        if (last_notif_timer > 0) {
+            this.get_next_calendar_notif_timeout = setTimeout(this.get_next_calendar_notif.bind(this), last_notif_timer * 1000);
+        }
     },
-    check_notifications: function() {
-        var self = this;
-        this.get_next_notif();
-        this.intervalNotif = setInterval(function() {
-            self.get_next_notif();
-        }, 5 * 60 * 1000);
+    get_next_calendar_notif: function() {
+        this.rpc("/calendar/notify", {}, {shadow: true})
+            .done(this.display_calendar_notif.bind(this))
+            .fail(function(err, ev) {
+                if(err.code === -32098) {
+                    // Prevent the CrashManager to display an error
+                    // in case of an xhr error not due to a server error
+                    ev.preventDefault();
+                }
+            });
     },
-    //Override the show_application of addons/web/static/src/js/chrome.js       
     show_application: function() {
-        this._super();
-        this.check_notifications();
-    },
-    //Override addons/web/static/src/js/chrome.js       
-    on_logout: function() {
-        this._super();
-        clearInterval(this.intervalNotif);
+        // An event is triggered on the bus each time a calendar event with alarm
+        // in which the current user is involved is created, edited or deleted
+        this.calendar_notif_timeouts = {};
+        this.calendar_notif = {};
+        bus.on('notification', this, function (notifications) {
+            _.each(notifications, (function (notification) {
+                if (notification[0][1] === 'calendar.alarm') {
+                    this.display_calendar_notif(notification[1]);
+                }
+            }).bind(this));
+        });
+        return this._super.apply(this, arguments).then(this.get_next_calendar_notif.bind(this));
     },
 });
 
@@ -262,20 +270,7 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
     },
 });
 
-function showCalendarInvitation(db, action, id, view, attendee_data) {
-    session.session_bind(session.origin).then(function () {
-        if (session.session_is_valid(db) && session.username !== "anonymous") {
-            window.location.href = _.str.sprintf('/web?db=%s#id=%s&view_type=form&model=calendar.event', db, id);
-        } else {
-            $("body").prepend(QWeb.render('CalendarInvitation', {attendee_data: JSON.parse(attendee_data)}));
-        }
-    });
-}
-
 core.form_widget_registry.add('many2manyattendee', Many2ManyAttendee);
 
-return {
-    showCalendarInvitation: showCalendarInvitation,
-};
 
 });

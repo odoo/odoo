@@ -3,27 +3,20 @@
 # * website_sale_options
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 10:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
+"POT-Creation-Date: 2016-09-29 14:01+0000\n"
+"PO-Revision-Date: 2016-09-29 14:01+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-
-#. module: website_sale_options
-#: code:addons/website_sale_options/models/sale_order.py:46
-#, python-format
-msgid ""
-"%s\n"
-"Option for: %s"
-msgstr ""
 
 #. module: website_sale_options
 #: model:product.attribute.value,name:website_sale_options.product_attribute_value_1
@@ -77,8 +70,27 @@ msgid "Linked Order Line"
 msgstr ""
 
 #. module: website_sale_options
+#: code:addons/website_sale_options/models/sale_order.py:46
+#, python-format
+msgid "Option for:"
+msgstr ""
+
+#. module: website_sale_options
+#: code:addons/website_sale_options/models/sale_order.py:48
+#, python-format
+msgid "Option:"
+msgstr ""
+
+#. module: website_sale_options
 #: model:ir.model.fields,field_description:website_sale_options.field_product_template_optional_product_ids
 msgid "Optional Products"
+msgstr ""
+
+#. module: website_sale_options
+#: model:ir.model.fields,help:website_sale_options.field_product_template_optional_product_ids
+msgid ""
+"Optional Products are suggested whenever the customer hits *Add to Cart* "
+"(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
 
 #. module: website_sale_options
@@ -112,11 +124,6 @@ msgid "Product to add in your shopping cart"
 msgstr ""
 
 #. module: website_sale_options
-#: model:ir.model.fields,help:website_sale_options.field_product_template_optional_product_ids
-msgid "Products to propose when add to cart."
-msgstr ""
-
-#. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Quantity"
 msgstr "Množství"
@@ -138,26 +145,19 @@ msgstr ""
 
 #. module: website_sale_options
 #: model:product.product,name:website_sale_options.product_product_1
-#: model:product.product,name:website_sale_options.product_product_1b
+#: model:product.product,name:website_sale_options.service_cost_01
 #: model:product.template,name:website_sale_options.product_product_1_product_template
-#: model:product.template,name:website_sale_options.product_product_1b_product_template
+#: model:product.template,name:website_sale_options.service_cost_01_product_template
 msgid "Warranty"
 msgstr "Záruka"
 
 #. module: website_sale_options
 #: model:product.product,description_sale:website_sale_options.product_product_1
-#: model:product.product,description_sale:website_sale_options.product_product_1b
+#: model:product.product,description_sale:website_sale_options.service_cost_01
 #: model:product.template,description_sale:website_sale_options.product_product_1_product_template
-#: model:product.template,description_sale:website_sale_options.product_product_1b_product_template
+#: model:product.template,description_sale:website_sale_options.service_cost_01_product_template
 msgid ""
 "Warranty, issued to the purchaser of an article by its manufacturer, "
 "promising to repair or replace it if necessary within a specified period of "
 "time."
-msgstr ""
-
-#. module: website_sale_options
-#. openerp-web
-#: code:addons/website_sale_options/static/src/js/website_sale.test.js:13
-#, python-format
-msgid "click in modal on 'Proceed to checkout' button"
 msgstr ""

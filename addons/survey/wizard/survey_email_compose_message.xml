@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <!--Survey send invitation by email: template -->
         <record id="email_template_survey" model="mail.template">
@@ -8,12 +8,10 @@
             <field name="auto_delete" eval="True" />
             <field name="body_html">
                 <![CDATA[
-                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); ">
-                    <p>Hello,</p>
-                    <p>We are conducting a survey, and your response would be appreciated.</p>
-                    <p><a href="__URL__">Please, click here to start survey</a></p>
-                    <p>Thanks for your participation!</p>
-                </div>
+<p>Hello,</p>
+<p>We are conducting a survey, and your response would be appreciated.</p>
+<p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="__URL__">Please, click here to start survey</a></p>
+<p>Thanks for your participation!</p>
                 ]]>
             </field>
         </record>
@@ -32,12 +30,12 @@
                     <field name="res_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <group col="2">
-                        <field name="survey_id" readonly="context.get('default_survey_id')" on_change="onchange_survey_id(survey_id)" />
+                        <field name="survey_id" readonly="context.get('default_survey_id')"/>
                         <field name="public" widget="radio" invisible="context.get('survey_resent_token')" />
                     </group>
                     <group col="1" invisible="context.get('survey_resent_token')" attrs="{'invisible':[('public','in',['email_private', 'email_public_link'])]}" class="oe_survey_email_public">
                         <div>
-                            You can share your survey web public link and/or send private invitations to your audience. People can answer once per invitation, and whenever they want with the public web link (in this case, the "Public in website" setting must be enabled).
+                            You can share your survey web public link and/or send private invitations to your audience. People can answer once per invitation, and whenever they want with the public web link (in this case, the "Login Required" setting must be disabled).
                         </div>
                         <div>Copy, paste and share the web link below to your audience.</div>
                         <code><field name="public_url"/></code>
@@ -47,7 +45,7 @@
                     <group col="1" attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
                         <group col="2">
                             <field invisible="context.get('survey_resent_token')" name="partner_ids" widget="many2many_tags_email" placeholder="Add list of existing contacts..." context="{'force_email':True, 'show_email':True}" />
-                            <field invisible="context.get('survey_resent_token')" name="multi_email" placeholder="Add list of email of recipients (will not converted in partner), separated by commas, semicolons or newline..." on_change="onchange_multi_email(multi_email)" />
+                            <field invisible="context.get('survey_resent_token')" name="multi_email" placeholder="Add list of email of recipients (will not converted in partner), separated by commas, semicolons or newline..."/>
                             <field name="subject" placeholder="Subject..."/>
                         </group>
                         <field name="body" options="{'style-inline': true}"/>
@@ -71,7 +69,7 @@
                         <group class="oe_right" col="1">
                             <div>
                                 Use template
-                                <field name="template_id" nolabel="1" on_change="onchange_template_id(template_id, composition_mode, model, res_id, context)" />
+                                <field name="template_id" nolabel="1"/>
                             </div>
                             <button icon="/email_template/static/src/img/email_template_save.png" type="object" name="save_as_template" string="Save as new template" class="oe_link" help="Save as a new template" />
                         </group>
@@ -80,4 +78,4 @@
             </field>
         </record>
     </data>
-</openerp>
+</odoo>

@@ -3,14 +3,17 @@
 # * base_geolocalize
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Manuela Silva <manuela.silva@sky.com>, 2016
+# Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:34+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Daniel C Santos <dcs@thinkopensolutions.pt>, 2016\n"
+"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,25 +23,27 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span class=\"oe_inline\"> ( On  </span>"
-msgstr ""
+msgstr "<span class=\"oe_inline\"> ( No </span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> : Lat : </span>"
-msgstr ""
+msgstr "<span> : Lat.: </span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> ;  Long:  </span>"
-msgstr ""
+msgstr "<span> ;  Long.:  </span>"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:23
+#: code:addons/base_geolocalize/models/res_partner.py:17
 #, python-format
 msgid ""
-"Cannot contact geolocation servers. Please make sure that your internet "
+"Cannot contact geolocation servers. Please make sure that your Internet "
 "connection is up and running (%s)."
-msgstr "Não é possível entrar em contato com servidores de geolocalização. Por favor, certifique-se de que sua conexão de internet está activa (% s)."
+msgstr ""
+"Não é possível contactar com os servidores de geolocalização. Por favor, "
+"certifique-se que a sua ligação à Internet está a funcionar (%s)."
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_latitude
@@ -46,24 +51,24 @@ msgid "Geo Latitude"
 msgstr "Latitude Geográfica"
 
 #. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
-msgid "Geo Localization Date"
-msgstr "Data da Localização Geográfica"
-
-#. module: base_geolocalize
-#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Geo Localize"
-msgstr "Localizar Geograficamente"
-
-#. module: base_geolocalize
-#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Geo Location"
-msgstr ""
-
-#. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_longitude
 msgid "Geo Longitude"
 msgstr "Longitude Geográfica"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geolocate"
+msgstr "Geolocalizar"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geolocation"
+msgstr "Geolocalização"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
+msgid "Geolocation Date"
+msgstr "Data da Geolocalização"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -73,4 +78,4 @@ msgstr "Parceiro"
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignation"
-msgstr "Atribuição parceiro"
+msgstr "Atribuição de Parceiro"

@@ -1,8 +1,9 @@
 -
   Set the company currency as EURO for the sake of repeatibility
 -
-  !record {model: res.company, id: base.main_company}:
-    currency_id: base.EUR
+  !python {model: res.company}: |
+    company = self.env.ref('base.main_company')
+    company.currency_id = self.env.ref('base.EUR')
 -
   Set a product as using fifo price
 -
@@ -19,13 +20,13 @@
     valuation: real_time
     property_stock_account_input: o_expense
     property_stock_account_output: o_income
+    supplier_taxes_id: []
     description: FIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
   I create a draft Purchase Order for first in move for 10 kg at 50 euro
 - 
   !record {model: purchase.order, id: purchase_order_fifo1}:
     partner_id: base.res_partner_3
-    currency_id: base.EUR
     order_line:
       - product_id: product_fifo_icecream
         product_qty: 10.0
@@ -36,8 +37,8 @@
 - 
   I confirm the first purchase order
 -
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_fifo1")])
+  !python {model: purchase.order, id: purchase_order_fifo1}: |
+    self.button_confirm()
 - 
   I check the "Purchase" status of purchase order 1
 -
@@ -46,14 +47,14 @@
 - 
   Process the reception of purchase order 1 and set date
 -
-  !python {model: stock.picking}: |
-    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo1"), context=context).picking_ids[0]
-    picking_obj.do_transfer()
+  !python {model: purchase.order, id: purchase_order_fifo1}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
 - 
   Check the standard price of the product (fifo icecream), that should have not changed because the standard price is supposed to be updated only when goods are going out of the stock
 - 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 70.0, 'Standard price should not have changed!'
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert self.standard_price == 70.0, 'Standard price should not have changed!'
 - 
   I create a draft Purchase Order for second shipment for 30 kg at 80 euro
 - 
@@ -69,19 +70,19 @@
 - 
   I confirm the second purchase order
 - 
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_fifo2")])
+  !python {model: purchase.order, id: purchase_order_fifo2}: |
+    self.button_confirm()
 - 
   Process the reception of purchase order 2
 - 
-  !python {model: stock.picking}: |
-    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo2"), context=context).picking_ids[0]
-    picking_obj.do_transfer()
+  !python {model: purchase.order, id: purchase_order_fifo2}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
 - 
   Check the standard price of the product, that should have not changed because the standard price is supposed to be updated only when goods are going out of the stock
 - 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 70.0, 'Standard price as fifo price of second reception incorrect!'
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert self.standard_price == 70.0, 'Standard price as fifo price of second reception incorrect!'
 - 
   Let us send some goods
 - 
@@ -101,19 +102,18 @@
 - 
   I assign this outgoing shipment 
 - 
-  !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment")])
+  !python {model: stock.picking, id: outgoing_fifo_shipment}: |
+    self.action_assign()
 - 
   Process the delivery of the outgoing shipment
 - 
-  !python {model: stock.picking}: |
-     pick_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment"), context=context)
-     pick_obj.do_transfer()
+  !python {model: stock.picking, id: outgoing_fifo_shipment}: |
+     self.do_transfer()
 - 
   Check product standard price changed to 65.0 (because last outgoing shipment was made of 10 kg at 50€ and 10 kg at 80€)
 - 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price,)
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert self.standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" % (self.standard_price,)
 - 
   Do a delivery of an extra 500 g (delivery order)
 - 
@@ -133,19 +133,18 @@
 - 
   I assign this outgoing shipment 
 - 
-  !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_uom")])
+  !python {model: stock.picking, id: outgoing_fifo_shipment_uom}: |
+    self.action_assign()
 -
   Process the delivery of the outgoing shipment
 - 
-  !python {model: stock.picking}: |
-    pick_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment_uom"), context=context)
-    pick_obj.do_transfer()
+  !python {model: stock.picking, id: outgoing_fifo_shipment_uom}: |
+    self.do_transfer()
 - 
   Check product price changed to 80.0 (because last outgoing shipment was made of 0.5 kg at 80€)
 - 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 80.0, "Product price not updated accordingly. %s found instead of 80" %(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price,)
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert self.standard_price == 80.0, "Product price not updated accordingly. %s found instead of 80" % (self.standard_price,)
 - 
   We will temporarily change the currency rate on the sixth of June to have the same results all year
 - 
@@ -153,6 +152,7 @@
 -
   !record {model: res.currency, id: new_USD}:
     name: new_usd
+    symbol: "$²"
     rate_ids:
       - rate: 1.2834
         name: !eval time.strftime('%Y-%m-%d')
@@ -178,14 +178,14 @@
 - 
   I confirm the purchase order in USD
 -
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_fifo_usd")])
+  !python {model: purchase.order, id: purchase_order_fifo_usd}: |
+    self.button_confirm()
 - 
   Process the reception of purchase order with usd
 -
-  !python {model: stock.picking}: |
-    pick_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_usd"), context=context).picking_ids[0]
-    pick_obj.do_transfer()
+  !python {model: purchase.order, id: purchase_order_fifo_usd}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
 - 
   We create delivery order of 49.5 kg
 - 
@@ -205,19 +205,18 @@
 - 
   I assign this outgoing shipment 
 - 
-  !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_cur")])
+  !python {model: stock.picking, id: outgoing_fifo_shipment_cur}: |
+    self.action_assign()
 -
   Process the delivery of the outgoing shipment
 - 
-  !python {model: stock.picking}: |
-    picking_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment_cur"), context=context)
-    picking_obj.do_transfer()
+  !python {model: stock.picking, id: outgoing_fifo_shipment_cur}: |
+    self.do_transfer()
 - 
  Check rounded price is 102 euro (because last outgoing shipment was made of 19.5kg at 80€ and 30kg at $150 (rate=1.2834)
 - 
-  !python {model: product.product}: |
-    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == 102, "Product price not updated accordingly. %s found instead of 102 (rounded values)" %(round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price),)
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert round(self.standard_price) == 102, "Product price not updated accordingly. %s found instead of 102 (rounded values)" %(round(self.standard_price),)
 -
   Do a delivery of an extra 10 kg
 - 
@@ -237,21 +236,19 @@
 - 
   I assign this outgoing shipment
 - 
-  !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_ret")])
+  !python {model: stock.picking, id: outgoing_fifo_shipment_ret}: |
+    self.action_assign()
 - 
   Process the delivery of the outgoing shipment
 - 
-  !python {model: stock.picking}: |
-    picking_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment_ret"), context=context)
-    picking_obj.do_transfer()
+  !python {model: stock.picking, id: outgoing_fifo_shipment_ret}: |
+    self.do_transfer()
 - 
   Check rounded price is 150.0 / 1.2834
 - 
-  !python {model: product.product}: |
-    product = self.browse(cr, uid, ref("product_fifo_icecream"))
-    assert round(product.standard_price) == round(150.0 / 1.2834), "Product price not updated accordingly. %s found instead of %s" %(product.standard_price, round(150.0/1.2834))
-    assert product.qty_available == 0.0, 'Wrong quantity in stock after first reception'
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert round(self.standard_price) == round(150.0 / 1.2834), "Product price not updated accordingly. %s found instead of %s" %(self.standard_price, round(150.0/1.2834))
+    assert self.qty_available == 0.0, 'Wrong quantity in stock after first reception'
 -
   Let us create some outs to get negative stock for a new product using the same config
 -
@@ -268,6 +265,7 @@
     valuation: real_time
     property_stock_account_input: o_expense
     property_stock_account_output: o_income
+    supplier_taxes_id: []
     description: 
 - 
   Create outpicking.  We create delivery order of 100 kg.
@@ -288,13 +286,12 @@
 - 
   Process the delivery of the first outgoing shipment
 - 
-  !python {model: stock.picking}: |
-    picking_obj = self.browse(cr, uid, ref("outgoing_fifo_shipment_neg"), context=context)
-    picking_obj.do_transfer()
+  !python {model: stock.picking, id: outgoing_fifo_shipment_neg}: |
+    self.do_transfer()
 -
   The behavior of fifo/lifo is not garantee if the quants are created at the same second, so i just wait one second
 -
-  !python {model: stock.picking}: |
+  !python {model: stock.picking, id: False}: |
     import time
     time.sleep(1)
 -
@@ -316,9 +313,8 @@
 - 
   Process the delivery of the outgoing shipments
 - 
-  !python {model: stock.picking}: |
-    picking_obj1 = self.browse(cr, uid, ref("outgoing_fifo_shipment_neg2"), context=context)
-    picking_obj1.do_transfer()
+  !python {model: stock.picking, id: outgoing_fifo_shipment_neg2}: |
+    self.do_transfer()
 
 - 
   Receive purchase order with 50 kg FIFO Ice Cream at 50 euro/kg
@@ -335,20 +331,20 @@
 - 
   I confirm the first purchase order
 -
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_fifo_neg")])
+  !python {model: purchase.order, id: purchase_order_fifo_neg}: |
+    self.button_confirm()
 - 
   Process the reception of purchase order 1
 -
-  !python {model: stock.picking}: |
-    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg"), context=context).picking_ids[0]
-    picking_obj.do_transfer()
+  !python {model: purchase.order, id: purchase_order_fifo_neg}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
 - 
   Assert price on product is still the old price as the out move has not been received fully yet
 - 
-  !python {model: product.product}: |
+  !python {model: product.product, id: product_fifo_negative}: |
 
-    assert self.browse(cr, uid, ref("product_fifo_negative")).standard_price == 70, 'The product price should not have been updated'
+    assert self.standard_price == 70, 'The product price should not have been updated'
 - 
   Receive purchase order with 60 kg FIFO Ice Cream at 80 euro/kg
 - 
@@ -364,16 +360,16 @@
 - 
   I confirm the second negative purchase order
 - 
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_fifo_neg2")])
+  !python {model: purchase.order, id: purchase_order_fifo_neg2}: |
+    self.button_confirm()
 - 
   Process the reception of purchase order 2
 - 
-  !python {model: stock.picking}: |
-    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg2"), context=context).picking_ids[0]
-    picking_obj.do_transfer()
+  !python {model: purchase.order, id: purchase_order_fifo_neg2}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
 - 
   The price of the product should have changed back to 65.0
 - 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_fifo_negative")).standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.browse(cr, uid, ref("product_fifo_negative")).standard_price,)
+  !python {model: product.product, id: product_fifo_negative}: |
+    assert self.standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.standard_price,)

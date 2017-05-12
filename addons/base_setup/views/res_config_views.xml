@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_general_configuration" model="ir.ui.view">
+            <field name="name">General Settings</field>
+            <field name="model">base.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="General Settings" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <separator string="General Settings"/>
+                    <div>
+                        <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
+                        <button type="object" name="open_company" string="Configure your company data" icon="fa-cogs" class="oe_inline oe_link"/>
+                        <field name="company_id" invisible="1"/>
+                    </div>
+                    <group>
+                        <label for="id" string="Email" name="email_label"/>
+                        <div name="email">
+                            <div name="email.outgoing_server">
+                                <button type="action"
+                                    name="%(base.action_ir_mail_server_list)d"
+                                    string="Configure outgoing email servers" class="oe_link"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Portal access"/>
+                        <div>
+                            <div>
+                                <field name="module_portal" class="oe_inline"/>
+                                <label for="module_portal"/>
+                                <p>
+                                    When you send a document to a customer
+                                    (quotation, invoice), your customer will be
+                                    able to signup to get all his documents,
+                                    read your company news, check his projects,
+                                    etc.
+                                </p>
+                            </div>
+                        </div>
+                    </group>
+                    <group name="authentication">
+                        <label for="id" string="Authentication"/>
+                        <div>
+                            <div>
+                                <field name="module_auth_oauth"/>
+                                <label for="module_auth_oauth"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Import / Export"/>
+                        <div>
+                            <field name="module_base_import" class="oe_inline"/>
+                            <label for="module_base_import"/>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Multi Company"/>
+                        <div name="group_multi_company">
+                            <field name="group_multi_company" class="oe_inline"/>
+                            <label for="group_multi_company"/>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Multi Currencies"/>
+                        <div name="group_multi_currency">
+                            <field name="group_multi_currency" class="oe_inline"/>
+                            <label for="group_multi_currency"/>
+                        </div>
+                    </group>
+                    <group attrs="{'invisible': [('group_multi_company','=',False)]}">
+                        <label for="module_inter_company_rules" string="Inter company"/>
+                        <div name="inter_company">
+                            <div name="module_inter_company_rules">
+                                <field name="module_inter_company_rules" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_inter_company_rules"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Shared resources" name="company_share_resources" attrs="{'invisible': [('group_multi_company','=',False)]}">
+                        <field name="company_share_partner" class="oe_inline" />
+                    </group>
+                    <div>
+                        <label string="New users access rights"/>
+                        <button type="object" name="open_default_user" string="Edit default access rights for new users" class="oe_inline oe_link" icon="fa-cogs"/>
+                    </div>
+                    <group string="Google Integration" name="google">
+                        <label for="id" string="Google Drive"/>
+                        <div name="google_drive">
+                            <div name="module_google_drive">
+                                <field name="module_google_drive" class="oe_inline"/>
+                                <label for="module_google_drive"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group name="google_analytics">
+                        <label for="id" string="Google Calendar"/>
+                        <div name="google_calendar">
+                            <div name="module_google_calendar">
+                                <field name="module_google_calendar" class="oe_inline"/>
+                                <label for="module_google_calendar"/>
+                                <div name="google_calendar_config_description" attrs="{'invisible': [('module_google_calendar','=',False)]}">
+                                    <p>
+                                        Once installed, you can configure your API credentials for "Google calendar"
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Report Configuration" name="report">
+                        <label for="custom_footer"/>
+                        <div>
+                            <field name="custom_footer" class="oe_inline"/>                                
+                        </div>
+                        <label for="rml_footer"/>
+                        <div>
+                            <field name="rml_footer" class="oe_inline"/>                                
+                        </div>
+                        <label for="rml_footer_readonly"/>
+                        <div>
+                            <field name="rml_footer_readonly" class="oe_inline"/>                                
+                        </div>
+                    </group>
+                    <group string="RML Report Configuration" groups="base.group_no_one">
+                        <button name="%(base.preview_rml_report)d" string="Preview RML Report" type="action" colspan="2"/>
+                        <label for="rml_paper_format"/>
+                        <div>
+                            <field name="rml_paper_format" class="oe_inline"/>                                
+                        </div>
+                        <label for="font"/>
+                        <div>
+                            <field name="font" class="oe_inline"/>
+                            <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
+                        </div>
+                        <label for="rml_header"/>
+                        <div>
+                            <field name="rml_header"/>                                
+                        </div>
+                        <label for="rml_header2"/>
+                        <div>
+                            <field name="rml_header2"/>                                
+                        </div>
+                        <label for="rml_header3"/>
+                        <div>
+                            <field name="rml_header3"/>                                
+                        </div>
+                    </group>
+                    <div name="company_dependent_settings_message">
+                        <span>(*) This configuration is related to the company you're logged into.</span>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_general_configuration" model="ir.actions.act_window">
+            <field name="name">General Settings</field>
+            <field name="res_model">base.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem
+            id="menu_config"
+            name="General Settings"
+            parent="base.menu_administration"
+            sequence="1"
+            action="action_general_configuration"
+            groups="base.group_system"/>
+
+</odoo>

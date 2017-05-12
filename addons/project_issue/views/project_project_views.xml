@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_project_view_form_simplified_inherit_issue" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit.issue</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <group name="options" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
+            <field name="use_tasks" position="after">
+                <field name="use_issues"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_project_kanban_inherited" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <field name="use_tasks" position="after">
+                <field name="use_issues"/>
+                <field name="issue_ids" invisible="1"/>
+                <field name="issue_needaction_count" invisible="1"/>
+            </field>
+            <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]/div[last()]" position="after">
+                <div attrs="{'invisible': [('use_issues', '=', False)]}">
+                    <a name="%(action_project_issue_report_filtered)d" type="action">Issues</a>
+                </div>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'o_project_kanban_box')]/div[last()]" position="before">
+                <div attrs="{'invisible': [('use_issues', '=', False)]}" class="o_project_kanban_box">
+                    <a name="%(act_project_project_2_project_issue_all)d" type="action">
+                        <span class="o_value"><t t-raw="record.issue_ids.raw_value.length"/></span>
+                        <span class="o_label"><field name="label_issues"/></span>
+                        <a t-if="record.issue_needaction_count.raw_value" class="o_needaction" name="%(act_project_project_2_project_issue_all)d" type="action" context="{'search_default_message_needaction': 1}">
+                            <t t-esc="record.issue_needaction_count.raw_value"/>
+                        </a>
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_project_form_inherited" model="ir.ui.view">
+        <field name="name">project.project.form.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <div name="options_active" position="attributes">
+                <attribute name="class"></attribute>
+            </div>
+            <xpath expr='//div[@name="options_active"]' position='inside'>
+                <div>
+                    <field name="use_issues" class="oe_inline"/>
+                    <label for="use_issues" class="oe_inline" string="Issues"/>
+                    <span attrs="{'invisible':[('use_issues', '=', False)]}">as </span>
+                    <field name="label_issues" class="oe_inline oe_input_align" attrs="{'invisible': [('use_issues', '=', False)]}"/>
+                </div>
+            </xpath>
+            <button name="toggle_active" position="before">
+                <button class="oe_stat_button" type="action" attrs="{'invisible':[('use_issues','=', False)]}"
+                    name="%(act_project_project_2_project_issue_all)d" icon="fa-bug">
+                    <field string="Issues" name="issue_count" widget="statinfo" options="{'label_field': 'label_issues'}"/>
+                </button>
+            </button>
+        </field>
+   </record>
+</odoo>

@@ -3,15 +3,15 @@
 # * website_form
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-14 12:56+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,7 +19,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:205
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form.js:209
+#, python-format
+msgid "'%s' is not a correct date"
+msgstr "'%s' is geen correcte datum"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form.js:204
+#, python-format
+msgid "'%s' is not a correct datetime"
+msgstr "'%s' is geen geldige datum/tijd"
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:225
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Bijgevoegde bestanden : </p>"
@@ -39,15 +53,15 @@ msgstr "Er is een fout opgetreden, het formulier is nog niet verzonden."
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr ""
+msgstr "Blacklist dit veld voor website formulieren"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields_website_form_blacklisted
 msgid "Blacklisted in web forms"
-msgstr ""
+msgstr "Blacklisted in website formulieren"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:48
+#: code:addons/website_form/controllers/main.py:53
 #, python-format
 msgid "Custom infos"
 msgstr "Aangepaste info"
@@ -55,12 +69,12 @@ msgstr "Aangepaste info"
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_website_form_access
 msgid "Enable the form builder feature for this model."
-msgstr ""
+msgstr "Schakel de formulier bouwer in voor dit model."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_website_website_form_enable_metadata
 msgid "Enable writing metadata on form submit."
-msgstr ""
+msgstr "Schakel metadata schrijven bij formulier verzending."
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_default_field_id
@@ -78,6 +92,8 @@ msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
+"Formulier actie label. Bv: crm.lead kan 'Verzend een e-mail' zijn en "
+"project.issue kan 'Maak een Issue' zijn."
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_label
@@ -85,7 +101,7 @@ msgid "Label for form action"
 msgstr "Label voor formulier actie"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:49
+#: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Metadata"
 msgstr "Metadata"
@@ -104,8 +120,11 @@ msgstr "Vul het formulier correct in a.u.b."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
-msgid "Specify the field wich will contain meta and custom form fields datas."
+msgid ""
+"Specify the field which will contain meta and custom form fields datas."
 msgstr ""
+"Specifieer het veld dat de metadata en gepersonaliseerde formulier veld data"
+" bevat."
 
 #. module: website_form
 #. openerp-web

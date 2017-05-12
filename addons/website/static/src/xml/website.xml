@@ -1,49 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="website.mobile_preview">
-        <div class="modal fade oe_mobile_preview" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
-                        <h3 class="modal-title">Mobile preview</h3>
-                    </div>
-                    <div class="modal-body">
-                        <iframe id="mobile-viewport" class="oe_mobile_viewport" style="width: 326px"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
+    <div t-name="website.mobile_preview">
+        <iframe id="mobile-viewport" t-att-src="widget.mobile_src"/>
+    </div>
 
-    <t t-name="website.error_dialog">
-        <div class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
-                        <div class="h2"><t t-esc="title"/></div>
-                    </div>
-                    <div class="modal-body" t-if="message or backend_url">
-                        <section>
-                            <t t-raw="message"/>
-                        </section>
-                        <section class="mt32" t-if="backend_url">
-                            <p>The web site has encountered an error.</p>
-                            <p>
-                                It might be possible to edit the relevant items
-                                or fix the issue in <a t-attf-href="#{backend_url}">
-                                the classic Odoo interface</a>.
-                            </p>
-                        </section>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" data-dismiss="modal" class="btn btn-primary">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
+    <div t-name="website.error_dialog">
+        <section t-if="message">
+            <t t-raw="message"/>
+        </section>
+        <section class="mt32" t-if="backend_url">
+            <p>The web site has encountered an error.</p>
+            <p>It might be possible to edit the relevant items or fix the issue in <a t-attf-href="#{backend_url}"> the classic Odoo interface</a>.</p>
+        </section>
+    </div>
 
     <t t-name="website.prompt">
         <t t-call="website.modal_base">
@@ -52,7 +21,7 @@
                     <label for="page-name" class="col-sm-3 control-label">
                         <t t-esc="field_name"/>:
                     </label>
-                    <div class="col-sm-9">
+                    <div class="col-sm-8">
                         <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
                         <textarea t-if="field_type == 'textarea'" class="form-control" required="required" rows="5"></textarea>
                         <select t-if="field_type == 'select'" class="form-control"></select>
@@ -63,7 +32,7 @@
     </t>
 
     <t t-name="website.modal_base">
-        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal o_website_modal " tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog">
                 <div class="modal-content">
                     <t t-call="website.modal_header" />
@@ -84,46 +53,34 @@
 
     <t t-name="website.modal_footer">
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary btn-continue">Continue</button>
-            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button type="button" class="btn btn-sm btn-primary btn-continue">Continue</button>
+            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
         </div>
     </t>
 
     <t t-name="website.dependencies">
-        <div class="alert alert-warning alert-dismissible fade in mt16" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <strong>Be careful !</strong> Some dependencies can exist ...
-        </div>
         <t t-if="dependencies">
+            <p class="text-warning">
+              <strong>Warning!</strong> Don't forget to update all links referring to this page:
+            </p>
             <t t-set='tid' t-value='0'/>
-            <t t-foreach="_.keys(dependencies)" t-as="type">
-                <div class="panel-group" role="tablist">
-                    <div class="panel panel-default">
-                      <div class="panel-heading" role="tab" >
-                        <h4 class="panel-title">
-                          <a class="collapsed" data-toggle="collapse" t-att-href="'#collapseDependencies'+tid" aria-expanded="false" t-att-aria-controls="'collapseDependencies'+tid">
-                            <t t-esc="type"/>
+            <div t-foreach="_.keys(dependencies)" t-as="type" class="mb16">
+                <a class="collapsed fa fa-caret-right" data-toggle="collapse" t-att-href="'#collapseDependencies'+tid" aria-expanded="false" t-att-aria-controls="'collapseDependencies'+tid">
+                  <t t-esc="type"/>:&amp;nbsp;
+                  <span class="text-muted"><t t-esc="dependencies[type].length"/> found(s)</span>
+                </a>
+                <div t-att-id="'collapseDependencies'+tid" class="collapse" aria-expanded="false" >
+                  <ul>
+                      <li t-foreach="dependencies[type]" t-as="error">
+                          <a t-if="!_.contains(['', '#', false,], error.link)" t-att-href="error.link">
+                              <t t-raw="error.text"/>
                           </a>
-                        </h4>
-                      </div>
-                      <div t-att-id="'collapseDependencies'+tid" class="panel-collapse collapse in" role="tabpanel" aria-expanded="false" >
-                        <ul class="list-group">
-                            <t t-foreach="dependencies[type]" t-as="error">
-                                <li class="list-group-item">
-                                    <i class='fa fa-share fa-flip-vertical'/>
-                                    <a t-if="!_.contains(['', '#', false,], error.link)" t-att-href="error.link">
-                                        <t t-raw="error.text"/>
-                                    </a>
-                                    <t t-if="_.contains(['', '#', false,], error.link)" t-raw="error.text"/>
-                                </li>
-                            </t>
-                        </ul>
-                        <div class="panel-footer">Reference(s) found: <t t-esc="dependencies[type].length"/></div>
-                      </div>
-                    </div>
+                          <t t-if="_.contains(['', '#', false,], error.link)" t-raw="error.text"/>
+                      </li>
+                  </ul>
                 </div>
                 <t t-set='tid' t-value='tid+1'/>
-            </t>
+            </div>
         </t>
     </t>
     <t t-name="website.delete_page">
@@ -143,11 +100,11 @@
         <t t-call="website.modal_base">
             <t t-call="website.dependencies" />
             <div class="row">
-                <form class="form-horizontal col-sm-offset-2 col-sm-8 alert alert-info" role="form" t-att-id="id">
-                    <div class="form-group" >
-                        <label for="new_name" class="control-label col-sm-4">New name</label>
+                <form class="form-horizontal alert alert-info" role="form" t-att-id="id">
+                    <div class="form-group mb0" >
+                        <label for="new_name" class="control-label col-sm-4">Rename Page To:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="new_name" placeholder="New Name" />
+                            <input type="text" class="form-control" id="new_name" placeholder="e.g. About Us" />
                         </div>
                     </div>
                 </form>

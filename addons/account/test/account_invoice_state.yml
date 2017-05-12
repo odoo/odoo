@@ -5,7 +5,7 @@
     company_id: base.main_company
     currency_id: base.EUR
     invoice_line_ids:
-      - name: '[PCSC234] PC Assemble SC234'
+      - name: 'Computer SC234'
         price_unit: 450.0
         quantity: 1.0
         product_id: product.product_product_3
@@ -25,10 +25,10 @@
 -
   I clicked on Confirm Invoices Button
 -
-  !python {model: account.invoice.confirm}: |
-    self.invoice_confirm(cr, uid, [ref("account_invoice_confirm_0")], {"lang": 'en_US',
+  !python {model: account.invoice.confirm, id: False}: |
+    self.browse(ref("account_invoice_confirm_0")).with_context({"lang": 'en_US',
       "tz": False, "active_model": "account.invoice", "active_ids": [ref("account_invoice_state")],
-      "type": "out_invoice", "active_id": ref("account_invoice_state"), })
+      "type": "out_invoice", "active_id": ref("account_invoice_state"), }).invoice_confirm()
 -
   I check that customer invoice state is "Open"
 -
@@ -42,17 +42,17 @@
     assert (len(moves) > 0), 'You should have multiple moves'
     moves[0].journal_id.write({'update_posted': True})
 -
-  In order to check the "Cancel Selected Invoices" wizard in openerp I cancelled this open invoice using this wizard
+  In order to check the "Cancel Selected Invoices" wizard in odoo I cancelled this open invoice using this wizard
 -
   !record {model: account.invoice.cancel, id: account_invoice_cancel_0}:
     {}
 -
   I clicked on Cancel Invoices Button
 -
-  !python {model: account.invoice.cancel}: |
-    self.invoice_cancel(cr, uid, [ref("account_invoice_cancel_0")], {"lang": 'en_US',
+  !python {model: account.invoice.cancel, id: False}: |
+    self.browse(ref("account_invoice_cancel_0")).with_context({"lang": 'en_US',
       "tz": False, "active_model": "account.invoice", "active_ids": [ref("account_invoice_state")],
-      "type": "out_invoice", "active_id": ref("account_invoice_state"), })
+      "type": "out_invoice", "active_id": ref("account_invoice_state"), }).invoice_cancel()
 -
   I check that customer invoice is in the cancel state
 -

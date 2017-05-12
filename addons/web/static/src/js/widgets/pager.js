@@ -28,6 +28,7 @@ var Pager = Widget.extend({
      * @param {int} [limit] the number of elements per page
      * @param {boolean} [options.can_edit] editable feature of the pager
      * @param {boolean} [options.single_page_hidden] (not) to display the pager if only one page
+     * @param {function} [options.validate] callback returning a Deferred to validate changes
      */
     init: function (parent, size, current_min, limit, options) {
         this.state = {
@@ -43,6 +44,9 @@ var Pager = Widget.extend({
         this.options = _.defaults({}, options, {
             can_edit: true, // editable
             single_page_hidden: false, // displayed even if there is a single page
+            validate: function() {
+                return $.Deferred().resolve();
+            },
         });
         this._super(parent);
     },
@@ -101,7 +105,7 @@ var Pager = Widget.extend({
     _edit: function() {
         if (this.options.can_edit) {
             var self = this;
-            var $input = $('<input>').val(this.$value.html());
+            var $input = $('<input>', {type: 'text', value: this.$value.html()});
 
             this.$value.html($input);
             $input.focus();
@@ -129,23 +133,26 @@ var Pager = Widget.extend({
      * @param {jQuery} [$input] the jQuery element containing the new state
      */
     _save: function($input) {
-        var value = $input.val().split("-");
-        var min = utils.confine(parseInt(value[0], 10), 1, this.state.size);
-        var max = utils.confine(parseInt(value[1], 10), 1, this.state.size);
+        var self = this;
+        this.options.validate().then(function() {
+            var value = $input.val().split("-");
+            var min = utils.confine(parseInt(value[0], 10), 1, self.state.size);
+            var max = utils.confine(parseInt(value[1], 10), 1, self.state.size);
 
-        if (!isNaN(min)) {
-            this.state.current_min = min;
-            if (!isNaN(max)) {
-                this.state.limit = utils.confine(max-min+1, 1, this.state.size);
-            } else {
-                // The state has been given as a single value -> set the limit to 1
-                this.state.limit = 1;
+            if (!isNaN(min)) {
+                self.state.current_min = min;
+                if (!isNaN(max)) {
+                    self.state.limit = utils.confine(max-min+1, 1, self.state.size);
+                } else {
+                    // The state has been given as a single value -> set the limit to 1
+                    self.state.limit = 1;
+                }
+                self.trigger('pager_changed', _.clone(self.state));
             }
-            this.trigger('pager_changed', _.clone(this.state));
-        }
-
-        // Render the pager's new state (removes the input)
-        this._render();
+        }).always(function() {
+            // Render the pager's new state (removes the input)
+            self._render();
+        });
     },
 
     /**
@@ -153,23 +160,26 @@ var Pager = Widget.extend({
      * @param {int} [direction] the action (previous or next) on the pager
      */
     _change_selection: function (direction) {
-        var size = this.state.size;
-        var current_min = this.state.current_min;
-        var limit = this.state.limit;
+        var self = this;
+        this.options.validate().then(function() {
+            var size = self.state.size;
+            var current_min = self.state.current_min;
+            var limit = self.state.limit;
 
-        // Compute the new current_min
-        current_min = (current_min + limit*direction);
-        if (current_min > size) {
-            current_min = 1;
-        } else if ((current_min < 1) && (limit === 1)) {
-            current_min = size;
-        } else if ((current_min < 1) && (limit > 1)) {
-            current_min = size - ((size % limit) || limit) + 1;
-        }
+            // Compute the new current_min
+            current_min = (current_min + limit*direction);
+            if (current_min > size) {
+                current_min = 1;
+            } else if ((current_min < 1) && (limit === 1)) {
+                current_min = size;
+            } else if ((current_min < 1) && (limit > 1)) {
+                current_min = size - ((size % limit) || limit) + 1;
+            }
 
-        this.state.current_min = current_min;
-        this.trigger('pager_changed', _.clone(this.state));
-        this._render();
+            self.state.current_min = current_min;
+            self.trigger('pager_changed', _.clone(self.state));
+            self._render();
+        });
     },
 
     /**

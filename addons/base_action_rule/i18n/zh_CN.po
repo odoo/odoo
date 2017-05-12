@@ -3,16 +3,16 @@
 # * base_action_rule
 # 
 # Translators:
-# fausthuang, 2015
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-03-12 01:56+0000\n"
-"Last-Translator: Joroy <13637815@qq.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2017\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,6 +29,11 @@ msgstr "<b>在设置条件之前请先设置文件类型</b>"
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
 msgid "Action Rule"
 msgstr "动作规则"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
+msgid "Action Rule Line Test"
+msgstr "动作规则测试"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -65,7 +70,7 @@ msgstr "自动的动作"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Form Modification"
-msgstr "基于表单更改"
+msgstr "基于表单修改"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -80,7 +85,7 @@ msgstr "更新前域表达式"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
 msgid "Before Update Filter"
-msgstr "更新前筛选器"
+msgstr "更新前筛选"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -113,25 +118,23 @@ msgid "Conditions"
 msgstr "条件"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
-msgid "Create Date"
-msgstr "创建日期"
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Days"
-msgstr "天"
+msgstr "天数"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -141,10 +144,13 @@ msgstr "触发日期后的延迟"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
 msgid ""
-"Delay after the trigger date.You can put a negative number if you need a "
-"delay before thetrigger date, like sending a reminder 15 minutes before a "
-"meeting."
-msgstr "延迟触发日期。如果在触发日期你需要一个延迟，你可以输入一个负数，如在会议前15分钟发送提醒"
+"Delay after the trigger date.\n"
+"                                    You can put a negative number if you need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 minutes before a meeting."
+msgstr ""
+"延迟触发日期。\n"
+"如果在触发日期你需要一个延迟，\n"
+"你可以输入一个负数，如在会议前15分钟发送提醒"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -159,6 +165,7 @@ msgstr "延迟类型"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_display_name
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -170,22 +177,22 @@ msgstr "域"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_server_action_ids
 msgid "Examples: email reminders, call object service, etc."
-msgstr "如：电子邮件提醒，调用对象的服务等。"
+msgstr "示例：电子邮件提醒，调用对象的服务，等。"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Fields to Change"
-msgstr "会更改的字段"
+msgstr "更改的字段"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_id
 msgid "Filter"
-msgstr "筛选器"
+msgstr "筛选"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_sequence
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr "为规则列表添加序号"
+msgstr "为规则列表添加序列"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -193,16 +200,17 @@ msgid ""
 "Go to your \"Related Document Model\" page and set the filter parameters in "
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
-msgstr "到您的\"相关模型\"页面，在\"查找\"视图 设置过滤条件 (例如:线索/商机 使用 过滤条件：创建日期\"等于\"2012-01-01)"
+msgstr "到你的\"相关模型\"页面，在\"查找\"视图 设置筛选条件 (例如:线索/商机 使用 筛选条件：创建日期\"等于\"2012-01-01)"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Hours"
-msgstr "时数"
+msgstr "小时"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_id
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_id
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_id
 msgid "ID"
 msgstr "ID"
 
@@ -233,40 +241,53 @@ msgid ""
 "In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
 " the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
-msgstr "在同一个\"搜索\"视图，选择菜单中的\"保存现有的过滤条件\"，输入名称（例如：创建于01/01/2012)并且勾选\"共享给其他用户\"的选项。"
+msgstr "在同一个\"搜索\"视图，选择菜单中的\"保存现有的筛选条件\"，输入名称（例如：创建于01/01/2012)并且勾选\"共享给其他用户\"的选项。"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Is a Customer"
-msgstr "是一个客户"
+msgstr "是客户"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_date_action_last
 msgid "Last Action"
-msgstr "最近动作"
+msgstr "最近的行动"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule___last_update
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test___last_update
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test___last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
-msgid "Last Run"
-msgstr "最后运行"
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_date
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
+msgid "Last run"
+msgstr "最后运行"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
+msgid "Lead id"
+msgstr "线索 ID"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
+msgid "Line ids"
+msgstr "行 ids"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -282,6 +303,11 @@ msgstr "模型"
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Months"
 msgstr "月"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
+msgid "Name"
+msgstr "名字"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -301,7 +327,7 @@ msgstr "创建时"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation & Update"
-msgstr "创建或更新时"
+msgstr "创建以及更新时"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -316,7 +342,7 @@ msgstr "更新时"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_partner_id
 msgid "Partner"
-msgstr "业务伙伴"
+msgstr "合作伙伴"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -326,7 +352,7 @@ msgstr "暂停"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model_id
 msgid "Related Document Model"
-msgstr "相关单据模型"
+msgstr "相关的单据模型"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_user_id
@@ -348,7 +374,7 @@ msgstr "当动作必须要执行的时候，选择并且选择记录和/或时�
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_sequence
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_server_action_ids
@@ -369,7 +395,7 @@ msgstr "设置负责人"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Set selection based on a search filter:"
-msgstr "在搜索过滤设置一个选择"
+msgstr "在搜索筛选设置一个选择"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
@@ -414,7 +440,15 @@ msgid ""
 "                be automatically set to a specific sales team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
-msgstr "使用自动操作来触发不同屏幕的动作\n例如：一个特定用户创建的线索可能被自动分配给某一个销售团队\n或者商机在等待14天后自动触发一个提醒电子邮件，"
+msgstr ""
+"使用自动操作来触发不同屏幕的动作\n"
+"例如：一个特定用户创建的线索可能被自动分配给某一个销售团队\n"
+"或者商机在等待14天后自动触发一个提醒电子邮件，"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
+msgid "User id"
+msgstr "用户 ID"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
@@ -426,9 +460,11 @@ msgstr "当需要基于时间条件做计算时，可能使用一个基于工作
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
-"When should the condition be triggered. If present, will be checked by the "
-"scheduler. If empty, will be checked at creation and update."
-msgstr "当条件被触发。如果存在，将由调度器检查。如果为空，将检查创建并更新。"
+"When should the condition be triggered.\n"
+"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+msgstr ""
+"当条件被触发。\n"
+"如果存在，将由调度器检查。如果为空，将检查创建并更新。"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
@@ -445,4 +481,4 @@ msgstr "如果不选中，此规则被隐藏且不被执行"
 msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
-msgstr "你可能也用过滤器选择记录。可以创建一个新的过滤："
+msgstr "你可能也用筛选选择记录。可以创建一个新的筛选："

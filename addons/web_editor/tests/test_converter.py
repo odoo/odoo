@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import textwrap
 import unittest
 
 from lxml import etree, html
 from lxml.builder import E
 
-from openerp.tests import common
-from openerp.addons.base.ir import ir_qweb
-from openerp.addons.web_editor.models.ir_qweb import html_to_text
+from odoo.tests import common
+from odoo.addons.web_editor.models.ir_qweb import html_to_text
 
 
 class TestHTMLToText(unittest.TestCase):
@@ -116,32 +117,24 @@ class TestHTMLToText(unittest.TestCase):
 class TestConvertBack(common.TransactionCase):
     def setUp(self):
         super(TestConvertBack, self).setUp()
+        self.env = self.env(context={'inherit_branding': True})
 
     def field_rountrip_result(self, field, value, expected):
         model = 'web_editor.converter.test'
-        Model = self.registry(model)
-        id = Model.create(
-            self.cr, self.uid, {
-                field: value
-            })
-        [record] = Model.browse(self.cr, self.uid, [id])
+        record = self.env[model].create({field: value})
 
+        t = etree.Element('t')
         e = etree.Element('span')
+        t.append(e)
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
-        rendered = self.registry('ir.qweb').render_tag_field(
-            e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {
-                'record': record,
-            }, context={'inherit_branding': True}))
-        element = html.fromstring(
-            rendered, parser=html.HTMLParser(encoding='utf-8'))
+        rendered = self.env['ir.qweb'].render(t, {'record': record})
 
-        converter = self.registry('ir.qweb').get_converter_for(
-            element.get('data-oe-type'))
-
-        value_back = converter.from_html(
-            self.cr, self.uid, model, Model._fields[field], element)
+        element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
+        model = 'ir.qweb.field.' + element.get('data-oe-type', '')
+        converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
+        value_back = converter.from_html(model, record._fields[field], element)
 
         if isinstance(expected, str):
             expected = expected.decode('utf-8')
@@ -162,7 +155,6 @@ class TestConvertBack(common.TransactionCase):
 
     def test_char(self):
         self.field_roundtrip('char', "foo bar")
-
         self.field_roundtrip('char', "ⒸⓄⓇⒼⒺ")
 
     def test_selection(self):
@@ -196,48 +188,39 @@ class TestConvertBack(common.TransactionCase):
         """ the M2O field conversion (from html) is markedly different from
         others as it directly writes into the m2o and returns nothing at all.
         """
-        model = 'web_editor.converter.test'
         field = 'many2one'
 
-        Sub = self.registry('web_editor.converter.test.sub')
-        sub_id = Sub.create(self.cr, self.uid, {'name': "Foo"})
-        sub2_id = Sub.create(self.cr, self.uid, {'name': "Bar"})
+        subrec1 = self.env['web_editor.converter.test.sub'].create({'name': "Foo"})
+        subrec2 = self.env['web_editor.converter.test.sub'].create({'name': "Bar"})
+        record = self.env['web_editor.converter.test'].create({field: subrec1.id})
 
-        Model = self.registry(model)
-        id = Model.create(self.cr, self.uid, {field: sub_id})
-        [record] = Model.browse(self.cr, self.uid, [id])
-
+        t = etree.Element('t')
         e = etree.Element('span')
+        t.append(e)
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
-        rendered = self.registry('ir.qweb').render_tag_field(
-            e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {
-                'record': record,
-            }, context={'inherit_branding': True}))
-
+        rendered = self.env['ir.qweb'].render(t, {'record': record})
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
+
         # emulate edition
-        element.set('data-oe-many2one-id', str(sub2_id))
+        element.set('data-oe-many2one-id', str(subrec2.id))
         element.text = "New content"
 
-        converter = self.registry('ir.qweb').get_converter_for(
-            element.get('data-oe-type'))
-
-        value_back = converter.from_html(
-            self.cr, self.uid, model, Model._fields[field], element)
+        model = 'ir.qweb.field.' + element.get('data-oe-type')
+        converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
+        value_back = converter.from_html('web_editor.converter.test', record._fields[field], element)
 
         self.assertIsNone(
             value_back, "the m2o converter should return None to avoid spurious"
                         " or useless writes on the parent record")
-
         self.assertEqual(
-            Sub.browse(self.cr, self.uid, sub_id).name,
+            subrec1.name,
             "Foo",
             "element edition can't change directly the m2o record"
         )
         self.assertEqual(
-            Model.browse(self.cr, self.uid, id).many2one.name,
+            record.many2one.name,
             "Bar",
             "element edition should have been change the m2o id"
         )

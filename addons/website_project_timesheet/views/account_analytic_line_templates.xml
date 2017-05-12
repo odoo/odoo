@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="my_task" inherit_id="website_project.my_task" name="Project Task Timesheets">
+        <xpath expr="//div[@class='panel-body']" position="inside">
+            <div class="container" t-if="task.timesheet_ids">
+                <hr/>
+                <table class="table table-hover">
+                    <thead>
+                      <tr class="active">
+                        <th>Date</th>
+                        <th class="col-md-6">Description</th>
+                        <th>Responsible</th>
+                        <th>Duration</th>
+                      </tr>
+                    </thead>
+                    <tr t-foreach="task.timesheet_ids" t-as="timesheet">
+                        <td><t t-esc="timesheet.date"/></td>
+                        <td><t t-esc="timesheet.name"/></td>
+                        <td><t t-esc="timesheet.sudo().user_id.name"/></td>
+                        <td><span t-field="timesheet.unit_amount" t-field-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/></td>
+                    </tr>
+                </table>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

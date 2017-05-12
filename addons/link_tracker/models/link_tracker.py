@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import datetime
 import random
 import re
 import string
 
-from lxml.html import parse
+from lxml import html
 from urllib2 import urlopen
 from urlparse import urljoin
 from urlparse import urlparse
-from werkzeug import url_encode
+from werkzeug import url_encode, unescape
 
-from openerp import models, fields, api, _
+from odoo import models, fields, api, _
+from odoo.tools import ustr
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:)([^\'"]+)[\'"])'
 
@@ -53,7 +56,7 @@ class link_tracker(models.Model):
             href = match[0]
             long_url = match[1]
 
-            vals['url'] = long_url
+            vals['url'] = unescape(long_url)
 
             if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
                 link = self.create(vals)
@@ -108,7 +111,7 @@ class link_tracker(models.Model):
     def _get_title_from_url(self, url):
         try:
             page = urlopen(url, timeout=5)
-            p = parse(page)
+            p = html.fromstring(ustr(page.read()).encode('utf-8'), parser=html.HTMLParser(encoding='utf-8'))
             title = p.find('.//title').text
         except:
             title = url

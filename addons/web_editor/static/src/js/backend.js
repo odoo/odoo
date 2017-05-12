@@ -52,7 +52,7 @@ var FieldTextHtmlSimple = widget.extend({
         }
         return config;
     },
-    start: function() {
+    start: function () {
         var def = this._super.apply(this, arguments);
         this.$translate.remove();
         this.$translate = $();
@@ -60,7 +60,7 @@ var FieldTextHtmlSimple = widget.extend({
         this.$content.trigger('mouseup');
         return def;
     },
-    initialize_content: function() {
+    initialize_content: function () {
         var self = this;
         this.$textarea = this.$("textarea").val(this.get('value') || "<p><br/></p>");
         this.$content = $();
@@ -113,29 +113,34 @@ var FieldTextHtmlSimple = widget.extend({
     },
     text_to_html: function (text) {
         var value = text || "";
-        if (value.match(/^\s*$/)) {
-            value = '<p><br/></p>';
-        } else {
-            value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
-            value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
+        try {
+            $(text)[0].innerHTML;
+            return text;
+        } catch (e) {
+            if (value.match(/^\s*$/)) {
+                value = '<p><br/></p>';
+            } else {
+                value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
+                value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
+            }
         }
         return value;
     },
     focus: function() {
-        if (this.get("effective_readonly")) {
+        if (!(!this.get("effective_readonly") && this.$textarea)) {
             return false;
         }
         // on IE an error may occur when creating range on not displayed element
         try {
-            return this.$content.focusInEnd();
+            return this.$textarea.focusInEnd();
         } catch (e) {
-            return this.$content.focus();
+            return this.$textarea.focus();
         }
     },
     resize: function() {
         this.$('iframe').css('height', '0px').css('height', Math.max(30, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
     },
-    render_value: function() {
+    render_value: function () {
         var value = this.get('value');
         this.$textarea.val(value || '');
         this.$content.html(this.text_to_html(value));
@@ -152,10 +157,15 @@ var FieldTextHtmlSimple = widget.extend({
             this.$('.note-toolbar').find('button[data-event="undo"]').attr('disabled', false);
         }
     },
-    is_false: function() {
+    is_false: function () {
         return !this.get('value') || this.get('value') === "<p><br/></p>" || !this.get('value').match(/\S/);
     },
-    commit_value: function() {
+    commit_value: function () {
+        /* Switch to WYSIWYG mode if currently in code view */
+        if (session.debug) {
+            var layoutInfo = this.$textarea.data('layoutInfo');
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
         if (this.options['style-inline']) {
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
@@ -195,6 +205,9 @@ var FieldTextHtml = widget.extend({
             self.trigger('changed_value');
             self.resize();
         };
+        window.odoo[this.callback+"_do_action"] = function () {
+            self.do_action.apply(self, arguments);
+        };
 
         // init jqery objects
         this.$iframe = this.$el.find('iframe');
@@ -213,16 +226,19 @@ var FieldTextHtml = widget.extend({
                 self.$iframe.css("height", (self.$body.find("#oe_snippets").length ? 500 : 300) + "px");
             }
         };
-        $(window).on('resize', self.resize);
+        $(window).on('resize', this.resize);
 
         var def = this._super.apply(this, arguments);
         this.$translate.remove();
         this.$translate = $();
         return def;
     },
+    get_datarecord: function() {
+        return this.view.get_fields_values();
+    },
     get_url: function (_attr) {
         var src = this.options.editor_url || "/web_editor/field/html";
-        var datarecord = this.view.get_fields_values();
+        var datarecord = this.get_datarecord();
 
         var attr = {
             'model': this.view.model,
@@ -248,7 +264,7 @@ var FieldTextHtml = widget.extend({
             attr.translatable = 1;
         }
         if (session.debug) {
-            attr.debug = 1;
+            attr.debug = session.debug;
         }
 
         attr.lang = attr.enable_editor ? 'en_US' : this.session.user_context.lang;
@@ -269,10 +285,10 @@ var FieldTextHtml = widget.extend({
 
         delete datarecord[this.name];
         src += "&datarecord="+ encodeURIComponent(JSON.stringify(datarecord));
-
         return src;
     },
-    initialize_content: function() {
+    initialize_content: function () {
+        var self = this;
         this.$el.closest('.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
         this.document = null;
@@ -281,6 +297,14 @@ var FieldTextHtml = widget.extend({
         this.editor = false;
         window.odoo[this.callback+"_updown"] = null;
         this.$iframe.attr("src", this.get_url());
+        this.view.on("load_record", this, function(r){
+            if (!self.$body.find('.o_dirty').length){
+                var url = self.get_url();
+                if(url !== self.$iframe.attr("src")){
+                    self.$iframe.attr("src", url);
+                }
+            }
+        });
     },
     on_content_loaded: function () {
         var self = this;
@@ -330,7 +354,7 @@ var FieldTextHtml = widget.extend({
                 $("body").toggleClass("o_form_FieldTextHtml_fullscreen");
                 var full = $("body").hasClass("o_form_FieldTextHtml_fullscreen");
                 self.$iframe.parents().toggleClass('o_form_fullscreen_ancestor', full);
-                self.resize();
+                $(window).trigger("resize"); // induce a resize() call and let other backend elements know (the navbar extra items management relies on this)
             });
 
         this.$body.on('click', '[data-action="cancel"]', function (event) {
@@ -338,7 +362,7 @@ var FieldTextHtml = widget.extend({
             self.initialize_content();
         });
     },
-    render_value: function() {
+    render_value: function () {
         if (this.lang !== this.view.dataset.context.lang || this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
             return;
         }
@@ -358,7 +382,7 @@ var FieldTextHtml = widget.extend({
             }
         }
     },
-    is_false: function() {
+    is_false: function () {
         return this.get('value') === false || !this.$content.html() || !this.$content.html().match(/\S/);
     },
     commit_value: function () {
@@ -367,21 +391,32 @@ var FieldTextHtml = widget.extend({
             this._dirty_flag = false;
             return this.editor.save();
         } else if (this._dirty_flag && this.editor && this.editor.buildingBlock) {
+            /* Switch to WYSIWYG mode if currently in code view */
+            if (session.debug) {
+                var layoutInfo = this.editor.rte.editable().data('layoutInfo');
+                $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+            }
             this.editor.buildingBlock.clean_for_save();
             this.internal_set_value( this.$content.html() );
         }
     },
     destroy: function () {
-        $(window).off('resize', self.resize);
+        $(window).off('resize', this.resize);
         delete window.odoo[this.callback+"_editor"];
         delete window.odoo[this.callback+"_content"];
         delete window.odoo[this.callback+"_updown"];
         delete window.odoo[this.callback+"_downup"];
+        delete window.odoo[this.callback+"_do_action"];
     }
 });
 
 core.form_widget_registry
     .add('html', FieldTextHtmlSimple)
     .add('html_frame', FieldTextHtml);
+
+return {
+    FieldTextHtmlSimple: FieldTextHtmlSimple,
+    FieldTextHtml: FieldTextHtml,
+};
 
 });

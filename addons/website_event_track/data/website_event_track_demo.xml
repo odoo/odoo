@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data noupdate="1">
     <record id="event_track_location5" model="event.track.location">
         <field name="name">Le Foyer du lac</field>
@@ -29,7 +29,7 @@
         <field eval="[(4, ref('base.res_partner_2')),(4, ref('base.res_partner_3'))]" name="speaker_ids"/>
         <field name="color">3</field>
         <field name="state">draft</field>
-        
+
     </record>
     <record id="event_track2" model="event.track">
         <field name="name">How to integrate hardware materials with the Odoo point of sale.</field>
@@ -322,4 +322,4 @@
         <field name="state">confirmed</field>
     </record>
 </data>
-</openerp>
+</odoo>

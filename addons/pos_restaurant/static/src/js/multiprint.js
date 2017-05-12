@@ -54,7 +54,14 @@ models.load_models({
 
         for(var i = 0; i < printers.length; i++){
             if(active_printers[printers[i].id]){
-                var printer = new Printer(self,{url:'http://'+printers[i].proxy_ip+':8069'});
+                var url = printers[i].proxy_ip;
+                if(url.indexOf('//') < 0){
+                    url = 'http://'+url;
+                }
+                if(url.indexOf(':',url.indexOf('//')+2) < 0){
+                    url = url+':8069';
+                }
+                var printer = new Printer(self,{url:url});
                 printer.config = printers[i];
                 self.printers.push(printer);
 
@@ -133,9 +140,9 @@ models.Orderline = models.Orderline.extend({
     },
     get_line_diff_hash: function(){
         if (this.get_note()) {
-            return this.get_product().id + '|' + this.get_note();
+            return this.id + '|' + this.get_note();
         } else {
-            return '' + this.get_product().id;
+            return '' + this.id;
         }
     },
 });

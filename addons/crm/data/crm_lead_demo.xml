@@ -1,0 +1,821 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--  crm categories -->
+        <record id="categ_oppor1" model="crm.lead.tag">
+            <field name="name">Product</field>
+            <field name="color" eval="1"/>
+        </record>
+        <record id="categ_oppor2" model="crm.lead.tag">
+            <field name="name">Software</field>
+            <field name="color" eval="2"/>
+        </record>
+        <record id="categ_oppor3" model="crm.lead.tag">
+            <field name="name">Services</field>
+            <field name="color" eval="3"/>
+        </record>
+        <record id="categ_oppor4" model="crm.lead.tag">
+            <field name="name">Information</field>
+            <field name="color" eval="4"/>
+        </record>
+        <record id="categ_oppor5" model="crm.lead.tag">
+            <field name="name">Design</field>
+            <field name="color" eval="5"/>
+        </record>
+        <record id="categ_oppor6" model="crm.lead.tag">
+            <field name="name">Training</field>
+            <field name="color" eval="6"/>
+        </record>
+        <record id="categ_oppor7" model="crm.lead.tag">
+            <field name="name">Consulting</field>
+            <field name="color" eval="7"/>
+        </record>
+        <record id="categ_oppor8" model="crm.lead.tag">
+            <field name="name">Other</field>
+            <field name="color" eval="8"/>
+        </record>
+
+        <!--  Demo Leads -->
+        <record id="crm_case_1" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Plan to Attend a Training</field>
+            <field name="contact_name">Jacques Dunagan</field>
+            <field name="partner_name">Le Club SARL</field>
+            <field name="email_from">jdunagan@leclub.example.com</field>
+            <field name="function">Training Manager</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="city">Paris</field>
+            <field name="zip">93190</field>
+            <field name="street">Rue Léon Dierx 73</field>
+            <field name="phone">+33 1 25 54 45 69</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor6])]"/>
+            <field name="priority">1</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="date_open" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_mailing"/>
+        </record>
+        <record id="msg_case1_1" model="mail.message">
+            <field name="subject">Inquiry</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_1"/>
+            <field name="author_id" eval="False"/>
+            <field name="email_from">jdunagan@leclub.example.com</field>
+            <field name="body"><![CDATA[<p>Hello,<br />
+            I am Jacques from Le Club SARL. I am interested to attend a training organized in your company.<br />
+            Can you send me the details ?</p>]]></field>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="crm_case_2" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Interest in Your New Software</field>
+            <field name="contact_name">Marc Dufour</field>
+            <field name="partner_name">The Oil Company</field>
+            <field name="email_from">md@oilcompany.fr</field>
+            <field name="function">Purchase Manager</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="city">Bordeaux</field>
+            <field name="zip">33000</field>
+            <field name="street">Rue Ignasse Blanchoux 214/32</field>
+            <field name="phone">+33 1 25 54 45 69</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="priority">1</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="date_open" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_christmas_special"/>
+            <field name="medium_id" ref="utm.utm_medium_website"/>
+            <field name="source_id" ref="utm.utm_source_newsletter"/>
+        </record>
+        <record id="msg_case2_1" model="mail.message">
+            <field name="subject">Need Details</field>
+            <field name="model">crm.lead</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="res_id" ref="crm_case_2"/>
+            <field name="body">Want to know features and benefits of using the new software.</field>
+            <field name="message_type">comment</field>
+        </record>
+
+        <record id="crm_case_3" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Need Info about Web Design</field>
+            <field name="contact_name">John Miller</field>
+            <field name="partner_name">The Kompany</field>
+            <field name="email_from">contact@thekompany.example.com</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="city">New York</field>
+            <field name="zip">10001</field>
+            <field name="street">Lafayette Ave 450/12</field>
+            <field name="phone">+1 555 754 3010</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4, categ_oppor5])]"/>
+            <field name="priority">2</field>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date_open" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_google_adwords"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <record id="crm_case_4" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Need a New Website</field>
+            <field name="contact_name">Henry Campbell</field>
+            <field name="partner_name">Burstein Applebee</field>
+            <field name="email_from">hmc@yahoo.example.com</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">Manchester</field>
+            <field name="zip">03101</field>
+            <field name="street">United Street 68</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor5])]"/>
+            <field name="priority">2</field>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date_open" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_banner"/>
+            <field name="source_id" ref="utm.utm_source_newsletter"/>
+        </record>
+
+        <record id="crm_case_5" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Need a Quotation for Computers with Accessories</field>
+            <field name="contact_name">Carrie Helle</field>
+            <field name="partner_name">Stonage IT</field>
+            <field name="email_from">helle@stonageit.example.com</field>
+            <field name="function">Purchase Manager</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="city">Philadelphia</field>
+            <field name="zip">1909</field>
+            <field name="street">West Allegheny Ave 800</field>
+            <field name="phone">+1 813 494 5005</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="priority">2</field>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref=""/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="description"></field>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_website"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+        <record id="msg_case5_1" model="mail.message">
+            <field name="subject">Inquiry</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_5"/>
+            <field name="author_id" eval="False"/>
+            <field name="email_from">helle@stonageit.example.com</field>
+            <field name="body"><![CDATA[<p>Hi,<br />
+Can you send me a quotation for 20 computers with speakers?<br />
+Regards,<br />
+Carrie Helle,<br />
+Purchase Manager<br />
+Stonage IT,<br />
+Philadelphia<br />
+Contact: +1 813 494 5005</p>]]></field>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="crm_case_6" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Need Info about your Services</field>
+            <field name="contact_name">Tina Pinero</field>
+            <field name="partner_name">Opensides</field>
+            <field name="email_from">tina@opensides.example.com</field>
+            <field name="function">Consultant</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="city">Roma</field>
+            <field name="zip">00118</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor3, categ_oppor4])]"/>
+            <field name="priority">2</field>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref=""/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <record id="crm_case_7" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Info about My Company</field>
+            <field name="contact_name">Wendi Baltz</field>
+            <field name="partner_name">Gardner Group</field>
+            <field name="function">Journalist</field>
+            <field name="country_id" ref="base.br"/>
+            <field name="city">Rio de Janeiro</field>
+            <field name="zip">29000</field>
+            <field name="street">R. Sen. Pompeu</field>
+            <field name="phone">+11 55 21 5555 5555</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
+            <field name="priority">0</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_newsletter"/>
+        </record>
+
+        <record id="crm_case_8" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Product Catalog</field>
+            <field name="contact_name">Logan</field>
+            <field name="partner_name">ESM Expert</field>
+            <field name="email_from">logan_expert@gmail.example.com</field>
+            <field name="function">Sales</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">London</field>
+            <field name="zip">E1AB</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4, categ_oppor8])]"/>
+            <field name="priority">1</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_google_adwords"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+        <record id="msg_case8_1" model="mail.message">
+            <field name="subject">Inquiry</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_8"/>
+            <field name="author_id" eval="False"/>
+            <field name="email_from">logan_expert@gmail.example.com</field>
+            <field name="body"><![CDATA[<p>Hi,<br />
+Could you send me your product catalogue please ?<br />
+Regards,<br />
+David Logan<br />
+ESM Expert<br />]]></field>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="crm_case_9" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Partnership Details</field>
+            <field name="contact_name">Delisle Albert</field>
+            <field name="partner_name">Marketing Business</field>
+            <field name="email_from">d.albert@marketing-business.example.com</field>
+            <field name="function">Sales</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">Oxford</field>
+            <field name="zip">OX1 1RQ</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4, categ_oppor7])]"/>
+            <field name="priority">2</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_mailing"/>
+        </record>
+
+        <record id="crm_case_10" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Information about laptop</field>
+            <field name="contact_name">Jose Garcia</field>
+            <field name="partner_name">Solar IT</field>
+            <field name="function">Medical illustrator</field>
+            <field name="email_from">jga@solar.example.com</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="city">Madrid</field>
+            <field name="zip">28001</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="priority">2</field>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_website"/>
+            <field name="source_id" ref="utm.utm_source_newsletter"/>
+        </record>
+        <record id="msg_case10_1" model="mail.message">
+            <field name="subject">Inquiry</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_10"/>
+            <field name="author_id" eval="False"/>
+            <field name="email_from">jga@solar.example.com</field>
+            <field name="body"><![CDATA[<p>Hi,<br />
+I would like to know more about specification and cost of laptops of your company.<br />
+Thanks,<br />
+Andrew</p>]]></field>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="crm_case_11" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Need estimated cost for new project</field>
+            <field name="contact_name">Thomas Passot</field>
+            <field name="partner_name">Agrolait</field>
+            <field name="email_from">p.thomas@agrolait.com</field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="function">Functional Consultant</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Wavre</field>
+            <field name="zip">1300</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="priority">2</field>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref=""/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_direct"/>
+            <field name="source_id" ref="utm.utm_source_mailing"/>
+        </record>
+
+        <record id="crm_case_12" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Need Quotation for 100 PC and 100 Keyboards</field>
+            <field name="contact_name">Bojing Hú</field>
+            <field name="partner_name">Incom Corporation</field>
+            <field name="email_from">bhu.a100@ic.example.com</field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="country_id" ref="base.cn"/>
+            <field name="city">Shenzhen</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="priority">2</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref=""/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_website"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <!-- Call Function to Cancel the leads (set as Dead) -->
+        <function model="crm.lead" name="action_set_lost"
+            eval="[ref('crm_case_7'), ref('crm_case_9'), ref('crm_case_11'), ref('crm_case_12')],
+                  {'install_mode': True}"/>
+
+        <!-- Demo Opportunities -->
+        <record id="crm_case_13" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Plan to buy 60 keyboards and mouses</field>
+            <field name="planned_revenue">40000</field>
+            <field name="probability">10.0</field>
+            <field name="contact_name">Will McEncroe</field>
+            <field name="partner_name">Rediff Mail</field>
+            <field name="email_from">willmac@rediffmail.example.com</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="city">Melbourne</field>
+            <field name="street">Kensington Road 189</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="next_activity_id" ref="crm_activity_data_meeting"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="title_action">Meeting to go over pricing information.</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <record id="crm_case_14" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Interest in your Graphic Design Project</field>
+            <field name="color">7</field>
+            <field name="planned_revenue">24000</field>
+            <field name="probability">10.0</field>
+            <field name="partner_name">Agrolait</field>
+            <field name="email_from">info@agrolait.com</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Wavre</field>
+            <field name="zip">1300</field>
+            <field name="street">Rue de Namur 69</field>
+            <field name="phone">+32 10 588 558</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="priority">2</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="title_action">Send Catalog by Email</field>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_website"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <record id="crm_case_15" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Plan to buy RedHat servers</field>
+            <field name="planned_revenue">25000</field>
+            <field name="probability">30.0</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="email_from">virginie@agrolait.com</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Wavre</field>
+            <field name="street">Rue de Namur 69</field>
+            <field name="phone">+32 10 588 558</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="title_action">Call to get system requirements</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="source_id" ref="utm.utm_source_newsletter"/>
+        </record>
+        <record id="msg_case15_attach1" model="ir.attachment">
+            <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
+            <field name="datas_fname">YourCompany2012.doc</field>
+            <field name="name">YourCompany2012.doc</field>
+        </record>
+        <record id="msg_case15_1" model="mail.message">
+            <field name="subject">Plan to buy RedHat servers</field>
+
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_15"/>
+            <field name="author_id" eval="False"/>
+            <field name="email_from">virginie@agrolait.fr</field>
+            <field name="body"><![CDATA[<div>
+            <p>Hello,</p>
+            <p>I am interested in your company's products and I plan to buy a new laptop having latest technologies as well as an affordable price.</p>
+            <p>Could you please send me the product catalog?</p>]]></field>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+        <record id="msg_case15_2" model="mail.message">
+            <field name="subject">Re: Plan to buy RedHat servers</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_15"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="body"><![CDATA[<p>Dear customer,<br/>
+            Thanks for showing interest in our products! As requested, I send to you our products catalog.<br />
+            To be able to finely tune the solution, we would like to know precise needs. This way we wil be able to help you choosing the right infrastructure according to your requirements.<br/>
+            Best regards,</p>]]></field>
+            <field name="parent_id" ref="msg_case15_1"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('msg_case15_attach1')])]"/>
+        </record>
+        <record id="msg_case15_3" model="mail.message">
+            <field name="subject">Re: Plan to buy RedHat servers</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_15"/>
+            <field name="email_from">virginie@agrolait.fr</field>
+            <field name="author_id" eval="False"/>
+            <field name="body"><![CDATA[<p>Thanks for the information!<br />I asked a precise specification to our technical expert. Here is what we precisely need:</p>
+            <ul>
+                <li>weekly backups, every Monday</li>
+                <li>backup time is not a blocking point for us, as we are closed all Monday, leaving time enough to perform the backup</li>
+                <li>reliability is very important; we need redundant servers and rollback capacity</li>
+                <li>a total capacity of about 2 TB</li>
+            </ul>
+            <p>Best regards,</p>]]></field>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="parent_id" ref="msg_case15_1"/>
+        </record>
+        <record id="msg_case15_4" model="mail.message">
+            <field name="subject">Re: Plan to buy RedHat servers</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_15"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="body"><![CDATA[<p>Hello</p>
+            <p>After our discussion with our technical experts, here is the offer of YourCompany. We believe it will meet every requirement you had in mind. Please feel free to contact me for any detail or technical detail that is not clear enough for you.</p>
+            <p>Notice that as agreed on phone, we offer you a <b>10% discount on the hardware</b>!</p>
+            <p>Best regards,</p>]]></field>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="parent_id" ref="msg_case15_1"/>
+        </record>
+
+        <record id="crm_case_16" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Need a new design for my website</field>
+            <field name="planned_revenue">3800</field>
+            <field name="probability">90.0</field>
+            <field name="contact_name">Robin Smith</field>
+            <field name="partner_name">Global Solutions</field>
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">Liverpool</field>
+            <field name="zip">L25 4RL</field>
+            <field name="street">Union Road</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor5])]"/>
+            <field name="priority">2</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="next_activity_id" ref="crm_activity_data_meeting"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="title_action">Convert to quote</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="source_id" ref="utm.utm_source_mailing"/>
+        </record>
+
+        <record id="crm_case_17" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Pricing Information of Services</field>
+            <field name="planned_revenue">1000</field>
+            <field name="probability">35.0</field>
+            <field name="partner_name">BalmerInc S.A.</field>
+            <field name="contact_name">Oliver Passot</field>
+            <field name="email_from">olivier.passo@balmer.inc.sa</field>
+            <field name="phone">+32 469 12 45 78</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Brussels</field>
+            <field name="zip">1100</field>
+            <field name="street">Rue des Palais 51, bte 33</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor3,categ_oppor4])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="title_action">Send our service pricelist</field>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_website"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+        <record id="msg_case17_1" model="mail.message">
+            <field name="subject">Catalog to send</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_17"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="body"><![CDATA[<p>They just want pricing information about our services. I think sending our catalog should be sufficient.</p>]]></field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="crm_case_18" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Trainee's training plan in your Organization</field>
+            <field eval="35000" name="planned_revenue"/>
+            <field eval="25.0" name="probability"/>
+            <field name="contact_name">Leland Martinez</field>
+            <field name="email_from">info@deltapc.com</field>
+            <field name="partner_name">Delta PC</field>
+            <field name="city">London</field>
+            <field name="street">3661 Station Street</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4,categ_oppor6])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=3)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="title_action">Call to get training needs</field>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field eval="1" name="active"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="source_id" ref="utm.utm_source_newsletter"/>
+        </record>
+        <record id="msg_case18_1" model="mail.message">
+            <field name="subject">Inquiry</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_18"/>
+            <field name="author_id" ref="base.res_partner_4"/>
+            <field name="body"><![CDATA[<p>Hello!<br />
+            I am Leland Martinez, from the Delta PC. Maybe you remember, we talked a bit last month at this international conference.<br />
+            We would like to attend a training, but we are not quite sure about what we can ask. Maybe we should meet and talk about that?<br />
+            Best regards,</p>]]></field>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+        <record id="msg_case18_2" model="mail.message">
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_18"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="body"><![CDATA[<p>It seems very interesting. As you say, first of all we will have to define precisely what the training will be about, and your precise needs.</p>]]></field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="parent_id" ref="msg_case18_1"/>
+        </record>
+
+        <record id="crm_case_19" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Interest in your customizable Pcs</field>
+            <field name="color">3</field>
+            <field name="planned_revenue">15000</field>
+            <field name="probability">65.5</field>
+            <field name="contact_name">Nhomar</field>
+            <field name="partner_name">Vauxoo</field>
+            <field name="email_from">vauxoo@yourcompany.example.com</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="country_id" ref="base.ve"/>
+            <field name="city">Caracas</field>
+            <field name="zip">1090</field>
+            <field name="street">3rd Floor, Room 3-C,</field>
+            <field name="street2">Carretera Panamericana, Km 1, Urb. Delgado Chalbaud</field>
+            <field name="phone">+58 212 681 0538</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=-2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="title_action">Followup on the proposal</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="date_closed" eval="(DateTime.today() - relativedelta(months=3)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="source_id" ref="utm.utm_source_mailing"/>
+        </record>
+
+        <record id="crm_case_20" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Interest in your Partnership Contract</field>
+            <field name="planned_revenue">19800</field>
+            <field name="contact_name">John M. Brown</field>
+            <field name="partner_name">Epic Technologies</field>
+            <field name="email_from">john.b@tech.info</field>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="country_id" ref="base.us"/>
+            <field name="zip">60610</field>
+            <field name="city">Chicago</field>
+            <field name="phone">+1 312 349 2324</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4,categ_oppor8])]"/>
+            <field name="priority">2</field>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="source_id" ref="utm.utm_source_mailing"/>
+        </record>
+
+        <record id="crm_case_21" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">“Resource Planning” project develpment</field>
+            <field name="planned_revenue">9000</field>
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">Birmingham</field>
+            <field name="zip">B46 3AG</field>
+            <field name="street">Cannon Hill Park</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="priority">2</field>
+            <field name="next_activity_id" ref="crm_activity_data_meeting"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="medium_id" ref="utm.utm_medium_phone"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <record id="crm_case_22" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Need script to Import external data</field>
+            <field name="planned_revenue">5600</field>
+            <field name="probability">30.0</field>
+            <field name="contact_name">Benjamin Flores</field>
+            <field name="partner_name">Nebula Business</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
+            <field name="priority">1</field>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <record id="crm_case_23" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Want to subscribe to your online solution</field>
+            <field name="planned_revenue">2000</field>
+            <field name="probability">80.0</field>
+            <field name="partner_id" ref="base.res_partner_18"/>
+            <field name="priority">0</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_fall_drive"/>
+            <field name="medium_id" ref="utm.utm_medium_direct"/>
+            <field name="source_id" ref="utm.utm_source_newsletter"/>
+        </record>
+
+        <record id="crm_case_24" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Need 20 Days of Consultancy</field>
+            <field name="planned_revenue">60000</field>
+            <field name="probability">90.0</field>
+            <field name="email_from">info@mycompany.net</field>
+            <field name="country_id" ref="base.pe"/>
+            <field name="city">Lima</field>
+            <field name="priority">0</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="medium_id" ref="utm.utm_medium_website"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <record id="crm_case_25" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Need to customize the solution</field>
+            <field name="planned_revenue">4500</field>
+            <field name="probability">60</field>
+            <field name="contact_name">Henry Jordan</field>
+            <field name="partner_name">E-light Industry</field>
+            <field name="email_from">henry@elight.com</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="city">Buenos Aires</field>
+            <field name="zip">B7313</field>
+            <field name="street">Palermo, Capital Federal</field>
+            <field name="street2">C1414CMS Capital Federal</field>
+            <field name="priority">2</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=0)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="title_action">Conf call with technical service</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <record id="crm_case_26" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Would appreciate more information about your products</field>
+            <field name="planned_revenue">11000</field>
+            <field name="probability">45</field>
+            <field name="partner_name">Agrolait</field>
+            <field name="email_from">info@agrolait.com</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="street">Rue de Namur 69</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Wavre</field>
+            <field name="zip">1300</field>
+            <field name="priority">2</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=6)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=0)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="title_action">Send Catalog by Email</field>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_website"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <record id="crm_case_27" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Interest in your products</field>
+            <field name="planned_revenue">2000</field>
+            <field name="probability">80</field>
+            <field name="partner_name">Agrolait</field>
+            <field name="email_from">info@agrolait.com</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Wavre</field>
+            <field name="zip">1300</field>
+            <field name="street">Rue de Namur 69</field>
+            <field name="priority">2</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=6)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=0)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="title_action">Send Catalog by Email</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+        </record>
+
+        <!-- Call Function to set some opportunities as Won -->
+        <function model="crm.lead" name="action_set_won"
+            eval="[ref('crm_case_20'), ref('crm_case_23'), ref('crm_case_27')],
+                  {'install_mode': True}"/>
+
+    </data>
+</odoo>

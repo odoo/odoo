@@ -1,21 +1,17 @@
 # -*- coding: utf-8 -*-
-import logging
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import commands
-import json
-import os
-import os.path
-import openerp
+import logging
 import time
-import random
-import subprocess
-import json
-import werkzeug
-import werkzeug.wrappers
+from threading import Lock
+
+
+from odoo import http
+from odoo.http import request
+
 _logger = logging.getLogger(__name__)
 
-
-from openerp import http
-from openerp.http import request
 
 # Those are the builtin raspberry pi USB modules, they should
 # not appear in the list of connected devices.
@@ -29,6 +25,11 @@ BANNED_DEVICES = set([
 # drivers modules must add to drivers an object with a get_status() method 
 # so that 'status' can return the status of all active drivers
 drivers = {}
+
+# keep a list of RS-232 devices that have been recognized by a driver,
+# so other drivers can skip them during probes
+rs232_devices = {}  # {'/path/to/device': 'driver'}
+rs232_lock = Lock() # must be held to update `rs232_devices`
 
 class Proxy(http.Controller):
 
@@ -47,7 +48,7 @@ class Proxy(http.Controller):
         return True
 
     @http.route('/hw_proxy/status', type='http', auth='none', cors='*')
-    def status_http(self):
+    def status_http(self, debug=None, **kwargs):
         resp = """
 <!DOCTYPE HTML>
 <html>
@@ -95,6 +96,8 @@ class Proxy(http.Controller):
             <h2>Connected Devices</h2>
             <p>The list of connected USB devices as seen by the posbox</p>
         """
+        if debug is None:
+            resp += """(<a href="/hw_proxy/status?debug">debug version</a>)"""
         devices = commands.getoutput("lsusb").split('\n')
         count   = 0
         resp += "<div class='devices'>\n"
@@ -109,6 +112,17 @@ class Proxy(http.Controller):
             resp += "<div class='device'>No USB Device Found</div>"
 
         resp += "</div>\n</body>\n</html>\n\n"
+
+        if debug is not None:
+            resp += """
+
+                <h3>Debug version</h3>
+                <p><tt>lsusb -v</tt> output:</p>
+                <pre>
+                %s
+                </pre>
+
+            """ % subprocess.check_output('lsusb -v', shell=True)
 
         return request.make_response(resp,{
             'Cache-Control': 'no-cache', 

@@ -3,14 +3,16 @@
 # * product_expiry
 # 
 # Translators:
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Ted Wang <feiyuwang2012@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 07:20+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,9 +20,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
+msgid "<span class=\"pull-right\">Expiry Date</span>"
+msgstr "<span class=\"pull-right\">过期日期</span>"
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
 msgid "Alert Date"
-msgstr "警示日期"
+msgstr "警报日期"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_use_date
@@ -69,17 +76,17 @@ msgstr "批次/序列号"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
 msgid "Product Alert Time"
-msgstr "产品警示时间"
+msgstr "产品警报时间"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
 msgid "Product Life Time"
-msgstr "产品生命时间"
+msgstr "产品寿命时间"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_removal_time
 msgid "Product Removal Time"
-msgstr "产品移除时间"
+msgstr "产品下架时间"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
@@ -89,7 +96,7 @@ msgstr "产品模板"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_use_time
 msgid "Product Use Time"
-msgstr "产品启用时间"
+msgstr "最佳使用时间"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
@@ -100,7 +107,7 @@ msgstr "份"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_removal_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant_removal_date
 msgid "Removal Date"
-msgstr "移除日期"
+msgstr "下架日期"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
@@ -118,6 +125,7 @@ msgstr "此处表明该序列号的商品变得危险的日期，此时该商品
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant_removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
@@ -142,7 +150,10 @@ msgstr "此处表明当新序列号生成时，商品生成提醒前的天数。
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr "此处表明当新序列号生成时，商品变危险以至于不能使用前的天数。When a new a Serial Number is issued, this is the number of days before the goods may become dangerous and must not be consumed."
+msgstr ""
+"此处表明当新序列号生成时，商品变危险以至于不能使用前的天数。When a new a Serial Number is issued, this is "
+"the number of days before the goods may become dangerous and must not be "
+"consumed."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_removal_time

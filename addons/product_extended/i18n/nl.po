@@ -3,15 +3,17 @@
 # * product_extended
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-22 09:50+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,103 +21,47 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:24
-#: code:addons/product_extended/wizard/wizard_price.py:40
-#, python-format
-msgid "Active ID is not set in Context."
-msgstr "Actieve ID is niet ingesteld in Context."
+#: model:ir.model.fields,field_description:product_extended.field_product_product_available_in_pos
+msgid "Available in the Point of Sale"
+msgstr "Beschikbaar in de kassa"
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Materiaallijst"
+#: model:ir.model.fields,help:product_extended.field_product_product_to_weight
+msgid ""
+"Check if the product should be weighted using the hardware scale integration"
+msgstr ""
+"Controleer of het product moet worden gewogen d.m.v. de weegschaalintegratie"
 
 #. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Cancel"
-msgstr "Annuleren"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Price"
-msgstr "Verander prijs"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Standard Price"
-msgstr "Wijzig kostprijs"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_recursive
-msgid "Change prices of child BoMs too"
-msgstr "Wijzig ook de prijzen van de onderliggende materiaallijsten"
-
-#. module: product_extended
-#: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
-msgid "Compute Price Wizard"
-msgstr "Bereken prijs wizard"
+#: model:ir.model.fields,help:product_extended.field_product_product_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
+msgstr "Vink deze optie aan als u het product wilt gebruiken in de kassa."
 
 #. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid "Compute from BOM"
 msgstr "Bereken vanuit materiaallijst"
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute price wizard"
-msgstr "Bereken prijs wizard"
-
-#. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
-msgstr "Bereken de prijs van het product gebruikmakend van producten en handelingen gerelateerd aan de materiaallijst, enkel voor geproduceerde producten."
+msgstr ""
+"Bereken de prijs van het product gebruikmakend van producten en handelingen "
+"gerelateerd aan de materiaallijst, enkel voor geproduceerde producten."
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
-msgid "Created by"
-msgstr "Aangemaakt door"
+#: model:ir.model.fields,field_description:product_extended.field_product_product_pos_categ_id
+msgid "Point of Sale Category"
+msgstr "Kassa categorie"
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_date
-msgid "Created on"
-msgstr "Aangemaakt op"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_display_name
-msgid "Display Name"
-msgstr "Naam weergeven"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
-msgid "Generate accounting entries when real-time"
-msgstr "Bij real-time voorraadwaardering, financiële boekingen maken."
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_id
-msgid "ID"
-msgstr "ID"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_info_field
-msgid "Info"
-msgstr "Info"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price___last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_uid
-msgid "Last Updated by"
-msgstr "Laatst bijgewerkt door"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_date
-msgid "Last Updated on"
-msgstr "Laatst bijgewerkt op"
+#: model:ir.model,name:product_extended.model_product_product
+msgid "Product"
+msgstr "Product"
 
 #. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
@@ -123,26 +69,13 @@ msgid "Product Template"
 msgstr "Productsjabloon"
 
 #. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Set price on BoM"
-msgstr "Stel prijs in op materiaallijst"
+#: model:ir.model.fields,help:product_extended.field_product_product_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
+msgstr ""
+"De categorieën worden gebruikt om gelijkwaardige producten te groeperen bij "
+"de kassa."
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_standard_price
-msgid "Standard Price"
-msgstr "Kostprijs"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid ""
-"The price is computed from the bill of material lines which are not variant "
-"specific"
-msgstr "De prijs wordt berekend op basis van de materiaallijstregels welke niet voor een variant specifiek zijn"
-
-#. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:38
-#, python-format
-msgid ""
-"This wizard is build for product templates, while you are currently running "
-"it from a product variant."
-msgstr "deze wizard is gemaakt voor productsjablonen, terwijl u deze nu gestart heeft vanaf een productvariant."
+#: model:ir.model.fields,field_description:product_extended.field_product_product_to_weight
+msgid "To Weigh With Scale"
+msgstr "Te wegen met weegschaal"

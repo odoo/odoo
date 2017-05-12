@@ -1,17 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_holidays
+#   * hr_holidays
 # 
 # Translators:
-# Kris Krnacs, 2015-2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2016-01-20 10:41+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2017-01-26 14:11+0000\n"
+"PO-Revision-Date: 2017-01-26 14:11+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -44,11 +47,16 @@ msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:234
-#: code:addons/hr_holidays/hr_holidays.py:356
+#: code:addons/hr_holidays/models/hr_holidays.py:125
 #, python-format
-msgid "%s on %s"
-msgstr "%s ezen %s"
+msgid "%g remaining out of %g"
+msgstr "%g visszamaradt ennyiből %g"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:331
+#, python-format
+msgid "%s on %s : %.2f day(s)"
+msgstr "%s on %s : %.2f nap(ok)"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -65,7 +73,9 @@ msgstr "&lt;/th&gt;"
 msgid ""
 "&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
 "color:"
-msgstr "&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
+msgstr ""
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
+"color:"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -98,6 +108,15 @@ msgid "Absence by Today"
 msgstr "Mától távolléten"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid ""
+"Absent Employee(s), Whose leaves request are either confirmed or validated "
+"on today"
+msgstr ""
+"Távol lévő alkalmazott(ak),  távollétüket megerősítették vagy jóváhagyták a "
+"mai nap"
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
 msgid "Absent Employees"
 msgstr "Távolléten lévő alkalmazottak"
@@ -109,14 +128,14 @@ msgid "Absent Today"
 msgstr "Ma távollétre küldött"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction
-msgid "Action Needed"
-msgstr "Művelet szükséges"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_active
 msgid "Active"
 msgstr "Aktív"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Active Leaves and Allocations"
+msgstr "Aktív Távollétek és Kiosztásai"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -175,7 +194,7 @@ msgid "Allocation Requests to Approve"
 msgstr "Kiosztási igény jóváhagyásra"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:559
+#: code:addons/hr_holidays/models/hr.py:129
 #, python-format
 msgid "Allocation for %s"
 msgstr "Kihelyezés ehhez %s"
@@ -184,6 +203,11 @@ msgstr "Kihelyezés ehhez %s"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
 msgid "Allocation to Approve"
 msgstr "Kiosztás jóváhagyásra"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Allocations"
+msgstr "Kiosztások"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -230,6 +254,21 @@ msgid "Assign Leaves"
 msgstr "Kiosztott távolétek"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_resource_calendar_uom_id
+msgid ""
+"Average hours of work per day.\n"
+"                It is used in an employee leave request to compute the number of days consumed based on the resource calendar.\n"
+"                It can be used to handle various contract types, e.g.:\n"
+"                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
+"                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
+msgstr ""
+"Átlag munkaórák naponta.\n"
+"                Ezt az alkalmazottak távozás igényénél használja az erőforrás naptár alapján a felhasznált napok kiszámításához.\n"
+"                Különböző kapcsolat típusok kezelésére használhatja, pl.:\n"
+"                - 38 óra/hét, 5 nap/hét: 1 nap = 7.6 óra\n"
+"                - 45 óra/hét, 5 nap/hét: 1 nap = 9.0 óra"
+
+#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Black"
 msgstr "Fekete"
@@ -265,7 +304,9 @@ msgstr "Alkalmazott címkétől"
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
-msgstr "Alkalmazottól: Kiosztás/Igény alkalmazott egyénnek, Alkalmazott címkétől: Kiosztás/Igény a kategóriához tartozó alkalmazott csoportnak"
+msgstr ""
+"Alkalmazottól: Kiosztás/Igény alkalmazott egyénnek, Alkalmazott címkétől: "
+"Kiosztás/Igény a kategóriához tartozó alkalmazott csoportnak"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_can_reset
@@ -276,7 +317,7 @@ msgstr "Visszaállítható"
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_dept
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
 msgid "Cancel"
-msgstr "Megszakítás"
+msgstr "Érvénytelenít"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -298,7 +339,26 @@ msgstr "Alkalmazotti kategória"
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
 "Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
-msgstr "Válassza a 'Szabadság igény' ha valaki ki akar venni szabadnapot. \nVálassza 'Kiosztási igény' ha a valaki számára még elérhető szabadság napok számát növelni szeretné"
+msgstr ""
+"Válassza a 'Szabadság igény' ha valaki ki akar venni szabadnapot. \n"
+"Válassza 'Kiosztási igény' ha a valaki számára még elérhető szabadság napok számát növelni szeretné"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_allocation_holidays
+msgid "Click here to create a new leave allocation request."
+msgstr "Kattintson egy új távollét kiosztás igényléshez."
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_allocation_approve
+msgid "Click here to create a new leave allocation."
+msgstr "Kattintson egy új távollét kiosztás létrehozásához."
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_company_allocation
+#: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_approve
+#: model:ir.actions.act_window,help:hr_holidays.open_employee_leaves
+msgid "Click here to create a new leave request."
+msgstr "Kattintson ide egy új távollét igényléshez."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -338,14 +398,14 @@ msgstr "Beállítások"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 msgid "Confirm"
-msgstr "Jóváhagyás"
+msgstr "Megerősítés"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "Confirmed"
-msgstr "Jóváhagyott"
+msgstr "Megerősített"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_create_uid
@@ -375,18 +435,13 @@ msgstr "Aktuális távollét tipusa"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Current Year Leaves"
-msgstr "Aktív éves távollétek"
+msgid "Current Year"
+msgstr "Idei év"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Dashboard"
 msgstr "Műszerfal"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "A feljegyzésen történt utolsó levelezés dátuma."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_department_id
@@ -422,7 +477,7 @@ msgstr "Leírás"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -456,14 +511,16 @@ msgstr "Alkalmazott(ak)"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_date_to
 msgid "End Date"
-msgstr "Dátum-ig:"
+msgstr "Befejezés dátuma"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid ""
 "Filters only on allocations and requests that belong to an holiday type that"
 " is 'active' (active field is True)"
-msgstr "Csak egy 'aktív' ünnep típushoz tartozó kiosztás és az igénylés szűrője (aktív mező igaz)"
+msgstr ""
+"Csak egy 'aktív' ünnep típushoz tartozó kiosztás és az igénylés szűrője "
+"(aktív mező igaz)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_manager_id
@@ -471,25 +528,10 @@ msgid "First Approval"
 msgstr "Első jóváhagyás"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_follower_ids
-msgid "Followers"
-msgstr "Követők"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Követők (Csatornák)"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Követők (Partnerek)"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_date_from
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_date_from
 msgid "From"
-msgstr "Feladó"
+msgstr "Kezdő dátum"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_leave_date_from
@@ -500,22 +542,19 @@ msgstr "Kezdő dátum"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_payslip_status
 msgid ""
 "Green this button when the leave has been taken into account in the payslip."
-msgstr "Zölddel jelölje a gombot, ha ezt a távollétet figyelembe kell venni a fizetési papíron."
+msgstr ""
+"Zölddel jelölje a gombot, ha ezt a távollétet figyelembe kell venni a "
+"fizetési papíron."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Group By"
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_report_note
 msgid "HR Comments"
 msgstr "Emberi erőforrás megjegyzések"
-
-#. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_department
-msgid "HR Department"
-msgstr "Emberi erőforrás Osztály, részleg"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
@@ -528,6 +567,16 @@ msgid "HR Leaves Summary Report By Employee"
 msgstr "Alkalmazottonkénti Emberi erőforrás HR  összegző jelentés"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_uom_id
+msgid "Hours per Day"
+msgstr "Óra naponta"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_department
+msgid "Hr Department"
+msgstr "Emberi erőforrás Osztály, részleg"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_id
@@ -538,21 +587,13 @@ msgid "ID"
 msgstr "Azonosító ID"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
-msgstr "Ha az aktív mező hamisra állított, lehetővé teszi a szabadság típusok eltüntetését azok eltávolítása nélkül."
+msgstr ""
+"Ha az aktív mező hamisra állított, lehetővé teszi a szabadság típusok "
+"eltüntetését azok eltávolítása nélkül."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_limit
@@ -560,22 +601,16 @@ msgid ""
 "If you select this check box, the system allows the employees to take more "
 "leaves than the available ones for this type and will not take them into "
 "account for the \"Remaining Legal Leaves\" defined on the employee form."
-msgstr "Ha bejelöli ezt a jelölő négyzetet, a rendszer lehetővé teszi a munkavállalók részére, hogy több távollétet vegyenek igénybe, mint amennyi elérhető ebből a típusból részükre és nem fogja figyelembe venni a  \"Még elérhető törvényes távollétek\" meghatározásában a munkavállaló űrlapján."
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_is_follower
-msgid "Is Follower"
-msgstr "Ő egy követő"
+msgstr ""
+"Ha bejelöli ezt a jelölő négyzetet, a rendszer lehetővé teszi a "
+"munkavállalók részére, hogy több távollétet vegyenek igénybe, mint amennyi "
+"elérhető ebből a típusból részükre és nem fogja figyelembe venni a  \"Még "
+"elérhető törvényes távollétek\" meghatározásában a munkavállaló űrlapján."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Ivory"
 msgstr "Elefántcsontszín"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_last_post
-msgid "Last Message Date"
-msgstr "Utolsó üzenet dátuma"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays___last_update
@@ -593,7 +628,7 @@ msgstr "Utoljára frissítve ekkor"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_write_uid
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_write_date
@@ -601,7 +636,7 @@ msgstr "Utoljára frissítve, által"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_write_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára frissítve "
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -670,6 +705,43 @@ msgid "Leave Types"
 msgstr "Távollétek típusai"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:445
+#, python-format
+msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
+msgstr "Távollét kérelmet meg kell erősíteni (\"Jóváhagyása\") jóváhagyáshoz."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:460
+#, python-format
+msgid "Leave request must be confirmed in order to approve it."
+msgstr "Távollét igénylést meg kell erősíteni a jóváhagyáshoz."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:519
+#, python-format
+msgid "Leave request must be confirmed or validated in order to refuse it."
+msgstr ""
+"Távollét igénylést meg kell erősíteni vagy jóváhagyni az elutasításhoz."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:432
+#, python-format
+msgid ""
+"Leave request must be in Draft state (\"To Submit\") in order to confirm it."
+msgstr ""
+"Távollét kérelemnek tervezetnek kell lennie (\"Jóváhagyása\") jóváhagyáshoz."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:417
+#, python-format
+msgid ""
+"Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
+"to Draft."
+msgstr ""
+"Távollét kérelemnek \"Elutasított\" vagy \"Jóváhagyása\"  állapotúnak kell "
+"lennie a Tervezet visszaállításához."
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_leave_to_approve_count
 msgid "Leave to Approve"
 msgstr "Jóváhagyásra váró távollét"
@@ -681,6 +753,7 @@ msgstr "Jóváhagyásra váró távollét"
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Leaves"
 msgstr "Távollétek"
 
@@ -770,18 +843,18 @@ msgstr "Távollétek/Kiosztás visszautasítva"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_confirmed
-msgid "Leaves/Allocations: first approval"
-msgstr "Távollétek/Kiosztások : első jóváhagyás"
+msgid "Leaves/Allocations Confirmed"
+msgstr "Távollétek/Kiosztások jóváhagyva"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
-msgid "Leaves/Allocations: second approval"
-msgstr "Távollétek/Kiosztások : második jóváhagyás"
+msgid "Leaves/Allocations First Approval"
+msgstr "Távollétek/Kiosztások első jóváhagyás"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2015"
-msgstr "Törvényes szabadságok 2015"
+msgid "Legal Leaves 2016"
+msgstr "Törvényes szabadságok 2016"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -830,6 +903,7 @@ msgstr "Magenta"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model:res.groups,name:hr_holidays.group_hr_holidays_manager
 msgid "Manager"
 msgstr "Igazgató"
 
@@ -847,7 +921,9 @@ msgstr "Maximum szabadság engedélyezve - Szabadság már kivett"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_virtual_remaining_leaves
 msgid ""
 "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
-msgstr "Maximum megengedett távollétek - Már kivett távollétek - Elfogadásra váró távollétek"
+msgstr ""
+"Maximum megengedett távollétek - Már kivett távollétek - Elfogadásra váró "
+"távollétek"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_meeting_id
@@ -858,16 +934,6 @@ msgstr "Találkozó"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_categ_id
 msgid "Meeting Type"
 msgstr "Találkozó típusa"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages"
-msgstr "Üzenetek"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -886,13 +952,7 @@ msgid "My Department Leaves"
 msgstr "Szabadságok az osztályomon"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "My Leave Requests"
-msgstr "Távollét igényléseim"
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Leaves"
 msgstr "Szabadságaim"
 
@@ -912,11 +972,6 @@ msgid "New"
 msgstr "Új"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Műveletek száma"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_number_of_days
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_employee
@@ -930,21 +985,18 @@ msgid "Number of Leaves"
 msgstr "Távollétek száma"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Olvasatlan üzenetek száma"
+#: model:res.groups,name:hr_holidays.group_hr_holidays_user
+msgid "Officer"
+msgstr "Hivatalnok"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_categ_id
 msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
 "type in the calendar."
-msgstr "Ha egy távollét el lett fogadva, Odoo rendszer létrehoz egy ide vonatkozó találkozó típust a naptárban."
+msgstr ""
+"Ha egy távollét el lett fogadva, Odoo rendszer létrehoz egy ide vonatkozó "
+"találkozó típust a naptárban."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -953,12 +1005,43 @@ msgid ""
 "                to a manager for validation. Be sure to set the right leave\n"
 "                type (recuperation, legal holidays, sickness) and the exact\n"
 "                number of open days related to your leave."
-msgstr "Miután rögzítette a távollét igénytét, azt elküldik a\nvezetőséghez jóváhagyásra. Győződjön meg, hogy a megfelelő\ntípusú távollétet (felépülés, törvényes szabadságok, betegségek) és a pontos a távollétnek megfelelő szabad napok számát adja meg."
+msgstr ""
+"Miután rögzítette a távollét igénytét, azt elküldik a\n"
+"vezetőséghez jóváhagyásra. Győződjön meg, hogy a megfelelő\n"
+"típusú távollétet (felépülés, törvényes szabadságok, betegségek) és a pontos a távollétnek megfelelő szabad napok számát adja meg."
 
 #. module: hr_holidays
-#: model:ir.actions.client,name:hr_holidays.action_client_hr_holidays_menu
-msgid "Open HR Menu"
-msgstr "Munkaügy HR menü megnyitása"
+#: code:addons/hr_holidays/models/hr_holidays.py:462
+#, python-format
+msgid "Only an HR Manager can apply the second approval on leave requests."
+msgstr ""
+"Csak egy HR emberi erőforrás vezető tud második jóváhagyást adni a  távollét"
+" igényre."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:415
+#, python-format
+msgid "Only an HR Manager or the concerned employee can reset to draft."
+msgstr ""
+"Csak egy HR emberi erőforrás vezető vagy a vonatkozó alkalmazott állíthatja "
+"vissza tervezetnek."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:440
+#: code:addons/hr_holidays/models/hr_holidays.py:455
+#, python-format
+msgid "Only an HR Officer or Manager can approve leave requests."
+msgstr ""
+"Csak egy HR emberi erőforrás hivatalnok vagy vezető tud jóváhagyást adni a "
+"távollét igényre."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:514
+#, python-format
+msgid "Only an HR Officer or Manager can refuse leave requests."
+msgstr ""
+"Csak egy HR emberi erőforrás hivatalnok vagy vezető utasíthatja vissza a "
+"távollét igénylést."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -991,6 +1074,13 @@ msgstr "Elutasít"
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "Elutasított"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr ""
+"Az erőforráshoz kapcsolódó felhasználó neve, aki kezeli a hozzáférést az "
+"erőforráshoz."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
@@ -1064,6 +1154,11 @@ msgid "Reset to Draft"
 msgstr "Visszaállítás tervezet állapotba"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_resource_calendar
+msgid "Resource Calendar"
+msgstr "Erőforrás naptár"
+
+#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Search Leave"
 msgstr "Szabadság keresése"
@@ -1114,15 +1209,19 @@ msgstr "Összeg"
 msgid ""
 "The employee or employee category of this request is missing. Please make "
 "sure that your user login is linked to an employee."
-msgstr "Nem található az igényelt alkalmazott vagy alkalmazotti kategória. Győződjön meg arról, hogy a belépése egy alkalmazotthoz van csatolva."
+msgstr ""
+"Nem található az igényelt alkalmazott vagy alkalmazotti kategória. Győződjön"
+" meg arról, hogy a belépése egy alkalmazotthoz van csatolva."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
+#: code:addons/hr_holidays/models/hr.py:117
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \\ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field."
-msgstr "A 'Törvényes szabadságból megmaradt' mező alatti tulajdonság csak akkor használható ha csak egy szabadság típus van, és azon  az 'Engedélyezze az érték hatástalanítását' lehetőség nincs bejelölve. (%s Talált). Egyébként, a frissítés félreérthető  mivel nem tudjuk eldönteni melyik szabadság típuson kell a frissítést végrehajtani. \nLehet hogy a klasszikus menüt használná 'Szabadság igénylések' és 'Kiosztási igénylések' ami a 'Emberi erőforrások \\ Szabadságok' alatt található és kezelhetők az alkalmazottak szabadság napjai, ha a beállítás nem engedi ennek a mezőnek a használatát."
+" You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
+msgstr ""
+"A 'Törvényes szabadságból megmaradt' mező alatti tulajdonság csak akkor használható ha csak egy távollét típus van, és azon az 'Engedélyezze az érték hatástalanítását' lehetőség nincs bejelölve. (%s Talált). Egyébként, a frissítés félreérthető mivel nem tudjuk eldönteni melyik szabadság típuson kell a frissítést végrehajtani.\n"
+"  Lehet hogy a klasszikus menüt használná 'Szabadság igénylések' és 'Kiosztási igénylések' ami a Távollétek alkalmazásban található és kezelhetők az alkalmazottak szabadság napjai, ha a beállítás nem engedi ennek a mezőnek a használatát."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1130,46 +1229,57 @@ msgid "The number of days must be greater than 0."
 msgstr "A napok számának nagyobbnak kell lennie mint 0."
 
 #. module: hr_holidays
-#: constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:253
+#, python-format
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
-msgstr "A még megmaradt távolléti napok száma nem elegendő ehhez a távollét típushoz\nKérem ellenőrizze a még elfogadásra váró távolléteket is."
+msgstr ""
+"A még megmaradt távolléti napok száma nem elegendő ehhez a távollét típushoz\n"
+"Kérem ellenőrizze a még elfogadásra váró távolléteket is."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:304
-#: code:addons/hr_holidays/hr_holidays.py:328 sql_constraint:hr.holidays:0
-#, python-format
+#: sql_constraint:hr.holidays:0
 msgid "The start date must be anterior to the end date."
 msgstr "A kezdő dátumumnak a vég dátum előbbinek kell lennie."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_state
 msgid ""
-"The status is set to 'To Submit', when a holiday request is created.            \n"
-"The status is 'To Approve', when holiday request is confirmed by user.            \n"
-"The status is 'Refused', when holiday request is refused by manager.            \n"
+"The status is set to 'To Submit', when a holiday request is created.\n"
+"The status is 'To Approve', when holiday request is confirmed by user.\n"
+"The status is 'Refused', when holiday request is refused by manager.\n"
 "The status is 'Approved', when holiday request is approved by manager."
-msgstr "Állapota beállítva mint 'Igénylés', a távolléti igény létrehozásakor.            \nÁllapota beállítva mint 'Elfogad', ha egy felhasználó által visszaigazolt.            \nÁllapota beállítva mint 'Elutasítva', ha a szabadság igény egy vezető által elutasított.            \nÁllapota beállítva mint 'Jóváhagyott', ha a szabadság igény vezető által jóváhagyott."
+msgstr ""
+"Állapota beállítva mint 'Igénylés', a szabadság igény létrehozásakor.\n"
+"Állapota beállítva mint 'Jóváhagy', ha egy felhasználó által megerősített. \n"
+"Állapota beállítva mint 'Elutasítva', ha a szabadság igény egy vezető által elutasított.\n"
+" Állapota beállítva mint 'Jóváhagyott', ha a szabadság igény vezető által jóváhagyott."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id
 msgid "This area is automatically filled by the user who validate the leave"
-msgstr "Ez a terület automatikusan ki lesz töltve a szabadságot jóváhagyó felhasználó által"
+msgstr ""
+"Ez a terület automatikusan ki lesz töltve a szabadságot jóváhagyó "
+"felhasználó által"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id2
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
-msgstr "Ez a terület automatikusan kitöltött a második szinten jóváhagyó felhasználó által (Ha a szabadság típus második jóváhagyást is igényel)"
+msgstr ""
+"Ez a terület automatikusan kitöltött a második szinten jóváhagyó felhasználó"
+" által (Ha a szabadság típus második jóváhagyást is igényel)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_color_name
 msgid ""
-"This color will be used in the leaves summary located in Reporting\\Leaves "
+"This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
-msgstr "Ez a szín lesz használva a szabadság összagzésénél ami a Jelentés\\Osztályonkénti szabadságoknál lesz használva."
+msgstr ""
+"Ezt a színt használja a szabadság összegzésénél amit a Jelentés > "
+"Osztályonkénti távollétek alatt talál."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
@@ -1183,7 +1293,8 @@ msgstr "Ez az összértéke az összes negatív értékkel igényelt szabadságn
 msgid ""
 "This value is given by the sum of all holidays requests with a positive "
 "value."
-msgstr "Ez az érték lesz a teljes szabadsági igény egy pozitív számmal megadva."
+msgstr ""
+"Ez az érték lesz a teljes szabadsági igény egy pozitív számmal megadva."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -1227,7 +1338,10 @@ msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
-msgstr "Az ehhez az alkalmazotthoz tartozó törvényes szabadságok összértéke, változtassa meg ezt az értéket kihelyezés/szabadság igény létrehozásához. Az összérték az összes szabadság típus alapján a határérték túllépése nélkül."
+msgstr ""
+"Az ehhez az alkalmazotthoz tartozó törvényes szabadságok összértéke, "
+"változtassa meg ezt az értéket kihelyezés/szabadság igény létrehozásához. Az"
+" összérték az összes szabadság típus alapján a határérték túllépése nélkül."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1240,15 +1354,9 @@ msgid "Unpaid"
 msgstr "Rendezetlen"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_user_id
@@ -1287,73 +1395,59 @@ msgid "Waiting Second Validation"
 msgstr "Második jóváhagyásra vár"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
-#: code:addons/hr_holidays/hr_holidays.py:561
-#, python-format
-msgid "Warning!"
-msgstr "Figyelem!"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_website_message_ids
-msgid "Website Messages"
-msgstr "Weboldal üzenetek"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_website_message_ids
-msgid "Website communication history"
-msgstr "Weboldal  kommunikáció történet"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
 msgstr "Búzaszín"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_double_validation
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_double_validation
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
-msgstr "Ha ki van választva, akkor ez a típusú Kihelyezés/Távollét igényt két jóváhagyással kell elfogadni."
-
-#. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Year"
-msgstr "Év"
+msgstr ""
+"Ha ki van választva, akkor ez a típusú Kihelyezés/Távollét igényt két "
+"jóváhagyással kell elfogadni."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
 msgid ""
 "You can assign remaining Legal Leaves for each employee, Odoo\n"
 "               will automatically create and validate allocation requests."
-msgstr "Lehetősége van a még meglévő törvényes távollétek munkavállalókhoz egyenként történő hozzárendelésére, Odoo \nrendszer automatikusan létrehozza és érvényesíti az igények kiosztását. "
+msgstr ""
+"Lehetősége van a még meglévő törvényes távollétek munkavállalókhoz egyenként történő hozzárendelésére, Odoo \n"
+"rendszer automatikusan létrehozza és érvényesíti az igények kiosztását. "
 
 #. module: hr_holidays
-#: constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:244
+#, python-format
 msgid "You can not have 2 leaves that overlaps on same day!"
 msgstr "Nem lehet 2 átfedésbe került napokon kivett szabadsága!"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:293
+#: code:addons/hr_holidays/models/hr_holidays.py:371
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "Nem törölhet olyan szabadságot ami %s állapotú."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:561
+#: code:addons/hr_holidays/models/hr.py:140
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr "Nem tudja az érvényesített kiosztási kérelmeket csökkenteni"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:352
-#: code:addons/hr_holidays/hr_holidays.py:364
+#: code:addons/hr_holidays/models/hr_holidays.py:350
+#: code:addons/hr_holidays/models/hr_holidays.py:361
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
-msgstr "Nem állíthat be távollét igényt mint '%s'. Lépjen kapcsolatba az emberi erőforrás igazgatóval."
+msgstr ""
+"Nem állíthat be távollét igényt mint '%s'. Lépjen kapcsolatba az emberi "
+"erőforrás igazgatóval."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:26
+#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:27
 #, python-format
 msgid "You have to select at least one Department. And try again."
 msgstr "Legaláb egy osztályt választania kell. Ezután próbálja újra."

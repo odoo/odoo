@@ -1,4 +1,4 @@
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 import time
 
 class TestPayment(AccountingTestCase):
@@ -55,7 +55,7 @@ class TestPayment(AccountingTestCase):
             'name': 'something',
             'account_id': self.account_revenue.id,
         })
-        invoice.signal_workflow('invoice_open')
+        invoice.action_invoice_open()
         return invoice
 
     def reconcile(self, liquidity_aml, amount=0.0, amount_currency=0.0, currency_id=None):
@@ -94,12 +94,10 @@ class TestPayment(AccountingTestCase):
             self.assertEqual(len(aml_rec), 1, "Expected a move line with values : %s" % str(aml_dict))
             if aml_dict.get('currency_diff'):
                 if aml_rec.credit:
-                    rec_ids = [r.id for r in aml_rec.matched_debit_ids]
+                    currency_diff_move = aml_rec.matched_debit_ids.full_reconcile_id.exchange_move_id
                 else:
-                    rec_ids = [r.id for r in aml_rec.matched_credit_ids]
-                currency_diff_move = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', rec_ids)])
-                self.assertEqual(len(currency_diff_move), 1)
-                for currency_diff_line in currency_diff_move[0].line_ids:
+                    currency_diff_move = aml_rec.matched_credit_ids.full_reconcile_id.exchange_move_id
+                for currency_diff_line in currency_diff_move.line_ids:
                     if aml_dict.get('currency_diff') > 0:
                         if currency_diff_line.account_id.id == aml_rec.account_id.id:
                             self.assertAlmostEquals(currency_diff_line.debit, aml_dict.get('currency_diff'))

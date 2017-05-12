@@ -9,26 +9,25 @@ var snippet_editor = require('web_editor.snippet.editor');
 
 widget.MediaDialog.include({
     start: function () {
-        this._super();
+        this._super.apply(this, arguments);
         this.$('[href="#editor-media-video"]').addClass('hidden');
     }
 });
 
 editor.Class.include({
     start: function () {
-        var self = this;
         if (location.search.indexOf("enable_editor") !== -1) {
             this.on('rte:start', this, function () {
                 // move the caret at the end of the text when click after all content
                 $("#wrapwrap").on('click', function (event) {
                     if ($(event.target).is("#wrapwrap") || $(event.target).is("#editable_area:empty")) {
-                        setTimeout(function () {
+                        _.defer(function () {
                             var node = $("#editable_area *")
                                 .filter(function () { return this.textContent.match(/\S|\u00A0/); })
                                 .add($("#editable_area"))
                                 .last()[0];
                             $.summernote.core.range.create(node, $.summernote.core.dom.nodeLength(node)).select();
-                        },0);
+                        });
                     }
                 });
             });
@@ -39,8 +38,7 @@ editor.Class.include({
 
 snippet_editor.Class.include({
     start: function () {
-        var self = this;
-        this._super();
+        this._super.apply(this, arguments);
         setTimeout(function () {
             var $editable = $("#editable_area");
             transcoder.img_to_font($editable);
@@ -51,21 +49,20 @@ snippet_editor.Class.include({
         });
     },
     clean_for_save: function () {
-        this._super();
+        this._super.apply(this, arguments);
         var $editable = $("#editable_area");
         transcoder.font_to_img($editable);
         transcoder.class_to_style($editable);
 
         // fix outlook image rendering bug
-        _.each(['width', 'height'], function(attribute) {
-            $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function(){
+        _.each(['width', 'height'], function (attribute) {
+            $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function () {
                 return $(this)[attribute]();
-            }).css(attribute, function(){
+            }).css(attribute, function () {
                 return $(this).get(0).style[attribute] || 'auto';
             });
         });
     },
-
 });
 
 window.top.odoo[callback+"_updown"] = function (value, fields_values) {
@@ -76,7 +73,7 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values) {
         if (snippet_editor.instance) {
             snippet_editor.instance.make_active(false);
         }
-        
+
         $editable.html(value);
 
         transcoder.img_to_font($editable);
@@ -88,5 +85,4 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values) {
         $editable.trigger("content_changed");
     }
 };
-
 });

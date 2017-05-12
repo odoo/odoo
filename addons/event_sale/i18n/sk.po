@@ -3,15 +3,18 @@
 # * event_sale
 # 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
+# Matus Krnac <matus.krnac@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-01-08 16:49+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Matus Krnac <matus.krnac@gmail.com>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,15 +22,14 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:170
-#, python-format
-msgid " with ticket %s"
-msgstr "so vstupenkou %s"
-
-#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
-msgstr "Použiť"
+msgstr "Mám záujem"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+msgid "Asset Type"
+msgstr "Typ aktíva"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -54,14 +56,17 @@ msgstr "Pred potvrdením"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Vyberte udalosť a to automaticky vytvorí registrácie pre túto udalosť."
+msgstr ""
+"Vyberte udalosť a to automaticky vytvorí registrácie pre túto udalosť."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "Vyberte si vstupenku na udalosť, a to automaticky vytvorí registráciu pre túto vstupenku na udalosť."
+msgstr ""
+"Vyberte si vstupenku na udalosť, a to automaticky vytvorí registráciu pre "
+"túto vstupenku na udalosť."
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_2_product
@@ -74,14 +79,19 @@ msgstr "Konferencia o obchodných aplikáciach"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr "Typ odložených príjmov"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
@@ -89,22 +99,28 @@ msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr "Definujte počet dostupných vstupeniek. Ak máte príliš veľa registrácií nebudete môcť už predávať lístky. Nastavte 0 a ignorujte toto pravidlo, nastaví ako neobmedzené."
+msgstr ""
+"Definujte počet dostupných vstupeniek. Ak máte príliš veľa registrácií "
+"nebudete môcť už predávať lístky. Nastavte 0 a ignorujte toto pravidlo, "
+"nastaví ako neobmedzené."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Zistite, či výrobok musí automaticky vytvoriť registráciu udalosti pri potvrdení riadku objednávky predaja."
+msgstr ""
+"Zistite, či výrobok musí automaticky vytvoriť registráciu udalosti pri "
+"potvrdení riadku objednávky predaja."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
@@ -125,17 +141,23 @@ msgid "Event"
 msgstr "Udalosť"
 
 #. module: event_sale
-#: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
-msgid "Event Registrations"
-msgstr "Registrácie udalosti"
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event Name"
+msgstr "Názov udalosti"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
-msgid "Event Subscription"
-msgstr "Odber udalosti"
+msgid "Event Registration"
+msgstr "Registrácia udalosti"
+
+#. module: event_sale
+#: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
+msgid "Event Registrations"
+msgstr "Registrácie udalosti"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
@@ -152,9 +174,9 @@ msgid "Event Tickets"
 msgstr "Vstupenky udalosti"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_type_id
-msgid "Event Type"
-msgstr "Typ udalosti"
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event's Ticket"
+msgstr ""
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_1_product
@@ -217,13 +239,13 @@ msgid "Name"
 msgstr "Meno"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:131
+#: code:addons/event_sale/models/event.py:107
 #, python-format
 msgid "No more available seats for the ticket"
 msgstr "Žiadne ďalšie voľné miesta pre vstupenku"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:153
+#: code:addons/event_sale/models/event.py:129
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Žiadne ďalšie voľné miesta pre túto vstupenku"
@@ -268,10 +290,12 @@ msgstr "Produkt"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
 msgid "Product Template"
-msgstr "šablona produktu"
+msgstr "Šablóna produktu"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:19
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+#, python-format
 msgid "Registration"
 msgstr "Registrácia"
 
@@ -309,25 +333,17 @@ msgstr "Ukončenie predaja"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Objednávka predaja"
+msgstr "Predajná objednávka"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Položky objednávky"
+msgstr "RIadok predajnej objednávky"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_used
 msgid "Seats used"
 msgstr "Použité sedadlá"
-
-#. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
-#: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
-msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "Vyberte typy udalostí, takže keď budeme používať tento produkt v riadkoch objednávky predaja, bude to filtrovať len udalosti tohto typu."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -348,24 +364,10 @@ msgid "Standard"
 msgstr "Štandard"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:21
-#, python-format
-msgid "Subscription"
-msgstr "Predplatné"
-
-#. module: event_sale
 #: model:product.product,name:event_sale.event_3_product
 #: model:product.template,name:event_sale.event_3_product_product_template
 msgid "Technical Training"
 msgstr "Technický tréning"
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:168
-#, python-format
-msgid ""
-"The registration has been created for event %(event_name)s%(ticket)s from "
-"sale order %(order)s"
-msgstr "Registrácia bola vytvorená pre udalosť %(event_name)s%(ticket)s z objednávky predaja %(order)s"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
@@ -377,12 +379,6 @@ msgstr "Typ vstupenky"
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
 msgstr "Vstupenky"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product_event_type_id
-#: model:ir.model.fields,field_description:event_sale.field_product_template_event_type_id
-msgid "Type of Event"
-msgstr "Typ udalosti"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_unconfirmed
@@ -400,11 +396,6 @@ msgstr "Neobmedzené"
 #: model:event.event.ticket,name:event_sale.event_3_ticket_2
 msgid "VIP"
 msgstr "VIP"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
-msgid "event_ok"
-msgstr "event_ok"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

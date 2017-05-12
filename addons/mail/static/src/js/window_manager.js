@@ -69,7 +69,6 @@ function open_chat (session, options) {
         });
 
         chat_session.window.on("post_message", null, function (message, channel_id) {
-            message.content = _.escape(message.content);
             chat_manager
                 .post_message(message, {channel_id: channel_id})
                 .then(function () {
@@ -117,7 +116,7 @@ function open_chat (session, options) {
                 }, 0); // setTimeout to prevent to execute handler on first scroll_to, which is asynchronous
                 if (options.passively) {
                     // mark first unread messages as seen when focusing the window, then on scroll to bottom as usual
-                    chat_session.window.$('.o_mail_thread, .o_chat_input').one('click', function () {
+                    chat_session.window.$('.o_mail_thread, .o_chat_composer').one('click', function () {
                         chat_manager.mark_channel_as_seen(session);
                     });
                 } else if (!display_state.chat_windows_hidden && !session.is_folded) {
@@ -395,37 +394,6 @@ core.bus.on('web_client_ready', null, function () {
     });
 
     core.bus.on('resize', null, _.debounce(reposition_windows, 100));
-});
-
-});
-
-// FIXME: move this to its own file in master
-odoo.define('mail.ExtendedChatWindow', function (require) {
-"use strict";
-
-var chat_manager = require('mail.chat_manager');
-var ChatWindow = require('mail.ChatWindow');
-
-return ChatWindow.extend({
-    template: "mail.ExtendedChatWindow",
-    start: function () {
-        var self = this;
-        return this._super().then(function () {
-            if (self.options.thread_less) {
-                self.$el.addClass('o_thread_less');
-                self.$('.o_chat_search_input input')
-                    .autocomplete({
-                        source: function(request, response) {
-                            chat_manager.search_partner(request.term, 10).done(response);
-                        },
-                        select: function(event, ui) {
-                            self.trigger('open_dm_session', ui.item.id);
-                        },
-                    })
-                    .focus();
-            }
-        });
-    },
 });
 
 });

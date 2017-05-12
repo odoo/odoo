@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <!-- QWeb Reports -->
         <report 
@@ -69,5 +69,23 @@
             file="account.report_agedpartnerbalance"
         />
 
+        <report 
+            id="action_report_journal"
+            model="account.report.journal"
+            string="Sale/Purchase Journal"
+            report_type="qweb-pdf"
+            name="account.report_journal"
+            file="account.report_journal"
+            />
+
+        <report 
+            id="action_report_partnerledger"
+            model="account.report_partnerledger"
+            string="Partner Ledger"
+            report_type="qweb-pdf"
+            name="account.report_partnerledger"
+            file="account.report_partnerledger"
+            />
+
     </data>
-</openerp>
+</odoo>

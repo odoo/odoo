@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <record forcecreate="True" id="ir_cron_mail_scheduler_action" model="ir.cron">
             <field name="name">Email Queue Manager</field>
@@ -39,6 +39,12 @@
             <field name="value">catchall</field>
         </record>
 
+        <!-- Bounce Email Alias -->
+        <record id="icp_mail_bounce_alias" model="ir.config_parameter">
+            <field name="key">mail.bounce.alias</field>
+            <field name="value">bounce</field>
+        </record>
+
         <!-- Discussion subtype for messaging / Chatter -->
         <record id="mt_comment" model="mail.message.subtype">
             <field name="name">Discussions</field>
@@ -60,106 +66,89 @@
             <field name="model_id" ref="mail.model_mail_message"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
+<div>
+% if ctx.get('has_button_access'):
 <div itemscope itemtype="http://schema.org/EmailMessage">
     <div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
-        % if ctx.get('button_access'):
         <link itemprop="target" href="${ctx['button_access']['url']}"/>
         <link itemprop="url" href="${ctx['button_access']['url']}"/>
-        % endif
         <meta itemprop="name" content="View ${ctx['model_name']}"/>
     </div>
 </div>
-<div summary="o_mail_notification" style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777">
-    <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
-        <tbody><tr>
-            <td valign="center" width="270" style="padding:5px 10px 5px 5px;font-size: 30px">
-                % if ctx.get('button_access'):
-                <a href="${ctx['button_access']['url']}" style="-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">${ctx['button_access']['title']}</a>
-                % endif
+% endif
+% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('has_button_access'):
+<div summary="o_mail_notification" style="padding: 0px; width:600px;">
+<table cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
+<tbody><tr>
+    <td valign="center">
+        % if ctx.get('has_button_access'):
+        <a href="${ctx['button_access']['url']}" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">${ctx['button_access']['title']}</a>
+        % endif
 
-                % if ctx.get('button_follow'):
-                <a href="${ctx['button_follow']['url']}" style="-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">${ctx['button_follow']['title']}</a>
-                
-                % elif ctx.get('button_unfollow'):
-                <a href="${ctx['button_unfollow']['url']}" style="-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">${ctx['button_unfollow']['title']}</a>
-                % endif
+        % if ctx.get('has_button_follow'):
+        % if ctx.get('has_button_access'):
+           |
+        % endif
+        <a href="${ctx['button_follow']['url']}" style="color: #875A7B; text-decoration: none !important;">${ctx['button_follow']['title']}</a>
+        % elif ctx.get('has_button_unfollow'):
+        % if ctx.get('has_button_access'):
+           |
+        % endif
+        <a href="${ctx['button_unfollow']['url']}" style="color: #875A7B; text-decoration: none !important;">${ctx['button_unfollow']['title']}</a>
+        % endif
 
-                % if not ctx.get('button_access') and not ctx.get('button_follow') and not ctx.get('button_unfollow') and ctx.get('model_name'):
-                <p style="padding: 5px 10px; font-size: 12px;">
-                About <strong>${ctx['model_name']}
-                % if ctx.get('record_name'):
-                : ${ctx['record_name']}
-                % endif
-                </strong>
-                </p>
-                % endif
-            </td>
-            <td valign="center" align="right" width="270" style="padding:5px 15px 5px 10px; font-size: 12px;">
-                <p>
-                % if ctx.get('actions'):
-                % for action in ctx['actions']:
-                <a href="${action['url']}" style="text-decoration:none; color: #a24689;"><strong>${action['title']}</strong></a>
-                %if cmp(len(ctx['actions']), 1) == 1 and cmp(len(ctx['actions']), loop.index) == 1:
-                    |
-                % endif
-                % endfor
-                % else:
-                <strong>Sent by</strong>
-                % if ctx.get('website_url'):
-                <a href="${ctx['website_url']}" style="text-decoration:none; color: #a24689;">
-                % endif
-                <strong>${ctx.get('company_name')}</strong>
-                % if ctx.get('website_url'):
-                </a>
-                % endif
-                <strong>using</strong>
-                <a href="https://www.odoo.com" style="text-decoration:none; color: #a24689;"><strong>Odoo</strong></a>
-                % endif
-                </p>
-            </td>
-        </tr>
-    </tbody></table>
-</div>
-<div style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777">
-    <table cellspacing="0" cellpadding="0" style="vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit">
-        <tbody><tr>
-            <td valign="top" style="width:600px; padding:5px 10px 5px 5px;">
-                <div>
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
-                </div>
-            </td>
-        </tr></tbody>
-    </table>
-</div>
-<div style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
-    <table cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit">
-        <tbody><tr>
-            <td style="padding:5px 10px 5px 5px;font-size: 14px;">
-                ${object.body | safe}
-                % if ctx.get('tracking'):
-                    <ul>
-                    % for tracking in ctx['tracking']
-                        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
-                    % endfor
-                    </ul>
-                % endif
-            </td>
-        </tr></tbody>
-    </table>
-</div>
-% if ctx.get('signature'):
-<div style="padding:0px; width:600px;margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
-    <table cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit">
-        <tbody><tr>
-            <td style="padding:5px 10px 5px 5px;font-size: 14px; text-align: left;">
-                ${ctx['signature'] | safe}
-            </td>
-        </tr></tbody>
-    </table>
+        % if ctx.get('actions'):
+        % for action in ctx['actions']:
+        |
+        <a href="${action['url']}" style="color: #875A7B; text-decoration:none !important;">${action['title']}</a>
+        % endfor
+        % endif
+    </td>
+    <td valign="center" align="right">
+        <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+    </td>
+</tr>
+<tr>
+    <td colspan="2" style="text-align:center;">
+        <hr width="100%"
+            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;">
+        % if ctx.get('subtype') and ctx.get('subtype').internal:
+        <span style="background-color: #f2dede; padding: 5px;">
+            <strong>Internal note</strong>: replies are not sent to followers.
+        </span>
+        % endif
+    </td>
+</tr>
+</tbody></table>
 </div>
 % endif
-]]></field>
+${object.body | safe}
+% if ctx.get('tracking'):
+    <ul>
+    % for tracking in ctx['tracking']
+        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
+    % endfor
+    </ul>
+% endif
+
+% if ctx.get('signature'):
+    ${ctx['signature'] | safe}
+% endif
+<br/>
+<p style="color: #555555;">
+    Sent by
+    % if ctx.get('website_url'):
+    <a href="${ctx['website_url']}" style="text-decoration:none; color: #875A7B;">
+    % endif
+    ${ctx.get('company_name')}
+    % if ctx.get('website_url'):
+    </a>
+    % endif
+    using
+    <a href="https://www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a>.
+</p>
+</div>]]></field>
         </record>
 
     </data>
-</openerp>
+</odoo>

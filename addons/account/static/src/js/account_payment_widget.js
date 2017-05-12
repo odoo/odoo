@@ -51,6 +51,7 @@ var ShowPaymentLineWidget = form_common.AbstractField.extend({
                     'placement': 'left',
                     'title': 'Payment Information',
                     'trigger': 'focus',
+                    'delay': { "show": 0, "hide": 100 },
                 };
                 $(k).popover(options);
                 $(k).on('shown.bs.popover', function(event){
@@ -58,7 +59,7 @@ var ShowPaymentLineWidget = form_common.AbstractField.extend({
                         var payment_id = parseInt($(this).attr('payment-id'))
                         if (payment_id !== undefined && payment_id !== NaN){
                             new Model("account.move.line")
-                                .call("remove_move_reconcile", [payment_id])
+                                .call("remove_move_reconcile", [payment_id, {'invoice_id': self.view.datarecord.id}])
                                 .then(function (result) {
                                     self.view.reload();
                                 });

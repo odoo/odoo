@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <!-- Update 'Demo user' and partners email preferences to avoid mail bombing -->
@@ -76,19 +76,21 @@
         <!-- Thread: 1 incoming email -->
         <record id="msg_discus5" model="mail.message">
             <field name="subject">Plan to install backup servers</field>
-            <field name="body"><![CDATA[<p>Hello,</p>
-            <p>We need to deploy new backup servers, with the following requirements:</p>
-            <ul>
-                <li>daily incremental backups, with an history of 15 days,</li>
-                <li>45 servers should be backuped between 1am and 3am when our offices are closed,</li>
-                <li>two redundant servers,</li>
-                <li>total capacity of 200Gb.</li>
-            </ul>
-            <p>
-                Do you have a simple solution with servers running on Redhat Linux?
-            </p>
-            <p>Best regards,</p>
-            ]]></field>
+            <field name="body" type="xml"><p>Hello,</p>
+<p>We need to deploy new backup servers, with the following requirements:</p>
+<ul>
+    <li>daily incremental backups, with an history of 15 days,</li>
+    <li>45 servers should be backuped between 1am and 3am when our offices are closed,</li>
+    <li>two redundant servers,</li>
+    <li>total capacity of 200Gb.</li>
+</ul>
+<p>
+    Do you have a simple solution with servers running on Redhat Linux?
+</p>
+<p>Best regards,</p>
+<pre>-- 
+Virginie Agrolait
+virginie@agrolait.fr</pre></field>
             <field name="message_type">email</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="email_from">virginie@agrolait.fr</field>
@@ -172,7 +174,10 @@
             <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discus6_1" model="mail.message">
-            <field name="body"><![CDATA[<p>Sure, here it is. Have a nice day!</p>]]></field>
+            <field name="body" type="xml">
+<p>Sure, here it is. Have a nice day!</p>
+<p class="gmail_extra"><p>Hello Demo,</p>
+    <p>-- Original mail stripped --</p></p></field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="parent_id" ref="msg_discus6"/>
@@ -288,4 +293,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

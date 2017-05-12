@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Partners with Barcodes -->
+        <record id='base.res_partner_1'  model='res.partner'> <field name='barcode'>0420100000005</field> </record>
+        <record id='base.res_partner_2'  model='res.partner'> <field name='barcode'>0420200000004</field> </record>
+        <record id='base.res_partner_3'  model='res.partner'> <field name='barcode'>0420300000003</field> </record>
+        <record id='base.res_partner_4'  model='res.partner'> <field name='barcode'>0420400000002</field> </record>
+        <record id='base.res_partner_4'  model='res.partner'> <field name='barcode'>0420700000009</field> </record>
+        <record id='base.res_partner_10' model='res.partner'> <field name='barcode'>0421000000003</field> </record>
+        <record id='base.res_partner_12'  model='res.partner'> <field name='barcode'>0420800000008</field> </record>
+        <record id='base.res_partner_18' model='res.partner'> <field name='barcode'>0421800000005</field> </record>
+
+        <record id="base.user_root" model="res.users">
+            <field name="barcode">0410100000006</field>
+        </record>
+        <record id="base.user_root" model="res.users">
+            <field name="barcode">0410100000006</field>
+            <field name="groups_id" eval="[(4,ref('group_pos_manager'))]"/>
+        </record>
+
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4, ref('group_pos_user'))]"/>
+        </record>
+
+        <!-- Resource: pos.category -->
+        <record id="fruits_vegetables" model="pos.category">
+          <field name="name">Fruits and Vegetables</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/fruits-image.jpg"/>
+        </record>
+
+        <record id="partner_services" model="pos.category">
+          <field name="name">Partner Services</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/services.jpg"/>
+        </record>
+
+
+        <!-- Resource: product.product -->
+        <record id="boni_orange" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.98</field>
+          <field name="name">Boni Oranges</field>
+          <field name="to_weight">True</field>
+          <field name="barcode">2100002000003</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/boni_orange-image.jpg"/>
+        </record>
+        <record id="papillon_orange" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.83</field>
+          <field name="name">Orange Butterfly</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="to_weight">True</field>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/papillon_orange-image.jpg"/>
+        </record>
+
+        <record id="citron" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.98</field>
+          <field name="name">Lemon</field>
+          <field name="barcode">2301000000006</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/citron-image.jpg"/>
+        </record>
+        <record id="limon" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">3.19</field>
+          <field name="name">Stringers</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/limon-image.jpg"/>
+        </record>
+        <record id="pamplemousse_rouge_pamplemousse" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.98</field>
+          <field name="name">Red grapefruit</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/pamplemousse_rouge_pamplemousse-image.jpg"/>
+        </record>
+
+        <record id="pomme_granny_smith" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.09</field>
+          <field name="name">Granny Smith apples</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/pomme_granny_smith-image.jpg"/>
+        </record>
+        <record id="pomme_jonagold" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.10</field>
+          <field name="name">Jonagold apples</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/pomme_jonagold-image.jpg"/>
+        </record>
+        <record id="pomme_golden_perlim" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.69</field>
+          <field name="name">Golden Apples Perlim</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/pomme_golden_perlim-image.jpg"/>
+        </record>
+
+        <record id="poire_conference" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.70</field>
+          <field name="name">Conference pears</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/poire_conference-image.jpg"/>
+        </record>
+
+        <record id="peche" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">5.10</field>
+          <field name="name">Peaches</field>
+          <field name="to_weight">True</field>
+          <field name="barcode">2300001000008</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/peche-image.jpg"/>
+          <field name="taxes_id" eval='[(5,)]'/>  <!-- no taxes -->
+        </record>
+
+        <record id="raisins_noir" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">4.80</field>
+          <field name="name">Black Grapes</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/raisins-image.jpg"/>
+        </record>
+
+        <record id="pomme_de_terre" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.39</field>
+          <field name="name">Potatoes</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/pomme_de_terre-image.jpg"/>
+        </record>
+
+        <record id="chicon_flandria_extra" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.20</field>
+          <field name="name">Extra Flandria chicory</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/chicon_flandria_extra-image.jpg"/>
+        </record>
+        <record id="carotte" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.90</field>
+          <field name="name">Carrots</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/carotte-image.jpg"/>
+        </record>
+
+        <record id="tomate_en_grappe" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.90</field>
+          <field name="name">In Cluster Tomatoes</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/tomate_en_grappe-image.jpg"/>
+        </record>
+
+        <record id="Onions" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.28</field>
+          <field name="name">Onions</field>
+          <field name="to_weight">True</field>
+          <field name="barcode">2100001000004</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/Onions-image.jpg"/>
+        </record>
+
+        <record id="poivron_rouges" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">3.10</field>
+          <field name="name">Red Pepper</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/poivron_rouges-image.jpg"/>
+        </record>
+        <record id="poivron_verts" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">3.00</field>
+          <field name="name">Green Peppers</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/poivron_verts-image.jpg"/>
+        </record>
+        <record id="poivron_jaunes" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.70</field>
+          <field name="name">Yellow Peppers</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/poivron_jaunes-image.jpg"/>
+        </record>
+        <record id="poireaux_poireaux" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.29</field>
+          <field name="name">Leeks</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/poireaux_poireaux-image.jpg"/>
+        </record>
+        <record id="courgette" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.20</field>
+          <field name="name">Zucchini</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="fruits_vegetables"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/courgette-image.jpg"/>
+        </record>
+
+
+        <!-- The electronic products shouldn't be present in the point of sale for the demo -->
+
+        <record id="stock.product_icecream"  model="product.product"> 
+            <field name="name">Ice Cream</field>
+            <field name="available_in_pos" eval="False"/> 
+        </record>
+
+        <record id="partner_product_3" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Eezee-It</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/eezee-it.png"/>
+        </record>
+
+        <record id="partner_product_4" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Ekomurz.nl</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/ekomurz.gif"/>
+        </record>
+
+        <record id="partner_product_5" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Acsone.eu</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/acsone.png"/>
+        </record>
+
+        <record id="partner_product_6" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Vauxoo.com</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/vauxoo.png"/>
+        </record>
+
+        <record id="partner_product_7" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Datalp.com</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/datalp.jpg"/>
+        </record>
+
+        <record id="partner_product_8" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">camptocamp.com</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/camptocamp.png"/>
+        </record>
+
+        <record id="partner_product_9" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">EGGS-solutions.fr</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/eggs-solutions.jpg"/>
+        </record>
+
+        <!-- The electronic products shouldn't be present in the point of sale for the demo -->
+
+        <record id="product.product_product_1" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_2" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_3" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_4" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_5" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_5b" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_6" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_7" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_8" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_9" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_10" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_11" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_12" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_13" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_16" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_17" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_20" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_22" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_24" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_25" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_27" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_delivery_02" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_delivery_01" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_order_01" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.service_delivery" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.consu_delivery_03" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.consu_delivery_02" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.consu_delivery_01" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.membership_0" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.membership_1" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.membership_2" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+
+</odoo>

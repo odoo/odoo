@@ -1,0 +1,33 @@
+// No content helper
+.oe_view_nocontent {
+    padding: 15px;
+    margin-top: 0;
+    color: #777777;
+    font-size: 125%;
+    max-width: 700px;
+    .oe_view_nocontent_create {
+        margin-top: 0;
+        padding-top: 35px;
+        color: #4c4c4c;
+        &:before {
+            content: "";
+            display: inline-block;
+            position: absolute;
+            width: 70px;
+            height: 80px;
+            margin-left: -70px;
+            margin-top: -50px;
+            background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 0px 0px;
+        }
+    }
+    > p {
+        padding-left: 78px;
+    }
+    .oe_empty_custom_dashboard {
+        background: transparent url(/web/static/src/img/graph_background.png) no-repeat 0 0;
+        margin-top: -15px;
+        padding: 100px 0 0 137px;
+        min-height: 327px;
+        margin-left: -15px;
+    }
+}

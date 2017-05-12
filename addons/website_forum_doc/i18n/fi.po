@@ -3,14 +3,22 @@
 # * website_forum_doc
 # 
 # Translators:
+# Miku Laitinen <miku.laitinen@gmail.com>, 2016
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2016
+# salmemik <salmemik@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-10-02 11:48+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
-"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: salmemik <salmemik@gmail.com>, 2016\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,7 +28,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -110,7 +118,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_display_name
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_display_name
 msgid "Display Name"
-msgstr "Näytä nimi"
+msgstr "Näyttönimi"
 
 #. module: website_forum_doc
 #: model:ir.actions.act_url,name:website_forum_doc.action_open_documentation
@@ -159,13 +167,14 @@ msgid "Employee Contract"
 msgstr "Työsopimus"
 
 #. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Virhe! Et voi luoda rekursiivisia ryhmiä."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
-msgid "Explain how to configure in Odoo"
+msgid "Explain how to configure Odoo"
 msgstr ""
 
 #. module: website_forum_doc
@@ -181,7 +190,7 @@ msgstr "Keskustelupalsta"
 #. module: website_forum_doc
 #: model:ir.model,name:website_forum_doc.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "Keskustelupalstan viesti"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_functional_doc
@@ -217,7 +226,7 @@ msgstr "Henkilöstöhallinto (HR)"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_id
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunniste (ID)"
 
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_ideas
@@ -227,7 +236,7 @@ msgstr "Ideat"
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_introduction
 msgid "Introduction"
-msgstr ""
+msgstr "Esittely"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage___last_update
@@ -285,7 +294,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_post_ids
 msgid "Posts"
-msgstr ""
+msgstr "Viestit"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -315,22 +324,22 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Question:"
-msgstr ""
+msgstr "Kysymys:"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid "Related question"
-msgstr ""
+msgstr "Liittyvä kysymys"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid "Related topics"
-msgstr ""
+msgstr "Liittyvät aiheet"
 
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_review
 msgid "Review"
-msgstr ""
+msgstr "Tarkasta"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_parent_right
@@ -340,7 +349,7 @@ msgstr "Oikea ylempi"
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_0
 msgid "Sales & Warehouse"
-msgstr ""
+msgstr "Myynnit ja varasto"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_sale
@@ -350,7 +359,7 @@ msgstr "Myynti"
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_sale_so
 msgid "Sales orders"
-msgstr ""
+msgstr "Myyntitilaukset"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -373,7 +382,7 @@ msgstr "Hae..."
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_sequence
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_sequence
 msgid "Sequence"
-msgstr "Järjestysluku"
+msgstr "Järjestys"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_name
@@ -430,22 +439,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_website
 msgid "Website"
-msgstr "Verkkosivusto"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_description
-msgid "Website meta description"
-msgstr "Verkkosivuston metakuvaus"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Verkkosivuston meta avainsanat"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_title
-msgid "Website meta title"
-msgstr "Verkkosivuston metaotsikko"
+msgstr "Kotisivu"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -460,7 +454,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "cancel"
-msgstr ""
+msgstr "peruuta"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
@@ -470,12 +464,12 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essay"
-msgstr ""
+msgstr "essee"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essays"
-msgstr ""
+msgstr "esseet"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc

@@ -91,7 +91,7 @@ var KanbanColumn = Widget.extend({
                 connectWith: '.o_kanban_group',
                 revert: 0,
                 delay: 0,
-                items: '> .o_kanban_record',
+                items: '> .o_kanban_record:not(.o_updating)',
                 helper: 'clone',
                 cursor: 'move',
                 over: function () {
@@ -116,7 +116,9 @@ var KanbanColumn = Widget.extend({
                     } else {
                         // adding record to this column
                         self.records.push(record);
+                        self.dataset.add_ids([record.id]);
                         record.setParent(self);
+                        ui.item.addClass('o_updating');
                         self.trigger_up('kanban_column_add_record', {record: record});
                     }
                     self.update_column();
@@ -159,7 +161,14 @@ var KanbanColumn = Widget.extend({
     get_ids: function () {
         var ids = [];
         this.$('.o_kanban_record').each(function (index, r) {
-            ids.push($(r).data('record').id);
+            var record = $(r).data('record');
+            // when a record is being dragged & dropped, an empty .o_kanban_record
+            // element (a placeholder) is present in the column, but it has no
+            // associated record (the real o_kanban_record is still in the
+            // column, but hidden), so we need to filter out those placeholders
+            if (record) {
+                ids.push(record.id);
+            }
         });
         return ids;
     },

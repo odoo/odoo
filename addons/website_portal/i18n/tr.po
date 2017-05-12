@@ -3,15 +3,22 @@
 # * website_portal
 # 
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Saban Yildiz <sabany@projetgrup.com>, 2016
+# Ediz Duman <neps1192@gmail.com>, 2016
+# Murat Kaplan <muratk@projetgrup.com>, 2016
+# gezgin biri <gezginbiri@hotmail.com>, 2016
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-03-05 17:40+0000\n"
-"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"POT-Creation-Date: 2017-01-11 13:04+0000\n"
+"PO-Revision-Date: 2017-01-11 13:04+0000\n"
+"Last-Translator: Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,14 +26,30 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+msgstr ""
+"<span class=\"sr-only\">Gezinmeyi Aç/Kapa</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_archive_groups
+msgid "Archives"
+msgstr "Arşivler"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Change"
 msgstr "Değiştir"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "City"
-msgstr "Şehir"
+msgstr "Mahalle"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -39,6 +62,8 @@ msgid ""
 "Confirm\n"
 "                                        <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"Onayla\n"
+"                                        <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.contact
@@ -63,27 +88,27 @@ msgstr "Ülke"
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.custom_panel
 msgid "Custom Panel"
-msgstr ""
+msgstr "Özel Pano"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "Details"
-msgstr "Ayrıntılar"
+msgstr "Detaylar"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "Email"
-msgstr "E-posta"
+msgstr "E-Posta"
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:72
+#: code:addons/website_portal/controllers/main.py:103
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "Geçersiz Eposta! Lütfen geçerli eposta adresi girin."
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.details
 #: model:ir.ui.view,arch_db:website_portal.my_account_link
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "My Account"
 msgstr "Hesabım"
 
@@ -98,10 +123,15 @@ msgid "Place your content here."
 msgstr "İçeriğinizi buraya yerleştirin."
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:87
+#: model:ir.ui.view,arch_db:website_portal.contact
+msgid "Saleman"
+msgstr "Satış Personeli"
+
+#. module: website_portal
+#: code:addons/website_portal/controllers/main.py:120
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Bazı zorunlu alanlar boş."
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -111,17 +141,17 @@ msgstr "İl / Eyalet"
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "Street"
-msgstr "Cadde"
+msgstr "adres"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "VAT Number"
-msgstr "KDV Numarası"
+msgstr "Vergi No"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Your Details"
-msgstr ""
+msgstr "Detaylarınız"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details

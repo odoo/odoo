@@ -1,17 +1,10 @@
-<?xml version="1.0" ?>
-<openerp>
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
     <data noupdate="1">
 
-        <record id="goal_officer_visibility" model="ir.rule">
-            <field name="name">HR Officer can see any goal</field>
-            <field name="model_id" ref="gamification.model_gamification_goal"/>
-            <field name="groups" eval="[(4, ref('base.group_hr_user'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+        <record id="gamification.goal_gamification_manager_visibility" model="ir.rule">
+            <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
         </record>
 
     </data>
-</openerp>
+</odoo>

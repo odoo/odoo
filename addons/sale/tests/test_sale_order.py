@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.exceptions import UserError, AccessError
+
+from odoo.exceptions import UserError, AccessError
 
 from test_sale_common import TestSale
 
@@ -40,7 +41,7 @@ class TestSaleOrder(TestSale):
 
         # deliver lines except 'time and material' then invoice again
         for line in so.order_line:
-            line.qty_delivered = 2 if line.product_id.invoice_policy in ['order', 'delivery'] else 0
+            line.qty_delivered = 2 if line.product_id.expense_policy=='no' else 0
         self.assertTrue(so.invoice_status == 'to invoice', 'Sale: SO status after delivery should be "to invoice"')
         inv_id = so.action_invoice_create()
         inv = inv_obj.browse(inv_id)
@@ -73,26 +74,37 @@ class TestSaleOrder(TestSale):
             'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for (_, p) in self.products.iteritems()],
             'pricelist_id': self.env.ref('product.list0').id,
         })
-        # only quotations are deletable
-        with self.assertRaises(UserError):
-            so.action_confirm()
-            so.unlink()
+
+        # SO in state 'draft' can be deleted
         so_copy = so.copy()
         with self.assertRaises(AccessError):
             so_copy.sudo(self.user).unlink()
         self.assertTrue(so_copy.sudo(self.manager).unlink(), 'Sale: deleting a quotation should be possible')
 
-        # cancelling and setting to done, you should not be able to delete any SO ever
-        so.action_cancel()
-        self.assertTrue(so.state == 'cancel', 'Sale: cancelling SO should always be possible')
+        # SO in state 'cancel' can be deleted
+        so_copy = so.copy()
+        so_copy.action_confirm()
+        self.assertTrue(so_copy.state == 'sale', 'Sale: SO should be in state "sale"')
+        so_copy.action_cancel()
+        self.assertTrue(so_copy.state == 'cancel', 'Sale: SO should be in state "cancel"')
+        with self.assertRaises(AccessError):
+            so_copy.sudo(self.user).unlink()
+        self.assertTrue(so_copy.sudo(self.manager).unlink(), 'Sale: deleting a cancelled SO should be possible')
+
+        # SO in state 'sale' or 'done' cannot be deleted
+        so.action_confirm()
+        self.assertTrue(so.state == 'sale', 'Sale: SO should be in state "sale"')
         with self.assertRaises(UserError):
             so.sudo(self.manager).unlink()
+
         so.action_done()
-        self.assertTrue(so.state == 'done', 'Sale: SO not done')
+        self.assertTrue(so.state == 'done', 'Sale: SO should be in state "done"')
+        with self.assertRaises(UserError):
+            so.sudo(self.manager).unlink()
 
     def test_cost_invoicing(self):
         """ Test confirming a vendor invoice to reinvoice cost on the so """
-        serv_cost = self.env.ref('product.product_product_1b')
+        serv_cost = self.env.ref('product.service_cost_01')
         prod_gap = self.env.ref('product.product_product_1')
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
@@ -118,7 +130,7 @@ class TestSaleOrder(TestSale):
             'currency_id': company.currency_id.id,
         }
         inv = self.env['account.invoice'].create(invoice_vals)
-        inv.signal_workflow('invoice_open')
+        inv.action_invoice_open()
         sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
         self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
         self.assertTrue(sol.price_unit == 160 and sol.qty_delivered == 2 and sol.product_uom_qty == sol.qty_invoiced == 0, 'Sale: line is wrong after confirming vendor invoice')

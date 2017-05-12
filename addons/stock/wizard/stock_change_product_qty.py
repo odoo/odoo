@@ -1,110 +1,104 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
-from openerp import tools
-from openerp.exceptions import UserError, AccessError
+from odoo import api, models, fields, tools, _
+from odoo.addons import decimal_precision as dp
+from odoo.exceptions import UserError
 
 
-class stock_change_product_qty(osv.osv_memory):
+class ProductChangeQuantity(models.TransientModel):
     _name = "stock.change.product.qty"
     _description = "Change Product Quantity"
 
-    _columns = {
-        'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_tmpl_id': fields.many2one('product.template', 'Template', required=True),
-        'product_variant_count': fields.related('product_tmpl_id', 'product_variant_count', type='integer', string='Variant Number'),
-        'new_quantity': fields.float('New Quantity on Hand', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, help='This quantity is expressed in the Default Unit of Measure of the product.'),
-        'lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
-    }
-    _defaults = {
-        'new_quantity': 1,
-        'product_id': lambda self, cr, uid, ctx: ctx and ctx.get('active_id', False) or False
-    }
+    # TDE FIXME: strange dfeault method, was present before migration ? to check
+    product_id = fields.Many2one('product.product', 'Product', required=True)
+    product_tmpl_id = fields.Many2one('product.template', 'Template', required=True)
+    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
+    new_quantity = fields.Float(
+        'New Quantity on Hand', default=1,
+        digits=dp.get_precision('Product Unit of Measure'), required=True,
+        help='This quantity is expressed in the Default Unit of Measure of the product.')
+    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number', domain="[('product_id','=',product_id)]")
+    location_id = fields.Many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]")
 
-    def default_get(self, cr, uid, fields, context):
-        res = super(stock_change_product_qty, self).default_get(cr, uid, fields, context=context)
-
-        if context.get('active_model') == 'product.template':
-            product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', '=', context.get('active_id'))], context=context)
-            if product_ids:
-                res['product_id'] = product_ids[0]
-
-        if 'location_id' in fields:
-            location_id = res.get('location_id', False)
-            if not location_id:
-                try:
-                    model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-                except (AccessError):
-                    pass
-            if location_id:
-                try:
-                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-                except (AccessError):
-                   location_id = False
-            res['location_id'] = location_id
+    @api.model
+    def default_get(self, fields):
+        res = super(ProductChangeQuantity, self).default_get(fields)
+        if not res.get('product_id') and self.env.context.get('active_id') and self.env.context.get('active_model') == 'product.template' and self.env.context.get('active_id'):
+            res['product_id'] = self.env['product.product'].search([('product_tmpl_id', '=', self.env.context['active_id'])], limit=1).id
+        elif not res.get('product_id') and self.env.context.get('active_id') and self.env.context.get('active_model') == 'product.product' and self.env.context.get('active_id'):
+            res['product_id'] = self.env['product.product'].browse(self.env.context['active_id']).id
+        if 'location_id' in fields and not res.get('location_id'):
+            res['location_id'] = self.env.ref('stock.stock_location_stock').id
         return res
 
-    def create(self, cr, uid, values, context=None):
+    @api.onchange('location_id', 'product_id')
+    def onchange_location_id(self):
+        # TDE FIXME: should'nt we use context / location ?
+        if self.location_id and self.product_id:
+            availability = self.product_id.with_context(compute_child=False)._product_available()
+            self.new_quantity = availability[self.product_id.id]['qty_available']
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        if self.product_id:
+            self.product_tmpl_id = self.onchange_product_id_dict(self.product_id.id)['product_tmpl_id']
+
+    @api.multi
+    def _prepare_inventory_line(self):
+        product = self.product_id.with_context(location=self.location_id.id, lot_id=self.lot_id.id)
+        th_qty = product.qty_available
+
+        res = {
+               'product_qty': self.new_quantity,
+               'location_id': self.location_id.id,
+               'product_id': self.product_id.id,
+               'product_uom_id': self.product_id.uom_id.id,
+               'theoretical_qty': th_qty,
+               'prod_lot_id': self.lot_id.id,
+        }
+
+        return res
+
+
+    def onchange_product_id_dict(self, product_id):
+        return {
+            'product_tmpl_id': self.env['product.product'].browse(product_id).product_tmpl_id.id,
+        }
+
+    @api.model
+    def create(self, values):
         if values.get('product_id'):
-            values.update(self.onchange_product_id(cr, uid, None, values['product_id'], context=context)['value'])
-        return super(stock_change_product_qty, self).create(cr, uid, values, context=context)
+            values.update(self.onchange_product_id_dict(values['product_id']))
+        return super(ProductChangeQuantity, self).create(values)
 
-    def onchange_product_id(self, cr, uid, ids, prod_id, context=None):
-        product = self.pool.get('product.product').browse(cr, uid, prod_id)
-        return {'value': {
-            'product_tmpl_id': product.product_tmpl_id.id,
-            'product_variant_count': product.product_tmpl_id.product_variant_count
-        }}
+    @api.constrains('new_quantity')
+    def check_new_quantity(self):
+        if any(wizard.new_quantity < 0 for wizard in self):
+            raise UserError(_('Quantity cannot be negative.'))
 
-    def change_product_qty(self, cr, uid, ids, context=None):
+    @api.multi
+    def change_product_qty(self):
         """ Changes the Product Quantity by making a Physical Inventory. """
-        if context is None:
-            context = {}
+        Inventory = self.env['stock.inventory']
+        for wizard in self:
+            product = wizard.product_id.with_context(location=wizard.location_id.id, lot_id=wizard.lot_id.id)
+            line_data = wizard._prepare_inventory_line()
 
-        inventory_obj = self.pool.get('stock.inventory')
-        inventory_line_obj = self.pool.get('stock.inventory.line')
 
-        for data in self.browse(cr, uid, ids, context=context):
-            if data.new_quantity < 0:
-                raise UserError(_('Quantity cannot be negative.'))
-            ctx = context.copy()
-            ctx['location'] = data.location_id.id
-            ctx['lot_id'] = data.lot_id.id
-            if data.product_id.id and data.lot_id.id:
-                filter = 'none'
-            elif data.product_id.id:
-                filter = 'product'
+            if wizard.product_id.id and wizard.lot_id.id:
+                inventory_filter = 'none'
+            elif wizard.product_id.id:
+                inventory_filter = 'product'
             else:
-                filter = 'none'
-            inventory_id = inventory_obj.create(cr, uid, {
-                'name': _('INV: %s') % tools.ustr(data.product_id.name),
-                'filter': filter,
-                'product_id': data.product_id.id,
-                'location_id': data.location_id.id,
-                'lot_id': data.lot_id.id}, context=context)
-            product = data.product_id.with_context(location=data.location_id.id, lot_id= data.lot_id.id)
-            th_qty = product.qty_available
-            line_data = {
-                'inventory_id': inventory_id,
-                'product_qty': data.new_quantity,
-                'location_id': data.location_id.id,
-                'product_id': data.product_id.id,
-                'product_uom_id': data.product_id.uom_id.id,
-                'theoretical_qty': th_qty,
-                'prod_lot_id': data.lot_id.id
-            }
-            inventory_line_obj.create(cr , uid, line_data, context=context)
-            inventory_obj.action_done(cr, uid, [inventory_id], context=context)
-        return {}
-
-    def onchange_location_id(self, cr, uid, ids, location_id, product_id, context=None):
-        if location_id:
-            qty_wh = 0.0
-            qty = self.pool.get('product.product')._product_available(cr, uid, [product_id], context=dict(context or {}, location=location_id))
-            if product_id in qty:
-                qty_wh = qty[product_id]['qty_available']
-            return { 'value': { 'new_quantity': qty_wh } }
+                inventory_filter = 'none'
+            inventory = Inventory.create({
+                'name': _('INV: %s') % tools.ustr(wizard.product_id.name),
+                'filter': inventory_filter,
+                'product_id': wizard.product_id.id,
+                'location_id': wizard.location_id.id,
+                'lot_id': wizard.lot_id.id,
+                'line_ids': [(0, 0, line_data)],
+            })
+            inventory.action_done()
+        return {'type': 'ir.actions.act_window_close'}

@@ -1,0 +1,209 @@
+.o-search-options-dropdown-custom-li() {
+    margin: 3px 25px;
+    width: auto;
+    max-width: 250px;
+}
+
+.o_searchview {
+    .o-flex-display();
+    .o-flex-flow(row, wrap);
+    .o-align-items(flex-end);
+    position: relative;
+    padding: 0 20px 1px 0;
+
+    .o_searchview_facet {
+        @o-searchview-facet-remove-width: 18px;
+
+        .o-flex(0, 0, auto);
+        max-width: 100%;
+        .o-flex-display();
+        position: relative;
+        margin: 1px 3px 0 0;
+
+        .o_searchview_facet_label {
+            .o-flex(0, 0, auto);
+            .o-text-overflow();
+            padding: 0 3px;
+            color: white;
+
+            .o-flex-display();
+            .o-align-items(center);
+        }
+            
+        .o_facet_values {
+            padding: 0 @o-searchview-facet-remove-width 0 5px;
+            .o_facet_values_sep {
+                font-style: italic;
+            }
+        }
+        .o_facet_remove {
+            .o-flex(0, 0, auto);
+            .o-flex-display();
+            .o-justify-content(center);
+            .o-align-items(center);
+            .o-position-absolute(0, 0, 0);
+            width: @o-searchview-facet-remove-width;
+            cursor: pointer;
+        }
+    }
+
+    .o_searchview_input {
+        width: 100px;
+        .o-flex(1, 0, auto);
+    }
+
+    .o_searchview_more {
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .o_searchview_autocomplete {
+        .o-position-absolute(100%, @left: auto);
+        width: 100%;
+
+        li {
+            padding-left: 25px;
+            position: relative;
+            &.o-indent {
+                padding-left: 50px;
+            }
+            a {
+                display: inline-block;
+                padding-left: 0px;
+                padding-right: 0px;
+                &:hover {
+                    background-color: inherit;
+                }
+                &.o-expand, &.o-expanded { // caret
+                    .o-position-absolute(@left: 6px);
+                    padding: 3px;
+                }
+                &.o-expand:before {
+                    .o-caret-right;
+                }
+                &.o-expanded:before {
+                    .o-caret-down;
+                }
+            }
+        }
+    }
+}
+
+// Searchview and Sidebar dropdowns
+// FIXME: move me out of here
+.o_dropdown {
+    white-space: nowrap;  // prevent the arrow from going under the dropdown when too little space
+    .dropdown-toggle:first-child {
+        // apply the padding to the first element so that when the `favorites` menu goes under
+        // the `filters` menu, they're still aligned
+        padding-right: 10px;
+    }
+
+    display: inline-block;
+    cursor: pointer;
+    .user-select(none);  // Prevent text selection when toggling the dropdowns
+    > a { // dropdown togglers
+        color: @odoo-main-text-color;
+        &:hover {
+            text-decoration: none;
+            font-weight: bold;
+            color: darken(@odoo-main-text-color, 10%);
+        }
+    }
+    &.open > a {
+        font-weight: bold;
+        color: darken(@odoo-main-text-color, 10%);
+    }
+}
+
+// Searchview dropdowns
+.o_search_options {
+    // Open and closed carets in dropdowns
+    .o_closed_menu {
+        position: relative;
+        a:before {
+            .o-caret-right;
+            .o-position-absolute(@top: 50%, @left: 10px);
+            margin-top: (-@caret-width-base);
+        }
+    }
+    .o_open_menu {
+        position: relative;
+        a:before {
+            .o-caret-down;
+            .o-position-absolute(@top: 50%, @left: 10px);
+            margin-top: (-@caret-width-base);
+        }
+    }
+
+    // Filters
+    .o_filters_menu {
+        .o-selected-li;
+
+        .o_filter_condition {
+            .o-search-options-dropdown-custom-li;
+            margin-bottom: 8px;
+            .o_or_filter { // or between conditions
+                display: none;  // hidden for the first condition
+                .o-position-absolute(@top: 7px, @left: -18px);
+            }
+        }
+        .o_filter_condition + .o_filter_condition {
+            .o_or_filter {
+                display: block; // displayed from second condition
+            }
+        }
+        .o_searchview_extended_prop_op {
+            margin: 3px 0px; // vertical gap between selects
+        }
+        .o_searchview_extended_prop_value { // date fields: datepicker position
+            .datepickerbutton {
+                .o-position-absolute(3px, -20px);
+                cursor: pointer;
+            }
+        }
+        .o_searchview_extended_delete_prop { // delete condition button position
+            .o-position-absolute(3px, -18px);
+            cursor: pointer;
+        }
+        .o_add_filter_menu { // apply and add buttons
+            display: none;  // Needed by the webclient
+            .o-search-options-dropdown-custom-li;
+        }
+    }
+
+    // Group By
+    .o_group_by_menu {
+        .o-selected-li;
+
+        .divider {display: none;} // hide the divider by default (no group)
+        .o_add_group { // add button
+            display: none;  // Needed by the webclient
+            .o-search-options-dropdown-custom-li;
+        }
+    }
+
+    // Favorites
+    .o_favorites_menu {
+        .o-selected-li;
+
+        .divider {display: none;} // hide the divider by default (no favorite)
+        .o-searchview-custom-private, .o-searchview-custom-public {
+            .o-remove-filter {
+                .o-position-absolute(50%, 12px);
+                margin-top: -6px;
+                cursor: pointer;
+            }
+        }
+        .o-searchview-custom-public a:after {
+            font-family: FontAwesome;
+            content: "\f0c0";
+            margin-left: 5px;
+            font-weight: normal;
+        }
+        .o_save_name { // save button
+            display: none; // hidden by default
+            .o-search-options-dropdown-custom-li;
+        }
+    }
+}

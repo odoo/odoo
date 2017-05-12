@@ -3,14 +3,15 @@
 # * product_extended
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-11-15 12:29+0000\n"
-"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,103 +19,44 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:24
-#: code:addons/product_extended/wizard/wizard_price.py:40
-#, python-format
-msgid "Active ID is not set in Context."
-msgstr "Агуулгад Идэвхтэй ID тохируулагдаагүй байна."
+#: model:ir.model.fields,field_description:product_extended.field_product_product_available_in_pos
+msgid "Available in the Point of Sale"
+msgstr ""
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Орц"
+#: model:ir.model.fields,help:product_extended.field_product_product_to_weight
+msgid ""
+"Check if the product should be weighted using the hardware scale integration"
+msgstr ""
 
 #. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Cancel"
-msgstr "Цуцлах"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Price"
-msgstr "Үнэ Өөрчлөх"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Standard Price"
-msgstr "Стандарт Үнийг Өөрчлөх"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_recursive
-msgid "Change prices of child BoMs too"
-msgstr "Дэд орцуудын үнийг бас өөрчлөх"
-
-#. module: product_extended
-#: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
-msgid "Compute Price Wizard"
-msgstr "Үнэ тооцоолох харилцах цонх"
+#: model:ir.model.fields,help:product_extended.field_product_product_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
+msgstr ""
 
 #. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid "Compute from BOM"
 msgstr ""
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute price wizard"
-msgstr "Үнэ тооцоолох харилцах цонх"
-
-#. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
-msgid "Created by"
-msgstr "Үүсгэгч"
+#: model:ir.model.fields,field_description:product_extended.field_product_product_pos_categ_id
+msgid "Point of Sale Category"
+msgstr "Кассын ангилал"
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_date
-msgid "Created on"
-msgstr "Үүсгэсэн"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_display_name
-msgid "Display Name"
-msgstr "Дэлгэцийн Нэр"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
-msgid "Generate accounting entries when real-time"
-msgstr "Бодит хугацаа тохиолдолд санхүүгийн бичилтүүдийг үүсгэх"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_id
-msgid "ID"
-msgstr "ID"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_info_field
-msgid "Info"
-msgstr "Мэдээлэл"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price___last_update
-msgid "Last Modified on"
-msgstr "Сүүлийн засвар хийсэн огноо"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_uid
-msgid "Last Updated by"
-msgstr "Сүүлийн засвар хийсэн"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_date
-msgid "Last Updated on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+#: model:ir.model,name:product_extended.model_product_product
+msgid "Product"
+msgstr "Бараа"
 
 #. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
@@ -122,26 +64,11 @@ msgid "Product Template"
 msgstr "Барааны үлгэр"
 
 #. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Set price on BoM"
-msgstr "Орцод үнэ тохируулах"
+#: model:ir.model.fields,help:product_extended.field_product_product_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
+msgstr ""
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_standard_price
-msgid "Standard Price"
-msgstr "Стандарт үнэ"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid ""
-"The price is computed from the bill of material lines which are not variant "
-"specific"
-msgstr "Хувилбараас хамаарсан бус орцын мөрүүдээс тооцоологдсон үнэ."
-
-#. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:38
-#, python-format
-msgid ""
-"This wizard is build for product templates, while you are currently running "
-"it from a product variant."
-msgstr "Барааны хувилбараас одоо ажиллуулж байгаа үед энэ харилцах цонх нь барааны үлгэрт зориулагдан хийгдсэн."
+#: model:ir.model.fields,field_description:product_extended.field_product_product_to_weight
+msgid "To Weigh With Scale"
+msgstr ""

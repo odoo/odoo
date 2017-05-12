@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- mail.channel.partner -->
@@ -49,13 +49,8 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="message_follower_ids"/>
-                    <field name="is_member"/>
-                    <field name="message_needaction_counter"/>
                     <field name="description"/>
-                    <field name="alias_id"/>
-                    <field name="alias_name"/>
-                    <field name="alias_domain"/>
+                    <field name="is_subscribed"/>
                     <templates>
                         <t t-name="kanban-description">
                             <div class="oe_group_description" t-if="record.description.raw_value">
@@ -63,27 +58,15 @@
                             </div>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="{record.is_member.raw_value} oe_group_vignette oe_semantic_html_override">
-                                <div class="oe_group_image">
-                                    <a type="open"><img t-att-src="kanban_image('mail.channel', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
-                                </div>
-                                <div class="oe_group_details">
-                                    <h4><a type="open"><field name="name"/></a></h4>
-                                    <div class="oe_kanban_alias" t-if="record.alias_name.value and record.alias_domain.value">
-                                        <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
-                                    </div>
-                                    <div class="oe_grey">
+                            <div class="oe_module_vignette oe_kanban_global_click">
+                                <img t-att-src="kanban_image('mail.channel', 'image_medium', record.id.value)" class="oe_module_icon"/>
+                                <div class="oe_module_desc">
+                                    <h4>#<field name="name"/></h4>
+                                    <p class="oe_module_name">
                                         <field name="description"/>
-                                    </div>
-                                    <div class="oe_kanban_bottom_left">
-                                        <t t-if="record.message_needaction_counter.raw_value">
-                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                        </t>
-                                    </div>
-                                    <div class="oe_group_button">
-                                        <button t-if="record.is_member.raw_value" name="action_unfollow" type="object">Unfollow</button>
-                                        <button t-if="! record.is_member.raw_value" name="action_follow" type="object">Join Group</button>
-                                    </div>
+                                    </p>
+                                    <button type="object" attrs="{'invisible':[('is_subscribed','=',True)]}" class="btn btn-primary pull-right btn-sm" name="channel_join_and_get_info">Join</button>
+                                    <button type="object" attrs="{'invisible':[('is_subscribed','=',False)]}" class="btn btn-default pull-right btn-sm" name="action_unfollow">Leave</button>
                                 </div>
                             </div>
                         </t>
@@ -106,7 +89,7 @@
                                 <label for="name"/>
                             </div>
                             <h1>
-                                <field name="name" default_focus="1" placeholder="Name" readonly="0"/>
+                                #<field name="name" default_focus="1" placeholder="Name" readonly="0"/>
                             </h1>
                         </div>
                         <group class="o_label_nowrap">
@@ -203,10 +186,9 @@
         id="mail.mail_channel_menu_root_chat"
         name="Discuss"
         action="mail_channel_action_client_chat"
-        icon="fa-envelope"
         web_icon="mail,static/description/icon.png"
         groups="base.group_user"
         sequence="1"/>
 
     </data>
-</openerp>
+</odoo>

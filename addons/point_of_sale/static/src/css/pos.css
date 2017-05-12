@@ -189,6 +189,7 @@ td {
     height: 100%;
     display: table;
     border: none;
+    overflow: hidden;
 }
 .pos .window .subwindow{
     display: table-row;
@@ -196,6 +197,9 @@ td {
     height: 100%;
 }
 .pos .window .subwindow.collapsed{
+    height: 0px;
+}
+.pos .window .subwindow-container .collapsed{
     height: 0px;
 }
 .pos .subwindow .subwindow-container{
@@ -208,6 +212,19 @@ td {
 .pos .subwindow .subwindow-container-fix{
     height: 100%;
     position: relative;
+}
+
+.pos .clientlist-screen .window,
+.pos .clientlist-screen .full-content .subwindow{
+    display: block;
+}
+.pos .clientlist-screen .full-content .subwindow-container{
+    display: block;
+    height: 100%;
+}
+.pos .clientlist-screen .full-content .subwindow.collapsed,
+.pos .clientlist-screen .full-content .subwindow-container.collapsed{
+    height: auto;
 }
 
 /* ---- Scrollers ----- */
@@ -494,7 +511,9 @@ td {
 .pos .oe_icon.oe_orange {
     color: rgb(239, 153, 65);
 }
-
+.pos .oe_link_icon{
+    cursor:pointer;
+}
 /*  ********* Contains everything below the  bar ********* */
 
 .pos .pos-content {
@@ -698,6 +717,7 @@ td {
     display: inline-block;
     float: right;
     text-align: center;
+    width: 216px;
     margin: 16px;
     margin-top: 8px;
     margin-left: 0px;
@@ -1452,6 +1472,7 @@ td {
         color: white !important;
     }
     .oe_leftbar,
+    .oe_loading,
     .pos .pos-topheader, 
     .pos .pos-leftpane, 
     .pos .keyboard_frame,
@@ -2219,6 +2240,15 @@ td {
     box-sizing: border-box;
     width: 80%;
 }
+.pos .popup .packlot-lines{
+    overflow: auto;
+    height: 250px;
+    margin: 10px;
+}
+.pos .popup .packlot-line-input {
+    margin: 3px;
+}
+
 .pos .popup-number .popup-input {
     text-align: center;
 }

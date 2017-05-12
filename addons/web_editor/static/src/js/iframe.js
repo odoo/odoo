@@ -1,11 +1,16 @@
 odoo.define('web_editor.iframe', function (require) {
 'use strict';
 
+var ajax = require("web.ajax");
+var core = require("web.core");
 var editor = require('web_editor.editor');
 var translator = require('web_editor.translate');
 var rte = require('web_editor.rte');
 var snippet_editor = require('web_editor.snippet.editor');
 
+ajax.loadXML('/web/static/src/xml/base_common.xml', core.qweb);
+
+var callback = window ? window["callback"] : undefined;
 window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name) {
     var $editable = $("#editable_area");
     if(value !== $editable.prop("innerHTML")) {
@@ -15,7 +20,7 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name
             }
             snippet_editor.instance.make_active(false);
         }
-        
+
         $editable.html(value);
 
         if ($('body').hasClass('editor_enable') && value !== fields_values[field_name]) {
@@ -49,7 +54,7 @@ editor.Class.include({
         this.on("snippets:ready", this, function () {
             $(window.top).trigger("resize");
         });
-        return this._super();
+        return this._super.apply(this, arguments);
     }
 });
 
@@ -61,7 +66,7 @@ snippet_editor.Class.include({
 
 rte.Class.include({
     config: function ($editable) {
-        var config = this._super($editable);
+        var config = this._super.apply(this, arguments);
         if ($.deparam($.param.querystring()).debug !== undefined) {
             config.airPopover.splice(7, 0, ['view', ['codeview']]);
         }
@@ -71,7 +76,7 @@ rte.Class.include({
 
 translator.Class.include({
     start: function () {
-        var res = this._super();
+        var res = this._super.apply(this, arguments);
         $('button[data-action=save]').hide();
         if (window.top.odoo[callback+"_editor"]) {
             window.top.odoo[callback+"_editor"](this);

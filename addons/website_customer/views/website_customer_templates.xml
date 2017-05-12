@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Layout add nav and footer -->
+<template id="footer_custom" inherit_id="website.footer_default" name="Footer Customer References Link">
+    <xpath expr="//div[@id='info']/ul" position="inside">
+        <li><a href="/customers">Our References</a></li>
+    </xpath>
+</template>
+
+<template id="index" name="Our References">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure">
+                <section>
+                    <h1 class="text-center">
+                        Our References
+                    </h1><h2 class="text-center text-muted">
+                        Trusted by millions worldwide
+                    </h2>
+                </section>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 mb32" id="ref_left_column">
+                    </div>
+                    <div class="col-md-8 col-md-offset-1" id="ref_content">
+                        <div class='navbar mb0'>
+                            <t t-call="website.pager">
+                               <t t-set="classname" t-value="'pull-left'"/>
+                            </t>
+                            <form action="" method="get" class="navbar-search pull-right pagination form-inline">
+                                <div class="form-group">
+                                    <input type="text" name="search" class="search-query form-control"
+                                        placeholder="Search" t-att-value="post.get('search', '')"/>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="row">
+
+                    <p t-if="not partners">No result found</p>
+                    <t t-foreach="partners" t-as="partner">
+                        <div class="media">
+                            <a class="pull-left" t-attf-href="/customers/#{slug(partner)}"
+                               t-field="partner.image_small"
+                               t-options='{"widget": "image", "class": "media-object"}'
+                            ></a>
+                            <div class="media-body" style="min-height: 64px;">
+                                <a class="media-heading" t-attf-href="/customers/#{slug(partner)}">
+                                    <span t-field="partner.display_name"/>
+                                </a>
+                                <div t-field="partner.website_short_description"/>
+                            </div>
+                        </div>
+                    </t>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<!-- Option: left column: World Map -->
+<template id="opt_country" inherit_id="website_customer.index" customize_show="True" name="Show Map">
+    <xpath expr="//div[@id='ref_left_column']" position="inside">
+        <t t-if="google_maps_api_key">
+            <!-- modal for large map -->
+            <div class="modal fade customer_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">World Map</h4>
+                    </div>
+                    <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
+                    style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
+                </div>
+              </div>
+            </div>
+            <!-- modal end -->
+            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".customer_map_modal"><span class="fa fa-external-link" /></button></h3>
+            <ul class="nav">
+                <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
+                    style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
+            </ul>
+        </t>
+    </xpath>
+</template>
+
+
+<template id="opt_country_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Countries">
+    <xpath expr="//div[@id='ref_left_column']" position="inside">
+        <h3>References by Country</h3>
+        <ul class="nav nav-pills nav-stacked mt16 mb32">
+            <t t-foreach="countries" t-as="country_dict">
+                <t t-if="country_dict['country_id']">
+                    <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or None">
+                        <a t-attf-href="/customers/#{ tag and 'tag/%s/' % slug(tag) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }">
+                            <span class="badge pull-right" t-esc="country_dict['country_id_count'] or '0'"/>
+                            <t t-esc="country_dict['country_id'][1]"/>
+                        </a>
+                    </li>
+                </t>
+            </t>
+        </ul>
+
+    </xpath>
+</template>
+
+<template id="opt_tag_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Tags" priority="5">
+    <xpath expr="//div[@id='ref_left_column']" position="inside">
+
+        <h3 t-if="len(tags)">References by Tag</h3>
+        <ul class="nav nav-pills nav-stacked mt16 mb32" t-if="len(tags)">
+            <a class="mr8" t-attf-href="/customers/#{ current_country and 'country/%s' % slug(current_country) or '' }#{ search_path }">
+                <span class="fa fa-1x fa-tags"/> All </a>
+            <t t-foreach="tags" t-as="o_tag">
+                <a t-attf-class="label label-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
+                    t-attf-href="/customers/#{ 'tag/%s/' % slug(o_tag) }#{ current_country and 'country/%s' % slug(current_country)  or '' }#{ search_path }"/>
+            </t>
+        </ul>
+    </xpath>
+</template>
+
+<template id="details" name="Customer Detail">
+  <t t-call="website.layout">
+    <div id="wrap">
+        <div class="oe_structure"/>
+        <div class="container mt16">
+            <div class="row">
+                <div class="col-md-5">
+                    <ol t-if="not edit_page" class="breadcrumb">
+                        <li><a href="/customers">Our References</a></li>
+                        <li class="active"><span t-field="partner.display_name"/></li>
+                    </ol>
+                </div>
+                <t t-call="website_partner.partner_detail">
+                    <t t-set="left_column">
+                        <div id="left_column"><t t-call="website_customer.implemented_by_block"/></div>
+                    </t>
+                    <t t-set="right_column">
+                        <div id="right_column"><t t-call="website_customer.references_block"/></div>
+                    </t>
+                </t>
+            </div>
+        </div>
+        <div class="oe_structure"/>
+    </div>
+  </t>
+</template>
+
+<template id="partner_details" inherit_id="website_partner.partner_page" name="Partner Detail Columns">
+ <xpath expr="//t[@t-call='website_partner.partner_detail']" position="inside">
+    <t t-set="left_column"><div id="left_column"><t t-call="website_customer.implemented_by_block"/></div></t>
+    <t t-set="right_column"><div id="right_column"><t t-call="website_customer.references_block"/></div></t>
+ </xpath>
+</template>
+
+<template id="implemented_by_block" name="Partner Implemented By Block">
+        <t t-if="partner.assigned_partner_id and partner.assigned_partner_id.website_published">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Implemented By</h4>
+                </div>
+                <div class="panel-body text-center">
+        <h4>
+            <a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}">
+              <span t-field="partner.assigned_partner_id"/>
+              <span class="small"> (<t t-esc="len([p for p in partner.assigned_partner_id.implemented_partner_ids if p.website_published])"/> reference(s))</span>
+            </a>
+        </h4>
+        <div><a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}"
+                t-field="partner.assigned_partner_id.image_medium"
+                t-options='{"widget": "image", "class": "center-block"}'
+             />
+        </div>
+        <address class="well text-left">
+             <div t-field="partner.assigned_partner_id" t-options='{
+                 "widget": "contact",
+                 "fields": ["address", "website", "phone", "fax", "email"]
+             }'/>
+        </address>
+                </div>
+            </div>
+        </t>
+</template>
+
+<template id="references_block" name="Partner References Block">
+        <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
+            <h3 id="references">References</h3>
+            <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media">
+              <t t-if="reference.website_published">
+                <a class="pull-left" t-attf-href="/customers/#{slug(reference)}">
+                    <span t-field="reference.image_small" t-options='{"widget": "image", "class": "center-block"}'/>
+                </a>
+                <div class="media-body" style="min-height: 64px;">
+                    <a class="media-heading" t-attf-href="/customers/#{slug(reference)}">
+                        <span t-field="reference.self"/>
+                    </a>
+                    <div t-field='reference.website_short_description'/>
+                </div>
+              </t>
+            </div>
+        </t>
+</template>
+
+</odoo>

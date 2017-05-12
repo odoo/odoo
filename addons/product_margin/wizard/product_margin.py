@@ -3,59 +3,42 @@
 
 import time
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
 
 
-class product_margin(osv.osv_memory):
+class ProductMargin(models.TransientModel):
     _name = 'product.margin'
     _description = 'Product Margin'
-    _columns = {
-        'from_date': fields.date('From'),
-        'to_date': fields.date('To'),
-        'invoice_state': fields.selection([
-            ('paid', 'Paid'),
-            ('open_paid', 'Open and Paid'),
-            ('draft_open_paid', 'Draft, Open and Paid'),
-        ], 'Invoice State', select=True, required=True),
-    }
 
-    _defaults = {
-        'from_date': time.strftime('%Y-01-01'),
-        'to_date': time.strftime('%Y-12-31'),
-        'invoice_state': "open_paid",
-    }
+    from_date = fields.Date('From', default=time.strftime('%Y-01-01'))
+    to_date = fields.Date('To', default=time.strftime('%Y-12-31'))
+    invoice_state = fields.Selection([
+        ('paid', 'Paid'),
+        ('open_paid', 'Open and Paid'),
+        ('draft_open_paid', 'Draft, Open and Paid'),
+    ], 'Invoice State', index=True, required=True, default="open_paid")
 
-    def action_open_window(self, cr, uid, ids, context=None):
-        """
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: the ID or list of IDs if we want more than one
-
-            @return:
-        """
-        context = dict(context or {})
+    @api.multi
+    def action_open_window(self):
+        self.ensure_one()
+        context = dict(self.env.context or {})
 
         def ref(module, xml_id):
-            proxy = self.pool.get('ir.model.data')
-            return proxy.get_object_reference(cr, uid, module, xml_id)
+            proxy = self.env['ir.model.data']
+            return proxy.get_object_reference(module, xml_id)
 
         model, search_view_id = ref('product', 'product_search_form_view')
         model, graph_view_id = ref('product_margin', 'view_product_margin_graph')
         model, form_view_id = ref('product_margin', 'view_product_margin_form')
         model, tree_view_id = ref('product_margin', 'view_product_margin_tree')
 
-        #get the current product.margin object to obtain the values from it
-        records = self.browse(cr, uid, ids, context=context)
-        record = records[0]
+        context.update(invoice_state=self.invoice_state)
 
-        context.update(invoice_state=record.invoice_state)
+        if self.from_date:
+            context.update(date_from=self.from_date)
 
-        if record.from_date:
-            context.update(date_from=record.from_date)
-
-        if record.to_date:
-            context.update(date_to=record.to_date)
+        if self.to_date:
+            context.update(date_to=self.to_date)
 
         views = [
             (tree_view_id, 'tree'),

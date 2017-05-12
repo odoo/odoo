@@ -5,78 +5,70 @@ import re
 import urlparse
 import werkzeug.urls
 
-from openerp import tools
-from openerp import SUPERUSER_ID
-from openerp.osv import osv, fields
+from odoo import api, fields, models, tools
+
+from openerp.addons.link_tracker.models.link_tracker import URL_REGEX
 
 
-URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
-
-
-class MailMail(osv.Model):
+class MailMail(models.Model):
     """Add the mass mailing campaign data to mail"""
-    _name = 'mail.mail'
     _inherit = ['mail.mail']
 
-    _columns = {
-        'mailing_id': fields.many2one('mail.mass_mailing', 'Mass Mailing'),
-        'statistics_ids': fields.one2many(
-            'mail.mail.statistics', 'mail_mail_id',
-            string='Statistics',
-        ),
-    }
+    mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing')
+    statistics_ids = fields.One2many('mail.mail.statistics', 'mail_mail_id', string='Statistics')
 
-    def create(self, cr, uid, values, context=None):
+    @api.model
+    def create(self, values):
         """ Override mail_mail creation to create an entry in mail.mail.statistics """
         # TDE note: should be after 'all values computed', to have values (FIXME after merging other branch holding create refactoring)
-        mail_id = super(MailMail, self).create(cr, uid, values, context=context)
+        mail = super(MailMail, self).create(values)
         if values.get('statistics_ids'):
-            mail = self.browse(cr, SUPERUSER_ID, mail_id, context=context)
-            for stat in mail.statistics_ids:
-                self.pool['mail.mail.statistics'].write(cr, uid, [stat.id], {'message_id': mail.message_id, 'state': 'outgoing'}, context=context)
-        return mail_id
+            mail_sudo = mail.sudo()
+            mail_sudo.statistics_ids.write({'message_id': mail_sudo.message_id, 'state': 'outgoing'})
+        return mail
 
-    def _get_tracking_url(self, cr, uid, mail, partner=None, context=None):
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+    def _get_tracking_url(self, partner=None):
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         track_url = urlparse.urljoin(
             base_url, 'mail/track/%(mail_id)s/blank.gif?%(params)s' % {
-                'mail_id': mail.id,
-                'params': werkzeug.url_encode({'db': cr.dbname})
+                'mail_id': self.id,
+                'params': werkzeug.url_encode({'db': self.env.cr.dbname})
             }
         )
         return '<img src="%s" alt=""/>' % track_url
 
-    def _get_unsubscribe_url(self, cr, uid, mail, email_to, context=None):
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+    def _get_unsubscribe_url(self, email_to):
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         url = urlparse.urljoin(
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
-                'mailing_id': mail.mailing_id.id,
-                'params': werkzeug.url_encode({'db': cr.dbname, 'res_id': mail.res_id, 'email': email_to})
+                'mailing_id': self.mailing_id.id,
+                'params': werkzeug.url_encode({'db': self.env.cr.dbname, 'res_id': self.res_id, 'email': email_to})
             }
         )
         return url
 
-    def send_get_mail_body(self, cr, uid, ids, partner=None, context=None):
+    @api.multi
+    def send_get_mail_body(self, partner=None):
         """ Override to add the tracking URL to the body and to add
         Statistic_id in shorted urls """
         # TDE: temporary addition (mail was parameter) due to semi-new-API
-        body = super(MailMail, self).send_get_mail_body(cr, uid, ids, partner=partner, context=context)
-        mail = self.browse(cr, uid, ids[0], context=context)
+        self.ensure_one()
+        body = super(MailMail, self).send_get_mail_body(partner=partner)
 
         links_blacklist = ['/unsubscribe_from_list']
 
-        if mail.mailing_id and body and mail.statistics_ids:
-            for match in re.findall(URL_REGEX, mail.body_html):
+        if self.mailing_id and body and self.statistics_ids:
+            for match in re.findall(URL_REGEX, self.body_html):
 
                 href = match[0]
                 url = match[1]
 
                 if not [s for s in links_blacklist if s in href]:
-                    new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
+                    new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
                     body = body.replace(href, new_href)
 
         # prepend <base> tag for images using absolute urls
-        domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
+        domain = self.env["ir.config_parameter"].get_param("web.base.url")
         base = "<base href='%s'>" % domain
         body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
         # resolve relative image url to absolute for outlook.com
@@ -86,29 +78,31 @@ class MailMail(osv.Model):
         body = re.sub(r'(<[^>]+\bstyle="[^"]+\burl\(\'?)(/[^/\'][^\'")]+)', _sub_relative2absolute, body)
 
         # generate tracking URL
-        if mail.statistics_ids:
-            tracking_url = self._get_tracking_url(cr, uid, mail, partner, context=context)
+        if self.statistics_ids:
+            tracking_url = self._get_tracking_url(partner)
             if tracking_url:
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
         return body
 
-    def send_get_email_dict(self, cr, uid, ids, partner=None, context=None):
+    @api.multi
+    def send_get_email_dict(self, partner=None):
         # TDE: temporary addition (mail was parameter) due to semi-new-API
-        res = super(MailMail, self).send_get_email_dict(cr, uid, ids, partner, context=context)
-        mail = self.browse(cr, uid, ids[0], context=context)
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        if mail.mailing_id and res.get('body') and res.get('email_to'):
+        res = super(MailMail, self).send_get_email_dict(partner)
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        if self.mailing_id and res.get('body') and res.get('email_to'):
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False
-            unsubscribe_url= self._get_unsubscribe_url(cr, uid, mail, email_to, context=context)
-            link_to_replace =  base_url+'/unsubscribe_from_list'
+            unsubscribe_url = self._get_unsubscribe_url(email_to)
+            link_to_replace = base_url + '/unsubscribe_from_list'
             if link_to_replace in res['body']:
                 res['body'] = res['body'].replace(link_to_replace, unsubscribe_url if unsubscribe_url else '#')
         return res
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
-        if mail_sent is True and mail.statistics_ids:
-            self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'sent': fields.datetime.now(), 'exception': False}, context=context)
-        elif mail_sent is False and mail.statistics_ids:
-            self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'exception': fields.datetime.now()}, context=context)
-        return super(MailMail, self)._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)
+    @api.multi
+    def _postprocess_sent_message(self, mail_sent=True):
+        for mail in self:
+            if mail_sent is True and mail.statistics_ids:
+                mail.statistics_ids.write({'sent': fields.Datetime.now(), 'exception': False})
+            elif mail_sent is False and mail.statistics_ids:
+                mail.statistics_ids.write({'exception': fields.Datetime.now()})
+        return super(MailMail, self)._postprocess_sent_message(mail_sent=mail_sent)

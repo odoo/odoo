@@ -3,16 +3,17 @@
 # * website_event_questions
 # 
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-11 10:04+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,8 +22,8 @@ msgstr ""
 
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
-msgid "<strong>Last questions</strong>"
-msgstr "<strong>Laatste vragen</strong>"
+msgid "<strong>Common Questions</strong>"
+msgstr "<strong>Vaak voorkomende vragen</strong>"
 
 #. module: website_event_questions
 #: model:event.question,title:website_event_questions.event_question_2
@@ -78,7 +79,7 @@ msgstr "Aangemaakt op"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_display_name
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_display_name
 msgid "Display Name"
-msgstr "Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_event
@@ -103,6 +104,11 @@ msgid "Event registration id"
 msgstr "Evenement registratie id"
 
 #. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
+msgid "General Questions"
+msgstr "Algemene vragen"
+
+#. module: website_event_questions
 #: model:event.answer,name:website_event_questions.event_suggestion_0_0
 msgid "Gold"
 msgstr "Goud"
@@ -110,7 +116,7 @@ msgstr "Goud"
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Group By"
-msgstr "Groeperen op"
+msgstr "Groepeer op"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_id
@@ -125,7 +131,10 @@ msgstr "ID"
 msgid ""
 "If True, this question will be asked for every attendee of a reservation. If"
 " not it will be asked only once and its value propagated to every attendees."
-msgstr "Indien waar, zal deze vraag aan elke deelnemer van de reservatie gesteld worden. Indien niet, dan zal ze slechts eenmaal gesteld worden en aan alle deelnemers worden doorgegeven."
+msgstr ""
+"Indien waar, zal deze vraag aan elke deelnemer van de reservatie gesteld "
+"worden. Indien niet, dan zal ze slechts eenmaal gesteld worden en aan alle "
+"deelnemers worden doorgegeven."
 
 #. module: website_event_questions
 #: model:event.answer,name:website_event_questions.event_suggestion_2_1
@@ -183,9 +192,7 @@ msgid "Question id"
 msgstr "Vraag id"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_question_ids
-#: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
 #: model:ir.ui.menu,name:website_event_questions.menu_report_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_form_inherit_question
 msgid "Questions"
@@ -197,7 +204,7 @@ msgstr "Vragen"
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_pivot
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Questions Analysis"
-msgstr "Vraaganalyse"
+msgstr "Vragen analyse"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_attendee_id
@@ -215,6 +222,11 @@ msgstr "Reeks"
 #: model:event.answer,name:website_event_questions.event_suggestion_0_1
 msgid "Silver"
 msgstr "Zilver"
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
+msgid "Specific Questions"
+msgstr "Specifieke vragen"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_title

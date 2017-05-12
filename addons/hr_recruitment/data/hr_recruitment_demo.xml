@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
   <data noupdate="1">
 
     <record model="hr.recruitment.stage" id="stage_job1">
@@ -8,7 +8,7 @@
     </record>
     <record model="hr.recruitment.stage" id="stage_job2">
         <field name="name">First Interview</field>
-        <field name="template_id" ref="applicant_interest"/>
+        <field name="template_id" ref="email_template_data_applicant_interest"/>
         <field name="sequence">2</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job3">
@@ -25,44 +25,26 @@
         <field name="fold" eval="True"/>
     </record>
 
-        <!--Manage the job_id to get in hr.applicant-->
+    <!--Manage the job_id to get in hr.applicant-->
     <record id="hr.job_developer" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">4</field>
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5')])]"/>
-    </record>
-    <record id="hr.job_ceo" model="hr.job">
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5')])]"/>
-    </record>
-    <record id="hr.job_cto" model="hr.job">
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5')])]"/>
     </record>
     <record id="hr.job_consultant" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">1</field>
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5')])]"/>
     </record>
     <record id="hr.job_hrm" model="hr.job">
         <field name="no_of_recruitment">1</field>
         <field name="state">recruit</field>
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5')])]"/>
     </record>
     <record id="hr.job_marketing" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">3</field>
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5')])]"/>
     </record>
     <record id="hr.job_trainee" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">6</field>
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5')])]"/>
     </record>
 
     <record id="hr_case_salesman0" model="hr.applicant">
@@ -228,8 +210,8 @@
         <field name="subtype_id" ref="mail.mt_comment"/>
         <field name="author_id" ref="base.partner_demo"/>
     </record>
-    <function model="mail.message" name="set_message_starred"
-            eval="[ ref('msg_case18_aplicant')], True"
+    <function model="mail.message" name="toggle_message_starred"
+            eval="[ref('msg_case18_aplicant')]"
     />
     <record id="msg_case_salesman0_aplicant" model="mail.message">
         <field name="subject">Refuse Application</field>
@@ -254,4 +236,4 @@
     </record>
 
   </data>
-</openerp>
+</odoo>

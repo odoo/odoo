@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <menuitem id="account_reports_lu_statements_menu" name="Luxembourg Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
+
+        <record id="lu_2011_account_517" model="account.account.template">
+            <field name="code">517</field>
+            <field name="name">Virements internes</field>
+            <field name="reconcile" eval='True'/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        </record>
+        <record id="lu_2011_chart_1" model="account.chart.template">
+            <field name="name">PCMN Luxembourg</field>
+            <field name="bank_account_code_prefix">513</field>
+            <field name="cash_account_code_prefix">516</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="transfer_account_id" ref="lu_2011_account_517"/>
+        </record>
+        <record id="lu_2011_account_517" model="account.account.template">
+            <field name="chart_template_id" ref="lu_2011_chart_1"/>
+         </record>
+</odoo>

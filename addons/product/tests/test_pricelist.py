@@ -1,106 +1,101 @@
-from openerp.tests.common import TransactionCase
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.tests.common import TransactionCase
+
 
 class TestPricelist(TransactionCase):
-    """Tests for unit of measure conversion"""
 
     def setUp(self):
         super(TestPricelist, self).setUp()
-        cr, uid, context = self.cr, self.uid, {}
-        self.ir_model_data = self.registry('ir.model.data')
-        self.product_product = self.registry('product.product')
-        self.product_pricelist = self.registry('product.pricelist')
-        self.uom = self.registry('product.uom')
 
-        self.usb_adapter_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_48')[1]
-        self.datacard_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_46')[1]
-        self.unit_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_uom_unit')[1]
-        self.dozen_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_uom_dozen')[1]
-        self.tonne_id = self.ir_model_data.xmlid_to_res_id(cr, uid, 'product.product_uom_ton')
-        self.kg_id = self.ir_model_data.xmlid_to_res_id(cr, uid, 'product.product_uom_kgm')
+        self.datacard = self.env.ref('product.product_delivery_02')
+        self.usb_adapter = self.env.ref('product.product_delivery_01')
+        self.uom_ton = self.env.ref('product.product_uom_ton')
+        self.uom_unit_id = self.ref('product.product_uom_unit')
+        self.uom_dozen_id = self.ref('product.product_uom_dozen')
+        self.uom_kgm_id = self.ref('product.product_uom_kgm')
 
-        self.public_pricelist_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'list0')[1]
-        self.sale_pricelist_id = self.product_pricelist.create(cr, uid, {
+        self.public_pricelist = self.env.ref('product.list0')
+        self.sale_pricelist_id = self.env['product.pricelist'].create({
             'name': 'Sale pricelist',
             'item_ids': [(0, 0, {
                     'compute_price': 'formula',
-                    'base': 'list_price', # based on public price
+                    'base': 'list_price',  # based on public price
                     'price_discount': 10,
-                    'product_id': self.usb_adapter_id,
+                    'product_id': self.usb_adapter.id,
                     'applied_on': '0_product_variant',
                 }), (0, 0, {
                     'compute_price': 'formula',
-                    'base': 'list_price', # based on public price
+                    'base': 'list_price',  # based on public price
                     'price_surcharge': -0.5,
-                    'product_id': self.datacard_id,
+                    'product_id': self.datacard.id,
                     'applied_on': '0_product_variant',
                 })]
-        }, context=context)
+        })
 
     def test_10_discount(self):
         # Make sure the price using a pricelist is the same than without after
         # applying the computation manually
-        cr, uid, context = self.cr, self.uid, {}
+        context = {}
 
-        public_context = dict(context, pricelist=self.public_pricelist_id)
-        pricelist_context = dict(context, pricelist=self.sale_pricelist_id)
+        public_context = dict(context, pricelist=self.public_pricelist.id)
+        pricelist_context = dict(context, pricelist=self.sale_pricelist_id.id)
 
-        usb_adapter_without_pricelist = self.product_product.browse(cr, uid, self.usb_adapter_id, context=public_context)
-        usb_adapter_with_pricelist = self.product_product.browse(cr, uid, self.usb_adapter_id, context=pricelist_context)
+        usb_adapter_without_pricelist = self.usb_adapter.with_context(public_context)
+        usb_adapter_with_pricelist = self.usb_adapter.with_context(pricelist_context)
         self.assertEqual(usb_adapter_with_pricelist.price, usb_adapter_without_pricelist.price*0.9)
 
-        datacard_without_pricelist = self.product_product.browse(cr, uid, self.datacard_id, context=public_context)
-        datacard_with_pricelist = self.product_product.browse(cr, uid, self.datacard_id, context=pricelist_context)
+        datacard_without_pricelist = self.datacard.with_context(public_context)
+        datacard_with_pricelist = self.datacard.with_context(pricelist_context)
         self.assertEqual(datacard_with_pricelist.price, datacard_without_pricelist.price-0.5)
 
         # Make sure that changing the unit of measure does not break the unit
         # price (after converting)
-        unit_context = dict(context,
-            pricelist=self.sale_pricelist_id,
-            uom=self.unit_id)
-        dozen_context = dict(context,
-            pricelist=self.sale_pricelist_id,
-            uom=self.dozen_id)
+        unit_context = dict(context, pricelist=self.sale_pricelist_id.id, uom=self.uom_unit_id)
+        dozen_context = dict(context, pricelist=self.sale_pricelist_id.id, uom=self.uom_dozen_id)
 
-        usb_adapter_unit = self.product_product.browse(cr, uid, self.usb_adapter_id, context=unit_context)
-        usb_adapter_dozen = self.product_product.browse(cr, uid, self.usb_adapter_id, context=dozen_context)
+        usb_adapter_unit = self.usb_adapter.with_context(unit_context)
+        usb_adapter_dozen = self.usb_adapter.with_context(dozen_context)
         self.assertAlmostEqual(usb_adapter_unit.price*12, usb_adapter_dozen.price)
-        datacard_unit = self.product_product.browse(cr, uid, self.datacard_id, context=unit_context)
-        datacard_dozen = self.product_product.browse(cr, uid, self.datacard_id, context=dozen_context)
+        datacard_unit = self.datacard.with_context(unit_context)
+        datacard_dozen = self.datacard.with_context(dozen_context)
         # price_surcharge applies to product default UoM, here "Units", so surcharge will be multiplied
         self.assertAlmostEqual(datacard_unit.price*12, datacard_dozen.price)
 
     def test_20_pricelist_uom(self):
         # Verify that the pricelist rules are correctly using the product's default UoM
         # as reference, and return a result according to the target UoM (as specific in the context)
-        cr, uid = self.cr, self.uid
-        kg, tonne = self.kg_id, self.tonne_id
+
+        kg, tonne = self.uom_kgm_id, self.uom_ton.id
         tonne_price = 100
 
         # make sure 'tonne' resolves down to 1 'kg'.
-        self.uom.write(cr, uid, tonne, {'rounding': 0.001})
+        self.uom_ton.write({'rounding': 0.001})
         # setup product stored in 'tonnes', with a discounted pricelist for qty > 3 tonnes
-        spam_id = self.product_product.copy(cr, uid, self.usb_adapter_id,
-                                            { 'name': '1 tonne of spam',
-                                              'uom_id': self.tonne_id,
-                                              'uom_po_id': self.tonne_id,
-                                              'list_price': tonne_price,
-                                              'type': 'consu',
-                                            })
-        self.registry('product.pricelist.item').create(cr, uid, {
-                                                       'pricelist_id': self.public_pricelist_id,
-                                                       'sequence': 10,
-                                                       'applied_on': '0_product_variant',
-                                                       'compute_price': 'formula',
-                                                       'base': 'list_price', # based on public price
-                                                       'min_quantity': 3, # min = 3 tonnes
-                                                       'price_surcharge': -10, # -10 EUR / tonne
-                                                       'product_id': spam_id, })
-        pricelist_id = self.public_pricelist_id
+        spam_id = self.usb_adapter.copy({
+            'name': '1 tonne of spam',
+            'uom_id': self.uom_ton.id,
+            'uom_po_id': self.uom_ton.id,
+            'list_price': tonne_price,
+            'type': 'consu'
+        })
+
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': self.public_pricelist.id,
+            'sequence': 10,
+            'applied_on': '0_product_variant',
+            'compute_price': 'formula',
+            'base': 'list_price',  # based on public price
+            'min_quantity': 3,  # min = 3 tonnes
+            'price_surcharge': -10,  # -10 EUR / tonne
+            'product_id': spam_id.id
+        })
+        pricelist = self.public_pricelist
 
         def test_unit_price(qty, uom, expected_unit_price):
-            unit_price = self.registry('product.pricelist').price_get(cr, uid, [pricelist_id],
-                                                                      spam_id, qty,
-                                                                      context={'uom': uom})[pricelist_id]
+            spam = spam_id.with_context({'uom': uom})
+            unit_price = pricelist.with_context({'uom': uom}).get_product_price(spam, qty, False)
             self.assertAlmostEqual(unit_price, expected_unit_price, msg='Computed unit price is wrong')
 
         # Test prices - they are *per unit*, the quantity is only here to match the pricelist rules!

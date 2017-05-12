@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sale config wizard -->
+    <record id="view_sale_config_settings" model="ir.ui.view">
+        <field name="name">sale settings</field>
+        <field name="model">sale.config.settings</field>
+        <field name="arch" type="xml">
+            <form string="Configure Sales" class="oe_form_configuration" name="sale_config_form">
+                <header>
+                    <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                    <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                </header>
+                <div id="main"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sale_config" model="ir.actions.act_window">
+        <field name="name">Configure Sales</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.config.settings</field>
+        <field name="view_id" ref="view_sale_config_settings"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+</odoo>

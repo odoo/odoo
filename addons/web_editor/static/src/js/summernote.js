@@ -134,7 +134,7 @@ dom.hasProgrammaticStyle = function (node) {
 };
 dom.mergeFilter = function (prev, cur, parent) {
     // merge text nodes
-    if (prev && (dom.isText(prev) || ("H1 H2 H3 H4 H5 H6 LI P".indexOf(prev.tagName) !== -1 && prev !== cur.parentNode)) && dom.isText(cur)) {
+    if (prev && (dom.isText(prev) || (['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'P'].indexOf(prev.tagName) !== -1 && prev !== cur.parentNode)) && dom.isText(cur)) {
         return true;
     }
     if (prev && prev.tagName === "P" && dom.isText(cur)) {
@@ -210,7 +210,7 @@ dom.merge = function (node, begin, so, end, eo, mergeFilter, all) {
         while(end.lastChild) {end = end.lastChild;}
         eo = end.textContent.length-1;
     } else if (end.tagName) {
-        
+
     } else if (end.tagName && end.childNodes[so]) {
         end = end.childNodes[so];
         so = 0;
@@ -234,7 +234,7 @@ dom.merge = function (node, begin, so, end, eo, mergeFilter, all) {
             if (cur === begin) {
                 if (!all) add = true;
             }
-            
+
             __merge(cur);
             dom.orderClass(dom.node(cur));
 
@@ -931,17 +931,26 @@ options.keyMap.mac['ESCAPE'] = 'cancel';
 options.keyMap.mac['UP'] = 'up';
 options.keyMap.mac['DOWN'] = 'down';
 
+options.styleTags = ['p', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
+
 $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
   var $editable = layoutInfo.editable();
   var dimension = sDim.split('x');
   var r = range.create();
   if (!r) return;
-  r = r.deleteContents();
+  r = r.deleteContents(true);
 
-  var isBodyContainer = dom.isBodyContainer;
-  dom.isBodyContainer = dom.isNotBreakable;
-  r.insertNode(editor.table.createTable(dimension[0], dimension[1]));
-  dom.isBodyContainer = isBodyContainer;
+  var table = editor.table.createTable(dimension[0], dimension[1]);
+  var parent = r.sc;
+  while (dom.isText(parent.parentNode) || dom.isRemovableEmptyNode(parent.parentNode)) {
+    parent = parent.parentNode;
+  }
+  var node = dom.splitTree(parent, {'node': r.sc, 'offset': r.so}) || r.sc;
+  node.parentNode.insertBefore(table, node);
+
+  if ($(node).text() === '' || node.textContent === '\u00A0') {
+    node.parentNode.removeChild(node);
+  }
 
   editor.afterCommand($editable);
   event.preventDefault();
@@ -977,7 +986,7 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
                 $.summernote.pluginEvents.indent(event, editor, layoutInfo);
             }
         } else {
-            if (!outdent){
+            if (!outdent) {
                 if(dom.isText(r.sc)) {
                     var next = r.sc.splitText(r.so);
                 } else {
@@ -1160,8 +1169,6 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
         if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
             remove_table_content(r);
             r = range.create(r.ec, 0).select();
-        } else {
-            r = r.deleteContents(true);
         }
         r.select();
     }
@@ -1501,7 +1508,7 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
 
         dom.removeSpace(temp2.parentNode, temp2, 0, temp, 0); // clean before jump for not select invisible space between 2 tag
         temp2 = dom.lastChild(temp2);
-    
+
         r = range.create(temp2, temp2.textContent.length, temp2, temp2.textContent.length);
         r.select();
 
@@ -1880,7 +1887,7 @@ eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent,
             font.className += ' ' + sValue;
             font.style.backgroundColor = "";
         } else {
-            font.className = font.className.replace(/(^|\s+)bg-\S+/);
+            font.className = font.className.replace(/(^|\s+)bg-\S+/, '');
             font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
         }
     }
@@ -1905,7 +1912,7 @@ eventHandler.modules.editor.redo = function ($popover) {
 
 // use image toolbar if current range is on image
 var fn_editor_currentstyle = eventHandler.modules.editor.currentStyle;
-eventHandler.modules.editor.currentStyle = function(target) {
+eventHandler.modules.editor.currentStyle = function (target) {
     var styleInfo = fn_editor_currentstyle.apply(this, arguments);
     // with our changes for inline editor, the targeted element could be a button of the editor
     if(!styleInfo.image || !dom.isEditable(styleInfo.image)) {
@@ -2302,6 +2309,26 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     }
 };
 
+// override summernote clipboard functionality
+eventHandler.modules.clipboard.attach = function(layoutInfo) {
+    var $editable = layoutInfo.editable();
+    $editable.on('paste', function(e) {
+        var clipboardData = ((e.originalEvent || e).clipboardData || window.clipboardData);
+        // Change nothing if pasting html (copy from text editor / web / ...) or
+        // if clipboardData is not available (IE / ...)
+        if (clipboardData && clipboardData.types && clipboardData.types.length === 1 && clipboardData.types[0] === "text/plain") {
+            e.preventDefault();
+            $editable.data('NoteHistory').recordUndo($editable); // FIXME
+            var pastedText = clipboardData.getData("text/plain");
+            // Try removing linebreaks which are not really linebreaks (in a PDF,
+            // when a sentence goes over the next line, copying it considers it
+            // a linebreak for example).
+            var formattedText = pastedText.replace(/([\w-])\r?\n([\w-])/g, "$1 $2").trim();
+            document.execCommand("insertText", false, formattedText);
+        }
+    });
+};
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var fn_attach = eventHandler.attach;
@@ -2317,6 +2344,9 @@ eventHandler.detach = function (oLayoutInfo, options) {
     $editable.off("scroll", summernote_table_scroll);
     $('.o_table_handler').remove();
 };
+
+options.icons.image.image = "file-image-o";
+$.summernote.lang['en-US'].image.image = "File / Image";
 
 return $.summernote;
 

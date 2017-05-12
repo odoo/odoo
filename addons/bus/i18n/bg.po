@@ -3,14 +3,16 @@
 # * bus
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# kalatchev <kalatchev@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:41+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: kalatchev <kalatchev@gmail.com>, 2016\n"
+"Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,19 +41,28 @@ msgstr "Дата на създаване"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
-#: model:ir.model.fields,field_description:bus.field_bus_presence_create_uid
 msgid "Created by"
 msgstr "Създадено от"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_create_date
-msgid "Created on"
-msgstr "Създадено на"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
 msgid "Display Name"
+msgstr "Име за показване"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
+msgid "Geo Latitude"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
+msgid "Geo Longitude"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
+msgid "Geolocation Date"
 msgstr ""
 
 #. module: bus
@@ -71,7 +82,7 @@ msgstr "IM състояние"
 #: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Последно променено на"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
@@ -85,13 +96,11 @@ msgstr "Последно Присъствие"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
-#: model:ir.model.fields,field_description:bus.field_bus_presence_write_uid
 msgid "Last Updated by"
 msgstr "Последно обновено от"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
-#: model:ir.model.fields,field_description:bus.field_bus_presence_write_date
 msgid "Last Updated on"
 msgstr "Последно обновено на"
 

@@ -1,4 +1,3 @@
-@charset "utf-8";
 /* ---- Default Styles ---- */
 .oe_product {
   border: 1px solid rgba(100, 100, 100, 0.2);
@@ -294,6 +293,14 @@
   min-width: 76px;
 }
 
+div#payment_method div.list-group {
+  margin-left: 40px;
+}
+div#payment_method .list-group-item {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 @media (max-width: 992px) {
   #modal_optional_products table:last-child td:last-child {
     overflow: hidden;
@@ -359,6 +366,7 @@
     min-height: 100px;
     position: relative;
     padding-bottom: 5px;
+    padding-left: 180px;
   }
   .oe_product.oe_list .oe_product_image {
     top: 0;
@@ -370,9 +378,10 @@
   .oe_product.oe_list section {
     position: relative;
     border: 0;
-    top: 0;
+    top: auto;
     bottom: auto;
-    left: 180px;
+    left: auto;
+    right: auto;
     background: transparent;
   }
 }
@@ -412,6 +421,13 @@
   display: block;
 }
 
+.css_quantity {
+  max-width: 125px;
+}
+.css_quantity input[name="add_qty"] {
+  text-align: center;
+}
+
 option.css_not_available {
   color: #ccc;
 }
@@ -444,6 +460,10 @@ label.css_attribute_color.css_not_available {
 .oe_website_sale input.js_quantity {
   min-width: 48px;
   text-align: center;
+}
+
+.oe_website_sale input.quantity {
+  padding: 0;
 }
 
 /* ---- Publish managment and options ---- */
@@ -557,3 +577,65 @@ ul.wizard li:first-child {
 .mycart-popover .cart_line {
   border-bottom: 1px #EEE solid;
 }
+
+td.noborder {
+  border: none !important;
+}
+
+.border_primary {
+  border: 1px solid #337ab7;
+}
+
+.js_change_shipping {
+  cursor: pointer;
+}
+
+a.no-decoration {
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+#o-carousel-product .carousel-inner div.item {
+  height: 400px;
+}
+#o-carousel-product .carousel-inner div.item img {
+  max-height: 100%;
+}
+#o-carousel-product .carousel-control {
+  background-image: none !important;
+}
+#o-carousel-product .carousel-indicators {
+  background-color: transparent;
+  margin: 10px 0 0;
+  overflow-y: hidden;
+  position: static;
+  text-align: left;
+  white-space: nowrap;
+  width: 100%;
+  height: 100px !important;
+  text-align: center;
+  list-style-position: inside;
+}
+#o-carousel-product .carousel-indicators li {
+  background-color: transparent !important;
+  border-radius: 0;
+  display: inline-block;
+  margin: 0 !important;
+  width: 54px !important;
+  height: 54px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+#o-carousel-product .carousel-indicators li img {
+  display: block;
+  opacity: 0.5;
+}
+#o-carousel-product .carousel-indicators li.active img {
+  opacity: 1;
+}
+
+.ecom-zoomable img[data-zoom] {
+  cursor: zoom-in;
+}
+
+/*# sourceMappingURL=website_sale.css.map */

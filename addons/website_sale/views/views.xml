@@ -23,6 +23,8 @@
                     <field name="public_categ_ids" widget="many2many_tags" string="Website Categories"/>
                     <field name="alternative_product_ids" widget="many2many_tags"/>
                     <field name="accessory_product_ids" widget="many2many_tags"/>
+                    <field name="availability" widget="selection"/>
+                    <field name="availability_warning" attrs="{'invisible': [('availability', '!=', 'warning')]}"/>
                     <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                 </group>
             </group>
@@ -32,6 +34,29 @@
                     <field name="website_published" widget="website_button"/>
                 </button>
             </div>
+            <xpath expr="//notebook[last()]" position="inside">
+                <page string="Images" groups="website_sale.group_website_multi_image">
+                    <field name="product_image_ids" mode="kanban" context="{'default_name': name, 'default_product_tmpl_id': active_id}">
+                        <kanban string="Product Images">
+                            <field name="name"/>
+                            <field name="image" />
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
+                                        <div class="o_kanban_image">
+                                            <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
+                                        </div>
+                                        <div class="oe_kanban_details">
+                                            <field name="name"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
 
@@ -43,7 +68,7 @@
         <field name="inherit_id" ref="product.product_attribute_value_view_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="color"/>
+                <field name="html_color"/>
             </field>
         </field>
     </record>
@@ -53,7 +78,7 @@
         <field name="inherit_id" ref="product.variants_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="color"/>
+                <field name="html_color"/>
             </field>
         </field>
     </record>
@@ -75,7 +100,7 @@
         <field name="arch" type="xml">
             <form string="Website Public Categories">
                 <sheet>
-                    <field name="image_medium" widget='image' class="oe_avatar oe_right"/>
+                    <field name="image_medium" widget='image' class="oe_avatar"/>
                     <div class="oe_left">
                         <group>
                             <field name="name"/>
@@ -92,9 +117,9 @@
         <field name="model">product.public.category</field>
         <field name="field_parent" eval="False"/>
         <field name="arch" type="xml">
-            <tree string="Product Product Categories">
+            <tree string="Product Public Categories">
                 <field name="sequence" invisible="1"/>
-                <field name="complete_name"/>
+                <field name="display_name"/>
             </tree>
         </field>
     </record>
@@ -114,54 +139,45 @@
           </p>
         </field>
     </record>
-    <menuitem action="product_public_category_action" id="menu_product_public_category" parent="product.prod_config_main" sequence="2" />
 
-    <record id="website_sale_pricelists_by_website" model="ir.actions.act_window">
-        <field name="name">Website Pricelist</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">website_pricelist</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" eval="False"/>
-    </record>
-    <menuitem action="website_sale_pricelists_by_website" id="menu_website_sale_pricelists" parent="product.menu_product_pricelist_main" sequence="1" />
-
-     <!-- Product Public Categories -->
-    <record id="website_pricelist_form_view" model="ir.ui.view">
-        <field name="name">website_pricelist.form</field>
-        <field name="model">website_pricelist</field>
+    <record id="website_sale_pricelist_form_view" model="ir.ui.view">
+        <field name="name">website_sale.pricelist.form</field>
+        <field name="inherit_id" ref="product.product_pricelist_view" />
+        <field name="model">product.pricelist</field>
         <field name="arch" type="xml">
-            <form string="Website PriceLists">
-                <group>
-                    <field name="website_id"/>
-                    <field name="selectable"/>
-                    <field name="pricelist_id"/>
-                    <field name="country_group_ids"/>
-                </group>
+            <field name='currency_id' position='after'>
+                <field name="selectable"/>
+                <field name="website_id" string='Allow to use on ' placeholder="None website" />
+            </field>
+        </field>
+    </record>
+
+    <record id="website_sale_pricelist_tree_view" model="ir.ui.view">
+        <field name="name">product.pricelist.tree.inherit.product</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="selectable" />
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_product_image_form">
+        <field name="name">product.image.form</field>
+        <field name="model">product.image</field>
+        <field name="arch" type="xml">
+            <form string="Product Images">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label class="oe_edit_only" for="name" string="Image Name"/>
+                        <h1><field name="name" placeholder="Image Name" required="True"/></h1>
+                        <field name="product_tmpl_id" invisible="1"/>
+                    </div>
+                </sheet>
             </form>
         </field>
     </record>
 
-    <record id="website_pricelist_tree_view" model="ir.ui.view">
-        <field name="name">website_pricelist.tree</field>
-        <field name="model">website_pricelist</field>
-        <field name="arch" type="xml">
-            <tree string="Website PriceLists">
-                <field name="website_id"/>
-                <field name="selectable"/>
-                <field name="pricelist_id"/>
-            </tree>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="inherits_website_sale_country_group_form">
-        <field name="name">website_sale.country_group.form</field>
-        <field name="model">res.country.group</field>
-        <field name="inherit_id" ref="base.view_country_group_form"/>
-        <field name="arch" type="xml">
-            <group name="country_group" position="after">
-                <field name="website_pricelist_ids"/>
-            </group>
-        </field>
-    </record>
 </odoo>

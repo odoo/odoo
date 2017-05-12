@@ -43,7 +43,7 @@ can take the following attributes:
 ``report_name``
     the name of your report (which will be the name of the PDF output)
 ``groups``
-    :class:`~openerp.fields.Many2many` field to the groups allowed to view/use
+    :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
     the current report
 ``attachment_use``
     if set to True, the report will be stored as an attachment of the record
@@ -161,7 +161,7 @@ For example, let's look at the Sale Order report from the Sale module::
                     <div class="col-xs-6">
                         <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoice and shipping address:</strong>
                         <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoice address:</strong>
-                        <div t-field="doc.partner_invoice_id" t-field-options="{&quot;no_marker&quot;: true}"/>
+                        <div t-field="doc.partner_invoice_id" t-options="{&quot;no_marker&quot;: True}"/>
                     <...>
                 <div class="oe_structure"/>
             </div>
@@ -282,20 +282,20 @@ named :samp:`report.{module.report_name}`. If it exists, it will use it to
 call the QWeb engine; otherwise a generic function will be used. If you wish
 to customize your reports by including more things in the template (like
 records of others models, for example), you can define this model, overwrite
-the function ``render_html`` and pass objects in the ``docargs`` dictionnary:
+the function ``render_html`` and pass objects in the ``docargs`` dictionary:
 
 .. code-block:: python
 
-    from openerp import api, models
+    from odoo import api, models
 
     class ParticularReport(models.AbstractModel):
         _name = 'report.module.report_name'
-        @api.multi
-        def render_html(self, data=None):
+        @api.model
+        def render_html(self, docids, data=None):
             report_obj = self.env['report']
             report = report_obj._get_report_from_name('module.report_name')
             docargs = {
-                'doc_ids': self._ids,
+                'doc_ids': docids,
                 'doc_model': report.model,
                 'docs': self,
             }

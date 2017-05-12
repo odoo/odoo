@@ -3,11 +3,10 @@ odoo.define('web.framework', function (require) {
 
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
-var session = require('web.session');
+var ajax = require('web.ajax');
 var Widget = require('web.Widget');
 
 var _t = core._t;
-var Spinner = window.Spinner;
 
 var messages_by_seconds = function() {
     return [
@@ -24,23 +23,6 @@ var messages_by_seconds = function() {
 var Throbber = Widget.extend({
     template: "Throbber",
     start: function() {
-        var opts = {
-          lines: 13, // The number of lines to draw
-          length: 7, // The length of each line
-          width: 4, // The line thickness
-          radius: 10, // The radius of the inner circle
-          rotate: 0, // The rotation offset
-          color: '#FFF', // #rgb or #rrggbb
-          speed: 1, // Rounds per second
-          trail: 60, // Afterglow percentage
-          shadow: false, // Whether to render a shadow
-          hwaccel: false, // Whether to use hardware acceleration
-          className: 'spinner', // The CSS class to assign to the spinner
-          zIndex: 2e9, // The z-index (defaults to 2000000000)
-          top: 'auto', // Top position relative to parent in px
-          left: 'auto' // Left position relative to parent in px
-        };
-        this.spin = new Spinner(opts).spin(this.$el[0]);
         this.start_time = new Date().getTime();
         this.act_message();
     },
@@ -59,23 +41,7 @@ var Throbber = Widget.extend({
             self.act_message();
         }, 1000);
     },
-    destroy: function() {
-        if (this.spin)
-            this.spin.stop();
-        this._super();
-    },
 });
-
-
-// special tweak for the web client
-var old_async_when = $.async_when;
-$.async_when = function() {
-    if (session.synch)
-        return $.when.apply(this, arguments);
-    else
-        return old_async_when.apply(this, arguments);
-};
-
 
 /** Setup blockui */
 if ($.blockUI) {
@@ -123,7 +89,7 @@ function redirect (url, wait) {
     };
 
     var wait_server = function() {
-        session.rpc("/web/webclient/version_info", {}).done(load).fail(function() {
+        ajax.rpc("/web/webclient/version_info", {}).done(load).fail(function() {
             setTimeout(wait_server, 250);
         });
     };
@@ -189,6 +155,7 @@ core.action_registry.add("login", login);
 
 function logout() {
     redirect('/web/session/logout');
+    return $.Deferred();
 }
 core.action_registry.add("logout", logout);
 
@@ -199,7 +166,7 @@ core.action_registry.add("logout", logout);
  */
 function ReloadContext (parent, action) {
     // side-effect of get_session_info is to refresh the session context
-    session.rpc("/web/session/get_session_info", {}).then(function() {
+    ajax.rpc("/web/session/get_session_info", {}).then(function() {
         Reload(parent, action);
     });
 }
@@ -233,6 +200,16 @@ if ('nv' in window) {
     // to remove tooltips after 500 ms...  seriously nvd3, what were you thinking?
     nv.tooltip.cleanup = function () {
         $('.nvtooltip').remove();
+    };
+
+    // monkey patch nvd3 to prevent it to display a tooltip (position: absolute) with
+    // a negative `top`; with this patch the highest tooltip's position is still in the
+    // graph
+    var originalCalcTooltipPosition = nv.tooltip.calcTooltipPosition;
+    nv.tooltip.calcTooltipPosition = function () {
+        var container = originalCalcTooltipPosition.apply(this, arguments);
+        container.style.top = container.style.top.split('px')[0] < 0 ? 0 + 'px' : container.style.top;
+        return container;
     };
 }
 
@@ -326,11 +303,18 @@ $.extend( proto, {
 });
 
 /**
- * Private function that triggers an event on core.bus
+ * Private function to notify that something has been attached in the DOM
  * @param {htmlString or Element or Array or jQuery} [content] the content that
  * has been attached in the DOM
+ * @params {Array} [callbacks] array of {widget: w, callback_args: args} such
+ * that on_attach_callback() will be called on each w with arguments args
  */
-function _notify (content) {
+function _notify (content, callbacks) {
+    _.each(callbacks, function(c) {
+        if (c.widget && c.widget.on_attach_callback) {
+            c.widget.on_attach_callback(c.callback_args);
+        }
+    });
     core.bus.trigger('DOM_updated', content);
 }
 /**
@@ -338,12 +322,14 @@ function _notify (content) {
  * @param {jQuery} [$target] the node where content will be appended
  * @param {htmlString or Element or Array or jQuery} [content] DOM element,
  * array of elements, HTML string or jQuery object to append to $target
- * @param {jQuery} [trigger] true to trigger an event, false otherwise
+ * @param {Boolean} [options.in_DOM] true if $target is in the DOM
+ * @param {Array} [options.callbacks] array of objects describing the callbacks
+ * to perform (see _notify for a complete description)
  */
-function append ($target, content, trigger) {
+function append ($target, content, options) {
     $target.append(content);
-    if (trigger) {
-        _notify(content);
+    if (options && options.in_DOM) {
+        _notify(content, options.callbacks);
     }
 }
 /**
@@ -351,13 +337,37 @@ function append ($target, content, trigger) {
  * @param {jQuery} [$target] the node where content will be prepended
  * @param {htmlString or Element or Array or jQuery} [content] DOM element,
  * array of elements, HTML string or jQuery object to prepend to $target
- * @param {jQuery} [trigger] true to trigger an event, false otherwise
+ * @param {Boolean} [options.in_DOM] true if $target is in the DOM
+ * @param {Array} [options.callbacks] array of objects describing the callbacks
+ * to perform (see _notify for a complete description)
  */
-function prepend ($target, content, trigger) {
+function prepend ($target, content, options) {
     $target.prepend(content);
-    if (trigger) {
-        _notify(content);
+    if (options && options.in_DOM) {
+        _notify(content, options.callbacks);
     }
+}
+
+/**
+ * Detaches widgets from the DOM and performs their on_detach_callback()
+ * @param {Array} [to_detach] array of {widget: w, callback_args: args} such
+ * that w.$el will be detached and w.on_detach_callback(args) will be called
+ * @param {jQuery} [options.$to_detach] if given, detached instead of widgets' $el
+ * @return {jQuery} the detached elements
+ */
+function detach (to_detach, options) {
+    _.each(to_detach, function(d) {
+        if (d.widget.on_detach_callback) {
+            d.widget.on_detach_callback(d.callback_args);
+        }
+    });
+    var $to_detach = options && options.$to_detach;
+    if (!$to_detach) {
+        $to_detach = $(_.map(to_detach, function(d) {
+            return d.widget.el;
+        }));
+    }
+    return $to_detach.detach();
 }
 
 /**
@@ -381,6 +391,7 @@ return {
     redirect: redirect,
     append: append,
     prepend: prepend,
+    detach: detach,
     getPosition: getPosition,
 };
 

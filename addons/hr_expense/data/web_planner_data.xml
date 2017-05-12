@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <template id="hr_expense_planner">
+        <t t-call="web_planner.pages">
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle">Setup</t>
+                <t t-set="menu_categoryclasses" t-value="'fa-magic'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Get Mobile</t>
+                    <t t-if="not (alias_name and alias_domain)">
+                        <div class="alert alert-warning" role="alert">
+                            <strong>Your email gateway is not configured.</strong> Please configure your email
+                            gateway from the Settings app, menu <i>General Settings</i>.
+                        </div>
+                        <p>
+                            Once your email gateway is configured, come back to this screen
+                            to setup the next steps.
+                        </p>
+                    </t>
+                    <t t-if="alias_name and alias_domain">
+                        <p>
+                            To create expenses by email, take photos of your
+                            receipts and send them by email with the following
+                            information:
+                        </p>
+
+                        <dl class="dl-horizontal">
+                            <dt>From: Your Email</dt>
+                            <dd>Your Email Address</dd>
+                            <dt>To:</dt>
+                            <dd><t t-esc="alias_name"/>@<t t-esc="alias_domain"/></dd>
+                            <dt>Subject: </dt>
+                            <dd><strong class="text-info">[PRODUCT CODE]</strong> Free Description <strong class="text-primary">PRICE</strong></dd>
+                        </dl>
+                        <hr class="mb32"/>
+                        <p>
+                            The <strong class="text-info">PRODUCT CODE</strong> is optional and should be the
+                            internal code of one of your expense product. This
+                            will set the right product automatically on your
+                            expense Odoo.
+                        </p><p>
+                            You can set an optionnal <strong class="text-primary">PRICE</strong>
+                            at the end of the subject of your email.
+                        </p><p class="mb32">
+                            The photo of the receipt and the description of the email will
+                            be attached to the expense. That way, you get everything attached
+                            to fill the remaining fields later on.
+                        </p>
+
+                        <div class="alert alert-info" role="alert">
+                            <b>Note:</b> Set the same email address on your employee form than
+                            the one you use are your "From:". Otherwise, your
+                            expenses will not be accepted by email.
+                        </div>
+                    </t>
+                </t>
+            </t>
+
+            <t t-call="web_planner.page">
+                <t t-set="page_title">End</t>
+                <t t-set="hide_title" t-value="True"/>
+                <t t-set="hide_from_menu" t-value="True"/>
+                <t t-set="hide_mark_as_done" t-value="True"/>
+                <h1 class="text-center o_planner_trophy" data-icon="&#xe006;" />
+                <div class="text-center">
+                    <h1>Congratulations, you're done!</h1>
+                    <h3>We hope this feature helped you manage your expenses efficiently.</h3>
+                    <h4>Don't hesitate to <a href="mailto:info@odoo.com?subject=HrExpense%20Planner" target="_blank">send us an email</a> to describe<br/> your experience or to suggest improvements!</h4>
+
+                    <p>Have a wonderful day,<br/>- The Odoo Team</p>
+                    <img src="/web_planner/static/src/img/odoo_logo.png"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--Planner Data-->
+    <record id="planner_hr_expense" model="web.planner">
+        <field name="name">Expense strategy planner</field>
+        <field name="view_id" ref="hr_expense_planner"/>
+        <field name="menu_id" ref="hr_expense.menu_hr_expense_root"/>
+        <field name="planner_application">planner_hr_expense</field>
+        <field name="tooltip_planner"><![CDATA[
+            Send receipts by email to create expenses efficiently.
+            ]]>
+        </field>
+    </record>
+
+</odoo>

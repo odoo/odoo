@@ -44,9 +44,8 @@
 -
   I clicked on Close CashBox button to close the cashbox
 -
- !python {model: account.bank.statement}: |
-      self.button_confirm_cash(cr, uid, [ref("account_bank_statement_1")], {"lang": "en_US", "tz": False, "active_model": "account.bank.statement", "active_ids": [ref("account_bank_statement_1")], "active_id": ref("account_bank_statement_1"), })
-
+ !python {model: account.bank.statement, id: False}: |
+      self.browse(ref("account_bank_statement_1")).with_context({"lang": "en_US", "tz": False, "active_model": "account.bank.statement", "active_ids": [ref("account_bank_statement_1")], "active_id": ref("account_bank_statement_1"), }).button_confirm_cash()
 -
   I check that bank statement state is now "Closed"
 -

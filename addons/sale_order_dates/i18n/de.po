@@ -3,14 +3,17 @@
 # * sale_order_dates
 # 
 # Translators:
+# Bülent Tiknas <btiknas@googlemail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Fabian Liesch <fabian.liesch@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 08:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Fabian Liesch <fabian.liesch@gmail.com>, 2016\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,7 +23,7 @@ msgstr ""
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
 msgid "Commitment Date"
-msgstr "Datum Liefervereinbarung"
+msgstr "Frühestes Lieferdatum"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
@@ -28,14 +31,20 @@ msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
-msgstr "Datum, an dem der Kunde die Produkte geliefert haben möchte.\nWenn dieser Auftrag bestätigt wird, wird der erwartete Liefertermin auf Grundlage dieses Datum und der Sicherheitsverzögerung der Firma berechnet.\nLassen Sie dieses Feld frei, wenn die Lieferung so bald wie möglich bearbeitet werden soll. In diesem Fall wird der voraussichtliche Liefertermin mit Hilfe der Standardmethode berechnet: auf Basis der Produktvorlaufzeiten und der Sicherheitsverzögerung der Firma."
+msgstr ""
+"Datum, an dem der Kunde die Produkte geliefert haben möchte.\n"
+"Wenn dieser Auftrag bestätigt wird, wird der erwartete Liefertermin auf Grundlage dieses Datum und der Sicherheitsverzögerung der Firma berechnet.\n"
+"Lassen Sie dieses Feld frei, wenn die Lieferung so bald wie möglich bearbeitet werden soll. In diesem Fall wird der voraussichtliche Liefertermin mit Hilfe der Standardmethode berechnet: auf Basis der Produktvorlaufzeiten und der Sicherheitsverzögerung der Firma."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
-msgstr "Datum, bis zu dem die Produkte mit Sicherheit geliefert werden können. Das ist ein Datum, das Sie dem Kunden auf Basis der Produktvorlaufzeiten versprechen können."
+msgstr ""
+"Datum, bis zu dem die Produkte mit Sicherheit geliefert werden können. Das "
+"ist ein Datum, das Sie dem Kunden auf Basis der Produktvorlaufzeiten "
+"versprechen können."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
@@ -50,10 +59,10 @@ msgstr "Effektives Datum"
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
-msgstr "Datum der Anfrage"
+msgstr "Gewünschtes Lieferdatum"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:51
+#: code:addons/sale_order_dates/models/sale_order.py:56
 #, python-format
 msgid "Requested date is too soon!"
 msgstr "Gewünschter Termin ist zu früh!"
@@ -69,9 +78,11 @@ msgid "Sales Order Line"
 msgstr "Auftragsposition"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:52
+#: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr "Das vom Kunden gewünschte Datum ist früher als das verpflichtende Datum. Sie können dem Wunsch des Kunden nicht nachkommen."
+msgstr ""
+"Das vom Kunden gewünschte Datum ist früher als das frühest mögliche "
+"Lieferdatum. Sie können dem Wunsch des Kunden nicht nachkommen."

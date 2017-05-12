@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        
+        <record id="edit_menu_access" model="ir.ui.view">
+            <field name="model">ir.ui.menu</field>
+            <field name="arch" type="xml">
+                <form string="Menu">
+                  <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id" groups="base.group_no_one"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                        <group groups="base.group_no_one">
+                            <field name="complete_name"/>
+                            <field name="action"/>
+                            <field name="web_icon"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Access Rights">
+                            <field name="groups_id"/>
+                        </page>
+                        <page string="Submenus" groups="base.group_no_one">
+                            <!-- Note: make sure you have 'ir.ui.menu.full_list'
+                                 in the context to see all submenus! -->
+                            <field name="child_id"
+                                    context="{'default_parent_id': active_id}">
+                                <tree string="Menu">
+                                    <field name="sequence"/>
+                                    <field icon="icon" name="name" string="Menu"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                   </sheet> 
+                </form>
+            </field>
+        </record>
+        <record id="edit_menu" model="ir.ui.view">
+            <field name="model">ir.ui.menu</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Menu">
+                    <field name="sequence"/>
+                    <field icon="icon" name="complete_name" string="Menu"/>
+                </tree>
+            </field>
+        </record>
+        <record id="edit_menu_access_search" model="ir.ui.view">
+            <field name="name">ir.ui.menu.search</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="arch" type="xml">
+                <search string="Menu">
+                    <field name="name" string="Menu"/>
+                    <field name="parent_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="grant_menu_access" model="ir.actions.act_window">
+            <field name="name">Menu Items</field>
+            <field name="res_model">ir.ui.menu</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="edit_menu"/>
+            <field name="context">{'ir.ui.menu.full_list':True}</field>
+            <field name="search_view_id" ref="edit_menu_access_search"/>
+            <field name="help">Manage and customize the items available and displayed in your Odoo system menu. You can delete an item by clicking on the box at the beginning of each line and then delete it through the button that appeared. Items can be assigned to specific groups in order to make them accessible to some users within the system.</field>
+        </record>
+        <menuitem action="grant_menu_access" id="menu_grant_menu_access" parent="base.next_id_2" sequence="1"/>
+
+</odoo>

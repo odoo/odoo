@@ -45,7 +45,6 @@ var Theme = Widget.extend({
         this.timer = null;
         this.reload = false;
         this.flag = false;
-        this.$el.addClass("theme_customize_modal");
         this.active_select_tags();
         this.$inputs = this.$("input[data-xmlid],input[data-enable],input[data-disable]");
         setTimeout(function () {self.$el.addClass('in');}, 0);
@@ -95,20 +94,20 @@ var Theme = Widget.extend({
         var self = this;
         $('#theme_error').remove();
         return ajax.jsonRpc('/website/theme_customize_get', 'call', {
-                'xml_ids': this.get_xml_ids(this.$inputs)
-            }).done(function (data) {
-                self.$inputs.filter('[data-xmlid=""]').prop("checked", true).change();
-                self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])').each(function () {
-                    if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
-                        $(this).prop("checked", false).trigger("change", true);
-                    }
-                    if (!_.difference(self.get_xml_ids($(this)), data[0]).length) {
-                        $(this).prop("checked", true).trigger("change", true);
-                    }
-                });
-            }).fail(function (d, error) {
-                $('body').prepend($('<div id="theme_error"/>').text(error.data.message));
+            'xml_ids': this.get_xml_ids(this.$inputs)
+        }).done(function (data) {
+            self.$inputs.filter('[data-xmlid=""]').prop("checked", true).change();
+            self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])').each(function () {
+                if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
+                    $(this).prop("checked", false).trigger("change", true);
+                }
+                if (!_.difference(self.get_xml_ids($(this)), data[0]).length) {
+                    $(this).prop("checked", true).trigger("change", true);
+                }
             });
+        }).fail(function (d, error) {
+            $('body').prepend($('<div id="theme_error"/>').text(error.data.message));
+        });
     },
     get_inputs: function (string) {
         return this.$inputs.filter('#'+string.split(/\s*,\s*/).join(", #"));
@@ -128,7 +127,7 @@ var Theme = Widget.extend({
         }
         this.$el.addClass('loading');
 
-        if (!reload && !session.debug) {
+        if (!reload && session.debug !== "assets") {
             var self = this;
             return ajax.jsonRpc('/website/theme_customize', 'call', {
                 enable: enable,
@@ -278,14 +277,7 @@ function themeError(message) {
         message = '<span class="text-muted">' + message + "</span><br/><br/>" + _t("Please install or update node-less");
     }
 
-    var $error = $( QWeb.render('website.error_dialog', {
-        title: _t("Theme Error"),
-        message: message
-    }));
-    $error.appendTo("body").modal();
-    $error.on('hidden.bs.modal', function () {
-        $(this).remove();
-    });
+    website.error(_t("Theme Error"), message);
 }
 
 function theme_customize() {

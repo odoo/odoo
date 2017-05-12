@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, models
+from odoo import api, models, fields
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
+
+    hs_code = fields.Char(string="HS Code", help="Standardized code for international shipping and goods declaration", oldname="x_hs_code")
 
     @api.multi
     def write(self, vals):

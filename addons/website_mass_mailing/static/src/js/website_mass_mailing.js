@@ -4,8 +4,7 @@ odoo.define('mass_mailing.website_integration', function (require) {
 var ajax = require('web.ajax');
 var utils = require('web.utils');
 var animation = require('web_editor.snippets.animation');
-var website = require('website.website');
-
+require('web_editor.base');
 
 animation.registry.subscribe = animation.Class.extend({
     selector: ".js_subscribe",
@@ -102,9 +101,11 @@ animation.registry.newsletter_popup = animation.Class.extend({
             self.$target.find('#o_newsletter_popup').modal('hide');
             $(document).off('mouseleave');
             if (self.redirect_url) {
-                if (_.contains(self.redirect_url.split('/'), window.location.host) || self.redirect_url.indexOf('/')== 0) {
+                if (_.contains(self.redirect_url.split('/'), window.location.host) || self.redirect_url.indexOf('/') === 0) {
                     window.location.href = self.redirect_url;
-                } else { window.open(self.redirect_url, '_blank'); }
+                } else {
+                    window.open(self.redirect_url, '_blank');
+                }
             }
         });
     },
@@ -119,17 +120,18 @@ animation.registry.newsletter_popup = animation.Class.extend({
         }
     }
 });
-
 });
 
-
 odoo.define('mass_mailing.unsubscribe', function (require) {
-var ajax = require('web.ajax');
-require('web_editor.base');  // wait for implicit dependencies to load
+    var ajax = require('web.ajax');
+    var core = require('web.core');
+    require('web_editor.base'); // wait for implicit dependencies to load
 
-if(!$('.o_unsubscribe_form').length) {
-    return $.Deferred().reject("DOM doesn't contain '.o_unsubscribe_form'");
-}
+    var _t = core._t;
+
+    if (!$('.o_unsubscribe_form').length) {
+        return $.Deferred().reject("DOM doesn't contain '.o_unsubscribe_form'");
+    }
 
     $('#unsubscribe_form').on('submit', function(e) {
         e.preventDefault();
@@ -149,11 +151,10 @@ if(!$('.o_unsubscribe_form').length) {
 
         ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
             .then(function(result) {
-                $('.alert-info').html('Your changes has been saved.').removeClass('alert-info').addClass('alert-success');
+                $('.alert-info').html(_t('Your changes have been saved.')).removeClass('alert-info').addClass('alert-success');
             })
             .fail(function() {
-                $('.alert-info').html('You changes has not been saved, try again later.').removeClass('alert-info').addClass('alert-warning');
+                $('.alert-info').html(_t('Your changes have not been saved, try again later.')).removeClass('alert-info').addClass('alert-warning');
             });
     });
-
 });

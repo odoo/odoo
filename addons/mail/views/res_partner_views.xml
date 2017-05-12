@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<openerp>
+<odoo>
     <data>
 
         <record id="view_emails_partner_info_form" model="ir.ui.view">
@@ -10,6 +10,7 @@
                 <xpath expr="//field[@name='user_id']" position="after">
                     <field name='notify_email' widget="radio" groups="base.group_no_one"/>
                     <field name="opt_out" string="Mailing Opt-Out" groups="base.group_no_one"/>
+                    <field name="message_bounce" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">
@@ -51,7 +52,7 @@
                 multi="True"
                 target="new"
                 key2="client_action_multi"
-                id="base.action_partner_mass_mail"
+                id="action_partner_mass_mail"
                 context="{
                             'default_composition_mode': 'mass_mail',
                             'default_partner_to': '${object.id or \'\'}',
@@ -60,8 +61,8 @@
                         }"/>
 
         <record id="email_template_partner" model="mail.template">
-            <field name="ref_ir_act_window" ref="base.action_partner_mass_mail"/>
+            <field name="ref_ir_act_window" ref="action_partner_mass_mail"/>
         </record>
 
     </data>
-</openerp>
+</odoo>

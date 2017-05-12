@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- USER INPUTS -->
@@ -11,10 +11,10 @@
                     <field name="survey_id"/>
                     <field name="email"/>
                     <field name="partner_id"/>
-                    <filter string="Completed" domain="[('state', '=', 'done')]"/>
+                    <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
                     <filter string="Partially completed" domain="[('state', '=', 'skip')]"/>
                     <filter string="New" domain="[('state', '=', 'new')]"/>
-                    <filter string="Test" domain="[('state','=', 'test')]"/>
+                    <filter string="Test" domain="[('test_entry','=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
                         <filter string="Email" domain="[]" context="{'group_by': 'email'}"/>
@@ -29,7 +29,7 @@
             <field name="arch" type="xml">
                 <form string="Survey User inputs" create="false">
                     <header>
-                        <button name="action_survey_resent" string="Sent Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
+                        <button name="action_survey_resend" string="Send Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
                         <button name="action_view_answers" states="done" string="Print These Answers" type="object"  class="oe_highlight" />
                         <button name="action_survey_results" string="View Results" type="object" />
                         <field name="state" widget="statusbar"/>
@@ -114,7 +114,8 @@
                 <form string="Survey">
                     <field name="id" invisible="1"/>
                     <field name="tot_start_survey" invisible="1"/>
-                    <header groups="base.group_survey_manager">
+                    <field name="is_closed" invisible="1"/>
+                    <header groups="survey.group_survey_manager">
                         <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>
                         <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
@@ -124,6 +125,17 @@
                         <field name="stage_id" widget="statusbar" clickable="True" />
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                            <button name="action_survey_user_input"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o">
+                                <field string="Answers" name="tot_comp_survey" widget="statinfo"/>
+                            </button>
+                        </div>
                         <div class="oe_title" style="width: 100%;">
                             <label for="title" class="oe_edit_only"/>
                             <h1><field name="title" placeholder="Survey Title"/></h1>
@@ -159,6 +171,7 @@
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
                 <tree string="Survey">
+                    <field name="active" invisible="1"/>
                     <field name="title" />
                     <field name="stage_id" />
                     <field name="tot_sent_survey" string="Invitations sent" />
@@ -217,6 +230,16 @@
                         </div>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+        <record id="survey_survey_view_search" model="ir.ui.view">
+            <field name="name">survey.survey.search</field>
+            <field name="model">survey.survey</field>
+            <field name="arch" type="xml">
+                <search string="Survey">
+                    <field string="Title" name="title"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 
@@ -379,7 +402,7 @@
                         </group>
                         <notebook>
                             <page string="Answers">
-                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}" on_change="onchange_validation_email(validation_email)"/>
+                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                 <label for="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                 <separator />
                                 <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
@@ -592,10 +615,32 @@
             </field>
         </record>
 
+        <record id="survey_action_server_clean_test_answers" model="ir.actions.server">
+            <field name="name">Clean test answers</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_survey_survey" />
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    env['survey.user_input'].search([('survey_id', 'in', records.ids), ('test_entry', '=', 'True')]).unlink()
+            </field>
+        </record>
+
+        <record id="survey_values_action_clean_test_answers" model="ir.values">
+            <field name="name">Survey clean test answers</field>
+            <field name="action_id" ref="survey_action_server_clean_test_answers" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('survey_action_server_clean_test_answers'))"/>
+            <field name="key">action</field>
+            <field name="model_id" ref="model_survey_survey" />
+            <field name="model">survey.survey</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <!-- MENU ELEMENTS -->
 
         <!-- Left menu categories-->
-        <menuitem name="Surveys" id="menu_surveys" sequence="70" groups="base.group_survey_user"  web_icon="survey,static/description/icon.png"/>
+        <menuitem name="Surveys" id="menu_surveys" sequence="70" groups="group_survey_user"  web_icon="survey,static/description/icon.png"/>
 
         <!-- Left menu elements: Survey -->
         <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
@@ -609,17 +654,4 @@
         <menuitem name="Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
         <menuitem name="User Input Lines" id="menu_survey_response_line_form" action="action_survey_user_input_line" parent="menu_surveys_configuration" sequence="4"/>
     </data>
-
-    <data noupdate="1">
-    <!-- After installation of the module, open the related menu -->
-        <record id="action_client_survey_menu" model="ir.actions.client">
-            <field name="name">Open Survey Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('menu_survey_form')}"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_survey_menu"/>
-            <field name="state">open</field>
-        </record>
-    </data>
-</openerp>
+</odoo>

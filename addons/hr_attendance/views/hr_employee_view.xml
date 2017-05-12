@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_employee_form_inherit_hr_attendance" model="ir.ui.view">
+        <field name="name">hr.employee</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority">10</field>
+        <field name="groups_id" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
+        <field name="arch" type="xml">
+            <field name="name" position="replace">
+            <div id="textbox">
+                    <field name="attendance_state" widget="hr_attendance_form_presence_indicator"/>
+                    <field name="name" placeholder="Employee's Name"/>
+            </div>
+            </field>
+            <field name="user_id" position="after">
+                <field name="barcode" groups="hr_attendance.group_hr_attendance_user"/>
+                <field name="pin" groups="hr_attendance.group_hr_attendance_user,hr_attendance.group_hr_attendance_use_pin"/>
+                <field name="manual_attendance" groups="hr_attendance.group_hr_attendance_user"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- employee kanban view specifically for hr_attendance (to check in/out) -->
+    <record id="hr_employees_view_kanban" model="ir.ui.view">
+        <field name="name">hr.employee.kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <kanban class="o_hr_employee_attendance_kanban" create="false">
+                <templates>
+                    <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div class="o_kanban_image">
+                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)"/>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <div id="textbox">
+                                <div class="col-xs-11" style="padding:0px">
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                </div><div class="col-xs-1" style="padding:0px">
+                                    <field name="attendance_state" widget="hr_attendance_kanban_presence_indicator"/>
+                                </div>
+                            </div>
+                            <ul>
+                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                            </ul>
+                        </div>
+                    </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_employee_kanban_inherit_hr_attendance" model="ir.ui.view">
+        <field name="name">hr.employee</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <field name="name" position="replace">
+                <div id="row">
+                    <div class="col-xs-11" style="padding:0px">
+                        <strong>
+                            <field name="name" placeholder="Employee's Name"/>
+                        </strong>
+                    </div>
+                    <div class="col-xs-1" style="padding:0px">
+                        <field name="attendance_state" widget="hr_attendance_kanban_presence_indicator"/>
+                    </div>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_employee_attendance_action_kanban" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="hr_employees_view_kanban"/>
+        <field name="help" type="html">
+            <p>
+                Create a few employees to be able to select an employee here and perform his check in / check out.
+            </p>
+            <p>
+                To create employees go to the Employees menu.
+            </p>
+        </field>
+    </record>
+
+</odoo>

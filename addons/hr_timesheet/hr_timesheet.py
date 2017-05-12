@@ -1,15 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields
+from odoo import api, fields, models
 
-class Company(models.Model):
-    _inherit = 'res.company'
 
-class account_analytic_line(models.Model):
+class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
-    is_timesheet = fields.Boolean(string="Is a Timesheet")
 
-class account_analytic_account(models.Model):
-    _inherit = 'account.analytic.account'
-    use_timesheets = fields.Boolean('Timesheets', help="Check this field if this project manages timesheets", deprecated=True)
+    task_id = fields.Many2one('project.task', 'Task')
+    project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
+    department_id = fields.Many2one('hr.department', "Department", related='user_id.employee_ids.department_id', store=True, readonly=True)
+
+    @api.onchange('project_id')
+    def onchange_project_id(self):
+        self.task_id = False
+
+    @api.model
+    def create(self, vals):
+        if vals.get('project_id'):
+            project = self.env['project.project'].browse(vals.get('project_id'))
+            vals['account_id'] = project.analytic_account_id.id
+        return super(AccountAnalyticLine, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('project_id'):
+            project = self.env['project.project'].browse(vals.get('project_id'))
+            vals['account_id'] = project.analytic_account_id.id
+        return super(AccountAnalyticLine, self).write(vals)

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="crm_activity_view_search" model="ir.ui.view">
+        <field name="name">crm.activity.search</field>
+        <field name="model">crm.activity</field>
+        <field name="arch" type="xml">
+            <search string="Action Search">
+                <field name="name"/>
+                <field name="team_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="crm_activity_view_form" model="ir.ui.view">
+        <field name="name">crm.activity.form</field>
+        <field name="model">crm.activity</field>
+        <field name="arch" type="xml">
+            <form string="Activities">
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name"/></h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="team_id"/>
+                        <field name="description"/>
+                        <field name="days"/>
+                        <field name="default"/>
+                    </group>
+                    <group>
+                        <field name="recommended_activity_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_activity_view_tree" model="ir.ui.view">
+        <field name="name">crm.activity.tree</field>
+        <field name="model">crm.activity</field>
+        <field name="arch" type="xml">
+            <tree string="Activities">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="days"/>
+                <field name="team_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_activity_action" model="ir.actions.act_window">
+        <field name="name">Activities</field>
+        <field name="res_model">crm.activity</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Click to create a new activity.</p>
+        </field>
+    </record>
+
+    <menuitem
+        id="crm_activity_menu"
+        name="Activities"
+        action="crm_activity_action"
+        parent="menu_crm_config_lead"/>
+</odoo>

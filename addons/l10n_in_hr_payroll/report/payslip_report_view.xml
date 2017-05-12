@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-
+<odoo>
     <record id="view_payslip_tree" model="ir.ui.view">
         <field name="name">payslip.report.tree</field>
         <field name="model">payslip.report</field>
@@ -76,13 +74,14 @@
         <field name="help">This report performs analysis on Payslip</field>
     </record>
 
-    <menuitem name="Reports" id="menu_l10n_in_hr_payroll_report" parent="hr_payroll.menu_hr_payroll_root" sequence="99" groups="base.group_hr_manager"/>
-    <menuitem action="action_payslip_report_all" id="menu_reporting_payslip" parent="menu_l10n_in_hr_payroll_report" sequence="5" groups="base.group_hr_manager"/>
+    <menuitem name="Reports" id="menu_l10n_in_hr_payroll_report" parent="hr_payroll.menu_hr_payroll_root" sequence="99" groups="hr_payroll.group_hr_payroll_manager"/>
+    <menuitem action="action_payslip_report_all" id="menu_reporting_payslip" parent="menu_l10n_in_hr_payroll_report" sequence="5" groups="hr_payroll.group_hr_payroll_manager"/>
     <!--Hr Department Inherit Kanban view-->
     <record id="hr_department_view_kanban" model="ir.ui.view">
         <field name="name">hr.department.kanban.inherit</field>
         <field name="model">hr.department</field>
         <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+        <field name="groups_id" eval="[(4,ref('hr_payroll.group_hr_payroll_user'))]"/>
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//div[contains(@class, 'manage_reports')]" position="inside">
@@ -97,6 +96,4 @@
             </data>
         </field>
     </record>
-
-</data>
-</openerp>
+</odoo>

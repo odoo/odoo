@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data noupdate="0">
+<odoo>
 
-    <record id="base.group_sale_salesman" model="res.groups">
-        <field name="name">See Own Leads</field>
-        <field name="category_id" ref="base.module_category_sales_management"/>
-        <field name="comment">the user will have access to his own data in the sales application.</field>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-    </record>
-
-    <record id="base.group_sale_salesman_all_leads" model="res.groups">
-        <field name="name">See all Leads</field>
-        <field name="category_id" ref="base.module_category_sales_management"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman'))]"/>
-        <field name="comment">the user will have access to all records of everyone in the sales application.</field>
-    </record>
-
-    <record id="base.group_sale_manager" model="res.groups">
-        <field name="name">Manager</field>
-        <field name="comment">the user will have an access to the sales configuration as well as statistic reports.</field>
-        <field name="category_id" ref="base.module_category_sales_management"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
-        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    <record id="sale.group_sale_layout" model="res.groups">
+        <field name="name">Personalize sale order and invoice report</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <record id="group_delivery_invoice_address" model="res.groups">
         <field name="name">Addresses in Sales Orders</field>
         <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_show_price_subtotal" model="res.groups">
+        <field name="name">Tax display B2B</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="comment">Show line subtotals without taxes (B2B)</field>
+    </record>
+
+    <record id="group_show_price_total" model="res.groups">
+        <field name="name">Tax display B2C</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="comment">Show line subtotals with taxes included (B2C)</field>
+    </record>
+
+    <record model="res.groups" id="base.group_public">
+        <field name="implied_ids" eval="[(4, ref('sale.group_show_price_subtotal'))]"/>
+    </record>
+
+    <record model="res.groups" id="base.group_portal">
+        <field name="implied_ids" eval="[(4, ref('sale.group_show_price_subtotal'))]"/>
+    </record>
+
+    <record model="res.groups" id="base.group_user">
+        <field name="implied_ids" eval="[(4, ref('sale.group_show_price_subtotal'))]"/>
     </record>
 
     <record id="group_mrp_properties" model="res.groups">
@@ -44,6 +50,11 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_warning_sale" model="res.groups">
+        <field name="name">A warning can be set on a product or a customer (Sale)</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <record id="group_analytic_accounting" model="res.groups">
         <field name="name">Analytic Accounting for Sales</field>
         <field name="category_id" ref="base.module_category_hidden"/>
@@ -53,14 +64,13 @@
     <record model="res.users" id="base.user_root">
         <field eval="[(4,ref('base.group_partner_manager'))]" name="groups_id"/>
     </record>
-    <record model="ir.ui.menu" id="base.menu_base_partner">
-        <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
+    <record model="ir.ui.menu" id="sales_team.menu_base_partner">
+        <field eval="[(4, ref('sales_team.group_sale_salesman'))]" name="groups_id"/>
     </record>
-    <record model="ir.ui.menu" id="base.menu_sale_config">
-        <field eval="[(4, ref('base.group_sale_manager'))]" name="groups_id"/>
+    <record model="ir.ui.menu" id="sales_team.menu_sale_config">
+        <field eval="[(4, ref('sales_team.group_sale_manager'))]" name="groups_id"/>
     </record>
 
-</data>
 <data noupdate="1">
     <!-- Multi - Company Rules -->
 
@@ -91,42 +101,41 @@
         <field name="name">Personal Orders</field>
         <field ref="model_sale_order" name="model_id"/>
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
     <record id="sale_order_see_all" model="ir.rule">
         <field name="name">All Orders</field>
         <field ref="model_sale_order" name="model_id"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
     <record id="sale_order_report_personal_rule" model="ir.rule">
         <field name="name">Personal Orders Analysis</field>
         <field ref="model_sale_report" name="model_id"/>
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
     <record id="sale_order_report_see_all" model="ir.rule">
         <field name="name">All Orders Analysis</field>
         <field ref="model_sale_report" name="model_id"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
     <record id="sale_order_line_personal_rule" model="ir.rule">
         <field name="name">Personal Order Lines</field>
         <field ref="model_sale_order_line" name="model_id"/>
         <field name="domain_force">['|',('order_id.user_id','=',user.id),('order_id.user_id','=',False)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
     <record id="sale_order_line_see_all" model="ir.rule">
         <field name="name">All Orders Lines</field>
         <field ref="model_sale_order_line" name="model_id"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
-
 </data>
-</openerp>
+</odoo>

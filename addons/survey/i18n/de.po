@@ -3,17 +3,28 @@
 # * survey
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# Renko Spiekermann <renkosp@gmail.com>, 2015
-# Wolfgang Taferner, 2016
+# darenkster <inactive+darenkster@transifex.com>, 2016
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
+# Fabian Liesch <fabian.liesch@gmail.com>, 2016
+# Tina Rittmüller <tr@ife.de>, 2016
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
+# Renzo Meister <info@jamotion.ch>, 2016
+# Anja Funk <anja.funk@afimage.de>, 2016
+# Henry Mineehen <info@mineehen.de>, 2016
+# JackTheHunter <Maximilian.N98@gmail.com>, 2016
+# Thomas Neu <t.neu@runbox.com>, 2016
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2016-02-07 08:30+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"Last-Translator: Bülent Tiknas <btiknas@googlemail.com>, 2017\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -25,15 +36,13 @@ msgstr ""
 msgid ""
 "\n"
 "                \n"
-"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-"                    <p>Hello,</p>\n"
-"                    <p>We are conducting a survey, and your response would be appreciated.</p>\n"
-"                    <p><a href=\"__URL__\">Please, click here to start survey</a></p>\n"
-"                    <p>Thanks for your participation!</p>\n"
-"                </div>\n"
+"<p>Hello,</p>\n"
+"<p>We are conducting a survey, and your response would be appreciated.</p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"<p>Thanks for your participation!</p>\n"
 "                \n"
 "            "
-msgstr "\n                \n                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n                    <p>Hallo,</p>\n                    <p>wir führen gerade eine Umfrage durch und würden uns über Ihre Beantwortung freuen.</p>\n                    <p><a href=\"__URL__\">Start der Befragung</a></p>\n                    <p>Danke für Ihre Beteiligung!</p>\n                </div>\n                \n            "
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_tree
@@ -41,11 +50,10 @@ msgid "#Questions"
 msgstr "# Fragen"
 
 #. module: survey
-#: code:addons/survey/survey.py:229 code:addons/survey/survey.py:525
-#: code:addons/survey/survey.py:647
+#: code:addons/survey/models/survey.py:124
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (copy)"
+msgstr "%s (Kopie)"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -68,11 +76,13 @@ msgid ""
 "<i class=\"fa fa-bar-chart\"/>\n"
 "                    Graph"
 msgstr ""
+"<i class=\"fa fa-bar-chart\"/>\n"
+"                    Grafik"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_choice
 msgid "<i class=\"fa fa-bar-chart-o\"/> Graph"
-msgstr ""
+msgstr "<i class=\"fa fa-bar-chart-o\"/> Grafik"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_choice
@@ -82,17 +92,17 @@ msgstr "<i class=\"fa fa-bar-chart-o\"/> Kuchendiagramm"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-check-square-o fa-lg\"/> answer"
-msgstr ""
+msgstr "<i class=\"fa fa-check-square-o fa-lg\"/> Antwort"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-circle-o  fa-lg\"/> answer"
-msgstr ""
+msgstr "<i class=\"fa fa-circle-o fa-lg\"/> Antwort"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-dot-circle-o fa-lg\"/> answer"
-msgstr ""
+msgstr "<i class=\"fa fa-dot-circle-o fa-lg\"/> Antwort"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
@@ -100,6 +110,8 @@ msgid ""
 "<i class=\"fa fa-list-alt\"/>\n"
 "                    All Data"
 msgstr ""
+"<i class=\"fa fa-list-alt\"/>\n"
+"Alle Daten"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_matrix
@@ -107,6 +119,8 @@ msgid ""
 "<i class=\"fa fa-list-alt\"/>\n"
 "                    Data"
 msgstr ""
+"<i class=\"fa fa-list-alt\"/>\n"
+"Daten"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_choice
@@ -123,17 +137,17 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-square-o fa-lg\"/> answer"
-msgstr ""
+msgstr "<i class=\"fa fa-square-o fa-lg\"/> Antwort"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid "<i class=\"fa fa-times\"/> Clear All Filters"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/> Alle Filter löschen"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid "<span class=\"fa fa-filter\"/>  Filters"
-msgstr ""
+msgstr "<span class=\"fa fa-filter\"/> Filter"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
@@ -146,17 +160,17 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"label label-default only_left_radius\">Average </span>"
-msgstr ""
+msgstr "<span class=\"label label-default only_left_radius\">Durchschnitt</span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"label label-default only_left_radius\">Maximum </span>"
-msgstr ""
+msgstr "<span class=\"label label-default only_left_radius\">Maximum </span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"label label-default only_left_radius\">Minimum </span>"
-msgstr ""
+msgstr "<span class=\"label label-default only_left_radius\">Minimum </span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
@@ -181,11 +195,6 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: constraint:survey.label:0
-msgid "A label must be attached to one and only one question"
-msgstr "Eine Überschrift sollte sich eindeutig nur auf eine Frage beziehen"
-
-#. module: survey
 #: sql_constraint:survey.question:0
 msgid "A length must be positive!"
 msgstr "Eine Länge muss ein positiver Wert sein!"
@@ -200,7 +209,9 @@ msgstr "Eine umfangreiche Beschreibung des Zwecks der Umfrage"
 msgid ""
 "A positive score indicates a correct choice; a negative or null score "
 "indicates a wrong answer"
-msgstr "Ein positiver Punktestand steht für eine korrekte Antwort; ein negativer oder ein Punktestand von null stehen für eine falsche Antwort"
+msgstr ""
+"Ein positiver Punktestand steht für eine korrekte Antwort; ein negativer "
+"oder ein Punktestand von null stehen für eine falsche Antwort"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -213,7 +224,8 @@ msgid "A process is defined for all enterprise flows"
 msgstr "Es ist ein Prozess für alle Unternehmensabläufe definiert"
 
 #. module: survey
-#: constraint:survey.user_input_line:0
+#: code:addons/survey/models/survey.py:808
+#, python-format
 msgid "A question cannot be unanswered and skipped"
 msgstr "Eine Frage muss beantwortet werden und kann nicht übersprungen werden"
 
@@ -228,21 +240,18 @@ msgid "About your Odoo usage"
 msgstr "Zu Ihrem Gebrauch von Odoo"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction
-msgid "Action Needed"
-msgstr "Aktion notwendig"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_active_domain
-msgid "Active domain"
-msgstr "Aktive Domain"
+#: model:ir.model.fields,field_description:survey.field_survey_survey_active
+msgid "Active"
+msgstr "Aktiv"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
 "Add list of email of recipients (will not converted in partner), separated "
 "by commas, semicolons or newline..."
-msgstr "Eine durch Kommas, Semikolons oder Zeilenumbrüche getrennte Liste von E-Mail-Empfängern (werden nicht in Partner umgewandelt)..."
+msgstr ""
+"Eine durch Kommas, Semikolons oder Zeilenumbrüche getrennte Liste von E"
+"-Mail-Empfängern (werden nicht in Partner umgewandelt)..."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -293,16 +302,15 @@ msgstr "Beantwortet"
 #: model:ir.model.fields,field_description:survey.field_survey_question_user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_user_input_line_ids
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "Antworten"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_no_auto_thread
-msgid ""
-"Answers do not go in the original document discussion thread. This has an "
-"impact on the generated message-id."
-msgstr "Antworten werden nicht in den original Diskussions-Thread gestellt. Dies hat Auswirkungen auf die Generierte Message-ID."
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr "Archiviert"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -315,26 +323,11 @@ msgid "Attachments"
 msgstr "Dateianhänge"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_author_id
-msgid "Author"
-msgstr "Autor"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_author_id
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_attachment_ids
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
-msgstr "Verfasser der Mitteilung. Wenn nicht gesetzt kann die E-Mail Absenderadresse keinem Partner zugeordnet werden."
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_author_avatar
-msgid "Author's avatar"
-msgstr "Avatar des Autors"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_body
-msgid "Automatically sanitized HTML contents"
-msgstr "Automatisch bereinigter HTML-Inhalt"
+"Attachments are linked to a document through model / res_id and to the "
+"message through this field."
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -352,16 +345,6 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_channel_ids
-msgid "Channels"
-msgstr "Vertriebskanal"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_child_ids
-msgid "Child Messages"
-msgstr "Kommentare"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Choices"
 msgstr "Antworten"
@@ -372,17 +355,15 @@ msgid "Choose..."
 msgstr "Bitte wählen Sie ..."
 
 #. module: survey
-#: code:addons/survey/survey.py:125
-#: code:addons/survey/wizard/survey_email_compose_message.py:34
+#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
+msgid "Clean test answers"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey.py:112
 #, python-format
 msgid "Click here to start survey"
 msgstr "Klicken Sie hier, um die Umfrage zu starten"
-
-#. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:92
-#, python-format
-msgid "Click here to take survey"
-msgstr "Klicken Sie hier, um an der Umfrage teilzunehmen"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -399,7 +380,7 @@ msgstr "Schließen"
 #: model:ir.model.fields,field_description:survey.field_survey_stage_closed
 #: model:survey.stage,name:survey.stage_closed
 msgid "Closed"
-msgstr "Beendet"
+msgstr "Abgeschlossen"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_color
@@ -408,7 +389,6 @@ msgstr "Farbkennzeichnung"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_comments
-#: selection:survey.mail.compose.message,message_type:0
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -440,11 +420,6 @@ msgid "Compose Email"
 msgstr "E-Mail schreiben"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_composition_mode
-msgid "Composition mode"
-msgstr "Schreibmodus"
-
-#. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
 msgstr "Konfiguration"
@@ -452,7 +427,8 @@ msgstr "Konfiguration"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_2
 msgid "Configuration wizard exists for each important setting"
-msgstr "Konfigurationsassistenten sind für jede wichtige Einstellung vorhanden"
+msgstr ""
+"Konfigurationsassistenten sind für jede wichtige Einstellung vorhanden"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -460,25 +436,23 @@ msgid "Constraints"
 msgstr "Bedingungen"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_body
-msgid "Contents"
-msgstr "Inhalte"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
 "Copy and paste the HTML code below to add this web link to any webpage."
-msgstr "Kopieren Sie den folgenden HTML-Code, um den Link in eine beliebige Webseite einzufügen."
+msgstr ""
+"Kopieren Sie den folgenden HTML-Code, um den Link in eine beliebige Webseite"
+" einzufügen."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Copy, paste and share the web link below to your audience."
-msgstr "Kopieren Sie den nachfolgenden Link und teilen Sie ihn mit Ihrem Publikum."
+msgstr ""
+"Kopieren Sie den nachfolgenden Link und teilen Sie ihn mit Ihrem Publikum."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_date_create
 msgid "Create Date"
-msgstr "Datum Erstellung"
+msgstr "Erstellungsdatum"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_create_uid
@@ -490,7 +464,7 @@ msgstr "Datum Erstellung"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_create_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_create_date
@@ -510,12 +484,6 @@ msgid "Creation Date"
 msgstr "Erzeugt am"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_starred
-msgid "Current user has a starred notification linked to this message"
-msgstr "Dieser Benutzer hat eine Markierung zu dieser Nachricht erstellt"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date
 #: selection:survey.user_input_line,answer_type:0
 msgid "Date"
 msgstr "Datum"
@@ -533,12 +501,8 @@ msgstr "Antwort Datum"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input_deadline
 msgid "Date by which the person can open the survey and submit answers"
-msgstr "Datum, zu dem die Person die Umfrage öffnen und Antworten einreichen kann"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum der letzten Nachricht."
+msgstr ""
+"Datum, zu dem die Person die Umfrage öffnen und Antworten einreichen kann"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_deadline
@@ -549,8 +513,8 @@ msgstr "Frist"
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_date_deadline
 msgid ""
 "Deadline to which the invitation to respond for this survey is valid. If the"
-" field is empty, the invitation is still valid."
-msgstr "Frist für die Gültigkeit der Einladung zum Ausfüllen der Umfrage. Wenn das Feld leer ist, ist die Einladung noch gültig."
+" field is empty,        the invitation is still valid."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date_deadline
@@ -577,7 +541,7 @@ msgstr "Beschreibungen und Tooltips sind ausreichend verständlich"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Design"
-msgstr "Erscheinungsbild"
+msgstr "Design"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
@@ -654,21 +618,13 @@ msgstr "Bearbeite Umfrage"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
-#: selection:survey.mail.compose.message,message_type:0
 msgid "Email"
 msgstr "E-Mail"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_email_template_id
 msgid "Email Template"
-msgstr "Vorlage der E-Mail"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_email_from
-msgid ""
-"Email address of the sender. This field is set when no matching partner is "
-"found and replaces the author_id field in the chatter."
-msgstr "E-Mail Adresse des Absenders. Dieses Feld wird gesetzt, wenn kein passender Partner gefunden wird und ersetzt das author_id Feld im Chatter."
+msgstr "E-Mail Vorlage"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
@@ -682,7 +638,6 @@ msgstr "Ergonomie und Benutzerfreundlichkeit"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
-#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
 msgstr "Fehlermeldung"
 
@@ -697,11 +652,6 @@ msgid "Extra modules proposed are relevant"
 msgstr "Vorgeschlagene Extramodule sind relevant"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_starred_partner_ids
-msgid "Favorited By"
-msgstr "Favorisiert von"
-
-#. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
 msgid "Financial Management"
 msgstr "Finanzbuchhaltung"
@@ -710,21 +660,6 @@ msgstr "Finanzbuchhaltung"
 #: model:ir.model.fields,field_description:survey.field_survey_stage_fold
 msgid "Folded in kanban view"
 msgstr "In Kanban-Ansicht eingeklappt"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_follower_ids
-msgid "Followers"
-msgstr "Followers"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Beobachter (Kanäle)"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Beobachter (Partner)"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -742,17 +677,12 @@ msgid "Free Text answer"
 msgstr "Freitext Antwort"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_email_from
-msgid "From"
-msgstr "Von"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Group By"
-msgstr "Gruppiere nach"
+msgstr "Gruppiert nach..."
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_1
@@ -761,7 +691,7 @@ msgstr "Wie tragen Sie aktuell und zukünftig zu  Odoo bei ?"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
-msgid "Human Ressources"
+msgid "Human Resources"
 msgstr "Personalwesen"
 
 #. module: survey
@@ -832,27 +762,22 @@ msgid "Identification token"
 msgstr "Identifikations-Token"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_users_can_go_back
 msgid "If checked, users can go back to previous pages."
-msgstr "Durch Aktivierung dieser Einstellung, können Nutzer zur vorherigen Seite zurück gehen."
+msgstr ""
+"Durch Aktivierung dieser Einstellung, können Nutzer zur vorherigen Seite "
+"zurück gehen."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_stage_closed
+#: model:ir.model.fields,help:survey.field_survey_survey_is_closed
 msgid "If closed, people won't be able to answer to surveys in this column."
-msgstr "Die Umfragen in dieser Spalte können nicht mehr beantwortet werden, wenn sie geschlossen ist."
+msgstr ""
+"Die Umfragen in dieser Spalte können nicht mehr beantwortet werden, wenn sie"
+" geschlossen ist."
 
 #. module: survey
-#: code:addons/survey/survey.py:631
+#: code:addons/survey/models/survey.py:473
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -867,13 +792,14 @@ msgstr "Die Umfragen in dieser Spalte können nicht mehr beantwortet werden, wen
 #: model:survey.question,comments_message:survey.feedback_3_3
 #: model:survey.question,comments_message:survey.feedback_4_1
 #, python-format
-msgid "If other, precise:"
-msgstr "Andere:"
+msgid "If other, please specify:"
+msgstr "Wenn anders, bitte spezifizieren:"
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
 msgid "If you do not contribute or develop in Odoo, skip this page."
-msgstr "Wenn Sie kein Odoo-Entwickler sind, überspringen Sie bitte diese Seite."
+msgstr ""
+"Wenn Sie kein Odoo-Entwickler sind, überspringen Sie bitte diese Seite."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -886,9 +812,10 @@ msgid "In progress"
 msgstr "In Bearbeitung"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_parent_id
-msgid "Initial thread message."
-msgstr "Nachricht zur Begrüßung in dieser Gruppe"
+#: code:addons/survey/wizard/survey_email_compose_message.py:66
+#, python-format
+msgid "Incorrect Email Address: %s"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
@@ -901,9 +828,9 @@ msgid "Invitations sent"
 msgstr "Einladungen verschickt"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_is_follower
-msgid "Is Follower"
-msgstr "Ist Beobachter"
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "Is closed"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
@@ -949,12 +876,7 @@ msgstr "Überschrift Reihenfolge"
 #: model:ir.actions.act_window,name:survey.action_survey_label_form
 #: model:ir.ui.menu,name:survey.menu_survey_label_form1
 msgid "Labels"
-msgstr "Etiketten"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_last_post
-msgid "Last Message Date"
-msgstr "Letzte Benachrichtigung"
+msgstr "Überschriften"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label___last_update
@@ -1008,15 +930,15 @@ msgid "List of emails"
 msgstr "E-Mail-Adressliste"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_is_log
-msgid "Log an Internal Note"
-msgstr "Interne Notiz hinterlassen"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_auth_required
 #: model:ir.ui.view,arch_db:survey.auth_required
 msgid "Login required"
 msgstr "Anmeldung erforderlich"
+
+#. module: survey
+#: model:res.groups,name:survey.group_survey_manager
+msgid "Manager"
+msgstr "Manager"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_mandatory
@@ -1075,38 +997,6 @@ msgid "Maximum value"
 msgstr "Maximalwert"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_record_name
-msgid "Message Record Name"
-msgstr "Nachrichtenname"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_message_type
-msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
-msgstr "Nachrichtentyp: E-Mail für E-Mail-Nachricht, Mitteilung für Systemnachricht, Kommentar für andere Mitteilungen wie Diskussionsbeiträge von Benutzern."
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_message_id
-msgid "Message unique identifier"
-msgstr "Eindeutige Identifikation der Nachricht"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_message_id
-msgid "Message-Id"
-msgstr "Nachricht-ID"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_ids
-msgid "Messages"
-msgstr "Mitteilungen"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_ids
-msgid "Messages and communication history"
-msgstr "Nachrichten und Kommunikations-Historie"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_min_date
 msgid "Minimum Date"
 msgstr "Minimale Laufzeit bis"
@@ -1144,19 +1034,7 @@ msgstr "Mehrfachauswahl in einer Reihe"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_name
 msgid "Name"
-msgstr "Bezeichnung"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_record_name
-msgid "Name get of the related document."
-msgstr "Bezeichnung kommt vom verbundenen Dokument"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_needaction
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_needaction_partner_ids
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_needaction
-msgid "Need Action"
-msgstr "Erfordert Aktion"
+msgstr "Name"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
@@ -1169,11 +1047,6 @@ msgid "Next page"
 msgstr "Nächste Seite"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_no_auto_thread
-msgid "No threading for answers"
-msgstr "Antworten werden nicht eingerückt"
-
-#. module: survey
 #: model:survey.label,value:survey.choice_1_1_4
 msgid "No, I just tested it"
 msgstr "Nein, ich habe es nur getestet"
@@ -1181,12 +1054,16 @@ msgstr "Nein, ich habe es nur getestet"
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
 msgid "Nobody has replied to your survey yet."
-msgstr "Niemand hat bis jetzt auf Ihre Umfrage geantwortet.\n            "
+msgstr ""
+"Niemand hat bis jetzt auf Ihre Umfrage geantwortet.\n"
+"            "
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_user_input
 msgid "Nobody has replied to your surveys yet."
-msgstr "Niemand hat bis jetzt auf Ihre Umfragen geantwortet.\n            "
+msgstr ""
+"Niemand hat bis jetzt auf Ihre Umfragen geantwortet.\n"
+"            "
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.notopen
@@ -1204,24 +1081,9 @@ msgid "Not started yet"
 msgstr "Noch nicht begonnen"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_notify
-msgid "Notify followers"
-msgstr "Follower benachrichtigen"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_notify
-msgid "Notify followers of the document (mass post only)"
-msgstr "Benachrichtigen Sie die Verfolger dieses Dokuments (nur bei Massenmail)"
-
-#. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Number"
 msgstr "Nummer"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Anzahl der Aktionen"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_column_nb
@@ -1235,11 +1097,6 @@ msgid "Number of completed surveys"
 msgstr "Anzahl der ausgefüllten Umfragen"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_sent_survey
 msgid "Number of sent surveys"
 msgstr "Anzahl der versendeten Umfragen"
@@ -1248,11 +1105,6 @@ msgstr "Anzahl der versendeten Umfragen"
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_start_survey
 msgid "Number of started surveys"
 msgstr "Anzahl der gestarteten Umfragen"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1275,26 +1127,10 @@ msgid "One choice per row"
 msgstr "Eine Auswahl je Reihe"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:78
-#, python-format
-msgid "One email at least is incorrect: %s"
-msgstr "Mindestens eine E-Mail-Adresse ist ungültig: %s"
-
-#. module: survey
-#: model:ir.actions.client,name:survey.action_client_survey_menu
-msgid "Open Survey Menu"
-msgstr "Umfragemenü öffnen"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
 msgstr "Optionen"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_mail_server_id
-msgid "Outgoing mail server"
-msgstr "Ausgehender Mailserver"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_page_id
@@ -1324,11 +1160,6 @@ msgid "Pages"
 msgstr "Seiten"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_parent_id
-msgid "Parent Message"
-msgstr "Übergeordnete Nachricht"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
 msgid "Partially completed"
@@ -1342,7 +1173,6 @@ msgstr "Partner"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail
-#: model:ir.actions.act_window,name:survey.action_partner_survey_mail_crm
 msgid "Partner Survey Mailing"
 msgstr "Umfrage an Partner versenden"
 
@@ -1352,16 +1182,10 @@ msgid "Permanent"
 msgstr "Unbefristet"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:196
+#: code:addons/survey/wizard/survey_email_compose_message.py:164
 #, python-format
 msgid "Please enter at least one valid recipient."
 msgstr "Bitte mindestens einen gültigen Empfänger eingeben"
-
-#. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:95
-#, python-format
-msgid "Please select a survey"
-msgstr "Bitte Umfrage auswählen"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -1425,12 +1249,16 @@ msgstr "Beschaffung"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
-#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
 #: model:ir.ui.view,arch_db:survey.survey_label_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
 msgstr "Frage"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
+msgid "Question 2"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_question
@@ -1459,35 +1287,13 @@ msgstr "Fragen für Entwickler"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
-msgid "Quiz mode"
-msgstr "Quizmodus"
+msgid "Quizz Mode"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,display_mode:0
 msgid "Radio Buttons"
 msgstr "Radiobuttons"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_res_id
-msgid "Related Document ID"
-msgstr "Zugehörige Dokumenten-ID"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_model
-msgid "Related Document Model"
-msgstr "Zugehöriges Dokumenten-Modell"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_reply_to
-msgid ""
-"Reply email address. Setting the reply_to bypasses the automatic thread "
-"creation."
-msgstr "Antwort E-Mail. Durch die Eingabe wird die automatische Entstehung einer Diskussionsrunde verhindert."
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_reply_to
-msgid "Reply-To"
-msgstr "Antwort an"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_result_url
@@ -1595,6 +1401,11 @@ msgid "Send"
 msgstr "Senden"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_user_input_form
+msgid "Send Invitation Again"
+msgstr ""
+
+#. module: survey
 #: selection:survey.mail.compose.message,public:0
 msgid "Send by email the public web link to your audience."
 msgstr "Senden Sie den öffentlichen Link per Mail an Ihr Publikum"
@@ -1604,12 +1415,9 @@ msgstr "Senden Sie den öffentlichen Link per Mail an Ihr Publikum"
 msgid ""
 "Send private invitation to your audience (only one response per recipient "
 "and per invitation)."
-msgstr "Senden Sie eine private Einladung zu Ihrem Publikum (Nur eine Antwort pro Empfänger und Einladung)."
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_form
-msgid "Sent Invitation Again"
-msgstr "Einladung erneut versenden"
+msgstr ""
+"Senden Sie eine private Einladung zu Ihrem Publikum (Nur eine Antwort pro "
+"Empfänger und Einladung)."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_sequence
@@ -1659,20 +1467,15 @@ msgid "Skipped"
 msgstr "Übersprungen"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_author_avatar
-msgid ""
-"Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "Miniaturbild des Kontakts. Es wird automatisch auf 64x64px heruntergerechnet unter Beibehaltung der Seitenverhältnisse. Benutzen Sie dieses Feld überall, wo ein Miniaturbild benötigt wird."
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid ""
 "Something went wrong while contacting survey server. <strong class=\"text-"
 "danger\">Your answers have probably not been recorded.</strong> Try "
 "refreshing."
-msgstr "Etwas ist beim Verbinden mit dem Umfrageservers schiefgegangen. <strong class=\"text-danger\">Ihre Antworten wurden wahrscheinlich nicht gespeichert.</strong> Bitte die Seite neu laden."
+msgstr ""
+"Etwas ist beim Verbinden mit dem Umfrageservers schiefgegangen. <strong "
+"class=\"text-danger\">Ihre Antworten wurden wahrscheinlich nicht "
+"gespeichert.</strong> Bitte die Seite neu laden."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
@@ -1684,11 +1487,6 @@ msgstr "Leider hat niemand diese Frage beantwortet."
 #: model:ir.ui.view,arch_db:survey.survey_stage_form
 msgid "Stage"
 msgstr "Stufe"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_starred
-msgid "Starred"
-msgstr "Markiert"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_init
@@ -1706,11 +1504,6 @@ msgid "Status"
 msgstr "Status"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_subject
-msgid "Subject"
-msgstr "Betreff"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Subject..."
 msgstr "Betreff..."
@@ -1719,11 +1512,6 @@ msgstr "Betreff..."
 #: model:ir.ui.view,arch_db:survey.page
 msgid "Submit survey"
 msgstr "Befragung abschließen"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_subtype_id
-msgid "Subtype"
-msgstr "Subtyp"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_suggested
@@ -1751,6 +1539,7 @@ msgstr "Vorschlag"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1830,15 +1619,10 @@ msgid "Surveys"
 msgstr "Umfragen"
 
 #. module: survey
-#: selection:survey.mail.compose.message,message_type:0
-msgid "System notification"
-msgstr "Systembenachrichtigung"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test"
-msgstr "Testen"
+msgstr "Testbetrieb"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
@@ -1861,32 +1645,36 @@ msgid "Text answer"
 msgstr "Testantwort"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
-msgid "Thank you message"
-msgstr "Bedankungstext"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "Thank you!"
 msgstr "Vielen Dank!"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
+msgid "Thanks Message"
+msgstr "Dank-Mitteilung"
+
+#. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
 msgid "The 'Usability/Extended View' group helps in daily work"
-msgstr "Die Berechtigung 'Usability/Extended View' ist hilfreich für die tägliche Bearbeitung"
+msgstr ""
+"Die Berechtigung 'Usability/Extended View' ist hilfreich für die tägliche "
+"Bearbeitung"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_4
 msgid "The 'Usability/Extended View' group hides only optional fields"
-msgstr "Die Berechtigung 'Usability/Extended View' versteckt nur optionale Felder."
+msgstr ""
+"Die Berechtigung 'Usability/Extended View' versteckt nur optionale Felder."
 
 #. module: survey
-#: constraint:survey.user_input_line:0
+#: code:addons/survey/models/survey.py:821
+#, python-format
 msgid "The answer must be in the right type"
 msgstr "Der Typ der Antwort muss korrekt sein"
 
 #. module: survey
-#: code:addons/survey/survey.py:629
+#: code:addons/survey/models/survey.py:487
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1905,12 +1693,14 @@ msgid "The answer you entered has an invalid format."
 msgstr "Ihre Antwort hat ein ungültiges Format."
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:171
+#: code:addons/survey/wizard/survey_email_compose_message.py:138
 #, python-format
 msgid ""
 "The content of the text don't contain '__URL__'.                     __URL__"
 " is automaticaly converted into the special url of the survey."
-msgstr "Der Textinhalt benötigt keine  '__URL__' Angabe. __URL__  wird automatisch in die richtige URL für die Umfrage umgewandelt."
+msgstr ""
+"Der Textinhalt benötigt keine  '__URL__' Angabe. __URL__  wird automatisch "
+"in die richtige URL für die Umfrage umgewandelt."
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_1
@@ -1940,12 +1730,16 @@ msgstr "Die zu den Gruppen definierten Sicherheitsgruppen sind nützlich"
 #. module: survey
 #: model:survey.label,value:survey.choice_2_6_2
 msgid "There are too few groups defined, security isn't accurate enough"
-msgstr "Es sind zu wenige Gruppen definiert. Zugriffe können nicht genau genug beschränkt werden."
+msgstr ""
+"Es sind zu wenige Gruppen definiert. Zugriffe können nicht genau genug "
+"beschränkt werden."
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_6_1
 msgid "There are too many groups defined, security is too complex to set"
-msgstr "Es sind zu viele Gruppen definiert. Die Sicherheitseinstellungen sind zu komplex."
+msgstr ""
+"Es sind zu viele Gruppen definiert. Die Sicherheitseinstellungen sind zu "
+"komplex."
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_3
@@ -1957,7 +1751,10 @@ msgstr "Es gibt zu viel Menüs. Die Struktur ist zu komplex."
 msgid ""
 "These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties."
-msgstr "Die Fragen betreffen die Ergonomie und die Benutzerfreundlichkeit von Odoo. Versuchen Sie sich an Ihre ersten Tage mit Odoo zu erinnern und was für Schwierigkeiten Sie hatten."
+msgstr ""
+"Die Fragen betreffen die Ergonomie und die Benutzerfreundlichkeit von Odoo. "
+"Versuchen Sie sich an Ihre ersten Tage mit Odoo zu erinnern und was für "
+"Schwierigkeiten Sie hatten."
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_2
@@ -1975,21 +1772,22 @@ msgid "They help new users to understand Odoo"
 msgstr "Sie sind hilfreich für neue Odoo Benutzer"
 
 #. module: survey
-#: code:addons/survey/survey.py:685 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/models/survey.py:546
+#: code:addons/survey/tests/test_survey.py:86
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Diese Antwort muss eine E-Mail-Adresse sein"
 
 #. module: survey
-#: code:addons/survey/survey.py:727
-#: code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/models/survey.py:590
+#: code:addons/survey/tests/test_survey.py:107
 #, python-format
 msgid "This is not a date/time"
 msgstr "Dies ist kein Datum / keine Uhrzeit"
 
 #. module: survey
-#: code:addons/survey/survey.py:704
-#: code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/models/survey.py:567
+#: code:addons/survey/tests/test_survey.py:97
 #, python-format
 msgid "This is not a number"
 msgstr "Dies ist keine Zahl"
@@ -1997,9 +1795,9 @@ msgstr "Dies ist keine Zahl"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_multi_email
 msgid ""
-"This list of emails of recipients will not converted in contacts. Emails "
-"separated by commas, semicolons or newline."
-msgstr "Die E-Mailempängerliste wird nicht automatisch in neue Kontakte umgewandelt. E-Mails werden durch Kommas, Semikolon oder einen Zeilenumbruch getrennt."
+"This list of emails of recipients will not be converted in contacts.        "
+"Emails must be separated by commas, semicolons or newline."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_thank_you_message
@@ -2007,7 +1805,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Diese Nachricht erscheint, wenn die Umfrage beendet wurde."
 
 #. module: survey
-#: code:addons/survey/survey.py:628
+#: code:addons/survey/models/survey.py:491
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -2050,12 +1848,15 @@ msgstr "Die Umfrage sollte weniger als 5 Minuten dauern."
 msgid ""
 "Those security rules are standard and can be used out-of-the-box in most "
 "cases"
-msgstr "Die Sicherheitsregeln entsprechen dem Standard und können in den meisten Fällen out-of-the-box benutzt werden"
+msgstr ""
+"Die Sicherheitsregeln entsprechen dem Standard und können in den meisten "
+"Fällen out-of-the-box benutzt werden"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_title
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Title"
-msgstr "Anrede"
+msgstr "Titel"
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_4
@@ -2074,19 +1875,6 @@ msgid "Totally disagree"
 msgstr "Stimme gar nicht zu"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_tracking_value_ids
-msgid ""
-"Tracked values are stored in a separate model. This field allow to "
-"reconstructthe tracking and to generate statistics on the model."
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_tracking_value_ids
-msgid "Tracking values"
-msgstr "Nachverfolgungswerte"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_message_type
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Type"
 msgstr "Typ"
@@ -2107,22 +1895,6 @@ msgid "Types of answers"
 msgstr "Antworttypen"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_unread
-msgid "Unread Messages"
-msgstr "Ungelesene Mitteilungen"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Zähler der ungelesenen Nachrichten"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_use_active_domain
-msgid "Use active domain"
-msgstr "Benutze die aktive Domain"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_template_id
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Use template"
 msgstr "Benutze Vorlage"
@@ -2130,9 +1902,13 @@ msgstr "Benutze Vorlage"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
-"Use this field to add             additional explanations about your "
-"question"
-msgstr "Verwenden Sie dieses Feld, um zusätzliche Erläuterungen zu Ihrer Frage hinzuzufügen."
+"Use this field to add         additional explanations about your question"
+msgstr ""
+
+#. module: survey
+#: model:res.groups,name:survey.group_survey_user
+msgid "User"
+msgstr "Benutzer"
 
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
@@ -2182,12 +1958,19 @@ msgstr "Benutzer können zurück gehen"
 msgid ""
 "Users with a public link will be requested to login before taking part to "
 "the survey"
-msgstr "Benutzer mit einem öffentlichen Link zur Umfrage müssen sich vor einer Beantwortung anmelden."
+msgstr ""
+"Benutzer mit einem öffentlichen Link zur Umfrage müssen sich vor einer "
+"Beantwortung anmelden."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_required
 msgid "Validate entry"
 msgstr "Eingabeprüfung"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
+msgid "Validation Error message"
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
@@ -2238,11 +2021,6 @@ msgid "Where do you develop your new features?"
 msgstr "Wo entwickeln Sie Ihre neuen Erweiterungen ?"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_is_log
-msgid "Whether the message is an internal note (comment mode only)"
-msgstr "Wenn die Nachricht eine interne Notiz ist (Kommentar Modus)"
-
-#. module: survey
 #: model:survey.question,question:survey.feedback_1_2
 msgid "Which modules are you using/testing?"
 msgstr "Welche Anwendungen testen Sie gerade ?"
@@ -2257,7 +2035,9 @@ msgstr "DD.MM.YYYY hh:mm:ss"
 msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
 "                                            <i class=\"fa fa-calendar fa-2x\"/>"
-msgstr "DD.MM.YYYY hh:mm:ss\n                                            <i class=\"fa fa-calendar fa-2x\"/>"
+msgstr ""
+"DD.MM.YYYY hh:mm:ss\n"
+"                                            <i class=\"fa fa-calendar fa-2x\"/>"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_1
@@ -2287,18 +2067,18 @@ msgstr ""
 msgid ""
 "You can share your survey web public link and/or send private invitations to"
 " your audience. People can answer once per invitation, and whenever they "
-"want with the public web link (in this case, the \"Public in website\" "
-"setting must be enabled)."
-msgstr "Sie können Ihre Umfrage nach Bedarf für Ihr Publikum veröffentlichen oder als private E-Mailnachricht senden. Pro Einladung kann jeder  Benutzer nur einmal an der Befragung teilnehmen."
+"want with the public web link (in this case, the \"Login Required\" setting "
+"must be disabled)."
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:422
+#: code:addons/survey/models/survey.py:318
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "Sie können keine Einladung zu einer Umfrage ohne Fragen versenden."
 
 #. module: survey
-#: code:addons/survey/survey.py:427
+#: code:addons/survey/models/survey.py:321
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Sie können keine Einladungen für bereits beendete Umfragen versenden."
@@ -2314,14 +2094,19 @@ msgid "ans"
 msgstr ""
 
 #. module: survey
+#: model:ir.model,name:survey.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.auth_required
 msgid "log in"
 msgstr "melden Sie sich an"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
-msgid "on"
-msgstr "an"
+msgid "of"
+msgstr "von"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -2332,10 +2117,3 @@ msgstr "Punkte."
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "review your answers"
 msgstr "Ihre Antworten überprüfen"
-
-#. module: survey
-#. openerp-web
-#: code:addons/survey/static/src/js/tour_test_survey.js:10
-#, python-format
-msgid "try to create and fill survey"
-msgstr "versuche Umfrage zu erstellen und auszufüllen"

@@ -3,18 +3,18 @@
 # * website_forum_doc
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Martin Trigaux, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-02-24 23:00+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -51,7 +51,9 @@ msgstr "Slechte vragen"
 msgid ""
 "Before submiting the question, help us improve its quality by\n"
 "                        editing the question and the main answer."
-msgstr "Voordat u de vraag indient, help ons met de kwaliteit van de vraag\n                        door de vraag en het antwoord te bewerken."
+msgstr ""
+"Voordat u de vraag indient, help ons met de kwaliteit van de vraag\n"
+"                        door de vraag en het antwoord te bewerken."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -103,7 +105,7 @@ msgstr "Klanten"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
 msgid "Delete"
-msgstr "Verwijderen"
+msgstr "Verwijder"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -114,7 +116,7 @@ msgstr "Omschrijf de zakelijke oplossing"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_display_name
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_display_name
 msgid "Display Name"
-msgstr "Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: website_forum_doc
 #: model:ir.actions.act_url,name:website_forum_doc.action_open_documentation
@@ -163,14 +165,15 @@ msgid "Employee Contract"
 msgstr "Arbeidsovereenkomst"
 
 #. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Fout! het is niet mogelijk recursieve categorieën te maken!"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
-msgid "Explain how to configure in Odoo"
-msgstr "Leg uit hoe in te stellen in Odoo"
+msgid "Explain how to configure Odoo"
+msgstr "Leg uit hoe in Odoo in te stellen"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -402,7 +405,9 @@ msgstr "De titel van de vraag is kort en beschrijvend"
 #. module: website_forum_doc
 #: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
 msgid "This documentation is produced using the best posts from the"
-msgstr "Deze documentatie is geproduceerd door de beste berichten te gebruiken van de"
+msgstr ""
+"Deze documentatie is geproduceerd door de beste berichten te gebruiken van "
+"de"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
@@ -410,7 +415,10 @@ msgid ""
 "This documentation page has been extracted\n"
 "                                        from the Q&amp;A section where you can\n"
 "                                        discuss it and get feedback."
-msgstr "Deze documentatie pagina is onttrokken \n                                        van de V&amp;A sectie, waar je deze kunt \n                                        bespreken en feedback geven."
+msgstr ""
+"Deze documentatie pagina is onttrokken \n"
+"                                        van de V&amp;A sectie, waar je deze kunt \n"
+"                                        bespreken en feedback geven."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
@@ -422,14 +430,18 @@ msgstr "Deze vraag is ingevoegd in de"
 msgid ""
 "To be promoted in the official documentation the question\n"
 "                        and answer must satisfy the following criteria:"
-msgstr "Om te worden gepromoveerd in de officiële documentatie, dient de vraag\n                        en het antwoord te voldoen aan de volgende criteria:"
+msgstr ""
+"Om te worden gepromoveerd in de officiële documentatie, dient de vraag\n"
+"                        en het antwoord te voldoen aan de volgende criteria:"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,introduction:website_forum_doc.toc_sale
 msgid ""
 "Tracks leads, boost opportunities and close deals.\n"
 "                    This serie of how-to will help you develop your business."
-msgstr "Volg leads, geeft uw prospects en sluit deals.\nDeze versie van how-to zal u helpen met het verder ontwikkelen van uw bedrijf."
+msgstr ""
+"Volg leads, geeft uw prospects en sluit deals.\n"
+"Deze versie van how-to zal u helpen met het verder ontwikkelen van uw bedrijf."
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_website
@@ -437,24 +449,10 @@ msgid "Website"
 msgstr "Website"
 
 #. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_description
-msgid "Website meta description"
-msgstr "Website meta omschrijving"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Website meta trefwoorden"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_title
-msgid "Website meta title"
-msgstr "Website meta titel"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "What report should I use to compute probabilities per stage?"
-msgstr "Welk rapport moet ik gebruiken om de verwachtingen per fase te berekenen?"
+msgstr ""
+"Welk rapport moet ik gebruiken om de verwachtingen per fase te berekenen?"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question

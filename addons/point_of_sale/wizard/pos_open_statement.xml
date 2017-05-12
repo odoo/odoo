@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>        
-        <!--  Point of Sale Confirm -->
-        
+<odoo>
         <record id="view_pos_open_statement" model="ir.ui.view">
-            <field name="name">Open Statements</field>
+            <field name="name">pos.open.statement.form</field>
             <field name="model">pos.open.statement</field>
             <field name="arch" type="xml">
                 <form string="Open Statements">
@@ -17,13 +14,14 @@
                 </form>
             </field>
         </record>
-        <act_window name="Open Statements"
+        <act_window
+            id="act_pos_open_statement"
+            name="Open Statements"
             res_model="pos.open.statement"
             src_model="account.bank.statement"
             view_mode="form"
             target="new"
-            key2="client_action_multi"    
-            id="act_pos_open_statement"/>
+            key2="client_action_multi"/>
 
         <record id="action_pos_open_statement" model="ir.actions.act_window">
             <field name="name">Open Cash Register</field>
@@ -33,6 +31,4 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        
-    </data>
-</openerp>            
+</odoo>

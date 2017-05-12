@@ -1,0 +1,128 @@
+.o_followers {
+    float: right;
+    @media (max-width: @screen-xs-max) {
+        display: none !important; // Hide the followers in mobile
+    }
+
+    .dropdown-menu {
+        right: 0;
+        left: auto;
+    }
+
+    .o_followers_actions {
+        position: relative;
+        float: right;
+
+        .dropdown-toggle {
+            opacity: 0.3;
+            border: none;
+            display: none;
+
+            &:hover, &:focus, &[aria-expanded="true"] {
+                opacity: 1;
+            }
+
+            > .fa {
+                font-size: inherit;
+            }
+
+            &.o_followers_following {
+                display: block;
+            }
+        }
+
+        &:hover .dropdown-toggle {
+            opacity: 1;
+        }
+
+        .o_followers_follow_button {
+            width: 85px;
+            padding-right: 0;
+            color: @text-color;
+            font-weight: bold;
+
+            .o_follow, .o_followers_unfollow, .o_followers_following {
+                display: none;
+            }
+            // when following, show 'following'
+            &.o_followers_following .o_followers_following {
+                display: inline;
+            }
+            // when following and hovering, show 'unfollow'
+            &.o_followers_following:hover .o_followers_following {
+                display: none;
+            }
+            &.o_followers_following:hover .o_followers_unfollow {
+                display: inline;
+            }
+            // when not following  show 'follow'
+            &.o_followers_notfollow .o_follow {
+                display: inline;
+            }
+
+            .fa {
+                &.fa-times {
+                    color: @brand-warning;
+                }
+                &.fa-check {
+                    color: @brand-success;
+                }
+            }
+        }
+
+        .o_subtype {
+            padding-left: 10px;
+        }
+    }
+
+    .o_followers_title_box {
+        position: relative;
+        float: right;
+        margin-left: 25px;
+
+        .dropdown-toggle {
+            .o_followers_count {
+                padding-right: 5px;
+                font-weight: bold;
+            }
+        }
+
+        .o_followers_list {
+            font-size: small;
+
+            .o_partner {
+                @partner_avatar_size: 24px;
+                position: relative; // required for old design compatibility
+                > a {
+                    max-width: 160px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    height: @partner_avatar_size;
+                    padding: 3px @partner_avatar_size + 8px;
+                }
+                > img {
+                    .o-position-absolute();
+                    width: @partner_avatar_size;
+                }
+                .o_remove_follower {
+                    .o-position-absolute(6px, 5px);
+                    cursor: pointer;
+                }
+                .o_edit_subtype {
+                    .o-position-absolute(6px, 18px);
+                    cursor: pointer;
+                }
+            }
+
+        }
+    }
+}
+
+// Edit subtypes in dialog
+.modal .modal-body > ul {
+    padding-left: 0;
+    > li.o_subtype {
+        list-style: none;
+    }
+}

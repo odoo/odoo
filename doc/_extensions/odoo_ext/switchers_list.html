@@ -1,0 +1,25 @@
+{% if languages %}
+<li class="languages dropdown">
+    <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+        {{ language }}
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        {% for name, url in languages %}
+            <li><a href="{{ url }}">{{ name }}</a></li>
+        {% endfor %}
+    </ul>
+</li>
+{% endif %}
+
+{% if versions %}
+<li class="versions dropdown">
+    <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+        {{ version }}
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        {% for name, url in versions %}
+            <li><a href="{{ url }}">{{ name }}</a></li>
+        {% endfor %}
+    </ul>
+</li>
+{% endif %}

@@ -3,19 +3,26 @@
 # * product_expiry
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Boško Stojaković <bluesoft83@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 07:20+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-9/language/bs/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2016\n"
+"Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: bs\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
+msgid "<span class=\"pull-right\">Expiry Date</span>"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
@@ -64,7 +71,7 @@ msgstr "Šunka"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Lot/Serijski"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
@@ -84,7 +91,7 @@ msgstr "Vrijeme uklanjanja proizvoda"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
-msgstr "Šablon proizvoda"
+msgstr "Predlog proizvoda"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_use_time
@@ -94,7 +101,7 @@ msgstr "Vrijeme korišćenja proizvoda"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr ""
+msgstr "Kvanti"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_removal_date
@@ -107,53 +114,69 @@ msgstr "Datum uklanjanja"
 msgid ""
 "This is the date on which an alert should be notified about the goods with "
 "this Serial Number."
-msgstr "Ovo je datum kada bi trebalo obavjestiti alarmom o robi sa ovim serijskim brojem."
+msgstr ""
+"Ovo je datum kada bi trebalo obavjestiti alarmom o robi sa ovim serijskim "
+"brojem."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
-msgstr "Ovo je datum kada roba sa ovim serijskim brojem može postati opasna i ne smije biti konzumirana."
+msgstr ""
+"Ovo je datum kada roba sa ovim serijskim brojem može postati opasna i ne "
+"smije biti konzumirana."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant_removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
-msgstr "Ovo je datum kada roba sa ovim serijskim brojem bi trebala biti uklonjena sa zalihe."
+msgstr ""
+"Ovo je datum kada roba sa ovim serijskim brojem bi trebala biti uklonjena sa"
+" zalihe."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
-msgstr "Ovo je datum kada roba sa ovim serijskim brojem počinje da propada, ali još nije opasna."
+msgstr ""
+"Ovo je datum kada roba sa ovim serijskim brojem počinje da propada, ali još "
+"nije opasna."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr "Kada je novi serijski broj izdan, ovo je broj dana prije obavjesti alarma."
+msgstr ""
+"Kada je novi serijski broj izdan, ovo je broj dana prije obavjesti alarma."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr "Kada je novi serijski broj izdan, ovo je broj dana prije nego roba postane opasna i ne smije se konzumirati."
+msgstr ""
+"Kada je novi serijski broj izdan, ovo je broj dana prije nego roba postane "
+"opasna i ne smije se konzumirati."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr "Kada je novi serijski broj izdan, ovo je broj dana prije nego bi roba trebala biti uklonjena sa zalihe."
+msgstr ""
+"Kada je novi serijski broj izdan, ovo je broj dana prije nego bi roba "
+"trebala biti uklonjena sa zalihe."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_use_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr "Kada je novi serijski broj izdan, ovo je broj dana prije nego će roba početi da propada, a da još nije opasno."
+msgstr ""
+"Kada je novi serijski broj izdan, ovo je broj dana prije nego će roba početi"
+" da propada, a da još nije opasno."

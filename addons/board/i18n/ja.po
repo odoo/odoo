@@ -3,14 +3,18 @@
 # * board
 # 
 # Translators:
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-22 12:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,22 +23,22 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:24
+#: code:addons/board/static/src/xml/board.xml:25
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:406
+#: code:addons/board/static/src/js/dashboard.js:409
 #, python-format
 msgid "'%s' added to dashboard"
-msgstr ""
+msgstr "'%s' をダッシュボードに追加"
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
 msgid "<b>Your personal dashboard is empty.</b>"
-msgstr ""
+msgstr "<b>個人用ダッシュボードは設定されていません</b>"
 
 #. module: board
 #. openerp-web
@@ -48,14 +52,14 @@ msgstr "追加"
 #: code:addons/board/static/src/xml/board.xml:64
 #, python-format
 msgid "Add to my Dashboard"
-msgstr ""
+msgstr "自分のダッシュボードに追加"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:139
+#: code:addons/board/static/src/js/dashboard.js:141
 #, python-format
 msgid "Are you sure you want to remove this item ?"
-msgstr ""
+msgstr "本当にこのアイテムを削除してもよろしいですか？"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -63,120 +67,64 @@ msgid "Board"
 msgstr "ボード"
 
 #. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr ""
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_name
-msgid "Board Name"
-msgstr "ボード名"
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Cancel"
-msgstr "取消"
-
-#. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
+#: code:addons/board/static/src/xml/board.xml:7
 #, python-format
 msgid "Change Layout"
 msgstr "レイアウトを変更"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
+#: code:addons/board/static/src/xml/board.xml:5
 #, python-format
 msgid "Change Layout.."
 msgstr "レイアウトを変更…"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:36
+#: code:addons/board/static/src/xml/board.xml:37
 #, python-format
 msgid "Choose dashboard layout"
 msgstr "ダッシュボードのレイアウトを選択"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:408
+#: code:addons/board/static/src/js/dashboard.js:411
 #, python-format
 msgid "Could not add filter to dashboard"
-msgstr ""
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create"
-msgstr "作成"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "ボードを作成"
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create New Dashboard"
-msgstr "新しいダッシュボードを作成"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_uid
-msgid "Created by"
-msgstr "作成者"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_date
-msgid "Created on"
-msgstr "作成日"
+msgstr "ダッシュボードにフィルタが追加できません"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_display_name
-#: model:ir.model.fields,field_description:board.field_board_create_display_name
 msgid "Display Name"
 msgstr "表示名"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:94
+#: code:addons/board/static/src/js/dashboard.js:96
 #, python-format
 msgid "Edit Layout"
 msgstr "レイアウトの編集"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_id
-#: model:ir.model.fields,field_description:board.field_board_create_id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board___last_update
-#: model:ir.model.fields,field_description:board.field_board_create___last_update
 msgid "Last Modified on"
 msgstr "最終更新日"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_uid
-msgid "Last Updated by"
-msgstr "最終更新者"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_date
-msgid "Last Updated on"
-msgstr "最終更新日"
-
-#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:32
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model:ir.ui.view,arch_db:board.board_my_dash_view
+#, python-format
 msgid "My Dashboard"
 msgstr "マイダッシュボード"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
-msgid "Parent Menu"
-msgstr "親メニュー"
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
@@ -185,6 +133,9 @@ msgid ""
 "                    menu, switch to list or graph view, and click <i>'Add to\n"
 "                    Dashboard'</i> in the extended search options."
 msgstr ""
+"いずれかのリストやグラフのメニューから、\n"
+"検索オプションの <i>「ダッシュボードに追加」</i> を選択し、\n"
+"あなたのダッシュボードに追加しましょう。"
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
@@ -192,3 +143,5 @@ msgid ""
 "You can filter and group data before inserting into the\n"
 "                    dashboard using the search options."
 msgstr ""
+"検索オプションによって、データをフィルタリングしたり、\n"
+"まとめたりすることが出来ます。"

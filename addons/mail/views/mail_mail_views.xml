@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
         <record model="ir.ui.view" id="view_mail_form">
             <field name="name">mail.mail.form</field>
@@ -18,7 +18,7 @@
                         <h2><field name="subject"/></h2>
                         <div style="vertical-align: top;">
                             by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" readonly="1" class="oe_inline"/>
-                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="fa-reply text-warning"
                                 context="{'default_composition_mode':'reply', 'default_parent_id': mail_message_id}" states='received,sent,exception,cancel'/>
                         </div>
                         <group>
@@ -27,6 +27,7 @@
                             <field name="recipient_ids" widget="many2many_tags"/>
                             <field name="email_cc"/>
                             <field name="reply_to"/>
+                            <field name="scheduled_date"/>
                         </group>
                         <notebook>
                             <page string="Body">
@@ -76,9 +77,9 @@
                     <field name="email_from" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="message_type" invisible="1"/>
-                    <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
-                    <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
-                    <button name="cancel" string="Cancel Email" type="object" icon="terp-gtk-stop" states='outgoing'/>
+                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane text-success" states='outgoing'/>
+                    <button name="mark_outgoing" string="Retry" type="object" icon="fa-repeat text-success" states='exception,cancel'/>
+                    <button name="cancel" string="Cancel Email" type="object" icon="fa-times-circle text-danger" states='outgoing'/>
                 </tree>
             </field>
         </record>
@@ -126,4 +127,4 @@
         <!-- Add menu entry in Settings/Email -->
         <menuitem name="Emails" id="menu_mail_mail" parent="base.menu_email" action="action_view_mail_mail" />
     </data>
-</openerp>
+</odoo>

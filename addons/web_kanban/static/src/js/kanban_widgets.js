@@ -139,7 +139,7 @@ var KanbanSelection = AbstractField.extend({
 
         var current_state = _.find(this.states, function(state) {
             return state.name === self.get('value');
-        });
+        }) || {state_class: ''};
 
         self.$el = $(QWeb.render("KanbanSelection", {
             current_state_class: current_state.state_class,
@@ -159,6 +159,19 @@ var KanbanSelection = AbstractField.extend({
             value[self.name] = String($li.data('value'));
             this.trigger_up('kanban_update_record', value, this);
         }
+    },
+});
+
+var KanbanLabelSelection = AbstractField.extend({
+
+    init: function(parent, field, $node) {
+        this._super.apply(this, arguments);
+        this.classes = this.options && this.options.classes || {};
+    },
+    renderElement: function() {
+        this._super.apply(this, arguments);
+        var lbl_class = this.classes[this.field.raw_value] || 'primary';
+        this.$el.addClass('label label-' + lbl_class).text(this.field.value);
     },
 });
 
@@ -270,6 +283,7 @@ fields_registry
     .add('progress', KanbanProgressBar)
     .add('float_time', FormatChar)
     .add('monetary', KanbanMonetary)
+    .add('kanban_label_selection', KanbanLabelSelection)
     ;
 
 return {

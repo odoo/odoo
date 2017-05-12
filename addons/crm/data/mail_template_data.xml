@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- notify to admin of module installation -->
+        <record id="mail_template_data_module_install_crm" model="mail.template">
+            <field name="name">Email send after crm installation.</field>
+            <field name="subject">Your Odoo CRM application is running smoothly.</field>
+            <field name="email_from">help@odoo.com</field>
+            <field name="email_to">${user.email|safe}</field>
+            <field name="lang">${user.lang}</field>
+            <field name="model_id" ref="base.model_ir_module_module"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="scheduled_date">${(datetime.datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')}</field>
+            <field name="body_html" ><![CDATA[
+
+            <div style="margin: 10px auto;">
+            % set last_created_team = user.env['crm.team'].search([], order="create_date desc")[0]
+            <table cellspacing="0" cellpadding="0" style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td style="padding:2px;width:30%;">
+                            <img src="web/static/src/img/logo.png"/>
+                        </td>
+                        <td style="vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;">
+                            <a href="web/login" style="float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;">Auto Login</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table style="width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray"">
+                <tbody>
+                    <tr>
+                        <td style="padding:15px 10px;font-size:20px">
+                            <p style="color:#875A7B;margin:0" >Hooray!</p><br>
+                            <p dir="ltr" style="font-size:15px;margin-top:0pt;margin-bottom:0pt;">
+                                <span>Your Odoo CRM application is up and running.</span></p><br>
+                            <p dir="ltr" style="margin-top:0pt;margin-bottom:8pt;">
+                                <span style="font-size:13px;font-weight:bold; ">What’s next?</span></p>
+                            <ul style="margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;">
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Try creating a lead by sending an email to </span>
+                                        <a href="mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}">
+                                            <span style="font-weight:bold; text-decoration:underline;">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>
+                                        </a>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:8pt;">
+                                        <span>Track your opportunities in your sale funnel by simply dragging and dropping the cards from one column to another</span>
+                                    </p>
+                                </li>
+                            </ul> <br>
+                            <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;">
+                                <span style="font-weight:bold;">Discover the </span>
+                                <span><a href="/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads">
+                                    <span style="font-weight:bold; text-decoration:underline;">CRM planner</span></a></span>
+                                <span> to activate extra features</span>
+                                <span style="color:#875A7B;margin:0;font-weight:bold">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>
+                            </p>
+                            <ul style="margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;">
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Automatically assign your leads to your salesmen with the lead scoring, </span>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Keep in touch with your potential client with efficient email campaigns,</span>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Gain high quality insight from surveys,</span>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Get smart reporting and accurate dashboards,</span>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:8pt;">
+                                        <span>And much more...</span>
+                                    </p>
+                                </li>
+                            </ul>
+                            <br>
+                            <p dir="ltr" style="font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;">
+                                <span style="font-weight:bold;">Need Help?</span>
+                                <span style="font-style:italic;">You’re not alone</span>
+                            </p>
+                            <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;">
+                                <span>We would be delighted to assist you along the way. Contact us through our
+                                <a href="https://www.odoo.com/help">support form</a> if you have any question.
+                                You can also discover how to get the best out of Odoo CRM with our </span>
+                                <a href="https://www.odoo.com/documentation/user/10.0/crm.html">
+                                <span style="text-decoration:underline;">User Documentation</span></a>
+                                </span><span> or with our </span>
+                                <a href="https://www.odoo.com/documentation">
+                                <span style="text-decoration:underline;">API Documentation</span></a>
+                            </p>
+                            <br>
+                            <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;"><span>Enjoy your Odoo experience,</span></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey">
+                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href="https://twitter.com/odoo/favorites"><span style="text-decoration:underline;">what they say about it.</span></a></span>
+            </div>
+        </div>]]></field>
+        </record>
+
+        <function
+            id="mail_template_function_module_install_crm"
+            model="mail.template"
+            name="send_mail"
+            eval="[ref('mail_template_data_module_install_crm'), ref('base.module_crm')]"/>
+
+    </data>
+</odoo>

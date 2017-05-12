@@ -3,14 +3,16 @@
 # * website_form
 # 
 # Translators:
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-10-17 09:35+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,66 +21,66 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:208
+#: code:addons/website_form/static/src/js/website_form.js:209
 #, python-format
 msgid "'%s' is not a correct date"
-msgstr "'%s' は正しい日付ではありません"
+msgstr "'%s' は正しいフォーマット（date型）ではありません"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:203
+#: code:addons/website_form/static/src/js/website_form.js:204
 #, python-format
 msgid "'%s' is not a correct datetime"
-msgstr "'%s' は正しい日時ではありません"
+msgstr "'%s' は正しいフォーマット（datetime）ではありません"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:205
+#: code:addons/website_form/controllers/main.py:225
 #, python-format
 msgid "<p>Attached files : </p>"
-msgstr ""
+msgstr "<p>添付されたファイル : </p>"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_access
 msgid "Allowed to use in forms"
-msgstr ""
+msgstr "フォームでの使用が許可されている"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:21
 #, python-format
 msgid "An error has occured, the form has not been sent."
-msgstr ""
+msgstr "エラーが発生したため、フォームは送信されませんでした。"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr ""
+msgstr "ウエブフォーム用にこのフィールドをブラックリストに登録する"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields_website_form_blacklisted
 msgid "Blacklisted in web forms"
-msgstr ""
+msgstr "ウェブフォームでブラックリストに載せます"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:48
+#: code:addons/website_form/controllers/main.py:53
 #, python-format
 msgid "Custom infos"
-msgstr ""
+msgstr "カスタム情報"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_website_form_access
 msgid "Enable the form builder feature for this model."
-msgstr ""
+msgstr "このモデルのフォームビルダ機能を有効にします。"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_website_website_form_enable_metadata
 msgid "Enable writing metadata on form submit."
-msgstr ""
+msgstr "フォーム送信時にメタデータを書き込むことができます。"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_default_field_id
 msgid "Field for custom form data"
-msgstr ""
+msgstr "カスタムフォームデータのフィールド"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
@@ -91,17 +93,18 @@ msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
+"フォームアクションラベル。 例：crm.leadは「電子メールを送る」ことができ、project.issueは「問題を作成する」ことができます。"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_label
 msgid "Label for form action"
-msgstr ""
+msgstr "フォームアクションのラベル"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:49
+#: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Metadata"
-msgstr ""
+msgstr "メタデータ"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
@@ -113,19 +116,20 @@ msgstr "モデル"
 #: code:addons/website_form/static/src/xml/website_form.xml:14
 #, python-format
 msgid "Please fill in the form correctly."
-msgstr ""
+msgstr "フォームに正しく記入してください。"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
-msgid "Specify the field wich will contain meta and custom form fields datas."
-msgstr ""
+msgid ""
+"Specify the field which will contain meta and custom form fields datas."
+msgstr "メタフィールドとカスタムフォームフィールドのデータを含むフィールドを指定します。"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:7
 #, python-format
 msgid "The form has been sent successfully."
-msgstr ""
+msgstr "フォームが正常に送信されました。"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
@@ -135,4 +139,4 @@ msgstr "ウェブサイト"
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_website_website_form_enable_metadata
 msgid "Write metadata"
-msgstr ""
+msgstr "メタデータ記入"

@@ -3,15 +3,15 @@
 # * hr
 # 
 # Translators:
-# Gennady Marchenko <gennadym@gmail.com>, 2016
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 10:41+0000\n"
-"PO-Revision-Date: 2016-03-19 11:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"POT-Creation-Date: 2016-10-10 08:43+0000\n"
+"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:119
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -51,7 +51,7 @@ msgstr "<i>Вы увлеченный</i>"
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>You autonomously and quickly learn</i>"
-msgstr "<i>Вы самостоятельный и быстро учитесь</i>"
+msgstr "<i>Вы самостоятельно и быстро учитесь</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -66,7 +66,9 @@ msgstr "<i>Вы легко управляете ими</i>"
 msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
 "                                    <span class=\"o_following\">Following</span>"
-msgstr "<span class=\"o_unfollow\">Отписаться</span>\n                                    <span class=\"o_following\">Подписаться</span>"
+msgstr ""
+"<span class=\"o_unfollow\">Отписаться</span>\n"
+"                                    <span class=\"o_following\">Подписаться</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -96,7 +98,11 @@ msgid ""
 "people. You will start contract with a full technical and functional "
 "training. If you are passionate, motivate and flexible apply for this job, "
 "you will certainly join the best company ever."
-msgstr "Полный рабочий день с привлекательной зарплатой в маленькой команде умных людей. Вы начнете работу с полной технической и функциональной подготовки. Если Вы увлечены, мотивированы и готовы откликнуться на данную вакансию Вы, безусловно, присоединитесь к лучшей компании."
+msgstr ""
+"Полный рабочий день с привлекательной зарплатой в маленькой команде умных "
+"людей. Вы начнете работу с полной технической и функциональной подготовки. "
+"Если Вы увлечены, мотивированы и готовы откликнуться на данную вакансию Вы, "
+"безусловно, присоединитесь к лучшей компании."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -110,26 +116,32 @@ msgid "A good job in a young and dynamic team"
 msgstr "Хорошая работа в молодой и динамичной команде"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction
-msgid "Action Needed"
-msgstr "Требуется реакция"
-
-#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
-msgstr "Активен"
+msgstr "Активно"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
+"Анализ потребности, написание спецификаций документов и ценовых предложений"
 
 #. module: hr
+#: model:ir.model,name:hr.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Аналитический счет"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
-msgstr "Помещено в архив"
+msgstr "Архивировано"
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_registration
+msgid "Attendee"
+msgstr "Участник"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -144,6 +156,10 @@ msgid ""
 "source project in a friendly and cooperative atmosphere sounds like fun to "
 "you, read on..."
 msgstr ""
+"Из-за нашего постоянного роста мы сейчас ищем людей, чтобы укрепить нашу "
+"команду увлеченным главным техническим сотрудником. Так что если работа над "
+"проектом с открытым кодом в атмосфере дружбы и сотрудничества звучит для вас"
+" весело, читайте дальше..."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -156,6 +172,10 @@ msgid ""
 "our team of enthusiastic developers. So if working on an open source project"
 " in a friendly and cooperative atmosphere sounds like fun to you, read on..."
 msgstr ""
+"Из-за нашего постоянного роста мы сейчас ищем людей, чтобы укрепить нашу "
+"команду увлеченным разработчиков. Так что если работа над проектом с "
+"открытым кодом в атмосфере дружбы и сотрудничества звучит как для вас "
+"весело, читайте дальше..."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_trainee
@@ -164,6 +184,10 @@ msgid ""
 "our team of enthusiastic trainees. So if working on an open source project "
 "in a friendly and cooperative atmosphere sounds like fun to you, read on..."
 msgstr ""
+"Из-за нашего постоянного роста, мы сейчас ищем людей, чтобы усилить нашу "
+"команду увлеченными стажерами. Так что если работа над проектом с открытым "
+"кодом в атмосфере дружбы и сотрудничества звучит для вас как весело, читайте"
+" дальше..."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -196,25 +220,15 @@ msgid "City"
 msgstr "Город"
 
 #. module: hr
-#: model:web.tip,description:hr.hr_tip_2
-msgid "Click here to change the recruitment goal!"
-msgstr ""
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
-msgstr "Кликните, чтобы добавить нового сотрудника."
+msgstr "Нажмите, чтобы добавить нового сотрудника"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
 msgstr "Кликните, чтобы создать отдел."
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
-msgstr "Кликните, чтобы определить новый отдел."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -230,7 +244,7 @@ msgstr "Кликните, чтобы определить новую должн�
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Close to the perfection ..."
-msgstr ""
+msgstr "Близко к совершенству..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_coach_id
@@ -284,12 +298,7 @@ msgstr "Контактная информация"
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Contributions to open source projects"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "Укажите ваши отделы"
+msgstr "Вклад к проектам с открытым источникам"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
@@ -297,7 +306,7 @@ msgstr "Укажите ваши отделы"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_date
@@ -305,7 +314,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_date
 msgid "Created on"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
@@ -316,13 +325,6 @@ msgstr "Текущее количество сотрудников"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
 msgid "Date of Birth"
 msgstr "Дата рождения"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_last_post
-#: model:ir.model.fields,help:hr.field_hr_employee_message_last_post
-#: model:ir.model.fields,help:hr.field_hr_job_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Дата последнего сообщения"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -339,7 +341,7 @@ msgstr "Определить график ресурса"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Deliver generic Odoo functional training sessions"
-msgstr ""
+msgstr "Доставьте общую функциональную тренировку сессий Odoo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
@@ -363,12 +365,17 @@ msgid "Departments"
 msgstr "Подразделения"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr "Канал обсуждения"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -379,6 +386,16 @@ msgstr "В разводе"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
 msgstr "КПД"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr "Псевдонимы электронной почты"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr "Цепочка эл.почты"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -439,16 +456,21 @@ msgid "Employees Tags"
 msgstr "Тэги сотрудников"
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:254
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Ошибка! Вы не можете создавать рекурсивные подразделения."
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:167
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Ошибка! Вы не можете создавать рекурсивную иерархию сотрудника(ов)."
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_event
+msgid "Event"
+msgstr "Событие"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
@@ -459,7 +481,9 @@ msgstr "Ожидаемые новые сотрудники"
 #: model:ir.model.fields,help:hr.field_hr_job_expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr "Планируемое количество сотрудников на данной должности по окончании нового набора сотрудников."
+msgstr ""
+"Планируемое количество сотрудников на данной должности по окончании нового "
+"набора сотрудников."
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
@@ -479,29 +503,22 @@ msgstr "Подписаться"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Follow and check the development part"
-msgstr ""
+msgstr "Отслеживать и проверять часть разработки"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_follower_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_follower_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_follower_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "Подписчики"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_channel_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_channel_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Подписчики (Каналы)"
+#: model:ir.model,name:hr.model_gamification_badge
+msgid "Gamification badge"
+msgstr "Значок игрофикации"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_partner_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_partner_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Подписчики (Партнеры)"
+#: model:ir.model,name:hr.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr "Задача игрофикации"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -511,53 +528,48 @@ msgstr "Пол"
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Good knowledge of HTML and Javascript"
-msgstr ""
+msgstr "Хорошее знание HTML и Javascript"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Good knowledge of object oriented programming"
-msgstr ""
+msgstr "Хорошее знание объектно-ориентированного программирования"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Good knowledge of the latest web technologies"
-msgstr ""
+msgstr "Хорошее знание новейших веб-технологий"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Good knowledge of the programming language"
-msgstr ""
+msgstr "Хорошее знание языка программирования"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Good knowledge of web design"
-msgstr ""
+msgstr "Хорошее знание веб-дизайна"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Good language skills in another language"
-msgstr ""
+msgstr "Хорошие языковые навыки в других языках"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
-msgstr "Группировать по"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "HR Department"
-msgstr "Отдел кадров"
+msgstr "Группировать"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -567,32 +579,37 @@ msgstr "HR установки"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Help with the configuration of the software"
-msgstr ""
+msgstr "Помощь с конфигурацией программного обеспечения"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
 msgid "Hire a team of great Human Resources people"
-msgstr ""
+msgstr "Наймите команду замечательных кадров"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 msgid "Hire a team of great executive people"
-msgstr ""
+msgstr "Наймите команда великих исполнителей"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Hire a team of great marketing people"
-msgstr ""
+msgstr "Наймите команду великих маркетологов"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_hired_employee
 msgid "Hired Employees"
-msgstr "Наемные работники"
+msgstr "Существующие сотрудники"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "Домашний адрес"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "Hr Department"
+msgstr "Отдел кадров"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -618,32 +635,20 @@ msgid "Identification No"
 msgstr "Табельный номер"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_unread
-#: model:ir.model.fields,help:hr.field_hr_employee_message_unread
-#: model:ir.model.fields,help:hr.field_hr_job_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_needaction
-#: model:ir.model.fields,help:hr.field_hr_employee_message_needaction
-#: model:ir.model.fields,help:hr.field_hr_job_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "Если значение активного поля — Ложь, это позволит вам скрыть запись ресурса, не удаляя ее."
+msgstr ""
+"Если значение активного поля — Ложь, это позволит вам скрыть запись ресурса,"
+" не удаляя ее."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Improve our communication to customers"
-msgstr ""
+msgstr "Улучшить наше общение с клиентами"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_job_filter
@@ -660,21 +665,19 @@ msgstr "Набор сотрудников"
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase opportunities"
-msgstr ""
+msgstr "Расширение возможностей"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
-msgstr ""
+msgstr "Увеличьте видимость продукта"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_is_follower
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_is_follower
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_is_follower
-msgid "Is Follower"
-msgstr "Подписчик"
+#: model:ir.model,name:hr.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr "Информация о транспортном средстве"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -690,24 +693,12 @@ msgid "Job Description"
 msgstr "Описание работы"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Name"
-msgstr "Наименование должности"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Position"
 msgstr "Должность"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Job Position Name"
-msgstr "Наименование должности"
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
-#: model:ir.ui.menu,name:hr.menu_hr_job_position
-#: model:ir.ui.menu,name:hr.menu_hr_job_position_config
 msgid "Job Positions"
 msgstr "Штатное расписание"
 
@@ -719,9 +710,14 @@ msgid ""
 "                position and follow the evolution according to what you planned\n"
 "                for the future."
 msgstr ""
+"Рабочие места используются для определения заданий и их требований.\n"
+"                Вы можете отслеживать количество сотрудников которые у вас есть на\n"
+"                должность и следить за эволюцией, которую вы запланировали\n"
+"                на будущее."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Title"
 msgstr "Название должности"
 
@@ -732,13 +728,6 @@ msgid "Jobs"
 msgstr "Вакансии"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_last_post
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_last_post
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_last_post
-msgid "Last Message Date"
-msgstr "Последнее сообщение по дате"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
@@ -747,22 +736,18 @@ msgid "Last Modified on"
 msgstr "Последний раз изменено"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
-msgid "Last Online Sale Order"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
+#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
 msgid "Last Updated on"
 msgstr "Последний раз обновлено"
 
@@ -779,17 +764,17 @@ msgstr "Рекрутинговое мероприятие"
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Launch new marketing campaigns and offers"
-msgstr ""
+msgstr "Запуск новых маркетинговых кампаний и предложения"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
 msgid "Launch new products, Human Resources campaigns and offers"
-msgstr ""
+msgstr "Запуск новых продуктов, людских ресурсов кампании и предложения"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 msgid "Launch new products, marketing campaigns and offers"
-msgstr ""
+msgstr "Запуск новых продуктов, маркетинговые кампании и предложения"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_login
@@ -805,8 +790,14 @@ msgstr "Мужской"
 #: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
-msgstr "Руководитель"
+msgstr "Менеджер"
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_attendance
+msgid "Manual Attendance"
+msgstr "Ручная посещаемость"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
@@ -816,7 +807,7 @@ msgstr "Семейное положение"
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr ""
+msgstr "Маркетинг и менеджер сообщества"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -828,7 +819,7 @@ msgstr "В браке"
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Master or engineer in computer science"
-msgstr ""
+msgstr "Мастер или инженер в области компьютерных наук"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image_medium
@@ -841,7 +832,10 @@ msgid ""
 "Medium-sized photo of the employee. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "Фотография сотрудника среднего размера. Автоматически принимает размер 128x128px, с сохранением соотношения сторон. Используйте это поле в форме просмотра или некоторых видах канбан."
+msgstr ""
+"Фотография сотрудника среднего размера. Автоматически принимает размер "
+"128x128px, с сохранением соотношения сторон. Используйте это поле в форме "
+"просмотра или некоторых видах канбан."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
@@ -849,9 +843,6 @@ msgid "Members"
 msgstr "Члены"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr "Сообщения"
@@ -859,7 +850,7 @@ msgstr "Сообщения"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "Больше<i class=\"fa fa-caret-down\"/>"
+msgstr "Подробности<i class=\"fa fa-caret-down\"/>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -870,14 +861,12 @@ msgstr "Больше<i class=\"fa fa-caret-down\"/>"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Must have ..."
-msgstr ""
+msgstr "Должны иметь..."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_country_id
@@ -893,7 +882,12 @@ msgstr "Национальность (Страна)"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
-msgstr ""
+msgstr "Хорошо иметь"
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Not Recruiting"
+msgstr "Не наема"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -903,44 +897,26 @@ msgstr "Примечание"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_notes
 msgid "Notes"
-msgstr "Примечания"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction_counter
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction_counter
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Количество действий"
+msgstr "Заметки"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr "Количество сотрудников, в настоящее время занимающих данную должность."
+msgstr ""
+"Количество сотрудников, в настоящее время занимающих данную должность."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
-msgstr "Количество наемных работников на эту должность в течении этапа подбора кадров."
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_needaction_counter
-#: model:ir.model.fields,help:hr.field_hr_employee_message_needaction_counter
-#: model:ir.model.fields,help:hr.field_hr_job_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Количество сообщений, требующих реакции"
+msgstr ""
+"Количество наемных работников на эту должность в течении этапа подбора "
+"кадров."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
 msgid "Number of new employees you expect to recruit."
 msgstr "Планируемое к найму количество сотрудников."
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_unread_counter
-#: model:ir.model.fields,help:hr.field_hr_employee_message_unread_counter
-#: model:ir.model.fields,help:hr.field_hr_job_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Количество непрочтённых сообщений"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -949,16 +925,19 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves and holidays, recruitments, etc."
 msgstr ""
+"Структура Департамента Odoo's используется для управления всеми документами,\n"
+"                  касающимися сотрудников по департаментам: расходы, табеля,\n"
+"                  отпуска и праздники, набор персонала, и др."
 
 #. module: hr
-#: model:ir.actions.client,name:hr.action_client_hr_menu
-msgid "Open HR Menu"
-msgstr "Открыть кадровое меню"
+#: model:res.groups,name:hr.group_hr_user
+msgid "Officer"
+msgstr "Должностное лицо"
 
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Other"
-msgstr "Прочие"
+msgstr "Другие"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -974,7 +953,7 @@ msgstr "Прочая информация..."
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Our staff at work"
-msgstr ""
+msgstr "Наши сотрудники на работе"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
@@ -982,9 +961,14 @@ msgid "Parent Department"
 msgstr "Вышестоящее подразделение"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr "Партнёр"
+
+#. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Passion for the Internet and its culture"
-msgstr ""
+msgstr "Страсть к Интернет и его культура"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_passport_id
@@ -1010,7 +994,7 @@ msgstr "Фото"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Pictures of smart and enthusiastic people"
-msgstr ""
+msgstr "Фотографии умных и увлеченных людей"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1022,7 +1006,7 @@ msgstr "Должность"
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Preferably 1 year of experience"
-msgstr ""
+msgstr "Предпочтительно 1 год опыта"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1032,17 +1016,12 @@ msgstr "Общедоступная информация"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Quantify and negotiate the resources required"
-msgstr ""
+msgstr "Количественно оценить и обсудить необходимые ресурсы"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Quick and autonomous learner"
-msgstr ""
-
-#. module: hr
-#: selection:hr.job,state:0
-msgid "Recruitment Closed"
-msgstr "Набор закрыт"
+msgstr "Быстрый и автономный обучаемый"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -1067,7 +1046,7 @@ msgstr "Пользователь управляющий доступом к ре
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reports"
-msgstr "Отчёты"
+msgstr "Отчеты"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
@@ -1077,7 +1056,12 @@ msgstr "Требования"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
 msgid "Resource"
-msgstr "Объект"
+msgstr "Ресурс"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
+msgid "Resource Name"
+msgstr "Название объекта"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1110,13 +1094,15 @@ msgstr "Номер карты социальной защиты"
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Scale our events organization all around the world"
-msgstr ""
+msgstr "Масштаб наших организационных мероприятий во всем мире"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
 msgstr ""
+"Установите, является ли процесс набора открытым или закрытым для этой "
+"должности."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -1150,7 +1136,10 @@ msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "Маленькая фотография сотрудника. Изображение автоматически уменьшено до 64x64 пикселей с сохранением соотношения сторон. Используйте данное поле везде, где требуется маленькое изображение."
+msgstr ""
+"Маленькая фотография сотрудника. Изображение автоматически уменьшено до "
+"64x64 пикселей с сохранением соотношения сторон. Используйте данное поле "
+"везде, где требуется маленькое изображение."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_sinid
@@ -1185,14 +1174,9 @@ msgid "Subordinates"
 msgstr "Подчинённые"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
-msgid "Subscriptions"
-msgstr "Подписки"
-
-#. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
-msgstr "Значение тэга уже существует !"
+msgstr "Значение тэга уже существует!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_ids
@@ -1202,17 +1186,32 @@ msgstr "Теги"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Take part in the consulting services"
-msgstr ""
+msgstr "Принять участие в консалтинговых услуг"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Team spirit and good communication"
-msgstr ""
+msgstr "Командный дух и хорошее общение"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_test
+msgid "Test Mail Model"
+msgstr "Тестовая модель почты"
 
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr "Наименование должности должно быть уникальным в подразделении компании!"
+msgstr ""
+"Наименование должности должно быть уникальным в подразделении компании!"
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_attendance
+msgid ""
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
+msgstr ""
+"Пользователь получит доступ к меню посещаемости кадров, что позволяет ему "
+"управлять своим собственным присутствием."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
@@ -1221,19 +1220,25 @@ msgid ""
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
 "show a load of 100% for this phase by default, but if we put a efficiency of"
 " 200%, then his load will only be 50%."
-msgstr "Это поле изображают эффективность ресурса для завершения задачи. например ресурс поместить в одну фазу на этап 5 дней с 5 задачами, возложенными на него, покажет нагрузку 100% в течение этой фазы, по умолчанию, но если мы ставим эффективность 200%, то его нагрузка будет только 50%."
+msgstr ""
+"Это поле изображают эффективность ресурса для завершения задачи. например "
+"ресурс поместить в одну фазу на этап 5 дней с 5 задачами, возложенными на "
+"него, покажет нагрузку 100% в течение этой фазы, по умолчанию, но если мы "
+"ставим эффективность 200%, то его нагрузка будет только 50%."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
-msgstr "Данное поле содержит изображение, используемое в качестве фотографии сотрудника, ограничение размера 1024x1024 пикселей."
+msgstr ""
+"Данное поле содержит изображение, используемое в качестве фотографии "
+"сотрудника, ограничение размера 1024x1024 пикселей."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
 msgid "Total Forecasted Employees"
-msgstr "Всего прогнозируемых сотрудников"
+msgstr "Всего предполагаеся сотрудников"
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -1244,29 +1249,20 @@ msgstr "Стажер"
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Transform our product into a suite of well positioned business Apps"
 msgstr ""
+"Преобразовать наш продукт в набор хорошо позиционируемых бизнес-приложений"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
-msgstr "Непрочитанные"
+msgstr "Непрочитанные Сообщения"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_unread_counter
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread_counter
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Счетчик непрочтённых сообщений"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
-msgid "Update Date"
-msgstr "Дата изменения"
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr "Используется для входа в систему"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1288,6 +1284,13 @@ msgid ""
 " give him the best service. You report to the head of consulting service and"
 " will be coached by a senior consultant."
 msgstr ""
+"Мы ищем мотивированных и ориентированных на результаты функционального "
+"консультант! Вы будет принимать участие в консалтинговых услугах, которые мы"
+" предоставляем для наших партнеров и клиентов, на функциональной стороне. "
+"Ваша работа начинается от к коммерческого предложения до клиента, доставку к"
+" клиенту. Вы слушаете клиента и пытаетесь дать ему лучший сервис. Вы "
+"докладываете начальника консультационных услуг и будете тренероваться "
+"старшим консультантом."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
@@ -1297,6 +1300,10 @@ msgid ""
 "and ..... not afraid to start new things, a lot of new things and scale "
 "them."
 msgstr ""
+"Мы ищем менеджера по Кадрам с самомотивацией, чтобы помочь нам сделать "
+"продукты, которые люди любят использовать. Нам нужен кто-то, кто является "
+"амбициозным, с самомотивацией и ..... не боится начинать новые вещи, много "
+"новых вещей и их масштабировать."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1305,6 +1312,10 @@ msgid ""
 "people love to use. We need someone who is ambitious, passionated, and ....."
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
+"Мы ищем исполнительного директора с самомотивацией, чтобы помочь нам сделать"
+" продукты, которые люди любят использовать. Нам нужен кто-то, кто является "
+"амбициозным, с самомотивацией и..... не боится начинать новые вещи, много "
+"новых вещей и их масштабировать."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
@@ -1313,6 +1324,10 @@ msgid ""
 "people love to use. We need someone who is ambitious, passionated, and ....."
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
+"Мы ищем менеджера по маркетингу с самомотивацией, чтобы помочь нам сделать "
+"продукты, которые люди любят использовать. Нам нужен кто-то, кто является "
+"амбициозным, с самомотивацией и не боится начинать новые вещи, много новых "
+"вещей и их масштабировать."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1323,7 +1338,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "What we offer"
-msgstr ""
+msgstr "Что мы предлагаем:"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1334,7 +1349,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "What you will do ..."
-msgstr ""
+msgstr "Что вы будете делать..."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1344,7 +1359,7 @@ msgstr "Вдовец/вдова"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Will report to the Head of Professional Services"
-msgstr ""
+msgstr "Представит доклад Руководителю Профессиональных Услуг"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -1353,7 +1368,10 @@ msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
-msgstr "Бросив лишь беглый взгляд на экран сотрудников Odoo, Вы \n                можете легко найти все необходимую информацию по каждому человеку;\n                контактные данные, должность, наличие и т.д."
+msgstr ""
+"Бросив лишь беглый взгляд на экран сотрудников Odoo, Вы \n"
+"                можете легко найти все необходимую информацию по каждому человеку;\n"
+"                контактные данные, должность, наличие и т.д."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1368,6 +1386,10 @@ msgid ""
 "source, full featured and it’s online offer is 3 times cheaper than "
 "traditional competitors. We have 2.000.000 users, and we're growing fast."
 msgstr ""
+"С нашим продуктом, который представляет собой набор из 3000 бизнес-"
+"приложений. Полностью с открытым исходным кодом, полнофункциональный и "
+"онлайн приложением, в 3 раза дешевле, чем традиционные конкуренты. У нас 2 "
+"000 000 пользователей и мы быстро растем."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
@@ -1402,58 +1424,58 @@ msgstr "Рабочее время"
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Write attractive content"
-msgstr ""
+msgstr "Написать привлекательный контент"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
 msgid "Write attractive content and build up Human Resources materials"
-msgstr ""
+msgstr "Написать привлекательный контент и наращивать кадровые материалы"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 msgid "Write attractive content and build up executive materials"
-msgstr ""
+msgstr "Написать привлекательный контент и исполнительные материалы"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You are a quick and autonomous learner"
-msgstr ""
+msgstr "Вы быстро и автономный обучаемый"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You are an excellent communicator and negotiator"
-msgstr ""
+msgstr "Вы отличный коммуникатор и переговорщик"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You are approachable, honest and fun team player"
-msgstr ""
+msgstr "Вы доступный, честный и веселый игрок команды"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You are available immediately"
-msgstr ""
+msgstr "Вы сразу же доступны"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You are creative"
-msgstr ""
+msgstr "Вы творческий"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You are ready to travel in US"
-msgstr ""
+msgstr "Вы готовы к поездке в США"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You are ready to work in a dynamic company"
-msgstr ""
+msgstr "Вы готовы работать в динамичной компании"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -1462,63 +1484,74 @@ msgid ""
 "                the recruitment process to evaluate the applicants for this job\n"
 "                position."
 msgstr ""
+"Опрос можно присоединить к должности. Он будет использоваться в \n"
+"               процессе набора персонала для оценки претендентов\n"
+"               на эту должность."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You have 2 or 3 years of experience"
-msgstr ""
+msgstr "У вас есть 2 или 3 года опыта"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You have a Master degree in Business Management"
-msgstr ""
+msgstr "У вас есть мастер в области управления бизнесом"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You have an affinity with the IT world"
-msgstr ""
+msgstr "У вас есть влечение к IT миру"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You have an affinity with the product"
-msgstr ""
+msgstr "У вас есть влечение к продукту"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You have good knowledge in accounting"
-msgstr ""
+msgstr "У вас хорошие знания в области бухгалтерского учета"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You speak a third language"
-msgstr ""
+msgstr "Вы говорите на третьем языке"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You speak fluently French and English"
-msgstr ""
+msgstr "Вы бегло говорите на французском и английском языках"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_trainee
 msgid ""
-"You will be responsible for developing and improving applications, such as "
-"the You will work autonomously as well as                     coordinate and"
-" supervise small distributed development teams for specific projects. You "
-"will become a technical                 expert of the product."
+"You will be responsible for developing and improving applications. You will "
+"work autonomously as well as                     coordinate and supervise "
+"small distributed development teams for specific projects. You will become a"
+" technical                 expert of the product."
 msgstr ""
+"Вы будете отвечать за разработку и совершенствование приложений. Будет "
+"работать автономно, а также               координировать и контролировать "
+"небольшие распределенные команды разработчиков для конкретных проектов. Вы "
+"станете техническим                   экспертом продукта."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid ""
-"You will be responsible for developing and improving applications, such as "
-"the You will work autonomously as well as coordinate and supervise small "
-"distributed development teams for specific projects. You will become a "
-"technical expert of the product."
+"You will be responsible for developing and improving applications. You will "
+"work autonomously as well as coordinate and supervise small distributed "
+"development teams for specific projects. You will become a technical expert "
+"of the product."
 msgstr ""
+"Вы будете отвечать за разработку и совершенствование приложений. Будет "
+"работать автономно, а также координировать и контролировать небольшие "
+"распределенные команды разработчиков для конкретных проектов. Вы станете "
+"техническим экспертом продукта."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1530,58 +1563,78 @@ msgid ""
 "distributed development teams for specific projects. You will become a "
 "techinical expert of the product."
 msgstr ""
+"Вы будете отвечать за разработку и улучшение коммуникации продукции. Будете "
+"работать автономно, а также координировать и контролировать небольшие "
+"распределенные команды разработчиков для конкретных проектов. Вы станете "
+"техническим экспертом продукта."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "You will become a technical expert of the product."
-msgstr ""
+msgstr "Вы станете техническим экспертом продукта."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "You will initially be coached by senior developers"
-msgstr ""
+msgstr "Вы изначально тренируете старших разработчиков"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 msgid "You will initially be coached by senior technical officer"
-msgstr ""
+msgstr "Вы изначально тренируете старшего технического сотрудника"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_trainee
 msgid "You will initially be coached by senior trainees"
-msgstr ""
+msgstr "Вы изначально тренирует старших стажеров"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "You will report to the head of R&amp;D"
-msgstr ""
+msgstr "Вы сообщите руководителю R &amp; D"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "You will work closely with all developers"
-msgstr ""
+msgstr "Вы будете работать в тесном контакте со всеми разработчиками"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 msgid "You will work closely with all technical officer"
 msgstr ""
+"Вы будете работать в тесном контакте со всеми техническими сотрудниками"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_trainee
 msgid "You will work closely with all trainees"
-msgstr ""
+msgstr "Вы будете работать в тесном контакте со всеми стажерами"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr "Ваш документ не был создан"
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
 msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and timesheets,\n"
-"                leaves and holidays, recruitments, etc."
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
 msgstr ""
+"Ваш документ не был создан потому, что ваш адрес электронной почты не "
+"распознается. Пожалуйста, присылайте письма с адреса электронной почты, "
+"зарегистрированного на вашего информационного сотрудника, или обратитесь к "
+"менеджеру по персоналу."
+
+#. module: hr
+#: code:addons/hr/models/mail_thread.py:41
+#, python-format
+msgid "alias %s does not accept unknown employees"
+msgstr "алиас %s не принимает неизвестных сотрудников"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
@@ -1592,3 +1645,28 @@ msgstr "подразделение"
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
 msgstr "т.е. частичная занятость"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr "нап. Менеджер Продаж"
+
+#. module: hr
+#: code:addons/hr/models/mail_thread.py:41
+#, python-format
+msgid "skipping"
+msgstr "пропуск"
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr "пользователь сможет утвердить документ, созданный сотрудниками."
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr ""
+"пользователь будет иметь доступ к настройке управления персоналом, а также к"
+" статистическим отчетам ."

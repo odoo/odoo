@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp.tests import common
+from odoo.tests import common
 
 
 class TestStockCommon(common.TransactionCase):
@@ -27,15 +27,17 @@ class TestStockCommon(common.TransactionCase):
         self.picking_type_out = self.ModelDataObj.xmlid_to_res_id('stock.picking_type_out')
         self.supplier_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_suppliers')
         self.stock_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_stock')
+        self.pack_location = self.ModelDataObj.xmlid_to_res_id('stock.location_pack_zone')
         self.customer_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_customers')
         self.categ_unit = self.ModelDataObj.xmlid_to_res_id('product.product_uom_categ_unit')
         self.categ_kgm = self.ModelDataObj.xmlid_to_res_id('product.product_uom_categ_kgm')
 
         # Product Created A, B, C, D
-        self.productA = self.ProductObj.create({'name': 'Product A'})
-        self.productB = self.ProductObj.create({'name': 'Product B'})
-        self.productC = self.ProductObj.create({'name': 'Product C'})
-        self.productD = self.ProductObj.create({'name': 'Product D'})
+        self.productA = self.ProductObj.create({'name': 'Product A', 'type': 'product'})
+        self.productB = self.ProductObj.create({'name': 'Product B', 'type': 'product'})
+        self.productC = self.ProductObj.create({'name': 'Product C', 'type': 'product'})
+        self.productD = self.ProductObj.create({'name': 'Product D', 'type': 'product'})
+        self.productE = self.ProductObj.create({'name': 'Product E', 'type': 'product'})
 
         # Configure unit of measure.
         self.uom_kg = self.UomObj.create({
@@ -90,9 +92,9 @@ class TestStockCommon(common.TransactionCase):
             'rounding': 1.0})
 
         # Product for different unit of measure.
-        self.DozA = self.ProductObj.create({'name': 'Dozon-A', 'uom_id': self.uom_dozen.id, 'uom_po_id': self.uom_dozen.id})
-        self.SDozA = self.ProductObj.create({'name': 'SuperDozon-A', 'uom_id': self.uom_sdozen.id, 'uom_po_id': self.uom_sdozen.id})
-        self.SDozARound = self.ProductObj.create({'name': 'SuperDozenRound-A', 'uom_id': self.uom_sdozen_round.id, 'uom_po_id': self.uom_sdozen_round.id})
-        self.UnitA = self.ProductObj.create({'name': 'Unit-A'})
-        self.kgB = self.ProductObj.create({'name': 'kg-B', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id})
-        self.gB = self.ProductObj.create({'name': 'g-B', 'uom_id': self.uom_gm.id, 'uom_po_id': self.uom_gm.id})
+        self.DozA = self.ProductObj.create({'name': 'Dozon-A', 'type': 'product', 'uom_id': self.uom_dozen.id, 'uom_po_id': self.uom_dozen.id})
+        self.SDozA = self.ProductObj.create({'name': 'SuperDozon-A', 'type': 'product', 'uom_id': self.uom_sdozen.id, 'uom_po_id': self.uom_sdozen.id})
+        self.SDozARound = self.ProductObj.create({'name': 'SuperDozenRound-A', 'type': 'product', 'uom_id': self.uom_sdozen_round.id, 'uom_po_id': self.uom_sdozen_round.id})
+        self.UnitA = self.ProductObj.create({'name': 'Unit-A', 'type': 'product'})
+        self.kgB = self.ProductObj.create({'name': 'kg-B', 'type': 'product', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id})
+        self.gB = self.ProductObj.create({'name': 'g-B', 'type': 'product', 'uom_id': self.uom_gm.id, 'uom_po_id': self.uom_gm.id})

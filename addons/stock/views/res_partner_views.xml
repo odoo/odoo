@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <!--
+    Partners Extension
+  -->
+
+    <record id="view_partner_stock_form" model="ir.ui.view">
+        <field name="name">res.partner.stock.property.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="mail.view_emails_partner_info_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='container_row_2']" position="after">
+                <group name="container_row_stock" groups="base.group_no_one">
+                    <group string="Warehouse" name="warehouse">
+                        <field name="property_stock_customer" domain="[('usage','=','customer')]"/>
+                        <field name="property_stock_supplier" domain="[('usage','=','supplier')]"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_stock_warnings_form" model="ir.ui.view">
+        <field name="name">res.partner.stock.warning</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <page name="internal_notes" position="inside">
+                <group colspan="2" col="2" groups="stock.group_warning_stock">
+                    <separator string="Warning on the Picking" colspan="4"/>
+                    <field name="picking_warn" nolabel="1" />
+                    <field name="picking_warn_msg" colspan="3" nolabel="1" 
+                            attrs="{'required':[('picking_warn','!=','no-message')],'readonly':[('picking_warn','=','no-message')]}"/>
+                </group>
+            </page>
+        </field>
+    </record>
+
+  </data>
+</odoo>

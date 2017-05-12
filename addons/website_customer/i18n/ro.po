@@ -3,14 +3,17 @@
 # * website_customer
 # 
 # Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2016
+# Cozmin Candea <office@terrabit.ro>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-11-06 08:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,7 +23,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "<span class=\"fa fa-1x fa-tags\"/> All"
-msgstr ""
+msgstr "<span class=\"fa fa-1x fa-tags\"/> Tot"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
@@ -28,7 +31,7 @@ msgid "Active"
 msgstr "Activ(a)"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:65
 #, python-format
 msgid "All Countries"
 msgstr "Toate țările"
@@ -41,7 +44,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_name
 msgid "Category Name"
-msgstr "Numele categoriei"
+msgstr "Nume categorie"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_classname
@@ -51,7 +54,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Click to create a new partner tag."
-msgstr ""
+msgstr "Click pentru a crea o noua eticheta partener"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
@@ -66,7 +69,7 @@ msgstr "Creat în"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
 msgid "Display Name"
-msgstr "Afiseaza nume"
+msgstr "Nume afișat"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_id
@@ -123,12 +126,6 @@ msgid "Partner Tag"
 msgstr "Etichete Partener"
 
 #. module: website_customer
-#: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
-#: model:ir.ui.view,arch_db:website_customer.view_partner_tag_list
-msgid "Partner Tags"
-msgstr "Etichete Partener"
-
-#. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner_tag
 msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
@@ -158,17 +155,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Search"
-msgstr "Căutați"
-
-#. module: website_customer
-#: model:ir.ui.menu,name:website_customer.menu_partner_tag_form
-msgid "Tags"
-msgstr "Etichete"
-
-#. module: website_customer
-#: model:ir.model.fields,help:website_customer.field_res_partner_tag_website_url
-msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "Caută"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
@@ -178,17 +165,15 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Vizibil în portal/pagină web"
 
 #. module: website_customer
+#: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
+#: model:ir.ui.menu,name:website_customer.menu_partner_tag_form
+#: model:ir.ui.view,arch_db:website_customer.view_partner_tag_list
 #: model:ir.ui.view,arch_db:website_customer.view_partners_form_website
 msgid "Website Tags"
 msgstr ""
-
-#. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_url
-msgid "Website URL"
-msgstr "URL website"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids

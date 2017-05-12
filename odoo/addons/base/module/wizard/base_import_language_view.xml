@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_base_import_language" model="ir.ui.view">
+            <field name="name">Import Translation</field>
+            <field name="model">base.language.import</field>
+            <field name="arch" type="xml">
+                <form string="Import Translation">
+                    <group>
+                        <field name="name" placeholder="e.g. English"/>
+                        <field name="code" string="Code" placeholder="e.g. en_US"/>
+                        <field name="data" filename="filename"/>
+                        <field name="filename" invisible="1"/>
+                        <field name="overwrite"/>
+                    </group>
+                    <footer>
+                        <button name="import_lang" string="_Import" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_base_import_language" model="ir.actions.act_window">
+            <field name="name">Import Translation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.language.import</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+        action="action_view_base_import_language"
+        id="menu_view_base_import_language"
+        parent="menu_translation_export"/>
+
+    </data>
+</odoo>

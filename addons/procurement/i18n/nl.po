@@ -3,17 +3,19 @@
 # * procurement
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Martin Trigaux, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-03-12 08:36+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,25 +25,15 @@ msgstr ""
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
-"<b>Procurement Orders</b> represent the need for a certain quantity of "
-"products, at a given time, in a given location."
-msgstr "<b>Verwervingsopdrachten</b> vertegenwoordigen de nood voor een bepaalde hoeveelheid producten, op een bepaalde tijd, op een bepaalde locatie."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
-"                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr "<b>Verkooporders</b> zijn een typische bron van verwervingsopdrachten (maar deze zijn verschillende documenten).\n<br>Afhankelijk van de verwervingsparameters en de productconfiguratie zal de verwervingsmachine proberen te voldoen aan de nood door producten te reserveren van de voorraad, door producten te bestellen van een leverancier of door een productieorder aan te maken, etc..."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
 "A <b>Procurement Exception</b> occurs when the system cannot find a way to "
 "fulfill a procurement. Some exceptions will resolve themselves "
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
-msgstr "Een <b>verwervingsfout</b> gebeurt wanneer het systeem geen manier kan vinden om een verwerving te voltooien. Sommige uitzonderingen lossen zich automatisch vanzelf op, maar anderen vereisen handmatige interventie (deze zijn geïdentificeerd met een specifieke foutmelding in de chatter)."
+msgstr ""
+"Een <b>verwervingsfout</b> gebeurt wanneer het systeem geen manier kan "
+"vinden om een verwerving te voltooien. Sommige uitzonderingen lossen zich "
+"automatisch vanzelf op, maar anderen vereisen handmatige interventie (deze "
+"zijn geïdentificeerd met een specifieke foutmelding in de chatter)."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -52,17 +44,16 @@ msgid ""
 "                product at a specific location. Procurement orders are usually\n"
 "                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
-msgstr "Een <b>verwervingsorder</b> wordt gebruikt om de nood van een specifiek\nproduct op te nemen op een specifieke locatie. Verwervingsorders zijn meestal\nautomatisch aangemaakt van <i>verkooporders, pull logistieke regels of\nminimale stokregels.</i>"
+msgstr ""
+"Een <b>verwervingsorder</b> wordt gebruikt om de nood van een specifiek\n"
+"product op te nemen op een specifieke locatie. Verwervingsorders zijn meestal\n"
+"automatisch aangemaakt van <i>verkooporders, pull logistieke regels of\n"
+"minimale stokregels.</i>"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
 msgstr "Actie"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
-msgid "Action Needed"
-msgstr "Vereist actie"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
@@ -75,9 +66,14 @@ msgid "All at once"
 msgstr "Lever alles tegelijk"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr "Annuleer"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -90,12 +86,6 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:139
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Het is niet mogelijk om verwerving order(s) te verwijderen welke zich in de %s status bevinden"
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Check Procurement"
 msgstr "Controleer verwerving"
@@ -106,14 +96,10 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but"
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
-msgstr "De gekozen regel voor de verwerving.Normaliter wordt dit automatisch ingesteld door het systeem, maar kan worden aangepast door de manager om abnormaal gedrag te forceren."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"Click to create a Procurement order in exception state, or remove the filter"
-" on the search bar to display all the procurements."
-msgstr "Klik om een verwervingsopdracht aan te maken in de uitzondering status, of verwijder de filter in de zoekbalk om alle verwervingen te tonen."
+msgstr ""
+"De gekozen regel voor de verwerving.Normaliter wordt dit automatisch "
+"ingesteld door het systeem, maar kan worden aangepast door de manager om "
+"abnormaal gedrag te forceren."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -160,14 +146,9 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum van het laatste bericht verstuurt op deze regel."
-
-#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-msgid "Delivery Method"
-msgstr "Leveringsmethode"
+msgid "Delivery Type"
+msgstr "Soort levering"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -180,12 +161,12 @@ msgstr "Omschrijving"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
 msgid "Display Name"
-msgstr "Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Done"
-msgstr "Voltooid"
+msgstr "Verwerkt"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -218,29 +199,14 @@ msgid "Fixed Procurement Group"
 msgstr "Vaste verwervingsgroep"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
-msgid "Followers"
-msgstr "Volgers"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Volgers (Kanalen)"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
-msgstr "Algemeen"
+msgstr "Voor iedereen"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Group By"
-msgstr "Groeperen op"
+msgstr "Groepeer op"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
@@ -257,16 +223,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
 msgstr "Als de route globaal is"
@@ -274,17 +230,9 @@ msgstr "Als de route globaal is"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr "Indien uitgevinkt kunt u de groep verbergen, zonder deze te hoeven verwijderen."
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
-msgid "Is Follower"
-msgstr "Is een volger"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
-msgid "Last Message Date"
-msgstr "Laatste bericht datum"
+msgstr ""
+"Indien uitgevinkt kunt u de groep verbergen, zonder deze te hoeven "
+"verwijderen."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -321,19 +269,15 @@ msgid "Leave Empty"
 msgstr "Laat leeg"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Logistiek"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
-msgid "Messages"
-msgstr "Berichten"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
+"De meest voorkomende uitzonderingen zijn te bestellen producten\n"
+"zonder een leverancier gedefinieerd op het product, en producten te\n"
+"fabriceren zonder een materiaallijst."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -341,7 +285,7 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:206
+#: code:addons/procurement/models/procurement.py:189
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Geen regel gevonden die geschikt is voor deze verwerving"
@@ -359,22 +303,7 @@ msgstr "Niet urgent"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Notes"
-msgstr "Notities"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Aantal acties"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Aantal berichten die actie vereisen"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Aantal ongelezen berichten"
+msgstr "Opmerkingen"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -426,7 +355,7 @@ msgstr "Verwervingsaanvraag"
 #: model:ir.model,name:procurement.model_procurement_rule
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Procurement Rule"
-msgstr "Verwerving regel"
+msgstr "Verwervingsregel"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
@@ -495,9 +424,11 @@ msgstr "Referentie"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
-msgstr "Referentie van het document dat deze verwerving heeft aangemaakt.\nDit wordt automatisch ingevuld door Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
+msgstr ""
+"Referentie van het document dat deze verwerving heeft aangemaakt.\n"
+"Dit wordt automatisch ingevuld door Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -523,7 +454,7 @@ msgstr "Starten planners"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Running"
-msgstr "In behandeling"
+msgstr "Actief"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_date_planned
@@ -559,7 +490,7 @@ msgstr "Reeks"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
 msgid "Source Document"
-msgstr "Bron document"
+msgstr "Brondocument"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_state
@@ -578,16 +509,6 @@ msgid "Unit of Measure"
 msgstr "Maateenheid"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread
-msgid "Unread Messages"
-msgstr "Ongelezen berichten"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Teller ongelezen berichten"
-
-#. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
 msgstr "Urgent"
@@ -598,24 +519,24 @@ msgid "Very Urgent"
 msgstr "Zeer urgent"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
-msgid "Website Messages"
-msgstr "Website berichten"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
-msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: purchase\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
-msgstr "Wanneer de verwervingsorder is bevestigd maakt deze automatisch\nde benodigde bewerkingen aan om te voldoen aan de voorwaarden: inkoopordervoorstel,\nproductieorder, etc."
+msgstr ""
+"Wanneer de verwervingsorder is bevestigd maakt deze automatisch\n"
+"de benodigde bewerkingen aan om te voldoen aan de voorwaarden: inkoopordervoorstel, productieorder, etc."
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:144
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr ""
+"U kan een document niet verwijderen dat zich bevind in de geannuleerde "
+"status."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <record id="view_account_position_form" model="ir.ui.view">
@@ -37,13 +37,15 @@
                         <page name="tax_mapping" string="Tax Mapping">
                         <group>
                             <field name="tax_ids" widget="one2many_list" nolabel="1">
-                                <tree string="Tax Mapping" editable="bottom">
+                                <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
                                     <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), ('price_include', '=', False)]"/>
+                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
                                 </tree>
-                                <form string="Tax Mapping">
-                                    <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), ('price_include', '=', False)]"/>
+                                <form name="tax_map_form" string="Tax Mapping">
+                                    <group>
+                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
+                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
+                                    </group>
                                 </form>
                             </field>
                         </group>
@@ -63,6 +65,7 @@
                         </group>
                         </page>
                     </notebook>
+                    <field name="note" placeholder="Legal Notes..."/>
                     </sheet>
                 </form>
             </field>
@@ -93,13 +96,13 @@
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button type="action"
+                    <button type="object"
                         class="oe_stat_button"
                         id="invoice_button"
                         icon="fa-pencil-square-o"
-                        name="%(account.action_invoice_refund_out_tree)d"
+                        name="open_partner_history"
                         attrs="{'invisible': [('customer', '=', False)]}"
-                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}">
+                        context="{'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_value"><field name="total_invoiced" widget='monetary' options="{'currency_field': 'currency_id'}"/></span>
                             <span class="o_stat_text">Invoiced</span>
@@ -119,6 +122,14 @@
 
                     </group>
                 </group>
+                <page name="internal_notes" position="inside">
+                    <group colspan="2" col="2" groups="account.group_warning_account">
+                        <separator string="Warning on the Invoice" colspan="4"/>
+                        <field name="invoice_warn" nolabel="1" />
+                        <field name="invoice_warn_msg" colspan="3" nolabel="1" 
+                                attrs="{'required':[('invoice_warn','!=','no-message')],'readonly':[('invoice_warn','=','no-message')]}"/>
+                    </group>
+                </page>
             </field>
         </record>
 
@@ -127,11 +138,11 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="priority" eval="22"/>
-            <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d"
-                        icon="fa-book">
+                        icon="fa-book" groups="analytic.group_analytic_accounting">
                         <field string="Analytic Accounts" name="contracts_count" widget="statinfo"/>
                     </button>
                 </div>
@@ -167,6 +178,7 @@
                         <group string="Sale" name="acc_sale">
                             <field name="property_payment_term_id" widget="selection"/>
                             <field name="credit" groups="base.group_no_one"/>
+                            <field name="trust"/>
                         </group>
                         <group string="Purchase" name="acc_purchase">
                             <field name="property_supplier_payment_term_id" widget="selection"/>
@@ -174,7 +186,7 @@
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <group string="Fiscal Information" name="fiscal_information">
-                            <field name="property_account_position_id" widget="selection"/>
+                            <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_manager">
                             <field name="property_account_receivable_id"/>
@@ -191,4 +203,4 @@
             </field>
         </record>
     </data>
-</openerp>
+</odoo>

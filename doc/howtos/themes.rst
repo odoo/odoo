@@ -144,17 +144,17 @@ Odoo's XML files, an overview
 -----------------------------
 
 Any Odoo XML file starts with encoding specifications.
-After that, you have to write your code inside a ``<data>`` tag, placed into an ``</openerp>`` tag.
+After that, you have to write your code inside a ``<data>`` tag, placed into an ``</odoo>`` tag.
 
 .. code-block:: xml
 
    [XML]
    <?xml version="1.0" encoding="utf-8" ?>
-   <openerp>
+   <odoo>
      <data>
        ## YOUR CODE HERE
      </data>
-   </openerp>
+   </odoo>
 
 Almost every element and option that you create has to be placed inside a ``<template>`` tag, like in this example.
 
@@ -205,9 +205,9 @@ Odoo’s themes are packaged like modules. Even if you are designing a very simp
   Create a folder and name it like this: ``theme_`` followed by your
   theme's name.
 
-``__openerp__.py``
+``__manifest__.py``
   Create an empty document and save it to your folder as
-  ``__openerp__.py``. This will contain the configuration info for
+  ``__manifest__.py``. This will contain the configuration info for
   your theme.
 
 ``__init__.py``
@@ -223,16 +223,16 @@ Odoo’s themes are packaged like modules. Even if you are designing a very simp
 .. important::
 
   Use two underscore characters at the beginning
-  and two at the end of openerp and init file names.
+  and two at the end of odoo and init file names.
 
 The final result should be something like this:
 
 .. image:: theme_tutorial_assets/img/folder.jpg
 
-Edit ``__openerp__.py``
------------------------
+Edit ``__manifest__.py``
+------------------------
 
-Open the ``__openerp__.py`` you created and copy/paste the following:
+Open the ``__manifest__.py`` you created and copy/paste the following:
 
 .. code-block:: python
 
@@ -309,11 +309,11 @@ To do so, create a **layout.xml** file in your **views** folder and add the defa
 .. code-block:: xml
 
    <?xml version="1.0" encoding="utf-8" ?>
-   <openerp>
+   <odoo>
      <data>
 
      </data>
-   </openerp>
+   </odoo>
 
 Create a new template into the ``<data>`` tag, copy-pasting the following
 code.
@@ -349,7 +349,7 @@ target css rules to that element and avoid these affecting other content on the 
 The second xpath will add a welcome message just after the navigation menu.
 
 The last step is to add layout.xml to the list of xml files used by
-the theme. To do that, edit your ``__openerp__.py`` file like this
+the theme. To do that, edit your ``__manifest__.py`` file like this
 
 .. code-block:: python
 
@@ -379,7 +379,7 @@ default Odoo markup.  Inside ``<data>`` create a ``<template>`` tag, set the
 .. code-block:: xml
 
    <?xml version="1.0" encoding="utf-8" ?>
-   <openerp>
+   <odoo>
      <data>
        <!-- === Services Page === -->
        <template name="Services page" id="website.services" page="True">
@@ -391,7 +391,7 @@ default Odoo markup.  Inside ``<data>`` create a ``<template>`` tag, set the
            </ul>
          </template>
        </data>
-     </openerp>
+     </odoo>
 
 The page title will be the template ID. In our case *Services* (from ``website.services``)
 
@@ -429,7 +429,7 @@ can fill with snippets. To achieve this, just create a ``div`` with
 .. code-block:: xml
 
    <?xml version="1.0" encoding="utf-8" ?>
-   <openerp>
+   <odoo>
    <data>
 
    <!-- === Services Page === -->
@@ -451,13 +451,13 @@ can fill with snippets. To achieve this, just create a ``div`` with
    </template>
 
    </data>
-   </openerp>
+   </odoo>
 
 .. tip::
 
    You can create as many snippet areas as you like and place them anywhere in your pages.
 
-Our page is almost ready. Now all we have to do is add **pages.xml** in our **__openerp__.py** file
+Our page is almost ready. Now all we have to do is add **pages.xml** in our **__manifest__.py** file
 
 .. code-block:: python
 
@@ -560,7 +560,7 @@ assets*".
 Placing it after the last one, we ensure that our file will
 be loaded at the end and take priority.
 
-Finally add **assets.xml** in your **__openerp__.py** file.
+Finally add **assets.xml** in your **__manifest__.py** file.
 
 Update your theme
 
@@ -614,7 +614,7 @@ The previous code will create the snippet’s content, but we still need to plac
 .. code-block:: xml
 
    <template id="place_into_bar" inherit_id="website.snippets" name="Place into bar">
-     <xpath expr="//div[@id='snippet_structure']" position="inside">
+     <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
        <t t-snippet="theme_tutorial.snippet_testimonial"
           t-thumbnail="/theme_tutorial/static/src/img/ui/snippet_thumb.jpg"/>
      </xpath>
@@ -717,7 +717,7 @@ the attribute will automatically be applied to the element.
 Since ``select_class`` method avoids multiple selections, the last "empty"
 option will reset the snippet to default.
 
-Add **options.xml** to ``__openerp__.py`` and update your theme.
+Add **options.xml** to ``__manifest__.py`` and update your theme.
 
 .. image:: theme_tutorial_assets/img/restart.png
 
@@ -787,8 +787,8 @@ the following code
 
     (function() {
         'use strict';
-        var website = openerp.website;
-        website.openerp_website = {};
+        var website = odoo.website;
+        website.odoo_website = {};
     })();
 
 Great, we successfully created our javascript editor file. This file will contain all the javascript functions used by our snippets in edit mode. Let’s create a new function for our testimonial snippet using the ``snippet_testimonial_options`` method that we created before.
@@ -797,8 +797,8 @@ Great, we successfully created our javascript editor file. This file will contai
 
    (function() {
        'use strict';
-       var website = openerp.website;
-       website.openerp_website = {};
+       var website = odoo.website;
+       website.odoo_website = {};
 
        website.snippet.options.snippet_testimonial_options = website.snippet.Option.extend({
            on_focus: function() {

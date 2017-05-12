@@ -268,6 +268,17 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
         });
         return this;
     },
+    once: function(events, dest, func) {
+        // similar to this.on(), but func is executed only once
+        var self = this
+        if (typeof func !== "function") {
+            throw new Error("Event handler must be a function.");
+        }
+        self.on(events, dest, function what() {
+            func.apply(this, arguments);
+            self.off(events, dest, what);
+        });
+    },
     trigger: function() {
         this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
         return this;

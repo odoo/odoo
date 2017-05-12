@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
-
-        <!-- After installation of the module, open the related menu -->
-        <record id="action_client_event_menu" model="ir.actions.client">
-            <field name="name">Open Event Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('event.menu_event_event')}"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_event_menu"/>
-            <field name="state">open</field>
-        </record>
-
         <!-- notify all employees of module installation -->
         <function model="mail.channel" name="message_post">
             <value eval="[ref('mail.channel_all_employees')]"/>
@@ -38,4 +26,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

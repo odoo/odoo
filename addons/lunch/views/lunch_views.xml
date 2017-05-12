@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <!-- Top menu item -->
-        <menuitem id='menu_lunch' name='Lunch' sequence="105" groups="group_lunch_user" icon="fa-cutlery" web_icon="lunch,static/description/icon.png"/>
+        <menuitem id='menu_lunch' name='Lunch' sequence="105" groups="group_lunch_user" web_icon="lunch,static/description/icon.png"/>
         <menuitem name="My Lunch" parent="menu_lunch" id="menu_lunch_title" sequence="50" />
         <menuitem name="Manager" parent="menu_lunch" id="menu_lunch_admin" sequence="51" groups="group_lunch_manager"/>
-        <menuitem name="Configuration" parent="menu_lunch" id="menu_lunch_config" sequence="53" groups="group_lunch_manager,base.group_configuration"/>
+        <menuitem name="Configuration" parent="menu_lunch" id="menu_lunch_config" sequence="53" groups="group_lunch_manager"/>
 
          <!--View Search to group/filter by Supplier and time-->
         <record id="lunch_order_line_view_search" model="ir.ui.view">
@@ -12,7 +12,9 @@
             <field name="model">lunch.order.line</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('note', 'ilike', self)]"/>
+                    <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
+                    <separator/>
+                    <field name="name" string="Product" filter_domain="['|', ('name', 'ilike', self), ('note', 'ilike', self)]"/>
                     <filter name="not_confirmed" string="Not Received" domain="[('state','!=',('confirmed'))]"/>
                     <filter name="confirmed" string="Received" domain="[('state','=','confirmed')]"/>
                     <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
@@ -20,6 +22,7 @@
                     <filter name="today" string="Today" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
+                        <filter name="group_by_order_id" string="By Order" context="{'group_by':'order_id'}"/>
                         <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier'}"/>
                         <filter name="group_by_date" string="Order Month" context="{'group_by':'date'}" help="Vendor Orders by Month"/>
                     </group>
@@ -57,32 +60,13 @@
             </field>
         </record>
 
-        <!--View search for order-->
-        <record id="lunch_order_view_search" model="ir.ui.view">
-            <field name='name'>lunch.order.search</field>
-            <field name='model'>lunch.order</field>
-            <field name='arch' type='xml'>
-                <search string="lunch orders">
-                    <field name="user_id"/>
-                    <field name="date"/>
-                    <field name="order_line_ids"/>
-                    <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
-                    <separator/>
-                    <filter name="new" string="New" domain="[('state','=','new')]"/>
-                    <filter name="received" string="Received" domain="[('state','=','confirmed')]"/>
-                    <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
-                    <filter name='by_users' string="Users" context="{'group_by':'user_id'}"/>
-                </search>
-            </field>
-        </record>
-
-
         <record id="lunch_alert_view_search" model="ir.ui.view">
             <field name="name">lunch.alert.search</field>
             <field name="model">lunch.alert</field>
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="message"/>
+                    <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>
@@ -108,8 +92,7 @@
                 <form string="cashmove form">
                     <sheet>
                         <group>
-                            <field name="user_id"
-                                   context="{'default_groups_ref': ['base.group_user', 'lunch.group_lunch_user']}"/>
+                            <field name="user_id" required="1"/>
                             <field name="date"/>
                             <field name="amount"/>
                         </group>
@@ -129,24 +112,19 @@
         </record>
         <menuitem name="New Order" parent="menu_lunch_title" id="lunch_order_menu_form" action="lunch_order_action_form" sequence="1"/>
 
-        <record id="lunch_order_action_tree" model="ir.actions.act_window">
+        <record id="lunch_order_line_action" model="ir.actions.act_window">
             <field name="name">Your Orders</field>
-            <field name="res_model">lunch.order</field>
+            <field name="res_model">lunch.order.line</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="lunch_order_view_search"/>
-            <field name="context">{"search_default_is_mine":1, "search_default_received":1}</field>
+            <field name="search_view_id" ref="lunch_order_line_view_search"/>
+            <field name="context">{"search_default_is_mine":1}</field>
             <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a lunch order.
-            </p>
             <p>
-                A lunch order is defined by its user, date and order lines.
-                Each order line corresponds to a product, an additional note and a price.
-                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area.
+                There is no previous order recorded. Click on "My Lunch" and then create a new lunch order.
             </p>
             </field>
         </record>
-        <menuitem name="Previous Orders" parent="menu_lunch_title" id="lunch_order_menu_tree" action="lunch_order_action_tree" sequence="2"/>
+        <menuitem name="Previous Orders" parent="menu_lunch_title" id="lunch_order_menu_tree" action="lunch_order_line_action" sequence="2"/>
 
         <record id="lunch_cashmove_view_tree_2" model="ir.ui.view">
             <field name="name">lunch.cashmove.tree</field>
@@ -190,9 +168,9 @@
                 Here you can see today's orders grouped by vendors.
               </p>
               <p>
-                - Click on the <img src="../../../web/static/src/img/icons/terp-call-start.png"/> to announce that the order is ordered <br/>
-                - Click on the <img src="../../../web/static/src/img/icons/gtk-apply.png"/> to announce that the order is received <br/>
-                - Click on the <img src="../../../web/static/src/img/icons/gtk-cancel.png"/> to announce that the order isn't available
+                - Click on the <span class="fa fa-phone text-success"/> to announce that the order is ordered <br/>
+                - Click on the <span class="fa fa-check text-success"/> to announce that the order is received <br/>
+                - Click on the <span class="fa fa-times-circle text-danger"/> to announce that the order isn't available
               </p>
             </field>
         </record>
@@ -210,9 +188,9 @@
                 Summary of all lunch orders, grouped by vendor and by date.
               </p>
               <p>
-                - Click on the <img src="../../../web/static/src/img/icons/terp-call-start.png"/> to announce that the order is ordered <br/>
-                - Click on the <img src="../../../web/static/src/img/icons/gtk-apply.png"/> to announce that the order is received <br/>
-                - Click on the <img src="../../../web/static/src/img/icons/gtk-cancel.png"/> red X to announce that the order isn't available
+                - Click on the <span class="fa fa-phone text-success"/> to announce that the order is ordered <br/>
+                - Click on the <span class="fa fa-check text-success"/> to announce that the order is received <br/>
+                - Click on the <span class="fa fa-times-circle text-danger"/> red X to announce that the order isn't available
               </p>
             </field>
         </record>
@@ -334,15 +312,15 @@
             <field name="arch" type="xml">
                 <tree string="Order lines Tree" create="false" edit="false">
                     <field name='date'/>
-                    <field name='user_id'/>
                     <field name='supplier' invisible='1'/>
                     <field name='product_id'/>
                     <field name='note'/>
                     <field name='state'/>
-                    <field name='price' sum="Total"/>
-                    <button name="order" string="Order" type="object" icon="terp-call-start" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}"/>
-                    <button name="confirm" string="Receive" type="object" icon="gtk-apply" attrs="{'invisible': [('state','!=','ordered')]}"/>
-                    <button name="cancel" string="Cancel" type="object" icon="gtk-cancel" attrs="{'invisible': [('state','=','cancelled')]}"/>
+                    <field name='user_id'/>
+                    <field name='price' sum="Total" string="Price"/>
+                    <button name="order" string="Order" type="object" icon="fa-phone text-success" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager"/>
+                    <button name="confirm" string="Receive" type="object" icon="fa-check text-success" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager"/>
+                    <button name="cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager"/>
                 </tree>
             </field>
         </record>
@@ -388,7 +366,7 @@
 
                         <group>
                             <group>
-                                <field name='user_id' context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'lunch.group_lunch_user']}" class="oe_inline"/>
+                                <field name='user_id' class="oe_inline" required='1'/>
                                 <field name='date'/>
                             </group>
                             <div>
@@ -435,6 +413,25 @@
             </field>
         </record>
 
+        <record id="action_server_lunch_archive_product" model="ir.actions.server">
+            <field name="name">Archive/Unarchive</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_lunch_product" />
+            <field name="state">code</field>
+            <field name="code">records.toggle_active()</field>
+        </record>
+
+        <record id="ir_values_lunch_archive_product" model="ir.values">
+            <field name="name">action_lunch_archive_product</field>
+            <field name="action_id" ref="action_server_lunch_archive_product" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_server_lunch_archive_product'))"/>
+            <field name="key">action</field>
+            <field name="model_id" ref="model_lunch_product" />
+            <field name="model">lunch.product</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <!-- Search for product -->
         <record id="lunch_product_view_search" model="ir.ui.view">
             <field name="name">lunch.product.search</field>
@@ -448,6 +445,7 @@
                     <group expand="0" string="Group By">
                         <filter name="supplier" string="Vendor" context="{'group_by': 'supplier'}"/>
                         <filter name="category" string="Category" context="{'group_by': 'category_id'}"/>
+                        <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                     </group>
                 </search>
             </field>
@@ -460,18 +458,27 @@
                 <form string="Products Form">
                     <header>
                     </header>
-                    <group>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <group>
-                            <field name='name'/>
-                            <field name='category_id'/>
+                            <group>
+                                <field name='name'/>
+                                <field name='category_id'/>
+                            </group>
+                            <group>
+                                <field name='supplier'/>
+                                <field name='price'/>
+                            </group>
                         </group>
-                        <group>
-                            <field name='supplier'/>
-                            <field name='price'/>
-                        </group>
-                    </group>
-                    <label for='description'/>
-                    <field name='description'/>
+                        <label for='description'/>
+                        <field name='description'/>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -495,6 +502,13 @@
             <field name="model">lunch.alert</field>
             <field name="arch" type="xml">
                 <form>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <group>
                         <group string="Schedule Date">
                             <field name="alert_type"/>

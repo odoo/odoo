@@ -1,6 +1,8 @@
-from openerp import SUPERUSER_ID
-from openerp.tests import common
-from .. import test_models
+# # -*- coding: utf-8 -*-
+# # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.tests import common
+
 
 @common.at_install(False)
 @common.post_install(True)
@@ -26,7 +28,7 @@ class base_action_rule_test(common.TransactionCase):
         """
         lead = self.create_lead(state='open')
         self.assertEqual(lead.state, 'open')
-        self.assertEqual(lead.user_id, self.user_admin)
+        self.assertEqual(lead.user_id, self.user_admin, "Responsible should not change on creation of Lead with state 'open'.")
 
     def test_01_check_to_state_draft_post(self):
         """
@@ -34,8 +36,8 @@ class base_action_rule_test(common.TransactionCase):
         filter which check that the state is draft.
         """
         lead = self.create_lead()
-        self.assertEqual(lead.state, 'draft')
-        self.assertEqual(lead.user_id, self.user_demo)
+        self.assertEqual(lead.state, 'draft', "Lead state should be 'draft'")
+        self.assertEqual(lead.user_id, self.user_demo, "Responsible should be change on creation of Lead with state 'draft'.")
 
     def test_02_check_from_draft_to_done_with_steps(self):
         """
@@ -43,21 +45,20 @@ class base_action_rule_test(common.TransactionCase):
         other states (open, pending and cancel). We have a rule with:
          - precondition: the record is in "open"
          - postcondition: that the record is "done".
-
         If the state goes from 'open' to 'done' the responsible is changed.
         If those two conditions aren't verified, the responsible remains the same.
         """
         lead = self.create_lead(state='open')
-        self.assertEqual(lead.state, 'open')
-        self.assertEqual(lead.user_id, self.user_admin)
+        self.assertEqual(lead.state, 'open', "Lead state should be 'open'")
+        self.assertEqual(lead.user_id, self.user_admin, "Responsible should not change on creation of Lead with state 'open'.")
         # change state to pending and check that responsible has not changed
         lead.write({'state': 'pending'})
-        self.assertEqual(lead.state, 'pending')
-        self.assertEqual(lead.user_id, self.user_admin)
+        self.assertEqual(lead.state, 'pending', "Lead state should be 'pending'")
+        self.assertEqual(lead.user_id, self.user_admin, "Responsible should not change on creation of Lead with state from 'draft' to 'open'.")
         # change state to done and check that responsible has not changed
         lead.write({'state': 'done'})
-        self.assertEqual(lead.state, 'done')
-        self.assertEqual(lead.user_id, self.user_admin)
+        self.assertEqual(lead.state, 'done', "Lead state should be 'done'")
+        self.assertEqual(lead.user_id, self.user_admin, "Responsible should not chang on creation of Lead with state from 'pending' to 'done'.")
 
     def test_03_check_from_draft_to_done_without_steps(self):
         """
@@ -65,17 +66,16 @@ class base_action_rule_test(common.TransactionCase):
         other states (open, pending and cancel). We have a rule with:
          - precondition: the record is in "open"
          - postcondition: that the record is "done".
-
         If the state goes from 'open' to 'done' the responsible is changed.
         If those two conditions aren't verified, the responsible remains the same.
         """
         lead = self.create_lead(state='open')
-        self.assertEqual(lead.state, 'open')
-        self.assertEqual(lead.user_id, self.user_admin)
+        self.assertEqual(lead.state, 'open', "Lead state should be 'open'")
+        self.assertEqual(lead.user_id, self.user_admin, "Responsible should not change on creation of Lead with state 'open'.")
         # change state to done and check that responsible has changed
         lead.write({'state': 'done'})
-        self.assertEqual(lead.state, 'done')
-        self.assertEqual(lead.user_id, self.user_demo)
+        self.assertEqual(lead.state, 'done', "Lead state should be 'done'")
+        self.assertEqual(lead.user_id, self.user_demo, "Responsible should be change on write of Lead with state from 'open' to 'done'.")
 
     def test_10_recomputed_field(self):
         """
@@ -85,12 +85,36 @@ class base_action_rule_test(common.TransactionCase):
         partner = self.env.ref('base.res_partner_1')
         partner.write({'customer': False})
         lead = self.create_lead(state='open', partner_id=partner.id)
-        self.assertFalse(lead.customer)
-        self.assertEqual(lead.user_id, self.user_admin)
+        self.assertFalse(lead.customer, "Customer field should updated to False")
+        self.assertEqual(lead.user_id, self.user_admin, "Responsible should not change on creation of Lead with state from 'draft' to 'open'.")
         # change partner, recompute on lead should trigger the rule
         partner.write({'customer': True})
-        self.assertTrue(lead.customer)
-        self.assertEqual(lead.user_id, self.user_demo)
+        self.assertTrue(lead.customer, "Customer field should updated to True")
+        self.assertEqual(lead.user_id, self.user_demo, "Responsible should be change on write of Lead when Customer becomes True.")
+
+    def test_11_recomputed_field(self):
+        """
+        Check that a rule is executed whenever a field is recomputed and the
+        context contains the target field
+        """
+        partner = self.env.ref('base.res_partner_1')
+        lead = self.create_lead(state='draft', partner_id=partner.id)
+        self.assertFalse(lead.deadline, 'There should not be a deadline defined')
+        # change priority and user; this triggers deadline recomputation, and
+        # the server action should set the boolean field to True
+        lead.write({'priority': True, 'user_id': self.user_admin.id})
+        self.assertTrue(lead.deadline, 'Deadline should be defined')
+        self.assertTrue(lead.is_assigned_to_admin, 'Lead should be assigned to admin')
+
+    def test_12_recursive(self):
+        """ Check that a rule is executed recursively by a secondary change. """
+        lead = self.create_lead(state='open')
+        self.assertEqual(lead.state, 'open')
+        self.assertEqual(lead.user_id, self.user_admin)
+        # change partner; this should trigger the rule that modifies the state
+        partner = self.env.ref('base.res_partner_1')
+        lead.write({'partner_id': partner.id})
+        self.assertEqual(lead.state, 'draft')
 
     def test_20_direct_line(self):
         """
@@ -104,7 +128,7 @@ class base_action_rule_test(common.TransactionCase):
         Check that creating a lead with a line executes rules on both records.
         """
         lead = self.create_lead(line_ids=[(0, 0, {'name': "Line"})])
-        self.assertEqual(lead.state, 'draft')
-        self.assertEqual(lead.user_id, self.user_demo)
-        self.assertEqual(len(lead.line_ids), 1)
-        self.assertEqual(lead.line_ids.user_id, self.user_demo)
+        self.assertEqual(lead.state, 'draft', "Lead state should be 'draft'")
+        self.assertEqual(lead.user_id, self.user_demo, "Responsible should change on creation of Lead test line.")
+        self.assertEqual(len(lead.line_ids), 1, "New test line is not created")
+        self.assertEqual(lead.line_ids.user_id, self.user_demo, "Responsible should be change on creation of Lead test line.")

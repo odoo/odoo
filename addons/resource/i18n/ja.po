@@ -3,14 +3,18 @@
 # * resource
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# Manami Hashi <manami@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-10-22 12:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,10 +22,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:689
+#: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "%s (copy)"
-msgstr "%s（コピー）"
+msgstr "%s (コピー)"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
@@ -78,7 +82,7 @@ msgstr "リソースのスケジュールを定義します。"
 msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
-msgstr ""
+msgstr "プロジェクトメンバーにスケジュールすることができる勤務時間と時間表を定義"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -91,12 +95,12 @@ msgstr "表示名"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 msgid "Duration"
-msgstr "期間"
+msgstr "時間"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
 msgid "Efficiency Factor"
-msgstr "効率性の因子"
+msgstr "効率性"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_to
@@ -105,7 +109,8 @@ msgid "End Date"
 msgstr "終了日"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:738
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "エラー。休暇開始日は休暇終了日の前でなければいけません。"
 
@@ -155,7 +160,7 @@ msgstr "アクティブ項目をFalse にセットすると、リソースレコ
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Inactive"
-msgstr "非アクティブ"
+msgstr "無効"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar___last_update
@@ -191,7 +196,7 @@ msgstr "休暇の詳細"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr ""
+msgstr "月ごとの休暇"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
@@ -201,7 +206,7 @@ msgstr "休暇"
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Material"
-msgstr "材料"
+msgstr "商品"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -241,7 +246,7 @@ msgstr "リソース"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr "リソースカレンダー」"
+msgstr "リソースカレンダ"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -262,7 +267,7 @@ msgstr "リソースタイプ"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_calendar_id
 msgid "Resource's Calendar"
-msgstr "リソースカレンダー"
+msgstr "リソースカレンダ"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -282,7 +287,8 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr "リソースは特定のプロジェクトフェーズに関与すべきリソースの作成と管理ができます。それらの効率レベルと週間作業時間を基本とする作業負荷を設定できます。"
+msgstr ""
+"リソースは特定のプロジェクトフェーズに関与すべきリソースの作成と管理ができます。それらの効率レベルと週間作業時間を基本とする作業負荷を設定できます。"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -312,7 +318,7 @@ msgstr "開始日"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
 msgid "Start and End time of working."
-msgstr ""
+msgstr "作業の開始時刻と終了時刻。"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
@@ -322,7 +328,7 @@ msgstr "開始日"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr ""
+msgstr "月ごとの休暇開始日"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -337,6 +343,8 @@ msgid ""
 "show a load of 100% for this phase by default, but if we put a efficiency of"
 " 200%, then his load will only be 50%."
 msgstr ""
+"この項目はタスクを完了するためのリソース効率性を示しています。例: "
+"5つのタスクを5日の期間である作業者に割り当てると、デフォルトではこの期間の負荷は100%と表示されます。もし200%の効率とすると、彼の負荷は50%となります。"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

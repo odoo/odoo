@@ -1,0 +1,299 @@
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+/* ----- EDITOR ----- */
+.css_non_editable_mode_hidden {
+    display: none !important;
+}
+
+.editor_enable .css_editable_mode_hidden {
+  display: none !important;
+}
+
+/* ----- Editor (for public user, like forum) ----- */
+.note-toolbar {
+    margin-left: 0 !important;
+}
+
+.note-popover .popover > .arrow {
+    display: none;
+}
+
+/* ----- GENERIC LAYOUTING HELPERS ---- */
+/* table */
+#wrapwrap, .o_editable {
+    table.table {
+        table-layout: fixed;
+        td {
+            min-width: 20px;
+        }
+    }
+}
+
+/* Media */
+img.shadow {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+img.padding-small, .img.padding-small, span.fa.padding-small, iframe.padding-small {
+    padding: 4px;
+}
+img.padding-medium, .img.padding-medium, span.fa.padding-medium, iframe.padding-medium {
+    padding: 8px;
+}
+img.padding-large, .img.padding-large, span.fa.padding-large, iframe.padding-large {
+    padding: 16px;
+}
+img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
+    padding: 32px;
+}
+
+div.media_iframe_video {
+    &.padding-small iframe {
+        padding: 4px;
+    }
+    &.padding-medium iframe {
+        padding: 8px;
+    }
+    &.padding-large iframe {
+        padding: 16px;
+    }
+    &.padding-xl iframe {
+        padding: 32px;
+    }
+}
+
+/* font awsome */
+.fa-6x {
+    font-size: 6em;
+}
+
+.fa-7x {
+    font-size: 7em;
+}
+
+.fa-8x {
+    font-size: 8em;
+}
+
+.fa-9x {
+    font-size: 9em;
+}
+
+.fa-10x {
+    font-size: 10em;
+}
+
+.fa.center-block {
+    text-align: center;
+}
+
+/* video */
+div.media_iframe_video {
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        .o-position-absolute(@top: 0);
+        margin: 0 auto;
+        margin-left: -50%;
+    }
+
+    .media_iframe_video_size {
+        padding-bottom: 66.5%;
+        position: relative;
+        width: 100%;
+        height: 0;
+    }
+
+    .css_editable_mode_display {
+        .o-position-absolute();
+        width: 100%;
+        height: 100%;
+        display: none;
+        z-index: 2;
+    }
+}
+
+html[data-browser^="msie"] div.media_iframe_video iframe {
+    margin-left: 0;
+}
+
+/* Mobile view */
+@media (max-width: @screen-xs-max) {
+    img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {
+        -webkit-transform: none !important;
+        -moz-transform: none !important;
+        -ms-transform: none !important;
+        -o-transform: none !important;
+        transform: none !important;
+    }
+}
+
+/* ---- fields --- */
+address {
+    .fa.fa-mobile-phone {
+        margin: 0 3px 0 2px;
+    }
+    .fa.fa-file-text-o {
+        margin-right: 1px;
+    }
+}
+
+span[data-oe-type="monetary"] {
+    white-space: nowrap;
+}
+
+/* ---- MENU ---- {{{ */
+div.oe_menu_buttons {
+    top: -8px;
+    right: -8px;
+}
+
+ul.oe_menu_editor {
+    .fa-home {
+        display: none;
+    }
+    > li:first-child > div > span > .fa-home {
+        display: block;
+    }
+    .oe_menu_placeholder {
+        outline: 1px dashed #4183C4;
+    }
+    ul {
+        list-style: none;
+    }
+    li div {
+        cursor: move;
+    }
+    .disclose {
+        cursor: pointer;
+        width: 10px;
+        display: none;
+    }
+}
+
+// Generate all margins for all sizes
+.o-margins-all(@factor: 1) {
+    // Unfortunately, the margins sizes are not
+    // mathematically related by a single function
+    .o-margins(128, @factor);
+    .o-margins(96, @factor);
+    .o-margins(92, @factor);
+    .o-margins(64, @factor);
+    .o-margins(48, @factor);
+    .o-margins(32, @factor);
+    .o-margins(24, @factor);
+    .o-margins(16, @factor);
+    .o-margins(8, @factor);
+    .o-margins(4, @factor);
+    .o-margins(0, @factor);
+}
+
+// Generate all margins for one size, scalled by a
+// given factor (0 <= factor <= 1)
+.o-margins(@name, @factor: 1) {
+    .o-margins-define(@name, @factor * @name);
+}
+
+// Generate all margins for one size, given
+// the name of the margin and intended size
+.o-margins-define(@name, @size: @name) {
+    .mt@{name} {margin-top: ~"@{size}px"!important;}
+    .mb@{name} {margin-bottom: ~"@{size}px"!important;}
+    .ml@{name} {margin-left: ~"@{size}px"!important;}
+    .mr@{name} {margin-right: ~"@{size}px"!important;}
+}
+
+// Generate all margins
+.o-margins-all();
+
+// Possibility to change the margins ratio for small screen sizes, e.g.:
+// @media (max-width: 768px) {
+//     .o-margins-all(0.75);
+// }
+// Possibility to only redefine single margins for small screen sizes, e.g.:
+// @media (max-width: 768px) {
+//     .o-margins(64, 0.50);
+//     .o-margins(48, 0.50);
+// }
+// Possibility to directly redefine the size of single margins instead of refering to a factor for small screen sizes, e.g.:
+// @media (max-width: 768px) {
+//     .o-margins-define(128, 48);
+//     .o-margins-define(96, 48);
+//     .o-margins-define(64, 48);
+// }
+
+a.o_underline {
+    text-decoration: underline;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// Colors
+@gray-white: #fff;
+
+@color-alpha: #1cc1a9;
+@color-beta: #875A7B;
+@color-gamma: #BA3C3D;
+@color-delta: #0D6759;
+@color-epsilon: #0B2E59;
+
+//Greyscale transparent colours
+@color-black-25: fade(black, 25%);
+@color-black-50: fade(black, 50%);
+@color-black-75: fade(black, 75%);
+@color-white-25: fade(white, 25%);
+@color-white-50: fade(white, 50%);
+@color-white-75: fade(white, 75%);
+
+.o-create-color-classes(@class_name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%), @content-color: @color) {
+    .bg-@{class_name} {
+        background-color: @color;
+        color: @complementary;
+        .text-muted {
+            color: fade(@complementary, 40%);
+        }
+    }
+    body .text-@{class_name} { // html to make the rules more important that bg-* ones
+        color: @content-color;
+    }
+}
+
+// Create classes for theme colors
+.o-create-color-classes(alpha, @color-alpha);
+.o-create-color-classes(beta, @color-beta);
+.o-create-color-classes(gamma, @color-gamma);
+.o-create-color-classes(delta, @color-delta);
+.o-create-color-classes(epsilon, @color-epsilon);
+
+// Create classes for UI colors
+.o-create-color-classes(primary, @brand-primary);
+.o-create-color-classes(success, @state-success-bg, @content-color: @state-success-text);
+.o-create-color-classes(info, @state-info-bg, @content-color: @state-info-text);
+.o-create-color-classes(warning, @state-warning-bg, @content-color: @state-warning-text);
+.o-create-color-classes(danger, @state-danger-bg, @content-color: @state-danger-text);
+
+// Create classes for greyscale colors
+.o-create-color-classes(~'black', @gray-base);
+.o-create-color-classes(~'gray-darker', @gray-darker);
+.o-create-color-classes(~'gray-dark', @gray-dark);
+.o-create-color-classes(~'gray', @gray);
+.o-create-color-classes(~'gray-light', @gray-light);
+.o-create-color-classes(~'gray-lighter', @gray-lighter);
+.o-create-color-classes(~'white', @gray-white);
+
+// Create classes for greyscale transparent colours
+.o-create-color-classes(~'black-25', @color-black-25);
+.o-create-color-classes(~'black-50', @color-black-50);
+.o-create-color-classes(~'black-75', @color-black-75);
+.o-create-color-classes(~'white-25', @color-white-25);
+.o-create-color-classes(~'white-50', @color-white-50);
+.o-create-color-classes(~'white-75', @color-white-75);

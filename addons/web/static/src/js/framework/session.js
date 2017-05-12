@@ -9,6 +9,10 @@ var _t = core._t;
 var qweb = core.qweb;
 var mixins = core.mixins;
 
+// To do: refactor session. Session accomplishes several concerns (rpc,
+// configuration, currencies (wtf?), user permissions...). They should be
+// clarified and separated.
+
 var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     /**
 
@@ -32,7 +36,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.avoid_recursion = false;
         this.use_cors = options.use_cors || false;
         this.setup(origin);
-        this.debug = ($.deparam($.param.querystring()).debug !== undefined);
+        var debug_param = $.deparam($.param.querystring()).debug;
+        this.debug = (debug_param !== undefined ? debug_param || 1 : false);
 
         // for historic reasons, the session requires a name to properly work
         // (see the methods get_cookie and set_cookie).  We should perhaps
@@ -81,8 +86,11 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * Init a session, reloads from cookie, if it exists
      */
     session_init: function () {
+        var def = this.session_reload();
+        if (this.is_frontend) return def;
+
         var self = this;
-        return this.session_reload().then(function() {
+        return def.then(function() {
             var modules = self.module_list.join(',');
             var deferred = self.load_qweb(modules);
             if(self.session_is_valid()) {
@@ -132,13 +140,16 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     },
     user_has_group: function(group) {
         if (!this.uid) {
-            return $.when().resolve(false);
+            return $.when(false);
         }
         var def = this._groups_def[group];
         if (!def) {
-            var Model = window.openerp.web.Model;
-            var Users = new Model('res.users');
-            def = this._groups_def[group] = Users.call('has_group', [group]);
+            def = this._groups_def[group] = this.rpc('/web/dataset/call_kw/res.users/has_group', {
+                "model": "res.users",
+                "method": "has_group",
+                "args": [group],
+                "kwargs": {}
+            });
         }
         return def;
     },
@@ -178,41 +189,30 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     load_modules: function() {
         var self = this;
-        return this.rpc('/web/session/modules', {}).then(function(result) {
-            var all_modules = _.uniq(self.module_list.concat(result));
-            var to_load = _.difference(result, self.module_list).join(',');
-            self.module_list = all_modules;
+        var modules = odoo._modules;
+        var all_modules = _.uniq(self.module_list.concat(modules));
+        var to_load = _.difference(modules, self.module_list).join(',');
+        this.module_list = all_modules;
 
-            var loaded = $.when(self.load_currencies(), self.load_translations());
-            var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
-            var file_list = [ locale ];
-            if(to_load.length) {
-                loaded = $.when(
-                    loaded,
-                    self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
-                    self.load_qweb(to_load),
-                    self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
-                        file_list = file_list.concat(files);
-                    })
-                );
-            }
-            return loaded.then(function () {
-                return self.load_js(file_list);
-            }).done(function() {
-                self.on_modules_loaded();
-                self.trigger('module_loaded');
-            });
-        });
-    },
-    load_currencies: function() {
-        this.currencies = {};
-        var self = this;
-        return new openerp.web.Model("res.currency").query(["symbol", "position", "decimal_places"]).all()
-                .then(function(value) {
-                    _.each(value, function(k){
-                        self.currencies[k.id] = {'symbol': k.symbol, 'position': k.position, 'digits': [69,k.decimal_places]};
-                    });
-                });
+        var loaded = $.when(self.load_translations());
+        var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
+        var file_list = [ locale ];
+        if(to_load.length) {
+            loaded = $.when(
+                loaded,
+                self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
+                self.load_qweb(to_load),
+                self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
+                    file_list = file_list.concat(files);
+                })
+            );
+        }
+        return loaded.then(function () {
+            return self.load_js(file_list);
+        }).done(function() {
+            self.on_modules_loaded();
+            self.trigger('module_loaded');
+       });
     },
     load_translations: function() {
         return _t.database.load_translations(this, this.module_list, this.user_context.lang);
@@ -236,14 +236,13 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return d;
     },
     load_qweb: function(mods) {
-        var self = this;
-        self.qweb_mutex.exec(function() {
-            return self.rpc('/web/proxy/load', {path: '/web/webclient/qweb?mods=' + mods}).then(function(xml) {
-                if (!xml) { return; }
-                qweb.add_template(_.str.trim(xml));
+        this.qweb_mutex.exec(function () {
+            return $.get('/web/webclient/qweb?mods=' + mods).then(function (doc) {
+                if (!doc) { return; }
+                qweb.add_template(doc);
             });
         });
-        return self.qweb_mutex.def;
+        return this.qweb_mutex.def;
     },
     on_modules_loaded: function() {
         var openerp = window.openerp;
@@ -271,16 +270,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         if (this.override_session){
             options.data.session_id = this.session_id;
         }
+        options.session = this;
         ajax.get_file(options);
-    },
-    synchronized_mode: function(to_execute) {
-        var synch = this.synch;
-        this.synch = true;
-        try {
-            return to_execute();
-        } finally {
-            this.synch = synch;
-        }
     },
     /**
      * (re)loads the content of a session: db name, username, user id, session
@@ -289,11 +280,10 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @returns {$.Deferred} deferred indicating the session is done reloading
      */
     session_reload: function () {
-        var self = this;
-        return self.rpc("/web/session/get_session_info", {}).then(function(result) {
-            delete result.session_id;
-            _.extend(self, result);
-        });
+        var result = _.extend({}, window.odoo.session_info);
+        delete result.session_id;
+        _.extend(this, result);
+        return $.when();
     },
     check_session_id: function() {
         var self = this;
@@ -337,7 +327,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var shadow = options.shadow || false;
         options.headers = _.extend({}, options.headers)
         if (odoo.debug) {
-            options.headers["X-Debug-Mode"] = true;
+            options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
         }
 
         delete options.shadow;
@@ -418,51 +408,4 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
 
 return Session;
 
-});
-
-
-odoo.define('web.config', function (require) {
-"use strict";
-
-var bus = require('web.core').bus;
-// Configuration module.
-// To do: refactor session, and this module in a sane way.  Session accomplish
-// several concerns (rpc, configuration, currencies (wtf?), user permissions, ...)
-// they should be clarified and separated.
-
-var medias = [
-    window.matchMedia('(max-width: 767px)'),
-    window.matchMedia('(min-width: 768px) and (max-width: 991px)'),
-    window.matchMedia('(min-width: 992px) and (max-width: 1199px)'),
-    window.matchMedia('(min-width: 1200px)')
-];
-_.each(medias, function(m) {
-    m.addListener(set_size_class);
-});
-
-var config = {
-    debug: ($.deparam($.param.querystring()).debug !== undefined),
-    device: {
-        touch: 'ontouchstart' in window || 'onmsgesturechange' in window,
-        size_class: size_class(),
-        SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-    },
-};
-
-function size_class() {
-    for(var i = 0 ; i < medias.length ; i++) {
-        if(medias[i].matches) {
-            return i;
-        }
-    }
-}
-function set_size_class() {
-    var sc = size_class();
-    if (sc !== config.device.size_class) {
-        config.device.size_class = sc;
-        bus.trigger('size_class', sc);
-    }
-}
-
-return config;
 });

@@ -3,15 +3,16 @@
 # * subscription
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-03-03 14:18+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
-"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,7 +23,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_active
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_active
 msgid "Active"
-msgstr "Ενεργό"
+msgstr "Ενεργή"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_create_uid
@@ -92,7 +93,7 @@ msgstr ""
 #. module: subscription
 #: selection:subscription.subscription,state:0
 msgid "Done"
-msgstr "Ολοκληρωμένο"
+msgstr "Εκπληρωμένη"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -122,7 +123,7 @@ msgstr "Πρώτη Ημερομηνία"
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Group By"
-msgstr "Ομαδοποίηση Ανά"
+msgstr "Ομαδοποίηση Κατά"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_id
@@ -130,7 +131,7 @@ msgstr "Ομαδοποίηση Ανά"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_id
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_id
 msgid "ID"
-msgstr "ID"
+msgstr "Κωδικός"
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_document_active
@@ -150,11 +151,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Internal Notes"
-msgstr "Εσωτερικές Σημειώσεις"
+msgstr "Εσωτερικά Σημειώματα"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
+msgid "Internal Qty"
 msgstr ""
 
 #. module: subscription
@@ -168,7 +169,7 @@ msgstr "Μονάδα Διαστήματος"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription___last_update
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history___last_update
 msgid "Last Modified on"
-msgstr "Τελευταία αλλαγή στις"
+msgstr "Τελευταία τροποποίηση στις"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_write_uid
@@ -195,7 +196,7 @@ msgstr "Μήνες"
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_name
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_name
 msgid "Name"
-msgstr "Όνομα"
+msgstr "Περιγραφή"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_note
@@ -205,8 +206,8 @@ msgstr "Σημειώσεις"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
-msgstr ""
+msgid "Number of Documents"
+msgstr "Αριθμός εγγράφων"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_model
@@ -217,10 +218,10 @@ msgstr "Αντικείμενο"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_partner_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Partner"
-msgstr "Συνεργάτης"
+msgstr "Συναλλασόμενος"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:92
 #, python-format
 msgid ""
 "Please provide another source document.\n"
@@ -236,7 +237,7 @@ msgstr "Διεργασία"
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
 #: model:ir.ui.menu,name:subscription.menu_action_subscription_form
 msgid "Recurring Documents"
-msgstr "Επαναλαμβανόμενα Έγραφα"
+msgstr "Επαναλαμβανόμενα Έγγραφα"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
@@ -263,13 +264,13 @@ msgstr ""
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Set to Draft"
-msgstr "Ορισμός σε Πρόχειρη"
+msgstr "Ορισμός σε Πρόχειρο"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_source
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_document_id
 msgid "Source Document"
-msgstr "Έγγραφο Προέλευσης"
+msgstr "Έγγραφο Πηγή"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_state
@@ -288,6 +289,11 @@ msgstr "Διακοπή"
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Subscription"
 msgstr "Προεγγραφή"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Subscription Data"
+msgstr ""
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
@@ -323,11 +329,6 @@ msgid "Subscriptions"
 msgstr "Συνδρομές"
 
 #. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr ""
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "User"
@@ -345,7 +346,7 @@ msgid "Weeks"
 msgstr "Εβδομάδες"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:115
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr ""

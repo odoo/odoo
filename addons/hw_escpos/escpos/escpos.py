@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import time
+import base64
 import copy
 import io
-import base64
 import math
 import md5
 import re
 import traceback
 import xml.etree.ElementTree as ET
-import xml.dom.minidom as minidom
 
 from PIL import Image
 
@@ -445,7 +443,7 @@ class Escpos:
             img_rgba = Image.open(f)
             img = Image.new('RGB', img_rgba.size, (255,255,255))
             channels = img_rgba.split()
-            if len(channels) > 1:
+            if len(channels) > 3:
                 # use alpha channel as mask
                 img.paste(img_rgba, mask=channels[3])
             else:

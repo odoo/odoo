@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import _, api, fields, models
-import openerp
+from odoo import _, api, exceptions, fields, models
 
 
 class Users(models.Model):
@@ -15,12 +15,14 @@ class Users(models.Model):
     """
     _name = 'res.users'
     _inherit = ['res.users']
-    _inherits = {'mail.alias': 'alias_id'}
 
-    alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
+    alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null", required=False,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications.", copy=False, auto_join=True)
-    chatter_needaction_auto = fields.Boolean('Automatically set needaction as Read')
+    alias_contact = fields.Selection([
+        ('everyone', 'Everyone'),
+        ('partners', 'Authenticated Partners'),
+        ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact')
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
@@ -29,29 +31,21 @@ class Users(models.Model):
         """
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
-        self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        self.SELF_WRITEABLE_FIELDS.extend(['notify_email'])
+        type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        type(self).SELF_WRITEABLE_FIELDS.extend(['notify_email'])
         # duplicate list to avoid modifying the original reference
-        self.SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        self.SELF_READABLE_FIELDS.extend(['notify_email', 'alias_domain', 'alias_name'])
+        type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
+        type(self).SELF_READABLE_FIELDS.extend(['notify_email'])
         return init_res
-
-    def _auto_init(self, cr, context=None):
-        """ Installation hook: aliases """
-        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(Users, self)._auto_init, self._name, self._columns['alias_id'], 'login', alias_force_key='id', context=context)
 
     @api.model
     def create(self, values):
         if not values.get('login', False):
             action = self.env.ref('base.action_res_users')
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
-            raise openerp.exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+            raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-        user = super(Users, self.with_context(
-            alias_model_name=self._name,
-            alias_parent_model_name=self._name
-        )).create(values)
-        user.alias_id.sudo().write({"alias_force_thread_id": user.id, "alias_parent_thread_id": user.id})
+        user = super(Users, self).create(values)
 
         # create a welcome message
         user._create_welcome_message()
@@ -67,12 +61,6 @@ class Users(models.Model):
             self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
         return write_res
 
-    def copy_data(self, *args, **kwargs):
-        data = super(Users, self).copy_data(*args, **kwargs)
-        if data and data.get('alias_name'):
-            data['alias_name'] = data['login']
-        return data
-
     def _create_welcome_message(self):
         self.ensure_one()
         if not self.has_group('base.group_user'):
@@ -82,14 +70,6 @@ class Users(models.Model):
         # TODO change SUPERUSER_ID into user.id but catch errors
         return self.partner_id.sudo().message_post(body=body)
 
-    @api.multi
-    def unlink(self):
-        # Cascade-delete mail aliases as well, as they should not exist without the user.
-        aliases = self.mapped('alias_id')
-        res = super(Users, self).unlink()
-        aliases.unlink()
-        return res
-
     def _message_post_get_pid(self):
         self.ensure_one()
         if 'thread_model' in self.env.context:
@@ -97,6 +77,7 @@ class Users(models.Model):
         return self.partner_id.id
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def message_post(self, **kwargs):
         """ Redirect the posting of message on res.users as a private discussion.
             This is done because when giving the context of Chatter on the
@@ -114,10 +95,7 @@ class Users(models.Model):
         if user_pid not in current_pids:
             partner_ids.append(user_pid)
         kwargs['partner_ids'] = partner_ids
-        # ??
-        # if context and context.get('thread_model') == 'res.partner':
-        #   return self.pool['res.partner'].message_post(cr, uid, user_pid, **kwargs)
-        return self.env['mail.thread'].message_post(**kwargs)  # ??
+        return self.env['mail.thread'].message_post(**kwargs)
 
     def message_update(self, msg_dict, update_vals=None):
         return True
@@ -125,9 +103,9 @@ class Users(models.Model):
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
         return True
 
-    @api.cr_uid_context
-    def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
-        return self.pool.get('mail.thread').message_get_partner_info_from_emails(cr, uid, emails, link_mail=link_mail, context=context)
+    @api.multi
+    def message_partner_info_from_emails(self, emails, link_mail=False):
+        return self.env['mail.thread'].message_partner_info_from_emails(emails, link_mail=link_mail)
 
     @api.multi
     def message_get_suggested_recipients(self):
