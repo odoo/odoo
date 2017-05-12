@@ -17,7 +17,10 @@ try:
 except ImportError:
     escpos = printer = None
 
-from Queue import Queue
+try:
+    from queue import Queue
+except ImportError:
+    from Queue import Queue # pylint: disable=deprecated-module
 from threading import Thread, Lock
 
 try:
