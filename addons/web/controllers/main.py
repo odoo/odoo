@@ -3,7 +3,6 @@
 
 import babel.messages.pofile
 import base64
-import csv
 import datetime
 import functools
 import glob
@@ -1389,31 +1388,21 @@ class CSVExport(ExportFormat, http.Controller):
 
     def from_data(self, fields, rows):
         fp = io.BytesIO()
-        writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
+        writer = pycompat.csv_writer(fp, quoting=1)
 
-        writer.writerow([name.encode('utf-8') for name in fields])
+        writer.writerow(fields)
 
         for data in rows:
             row = []
             for d in data:
-                if type(d) != str and isinstance(d, pycompat.string_types):
-                    try:
-                        d = d.encode('utf-8')
-                    except UnicodeError:
-                        pass
-                if d is False: d = None
-
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
-                if type(d) is str and d.startswith(('=', '-', '+')):
+                if isinstance(d, pycompat.string_types) and d.startswith(('=', '-', '+')):
                     d = "'" + d
 
-                row.append(d)
+                row.append(pycompat.to_text(d))
             writer.writerow(row)
 
-        fp.seek(0)
-        data = fp.read()
-        fp.close()
-        return data
+        return fp.getvalue()
 
 class ExcelExport(ExportFormat, http.Controller):
     # Excel needs raw data to correctly handle numbers and date values

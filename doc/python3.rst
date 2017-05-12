@@ -452,6 +452,26 @@ conversions: text is *encoded* to bytes and bytes are *decoded* to text.
     migrated to using ``base64.b64encode`` and ``base64.b64decode``
     respectively.
 
+csv
+---
+
+``csv`` is a fairly vicious one: not only is it not a very good format, the
+Python 2 and Python 3 versions of the library are text-model incompatible in
+significant ways:
+
+* Python 2's CSV only works on *ascii-compatible byte streams* (it has no
+  encoding support at all) and extracts bytestring values
+* Python 3's CSV only works on *text streams* and extract text values
+* And ``io`` doesn't provide "native string" streaming facilities.
+
+However with respect to Odoo it turns out most or all uses of ``csv`` fit
+inside a model of *byte stream to and from text values*.
+
+The latter is thus a model implemented by cross-version wrappers
+:func:`odoo.tools.pycompat.csv_reader` and
+:func:`odoo.tools.pycompat.csv_writer`: they take a *UTF-8 byte stream* and
+read or write *text* values.
+
 .. _hash randomisation: http://bugs.python.org/issue13703
 
 .. _requests: http://docs.python-requests.org/
