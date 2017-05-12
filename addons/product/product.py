@@ -722,7 +722,8 @@ class product_template(osv.osv):
             for variant_ids in all_variants:
                 values = {
                     'product_tmpl_id': tmpl_id.id,
-                    'attribute_value_ids': [(6, 0, variant_ids)]
+                    'attribute_value_ids': [(6, 0, variant_ids)],
+                    'default_code': tmpl_id.default_code,
                 }
                 id = product_obj.create(cr, uid, values, context=ctx)
                 variants_active_ids.append(id)
