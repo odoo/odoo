@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import csv
 import io
 import unittest
 
 from odoo.tests.common import TransactionCase, can_import
 from odoo.modules.module import get_module_resource
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, pycompat
 
 ID_FIELD = {
     'id': 'id',
@@ -501,11 +500,11 @@ class test_convert_import_data(TransactionCase):
         Ensure importing keep newlines
         """
         output = io.BytesIO()
-        writer = csv.writer(output, quoting=csv.QUOTE_ALL)
+        writer = pycompat.csv_writer(output, quoting=1)
 
-        data_row = ["\tfoo\n\tbar", " \"hello\" \n\n 'world' "]
+        data_row = [u"\tfoo\n\tbar", u" \"hello\" \n\n 'world' "]
 
-        writer.writerow(["name", "Some Value"])
+        writer.writerow([u"name", u"Some Value"])
         writer.writerow(data_row)
 
         import_wizard = self.env['base_import.import'].create({
@@ -527,16 +526,15 @@ class test_failures(TransactionCase):
         Ensure big fields (e.g. b64-encoded image data) can be imported and
         we're not hitting limits of the default CSV parser config
         """
-        import csv, io
         from PIL import Image
 
         im = Image.new('RGB', (1920, 1080))
         fout = io.BytesIO()
 
-        writer = csv.writer(fout, dialect=None)
+        writer = pycompat.csv_writer(fout, dialect=None)
         writer.writerows([
-            ['name', 'db_datas'],
-            ['foo', base64.b64encode(im.tobytes())]
+            [u'name', u'db_datas'],
+            [u'foo', base64.b64encode(im.tobytes()).decode('ascii')]
         ])
 
         import_wizard = self.env['base_import.import'].create({

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import csv
 import datetime
 import io
 import itertools
@@ -262,14 +261,13 @@ class Import(models.TransientModel):
             # csv module expect utf-8, see http://docs.python.org/2/library/csv.html
             csv_data = csv_data.decode(encoding).encode('utf-8')
 
-        csv_iterator = csv.reader(
+        csv_iterator = pycompat.csv_reader(
             io.BytesIO(csv_data),
             quotechar=str(options['quoting']),
             delimiter=str(options['separator']))
 
         return (
-            [item.decode('utf-8') for item in row]
-            for row in csv_iterator
+            row for row in csv_iterator
             if any(x for x in row if x.strip())
         )
 

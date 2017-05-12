@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 # to remove if we decide to add a dependency on six or future
 # very strongly inspired by https://github.com/pallets/werkzeug/blob/master/werkzeug/_compat.py
+#pylint: disable=deprecated-module
+import csv
+import collections
+import io
 import sys
+
 
 PY2 = sys.version_info[0] == 2
 
+_Writer = collections.namedtuple('_Writer', 'writerow writerows')
 if PY2:
     # pylint: disable=long-builtin,unichr-builtin,unicode-builtin
     unichr = unichr
@@ -39,6 +45,19 @@ if PY2:
         return cls
 
     exec ('def reraise(tp, value, tb=None):\n raise tp, value, tb')
+
+    def csv_reader(stream, **params):
+        for row in csv.reader(stream, **params):
+            yield [c.decode('utf-8') for c in row]
+    def csv_writer(stream, **params):
+        w = csv.writer(stream, **params)
+        return _Writer(
+            writerow=lambda r: w.writerow([c.encode('utf-8') for c in r]),
+            writerows=lambda rs: w.writerows(
+                [c.encode('utf-8') for c in r]
+                for r in rs
+            )
+        )
 else:
     # pylint: disable=bad-functions
     unichr = chr
@@ -73,6 +92,15 @@ else:
         if value.__traceback__ != tb:
             raise value.with_traceback(tb)
         raise value
+
+    def csv_reader(stream, **params):
+        assert not isinstance(stream, io.TextIOBase),\
+            "For cross-compatibility purposes, csv_reader takes a bytes stream"
+        return csv.reader(io.TextIOWrapper(stream, encoding='utf-8'), **params)
+    def csv_writer(stream, **params):
+        assert not isinstance(stream, io.TextIOBase), \
+            "For cross-compatibility purposes, csv_writer takes a bytes stream"
+        return csv.writer(io.TextIOWrapper(stream, encoding='utf-8', line_buffering=True), **params)
 
 def to_text(source):
     """ Generates a text value (an instance of text_type) from an arbitrary 
