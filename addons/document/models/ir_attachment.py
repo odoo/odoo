@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import pyPdf
+import PyPDF2
 import xml.dom.minidom
 import zipfile
 
@@ -110,7 +110,7 @@ class IrAttachment(models.Model):
         if bin_data.startswith('%PDF-'):
             f = StringIO(bin_data)
             try:
-                pdf = pyPdf.PdfFileReader(f)
+                pdf = PyPDF2.PdfFileReader(f, overwriteWarnings=False)
                 for page in pdf.pages:
                     buf += page.extractText()
             except Exception:
