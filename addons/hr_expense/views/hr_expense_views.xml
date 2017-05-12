@@ -404,7 +404,7 @@
             <field name="model">hr.expense.sheet</field>
             <field eval="25" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Expense Reports" class="o_expense_sheet">
+                <form string="Expense Reports">
                  <header>
                     <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr_expense.group_hr_expense_user" class="oe_highlight o_expense_sheet_approve"/>
                     <button name="action_sheet_move_create" states="approve" string="Validate" type="object" groups="account.group_account_manager" class="oe_highlight o_expense_sheet_post"/>

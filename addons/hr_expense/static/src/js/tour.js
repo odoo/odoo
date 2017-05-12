@@ -51,7 +51,7 @@ tour.register('hr_expense_tour' ,
     content: _t("The accountant can register a payment to reimburse the employee directly."),
     position: 'bottom',
 }, {
-    trigger: 'li a[data-menu-xmlid="hr_expense.menu_hr_expense_sheet_my_all"], div[data-menu-xmlid="hr_expense.menu_hr_expense_sheet_my_all"]',
+    trigger: 'li a[data-menu-xmlid="hr_expense.menu_hr_expense_sheet_all_to_approve"], div[data-menu-xmlid="hr_expense.menu_hr_expense_sheet_all_to_approve"]',
     content: _t("Managers can get all reports to approve from this menu."),
     position: 'bottom',
 }]);
