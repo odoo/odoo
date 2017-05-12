@@ -758,7 +758,46 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.renderer.widgets.length, 2,
             "the old widgets should have been correctly deleted");
         kanban.destroy();
-    });
+    }),
+
+    QUnit.test('create a column, delete it and create another one', function (assert) {
+        assert.expect(5);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have two columns");
+
+        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').val('new column 1');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have two columns");
+
+        kanban.$('.o_kanban_group:last .o_column_delete').click();
+        $('.modal .modal-footer .btn-primary').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have twos columns");
+
+        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').val('new column 2');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have three columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column 2)').length, 1,
+            "the last column should be the newly created one");
+        kanban.destroy();
+    }),
 
     QUnit.test('edit a column in grouped on m2o', function (assert) {
         assert.expect(12);

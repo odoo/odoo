@@ -294,7 +294,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var self = this;
         function doIt() {
             return self.model
-                .deleteRecords(ids, self.modelName, self.handle)
+                .deleteRecords(ids, self.modelName)
                 .then(self._onDeletedRecords.bind(self, ids));
         }
         if (this.confirmOnDelete) {

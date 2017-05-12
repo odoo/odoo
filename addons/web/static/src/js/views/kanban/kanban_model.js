@@ -69,6 +69,7 @@ var KanbanModel = BasicModel.extend({
                     groupedBy: parent.groupedBy,
                     isOpen: true,
                     limit: parent.limit,
+                    parentID: parent.id,
                     openGroupByDefault: true,
                     orderedBy: parent.orderedBy,
                     value: result,
