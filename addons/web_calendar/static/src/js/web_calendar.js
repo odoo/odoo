@@ -75,6 +75,7 @@ function get_fc_defaultOptions() {
         },
         weekMode : 'liquid',
         snapMinutes: 15,
+        ignoreTimezone: false,
     };
 }
 
