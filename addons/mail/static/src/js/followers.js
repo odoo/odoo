@@ -15,7 +15,7 @@ var QWeb = core.qweb;
 // -----------------------------------------------------------------------------
 var Followers = AbstractField.extend({
     template: 'mail.Followers',
-    no_tabindex: true,
+    noTabindex: true,
     events: {
         // click on '(Un)Follow' button, that toggles the follow for uid
         'click .o_followers_follow_button': '_onFollowButtonClicked',

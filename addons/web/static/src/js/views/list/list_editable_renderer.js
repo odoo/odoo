@@ -13,6 +13,7 @@ odoo.define('web.EditableListRenderer', function (require) {
  */
 var core = require('web.core');
 var dom = require('web.dom');
+var BasicRenderer = require('web.BasicRenderer');
 var ListRenderer = require('web.ListRenderer');
 var utils = require('web.utils');
 
@@ -34,6 +35,7 @@ ListRenderer.include({
      * @param {Object} params
      * @param {boolean} params.addCreateLine
      * @param {boolean} params.addTrashIcon
+     * @param {boolean} params.renderFromX2Many
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
@@ -50,8 +52,20 @@ ListRenderer.include({
         // so that it means 'unlink' instead of 'remove'
         this.isMany2Many = params.isMany2Many;
 
+        // Make sure List is rendered by X2Many Widget in relational_fields
+        // Used to activate next widget in navigation handler
+        this.renderFromX2Many = params.renderFromX2Many;
+
         this.currentRow = null;
         this.currentFieldIndex = null;
+
+        // Select cell on dialog closed
+        core.bus.on('dialog_closed', this, function () {
+            // FIXME: This is going to be bind on each renderer, this will create issue when dialog is closed, it will be trigerred for all renderers
+            if (this.$el.is(':visible')) {
+                this.trigger_up('navigation_move', {direction: 'current'});
+            }
+        });
     },
     /**
      * @override
@@ -395,6 +409,20 @@ ListRenderer.include({
         }
     },
     /**
+     * It will returns the first visible widget.
+     *
+     * @private
+     * @returns {Class} Widget returns first widget
+     */
+    _getFirstWidget: function () {
+        var record = this.state.data[this.currentRow];
+        var recordWidgets = this.tabindexFieldWidgets && this.tabindexFieldWidgets[record.id] || this.allFieldWidgets[record.id];
+        var firstWidget = _.find(recordWidgets, function (widget) {
+            return widget.$el.is(':visible') && !widget.$el.hasClass('o_readonly_modifier');
+        });
+        return firstWidget;
+    },
+    /**
      * Returns the current number of columns.  The editable renderer may add a
      * trash icon on the right of a record, so we need to take this into account
      *
@@ -626,7 +654,7 @@ ListRenderer.include({
         var self = this;
         return this._selectRow(rowIndex).then(function () {
             var record = self.state.data[rowIndex];
-            if (fieldIndex >= (self.allFieldWidgets[record.id] || []).length) {
+            if (!record || fieldIndex >= (self.allFieldWidgets[record.id] || []).length) {
                 return $.Deferred().reject();
             }
             // _activateFieldWidget might trigger an onchange,
@@ -634,7 +662,7 @@ ListRenderer.include({
             // so that the cursor can be restored
             var oldFieldIndex = self.currentFieldIndex;
             self.currentFieldIndex = fieldIndex;
-            fieldIndex = self._activateFieldWidget(record, fieldIndex, {
+            fieldIndex = self._activateWidget(record, fieldIndex, {
                 inc: 1,
                 wrap: wrap,
                 event: options && options.event,
@@ -743,9 +771,14 @@ ListRenderer.include({
      * - left/right: move to the first activable cell on the left/right if any
      *          (wrap to the end/beginning of the line if necessary).
      * - previous: move to the first activable cell on the left if any, if not
-     *          move to the rightmost activable cell on the row above.
+     *          move to the rightmost activable cell on the row above,
+     *          if SHIFT + TAB is pressed on first field then set focus to
+     *          previous widget of parent.
      * - next: move to the first activable cell on the right if any, if not move
-     *          to the leftmost activable cell on the row below.
+     *          to the leftmost activable cell on the row below,
+     *          if first field is empty then move to next widget of parent
+     *          regardless of required attribute,
+     *          if it is last widget then create new line else next widget.
      * - next_line: move to leftmost activable cell on the row below.
      *
      * Note: moving to a line below if on the last line or moving to a line
@@ -778,7 +811,11 @@ ListRenderer.include({
                 }
                 break;
             case 'previous':
-                if (this.currentFieldIndex > 0) {
+                var column = this.columns[this.currentFieldIndex];
+                var firstWidget = this._getFirstWidget();
+                if (this.renderFromX2Many && column.attrs.name === firstWidget.name) {
+                    this.trigger_up('active_previous_widget');
+                } else if (this.currentFieldIndex > 0) {
                     this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false})
                         .fail(this._moveToPreviousLine.bind(this));
                 } else {
@@ -786,7 +823,12 @@ ListRenderer.include({
                 }
                 break;
             case 'next':
-                if (this.currentFieldIndex + 1 < this.columns.length) {
+                var column = this.columns[this.currentFieldIndex];
+                var firstWidget = this._getFirstWidget();
+                // FIXME: MSH: We can remove this renderFromX2Many based fix, maybe we can create separate ListRenderer for o2m fields and handle _onNavigationMove separately
+                if (this.renderFromX2Many && column.attrs.name === firstWidget.name && firstWidget.isBlank()) {
+                    this.trigger_up('active_next_widget');
+                } else if (this.currentFieldIndex + 1 < this.columns.length) {
                     this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
                         .fail(this._moveToNextLine.bind(this));
                 } else {
@@ -795,6 +837,9 @@ ListRenderer.include({
                 break;
             case 'next_line':
                 this._moveToNextLine();
+                break;
+            case 'current':
+                this._selectCell(this.currentRow, this.currentFieldIndex, {force: true});
                 break;
             case 'cancel':
                 // stop the original event (typically an ESCAPE keydown), to
@@ -892,6 +937,18 @@ ListRenderer.include({
         }
 
         this.unselectRow();
+    },
+    /*
+     * Do not call listview _scrollTo function if listview is editable instead
+     * call BasicRenderer's _scrollTo function.
+     *
+     * @override
+     */
+    _scrollTo: function (offset) {
+        if (!this._isEditable()) {
+            return this._super.apply(this, arguments);
+        }
+        return BasicRenderer.prototype._scrollTo.apply(this, arguments);
     },
 });
 

@@ -111,6 +111,7 @@ var FormViewDialog = ViewDialog.extend({
                 text: (readonly ? _t("Close") : _t("Discard")),
                 classes: "btn-default o_form_button_cancel",
                 close: true,
+                tabindex: '-1',
                 click: function () {
                     if (!readonly) {
                         self.form_view.model.discardChanges(self.form_view.handle, {
@@ -123,9 +124,17 @@ var FormViewDialog = ViewDialog.extend({
             if (!readonly) {
                 options.buttons.unshift({
                     text: _t("Save") + ((multi_select)? " " + _t(" & Close") : ""),
-                    classes: "btn-primary",
+                    classes: "btn-primary o_form_button_save",
                     click: function () {
                         this._save().then(self.close.bind(self));
+                    },
+                    // Set focus on next widget/button(set focus on first button if buttons available else first widget)
+                    // when keydown TAB is pressed on Save/Save & New button
+                    keydown: function (event) {
+                        if (!multi_select && event.which == $.ui.keyCode.TAB && !event.shiftKey) {
+                            event.preventDefault();
+                            self.form_view.renderer.focusFirstButton();
+                        }
                     }
                 });
 
@@ -136,6 +145,12 @@ var FormViewDialog = ViewDialog.extend({
                         click: function () {
                             this._save().then(self.form_view.createRecord.bind(self.form_view, self.parentID));
                         },
+                        keydown: function (event) {
+                            if (event.which == $.ui.keyCode.TAB && !event.shiftKey) {
+                                event.preventDefault();
+                                self.form_view.renderer.focusFirstButton();
+                            }
+                        }
                     });
                 }
             }
@@ -181,6 +196,7 @@ var FormViewDialog = ViewDialog.extend({
                 model: self.model,
                 parentID: self.parentID,
                 recordID: self.recordID,
+                formview_in_popup: true,
             });
             return formview.getController(self);
         }).then(function (formView) {
@@ -197,6 +213,8 @@ var FormViewDialog = ViewDialog.extend({
                         if ($buttons.children().length) {
                             self.$footer.empty().append($buttons.contents());
                         }
+                        // Set form buttons else form_view.$buttons will be undefined
+                        self.form_view.$buttons = self.$footer;
                         dom.append(self.$el, fragment, {
                             callbacks: [{widget: self.form_view}],
                             in_DOM: true,
@@ -308,6 +326,9 @@ var SelectCreateDialog = ViewDialog.extend({
                         in_DOM: true,
                     });
                     self.set_buttons(self.__buttons);
+                }).then(function () {
+                    //Set focus to search input  by default when dialog is opened
+                    self.searchview.$('.o_searchview_input').focus();
                 });
                 _super();
             });
@@ -327,14 +348,14 @@ var SelectCreateDialog = ViewDialog.extend({
             $buttons: $('<div/>').addClass('o_search_options').appendTo($header),
             search_defaults: search_defaults,
         };
-        var searchview = new SearchView(this, this.dataset, fields_views.search, options);
-        searchview.prependTo($header).done(function () {
-            var d = searchview.build_search_data();
+        this.searchview = new SearchView(this, this.dataset, fields_views.search, options);
+        this.searchview.prependTo($header).done(function () {
+            var data = self.searchview.build_search_data();
             if (self.initial_ids) {
-                d.domains.push([["id", "in", self.initial_ids]]);
+                data.domains.push([["id", "in", self.initial_ids]]);
                 self.initial_ids = undefined;
             }
-            var searchData = self._process_search_data(d.domains, d.contexts, d.groupbys);
+            var searchData = self._process_search_data(data.domains, data.contexts, data.groupbys);
             searchDef.resolve(searchData);
         });
 
@@ -356,13 +377,21 @@ var SelectCreateDialog = ViewDialog.extend({
             self.__buttons = [{
                 text: _t("Cancel"),
                 classes: "btn-default o_form_button_cancel",
+                tabindex: '-1',
                 close: true,
             }];
             if (!self.options.no_create) {
                 self.__buttons.unshift({
                     text: _t("Create"),
                     classes: "btn-primary",
-                    click: self.create_edit_record.bind(self)
+                    click: self.create_edit_record.bind(self),
+                    keydown: function (event) {
+                        // Set focus back to search view input when TAB is pressed from Create button
+                        if (event.which == $.ui.keyCode.TAB && !event.shiftKey) {
+                            event.preventDefault();
+                            self.searchview.setInputFocus();
+                        }
+                    }
                 });
             }
             if (!self.options.disable_multiple_selection) {
@@ -385,7 +414,7 @@ var SelectCreateDialog = ViewDialog.extend({
             }
             return self.list_controller.appendTo(fragment);
         }).then(function () {
-            searchview.toggle_visibility(true);
+            self.searchview.toggle_visibility(true);
             self.list_controller.do_show();
             self.list_controller.renderPager($pager);
             return fragment;

@@ -509,7 +509,7 @@ var BasicModel = AbstractModel.extend({
      */
     isNew: function (id) {
         var data = this.localData[id];
-        if (data.type !== "record") {
+        if (!data || data.type !== "record") {
             return false;
         }
         var res_id = data.res_id;

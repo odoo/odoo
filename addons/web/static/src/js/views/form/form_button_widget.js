@@ -1,16 +1,16 @@
 odoo.define('web.ButtonWidget', function (require) {
 "use strict";
 
-var core = require('web.core');
 var config = require('web.config');
+var core = require('web.core');
 var ViewWidget = require('web.ViewWidget');
 
 var _t = core._t;
 var qweb = core.qweb;
 
 var ButtonWidget = ViewWidget.extend({
-	template: 'WidgetButton',
-	/**
+    template: 'WidgetButton',
+    /**
      * Button Widget  class
      *
      * @constructor
@@ -20,29 +20,32 @@ var ButtonWidget = ViewWidget.extend({
      * @param {Object} [options]
      * @param {string} [options.mode=readonly] should be 'readonly' or 'edit'
      */
-	init: function (parent, node, record, options) {
-		this._super(parent);
+    init: function (parent, node, record, options) {
+        this._super(parent, record);
 
-		this.node = node;
+        this.node = node;
+        this.__node = node; // TODO: get rid of this, added because we are finding first button based on this
 
-		// the datapoint fetched from the model
-        this.record = record;
-
-        this.string = this.node.attrs.string;
+        // the 'string' property is a human readable (and translated) description of the button.
+        this.string = (this.node.attrs.string || '').replace(/_/g, '');
 
         if (node.attrs.icon) {
             this.fa_icon = node.attrs.icon.indexOf('fa-') === 0;
         }
-	},
-	start: function() {
-		var self = this;
+    },
+    start: function () {
+        var self = this;
         this._super.apply(this, arguments);
+        var enterPressed = false;
         this.$el.click(function () {
+            if (enterPressed) {
+                self.trigger_up('set_last_tabindex', {target: self});
+            }
             self.trigger_up('button_clicked', {
                 attrs: self.node.attrs,
                 record: self.record,
-                callback: function() {
-                    self.trigger_up('move_next');
+                callback: function (direction) {
+                    self.trigger_up('navigation_move', {direction: direction || 'next'});
                 }
             });
         });
@@ -52,6 +55,14 @@ var ButtonWidget = ViewWidget.extend({
             this._addButtonTooltip();
         }
 
+        this.$el.on('keydown', function (e) {
+            // Note: For setting enterPressed variable which will be helpful to set next widget or not,
+            // if mouse is used then do not set next widget focus
+            e.stopPropagation();
+            if (e.which === $.ui.keyCode.ENTER) {
+                enterPressed = true;
+            }
+        });
         this._addOnFocusAction();
     },
 
@@ -101,9 +112,9 @@ var ButtonWidget = ViewWidget.extend({
     _addOnFocusAction: function () {
         var self = this;
         var options = _.extend({
-            delay: { show: 1000, hide: 0 },
+            delay: {show: 1000, hide: 0},
             trigger: 'focus',
-            title: function() {
+            title: function () {
                 return qweb.render('FocusTooltip', {
                     getFocusTip: self._getFocusTip(self.node)
                 });

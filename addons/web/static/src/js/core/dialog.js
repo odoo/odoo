@@ -31,7 +31,7 @@ var Dialog = Widget.extend({
      *        modal-body class
      * @param {Object[]} [options.buttons]
      *        List of button descriptions. Note: if no buttons, a "ok" primary
-     *        button is added to allow closing the dialog
+     *        button is added to allow closing the dialog with autofocus
      * @param {string} [options.buttons[].text]
      * @param {string} [options.buttons[].classes]
      *        Default to 'btn-primary' if only one button, 'btn-default'
@@ -52,7 +52,7 @@ var Dialog = Widget.extend({
             size: 'large',
             dialogClass: '',
             $content: false,
-            buttons: [{text: _t("Ok"), close: true}],
+            buttons: [{text: _t("Ok"), close: true, autofocus: true}],
             technical: true,
         });
 
@@ -90,6 +90,15 @@ var Dialog = Widget.extend({
             self.$footer = self.$modal.find(".modal-footer");
             self.set_buttons(self.buttons);
             self.$modal.on('hidden.bs.modal', _.bind(self.destroy, self));
+            // Bind keydown.dismiss.bs.modal explicitly as we do not want to propagate Escape keydown further else form discard method will get trigerred
+            self.$modal
+            .off('keydown.dismiss.bs.modal')
+            .on('keydown.dismiss.bs.modal', function (e) {
+                if (e.which == 27) {
+                    e.stopPropagation();
+                    self.destroy();
+                }
+            });
         });
     },
     /**
@@ -113,10 +122,14 @@ var Dialog = Widget.extend({
                 attrs: {
                     class: buttonData.classes || (buttons.length > 1 ? 'btn-default' : 'btn-primary'),
                     disabled: buttonData.disabled,
+                    autofocus: buttonData.autofocus,
                 },
                 icon: buttonData.icon,
                 text: buttonData.text,
             });
+            if (buttonData.tabindex) {
+                $button.attr('tabindex', buttonData.tabindex);
+            }
             $button.on('click', function (e) {
                 var def;
                 if (buttonData.click) {
@@ -124,6 +137,11 @@ var Dialog = Widget.extend({
                 }
                 if (buttonData.close) {
                     $.when(def).always(self.close.bind(self));
+                }
+            });
+            $button.on('keydown', function (e) {
+                if (buttonData.keydown) {
+                    buttonData.keydown.call(self, e);
                 }
             });
             self.$footer.append($button);
@@ -155,6 +173,9 @@ var Dialog = Widget.extend({
         this.appendTo($('<div/>')).then(function () {
             self.$modal.find(".modal-body").replaceWith(self.$el);
             self.$modal.modal('show');
+            setTimeout(function () {
+                self.$modal.find('button[autofocus]').focus(); //FIXME: Need to set focus explicitly after shown(bind shown.bs.modal)
+            }, 50);
             self._opened.resolve();
         });
 
@@ -199,6 +220,7 @@ Dialog.alert = function (owner, message, options) {
         text: _t("Ok"),
         close: true,
         click: options && options.confirm_callback,
+        autofocus: true,
     }];
     return new Dialog(owner, _.extend({
         size: 'medium',
@@ -218,6 +240,7 @@ Dialog.confirm = function (owner, message, options) {
             classes: 'btn-primary',
             close: true,
             click: options && options.confirm_callback,
+            autofocus: true,
         },
         {
             text: _t("Cancel"),

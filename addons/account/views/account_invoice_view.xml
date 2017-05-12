@@ -427,7 +427,7 @@
                                     <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="base.group_no_one" tabindex="-1"/>
-                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" context="{'type':parent.type}"
+                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type}"
                                         domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" string="Subtotal" tabindex="-1"/>
                                     <field name="currency_id" invisible="1"/>

@@ -339,11 +339,14 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     _onDisplayWarning: function (e) {
         var data = e.data;
         if (data.type === 'dialog') {
-            new Dialog(this, {
+            var dialog = new Dialog(this, {
                 size: 'medium',
                 title: data.title,
                 $content: qweb.render("CrashManager.warning", data),
             }).open();
+            dialog.on('closed', this, function () {
+                core.bus.trigger('dialog_closed');
+            });
         } else if (this.notification_manager) {
             this.notification_manager.warn(e.data.title, e.data.message, e.data.sticky);
         }

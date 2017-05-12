@@ -4,7 +4,6 @@ odoo.define('web.FormRenderer', function (require) {
 var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
-var dom = require('web.dom');
 var ButtonWidget = require('web.ButtonWidget');
 
 var _t = core._t;
@@ -21,7 +20,14 @@ var FormRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
+        this.formviewInPopup = params.formviewInPopup;
         this.idsForLabels = {};
+        core.bus.on('dialog_closed', this, function () {
+            // Hacky Fix: Note: This is going to be bind on each formview, this will create issue when dialog is closed, it will be trigerred for all formviews
+            if (this.$el.is(':visible')) {
+                this.trigger_up('navigation_move', {direction: 'current'});
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -32,7 +38,7 @@ var FormRenderer = BasicRenderer.extend({
      * Focuses the field having attribute 'default_focus' set, if any, or the
      * first focusable field otherwise.
      */
-    autofocus: function() {
+    autofocus: function () {
         if (this.mode === 'readonly') {
             return;
         }
@@ -41,10 +47,7 @@ var FormRenderer = BasicRenderer.extend({
             var widgets = (!_.isEmpty(this.tabindexWidgets) &&  this.tabindexWidgets[this.state.id]) || this.allFieldWidgets[this.state.id];
             for (var i = 0; i < (widgets ? widgets.length : 0); i++) {
                 var widget = widgets[i];
-                // TODO: Use isFocusable method instead of following condition and check why we need to check label
-                var idForLabel = this.idsForLabels[widget.name];
-                var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
-                if (!widget.$el.is('.o_form_invisible') && !widget.$el.is('.o_readonly') && $label && $label.length  && !widget.$el.is(":hidden")) {
+                if (widget.isFocusable()) {
                     focusWidget = widget;
                     break;
                 }
@@ -53,16 +56,6 @@ var FormRenderer = BasicRenderer.extend({
         if (focusWidget) {
             focusWidget.activate({noselect: true});
         }
-    },
-    setTabindexWidgets: function() {
-        var self = this;
-        this.tabindexWidgets[this.state.id] = [];
-        _.each(this.tabindexFieldWidgets[this.state.id], function (widget) {
-            self.tabindexWidgets[self.state.id].push(widget);
-        });
-        _.each(this.tabindexButtons[this.state.id], function (widget) {
-            self.tabindexWidgets[self.state.id].push(widget);
-        });
     },
     /**
      * Extend the method so that labels also receive the 'o_field_invalid' class
@@ -146,6 +139,47 @@ var FormRenderer = BasicRenderer.extend({
             .removeAttr('disabled');
     },
     /**
+     * Sets focus to first header button, if there is no header button then
+     * sets focus to next widget i.e. do iteration cycle on all widgets from last widget to first widget
+     * if view is in readonly mode then set focus to control buttons i.e. Create/Edit
+     */
+    focusFirstButton: function () {
+        var firstButtonWidget = this.getFirstButtonWidget();
+        if (firstButtonWidget) {
+            return firstButtonWidget.activate();
+        } else if (this.mode !== 'readonly') {
+            return this._activateNextWidget(this.state, -1);
+        } else {
+            return this.trigger_up('focus_control_button');
+        }
+    },
+    /**
+     * Will return first header button from tabindexWidgets list for current record.
+     */
+    getFirstButtonWidget: function () {
+        var recordWidgets = this.tabindexWidgets[this.state.id] || [];
+        var firstButtonWidget = _.find(recordWidgets, function (widget) {
+            // FIXME: widget.__node, we may remove __node in future
+            return widget.__node.tag === 'button'
+                && (widget.__node.attrs.class.indexOf('oe_highlight') !== -1
+                || widget.__node.attrs.class.indexOf('btn-primary') !== -1)
+                && widget.$el.is(':visible')
+                && !widget.$el.hasClass('o_readonly_modifier');
+        });
+        return firstButtonWidget;
+    },
+    /**
+     * Will return last field widget from tabindeWidgets list for current record.
+     */
+    getLastFieldWidget: function () {
+        var lastTabindexField = _.chain(this.tabindexWidgets[this.state.id]).filter(function (widget) {
+            return !(widget.$el.is(':hidden') || widget.$el.hasClass('o_readonly_modifier')) && widget.__node.tag === 'field';
+        })
+        .last()
+        .value();
+        return lastTabindexField;
+    },
+    /**
      * returns the active tab pages for each notebook
      *
      * @todo currently, this method is unused...
@@ -188,6 +222,21 @@ var FormRenderer = BasicRenderer.extend({
         });
     },
     /**
+     * This method will prepare tabindexWidgets list which contains all widgets per record
+     * which can be navigated through TAB key, this tabindexWidgets will also contain header buttons,
+     * when user press TAB key then we will pick widget from this list instead of allFieldWidgets list.
+     */
+    setTabindexWidgets: function () {
+        var self = this;
+        this.tabindexWidgets[this.state.id] = [];
+        _.each(this.tabindexFieldWidgets[this.state.id], function (widget) {
+            self.tabindexWidgets[self.state.id].push(widget);
+        });
+        _.each(this.tabindexButtons[this.state.id], function (widget) {
+            self.tabindexWidgets[self.state.id].push(widget);
+        });
+    },
+    /**
      * @override method from AbstractRenderer
      * @param {Object} state a valid state given by the model
      * @param {Object} params
@@ -225,6 +274,40 @@ var FormRenderer = BasicRenderer.extend({
             this.idsForLabels[name] = idForLabel;
         }
         return idForLabel;
+    },
+    /**
+     * It will returns the last visible widget from tabindexWidgets list for current record.
+     *
+     * @private
+     * @returns {Class} Widget returns last widget
+     */
+    _getLastWidget: function () {
+        var lastTabindexWidget = _.chain(this.tabindexWidgets[this.state.id]).filter(function (widget) {
+            return !(widget.$el.is(':hidden') || widget.$el.hasClass('o_readonly_modifier'));
+        })
+        .last()
+        .value();
+        return lastTabindexWidget;
+    },
+    /**
+     * This method called every time when navigation move next is performed,
+     * returns the widget that is next to current active widget.
+     *
+     * @private
+     * @param {Integer} currentIndex current widget index
+     * @param {Array} recordWidgets Array of all record widgets
+     * @returns {Class} Widget returns widget
+     */
+    _getNextTabindexWidget: function (currentIndex, recordWidgets) {
+        if (recordWidgets.length === currentIndex) {
+            currentIndex -= recordWidgets.length-1; // If we are on last widget index then move user back to first widget
+        }
+        for (var i = currentIndex; i < recordWidgets.length; i++) {
+            var widget = recordWidgets[i];
+            if (widget && widget.$el.is(':visible') && !widget.$el.hasClass('o_readonly_modifier')) { // check it is visible and not readonly
+                return widget;
+            }
+        }
     },
     /**
      * @override
@@ -316,7 +399,6 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderHeaderButton: function (node) {
-        var self = this;
         var widget = new ButtonWidget(this, node, this.state);
         // Prepare widget rendering and save the related deferred
         var def = widget._widgetRenderAndInsert(function () {});
@@ -325,9 +407,9 @@ var FormRenderer = BasicRenderer.extend({
         }
         this._handleAttributes(widget.$el, node);
         this._registerModifiers(node, this.state, widget.$el);
-        if (node.attrs.class && (node.attrs.class.indexOf('btn-primary') != -1
-            || node.attrs.class.indexOf('oe_highlight') != -1
-            || node.attrs.class.indexOf('oe_stat_button') != -1)) {
+        if (node.attrs.class && (node.attrs.class.indexOf('btn-primary') !== -1
+            || node.attrs.class.indexOf('oe_highlight') !== -1
+            || node.attrs.class.indexOf('oe_stat_button') !== -1)) {
             this.tabindexButtons[this.state.id].push(widget);
         }
         return widget.$el;
@@ -489,12 +571,6 @@ var FormRenderer = BasicRenderer.extend({
         this._handleAttributes(widget.$el, node);
         this._registerModifiers(node, this.state, widget.$el);
 
-        if (node.attrs.class && (node.attrs.class.indexOf('btn-primary') != -1
-            || node.attrs.class.indexOf('oe_highlight') != -1
-            || node.attrs.class.indexOf('oe_stat_button') != -1)) {
-            // TODO: Add into tabindexWidgets but mainatain separate object and push inside tabindexWidgets in last so that stat buttons get focus in last
-            // this.tabindexButtons[this.state.id].push(widget);
-        }
         return widget.$el;
     },
     /**
@@ -536,11 +612,12 @@ var FormRenderer = BasicRenderer.extend({
         if (def.state() === 'pending') {
             this.defs.push(def);
         }
+        widget.$el.append(_.map(node.children, this._renderNode.bind(this)));
         this._handleAttributes(widget.$el, node);
         this._registerModifiers(node, this.state, widget.$el);
-        if (node.attrs.class && (node.attrs.class.indexOf('btn-primary') != -1
-            || node.attrs.class.indexOf('oe_highlight') != -1
-            || node.attrs.class.indexOf('oe_stat_button') != -1)) {
+        if (node.attrs.class && (node.attrs.class.indexOf('btn-primary') !== -1
+            || node.attrs.class.indexOf('oe_highlight') !== -1
+            || node.attrs.class.indexOf('oe_stat_button') !== -1)) {
             this.tabindexButtons[this.state.id].push(widget);
         }
         return widget.$el;
@@ -778,10 +855,9 @@ var FormRenderer = BasicRenderer.extend({
 
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
+            self.setTabindexWidgets();
         }, function () {
             $form.remove();
-            self.autofocus();
-            self.setTabindexWidgets();
         });
     },
     /**
@@ -852,22 +928,73 @@ var FormRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * This method will do navigation on widgets based on direction(next, previous etc.),
+     * will not allow to proceed further if field is required, direction is next and user did not fill field,
+     * if direction is next then move user to next widget and if direction is previous then on previous widget,
+     * if direction is next and next widget is button(i.e. current widget is last field widget)
+     * then first set focus to Save button if form is in edit mode,
+     * once record is saved and mode is readonly then navigate user to header buttons,
+     * if user is on last wiget and press TAB if mode is edit then navigate user to first widget to do widget iteration cycle,
+     * else on control buttons i.e. Create/Edit,
+     * if direction is current the keep user to current widget, do not move user to next or previous widget,
+     * if SHIFT + ENTER is pressed then save the document and navigate focus to control buttons i.e. Create/Edit
+     * if user press ESCAPE key then discard document.
+     *
      * @override
      * @private
      * @param {OdooEvent} ev
      */
     _onNavigationMove: function (ev) {
         ev.stopPropagation();
+        var lastWidget = this._getLastWidget();
+        var lastFieldWidget = this.getLastFieldWidget();
 
-        var index;
+        var index = this.tabindexWidgets[this.state.id].indexOf(ev.data.target);
+        if (index === -1) {
+            index = this.lastTabindex; // Get widget based on last saved tabindex
+        }
         if (ev.data.direction === "next") {
-            index = this.tabindexWidgets[this.state.id].indexOf(ev.data.target);
+            if (ev.data.required_error) {
+                return this._activateWidget(this.state, index, {inc: 1});
+            }
             var recordWidgets = this.tabindexWidgets[this.state.id] || [];
-            var nextWidget = this._getNextTabindexWidget(index+1, recordWidgets);
-            this._activateNextFieldWidget(this.state, index);
+            var nextWidget = this._getNextTabindexWidget(index + 1, recordWidgets);
+            // If user presses TAB on last field and next widget is button then first move user to Save button
+            if (lastFieldWidget && _.isEqual(ev.data.target, lastFieldWidget)) {
+                return this.trigger_up('focus_control_button');
+            }
+            // If widget is last but it is not field widget then move user to first widget(re-traversal)
+            if (_.isEqual(ev.data.target, lastWidget) && !_.isEqual(ev.data.target, lastFieldWidget)) {
+                var activatedWidget = this._activateNextWidget(this.state, index);
+                if (activatedWidget === -1 && this.mode === 'readonly') {
+                    return this.trigger_up('focus_control_button');
+                }
+                return activatedWidget;
+            } else if (nextWidget && !_.isEqual(nextWidget, ev.data.target)) {
+                // Checking nextWidget is not current active widget for speical case where we have single field widget in form
+                return this._activateNextWidget(this.state, index);
+            } else {
+                return this.trigger_up('focus_control_button');
+            }
         } else if (ev.data.direction === "previous") {
-            index = this.tabindexWidgets[this.state.id].indexOf(ev.data.target);
-            this._activatePreviousFieldWidget(this.state, index);
+            if (_.isEqual(this.getFirstButtonWidget(), ev.data.target)) {
+                this.trigger_up('focus_control_button');
+            } else {
+                this._activatePreviousWidget(this.state, index);
+            }
+        } else if (ev.data.direction === 'current') {
+            this._activateWidget(this.state, index, {inc: 1});
+        } else if (ev.data.direction === "cancel") {
+            this.trigger_up('discard_changes', {
+                onSuccess: _.bind(function () {
+                    if (this.state.res_id) { // Set focus to Edit button, in new record we will do history_back
+                        this.trigger_up('focus_control_button');
+                    }
+                }, this)
+            });
+        } else if (ev.data.direction === 'next_line' && ev.data.shift_key && !this.formviewInPopup) {
+            ev.stopPropagation();
+            this.trigger_up('shift_enter_pressed');
         }
     },
     /**
@@ -879,19 +1006,6 @@ var FormRenderer = BasicRenderer.extend({
     _onTranslate: function (event) {
         event.preventDefault();
         this.trigger_up('translate', {fieldName: event.target.name, id: this.state.id});
-    },
-    _getNextTabindexWidget: function(currentIndex, recordWidgets) {
-        for (var i = 0 ; i < recordWidgets.length ; i++) {
-            var widget = recordWidgets[currentIndex];
-            if (widget && widget.$el.is(':visible') && !widget.$el.hasClass("o_readonly_modifier")) { // check it is visible and not readonly
-                return widget;
-            }
-        }
-    },
-    _onMoveNextButton: function($el) {
-        var index = this.tabindexWidgets[this.state.id].indexOf($el);
-        var recordWidgets = this.tabindexWidgets[this.state.id] || [];
-        this._activateNextFieldWidget(this.state, index);
     },
 });
 

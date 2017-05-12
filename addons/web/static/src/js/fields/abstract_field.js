@@ -71,14 +71,11 @@ var AbstractField = ViewWidget.extend({
      * @param {string} [options.mode=readonly] should be 'readonly' or 'edit'
      */
     init: function (parent, name, record, options) {
-        this._super(parent);
+        this._super(parent, record);
         options = options || {};
 
         // 'name' is the field name displayed by this widget
         this.name = name;
-
-        // the datapoint fetched from the model
-        this.record = record;
 
         // the 'field' property is a description of all the various field properties,
         // such as the type, the comodel (relation), ...
@@ -191,6 +188,20 @@ var AbstractField = ViewWidget.extend({
      * @returns {Deferred|undefined}
      */
     commitChanges: function () {},
+    /**
+     * A field widget element is blank or not.
+     *
+     * This function should override by widgets and return true/false
+     * after checking widget element is blank or not
+     *
+     * Note: Checking element value is blank varies by widgets
+     * InputField will check input is blank or not while date field will check datepicker.$input
+     *
+     * @returns {boolean}
+     */
+    isBlank: function () {
+        return false;
+    },
     /**
      * this method is used to determine if the field value is set to a meaningful
      * value.  This is useful to determine if a field should be displayed as empty
@@ -371,6 +382,21 @@ var AbstractField = ViewWidget.extend({
         });
         return def;
     },
+    /**
+     * Stops to navigate further if required field is blank,
+     * isBlank method will check whether field is blank or not.
+     *
+     * @override
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onNavigationMove: function (ev) {
+        if (ev.data.direction === 'next' && this.isBlank() && this.$el.hasClass('o_required_modifier')) {
+            this.$el.toggleClass('o_field_invalid', true);
+            ev.data.required_error = true;
+        }
+        return this._super.apply(this, arguments);
+    }
 });
 
 return AbstractField;

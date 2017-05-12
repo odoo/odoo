@@ -103,12 +103,22 @@ var CrashManager = core.Class.extend({
         if (!this.active) {
             return;
         }
-        new Dialog(this, {
+        var dialog = new Dialog(this, {
             size: 'medium',
             title: _.str.capitalize(error.type || error.message) || _t("Odoo Warning"),
             subtitle: error.data.title,
             $content: $(QWeb.render('CrashManager.warning', {error: error}))
         }).open();
+        dialog.on('closed', this, function () {
+            // Note: dialog sucks, when Warning or Error shown in bootstrap modal it will not have any connection with form view
+            // So closing it will not set focus on right widget, so we handled this scenario with core.bus event
+            // Now if there are many form views available, main form inside that o2m and again o2m and then UserError throws 
+            // closing that bootstrap modal will trigger event for all forms and set focus on top visible form's widget
+            var modals = $('body > .modal').filter(':visible');
+            if (!(modals.length > 1)) {
+                core.bus.trigger('dialog_closed');
+            }
+        });
     },
     show_error: function(error) {
         if (!this.active) {
@@ -147,6 +157,10 @@ var CrashManager = core.Class.extend({
         dialog.on("closed", this, function () {
             $clipboardBtn.tooltip("destroy");
             clipboard.destroy();
+            var modals = $('body > .modal').filter(':visible');
+            if (!(modals.length > 1)) {
+                core.bus.trigger('dialog_closed');
+            }
         });
 
         dialog.open();

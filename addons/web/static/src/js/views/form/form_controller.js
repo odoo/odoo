@@ -1,6 +1,7 @@
 odoo.define('web.FormController', function (require) {
 "use strict";
 
+var Framework = require('web.framework');
 var BasicController = require('web.BasicController');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
@@ -18,21 +19,9 @@ var FormController = BasicController.extend({
         open_one2many_record: '_onOpenOne2ManyRecord',
         open_record: '_onOpenRecord',
         toggle_column_order: '_onToggleColumnOrder',
+        focus_control_button: '_onFocusControlButton',
+        shift_enter_pressed: '_onShiftEnterPress',
     }),
-    /**
-     * Called each time the form view is attached into the DOM
-     */
-    on_attach_callback: function() {
-        this.trigger('attached');
-        this.renderer.setTabindexWidgets();
-        this.autofocus();
-    },
-    /**
-     * Called each time the form view is detached from the DOM
-     */
-    on_detach_callback: function() {
-        this.trigger('detached');
-    },
     /**
      * @override
      *
@@ -59,10 +48,10 @@ var FormController = BasicController.extend({
      */
     autofocus: function () {
         if (!this.disableAutofocus) {
-            this.renderer.autofocus();
-            if (this.$buttons && this.mode == 'readonly') {
-                this.$buttons.find('.o_form_button_edit').focus();
+            if (this.$buttons && this.mode === 'readonly') {
+                return this.$buttons.find('.o_form_button_edit').focus();
             }
+            this.renderer.autofocus();
         }
     },
     /**
@@ -75,6 +64,7 @@ var FormController = BasicController.extend({
      */
     createRecord: function (parentID) {
         var self = this;
+        this.lastTabindex = 0;
         var record = this.model.get(this.handle, {raw: true});
         return this.model.load({
             context: record.getContext(),
@@ -116,17 +106,20 @@ var FormController = BasicController.extend({
      * @todo convert to new style
      */
     on_attach_callback: function () {
+        this.renderer.setTabindexWidgets();
         this.autofocus();
     },
     /**
      * Render buttons for the control panel.  The form view can be rendered in
      * a dialog, and in that case, if we have buttons defined in the footer, we
-     * have to use them instead of the standard buttons.
+     * have to use them instead of the standard buttons, when focus comes to button
+     * show tip, also support keyboard keys TAB, ENTER and ESCAPE.
      *
      * @override method from AbstractController
      * @param {jQueryElement} $node
      */
     renderButtons: function ($node) {
+        var self = this;
         var $footer = this.footerToButtons ? this.$('footer') : null;
         var mustRenderFooterButtons = $footer && $footer.length;
         if (!this.defaultButtons && !mustRenderFooterButtons) {
@@ -136,10 +129,69 @@ var FormController = BasicController.extend({
         if (mustRenderFooterButtons) {
             this.$buttons.append($footer);
         } else {
+            var mouseClicked = false;
+            var on_button_focus = function (bindElement, message) {
+                if (mouseClicked) {
+                    $(bindElement).tooltip('hide');
+                    mouseClicked = false;
+                    return;
+                }
+                Framework.showFocusTip({attachTo: bindElement, message: message, trigger: 'focus'});
+            };
+
             this.$buttons.append(qweb.render("FormView.buttons", {widget: this}));
-            this.$buttons.on('click', '.o_form_button_edit', this._onEdit.bind(this));
-            this.$buttons.on('click', '.o_form_button_create', this._onCreate.bind(this));
-            this.$buttons.on('click', '.o_form_button_save', this._onSave.bind(this));
+            this.$buttons.on('mousedown', 'button', function () {
+                mouseClicked = true;
+            });
+            this.$buttons.find('.o_form_button_edit')
+                .on('click', this._onEdit.bind(this))
+                .on('focus', function () {
+                    on_button_focus(this, _t('Press ENTER to Edit or ESC to go back'));
+                })
+                .on('keydown', function (e) {
+                    if (e.which === $.ui.keyCode.ESCAPE) {
+                        $(this).tooltip('hide'); //forcefully hide tooltip as firefox doesn't hide it when element get hidden
+                        self.trigger_up('history_back');
+                    }
+                });
+
+            this.$buttons.find('.o_form_button_create')
+                .on('click', this._onCreate.bind(this))
+                .on('focus', function () {
+                    on_button_focus(this, _t('Press ENTER to <b>Create</b> or ESC to go back'));
+                })
+                .on('keydown', function (e) {
+                    if (e.which === $.ui.keyCode.TAB) {
+                        e.preventDefault();
+                        self.renderer.focusFirstButton();
+                    } else if (e.which === $.ui.keyCode.ESCAPE) {
+                        $(this).tooltip('hide'); //forcefully hide tooltip as firefox doesn't hide it when element get hidden
+                        self.trigger_up('history_back');
+                    }
+                });
+
+            this.$buttons.find('.o_form_button_save')
+                .on('click', this._onSave.bind(this))
+                .on('focus', function () {
+                    on_button_focus(this, _t('Press ENTER to Save or ESC to Discard'));
+                })
+                .on('keydown', function (event) {
+                    event.preventDefault();
+                    if (event.which === $.ui.keyCode.TAB) {
+                        if (event.shiftKey && self.renderer.getLastFieldWidget()) {
+                            self.renderer.getLastFieldWidget().activate();
+                        } else {
+                            self.renderer.focusFirstButton();
+                        }
+                    } else if (event.which === $.ui.keyCode.ENTER) {
+                        self._onSave(event).then(function () {
+                            self.renderer.focusFirstButton();
+                        });
+                    } else if (event.which === $.ui.keyCode.ESCAPE) {
+                        self._onDiscard();
+                    }
+                });
+
             this.$buttons.on('click', '.o_form_button_cancel', this._onDiscard.bind(this));
 
             this._updateButtons();
@@ -405,7 +457,7 @@ var FormController = BasicController.extend({
                 // by the basic model, such as the new res_id, if the record is
                 // new.
                 var record = self.model.get(event.data.record.id);
-                return self._callButtonAction(attrs, record);
+                return self._callButtonAction(attrs, record, event.data.callback);
             });
         }
         var attrs = event.data.attrs;
@@ -418,7 +470,7 @@ var FormController = BasicController.extend({
             });
             def = d.promise();
         } else if (attrs.special === 'cancel') {
-            def = this._callButtonAction(attrs, event.data.record);
+            def = this._callButtonAction(attrs, event.data.record, event.data.callback);
         } else if (!attrs.special || attrs.special === 'save') {
             // save the record but don't switch to readonly mode
             def = saveAndExecuteAction();
@@ -450,6 +502,28 @@ var FormController = BasicController.extend({
      */
     _onDiscard: function () {
         this._discardChanges();
+    },
+    /**
+     * When user press Escape this method will be called and if there is any dialog
+     * then we will first close top most dialog and set focus to previous dialog,
+     * if there is not dialog then we will call super method to discard whole record.
+     *
+     * @override
+     */
+    _onDiscardChanges: function () {
+        // If popups are open and by chance if popup does not have focus instead focus is on some other form maybe on main form
+        // then first close the top popup otherwise main form's cancel will move us to history_back(maybe on listview) but popup still remains open
+        // this should never happen so to avoid this worst case scenario we check if popup is available then close top popup
+        var modals = $('body > .modal').filter(':visible');
+        // Need to use document.activeElement because issue is something like: http://blog.mattheworiordan.com/post/9308775285/testing-focus-with-jquery-and-selenium-or
+        var hasFocus = $(document.activeElement).closest(".modal").length;
+        if (modals.length && !hasFocus) {
+            var lastModal = modals && modals.last();
+            lastModal.modal('hide');
+            lastModal.remove();
+            return;
+        }
+        return this._super.apply(this, arguments);
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the sidebar
@@ -485,6 +559,25 @@ var FormController = BasicController.extend({
         this.model.freezeOrder(event.data.id);
     },
     /**
+     * When someone wants to set focus on Create/Edit/Save buttons then will trigger event focus_control_button,
+     * ususally called using keyboard navigation, when user reach to last field widget and if press TAB
+     * then user will be first navigated to Save button, if all widgets are traversed and user press TAB
+     * then user will be navigated to Create/edit buttons, so this method will set focus to respective button according to mode.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onFocusControlButton: function (event) {
+        event.stopPropagation();
+        if (this.mode !== 'readonly' && this.$buttons && this.$buttons.find('.o_form_button_save').length) {
+            return this.$buttons.find('.o_form_button_save').focus();
+        } else if (this.mode === 'readonly' && this.$buttons && this.$buttons.find('.o_form_button_edit')) {
+            return this.$buttons.find('.o_form_button_edit').focus();
+        } else {
+            return this.renderer.focusFirstButton();
+        }
+    },
+    /**
      * Opens a one2many record (potentially new) in a dialog. This handler is
      * o2m specific as in this case, the changes done on the related record
      * shouldn't be saved in DB when the user clicks on 'Save' in the dialog,
@@ -504,7 +597,7 @@ var FormController = BasicController.extend({
             record = this.model.get(data.id, {raw: true});
         }
 
-        new dialogs.FormViewDialog(this, {
+        var FormViewDialog = new dialogs.FormViewDialog(this, {
             context: data.context,
             domain: data.domain,
             fields_view: data.fields_view,
@@ -518,6 +611,11 @@ var FormController = BasicController.extend({
             shouldSaveLocally: true,
             title: (record ? _t("Open: ") : _t("Create ")) + (event.target.string || data.field.string),
         }).open();
+        FormViewDialog.on('closed', this, function () {
+            _.delay(function () {
+                data.widget.$el.focus();
+            }, 100);
+        });
     },
     /**
      * Open an existing record in a form view dialog
@@ -547,7 +645,40 @@ var FormController = BasicController.extend({
      */
     _onSave: function (ev) {
         ev.stopPropagation(); // Prevent x2m lines to be auto-saved
-        this.saveRecord();
+        return this.saveRecord();
+    },
+    /**
+     * Save the record on SHIFT+ENTER and set focus to first header button,
+     * if there is no header button then set focus to Edit button,
+     * if there are not Save/Edit buttons(i.e. form in wizard) then trigger click of first action button.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onShiftEnterPress: function (ev) {
+        var self = this;
+        if (this.$buttons && this.$buttons.find('.o_form_button_save').length) {
+            this._onSave(ev).then(function () {
+                var firstButton = self.renderer.getFirstButtonWidget(); // Need to get firstButton in if..else both because reload will re-render buttons
+                if (firstButton) {
+                    _.delay(function () {
+                        firstButton.activate();
+                    }, 0);
+                } else {
+                    _.delay(function () {
+                        if (self.$buttons) {
+                            self.$buttons.find('.o_form_button_edit').focus();
+                        }
+                    }, 0);
+                }
+            });
+        } else {
+            // Wizard will not have o_form_button_save, so in that case trigger click event for first button of wizard
+            var firstButton = this.renderer.getFirstButtonWidget();
+            if (firstButton) {
+                firstButton.$el.trigger('click');
+            }
+        }
     },
     /**
      * This method is called when someone tries to sort a column, most likely

@@ -19,7 +19,6 @@ var ViewWidget = Widget.extend({
     jsLibs: [],
     events: {
         'keydown': '_onKeydown',
-        'keyup': '_onKeyup'
     },
     custom_events: {
         navigation_move: '_onNavigationMove',
@@ -33,6 +32,11 @@ var ViewWidget = Widget.extend({
     */
     fieldDependencies: {},
 
+    init: function (parent, record) {
+        this._super(parent);
+        // the datapoint fetched from the model
+        this.record = record;
+    },
     /**
      * Loads the libraries listed in this.jsLibs and this.cssLibs
      *
@@ -49,7 +53,7 @@ var ViewWidget = Widget.extend({
     /**
      * Activates the field widget. By default, activation means focusing and
      * selecting (if possible) the associated focusable element. The selecting
-     * part can be disabled.  In that case, note that the focused input/textarea
+     * part can be disabled. In that case, note that the focused input/textarea
      * will have the cursor at the very end.
      *
      * @param {Object} [options]
@@ -83,7 +87,7 @@ var ViewWidget = Widget.extend({
         return $();
     },
     /**
-     * Returns true iff the widget has a visible element that can take the focus
+     * Returns true if the widget has a visible element that can take the focus
      *
      * @returns {boolean}
      */
@@ -120,7 +124,7 @@ var ViewWidget = Widget.extend({
                 break;
             case $.ui.keyCode.ENTER:
                 ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'next_line'});
+                this.trigger_up('navigation_move', {direction: 'next_line', 'shift_key': ev.shiftKey});
                 break;
             case $.ui.keyCode.ESCAPE:
                 this.trigger_up('navigation_move', {direction: 'cancel', originalEvent: ev});
@@ -153,13 +157,7 @@ var ViewWidget = Widget.extend({
      */
     _onNavigationMove: function (ev) {
         ev.data.target = this;
-    },
-    _onKeyup: function(event) {
-        if (event.which === $.ui.keyCode.ESCAPE) {
-            this._onKeyupEscape();
-        }
-    },
-    _onKeyupEscape: function() {}
+    }
 });
 
 return ViewWidget;

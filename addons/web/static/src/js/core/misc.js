@@ -182,10 +182,32 @@ if (!document.contains) {
     };
 }
 
+/**
+ * Will display tip on widget to describe to next action
+ * Will show tip on options.attachTo
+ * If options.trigger is passed then will trigger on that else trigger will be manual
+ * If options.placement is given then will show tip accordingly else tip will be displayed on bottom
+ */
+function showFocusTip (options) {
+    var $attachTo = $(options.attachTo);
+    var $template = core.qweb.render('FocusTooltip', {title: options.message});
+    var options = _.extend({
+        delay: {show: 200, hide: 0},
+        trigger: options.trigger || 'manual',
+        placement: options.placement || 'bottom',
+        title: function () {
+            return $template;
+        }
+    }, {});
+    $attachTo.tooltip(options);
+    $attachTo.tooltip('show');
+};
+
 return {
     blockUI: blockUI,
     unblockUI: unblockUI,
     redirect: redirect,
+    showFocusTip: showFocusTip,
 };
 
 });

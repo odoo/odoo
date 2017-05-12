@@ -24,7 +24,7 @@ var QWeb = core.qweb;
 // the flickering when switching between records
 var Chatter = Widget.extend(chat_mixin, {
     template: 'mail.Chatter',
-    no_tabindex: true,
+    noTabindex: true,
     custom_events: {
         reload_mail_fields: '_onReloadMailFields',
     },
