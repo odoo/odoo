@@ -406,7 +406,7 @@ class IrModelFields(models.Model):
             try:
                 field = self._related_field()
             except UserError as e:
-                return {'warning': {'title': _("Warning"), 'message': e.message}}
+                return {'warning': {'title': _("Warning"), 'message': e}}
             self.ttype = field.type
             self.relation = field.comodel_name
             self.readonly = True

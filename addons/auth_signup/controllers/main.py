@@ -38,7 +38,7 @@ class AuthSignupHome(Home):
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
                     qcontext["error"] = _("Another user is already registered using this email address.")
                 else:
-                    _logger.error(e.message)
+                    _logger.error("%s", e)
                     qcontext['error'] = _("Could not create a new account.")
 
         return request.render('auth_signup.signup', qcontext)
@@ -64,7 +64,7 @@ class AuthSignupHome(Home):
                 qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')
             except Exception as e:
-                qcontext['error'] = e.message or e.name
+                qcontext['error'] = str(e)
 
         response = request.render('auth_signup.reset_password', qcontext)
         response.headers['X-Frame-Options'] = 'DENY'

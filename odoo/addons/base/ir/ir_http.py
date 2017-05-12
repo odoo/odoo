@@ -356,6 +356,6 @@ def convert_exception_to(to_type, with_message=False):
         else:
             message = str(with_message)
 
-        raise to_type, message, tb
+        raise pycompat.reraise(to_type, to_type(message), tb)
     except to_type as e:
         return e
