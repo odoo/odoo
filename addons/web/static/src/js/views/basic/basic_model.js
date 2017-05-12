@@ -180,15 +180,16 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
-     * Delete a list of records, then, if a parentID is given, reload the
-     * parent.
+     * Delete a list of records, then, if the records have a parent, reload it.
      *
      * @todo we should remove the deleted records from the localData
-     * @todo why can't we infer modelName?
+     * @todo why can't we infer modelName? Because of grouped datapoint
+     *       --> res_id doesn't correspond to the model and we don't have the
+     *           information about the related model
      *
      * @param {string[]} recordIds list of local resources ids. They should all
-     *   be of type 'record', and of the same model
-     * @param {string} modelName
+     *   be of type 'record', be of the same model and have the same parent.
+     * @param {string} modelName mode name used to unlink the records
      * @returns {Deferred}
      */
     deleteRecords: function (recordIds, modelName) {
@@ -202,9 +203,15 @@ var BasicModel = AbstractModel.extend({
             })
             .then(function () {
                 _.each(records, function (record) {
-                    record.res_ids.splice(record.offset, 1);
-                    record.res_id = record.res_ids[record.offset];
-                    record.count--;
+                    var parent = record.parentID && self.localData[record.parentID];
+                    if (parent && parent.type === 'list') {
+                        parent.data = _.without(parent.data, record.id);
+                        delete self.localData[record.id];
+                    } else {
+                        record.res_ids.splice(record.offset, 1);
+                        record.res_id = record.res_ids[record.offset];
+                        record.count--;
+                    }
                 });
             });
     },

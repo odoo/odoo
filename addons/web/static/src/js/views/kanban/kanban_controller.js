@@ -220,7 +220,7 @@ var KanbanController = BasicController.extend({
         var state = this.model.get(this.handle, {raw: true});
         var relatedModelName = state.fields[state.groupedBy[0]].relation;
         this.model
-            .deleteRecords([column.db_id], relatedModelName, this.handle)
+            .deleteRecords([column.db_id], relatedModelName)
             .done(function () {
                 if (column.isEmpty()) {
                     self.renderer.removeWidget(column);

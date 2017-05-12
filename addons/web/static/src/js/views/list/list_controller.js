@@ -275,6 +275,7 @@ var ListController = BasicController.extend({
      * @returns {Deferred}
      */
     _update: function (state) {
+        this.selectedRecords = [];
         this._toggleNoContentHelper(!this._hasContent(state));
         this._toggleSidebar();
         return this._super.apply(this, arguments);
