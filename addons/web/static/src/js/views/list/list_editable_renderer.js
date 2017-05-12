@@ -560,6 +560,9 @@ ListRenderer.include({
             case 'next_line':
                 this._moveToNextLine();
                 break;
+            case 'cancel_line':
+                this._unselectRow();
+                break;
         }
     },
     /**
