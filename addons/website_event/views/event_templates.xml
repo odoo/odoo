@@ -66,7 +66,16 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
+                                    <i class="fa fa-clock-o"></i>
+                                    <t t-set="tz" t-value="event.date_tz" />
+                                    <t t-if="event.timezone_type == 'unique'">
+                                        <span itemprop="startDate" t-field="event.date_begin_located" t-options='{"hide_seconds":"True"}'/> <i>to</i>
+                                        <span itemprop="endDate" t-field="event.date_end_located" t-options='{"hide_seconds":"True"}'/> (<span t-esc="event.date_tz"/>)
+                                    </t>
+                                    <t t-else="">
+                                        <span itemprop="startDate" t-att-data-event-visitor-date="event.date_begin"/> <i>to</i>
+                                        <span itemprop="endDate" t-att-data-event-visitor-date="event.date_end"/> (<span class="o_visitor_timezone" t-esc="event.date_tz"/>)
+                                    </t>
                                 </div>
                                 <t t-if="not event.is_online">
                                     <div itemprop="location" t-field="event.address_id" t-options='{
@@ -278,9 +287,16 @@
                 <small t-if="event.is_participating" class="label label-info">Participating</small>
             </div>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
-                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'/>
-                <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
+                <i class="fa fa-clock-o"></i>
+                <t t-set="tz" t-value="event.date_tz" />
+                <t t-if="event.timezone_type == 'unique'">
+                    <span itemprop="startDate" t-field="event.date_begin_located" t-options='{"hide_seconds":"True"}'/> <i>to</i>
+                    <span itemprop="endDate" t-field="event.date_end_located" t-options='{"hide_seconds":"True"}'/> (<span t-esc="event.date_tz"/>)
+                </t>
+                <t t-else="">
+                    <span itemprop="startDate" t-att-data-event-visitor-date="event.date_begin"/> <i>to</i>
+                    <span itemprop="endDate" t-att-data-event-visitor-date="event.date_end"/> (<span class="o_visitor_timezone" t-esc="event.date_tz"/>)
+                </t>
             </h4>
             <h4 class="text-center text-muted"
                 t-field="event.address_id" t-options='{

@@ -45,6 +45,14 @@ var EventRegistrationForm = Widget.extend({
 });
 
 web_editor_base.ready().then(function(){
+    _.each($('[data-event-visitor-date]'), function (el) {
+        var utc_date = $(el).data('event-visitor-date');
+        $(el).text(moment.utc(utc_date).utcOffset(moment().utcOffset()).format("L HH:mm"));
+   });
+    _.each($('.o_visitor_timezone'), function (el) {
+        var visitor_system_timezone = jstz.determine().name()
+        $(el).text = $(el).text(visitor_system_timezone);
+    });
     var event_registration_form = new EventRegistrationForm().appendTo($('#registration_form'));
 });
 
