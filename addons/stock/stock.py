@@ -1460,8 +1460,7 @@ class stock_picking(osv.osv):
                     elif move.state == 'draft':
                         toassign_move_ids.append(move.id)
                     if float_compare(remaining_qty, 0,  precision_rounding = move.product_id.uom_id.rounding) == 0:
-                        if move.state in ('draft', 'assigned', 'confirmed'):
-                            todo_move_ids.append(move.id)
+                        todo_move_ids.append(move.id)
                     elif float_compare(remaining_qty,0, precision_rounding = move.product_id.uom_id.rounding) > 0 and \
                                 float_compare(remaining_qty, move.product_qty, precision_rounding = move.product_id.uom_id.rounding) < 0:
                         new_move = stock_move_obj.split(cr, uid, move, remaining_qty, context=notrack_context)
