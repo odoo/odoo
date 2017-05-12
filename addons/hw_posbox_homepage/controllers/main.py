@@ -8,6 +8,7 @@ import werkzeug
 
 import odoo
 from odoo import http
+from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
 
@@ -106,7 +107,7 @@ class PosboxHomepage(odoo.addons.web.controllers.main.Home):
             f = open('/tmp/scanned_networks.txt', 'r')
             for line in f:
                 line = line.rstrip()
-                line = werkzeug.utils.escape(line)
+                line = misc.html_escape(line)
                 wifi_template += '<option value="' + line + '">' + line + '</option>\n'
             f.close()
         except IOError:

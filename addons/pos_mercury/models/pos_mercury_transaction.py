@@ -3,15 +3,12 @@
 
 from datetime import date, timedelta
 
-import cgi
-import ssl
-
 import requests
 import werkzeug
 
 from odoo import models, api, service
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, misc
 
 
 class MercuryTransaction(models.Model):
@@ -53,7 +50,7 @@ class MercuryTransaction(models.Model):
 
         soap_header = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mer="http://www.mercurypay.com"><soapenv:Header/><soapenv:Body><mer:CreditTransaction><mer:tran>'
         soap_footer = '</mer:tran><mer:pw>' + data['merchant_pwd'] + '</mer:pw></mer:CreditTransaction></soapenv:Body></soapenv:Envelope>'
-        xml_transaction = soap_header + cgi.escape(xml_transaction) + soap_footer
+        xml_transaction = soap_header + misc.escape_html(xml_transaction) + soap_footer
 
         response = ''
 
