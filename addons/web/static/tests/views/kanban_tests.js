@@ -1452,6 +1452,33 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('update buttons after column creation', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records = [];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.ok(kanban.$buttons.find('.o-kanban-button-new').hasClass('btn-default'),
+            "Create button shouldn't be highlighted");
+
+        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').val('new column');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        assert.ok(kanban.$buttons.find('.o-kanban-button-new').hasClass('btn-primary'),
+            "Create button should now be highlighted");
+        kanban.destroy();
+    });
 });
 
 });
