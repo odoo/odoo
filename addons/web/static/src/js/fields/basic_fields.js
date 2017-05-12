@@ -225,10 +225,17 @@ var InputField = DebouncedField.extend({
     _prepareInput: function ($input) {
         this.$input = $input || $("<input/>");
         this.$input.addClass('o_input');
-        this.$input.attr({
-            type: 'text',
-            placeholder: this.attrs.placeholder || "",
-        });
+        if (this.attrs.hasOwnProperty('password')){
+            this.$input.attr({
+                type: 'password',
+                placeholder: this.attrs.placeholder || "",
+            });
+        }else{
+            this.$input.attr({
+                type: 'text',
+                placeholder: this.attrs.placeholder || "",
+            });
+        }
         // Save cursor position to restore it after updating value
         var selectionStart = this.$input[0].selectionStart;
         var selectionEnd = this.$input[0].selectionEnd;
