@@ -1777,7 +1777,7 @@ var DataGroup =  Class.extend({
            // ensure group_by fields are read.
            fields = _.unique((fields || []).concat(this.group_by));
        }
-       var query = this.model.query(fields).order_by(this.sort).group_by(this.group_by);
+       var query = this.model.query(fields).order_by(this.sort).lazy(false).group_by(this.group_by);
        $.when(query).done(function (querygroups) {
            // leaf node
            if (!querygroups) {
