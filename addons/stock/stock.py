@@ -2941,7 +2941,7 @@ class stock_inventory_line(osv.osv):
         'product_uom_id': lambda self, cr, uid, ctx=None: self.pool['ir.model.data'].get_object_reference(cr, uid, 'product', 'product_uom_unit')[1]
     }
 
-    def create(self, cr, uid, values, context=None):
+    def _check_inventory_duplication(self, cr, uid, values, context=None):
         product_obj = self.pool.get('product.product')
         dom = [('product_id', '=', values.get('product_id')), ('inventory_id.state', '=', 'confirm'),
                ('location_id', '=', values.get('location_id')), ('partner_id', '=', values.get('partner_id')),
@@ -2951,6 +2951,9 @@ class stock_inventory_line(osv.osv):
             location = self.pool['stock.location'].browse(cr, uid, values.get('location_id'), context=context)
             product = product_obj.browse(cr, uid, values.get('product_id'), context=context)
             raise Warning(_("You cannot have two inventory adjustements in state 'in Progess' with the same product(%s), same location(%s), same package, same owner and same lot. Please first validate the first inventory adjustement with this product before creating another one.") % (product.name, location.name))
+        
+    def create(self, cr, uid, values, context=None):
+        self._check_inventory_duplication(cr, uid, values, context)
         return super(stock_inventory_line, self).create(cr, uid, values, context=context)
 
     def _get_quants(self, cr, uid, line, context=None):
