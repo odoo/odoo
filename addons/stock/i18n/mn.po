@@ -3,9 +3,9 @@
 # * stock
 # 
 # Translators:
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
 # Erdenebold Ts <erdenebold10@gmail.com>, 2017
 # Enkhzaya Batmunkh <enkhzaya.b@ufe.edu.mn>, 2017
-# Otgonbayar.A <gobi.mn@gmail.com>, 2017
 # Batzul B <batzul.active@gmail.com>, 2017
 # darambazar <daramaa26@gmail.com>, 2017
 # nasaaskii <nasaaskii@gmail.com>, 2017
@@ -342,7 +342,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Barcode</strong>"
-msgstr "<strong>Баркод</strong>"
+msgstr "<strong>Зураасан код</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -842,12 +842,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_string_availability_info
 msgid "Availability"
-msgstr "Боломжтой байдал"
+msgstr "Бэлэн байдал"
 
 #. module: stock
 #: selection:stock.move,state:0 selection:stock.picking,state:0
 msgid "Available"
-msgstr "Боломжтой"
+msgstr "Бэлэн"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -2422,8 +2422,8 @@ msgid ""
 "will too"
 msgstr ""
 "Хэрэв чагтлагдвал, хөдөлгөөний (дараагийн татан авалтаар үүсгэгдсэн) өмнөх "
-"хөдөлгөөн нь цуцлалт эсвэл салгалт хийгдэхэд энэ хөдөлгөөнөөс үүсгэгдсэн "
-"хөдөлгөөн нь мөн ижил үйлдэл хийх болно."
+"хөдөлгөөн нь цуцлалт эсвэл салгалт хийгдэх бөгөөд энэ хөдөлгөөнөөс "
+"үүсгэгдсэн хөдөлгөөн нь мөн ижил үйлдэл хийх болно."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_propagate
@@ -2560,7 +2560,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.inventory,state:0
 msgid "In Progress"
-msgstr "Боловсруулалтанд"
+msgstr "Боловсруулагдаж буй"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_in_type_id
@@ -3200,7 +3200,7 @@ msgstr "Ложистик"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_lot_id
 #, python-format
 msgid "Lot"
-msgstr "Цуваа"
+msgstr "Цуврал"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_lot_barcode
@@ -3458,7 +3458,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "Хамгийн бага нөөцийн дүрэм"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_min_qty
@@ -4201,7 +4201,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_partially_available
 #: selection:stock.picking,state:0
 msgid "Partially Available"
-msgstr "Хэсэгчлэн Боломжтой"
+msgstr "Зарим нь Бэлэн"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -4308,7 +4308,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr "Түүвэрлэлтийн Төрөл"
+msgstr "Бэлтгэх Төрөл"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_name
@@ -4440,7 +4440,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_priority
 #: model:ir.model.fields,field_description:stock.field_stock_picking_priority
 msgid "Priority"
-msgstr "Чухалчлал"
+msgstr "Урьтамж"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_priority
@@ -4835,7 +4835,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_quant_ids
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Quants"
-msgstr "Тоо"
+msgstr "Тоо Бүтгэл"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_12
@@ -5132,7 +5132,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
-msgstr ""
+msgstr "Буцаалт"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_right
@@ -5479,7 +5479,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Source"
-msgstr "Сурвалж"
+msgstr "Эх"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_origin
@@ -5609,7 +5609,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
 msgid "Stock Move"
-msgstr "Бэлэн нөөцийн Хөдөлгөөн"
+msgstr "Барааны Хөдөлгөөн"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -5622,7 +5622,7 @@ msgstr "Бэлэн нөөцийн Хөдөлгөөн"
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Stock Moves"
-msgstr "Бэлэн нөөцийн Хөдөлгөөн"
+msgstr "Барааны Хөдөлгөөн"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_graph
@@ -6300,7 +6300,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_template_tracking
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_tracking
 msgid "Tracking"
-msgstr "Гүйлэлт"
+msgstr "Хөтлөлт"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:958
@@ -6424,7 +6424,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Units of Measures"
-msgstr "Хэмжих нэгжүүд"
+msgstr "Хэмжих нэгж"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:569
@@ -6465,7 +6465,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unreserve"
-msgstr "Тусгаарлалт цуцлах"
+msgstr "Нөөцлөлтийг болих"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6599,7 +6599,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Waiting"
-msgstr "Хүлээлтэнд"
+msgstr "Хүлээгдэж буй"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -6615,7 +6615,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: selection:stock.move,state:0 selection:stock.picking,state:0
 msgid "Waiting Availability"
-msgstr "Боломжтой болох Хүлээлтэнд"
+msgstr "Бэлэн болохыг хүлээж буй"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6625,7 +6625,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Transfers"
-msgstr "Хүлээгдэж буй шилжүүлгүүд"
+msgstr "Шилжүүлэхийг хүлээж буй"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -6682,7 +6682,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Warehouses"
-msgstr "Агуулахууд"
+msgstr "Агуулах"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_warehouse_and_location_usage_level
@@ -7095,7 +7095,7 @@ msgstr "Тохиргооны цэс"
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form_stock_inherit
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "days"
-msgstr "Өдрөөр"
+msgstr "өдөр"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
