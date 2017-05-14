@@ -280,6 +280,12 @@ class ProcurementOrder(models.Model):
         return True
 
     @api.model
+    def _get_orderpoint_domain(self, company_id=False):
+        domain = [('company_id', '=', company_id)] if company_id else []
+        domain += [('product_id.active', '=', True)]
+        return domain
+
+    @api.model
     def _procure_orderpoint_confirm(self, use_new_cursor=False, company_id=False):
         """ Create procurements based on orderpoints.
         :param bool use_new_cursor: if set, use a dedicated cursor and auto-commit after processing
@@ -289,8 +295,7 @@ class ProcurementOrder(models.Model):
 
         OrderPoint = self.env['stock.warehouse.orderpoint']
 
-        domain = [('company_id', '=', company_id)] if company_id else []
-        domain += [('product_id.active', '=', True)]
+        domain = self._get_orderpoint_domain(company_id=company_id)
         orderpoints_noprefetch = OrderPoint.with_context(prefetch_fields=False).search(domain,
             order=self._procurement_from_orderpoint_get_order()).ids
         while orderpoints_noprefetch:
