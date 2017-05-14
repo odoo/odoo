@@ -19,6 +19,7 @@ from lxml.builder import E
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError
+from odoo.exceptions import Warning
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.osv import orm
@@ -341,6 +342,8 @@ actual arch.
             else:
 
                 try:
+                    if not values.get('arch') and not values.get('arch_base'):
+                        raise Warning(_('The Architecture has to be filled if View Type does not exist.'))
                     values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
                 except LxmlError:
                     # don't raise here, the constraint that runs `self._check_xml` will
