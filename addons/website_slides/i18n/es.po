@@ -25,13 +25,14 @@
 # Gelo Joga Landoo <gj@landoo.es>, 2016
 # Pablo Fuentes <pablo@studio73.es>, 2016
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -440,6 +441,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
 "%s"
 msgstr ""
+"No se han podido obtener datos de la url. Documento o permiso de acceso no disponible:\n"
+"%s"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.website_config_settings_view_form_inherit_website_slides
@@ -648,7 +651,7 @@ msgstr "Llave de Google Doc"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
 msgid "Graph of Slides"
-msgstr ""
+msgstr "Esquema de diapositivas"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -658,7 +661,7 @@ msgstr "Agrupar por"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
 msgid "Groups allowed to see presentations in this channel"
-msgstr ""
+msgstr "Grupos con permiso para ver presentaciones en este canal"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_upload_group_ids
@@ -666,6 +669,8 @@ msgid ""
 "Groups allowed to upload presentations in this channel. If void, every user "
 "can upload."
 msgstr ""
+"Grupos con permiso para subir presentaciones en este canal. Si se anula, "
+"todos los usuarios pueden subir."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_id
@@ -698,6 +703,8 @@ msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
+"Error interno del servidor, inténtelo de nuevo más tarde o póngase en contacto con el administrador.\n"
+"Este es el mensaje de error: %s"
 
 #. module: website_slides
 #. openerp-web
@@ -737,7 +744,7 @@ msgstr "Última actualización el"
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "Latest Published"
-msgstr ""
+msgstr "Último publicado"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
@@ -753,7 +760,7 @@ msgstr "Media"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
 msgid "Message to display when not accessible due to access rights"
-msgstr ""
+msgstr "Mensaje mostrar cuando no se accede por permisos"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_mime_type
@@ -785,7 +792,7 @@ msgstr "Nombre"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
-msgstr ""
+msgstr "Nueva ${object.slide_type} publicada el ${object.channel_id.name}"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -795,12 +802,12 @@ msgstr "Más moderno"
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "No Featured Presentation"
-msgstr ""
+msgstr "Sin presentación destacada"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "No One"
-msgstr ""
+msgstr "Ninguna"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channel_not_found
@@ -815,7 +822,7 @@ msgstr "No hay presentaciones disponibles"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "No presentation published yet."
-msgstr ""
+msgstr "Ninguna presentación publicada aun."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
@@ -827,13 +834,13 @@ msgstr "Número de documentos"
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
 msgid "Number of Infographics"
-msgstr ""
+msgstr "Número de infografías"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
 msgid "Number of Presentations"
-msgstr ""
+msgstr "Número de presentaciones"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
@@ -851,7 +858,7 @@ msgstr "PDF o archivo de imagen"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_partial
 msgid "Partner Channel"
-msgstr ""
+msgstr "Canal del partner"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -864,6 +871,8 @@ msgstr "Por favor"
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
+"Porfavor <a href=\"/web?redirect=%s\">regístrese</a> para valorar esta "
+"diapositiva"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:324
@@ -889,6 +898,9 @@ msgid ""
 "Post comment with email address (confirmation of email is required in order "
 "to publish comment on website) or please"
 msgstr ""
+"Publicar comentario con dirección de correo electrónico (se requiere "
+"confirmación de correo electrónico para publicar comentarios en el sitio "
+"web) o por favor"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
@@ -932,7 +944,7 @@ msgstr "Canal público"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
 msgid "Publish Date"
-msgstr ""
+msgstr "Fecha de publicación"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -960,6 +972,8 @@ msgid ""
 "Review your channel settings to promote your most viewed or recent published"
 " presentation"
 msgstr ""
+"Revise la configuración de su canal para promocionar su publicación más "
+"reciente o más visitada"
 
 #. module: website_slides
 #. openerp-web
@@ -973,7 +987,7 @@ msgstr "Guardar y publicar"
 #: code:addons/website_slides/static/src/xml/website_slides.xml:69
 #, python-format
 msgid "Save as Draft"
-msgstr ""
+msgstr "Guardar como borrador"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -993,7 +1007,7 @@ msgstr "Seleccione un canal"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Select page to start with"
-msgstr ""
+msgstr "Seleccionar página de inicio"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_sequence
@@ -1024,12 +1038,12 @@ msgstr "Compartir con un amigo"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
 msgid "Shared Template"
-msgstr ""
+msgstr "Plantilla compartida"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Show channel but restrict presentations"
-msgstr ""
+msgstr "Mostrar el canal pero restringir las presentaciones"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1039,12 +1053,12 @@ msgstr "Presentación"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
 msgid "Slide Tag"
-msgstr ""
+msgstr "Etiqueta de diapositiva"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_custom_slide_id
 msgid "Slide to Promote"
-msgstr ""
+msgstr "Diapositiva a promocionar"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slides_slides
@@ -1060,7 +1074,7 @@ msgstr "Presentaciones"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_category
 msgid "Slides Category"
-msgstr ""
+msgstr "Categoría de diapositiva"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -1104,12 +1118,12 @@ msgstr ""
 #. module: website_slides
 #: sql_constraint:slide.slide:0
 msgid "The slide name must be unique within a channel"
-msgstr ""
+msgstr "El nombre de la diapositiva debe ser único en el canal"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_url
 msgid "Third Party Website URL"
-msgstr ""
+msgstr "URL de sitio web de terceros"
 
 #. module: website_slides
 #: model:slide.channel,access_error_msg:website_slides.channel_partial
@@ -1127,6 +1141,8 @@ msgid ""
 "This video already exists in this channel <a target=\"_blank\" "
 "href=\"/slides/slide/%s\">click here to view it </a>"
 msgstr ""
+"Este vídeo ya existe en este canal <a target=\"_blank\" "
+"href=\"/slides/slide/%s\">clic aquí para verlo </a>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
@@ -1173,13 +1189,13 @@ msgstr "Sin categoría"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "Uncategorized presentation"
-msgstr ""
+msgstr "Presentación sin categorizar"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:537
 #, python-format
 msgid "Unknown document"
-msgstr ""
+msgstr "Documento desconocido"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
@@ -1189,7 +1205,7 @@ msgstr "No publicado"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
 msgid "Upload Groups"
-msgstr ""
+msgstr "Subir grupos"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1197,6 +1213,8 @@ msgid ""
 "Upload PDF presentations, documents, videos or infographic using the button "
 "below."
 msgstr ""
+"Subir presentaciones en PDF, documentos, vídeos o infografías usando el "
+"botón de abajo."
 
 #. module: website_slides
 #. openerp-web
@@ -1204,24 +1222,24 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #, python-format
 msgid "Upload Presentation"
-msgstr ""
+msgstr "Subir presentación"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:12
 #, python-format
 msgid "Uploading presentation..."
-msgstr ""
+msgstr "Subiendo presentación ..."
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.channel_private
 msgid "Used to publish internal slides of company."
-msgstr ""
+msgstr "Usado para publicar diapositivas internas de la compañía."
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.channel_partial
 msgid "Used to publish slides in partner network privately."
-msgstr ""
+msgstr "Usado para publicar diapositivas en la red privada de la empresa."
 
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
@@ -1252,7 +1270,7 @@ msgstr "Visibilidad"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
-msgstr ""
+msgstr "Esperando validación"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1286,7 +1304,7 @@ msgstr "No puede subir un archivo protegido con contraseña."
 #: code:addons/website_slides/static/src/js/slides.js:65
 #, python-format
 msgid "You have already voted for this slide"
-msgstr ""
+msgstr "Ya ha valorado esta diapositiva"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1305,17 +1323,17 @@ msgstr "URL vídeo de Youtube"
 #: code:addons/website_slides/static/src/xml/website_slides.xml:34
 #, python-format
 msgid "Youtube or Google Doc URL"
-msgstr ""
+msgstr "URL de Youtube  o de Google Doc"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
 msgid "Youtube or Google Document ID"
-msgstr ""
+msgstr "ID de Youtube o de Google Document"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_url
 msgid "Youtube or Google Document URL"
-msgstr ""
+msgstr "URL de Youtube o de Google Document"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1325,7 +1343,7 @@ msgstr "por correo!"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "is empty."
-msgstr ""
+msgstr "está vacío."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1352,17 +1370,17 @@ msgstr "en"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
 msgid "results found for the given criteria"
-msgstr ""
+msgstr "resultados encontrados para el criterio dado"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "suggest_slide.name"
-msgstr ""
+msgstr "suggest_slide.name"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "to post comment"
-msgstr ""
+msgstr "publicar comentario"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
