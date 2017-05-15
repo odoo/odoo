@@ -56,7 +56,7 @@ var DateWidget = Widget.extend({
         var formatted_value = value ? this.format_client(value) : null;
         this.$input.val(formatted_value);
         if (this.picker) {
-            this.picker.date(formatted_value);
+            this.picker.date(value || null);
         }
     },
     get_value: function() {
@@ -95,7 +95,7 @@ var DateWidget = Widget.extend({
         //the input field if any or the current day otherwise
         var value = moment().second(0);
         if(this.$input.val().length !== 0 && this.is_valid()) {
-            value = this.$input.val();
+            value = this.parse_client(this.$input.val());
         }
 
         this.picker.date(value);
