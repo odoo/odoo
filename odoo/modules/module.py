@@ -434,7 +434,7 @@ def get_test_modules(module):
         mod = importlib.import_module('.tests', modpath)
     except Exception as e:
         # If module has no `tests` sub-module, no problem.
-        if str(e) != 'No module named tests':
+        if not pycompat.text_type(e).startswith(u'No module named'):
             _logger.exception('Can not `import %s`.', module)
         return []
 
