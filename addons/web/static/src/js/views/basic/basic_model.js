@@ -2314,13 +2314,13 @@ var BasicModel = AbstractModel.extend({
                                     });
                                     x2manyList._changes = x2manyList._changes || [];
                                     x2manyList._changes.push(r.id);
-                                    r._changes = value[2];
 
                                     // this is necessary so the fields are initialized
-                                    for (var fieldName in value[2]) {
+                                    _.each(r.getFieldNames(), function (fieldName) {
                                         r.data[fieldName] = null;
-                                    }
+                                    });
 
+                                    r._changes = _.defaults(value[2], r.data);
                                     for (var name in r._changes) {
                                         var isFieldInView = name in r.fields;
                                         if (isFieldInView && r.fields[name].type === 'many2one') {
