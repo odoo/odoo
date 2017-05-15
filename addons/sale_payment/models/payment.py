@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-from odoo import api, fields, models
+
+from odoo import api, fields, models, _
 from odoo.tools import float_compare
 
 _logger = logging.getLogger(__name__)
@@ -91,3 +92,94 @@ class PaymentTransaction(models.Model):
         else:
             _logger.warning('<%s> transaction completed, could not auto-generate invoice for %s (ID %s)',
                             self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
+
+    # --------------------------------------------------
+    # Tools for payment
+    # --------------------------------------------------
+
+    def confirm_sale_token(self):
+        """ Confirm a transaction token and call SO confirmation if it is a success.
+
+        :return: True if success; error string otherwise """
+        self.ensure_one()
+        if self.payment_token_id and self.partner_id == self.sale_order_id.partner_id:
+            try:
+                s2s_result = self.s2s_do_transaction()
+            except Exception as e:
+                _logger.warning(_("Payment transaction (%s) failed : <%s>") % (self.id, str(e)))
+                return _("Payment transaction failed (Contact Administrator)")
+
+            valid_state = 'authorized' if self.acquirer_id.capture_manually else 'done'
+            if not s2s_result or self.state != valid_state:
+                return _("Payment transaction failed (%s)" % self.state_message)
+            try:
+                # Auto-confirm SO if necessary
+                self._confirm_so()
+                return True
+            except Exception as e:
+                _logger.warning(_("Payment transaction (%s) failed : <%s>") % (self.id, str(e)))
+                return _("Payment transaction / SO Confirmation failed (Contact Administrator)")
+        return _('Tx missmatch')
+
+    def check_or_create_sale_tx(self, order, acquirer, payment_token=None, tx_type='form', add_tx_values=None, reset_draft=True):
+        tx = self
+        # incorrect state or unexisting tx
+        if not self or self.state in ['error', 'cancel']:
+            tx = False
+        # unmatching
+        if (self and acquirer and self.acquirer_id != acquirer) or (self and self.sale_order_id != order):
+            tx = False
+        # new or distinct token
+        if payment_token and tx.payment_token_id and payment_token != self.payment_token_id:
+            tx = False
+
+        # still draft tx, no more info -> rewrite on tx or create a new one depending on parameter
+        if tx and tx.state == 'draft':
+            if reset_draft:
+                tx.write(dict(
+                    self.on_change_partner_id(order.partner_id.id).get('value', {}),
+                    amount=order.amount_total,
+                    type=tx_type)
+                )
+            else:
+                tx = False
+
+        if not tx:
+            tx_values = {
+                'acquirer_id': acquirer.id,
+                'type': tx_type,
+                'amount': order.amount_total,
+                'currency_id': order.pricelist_id.currency_id.id,
+                'partner_id': order.partner_id.id,
+                'partner_country_id': order.partner_id.country_id.id,
+                'reference': self.get_next_reference(order.name),
+                'sale_order_id': order.id,
+            }
+            if add_tx_values:
+                tx_values.update(add_tx_values)
+            if payment_token and payment_token.sudo().partner_id == order.partner_id:
+                tx_values['payment_token_id'] = payment_token.id
+
+            tx = self.create(tx_values)
+
+        # update quotation
+        order.write({
+            'payment_tx_id': tx.id,
+        })
+
+        return tx
+
+    def render_sale_button(self, order, return_url, submit_txt=None, render_values=None):
+        values = {
+            'return_url': return_url,
+            'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
+            'billing_partner_id': order.partner_invoice_id.id,
+        }
+        if render_values:
+            values.update(render_values)
+        return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo().render(
+            self.reference,
+            order.amount_total,
+            order.pricelist_id.currency_id.id,
+            values=values,
+        )
