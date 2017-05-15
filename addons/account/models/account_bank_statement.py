@@ -371,6 +371,12 @@ class AccountBankStatementLine(models.Model):
         default=False, copy=False,
         help="Technical field holding the number given to the journal entry, automatically set when the statement line is reconciled then stored to set the same number again if the line is cancelled, set to draft and re-processed again.")
 
+    @api.constrains('date')
+    def _check_date(self):
+        for line in self:
+            if line.statement_id and line.statement_id.date < line.date:
+                raise ValidationError(_('The date of a statement line must be earlier than or the same as the current statement date!'))
+
     @api.one
     @api.constrains('amount')
     def _check_amount(self):
