@@ -10,6 +10,7 @@ var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
+var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -122,6 +123,17 @@ var KanbanRecord = Widget.extend({
             return index % 10;
         }
         return 0;
+    },
+    /**
+     * Format date in to given format in user's timezone
+     *
+     * @private
+     * @param {date} get date object from kanban field
+     * @param {format} moment format for date
+     * @returns {string} formated date value with user's timezone
+     */
+    _getMomentDate: function (date, format) {
+        return moment(date).add(session.tzOffset, 'minutes').utc().format(format);
     },
     /**
      * @private
@@ -314,6 +326,7 @@ var KanbanRecord = Widget.extend({
         this.recordData = recordState.data;
         this.record = this._transformRecord(recordState.data);
         this.qweb_context = {
+            kanban_moment: this._getMomentDate.bind(this),
             kanban_image: this._getImageURL.bind(this),
             kanban_color: this._getColorClassname.bind(this),
             kanban_getcolor: this._getColorID.bind(this),
