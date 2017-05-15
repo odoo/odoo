@@ -554,6 +554,10 @@ msgid ""
 "                                    After a few month, set the real success rate according to the stages, to have\n"
 "                                    accurate expected revenues by closing date."
 msgstr ""
+"<strong>Ирээдүйн орлогоо таамагла</strong><br/>\n"
+"Борлуулалтын баг ирээдүйн сар эсвэл улиралын орлогоо хэр сайн таамаглаж чадаж байгаагаар нь боловсорсон түвшинг нь үнэлж болно. \n"
+"Боломжуудын сувагаа байнга шинэчлэн хөтөлснөөр зохимжтойгоор таамаглал үүсгэх боломжтойг борлуулалтын багтаа сургах шаардлагатай. \n"
+"Хэдэн сарын дараагаар үе шатуудын шилжилтээр борлуулалтын амжилттайгаар таамаглаж чаддаг болно."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -581,6 +585,9 @@ msgid ""
 "<strong>Organize weekly sales meetings</strong><br/>\n"
 "                                    It's a great way to see where you can improve and keep track of the progress of your sales team. Start the pipeline review by looking at the big picture; revenues and number of opportunities by stage, by expected closing date and by salespeople."
 msgstr ""
+"<strong>Долоо хоног бүр борлуулалтын уулзалтыг зохион байгуула</strong><br/>\n"
+"Энэ нь борлуулалтын багийн ажлын явцыг хөтлөж хаана юун дээр анхаарч сайжруулахаа харах сайн арга байдаг.\n"
+"Сувагийг том зурагаар нь харж үзлэг хийдэг болох хэрэгтэй; орлого болон боломжийн тоог үе шатаар харж, хаалтын үед борлуулалтын ажилтангуудаар ямар борлуулалттай байхыг таамаглаж болно."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1223,7 +1230,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Company"
-msgstr "Байгууллага"
+msgstr "Компани"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1376,7 +1383,7 @@ msgstr "Боломж үүсгэх"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create Vendors"
-msgstr ""
+msgstr "Нийлүүлэгч үүсгэх"
 
 #. module: crm
 #. openerp-web
@@ -1754,7 +1761,7 @@ msgstr "Холбогчийн имэйл хаяг"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "End"
-msgstr "Дуусах"
+msgstr "Төгсгөл"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1899,7 +1906,7 @@ msgstr "Дууссан"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
-msgstr ""
+msgstr "Сувагт Эвхэгдсэн"
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_demo_followup_quote
@@ -2798,7 +2805,7 @@ msgstr "Миний боломж"
 #: model:ir.actions.server,name:crm.action_your_pipeline
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
 msgid "My Pipeline"
-msgstr ""
+msgstr "Миний суваг"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
@@ -3090,7 +3097,7 @@ msgstr "Багийн ялсан боломжууд"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Opportunities pipeline"
-msgstr ""
+msgstr "Боломжийн суваг"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3296,7 +3303,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Pipeline"
-msgstr ""
+msgstr "Суваг"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -3306,7 +3313,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Pipeline Analysis"
-msgstr ""
+msgstr "Сувгийн Шинжилгээ"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -4206,7 +4213,7 @@ msgstr "Бүх орлого"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Tracking"
-msgstr "Хөтлөж байна"
+msgstr "Хөтлөлт"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor6
@@ -4537,7 +4544,7 @@ msgstr ""
 #: code:addons/crm/wizard/base_partner_merge.py:306
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
-msgstr "Эцэгтэй хаягтай нь холбох хаягийг нэгтгэж болохгүй."
+msgstr "Эцэг хаягтай нь холбох хаягийг нэгтгэж болохгүй."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4602,7 +4609,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_opportunities_tree_view
 msgid "Your Pipeline"
-msgstr ""
+msgstr "Таны Суваг"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
