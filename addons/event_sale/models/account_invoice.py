@@ -9,7 +9,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_paid(self):
-    	""" When an invoice linked to a sales order selling registrations is
+        """ When an invoice linked to a sales order selling registrations is
         paid confirm attendees. Attendees should indeed not be confirmed before
         full payment. """
         res = super(AccountInvoice, self).action_invoice_paid()
