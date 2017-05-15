@@ -648,7 +648,10 @@ class PosOrder(models.Model):
 
             # when the pos.config has no picking_type_id set only the moves will be created
             if moves and not return_picking and not order_picking:
-                moves.action_assign()
+                tracked_moves = moves.filtered(lambda move: move.product_id.tracking != 'none')
+                untracked_moves = moves - tracked_moves
+                tracked_moves.action_confirm()
+                untracked_moves.action_assign()
                 moves.filtered(lambda m: m.state in ['confirmed', 'waiting']).force_assign()
                 moves.filtered(lambda m: m.product_id.tracking == 'none').action_done()
 
@@ -657,10 +660,17 @@ class PosOrder(models.Model):
     def _force_picking_done(self, picking):
         """Force picking in order to be set as done."""
         self.ensure_one()
-        picking.action_assign()
+        contains_tracked_products = any([(product_id.tracking != 'none') for product_id in self.lines.mapped('product_id')])
+
+        # do not reserve for tracked products, the user will have manually specified the serial/lot numbers
+        if contains_tracked_products:
+            picking.action_confirm()
+        else:
+            picking.action_assign()
+
         picking.force_assign()
         self.set_pack_operation_lot(picking)
-        if not any([(x.product_id.tracking != 'none') for x in picking.pack_operation_ids]):
+        if not contains_tracked_products:
             picking.action_done()
 
     def set_pack_operation_lot(self, picking=None):
@@ -674,7 +684,7 @@ class PosOrder(models.Model):
                 qty = 0
                 qty_done = 0
                 pack_lots = []
-                pos_pack_lots = PosPackOperationLot.search([('order_id', '=',  order.id), ('product_id', '=', pack_operation.product_id.id)])
+                pos_pack_lots = PosPackOperationLot.search([('order_id', '=', order.id), ('product_id', '=', pack_operation.product_id.id)])
                 pack_lot_names = [pos_pack.lot_name for pos_pack in pos_pack_lots]
 
                 if pack_lot_names:
