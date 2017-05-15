@@ -471,13 +471,10 @@ var BasicComposer = Widget.extend(chat_mixin, {
         // behavior for the chatter composer
 
         //Remove Extra newlines from starting and ending of Message.
-        var value = _.escape(this.$input.val()).replace(/^(\r|\n)+|(\n|\r)+$/g, '');
 
-        //Combine 2 or more consecutive newlines into 1 newline.
+        var value = _.escape(this.$input.val()).trim();
         value = value.replace(/(\r|\n){2,}/g, '<br/><br/>');
-
-        //convert newline to <br/> tag.
-        value = value.replace(/(\r|\n){1,}/g, '<br/>');
+        value = value.replace(/(\r|\n)/g, '<br/>');
         
         // prevent html space collapsing
         value = value.replace(/ /g, '&nbsp;').replace(/([^>])&nbsp;([^<])/g, '$1 $2');
