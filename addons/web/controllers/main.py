@@ -598,8 +598,12 @@ class WebClient(http.Controller):
         return odoo.service.common.exp_version()
 
     @http.route('/web/tests', type='http', auth="none")
-    def index(self, mod=None, **kwargs):
+    def test_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
+
+    @http.route('/web/benchmarks', type='http', auth="none")
+    def benchmarks(self, mod=None, **kwargs):
+        return request.render('web.benchmark_suite')
 
 
 class Proxy(http.Controller):

@@ -464,6 +464,60 @@
         </t>
     </template>
 
+    <template id="web.benchmark_suite">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="title">Web Benchmarks</t>
+            <t t-set="head">
+                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.2.1.css"/>
+                <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.2.1.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
+                <script type="text/javascript" src="/web/static/lib/benchmarkjs/lodash.js"></script>
+                <script type="text/javascript" src="/web/static/lib/benchmarkjs/benchmark.js"></script>
+
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+
+                <script type="text/javascript">
+                    QUnit.config.hidepassed = false;
+
+                    // define the 'web.web_client' module because some other modules require it
+                    odoo.define('web.web_client', function (require) {
+                        var WebClient = require('web.WebClient');
+                        var web_client = new WebClient();
+                        // override _call_service to prevent the web_client from doing RPCs
+                        web_client._call_service = function () {};
+                        return web_client;
+                    });
+                </script>
+
+                <style>
+                    body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
+                        opacity: 0 !important;
+                    }
+                    #qunit-testrunner-toolbar label {
+                        font-weight: inherit;
+                        margin-bottom: inherit;
+                    }
+                    #qunit-testrunner-toolbar input[type=text] {
+                        width: inherit;
+                        display: inherit;
+                    }
+                </style>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
+
+                <script type="text/javascript" src="/web/static/tests/views/list_benchmarks.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/kanban_benchmarks.js"></script>
+            </t>
+
+            <div id="qunit"/>
+            <div id="qunit-fixture"/>
+        </t>
+    </template>
+
     <template id="web.webclient_bootstrap">
         <t t-call="web.layout">
             <t t-set="head_web">
