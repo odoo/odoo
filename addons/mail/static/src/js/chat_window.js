@@ -62,6 +62,9 @@ return Widget.extend({
         } else if (this.options.autofocus) {
             this.focus_input();
         }
+        if (!config.isMobile) {
+            this.$el.css('margin-right', $.position.scrollbarWidth());
+        }
         var def = this.thread.replace(this.$('.o_chat_content'));
         return $.when(this._super(), def);
     },
