@@ -21,8 +21,10 @@ import functools
 from psycopg2 import OperationalError
 from types import CodeType
 import logging
+import sys
 import werkzeug
 
+from . import pycompat
 from .misc import ustr
 
 import odoo
@@ -159,9 +161,8 @@ def test_expr(expr, allowed_codes, mode="eval"):
     except (SyntaxError, TypeError, ValueError):
         raise
     except Exception as e:
-        import sys
         exc_info = sys.exc_info()
-        raise ValueError, '"%s" while compiling\n%r' % (ustr(e), expr), exc_info[2]
+        pycompat.reraise(ValueError, ValueError('"%s" while compiling\n%r' % (ustr(e), expr)), exc_info[2])
     assert_valid_codeobj(allowed_codes, code_obj, expr)
     return code_obj
 
@@ -320,9 +321,8 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except odoo.exceptions.MissingError:
         raise
     except Exception as e:
-        import sys
         exc_info = sys.exc_info()
-        raise ValueError, '%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr), exc_info[2]
+        pycompat.reraise(ValueError, ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr)), exc_info[2])
 def test_python_expr(expr, mode="eval"):
     try:
         test_expr(expr, _SAFE_OPCODES, mode=mode)

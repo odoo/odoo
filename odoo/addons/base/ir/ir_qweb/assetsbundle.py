@@ -524,7 +524,7 @@ class JavascriptAsset(WebAsset):
         try:
             return super(JavascriptAsset, self)._fetch_content()
         except AssetError as e:
-            return "console.error(%s);" % json.dumps(e.message)
+            return "console.error(%s);" % json.dumps(str(e))
 
     def to_html(self):
         if self.url:
@@ -573,7 +573,7 @@ class StylesheetAsset(WebAsset):
 
             return content
         except AssetError as e:
-            self.bundle.css_errors.append(e.message)
+            self.bundle.css_errors.append(str(e))
             return ''
 
     def minify(self):

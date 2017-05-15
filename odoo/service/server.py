@@ -550,7 +550,7 @@ class PreforkServer(CommonServer):
                     if e.errno not in [errno.EAGAIN]:
                         raise
         except select.error as e:
-            if e[0] not in [errno.EINTR]:
+            if e.args[0] not in [errno.EINTR]:
                 raise
 
     def start(self):
@@ -660,7 +660,7 @@ class Worker(object):
         try:
             select.select([self.multi.socket], [], [], self.multi.beat)
         except select.error as e:
-            if e[0] not in [errno.EINTR]:
+            if e.args[0] not in [errno.EINTR]:
                 raise
 
     def process_limit(self):
@@ -874,7 +874,7 @@ def load_test_file_yml(registry, test_file):
 def load_test_file_py(registry, test_file):
     # Locate python module based on its filename and run the tests
     test_path, _ = os.path.splitext(os.path.abspath(test_file))
-    for mod_name, mod_mod in pycompat.items(sys.modules):
+    for mod_name, mod_mod in list(pycompat.items(sys.modules)):
         if mod_mod:
             mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
             if test_path == mod_path:
