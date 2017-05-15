@@ -1257,7 +1257,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('date field in form view', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         var form = createView({
             View: FormView,
@@ -1290,6 +1290,7 @@ QUnit.module('basic_fields', {
         // click on the input and select another value
         form.$('.o_datepicker_input').click();
         assert.ok(form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        assert.strictEqual(form.$('.day.active').data('day'), '02/03/2017', 'datepicker should be highlight February 3');
         form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
         form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
@@ -1392,7 +1393,6 @@ QUnit.module('basic_fields', {
             'the selected date should be displayed after saving');
         form.destroy();
     });
-
 
     QUnit.module('FieldDatetime');
 
