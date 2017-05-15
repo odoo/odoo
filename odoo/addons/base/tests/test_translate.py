@@ -9,6 +9,8 @@ from odoo.tests.common import TransactionCase
 
 
 class TranslationToolsTestCase(unittest.TestCase):
+    def assertItemsEqual(self, a, b, msg=None):
+        self.assertEqual(sorted(a), sorted(b), msg)
 
     def test_quote_unquote(self):
 

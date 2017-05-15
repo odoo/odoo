@@ -125,7 +125,7 @@ class IrHttp(models.AbstractModel):
         attach = env['ir.attachment'].search_read(domain, fields)
         if attach:
             wdate = attach[0]['__last_update']
-            datas = attach[0]['datas'] or ''
+            datas = attach[0]['datas'] or b''
             name = attach[0]['name']
             checksum = attach[0]['checksum'] or hashlib.sha1(datas).hexdigest()
 
@@ -288,7 +288,7 @@ class IrHttp(models.AbstractModel):
                     if module_resource_path.startswith(module_path):
                         with open(module_resource_path, 'rb') as f:
                             content = base64.b64encode(f.read())
-                        last_update = str(os.path.getmtime(module_resource_path))
+                        last_update = pycompat.text_type(os.path.getmtime(module_resource_path))
 
             if not module_resource_path:
                 module_resource_path = obj.url
@@ -324,7 +324,7 @@ class IrHttp(models.AbstractModel):
 
         # cache
         etag = bool(request) and request.httprequest.headers.get('If-None-Match')
-        retag = '"%s"' % hashlib.md5(last_update).hexdigest()
+        retag = '"%s"' % hashlib.md5(last_update.encode('utf-8')).hexdigest()
         status = status or (304 if etag == retag else 200)
         headers.append(('ETag', retag))
         headers.append(('Cache-Control', 'max-age=%s' % (STATIC_CACHE if unique else 0)))

@@ -54,7 +54,7 @@ class AcquirerAdyen(models.Model):
                 escapeVal(v)
                 for v in chain(pycompat.keys(parms), pycompat.values(parms))
             )
-            hm = hmac.new(hmac_key, signing_string, hashlib.sha256)
+            hm = hmac.new(hmac_key, signing_string.encode('utf-8'), hashlib.sha256)
             return base64.b64encode(hm.digest())
 
         assert inout in ('in', 'out')

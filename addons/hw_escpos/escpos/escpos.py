@@ -433,7 +433,7 @@ class Escpos:
 
         print('print_b64_img')
 
-        id = md5(img).digest()
+        id = md5(img.encode('utf-8')).digest()
 
         if id not in self.img_cache:
             print('not in cache')
