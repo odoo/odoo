@@ -42,6 +42,7 @@ class TestPyLint(TransactionCase):
         'parameter-unpacking',
 
         'metaclass-assignment',
+        'deprecated-module',
 
         'exception-message-attribute',
         'indexing-exception',
@@ -70,6 +71,24 @@ class TestPyLint(TransactionCase):
         'reduce',
     ]
 
+    BAD_MODULES = [
+        'commands',
+        'cPickle',
+        'md5',
+        'urllib',
+        'urllib2',
+        'urlparse',
+        'sgmllib',
+        'sha',
+        'cgi',
+        'htmlentitydefs',
+        'HTMLParser',
+        'Queue',
+        'UserDict',
+        'UserString',
+        'UserList',
+    ]
+
     def _skip_test(self, reason):
         _logger.warn(reason)
         self.skipTest(reason)
@@ -93,6 +112,7 @@ class TestPyLint(TransactionCase):
             "--msg-template='{msg} ({msg_id}) at {path}:{line}'",
             '--load-plugins=pylint.extensions.bad_builtin',
             '--bad-functions=%s' % ','.join(self.BAD_FUNCTIONS),
+            '--deprecated-modules=%s' % ','.join(self.BAD_MODULES)
         ]
 
         try:

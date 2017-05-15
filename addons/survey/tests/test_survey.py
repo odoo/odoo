@@ -5,7 +5,8 @@ import random
 import re
 from collections import Counter
 from itertools import product
-from urlparse import urljoin
+
+from werkzeug import urls
 
 from odoo import _
 from odoo.exceptions import UserError
@@ -183,7 +184,7 @@ class TestSurvey(TransactionCase):
             survey_url_relative = getattr(self.survey1.with_context({'relative_url': True}), urltype + '_url')
             self.assertTrue(validate_url(survey_url))
             url = "survey/%s/%s" % (urltxt, slug(self.survey1))
-            full_url = urljoin(base_url, url)
+            full_url = urls.url_join(base_url, url)
             self.assertEqual(full_url, survey_url)
             self.assertEqual('/' + url, survey_url_relative)
             if urltype == 'public':

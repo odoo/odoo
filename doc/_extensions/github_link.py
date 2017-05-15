@@ -1,7 +1,8 @@
 import inspect
 import importlib
 import os.path
-from urlparse import urlunsplit
+
+from werkzeug import urls
 
 """
 * adds github_link(mode) context variable: provides URL (in relevant mode) of
@@ -81,7 +82,7 @@ def make_github_link(app, path, line=None, mode="blob"):
         path=path,
         mode=mode,
     )
-    return urlunsplit((
+    return urls.url_unparse((
         'https',
         'github.com',
         urlpath,

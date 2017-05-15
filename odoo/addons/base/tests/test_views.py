@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from functools import partial
-from itertools import izip_longest
+try:
+    from itertools import zip_longest as izip_longuest
+except ImportError:
+    from itertools import izip_longest
 
 from lxml import etree
 from lxml.builder import E

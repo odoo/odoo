@@ -1,8 +1,8 @@
 # coding: utf-8
 from hashlib import sha1
 import logging
-import urllib
-import urlparse
+
+from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -74,14 +74,11 @@ class AcquirerBuckaroo(models.Model):
                     break
 
             items = sorted(pycompat.items(values), key=lambda pair: pair[0].lower())
-            sign = ''.join('%s=%s' % (k, urllib.unquote_plus(v)) for k, v in items)
+            sign = ''.join('%s=%s' % (k, urls.url_unquote_plus(v)) for k, v in items)
         else:
             sign = ''.join('%s=%s' % (k, get_value(k)) for k in keys)
         # Add the pre-shared secret key at the end of the signature
         sign = sign + self.brq_secretkey
-        if isinstance(sign, str):
-            # TODO: remove me? should not be used
-            sign = urlparse.parse_qsl(sign)
         shasign = sha1(sign.encode('utf-8')).hexdigest()
         return shasign
 
@@ -95,10 +92,10 @@ class AcquirerBuckaroo(models.Model):
             'Brq_currency': values['currency'] and values['currency'].name or '',
             'Brq_invoicenumber': values['reference'],
             'brq_test': False if self.environment == 'prod' else True,
-            'Brq_return': '%s' % urlparse.urljoin(base_url, BuckarooController._return_url),
-            'Brq_returncancel': '%s' % urlparse.urljoin(base_url, BuckarooController._cancel_url),
-            'Brq_returnerror': '%s' % urlparse.urljoin(base_url, BuckarooController._exception_url),
-            'Brq_returnreject': '%s' % urlparse.urljoin(base_url, BuckarooController._reject_url),
+            'Brq_return': urls.url_join(base_url, BuckarooController._return_url),
+            'Brq_returncancel': urls.url_join(base_url, BuckarooController._cancel_url),
+            'Brq_returnerror': urls.url_join(base_url, BuckarooController._exception_url),
+            'Brq_returnreject': urls.url_join(base_url, BuckarooController._reject_url),
             'Brq_culture': (values.get('partner_lang') or 'en_US').replace('_', '-'),
             'add_returndata': buckaroo_tx_values.pop('return_url', '') or '',
         })

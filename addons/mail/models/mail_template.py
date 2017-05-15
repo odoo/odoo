@@ -10,9 +10,7 @@ import logging
 
 import functools
 import lxml
-import urlparse
-
-from urllib import urlencode, quote as quote
+from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
@@ -83,8 +81,8 @@ try:
     )
     mako_template_env.globals.update({
         'str': str,
-        'quote': quote,
-        'urlencode': urlencode,
+        'quote': urls.url_quote,
+        'urlencode': urls.url_encode,
         'datetime': datetime,
         'len': len,
         'abs': abs,
@@ -297,14 +295,13 @@ class MailTemplate(models.Model):
             root = lxml.html.fromstring(html)
 
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        (base_scheme, base_netloc, bpath, bparams, bquery, bfragment) = urlparse.urlparse(base_url)
+        base = urls.url_parse(base_url)
 
         def _process_link(url):
-            new_url = url
-            (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(url)
-            if not scheme and not netloc:
-                new_url = urlparse.urlunparse((base_scheme, base_netloc, path, params, query, fragment))
-            return new_url
+            new_url = urls.url_parse(url)
+            if new_url.scheme and new_url.netloc:
+                return url
+            return new_url.replace(scheme=base.scheme, netloc=base.netloc).to_url()
 
         # check all nodes, replace :
         # - img src -> check URL

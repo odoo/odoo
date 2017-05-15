@@ -7,16 +7,11 @@ import hashlib
 import pytz
 import threading
 
-try:
-    from urllib import parse as urlparse
-    from urllib.request import urlopen
-except ImportError:
-    # pylint: disable=bad-python3-import
-    import urlparse
-    from urllib2 import urlopen
-
 from email.utils import formataddr
+
+import requests
 from lxml import etree
+from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
@@ -481,11 +476,11 @@ class Partner(models.Model):
             parent.update_address(addr_vals)
 
     def _clean_website(self, website):
-        (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
-        if not scheme:
-            if not netloc:
-                netloc, path = path, ''
-            website = urlparse.urlunparse(('http', netloc, path, params, query, fragment))
+        url = urls.url_parse(website)
+        if not url.scheme:
+            if not url.netloc:
+                url = url.replace(netloc=url.path, path='')
+            website = url.replace(scheme='http').to_url()
         return website
 
     @api.multi
@@ -703,15 +698,12 @@ class Partner(models.Model):
         return partners.id or self.name_create(email)[0]
 
     def _get_gravatar_image(self, email):
-        gravatar_image = False
         email_hash = hashlib.md5(email.lower()).hexdigest()
         url = "https://www.gravatar.com/avatar/" + email_hash
-        try:
-            image_content = urlopen(url + "?d=404&s=128", timeout=5).read()
-            gravatar_image = base64.b64encode(image_content)
-        except Exception:
-            pass
-        return gravatar_image
+        res = requests.get(url, params={'d': '404', 's': '128'}, timeout=5)
+        if res.status_code != requests.codes.ok:
+            return False
+        return base64.b64encode(res.content)
 
     @api.multi
     def _email_send(self, email_from, subject, body, on_error=None):

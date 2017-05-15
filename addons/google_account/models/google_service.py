@@ -4,8 +4,9 @@
 from datetime import datetime
 import json
 import logging
-import urllib2
-import werkzeug.urls
+
+import requests
+from werkzeug import urls
 
 from odoo import api, fields, models, registry, _
 from odoo.http import request
@@ -38,27 +39,27 @@ class GoogleService(models.TransientModel):
 
         # Get the Refresh Token From Google And store it in ir.config_parameter
         headers = {"Content-type": "application/x-www-form-urlencoded"}
-        data = werkzeug.url_encode({
+        data = {
             'code': authorization_code,
             'client_id': client_id,
             'client_secret': client_secret,
             'redirect_uri': redirect_uri,
             'grant_type': "authorization_code"
-        })
+        }
         try:
-            req = urllib2.Request(GOOGLE_TOKEN_ENDPOINT, data, headers)
-            content = urllib2.urlopen(req, timeout=TIMEOUT).read()
-        except urllib2.HTTPError:
+            req = requests.post(GOOGLE_TOKEN_ENDPOINT, data=data, headers=headers, timeout=TIMEOUT)
+            req.raise_for_status()
+            content = req.json()
+        except IOError:
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired")
             raise self.env['res.config.settings'].get_config_warning(error_msg)
 
-        content = json.loads(content)
         return content.get('refresh_token')
 
     @api.model
     def _get_google_token_uri(self, service, scope):
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        encoded_params = werkzeug.url_encode({
+        encoded_params = urls.url_encode({
             'scope': scope,
             'redirect_uri': get_param('google_redirect_uri'),
             'client_id': get_param('google_%s_client_id' % service),
@@ -81,7 +82,7 @@ class GoogleService(models.TransientModel):
         base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
         client_id = get_param('google_%s_client_id' % (service,), default=False)
 
-        encoded_params = werkzeug.url_encode({
+        encoded_params = urls.url_encode({
             'response_type': 'code',
             'client_id': client_id,
             'state': json.dumps(state),
@@ -103,17 +104,17 @@ class GoogleService(models.TransientModel):
         client_secret = get_param('google_%s_client_secret' % (service,), default=False)
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
-        data = werkzeug.url_encode({
+        data = {
             'code': authorize_code,
             'client_id': client_id,
             'client_secret': client_secret,
             'grant_type': 'authorization_code',
             'redirect_uri': base_url + '/google_account/authentication'
-        })
+        }
         try:
             dummy, response, dummy = self._do_request(GOOGLE_TOKEN_ENDPOINT, params=data, headers=headers, type='POST', preuri='')
             return response
-        except urllib2.HTTPError:
+        except requests.HTTPError:
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid")
             raise self.env['res.config.settings'].get_config_warning(error_msg)
 
@@ -125,21 +126,21 @@ class GoogleService(models.TransientModel):
         client_secret = get_param('google_%s_client_secret' % (service,), default=False)
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
-        data = werkzeug.url_encode({
+        data = {
             'refresh_token': refresh_token,
             'client_id': client_id,
             'client_secret': client_secret,
             'grant_type': 'refresh_token',
-        })
+        }
 
         try:
             dummy, response, dummy = self._do_request(GOOGLE_TOKEN_ENDPOINT, params=data, headers=headers, type='POST', preuri='')
             return response
-        except urllib2.HTTPError as error:
-            if error.code == 400:  # invalid grant
+        except requests.HTTPError as error:
+            if error.response.status_code == 400:  # invalid grant
                 with registry(request.session.db).cursor() as cur:
                     self.env(cur)['res.users'].browse(self.env.uid).write({'google_%s_rtoken' % service: False})
-            error_key = json.loads(error.read()).get("error", "nc")
+            error_key = json.loads(error.response.json()).get("error", "nc")
             _logger.exception("Bad google request : %s !", error_key)
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]") % error_key
             raise self.env['res.config.settings'].get_config_warning(error_msg)
@@ -154,40 +155,34 @@ class GoogleService(models.TransientModel):
             :param type : the method to use to make the request
             :param preuri : pre url to prepend to param uri.
         """
-        _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, type, headers, werkzeug.url_encode(params) if type == 'GET' else params))
+        _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !", (uri, type, headers, params))
 
-        status = 418
-        response = ""
         ask_time = fields.Datetime.now()
         try:
-            if type.upper() == 'GET' or type.upper() == 'DELETE':
-                data = werkzeug.url_encode(params)
-                req = urllib2.Request(preuri + uri + "?" + data)
-            elif type.upper() == 'POST' or type.upper() == 'PATCH' or type.upper() == 'PUT':
-                req = urllib2.Request(preuri + uri, params, headers)
+            if type.upper() in ('GET', 'DELETE'):
+                res = requests.request(type.lower(), preuri + uri, params=params, timeout=TIMEOUT)
+            elif type.upper() in ('POST', 'PATCH', 'PUT'):
+                res = requests.request(type.lower(), preuri + uri, data=params, headers=headers, timeout=TIMEOUT)
             else:
                 raise Exception(_('Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!') % (type))
-            req.get_method = lambda: type.upper()
-
-            resp = urllib2.urlopen(req, timeout=TIMEOUT)
-            status = resp.getcode()
+            res.raise_for_status()
+            status = res.status_code
 
             if int(status) in (204, 404):  # Page not found, no response
                 response = False
             else:
-                content = resp.read()
-                response = json.loads(content)
+                response = res.json()
 
             try:
-                ask_time = datetime.strptime(resp.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
+                ask_time = datetime.strptime(res.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
             except:
                 pass
-        except urllib2.HTTPError as error:
-            if error.code in (204, 404):
+        except request.HTTPError as error:
+            if error.response.status_code in (204, 404):
                 status = error.code
                 response = ""
             else:
-                _logger.exception("Bad google request : %s !", error.read())
+                _logger.exception("Bad google request : %s !", error.response.content)
                 if error.code in (400, 401, 410):
                     raise error
                 raise self.env['res.config.settings'].get_config_warning(_("Something went wrong with your request to google"))

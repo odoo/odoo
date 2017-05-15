@@ -4,12 +4,12 @@
 import base64
 import json
 import lxml
+import requests
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 
 from datetime import datetime
-from urllib2 import urlopen, URLError
 
 from odoo import http, modules, SUPERUSER_ID, tools, _
 from odoo.addons.web.controllers.main import binary_content
@@ -217,9 +217,11 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
     def get_url_title(self, **kwargs):
         try:
-            arch = lxml.html.parse(urlopen(kwargs.get('url')))
+            req = requests.get(kwargs.get('url'), stream=True)
+            req.raise_for_status()
+            arch = lxml.html.parse(req.raw)
             return arch.find(".//title").text
-        except URLError:
+        except IOError:
             return False
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)

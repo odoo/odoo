@@ -1,4 +1,5 @@
 # coding: utf-8
+from werkzeug import urls
 
 from .authorize_request import AuthorizeAPI
 from datetime import datetime
@@ -6,7 +7,6 @@ import hashlib
 import hmac
 import logging
 import time
-import urlparse
 
 from odoo import api, fields, models
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -72,8 +72,8 @@ class PaymentAcquirerAuthorize(models.Model):
             'x_version': '3.1',
             'x_relay_response': 'TRUE',
             'x_fp_timestamp': str(int(time.time())),
-            'x_relay_url': '%s' % urlparse.urljoin(base_url, AuthorizeController._return_url),
-            'x_cancel_url': '%s' % urlparse.urljoin(base_url, AuthorizeController._cancel_url),
+            'x_relay_url': urls.url_join(base_url, AuthorizeController._return_url),
+            'x_cancel_url': urls.url_join(base_url, AuthorizeController._cancel_url),
             'x_currency_code': values['currency'] and values['currency'].name or '',
             'address': values.get('partner_address'),
             'city': values.get('partner_city'),
