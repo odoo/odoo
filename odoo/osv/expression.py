@@ -337,7 +337,7 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         # We have to fit a crc32 hash and one underscore
         # into a 63 character alias. The remaining space we can use to add
         # a human readable prefix.
-        alias_hash = hex(crc32(alias))[2:]
+        alias_hash = hex(crc32(alias.encode('utf-8')))[2:].decode('utf-8')
         ALIAS_PREFIX_LENGTH = 63 - len(alias_hash) - 1
         alias = "%s_%s" % (
             alias[:ALIAS_PREFIX_LENGTH], alias_hash)
