@@ -4973,7 +4973,7 @@ class BaseModel(object):
                     # duplicated record is not linked to any module
                     del record['module']
                     record.update({'res_id': target_id})
-                    if user_lang and user_lang == record['lang']:
+                    if user_lang and user_lang == record['lang'] and field.translate is True:
                         # 'source' to force the call to _set_src
                         # 'value' needed if value is changed in copy(), want to see the new_value
                         record['source'] = old_record[field_name]
