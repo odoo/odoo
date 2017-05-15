@@ -17,7 +17,7 @@ from lxml import etree, builder
 
 import odoo
 import odoo.release
-from . import assertion_report
+from . import assertion_report, pycompat
 from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
