@@ -1331,4 +1331,44 @@ QUnit.module('Views', {
             "there should be only one read");
         model.destroy();
     });
+
+    QUnit.test('data should contain all fields in view, default being false', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.product_ids.default = [
+            [6, 0, []],
+            [0, 0, {name: 'new'}],
+        ];
+        this.data.product.fields.date = { string: "Date", type: "date" };
+
+        var params = {
+            fieldNames: ['product_ids'],
+            modelName: 'partner',
+            fields: this.data.partner.fields,
+            fieldsInfo: {
+                form: {
+                    product_ids: {
+                        fieldsInfo: { list: { name: {}, date: {} } },
+                        viewType: 'list',
+                    }
+                },
+            },
+            res_id: undefined,
+            type: 'record',
+            viewType: 'form',
+        };
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.product_ids.data[0].data.date, false,
+                "date value should be in data, and should be false");
+        });
+
+        model.destroy();
+    });
 });});
