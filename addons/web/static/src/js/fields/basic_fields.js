@@ -225,17 +225,11 @@ var InputField = DebouncedField.extend({
     _prepareInput: function ($input) {
         this.$input = $input || $("<input/>");
         this.$input.addClass('o_input');
-        if (this.attrs.hasOwnProperty('password')){
-            this.$input.attr({
-                type: 'password',
-                placeholder: this.attrs.placeholder || "",
-            });
-        }else{
-            this.$input.attr({
-                type: 'text',
-                placeholder: this.attrs.placeholder || "",
-            });
-        }
+        var input_type = this.attrs.hasOwnProperty('password') ? 'password' : 'text' ;
+        this.$input.attr({
+            type: input_type,
+            placeholder: this.attrs.placeholder || "",
+        });
         // Save cursor position to restore it after updating value
         var selectionStart = this.$input[0].selectionStart;
         var selectionEnd = this.$input[0].selectionEnd;
@@ -262,7 +256,11 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.html(this._formatValue(this.value));
+        var show_value = this._formatValue(this.value);
+        if (this.attrs.hasOwnProperty('password')) {
+            show_value = new Array(show_value.length + 1).join('*');
+        }
+        this.$el.html(show_value);
     },
 
     //--------------------------------------------------------------------------
