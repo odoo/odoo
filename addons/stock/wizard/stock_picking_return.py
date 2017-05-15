@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Part of Odoo. See ICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
@@ -20,6 +20,7 @@ class ReturnPicking(models.TransientModel):
     _name = 'stock.return.picking'
     _description = 'Return Picking'
 
+    picking_id = fields.Many2one('stock.picking')
     product_return_moves = fields.One2many('stock.return.picking.line', 'wizard_id', 'Moves')
     move_dest_exists = fields.Boolean('Chained Move Exists', readonly=True)
     original_location_id = fields.Many2one('stock.location')
@@ -39,6 +40,7 @@ class ReturnPicking(models.TransientModel):
         product_return_moves = []
         picking = self.env['stock.picking'].browse(self.env.context.get('active_id'))
         if picking:
+            res.update({'picking_id': picking.id})
             if picking.state != 'done':
                 raise UserError(_("You may only return Done pickings"))
             for move in picking.move_lines:
@@ -75,9 +77,6 @@ class ReturnPicking(models.TransientModel):
 
     @api.multi
     def _create_returns(self):
-        # TDE FIXME: store it in the wizard, stupid
-        picking = self.env['stock.picking'].browse(self.env.context['active_id'])
-
         return_moves = self.product_return_moves.mapped('move_id')
         unreserve_moves = self.env['stock.move']
         for move in return_moves:
@@ -96,16 +95,16 @@ class ReturnPicking(models.TransientModel):
             unreserve_moves.write({'move_orig_ids': False})
 
         # create new picking for returned products
-        picking_type_id = picking.picking_type_id.return_picking_type_id.id or picking.picking_type_id.id
-        new_picking = picking.copy({
+        picking_type_id = self.picking_id.picking_type_id.return_picking_type_id.id or self.picking_id.picking_type_id.id
+        new_picking = self.picking_id.copy({
             'move_lines': [],
             'picking_type_id': picking_type_id,
             'state': 'draft',
-            'origin': picking.name,
-            'location_id': picking.location_dest_id.id,
+            'origin': self.picking_id.name,
+            'location_id': self.picking_id.location_dest_id.id,
             'location_dest_id': self.location_id.id})
         new_picking.message_post_with_view('mail.message_origin_link',
-            values={'self': new_picking, 'origin': picking},
+            values={'self': new_picking, 'origin': self.picking_id},
             subtype_id=self.env.ref('mail.mt_note').id)
 
         returned_lines = 0
@@ -129,7 +128,7 @@ class ReturnPicking(models.TransientModel):
                     'location_id': return_line.move_id.location_dest_id.id,
                     'location_dest_id': self.location_id.id or return_line.move_id.location_id.id,
                     'picking_type_id': picking_type_id,
-                    'warehouse_id': picking.picking_type_id.warehouse_id.id,
+                    'warehouse_id': self.picking_id.picking_type_id.warehouse_id.id,
                     'origin_returned_move_id': return_line.move_id.id,
                     'procure_method': 'make_to_stock',
                     'move_dest_id': move_dest_id,
