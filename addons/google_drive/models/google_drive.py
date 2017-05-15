@@ -3,7 +3,8 @@
 import logging
 import json
 import re
-import urllib2
+
+import requests
 import werkzeug.urls
 
 from odoo import api, fields, models
@@ -62,26 +63,25 @@ class GoogleDrive(models.Model):
         google_drive_client_id = Config.get_param('google_drive_client_id')
         google_drive_client_secret = Config.get_param('google_drive_client_secret')
         #For Getting New Access Token With help of old Refresh Token
-        data = werkzeug.url_encode({
+        data = {
             'client_id': google_drive_client_id,
             'refresh_token': google_drive_refresh_token,
             'client_secret': google_drive_client_secret,
             'grant_type': "refresh_token",
             'scope': scope or 'https://www.googleapis.com/auth/drive'
-        })
+        }
         headers = {"Content-type": "application/x-www-form-urlencoded"}
         try:
-            req = urllib2.Request(GOOGLE_TOKEN_ENDPOINT, data, headers)
-            content = urllib2.urlopen(req, timeout=TIMEOUT).read()
-        except urllib2.HTTPError:
+            req = requests.post(GOOGLE_TOKEN_ENDPOINT, data=data, headers=headers, timeout=TIMEOUT)
+            req.raise_for_status()
+        except requests.HTTPError:
             if user_is_admin:
                 dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')
                 msg = _("Something went wrong during the token generation. Please request again an authorization code .")
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
                 raise UserError(_("Google Drive is not yet configured. Please contact your administrator."))
-        content = json.loads(content)
-        return content.get('access_token')
+        return req.json().get('access_token')
 
     @api.model
     def copy_doc(self, res_id, template_id, name_gdocs, res_model):
@@ -91,11 +91,11 @@ class GoogleDrive(models.Model):
         request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, access_token)
         headers = {"Content-type": "application/x-www-form-urlencoded"}
         try:
-            req = urllib2.Request(request_url, None, headers)
-            parents = urllib2.urlopen(req, timeout=TIMEOUT).read()
-        except urllib2.HTTPError:
+            req = requests.post(request_url, headers=headers, timeout=TIMEOUT)
+            req.raise_for_status()
+            parents_dict = req.json()
+        except requests.HTTPError:
             raise UserError(_("The Google Template cannot be found. Maybe it has been deleted."))
-        parents_dict = json.loads(parents)
 
         record_url = "Click on link to open Record in Odoo\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, self._cr.dbname, res_id, res_model)
         data = {
@@ -108,11 +108,10 @@ class GoogleDrive(models.Model):
             'Content-type': 'application/json',
             'Accept': 'text/plain'
         }
-        data_json = json.dumps(data)
         # resp, content = Http().request(request_url, "POST", data_json, headers)
-        req = urllib2.Request(request_url, data_json, headers)
-        content = urllib2.urlopen(req, timeout=TIMEOUT).read()
-        content = json.loads(content)
+        req = requests.post(request_url, data=json.dumps(data), headers=headers, timeout=TIMEOUT)
+        req.raise_for_status()
+        content = req.json()
         res = {}
         if content.get('alternateLink'):
             res['id'] = self.env["ir.attachment"].create({
@@ -129,16 +128,15 @@ class GoogleDrive(models.Model):
             request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+Odoo&sendNotificationEmails=false&access_token=%s" % (key, access_token)
             data = {'role': 'writer', 'type': 'anyone', 'value': '', 'withLink': True}
             try:
-                req = urllib2.Request(request_url, json.dumps(data), headers)
-                urllib2.urlopen(req, timeout=TIMEOUT)
-            except urllib2.HTTPError:
+                req = requests.post(request_url, data=json.dumps(data), headers=headers, timeout=TIMEOUT)
+                req.raise_for_status()
+            except requests.HTTPError:
                 raise self.env['res.config.settings'].get_config_warning(_("The permission 'reader' for 'anyone with the link' has not been written on the document"))
             if self.env.user.email:
                 data = {'role': 'writer', 'type': 'user', 'value': self.env.user.email}
                 try:
-                    req = urllib2.Request(request_url, json.dumps(data), headers)
-                    urllib2.urlopen(req, timeout=TIMEOUT)
-                except urllib2.HTTPError:
+                    requests.post(request_url, data=json.dumps(data), headers=headers, timeout=TIMEOUT)
+                except requests.HTTPError:
                     pass
         return res
 

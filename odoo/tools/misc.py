@@ -5,7 +5,6 @@
 """
 Miscellaneous tools used by OpenERP.
 """
-
 from functools import wraps
 import babel
 from contextlib import contextmanager
@@ -14,11 +13,13 @@ import subprocess
 import io
 import os
 import passlib.utils
+import pickle as pickle_
 import re
 import socket
 import sys
 import threading
 import time
+import types
 import werkzeug.utils
 import zipfile
 from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
@@ -26,7 +27,6 @@ from itertools import islice, groupby, repeat
 from lxml import etree
 
 from .which import which
-from threading import local
 import traceback
 import csv
 from operator import itemgetter
@@ -37,16 +37,6 @@ try:
 except ImportError:
     import profile as cProfile
 
-try:
-    # pylint: disable=bad-python3-import
-    import cPickle as pickle_
-except ImportError:
-    import pickle as pickle_
-
-try:
-    from html2text import html2text
-except ImportError:
-    html2text = None
 
 from .config import config
 from .cache import *
@@ -677,29 +667,6 @@ def split_every(n, iterable, piece_maker=tuple):
         yield piece
         piece = piece_maker(islice(iterator, n))
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
-
-class upload_data_thread(threading.Thread):
-    def __init__(self, email, data, type):
-        self.args = [('email',email),('type',type),('data',data)]
-        super(upload_data_thread,self).__init__()
-    def run(self):
-        try:
-            import urllib
-            args = urllib.urlencode(self.args)
-            fp = urllib.urlopen('http://www.openerp.com/scripts/survey.php', args)
-            fp.read()
-            fp.close()
-        except Exception:
-            pass
-
-def upload_data(email, data, type='SURVEY'):
-    a = upload_data_thread(email, data, type)
-    a.start()
-    return True
-
 def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
     """ Read the values of ``field´´ for the given ``ids´´ and group ids by value.
 
@@ -1128,23 +1095,18 @@ def _consteq(str1, str2):
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
 
-class Pickle(object):
-    @classmethod
-    def load(cls, stream, errors=False):
-        unpickler = pickle_.Unpickler(stream)
-        # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
-        unpickler.find_global = None
-        try:
-            return unpickler.load()
-        except Exception:
-            _logger.warning('Failed unpickling data, returning default: %r', errors, exc_info=True)
-            return errors
-
-    @classmethod
-    def loads(cls, text):
-        return cls.load(io.BytesIO(text))
-
-    dumps = pickle_.dumps
-    dump = pickle_.dump
-
-pickle = Pickle
+def _pickle_load(stream, errors=False):
+    unpickler = pickle_.Unpickler(stream)
+    # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
+    unpickler.find_global = None
+    try:
+        return unpickler.load()
+    except Exception:
+        _logger.warning('Failed unpickling data, returning default: %r',
+                        errors, exc_info=True)
+        return errors
+pickle = types.ModuleType(__name__ + '.pickle')
+pickle.load = _pickle_load
+pickle.loads = lambda text: _pickle_load(io.BytesIO(text))
+pickle.dump = pickle_.dump
+pickle.dumps = pickle_.dumps

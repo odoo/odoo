@@ -3,9 +3,9 @@
 import hashlib
 import hmac
 import time
-import urlparse
 import unittest
 from lxml import objectify
+from werkzeug import urls
 
 import odoo
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -59,8 +59,8 @@ class AuthorizeForm(AuthorizeCommon):
             'x_version': '3.1',
             'x_relay_response': 'TRUE',
             'x_fp_timestamp': str(int(time.time())),
-            'x_relay_url': '%s' % urlparse.urljoin(base_url, AuthorizeController._return_url),
-            'x_cancel_url': '%s' % urlparse.urljoin(base_url, AuthorizeController._cancel_url),
+            'x_relay_url': urls.url_join(base_url, AuthorizeController._return_url),
+            'x_cancel_url': urls.url_join(base_url, AuthorizeController._cancel_url),
             'return_url': None,
             'x_currency_code': 'USD',
             'x_invoice_num': 'SO004',

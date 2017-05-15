@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from urllib2 import URLError, HTTPError
+
+import requests
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -49,13 +51,13 @@ class WebsiteTwitterConfig(models.TransientModel):
         try:
             self.website_id.fetch_favorite_tweets()
 
-        except HTTPError as e:
-            _logger.info("%s - %s" % (e.code, e.reason), exc_info=True)
-            raise UserError("%s - %s" % (e.code, e.reason) + ':' + self._get_twitter_exception_message(e.code))
-        except URLError as e:
+        except requests.HTTPError as e:
+            _logger.info("%s - %s" % (e.response.status_code, e.response.reason), exc_info=True)
+            raise UserError("%s - %s" % (e.response.status_code, e.response.reason) + ':' + self._get_twitter_exception_message(e.response.status_code))
+        except IOError:
             _logger.info(_('We failed to reach a twitter server.'), exc_info=True)
             raise UserError(_('Internet connection refused') + ' ' + _('We failed to reach a twitter server.'))
-        except Exception as e:
+        except Exception:
             _logger.info(_('Please double-check your Twitter API Key and Secret!'), exc_info=True)
             raise UserError(_('Twitter authorization error!') + ' ' + _('Please double-check your Twitter API Key and Secret!'))
 

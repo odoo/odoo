@@ -2,7 +2,10 @@
 import os.path
 import posixpath
 import re
-import urllib
+try:
+    from urllib.request import url2pathname  # pylint: disable=deprecated-module
+except ImportError:
+    from urllib import url2pathname  # pylint: disable=deprecated-module
 
 from docutils import nodes
 from sphinx import addnodes, util
@@ -636,7 +639,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                     banner = '_static/' + cover
                     base, ext = os.path.splitext(banner)
                     small = "{}.small{}".format(base, ext)
-                    if os.path.isfile(urllib.url2pathname(small)):
+                    if os.path.isfile(url2pathname(small)):
                         banner = small
                     style = u"background-image: url('{}')".format(
                         util.relative_uri(baseuri, banner) or '#')

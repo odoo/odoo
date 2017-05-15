@@ -12,7 +12,6 @@ from odoo import fields, tools
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 import psycopg2
-import werkzeug
 from odoo.tools import func, misc, pycompat
 
 import logging
@@ -587,7 +586,7 @@ class StylesheetAsset(WebAsset):
         return self.with_header(content)
 
     def to_html(self):
-        media = (' media="%s"' % werkzeug.utils.escape(self.media)) if self.media else ''
+        media = (' media="%s"' % misc.html_escape(self.media)) if self.media else ''
         if self.url:
             href = self.html_url
             return '<link rel="stylesheet" href="%s" type="text/css"%s/>' % (href, media)

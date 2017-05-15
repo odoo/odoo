@@ -5,14 +5,10 @@ import json
 import logging
 from collections import OrderedDict
 from time import time
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    # pylint: disable=bad-python3-import
-    from urlparse import urlparse
 
 from lxml import html
 from lxml import etree
+from werkzeug import urls
 
 from odoo.tools import pycompat
 
@@ -230,7 +226,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                 atype = el.get('type')
                 media = el.get('media')
 
-                can_aggregate = not urlparse(href).netloc and not href.startswith('/web/content')
+                can_aggregate = not urls.url_parse(href).netloc and not href.startswith('/web/content')
                 if el.tag == 'style' or (el.tag == 'link' and el.get('rel') == 'stylesheet' and can_aggregate):
                     if href.endswith('.sass'):
                         atype = 'text/sass'

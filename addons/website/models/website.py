@@ -6,9 +6,9 @@ import logging
 import math
 import unicodedata
 import re
-import urlparse
 import hashlib
-import werkzeug
+
+from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
@@ -44,10 +44,10 @@ def url_for(path_or_uri, lang=None):
         current_path = current_path.encode('utf-8')
     location = path_or_uri.strip()
     force_lang = lang is not None
-    url = urlparse.urlparse(location)
+    url = urls.url_parse(location)
 
     if request and not url.netloc and not url.scheme and (url.path or force_lang):
-        location = urlparse.urljoin(current_path, location)
+        location = urls.url_join(current_path, location)
 
         lang = lang or request.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
@@ -459,7 +459,7 @@ class Website(models.Model):
         def get_url(page):
             _url = "%s/page/%s" % (url, page) if page > 1 else url
             if url_args:
-                _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
+                _url = "%s?%s" % (_url, urls.url_encode(url_args))
             return _url
 
         return {
@@ -598,7 +598,7 @@ class Website(models.Model):
             cdn_filters = (request.website.cdn_filters or '').splitlines()
             for flt in cdn_filters:
                 if flt and re.match(flt, uri):
-                    return urlparse.urljoin(cdn_url, uri)
+                    return urls.url_join(cdn_url, uri)
         return uri
 
     @api.model

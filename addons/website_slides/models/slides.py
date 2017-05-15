@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import requests
 from PIL import Image
-from urllib import urlencode
-from urlparse import urlparse
 
 import datetime
 import io
 import json
 import re
-import urllib2
+
+from werkzeug import urls
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools import image, pycompat
@@ -224,8 +223,7 @@ class EmbeddedSlide(models.Model):
     count_views = fields.Integer('# Views', default=1)
 
     def add_embed_url(self, slide_id, url):
-        schema = urlparse(url)
-        baseurl = schema.netloc
+        baseurl = urls.url_parse(url).netloc
         embeds = self.search([('url', '=', baseurl), ('slide_id', '=', int(slide_id))], limit=1)
         if embeds:
             embeds.count_views += 1
@@ -498,22 +496,19 @@ class Slide(models.Model):
     def _fetch_data(self, base_url, data, content_type=False, extra_params=False):
         result = {'values': dict()}
         try:
-            if data:
-                sep = '?' if not extra_params else '&'
-                base_url = base_url + '%s%s' % (sep, urlencode(data))
-            req = urllib2.Request(base_url)
-            content = urllib2.urlopen(req).read()
+            response = requests.get(base_url, params=data)
+            response.raise_for_status()
+            content = response.content
             if content_type == 'json':
                 result['values'] = json.loads(content)
             elif content_type in ('image', 'pdf'):
                 result['values'] = content.encode('base64')
             else:
                 result['values'] = content
-        except urllib2.HTTPError as e:
-            result['error'] = e.read()
-            e.close()
-        except urllib2.URLError as e:
-            result['error'] = e.reason
+        except requests.exceptions.HTTPError as e:
+            result['error'] = e.response.content
+        except requests.exceptions.ConnectionError as e:
+            result['error'] = str(e)
         return result
 
     def _find_document_data_from_url(self, url):

@@ -74,9 +74,22 @@ library:
   ``io.StringIO`` to replace them in a cross-version manner (``io.BytesIO``
   for binary data, ``io.StringIO`` for text/unicode data).
 * ``urllib``, ``urllib2`` and ``urlparse`` were redistributed across
-  ``urllib.parse`` and ``urllib.request``, you may want to use conditional
-  imports e.g. try to import the Python 3 version and fallback on the Python
-  2 version.
+  ``urllib.parse`` and ``urllib.request``.
+
+  Since `requests`_ and `werkzeug`_ are already hard dependencies of Odoo,
+  replace ``urllib[2].urlopen``/``urllib2.Request`` uses by `requests`_, and
+  ``urlparse`` and a few utilty functions (``urllib.quote``,
+  ``urllib.urlencode``) are available through ``werkzeug.urls``, a backport
+  of Python 3's ``urllib.parse``.
+
+  .. warning:: `requests`_ does not raise by default on non-200 responses
+
+* ``cgi.escape`` (HTML escaping) is deprecated in Python 3, prefer Odoo's own
+  :func:`odoo.tools.misc.html_encode`.
+* Most of ``types``'s content has been stripped out in Python 3: only
+  "internal" interpreter types (e.g. CodeType, FrameType, ...) have been left
+  in, other types can be obtained directly from the corresponding builtin or
+  by getting the ``type()`` of a literal value.
 
 Absolute Imports (:pep:`328`)
 -----------------------------
@@ -326,3 +339,7 @@ Minor syntax changes
   In Python 3, leading zeroes followed by neither a 0 nor a period is an
   error, octal literals now follow the hexadecimal convention with a ``0o``
   prefix.
+
+.. _requests: http://docs.python-requests.org/
+
+.. _werkzeug: http://werkzeug.pocoo.org/docs/urls/

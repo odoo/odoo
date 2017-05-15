@@ -10,15 +10,9 @@ import shutil
 import tempfile
 import zipfile
 
-from odoo.tools import pycompat
+import requests
 
-try:
-    from urllib import parse as urlparse
-    from urllib.request import urlopen
-except ImportError:
-    # pylint: disable=bad-python3-import
-    import urlparse
-    from urllib2 import urlopen
+from odoo.tools import pycompat
 
 from docutils import nodes
 from docutils.core import publish_string
@@ -663,7 +657,7 @@ class Module(models.Model):
             _logger.warning(msg)
             raise UserError(msg)
 
-        apps_server = urlparse.urlparse(self.get_apps_server())
+        apps_server = urls.url_parse(self.get_apps_server())
 
         OPENERP = odoo.release.product_name.lower()
         tmp = tempfile.mkdtemp()
@@ -674,13 +668,15 @@ class Module(models.Model):
                 if not url:
                     continue    # nothing to download, local version is already the last one
 
-                up = urlparse.urlparse(url)
+                up = urls.url_parse(url)
                 if up.scheme != apps_server.scheme or up.netloc != apps_server.netloc:
                     raise AccessDenied()
 
                 try:
                     _logger.info('Downloading module `%s` from OpenERP Apps', module_name)
-                    content = urlopen(url).read()
+                    response = requests.get(url)
+                    response.raise_for_status()
+                    content = response.content
                 except Exception:
                     _logger.exception('Failed to fetch module %s', module_name)
                     raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.') % module_name)

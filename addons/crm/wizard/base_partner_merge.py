@@ -4,7 +4,10 @@
 from ast import literal_eval
 from email.utils import parseaddr
 import functools
-import htmlentitydefs
+try:
+    from html.entities import entitydefs
+except ImportError:
+    from htmlentitydefs import entitydefs # pylint: disable=deprecated-module
 import itertools
 import logging
 import operator
@@ -23,7 +26,7 @@ _logger = logging.getLogger('base.partner.merge')
 
 
 # http://www.php2python.com/wiki/function.html-entity-decode/
-def html_entity_decode_char(m, defs=htmlentitydefs.entitydefs):
+def html_entity_decode_char(m, defs=entitydefs):
     try:
         return defs[m.group(1)]
     except KeyError:

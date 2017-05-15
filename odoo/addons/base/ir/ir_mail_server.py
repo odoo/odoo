@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from email import Encoders
+from email import encoders
 from email.charset import Charset
 from email.header import Header
 from email.mime.base import MIMEBase
@@ -13,11 +13,11 @@ import re
 import smtplib
 import threading
 
-import itertools
+import html2text
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import except_orm, UserError
-from odoo.tools import html2text, ustr, pycompat
+from odoo.tools import ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -28,16 +28,16 @@ class MailDeliveryException(except_orm):
     def __init__(self, name, value):
         super(MailDeliveryException, self).__init__(name, value)
 
+# Python 3: patch SMTP's internal printer/debugger
+def _print_debug(self, *args):
+    _logger.debug(' '.join(str(a) for a in args))
+smtplib.SMTP._print_debug = _print_debug
 
+# Python 2: replace smtplib's stderr
 class WriteToLogger(object):
-    """debugging helper: behave as a fd and pipe to logger at the given level"""
-    def __init__(self, logger, level=logging.DEBUG):
-        self.logger = logger
-        self.level = level
-
     def write(self, s):
-        self.logger.log(self.level, s)
-
+        _logger.debug(s)
+smtplib.stderr = WriteToLogger()
 
 def try_coerce_ascii(string_utf8):
     """Attempts to decode the given utf8-encoded string
@@ -158,14 +158,6 @@ class IrMailServer(models.Model):
     sequence = fields.Integer(string='Priority', default=10, help="When no specific mail server is requested for a mail, the highest priority one "
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
-
-    def __init__(self, *args, **kwargs):
-        # Make sure we pipe the smtplib outputs to our own DEBUG logger
-        if not isinstance(smtplib.stderr, WriteToLogger):
-            logpiper = WriteToLogger(_logger)
-            smtplib.stderr = logpiper
-            smtplib.stdout = logpiper
-        super(IrMailServer, self).__init__(*args, **kwargs)
 
     @api.multi
     def name_get(self):
@@ -338,9 +330,9 @@ class IrMailServer(models.Model):
         for key, value in pycompat.items(headers):
             msg[ustr(key).encode('utf-8')] = encode_header(value)
 
-        if subtype == 'html' and not body_alternative and html2text:
+        if subtype == 'html' and not body_alternative:
             # Always provide alternative text body ourselves if possible.
-            text_utf8 = tools.html2text(email_body_utf8.decode('utf-8')).encode('utf-8')
+            text_utf8 = html2text.html2text(email_body_utf8.decode('utf-8')).encode('utf-8')
             alternative_part = MIMEMultipart(_subtype="alternative")
             alternative_part.attach(MIMEText(text_utf8, _charset='utf-8', _subtype='plain'))
             alternative_part.attach(email_text_part)
@@ -371,7 +363,7 @@ class IrMailServer(models.Model):
                 part.add_header('Content-Disposition', 'attachment', filename=filename_rfc2047)
 
                 part.set_payload(fcontent)
-                Encoders.encode_base64(part)
+                encoders.encode_base64(part)
                 msg.attach(part)
         return msg
 

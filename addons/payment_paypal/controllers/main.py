@@ -3,9 +3,10 @@
 import json
 import logging
 import pprint
-import urllib
-import urllib2
+
+import requests
 import werkzeug
+from werkzeug import urls
 
 from odoo import http
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -23,7 +24,7 @@ class PaypalController(http.Controller):
         """ Extract the return URL from the data coming from paypal. """
         return_url = post.pop('return_url', '')
         if not return_url:
-            custom = json.loads(urllib.unquote_plus(post.pop('custom', False) or post.pop('cm', False) or '{}'))
+            custom = json.loads(urls.url_unquote_plus(post.pop('custom', False) or post.pop('cm', False) or '{}'))
             return_url = custom.get('return_url', '/')
         return return_url
 
@@ -44,7 +45,7 @@ class PaypalController(http.Controller):
         for line in lines:
             split = line.split('=', 1)
             if len(split) == 2:
-                pdt_post[split[0]] = urllib.unquote_plus(split[1]).decode('utf8')
+                pdt_post[split[0]] = urls.url_unquote_plus(split[1]).decode('utf8')
             else:
                 _logger.warning('Paypal: error processing pdt response: %s', line)
 
@@ -75,9 +76,9 @@ class PaypalController(http.Controller):
             new_post['at'] = tx and tx.acquirer_id.paypal_pdt_token or ''
             new_post['cmd'] = '_notify-synch'  # command is different in PDT than IPN/DPN
         validate_url = paypal_urls['paypal_form_url']
-        urequest = urllib2.Request(validate_url, werkzeug.url_encode(new_post))
-        uopen = urllib2.urlopen(urequest)
-        resp = uopen.read()
+        urequest = requests.post(validate_url, new_post)
+        urequest.raise_for_status()
+        resp = urequest.content
         if pdt_request:
             resp, post = self._parse_pdt_response(resp)
         if resp in ['VERIFIED', 'SUCCESS']:
