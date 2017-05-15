@@ -18,7 +18,7 @@ except ImportError:
 import psycopg2
 
 from odoo.sql_db import LazyCursor
-from odoo.tools import float_precision, float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, ustr, OrderedSet, pycompat
+from odoo.tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, ustr, OrderedSet, pycompat
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.translate import html_translate, _
@@ -1280,34 +1280,32 @@ class Monetary(Field):
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
     def convert_to_column(self, value, record, values=None):
-        try:
-            return value.float_repr()         # see float_precision.float_repr()
-        except Exception:
-            # retrieve currency from values or record
-            if values and self.currency_field in values:
-                field = record._fields[self.currency_field]
-                currency = field.convert_to_cache(values[self.currency_field], record)
-                currency = field.convert_to_record(currency, record)
-            else:
-                currency = record[:1][self.currency_field]
-            if currency:
-                value = currency.round(float(value or 0.0))
-                return float_repr(value, currency.decimal_places)
-            return float(value or 0.0)
+        # retrieve currency from values or record
+        if values and self.currency_field in values:
+            field = record._fields[self.currency_field]
+            currency = field.convert_to_cache(values[self.currency_field], record)
+            currency = field.convert_to_record(currency, record)
+        else:
+            # Note: this is wrong if 'record' is several records with different
+            # currencies, which is functional nonsense and should not happen
+            currency = record[:1][self.currency_field]
+
+        value = float(value or 0.0)
+        if currency:
+            return float_repr(currency.round(value), currency.decimal_places)
+        return value
 
     def convert_to_cache(self, value, record, validate=True):
-        if validate:
-            currency = record[self.currency_field]
+        # cache format: float
+        value = float(value or 0.0)
+        if validate and record[self.currency_field]:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
-            if currency:
-                value = currency.round(float(value or 0.0))
-                return float_precision(value, currency.decimal_places)
-        return float(value or 0.0)
+            value = record[self.currency_field].round(value)
+        return value
 
     def convert_to_read(self, value, record, use_name_get=True):
-        # float_precision values are not supported in pure XMLRPC
-        return float(value)
+        return value
 
     def convert_to_write(self, value, record):
         return value
