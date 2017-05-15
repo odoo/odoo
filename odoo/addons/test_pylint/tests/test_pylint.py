@@ -73,6 +73,20 @@ class TestPyLint(TransactionCase):
 
     BAD_MODULES = [
         'commands',
+        'cPickle',
+        'md5',
+        'urllib',
+        'urllib2',
+        'urlparse',
+        'sgmllib',
+        'sha',
+        'cgi',
+        'htmlentitydefs',
+        'HTMLParser',
+        'Queue',
+        'UserDict',
+        'UserString',
+        'UserList',
     ]
 
     def _skip_test(self, reason):
