@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class MrpBomCost(models.AbstractModel):
-    _name = 'report.mrp_bom_cost'
+    _name = 'report.mrp.bom_cost_report'
 
     @api.multi
     def get_lines(self, boms):
