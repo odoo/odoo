@@ -470,8 +470,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
         // Return a deferred as this function is extended with asynchronous
         // behavior for the chatter composer
 
-        //Remove Extra newlines from starting and ending of Message.
-
+        //Removing unwanted extra spaces from message
         var value = _.escape(this.$input.val()).trim();
         value = value.replace(/(\r|\n){2,}/g, '<br/><br/>');
         value = value.replace(/(\r|\n)/g, '<br/>');
