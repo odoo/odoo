@@ -6,6 +6,7 @@ import werkzeug
 from odoo import http, _
 from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
+from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import pycompat
 
@@ -34,6 +35,8 @@ class AuthSignupHome(Home):
             try:
                 self.do_signup(qcontext)
                 return super(AuthSignupHome, self).web_login(*args, **kw)
+            except UserError as e:
+                qcontext['error'] = str(e)
             except (SignupError, AssertionError) as e:
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
                     qcontext["error"] = _("Another user is already registered using this email address.")
@@ -57,7 +60,7 @@ class AuthSignupHome(Home):
                     return super(AuthSignupHome, self).web_login(*args, **kw)
                 else:
                     login = qcontext.get('login')
-                    assert login, "No login provided."
+                    assert login, _("No login provided.")
                     _logger.info(
                         "Password reset attempt for <%s> by user <%s> from %s",
                         login, request.env.user.login, request.httprequest.remote_addr)
@@ -100,8 +103,10 @@ class AuthSignupHome(Home):
     def do_signup(self, qcontext):
         """ Shared helper that creates a res.partner out of a token """
         values = { key: qcontext.get(key) for key in ('login', 'name', 'password') }
-        assert values, "The form was not properly filled in."
-        assert values.get('password') == qcontext.get('confirm_password'), "Passwords do not match; please retype them."
+        if not values:
+            raise UserError(_("The form was not properly filled in."))
+        if values.get('password') != qcontext.get('confirm_password'):
+            raise UserError(_("Passwords do not match; please retype them."))
         supported_langs = [lang['code'] for lang in request.env['res.lang'].sudo().search_read([], ['code'])]
         if request.lang in supported_langs:
             values['lang'] = request.lang
