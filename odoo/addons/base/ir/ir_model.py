@@ -848,7 +848,7 @@ class IrModelFields(models.Model):
     def _add_manual_fields(self, model):
         """ Add extra fields on model. """
         fields_data = self._existing_field_data(model._name)
-        for name, field_data in fields_data.iteritems():
+        for name, field_data in pycompat.items(fields_data):
             if name not in model._fields and field_data['state'] == 'manual':
                 field = self._instanciate(field_data)
                 if field:
