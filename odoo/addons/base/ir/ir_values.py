@@ -96,8 +96,8 @@ class IrValues(models.Model):
                                      "helper field for binding an action, will "
                                      "automatically set the correct reference")
 
-    value = fields.Text(help="Default value (pickled) or reference to an action")
-    value_unpickle = fields.Text(string='Default value or action reference',
+    value = fields.Binary(help="Default value (pickled) or reference to an action")
+    value_unpickle = fields.Binary(string='Default value or action reference',
                                  compute='_value_unpickle', inverse='_value_pickle')
     key = fields.Selection([('action', 'Action'), ('default', 'Default')],
                            string='Type', index=True, required=True, default='action',
@@ -261,7 +261,7 @@ class IrValues(models.Model):
             ('company_id', '=', company_id)
         ]
         defaults = self.search(search_criteria)
-        return pickle.loads(defaults.value.encode('utf-8')) if defaults else None
+        return pickle.loads(defaults.value) if defaults else None
 
     @api.model
     def get_defaults(self, model, condition=False):
@@ -313,7 +313,7 @@ class IrValues(models.Model):
         # keep only the highest priority default for each field
         defaults = {}
         for row in self._cr.dictfetchall():
-            value = pickle.loads(row['value'].encode('utf-8'))
+            value = pickle.loads(row['value'])
             defaults.setdefault(row['name'], (row['id'], row['name'], value))
         return list(pycompat.values(defaults))
 
@@ -351,6 +351,8 @@ class IrValues(models.Model):
                'Action definition must be an action reference, e.g. "ir.actions.act_window,42"'
         assert action_slot in ACTION_SLOTS, \
                'Action slot (%s) must be one of: %r' % (action_slot, ACTION_SLOTS)
+
+        action = action.encode('utf-8')
 
         # remove existing action definition of same slot and value
         search_criteria = [
@@ -405,7 +407,7 @@ class IrValues(models.Model):
         for id, name, value in self._cr.fetchall():
             if not value:
                 continue                # skip if undefined
-            action_model, action_id = value.split(',')
+            action_model, action_id = value.decode('utf-8').split(',')
             if action_model not in self.env:
                 continue                # unknown model? skip it!
             action = self.env[action_model].browse(int(action_id))

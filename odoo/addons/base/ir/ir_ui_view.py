@@ -910,7 +910,7 @@ actual arch.
                                 not self._context.get(action, True) and is_base_model):
                             node.set(action, 'false')
 
-        arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
+        arch = etree.tostring(node, encoding="utf-8").replace(b'\t', b'')
         for k in list(fields):
             if k not in fields_def:
                 del fields[k]
