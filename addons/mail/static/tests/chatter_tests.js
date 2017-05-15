@@ -1,10 +1,15 @@
 odoo.define('mail.chatter_tests', function (require) {
 "use strict";
 
+var Composers = require('mail.composer');
+
 var Bus = require('web.Bus');
+var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
+
+var BasicComposer = Composers.BasicComposer;
 
 var createView = testUtils.createView;
 
@@ -318,7 +323,12 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
 });
 
 QUnit.test('chatter: post, receive and star messages', function (assert) {
-    assert.expect(22);
+    var done = assert.async();
+    assert.expect(27);
+
+    // Remove the mention throttle to speed up the test
+    var mentionThrottle = BasicComposer.prototype.MENTION_THROTTLE;
+    BasicComposer.prototype.MENTION_THROTTLE = 1;
 
     this.data.partner.records[0].message_ids = [1];
     var messages = [{
@@ -334,6 +344,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
         res_id: 2,
     }];
     var bus = new Bus();
+    var getSuggestionsDef = $.Deferred();
     var form = createView({
         View: FormView,
         model: 'partner',
@@ -348,8 +359,12 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (args.method === 'message_get_suggested_recipients') {
                 return $.when({2: []});
+            }
+            if (args.method === 'get_mention_suggestions') {
+                getSuggestionsDef.resolve();
+                return $.when([{email: "test@odoo.com", id: 1, name: "Test User"}]);
             }
             return this._super(route, args);
         },
@@ -447,7 +462,35 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     form.$('.o_thread_message[data-message-id=2] .o_thread_message_star').click();
     assert.ok(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star.fa-star-o').length,
         "message 2 should not be starred");
-    form.destroy();
+
+    // very basic test of mention
+    form.$('.o_chatter_button_new_message').click();
+    var $input = form.$('.oe_chatter .o_composer_text_field:first()');
+    $input.val('@');
+    // the cursor position must be set for the mention manager to detect that we are mentionning
+    $input[0].selectionStart = 1;
+    $input[0].selectionEnd = 1;
+    $input.trigger('keyup');
+
+    assert.strictEqual(getSuggestionsDef.state(), "pending",
+        "the mention suggestion RPC should be throttled");
+
+    getSuggestionsDef
+        .then(concurrency.delay.bind(concurrency, 0))
+        .then(function () {
+            assert.strictEqual(form.$('.o_mention_proposition:visible').length, 1,
+                "there should be one mention suggestion");
+            assert.strictEqual(form.$('.o_mention_proposition').data('id'), 1,
+                "suggestion's id should be correct");
+            assert.strictEqual(form.$('.o_mention_proposition .o_mention_name').text(), 'Test User',
+                "suggestion should be displayed correctly");
+            assert.strictEqual(form.$('.o_mention_proposition .o_mention_info').text(), '(test@odoo.com)',
+                "suggestion should be displayed correctly");
+
+            BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
+            form.destroy();
+            done();
+        });
 });
 
 QUnit.test('form activity widget: schedule next activity', function (assert) {
