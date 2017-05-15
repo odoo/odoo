@@ -1114,7 +1114,7 @@ exports.Orderline = Backbone.Model.extend({
         return orderline;
     },
     set_product_lot: function(product){
-        this.has_product_lot = product.tracking !== 'none';
+        this.has_product_lot = product.tracking !== 'none' && this.pos.config.use_existing_lots;
         this.pack_lot_lines  = this.has_product_lot && new PacklotlineCollection(null, {'order_line': this});
     },
     // sets a discount [0,100]%
@@ -1177,16 +1177,28 @@ exports.Orderline = Backbone.Model.extend({
         }
     },
 
+    get_required_number_of_lots: function(){
+        var lots_required = 1;
+
+        if (this.product.tracking == 'serial') {
+            lots_required = this.quantity;
+        }
+
+        return lots_required;
+    },
+
     compute_lot_lines: function(){
         var pack_lot_lines = this.pack_lot_lines;
         var lines = pack_lot_lines.length;
-        if(this.quantity > lines){
-            for(var i=0; i<this.quantity - lines; i++){
+        var lots_required = this.get_required_number_of_lots();
+
+        if(lots_required > lines){
+            for(var i=0; i<lots_required - lines; i++){
                 pack_lot_lines.add(new exports.Packlotline({}, {'order_line': this}));
             }
         }
-        if(this.quantity < lines){
-            var to_remove = lines - this.quantity;
+        if(lots_required < lines){
+            var to_remove = lines - lots_required;
             var lot_lines = pack_lot_lines.sortBy('lot_name').slice(0, to_remove);
             pack_lot_lines.remove(lot_lines);
         }
@@ -1198,7 +1210,7 @@ exports.Orderline = Backbone.Model.extend({
             return true;
         }
         var valid_product_lot = this.pack_lot_lines.get_valid_lots();
-        return this.quantity === valid_product_lot.length;
+        return this.get_required_number_of_lots() === valid_product_lot.length;
     },
 
     // return the unit of measure of the product
@@ -1238,6 +1250,8 @@ exports.Orderline = Backbone.Model.extend({
         }else if(this.get_discount() > 0){             // we don't merge discounted orderlines
             return false;
         }else if(this.price !== orderline.price){
+            return false;
+        }else if(this.product.tracking == 'lot') {
             return false;
         }else{ 
             return true;
@@ -1564,8 +1578,10 @@ var PacklotlineCollection = Backbone.Collection.extend({
     },
 
     set_quantity_by_lot: function() {
-        var valid_lots = this.get_valid_lots();
-        this.order_line.set_quantity(valid_lots.length);
+        if (this.order_line.product.tracking == 'serial') {
+            var valid_lots = this.get_valid_lots();
+            this.order_line.set_quantity(valid_lots.length);
+        }
     }
 });
 
@@ -2053,7 +2069,8 @@ exports.Order = Backbone.Model.extend({
             this.pos.gui.show_popup('packlotline', {
                 'title': _t('Lot/Serial Number(s) Required'),
                 'pack_lot_lines': pack_lot_lines,
-                'order': this
+                'order_line': order_line,
+                'order': this,
             });
         }
     },

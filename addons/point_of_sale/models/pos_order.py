@@ -625,7 +625,7 @@ class PosOrder(models.Model):
                     return_picking = Picking.create(return_vals)
                     return_picking.message_post(body=message)
 
-            for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):
+            for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and l.qty != 0):
                 moves |= Move.create({
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,
@@ -659,8 +659,8 @@ class PosOrder(models.Model):
         self.ensure_one()
         picking.action_assign()
         picking.force_assign()
-        self.set_pack_operation_lot(picking)
-        if not any([(x.product_id.tracking != 'none') for x in picking.pack_operation_ids]):
+        wrong_lots = self.set_pack_operation_lot(picking)
+        if not wrong_lots:
             picking.action_done()
 
     def set_pack_operation_lot(self, picking=None):
@@ -668,28 +668,38 @@ class PosOrder(models.Model):
 
         StockProductionLot = self.env['stock.production.lot']
         PosPackOperationLot = self.env['pos.pack.operation.lot']
-
+        has_wrong_lots = False
         for order in self:
             for pack_operation in (picking or self.picking_id).pack_operation_ids:
+                picking_type = (picking or self.picking_id).picking_type_id
+                lots_necessary = True
+                if picking_type:
+                    lots_necessary = picking_type and picking_type.use_existing_lots
                 qty = 0
                 qty_done = 0
                 pack_lots = []
                 pos_pack_lots = PosPackOperationLot.search([('order_id', '=',  order.id), ('product_id', '=', pack_operation.product_id.id)])
                 pack_lot_names = [pos_pack.lot_name for pos_pack in pos_pack_lots]
 
-                if pack_lot_names:
+                if pack_lot_names and lots_necessary:
                     for lot_name in list(set(pack_lot_names)):
                         stock_production_lot = StockProductionLot.search([('name', '=', lot_name), ('product_id', '=', pack_operation.product_id.id)])
                         if stock_production_lot:
                             if stock_production_lot.product_id.tracking == 'lot':
-                                qty = pack_lot_names.count(lot_name)
-                            else:
+                                # if a lot nr is set through the frontend it will refer to the full quantity
+                                qty = pack_operation.product_qty
+                            else: # serial numbers
                                 qty = 1.0
                             qty_done += qty
                             pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
-                else:
+                        else:
+                            has_wrong_lots = True
+                elif pack_operation.product_id.tracking == 'none' or not lots_necessary:
                     qty_done = pack_operation.product_qty
+                else:
+                    has_wrong_lots = True
                 pack_operation.write({'pack_lot_ids': map(lambda x: (0, 0, x), pack_lots), 'qty_done': qty_done})
+        return has_wrong_lots
 
     def add_payment(self, data):
         """Create a new payment for the order"""
