@@ -36,7 +36,8 @@ class AccountInvoice(models.Model):
         else:
             qty = line.qty_received - line.qty_invoiced
         if float_compare(qty, 0.0, precision_rounding=line.product_uom.rounding) <= 0:
-            qty = 0.0
+            # If received quantities or quantities is zero is better not create invoice lines
+            return {}
         taxes = line.taxes_id
         invoice_line_tax_ids = self.purchase_id.fiscal_position_id.map_tax(taxes)
         invoice_line = self.env['account.invoice.line']
@@ -69,9 +70,11 @@ class AccountInvoice(models.Model):
         new_lines = self.env['account.invoice.line']
         for line in self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id'):
             data = self._prepare_invoice_line_from_po_line(line)
-            new_line = new_lines.new(data)
-            new_line._set_additional_fields(self)
-            new_lines += new_line
+            if data:
+                # Only create lines with units
+                new_line = new_lines.new(data)
+                new_line._set_additional_fields(self)
+                new_lines += new_line
 
         self.invoice_line_ids += new_lines
         self.purchase_id = False
