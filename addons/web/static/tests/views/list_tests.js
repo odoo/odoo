@@ -2134,6 +2134,38 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('grouped list are not editable', function (assert) {
+        // Editable grouped list views are not supported, so the purpose of this
+        // test is to check that when a list view is grouped, its editable
+        // attribute is ignored
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
+            intercepts: {
+                switch_view: function () {
+                    assert.step('switch view');
+                },
+            },
+        });
+
+        list.$('.o_data_cell:first').click();
+        assert.verifySteps([], 'no switch view should have been requested');
+        assert.strictEqual(list.$('.o_selected_row').length, 1,
+            "a row should be in edition");
+
+        // reload with groupBy
+        list.reload({groupBy: ['bar']});
+        list.$('.o_group_header:first').click();
+        list.$('.o_data_cell:first').click();
+        assert.verifySteps(['switch view'], 'one switch view should have been requested');
+
+        list.destroy();
+    });
 });
 
 });

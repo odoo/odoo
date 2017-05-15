@@ -44,8 +44,6 @@ ListRenderer.include({
         // of each line, so the user can delete a record.
         this.addTrashIcon = params.addTrashIcon;
 
-        this.editable = this.arch.attrs.editable;
-
         this.currentRow = null;
         this.currentCol = null;
     },
@@ -222,6 +220,16 @@ ListRenderer.include({
             n++;
         }
         return n;
+    },
+    /**
+     * Returns true iff the list is editable, i.e. if it isn't grouped and if
+     * the editable attribute is set on the root node of its arch.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isEditable: function () {
+        return this.mode === 'edit' && !this.state.groupedBy.length && this.arch.attrs.editable;
     },
     /**
      * Move the cursor on the end of the previous line, if possible.
@@ -474,7 +482,7 @@ ListRenderer.include({
     _onCellClick: function (event) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (this.mode === 'readonly' || !this.editable || $(event.target).prop('special_click')) {
+        if (!this._isEditable() || $(event.target).prop('special_click')) {
             return;
         }
         var $td = $(event.currentTarget);
@@ -486,7 +494,7 @@ ListRenderer.include({
     /**
      * We need to manually unselect row, because noone else would do it
      */
-    _onEmptyRowClick: function (event) {
+    _onEmptyRowClick: function () {
         this._unselectRow();
     },
     /**
@@ -570,7 +578,7 @@ ListRenderer.include({
      * @private
      */
     _onRowClicked: function () {
-        if (this.mode === 'readonly' || !this.editable) {
+        if (!this._isEditable()) {
             this._super.apply(this, arguments);
         }
     },
