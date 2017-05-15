@@ -53,28 +53,28 @@ class TableCompute(object):
                 x = y = 1
 
             pos = minpos
-            while not self._check_place(pos % PPR, pos / PPR, x, y):
+            while not self._check_place(pos % PPR, pos // PPR, x, y):
                 pos += 1
             # if 21st products (index 20) and the last line is full (PPR products in it), break
             # (pos + 1.0) / PPR is the line where the product would be inserted
             # maxy is the number of existing lines
             # + 1.0 is because pos begins at 0, thus pos 20 is actually the 21st block
             # and to force python to not round the division operation
-            if index >= ppg and ((pos + 1.0) / PPR) > maxy:
+            if index >= ppg and ((pos + 1.0) // PPR) > maxy:
                 break
 
             if x == 1 and y == 1:   # simple heuristic for CPU optimization
-                minpos = pos / PPR
+                minpos = pos // PPR
 
             for y2 in range(y):
                 for x2 in range(x):
-                    self.table[(pos / PPR) + y2][(pos % PPR) + x2] = False
-            self.table[pos / PPR][pos % PPR] = {
+                    self.table[(pos // PPR) + y2][(pos % PPR) + x2] = False
+            self.table[pos // PPR][pos % PPR] = {
                 'product': p, 'x': x, 'y': y,
                 'class': " ".join(x.html_class for x in p.website_style_ids if x.html_class)
             }
             if index <= ppg:
-                maxy = max(maxy, y + (pos / PPR))
+                maxy = max(maxy, y + (pos // PPR))
             index += 1
 
         # Format table according to HTML needs
@@ -910,7 +910,7 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
     def get_unit_price(self, product_ids, add_qty, **kw):
         products = request.env['product.product'].with_context({'quantity': add_qty}).browse(product_ids)
-        return {product.id: product.website_price / add_qty for product in products}
+        return {product.id: product.website_price // add_qty for product in products}
 
     # ------------------------------------------------------
     # Edit
