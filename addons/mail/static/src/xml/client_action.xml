@@ -211,6 +211,17 @@
                     <p t-attf-class="#{is_unread ? 'unread' : ''}">
                         <span t-if="is_author" class="fa fa-mail-reply"/>
                         <t t-if="channel.last_message" t-raw="get_message_body_preview(channel.last_message.body)"/>
+                        <t t-if="channel.last_message.body == ''">
+                            <t t-if="channel.last_message.attachment_ids.length != 0">
+                                <t t-esc="channel.last_message.attachment_ids.length"/> attachment(s)
+                            </t>
+                            <t t-if="channel.last_message.tracking_value_ids and channel.last_message.tracking_value_ids.length &gt; 0">
+                                <t t-if="channel.last_message.subtype_description">
+                                    <strong><t t-esc="channel.last_message.record_name"/></strong>
+                                    : <t t-esc="channel.last_message.subtype_description"/>
+                                </t>
+                            </t>
+                        </t>
                     </p>
                 </t>
             </div>
