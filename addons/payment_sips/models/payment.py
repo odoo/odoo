@@ -66,7 +66,7 @@ class AcquirerSips(models.Model):
         if self.environment == 'prod':
             key = getattr(self, 'sips_secret')
 
-        shasign = sha256(data + key)
+        shasign = sha256((data + key).encode('utf-8'))
         return shasign.hexdigest()
 
     @api.multi

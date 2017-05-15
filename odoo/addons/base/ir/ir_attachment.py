@@ -195,7 +195,7 @@ class IrAttachment(models.Model):
         for attach in self:
             # compute the fields that depend on datas
             value = attach.datas
-            bin_data = value and base64.b64decode(value) or ''
+            bin_data = base64.b64decode(value) if value else b''
             vals = {
                 'file_size': len(bin_data),
                 'checksum': self._compute_checksum(bin_data),
@@ -220,7 +220,7 @@ class IrAttachment(models.Model):
             :param bin_data : datas in its binary form
         """
         # an empty file has a checksum too (for caching)
-        return hashlib.sha1(bin_data or '').hexdigest()
+        return hashlib.sha1(bin_data or b'').hexdigest()
 
     def _compute_mimetype(self, values):
         """ compute the mimetype of the given values

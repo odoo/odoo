@@ -570,7 +570,7 @@ class MailThread(models.AbstractModel):
     def _generate_notification_token(self, base_link, params):
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params)))
-        hm = hmac.new(str(secret), token, hashlib.sha1).hexdigest()
+        hm = hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha1).hexdigest()
         return hm
 
     @api.multi
