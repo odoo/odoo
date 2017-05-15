@@ -345,7 +345,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _doDebouncedAction: function () {
-        this.datewidget.change_datetime();
+        this.datewidget.changeDatetime();
     },
 
     /**
@@ -354,7 +354,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _getValue: function () {
-        return this.datewidget.get_value();
+        return this.datewidget.getValue();
     },
     /**
      * @override
@@ -383,7 +383,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _renderEdit: function () {
-        this.datewidget.set_value(this.value);
+        this.datewidget.setValue(this.value);
         this.$input = this.datewidget.$input;
     },
 
@@ -412,7 +412,7 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _getValue: function () {
-        var value = this.datewidget.get_value();
+        var value = this.datewidget.getValue();
         return value && value.add(-this.getSession().tzOffset, 'minutes');
     },
 
@@ -435,7 +435,7 @@ var FieldDateTime = FieldDate.extend({
      */
     _renderEdit: function () {
         var value = this.value && this.value.clone().add(this.getSession().tzOffset, 'minutes');
-        this.datewidget.set_value(value);
+        this.datewidget.setValue(value);
         this.$input = this.datewidget.$input;
     },
 
