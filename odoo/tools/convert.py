@@ -85,11 +85,11 @@ def _fix_multiple_roots(node):
 def _eval_xml(self, node, env):
     if node.tag in ('field','value'):
         t = node.get('type','char')
-        f_model = node.get('model', '').encode('utf-8')
+        f_model = node.get('model')
         if node.get('search'):
-            f_search = node.get("search",'').encode('utf-8')
-            f_use = node.get("use",'id').encode('utf-8')
-            f_name = node.get("name",'').encode('utf-8')
+            f_search = node.get("search")
+            f_use = node.get("use",'id')
+            f_name = node.get("name")
             idref2 = {}
             if f_search:
                 idref2 = _get_idref(self, env, f_model, self.idref)
@@ -106,7 +106,7 @@ def _eval_xml(self, node, env):
                 if isinstance(f_val, tuple):
                     f_val = f_val[0]
             return f_val
-        a_eval = node.get('eval','')
+        a_eval = node.get('eval')
         if a_eval:
             idref2 = _get_idref(self, env, f_model, self.idref)
             try:
@@ -116,32 +116,40 @@ def _eval_xml(self, node, env):
                     'Could not eval(%s) for %s in %s', a_eval, node.get('name'), env.context)
                 raise
         def _process(s):
-            matches = re.finditer(r'[^%]%\((.*?)\)[ds]', s)
-            done = []
+            matches = re.finditer(br'[^%]%\((.*?)\)[ds]', s)
+            done = set()
             for m in matches:
                 found = m.group()[1:]
                 if found in done:
                     continue
-                done.append(found)
-                id = m.groups()[0]
+                done.add(found)
+                id = m.groups()[0].decode('utf-8')
                 if not id in self.idref:
                     self.idref[id] = self.id_get(id)
-                s = s.replace(found, str(self.idref[id]))
-            s = s.replace('%%', '%') # Quite wierd but it's for (somewhat) backward compatibility sake
+                # So funny story: in Python 3, bytes(n: int) returns a
+                # bytestring of n nuls. In Python 2 it obviously returns the
+                # stringified number, which is what we're expecting here
+                s = s.replace(found, pycompat.text_type(self.idref[id]).encode('utf-8'))
+            s = s.replace(b'%%', b'%') # Quite wierd but it's for (somewhat) backward compatibility sake
             return s
 
         if t == 'xml':
             _fix_multiple_roots(node)
-            return '<?xml version="1.0"?>\n'\
-                +_process("".join([etree.tostring(n, encoding='utf-8') for n in node]))
+            return b'<?xml version="1.0"?>\n'\
+                +_process(b"".join(etree.tostring(n, encoding='utf-8') for n in node))
         if t == 'html':
-            return _process("".join([etree.tostring(n, encoding='utf-8') for n in node]))
+            return _process(b"".join(etree.tostring(n, encoding='utf-8') for n in node))
 
         data = node.text
         if node.get('file'):
             with file_open(node.get('file'), 'rb') as f:
                 data = f.read()
 
+        if t == 'base64':
+            return base64.b64encode(data)
+
+        # after that, only text content makes sense
+        data = pycompat.to_text(data)
         if t == 'file':
             from ..modules import module
             path = data.strip()
@@ -152,9 +160,6 @@ def _eval_xml(self, node, env):
 
         if t == 'char':
             return data
-
-        if t == 'base64':
-            return base64.b64encode(data)
 
         if t == 'int':
             d = data.strip()
@@ -174,7 +179,7 @@ def _eval_xml(self, node, env):
             return res
     elif node.tag == "function":
         args = []
-        a_eval = node.get('eval','')
+        a_eval = node.get('eval')
         # FIXME: should probably be exclusive
         if a_eval:
             self.idref['ref'] = self.id_get
@@ -183,7 +188,7 @@ def _eval_xml(self, node, env):
             return_val = _eval_xml(self, n, env)
             if return_val is not None:
                 args.append(return_val)
-        model = env[node.get('model', '')]
+        model = env[node.get('model')]
         method = node.get('name')
         # this one still depends on the old API
         return odoo.api.call_kw(model, method, args, {})
@@ -210,8 +215,8 @@ class xml_import(object):
         return self.noupdate or (len(data_node) and self.nodeattr2bool(data_node, 'noupdate', False))
 
     def get_context(self, data_node, node, eval_dict):
-        data_node_context = (len(data_node) and data_node.get('context','').encode('utf8'))
-        node_context = node.get("context",'').encode('utf8')
+        data_node_context = (len(data_node) and data_node.get('context',''))
+        node_context = node.get("context")
         context = {}
         for ctx in (data_node_context, node_context):
             if ctx:
@@ -250,7 +255,7 @@ form: module.record_id""" % (xml_id,)
 
     def _tag_delete(self, rec, data_node=None, mode=None):
         d_model = rec.get("model")
-        d_search = rec.get("search",'').encode('utf-8')
+        d_search = rec.get("search")
         d_id = rec.get("id")
         records = self.env[d_model]
 
@@ -281,7 +286,7 @@ form: module.record_id""" % (xml_id,)
     def _tag_report(self, rec, data_node=None, mode=None):
         res = {}
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
-            res[dest] = rec.get(f,'').encode('utf8')
+            res[dest] = rec.get(f)
             assert res[dest], "Attribute %s of report is empty !" % (f,)
         for field, dest in (('attachment', 'attachment'),
                             ('attachment_use', 'attachment_use'),
@@ -292,7 +297,7 @@ form: module.record_id""" % (xml_id,)
                             ('print_report_name', 'print_report_name'),
                             ):
             if rec.get(field):
-                res[dest] = rec.get(field).encode('utf8')
+                res[dest] = rec.get(field)
         if rec.get('auto'):
             res['auto'] = safe_eval(rec.get('auto','False'))
         if rec.get('header'):
@@ -300,7 +305,7 @@ form: module.record_id""" % (xml_id,)
 
         res['multi'] = rec.get('multi') and safe_eval(rec.get('multi','False'))
 
-        xml_id = rec.get('id','').encode('utf8')
+        xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
 
         if rec.get('groups'):
@@ -344,20 +349,20 @@ form: module.record_id""" % (xml_id,)
         return
 
     def _tag_act_window(self, rec, data_node=None, mode=None):
-        name = rec.get('name','').encode('utf-8')
-        xml_id = rec.get('id','').encode('utf8')
+        name = rec.get('name')
+        xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
-        type = rec.get('type','').encode('utf-8') or 'ir.actions.act_window'
+        type = rec.get('type') or 'ir.actions.act_window'
         view_id = False
         if rec.get('view_id'):
-            view_id = self.id_get(rec.get('view_id','').encode('utf-8'))
-        domain = rec.get('domain','').encode('utf-8') or '[]'
-        res_model = rec.get('res_model','').encode('utf-8')
-        src_model = rec.get('src_model','').encode('utf-8')
-        view_type = rec.get('view_type','').encode('utf-8') or 'form'
-        view_mode = rec.get('view_mode','').encode('utf-8') or 'tree,form'
-        usage = rec.get('usage','').encode('utf-8')
-        limit = rec.get('limit','').encode('utf-8')
+            view_id = self.id_get(rec.get('view_id'))
+        domain = rec.get('domain') or '[]'
+        res_model = rec.get('res_model')
+        src_model = rec.get('src_model')
+        view_type = rec.get('view_type') or 'form'
+        view_mode = rec.get('view_mode') or 'tree,form'
+        usage = rec.get('usage')
+        limit = rec.get('limit')
         uid = self.uid
 
         # Act_window's 'domain' and 'context' contain mostly literals
@@ -443,9 +448,9 @@ form: module.record_id""" % (xml_id,)
             model = src_model
             if isinstance(model, (list, tuple)):
                 model, res_id = model
-            keyword = rec.get('key2','').encode('utf-8') or 'client_action_relate'
-            value = 'ir.actions.act_window,'+str(id)
-            replace = rec.get('replace','') or True
+            keyword = rec.get('key2') or 'client_action_relate'
+            value = 'ir.actions.act_window,%s' % id
+            replace = rec.get('replace') or True
             self.env['ir.values'].set_action(xml_id, action_slot=keyword, model=model, action=value, res_id=res_id)
         # TODO add remove ir.model.data
 
@@ -459,7 +464,7 @@ form: module.record_id""" % (xml_id,)
             return
         res = {}
         for field in rec.findall('./field'):
-            f_name = field.get("name",'').encode('utf-8')
+            f_name = field.get("name")
             f_val = _eval_xml(self, field, self.env)
             res[f_name] = f_val
         ir_values = self.env['ir.values']
@@ -473,7 +478,7 @@ form: module.record_id""" % (xml_id,)
                 ir_values.set_action(res['name'], action_slot=res['key2'], model=model, action=res['value'], res_id=res_id)
 
     def _tag_menuitem(self, rec, data_node=None, mode=None):
-        rec_id = rec.get("id",'').encode('ascii')
+        rec_id = rec.get("id")
         self._test_xml_id(rec_id)
 
         # The parent attribute was specified, if non-empty determine its ID, otherwise
@@ -493,7 +498,7 @@ form: module.record_id""" % (xml_id,)
             res = None
 
         if rec.get('action'):
-            a_action = rec.get('action','').encode('utf8')
+            a_action = rec.get('action')
 
             # determine the type of action
             action_type, action_id = self.model_id_get(a_action)
@@ -546,13 +551,13 @@ form: module.record_id""" % (xml_id,)
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
 
-        rec_model = rec.get("model",'').encode('ascii')
-        rec_id = rec.get("id",'').encode('ascii')
+        rec_model = rec.get("model")
+        rec_id = rec.get("id")
         self._test_xml_id(rec_id)
-        rec_src = rec.get("search",'').encode('utf8')
+        rec_src = rec.get("search")
         rec_src_count = rec.get("count")
 
-        rec_string = rec.get("string",'').encode('utf8') or 'unknown'
+        rec_string = rec.get("string") or 'unknown'
 
         records = None
         eval_dict = {'ref': self.id_get}
@@ -585,7 +590,7 @@ form: module.record_id""" % (xml_id,)
             globals_dict['ref'] = ref
             globals_dict['_ref'] = ref
             for test in rec.findall('./test'):
-                f_expr = test.get("expr",'').encode('utf-8')
+                f_expr = test.get("expr",'')
                 env = self.env(user=uid, context=context)
                 expected_value = _eval_xml(self, test, env) or True
                 expression_value = safe_eval(f_expr, globals_dict)
@@ -602,9 +607,9 @@ form: module.record_id""" % (xml_id,)
             self.assertion_report.record_success()
 
     def _tag_record(self, rec, data_node=None, mode=None):
-        rec_model = rec.get("model").encode('ascii')
+        rec_model = rec.get("model")
         model = self.env[rec_model]
-        rec_id = rec.get("id",'').encode('ascii')
+        rec_id = rec.get("id",'')
         rec_context = rec.get("context", {})
         if rec_context:
             rec_context = safe_eval(rec_context)
@@ -645,13 +650,13 @@ form: module.record_id""" % (xml_id,)
         res = {}
         for field in rec.findall('./field'):
             #TODO: most of this code is duplicated above (in _eval_xml)...
-            f_name = field.get("name").encode('utf-8')
-            f_ref = field.get("ref",'').encode('utf-8')
-            f_search = field.get("search",'').encode('utf-8')
-            f_model = field.get("model",'').encode('utf-8')
+            f_name = field.get("name")
+            f_ref = field.get("ref")
+            f_search = field.get("search")
+            f_model = field.get("model")
             if not f_model and f_name in model._fields:
                 f_model = model._fields[f_name].comodel_name
-            f_use = field.get("use",'').encode('utf-8') or 'id'
+            f_use = field.get("use",'') or 'id'
             f_val = False
 
             if f_search:
@@ -694,7 +699,7 @@ form: module.record_id""" % (xml_id,)
 
     def _tag_template(self, el, data_node=None, mode=None):
         # This helper transforms a <template> element into a <record> and forwards it
-        tpl_id = el.get('id', el.get('t-name', '')).encode('ascii')
+        tpl_id = el.get('id', el.get('t-name'))
         full_tpl_id = tpl_id
         if '.' not in full_tpl_id:
             full_tpl_id = '%s.%s' % (self.module, tpl_id)
@@ -815,7 +820,7 @@ form: module.record_id""" % (xml_id,)
 def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
     if pathname is None:
         pathname = os.path.join(module, filename)
-    fp = file_open(pathname)
+    fp = file_open(pathname, mode='rb')
     ext = os.path.splitext(filename)[1].lower()
 
     try:
