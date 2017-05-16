@@ -23,6 +23,11 @@ PIDFILE=/var/run/${NAME}.pid
 USER=odoo
 export LOGNAME=$USER
 
+green='\033[0;32m'
+yellow='\033[0;33m'
+red='\033[0;31m'
+NC='\033[0m'
+
 test -x $DAEMON || exit 0
 set -e
 
@@ -40,28 +45,51 @@ function _status() {
     return $?
 }
 
-
 case "$1" in
         start)
                 echo -n "Starting $DESC: "
-                _start
-                echo "ok"
+		if (( $(ps -ef | grep -v grep | grep $DAEMON | wc -l) > 0 ))
+		then
+			echo -e "${yellow}Warning -- Already running${NC}"
+                        exit 1
+		else
+                	_start
+			if (( $(ps -ef | grep -v grep | grep $DAEMON | wc -l) > 0 ))
+			then
+                		echo -e "${green}Done${NC}"
+			else
+				echo -e "${red}Error -- Could not start${NC}"
+                                exit 2
+			fi
+		fi
                 ;;
         stop)
                 echo -n "Stopping $DESC: "
                 _stop
-                echo "ok"
+                echo -e "${green}Done${NC}"
                 ;;
         restart|force-reload)
                 echo -n "Restarting $DESC: "
                 _stop
                 sleep 1
-                _start
-                echo "ok"
+                if (( $(ps -ef | grep -v grep | grep $DAEMON | wc -l) > 0 ))
+                then
+                        echo -e "${yellow}Warning -- Already running${NC}"
+                        exit 1
+                else
+                        _start
+                        if (( $(ps -ef | grep -v grep | grep $DAEMON | wc -l) > 0 ))
+                        then
+                                echo -e "${green}Done${NC}"
+                        else
+                                echo -e "${red}Error -- Could not start${NC}"
+                                exit 2
+                        fi
+                fi
                 ;;
         status)
                 echo -n "Status of $DESC: "
-                _status && echo "running" || echo "stopped"
+                _status && echo -e "${green}running${NC}" || echo -e "${red}stopped${NC}"
                 ;;
         *)
                 N=/etc/init.d/$NAME
