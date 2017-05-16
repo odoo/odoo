@@ -81,7 +81,7 @@ class procurement_order(osv.osv):
             'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or procurement.partner_dest_id.id,
             'user_id': procurement.product_id.product_manager.id,
             'procurement_id': procurement.id,
-            'description': procurement.name + '\n',
+            'description': procurement.name + '<br/>',
             'project_id': project and project.id or False,
             'company_id': procurement.company_id.id,
         },context=context)
