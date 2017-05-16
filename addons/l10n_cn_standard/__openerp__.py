@@ -27,6 +27,5 @@
         'account_chart_template.xml',
         'account_chart_template.yml',
     ],
-    'license': 'GPL-3',
     'installable': True,
 }
