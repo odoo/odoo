@@ -8,13 +8,10 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='msg_module_google_spreadsheet']" position="replace">
                 <div class="content-group" attrs="{'invisible': [('module_google_spreadsheet','=',False)]}">
-                    <div class="row mt16">
-                        <label for="google_drive_authorization_code" class="col-md-3 o_light_label"/>
-                        <field name="google_drive_authorization_code"/>
-                    </div>
-                    <a type="button" class="btn-link" target="_blank"><i class="fa fa-fw fa-arrow-right"/>
-                        <field name="google_drive_uri_copy" widget="url" text="Generate Code"/>
-                    </a>
+                        <div class="content-group mt16">
+                            Please use the settings of Google Drive
+                            on the left or above.
+                        </div>
                 </div>
             </xpath>
         </field>

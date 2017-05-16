@@ -57,6 +57,9 @@ class AuthSignupHome(Home):
                 else:
                     login = qcontext.get('login')
                     assert login, "No login provided."
+                    _logger.info(
+                        "Password reset attempt for <%s> by user <%s> from %s",
+                        login, request.env.user.login, request.httprequest.remote_addr)
                     request.env['res.users'].sudo().reset_password(login)
                     qcontext['message'] = _("An email has been sent with credentials to reset your password")
             except SignupError:

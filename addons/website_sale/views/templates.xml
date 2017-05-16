@@ -465,7 +465,7 @@
                                     <a id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
                                 </div>
                             </form>
-                            <hr />
+                            <hr t-if="product.availability != 'empty'"/>
                             <div t-if="product.availability == 'in_stock'" class="alert alert-success">
                                 <span class="fa fa-check" />
                                 <span>In Stock</span>
@@ -1431,7 +1431,7 @@
                                 <div class="col-sm-12">
                                     <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                        <a style="width:127px;" class="btn btn-primary a-submit">
+                                        <a class="btn btn-primary a-submit">
                                             <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-long-arrow-right"></span></span>
                                             <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-long-arrow-right"></span></span>
                                         </a>

@@ -168,6 +168,7 @@ var DebugManager = Widget.extend({
             res_model: 'ir.ui.view',
             title: _t('Select a view'),
             disable_multiple_selection: true,
+            domain: [['type', '!=', 'qweb'], ['type', '!=', 'search']],
             on_selected: function (element_ids) {
                 self._rpc({
                         model: 'ir.ui.view',

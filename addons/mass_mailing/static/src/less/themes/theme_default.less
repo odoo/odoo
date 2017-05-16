@@ -49,27 +49,36 @@
 
 // ===== Layout =====
 .o_layout {
-    font-family: @o_mm_def_font;
-    color: lighten(@o_mm_def_text_color, 20%);
     overflow: hidden;
-    width: 100%;
+    width: 94%;
     min-height: 100%;
     background-color: @o_mm_def_color_alpha;
-    padding: 24px 0;
+    padding: 24px 3%;
+
+    // Forces on <p/> elements as several mail clients does not correctly
+    // inherit font properties
+    &, p {
+        font-family: @o_mm_def_font;
+        color: lighten(@o_mm_def_text_color, 20%);
+    }
 
     > .o_mail_wrapper {
         width: 100%;
-        max-width: @o_mm_def_body_width;
-        margin: auto;
-        border: 1px solid darken(@o_mm_def_color_alpha, 2%);
-        background-color: @o_mm_def_color_beta;
+        border-collapse: separate; // Allow the first and last td to have the
+                                   // same width
+
+        .o_mail_wrapper_td {
+            width: @o_mm_def_body_width;
+            border: 1px solid darken(@o_mm_def_color_alpha, 2%);
+            background-color: @o_mm_def_color_beta;
+        }
     }
 }
 
 // ===== Snippets (general) =====
 .o_mail_snippet_general {
     width: 100%;
-    max-width: @o_mm_def_body_width;
+    max-width: @o_mm_def_body_width; // should not be necessary thanks to mail wrapper
     margin: 0 auto;
 
     h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -157,7 +166,11 @@
 }
 
 .o_mail_block_two_cols, .o_mail_block_three_cols {
-    font-size: small;
+    // Forces on <p/> elements as several mail clients does not correctly
+    // inherit font properties
+    &, p {
+        font-size: small;
+    }
 
     .o_mail_col_container {
         padding: 10px 20px;
@@ -169,7 +182,11 @@
 }
 
 .o_mail_block_image_text, .o_mail_block_text_image {
-    font-size: small;
+    // Forces on <p/> elements as several mail clients does not correctly
+    // inherit font properties
+    &, p {
+        font-size: small;
+    }
 }
 
 .o_mail_block_event {
