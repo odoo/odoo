@@ -1371,4 +1371,37 @@ QUnit.module('Views', {
 
         model.destroy();
     });
+
+    QUnit.test('changes are discarded when reloading from a new record', function (assert) {
+        // practical use case: click on 'Create' to open a form view in edit
+        // mode (new record), click on 'Discard', then open an existing record
+        assert.expect(2);
+
+        this.data.partner.fields.foo.default = 'default';
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        // load a new record (default_get)
+        var params = _.extend(this.params, {
+            res_id: undefined,
+            type: 'record',
+            fieldNames: ['foo'],
+        });
+        model.load(params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.foo, 'default',
+                "should be the default value");
+
+            // reload with id 2
+            model.reload(record.id, {currentId: 2}).then(function (resultID) {
+                var record = model.get(resultID);
+                assert.strictEqual(record.data.foo, 'gnap',
+                    "should be the value of record 2");
+            });
+        });
+
+        model.destroy();
+    });
 });});
