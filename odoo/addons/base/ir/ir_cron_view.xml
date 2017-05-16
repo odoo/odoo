@@ -68,6 +68,8 @@
                     <field name="user_id"/>
                     <field name="nextcall"/>
                     <field name="active"/>
+                    <separator/>
+                    <filter string="All" name="all" domain="['|', ('active', '=', False), ('active', '=', True)]" />
                     <group expand="0" string="Group By">
                         <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Execution" domain="[]" context="{'group_by':'nextcall'}" />
@@ -80,7 +82,7 @@
             <field name="res_model">ir.cron</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{'active_test': False}</field>
+            <field name="context">{'search_default_all': 1}</field>
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
         <menuitem id="menu_ir_cron_act" action="ir_cron_act" parent="base.menu_automation"/>
