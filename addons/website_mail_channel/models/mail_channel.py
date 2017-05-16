@@ -27,3 +27,30 @@ class MailGroup(models.Model):
         })
         res['headers'] = repr(headers)
         return res
+
+    @api.multi
+    def _send_confirmation_email(self, partner_ids, unsubscribe=False):
+        if unsubscribe:
+            template = self.env.ref('website_mail_channel.mail_template_list_unsubscribe')
+            route = "/groups/unsubscribe/%s"
+        else:
+            template = self.env.ref('website_mail_channel.mail_template_list_unsubscribe')
+            route = "/groups/subscribe/%s"
+
+        for partner_id in partner_ids:
+            # generate a new token per subscriber
+            token = self.env['ir.token'].sudo().create({
+                'res_model': 'mail.channel',
+                'res_id': self.id,
+                'partner_id': partner_id,
+            })
+
+            template.with_context(
+                token=token,
+                token_url=token._generate_token_url(route)
+            ).send_mail(self.id,
+                        force_send=True,
+                        email_values={'recipient_ids': [(4, partner_id)]}
+            )
+
+        return True

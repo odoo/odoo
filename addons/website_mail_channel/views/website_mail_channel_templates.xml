@@ -58,15 +58,18 @@
                     <div class="js_follow_alias"
                               t-att-data-id="group.id"
                               data-object="mail.channel"
-                              data-follow="off">
+                              t-att-data-follow="'on' if 'unsubscribe' in request.params else 'off'">
                         <div class="input-group js_mg_follow_form">
                             <input
                                   type="email"
                                   name="email"
                                   class="js_follow_email form-control"
                                   placeholder="your email..."/>
-                            <span class="input-group-btn">
-                                <button href="#" class="btn btn-primary js_follow_btn">Subscribe</button>
+                            <span t-if="'unsubscribe' not in request.params" class="input-group-btn">
+                               <button href="#" class="btn btn-primary js_follow_btn">Subscribe</button>
+                            </span>
+                            <span t-if="'unsubscribe' in request.params" class="input-group-btn">
+                               <button href="#" class="btn btn-primary js_follow_btn">Unsubscribe</button>
                             </span>
                         </div>
                         <p class="js_mg_details hidden well well-sm">
@@ -304,6 +307,34 @@
             </button>
         </p>
     </div>
+</template>
+
+
+<template id="confirmation_subscription" name="Mailing List Confirmation">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty">
+            <div class="container">
+                <p>
+                    You have been correctly
+                    <t t-if="subscribing">subscribed</t>
+                    <t t-if="not subscribing">unsubscribed</t>
+                    to the mailing list.
+                </p>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="invalid_token_subscription" name="Invalid Token Submitted">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty">
+            <div class="container">
+                <p>
+                    Invalid or expired confirmation link.
+                </p>
+            </div>
+        </div>
+    </t>
 </template>
 
 </odoo>
