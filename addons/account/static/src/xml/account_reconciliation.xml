@@ -37,7 +37,7 @@
     <t t-jquery="div:first" t-operation="attributes">
         <attribute name="class">o_manual_statement</attribute>
     </t>
-    <t t-jquery="h1:last" t-operation="replace"></t>
+    <t t-jquery="h1:last, .progress, .o_automatic_reconciliation" t-operation="replace"></t>
     <t t-jquery=".o_view_nocontent p" t-operation="replace"></t>
     <t t-jquery=".o_view_nocontent" t-operation="append">
         <p><b>Good Job!</b> There is nothing to reconcile.</p>

@@ -14,6 +14,7 @@ odoo.define('web.relational_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
+var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var ControlPanel = require('web.ControlPanel');
 var dialogs = require('web.view_dialogs');
@@ -76,10 +77,10 @@ var M2ODialog = Dialog.extend({
 var FieldMany2One = AbstractField.extend({
     supportedFieldTypes: ['many2one'],
     template: 'FieldMany2One',
-    custom_events: {
+    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         'quick_create': '_onQuickCreate',
         'search_create_popup': '_onSearchCreatePopup',
-    },
+    }),
     events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClick',
         'focusout input': '_onInputFocusout',
@@ -461,6 +462,19 @@ var FieldMany2One = AbstractField.extend({
         }
     },
     /**
+     * Stops the left/right navigation move event if the cursor is not at the
+     * start/end of the input element. Stops any navigation move event if the
+     * user is selecting text.
+     *
+     * TODO this is a duplicate of InputField._onNavigationMove, maybe this
+     * should be done in a mixin or, better, the m2o field should be an
+     * InputField (but this requires some refactoring).
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onNavigationMove: basicFields.InputField.prototype._onNavigationMove,
+    /**
      * @private
      * @param {OdooEvent} event
      */
@@ -600,7 +614,7 @@ var FieldX2Many = AbstractField.extend({
             if (command.operation === 'UPDATE') {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
-                this.renderer.confirmChange(state, command.id, fieldNames);
+                this.renderer.confirmChange(state, command.id, fieldNames, ev.initialEvent);
                 return $.when();
             }
         }
@@ -624,7 +638,7 @@ var FieldX2Many = AbstractField.extend({
             return this._super();
         }
         if (this.renderer) {
-            this.renderer.updateState(this.value);
+            this.renderer.updateState(this.value, {});
             this.pager.updateState({ size: this.value.count });
             return $.when();
         }
@@ -732,8 +746,8 @@ var FieldX2Many = AbstractField.extend({
                     onFailure: def.reject.bind(def),
                 });
             } else {
-                self.renderer.setRowMode(recordID, 'readonly');
-                def.resolve();
+                self.renderer.setRowMode(recordID, 'readonly')
+                    .done(def.resolve.bind(def));
             }
         });
         return def;
@@ -777,7 +791,8 @@ var FieldX2Many = AbstractField.extend({
      */
     _onEditLine: function (ev) {
         ev.stopPropagation();
-        this.renderer.setRowMode(ev.data.recordID, 'edit');
+        this.renderer.setRowMode(ev.data.recordID, 'edit')
+            .done(ev.data.onSuccess);
     },
     /**
      * Updates the given record with the changes.
@@ -787,12 +802,19 @@ var FieldX2Many = AbstractField.extend({
      */
     _onFieldChanged: function (ev) {
         if (ev.target === this) {
+            ev.initialEvent = this.lastInitialEvent;
             return;
         }
         ev.stopPropagation();
         // changes occured in an editable list
         var changes = ev.data.changes;
+        // save the initial event triggering the field_changed, as it will be
+        // necessary when the field triggering this event will be reset (to
+        // prevent it from re-rendering itself, formatting its value, loosing
+        // the focus... while still being edited)
+        this.lastInitialEvent = undefined;
         if (Object.keys(changes).length) {
+            this.lastInitialEvent = ev;
             this._setValue({
                 operation: 'UPDATE',
                 id: ev.data.dataPointID,
@@ -1050,6 +1072,11 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         this._generatedMetadata();
     },
 
+    destroy: function () {
+        this._super();
+        $(window).off(this.fileupload_id);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -1208,13 +1235,11 @@ var FieldMany2ManyTags = AbstractField.extend({
     tag_template: "FieldMany2ManyTag",
     className: "o_field_many2manytags",
     supportedFieldTypes: ['many2many'],
-    custom_events: {
+    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         field_changed: '_onFieldChanged',
-        move_next: '_onMoveNext',
-    },
+    }),
     events: _.extend({}, AbstractField.prototype.events, {
         'click .o_delete': '_onDeleteTag',
-        'keydown .o_field_many2one input': '_onKeyDown',
     }),
     fieldsToFetch: {
         color: {type: 'integer'},
@@ -1358,42 +1383,35 @@ var FieldMany2ManyTags = AbstractField.extend({
         this._removeTag($(event.target).parent().data('id'));
     },
     /**
+     * Controls the changes made in the internal m2o field.
+     *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onFieldChanged: function (event) {
-        if (event.target === this) {
+    _onFieldChanged: function (ev) {
+        if (ev.target !== this.many2one) {
             return;
         }
-        event.stopPropagation();
-        var new_value = event.data.changes[this.name];
-        if (new_value) {
-            this._addTag(new_value);
+        ev.stopPropagation();
+        var newValue = ev.data.changes[this.name];
+        if (newValue) {
+            this._addTag(newValue);
             this.many2one.reinitialize(false);
         }
     },
     /**
      * @private
-     * @param {KeyboardEvent} event
+     * @param {KeyboardEvent} ev
      */
-    _onKeyDown: function (event) {
-        if ($(event.target).val() === "" && event.which === $.ui.keyCode.BACKSPACE) {
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.BACKSPACE && this.$('input').val() === "") {
             var $badges = this.$('.badge');
             if ($badges.length) {
                 this._removeTag($badges.last().data('id'));
+                return;
             }
         }
-    },
-    /**
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onMoveNext: function (event) {
-        if (event.target === this) {
-            return;
-        }
-        // Intercept event triggered up by the many2one, to prevent triggering it twice
-        event.stopPropagation();
+        this._super.apply(this, arguments);
     },
     /**
      * @private

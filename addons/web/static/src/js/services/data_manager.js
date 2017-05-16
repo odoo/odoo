@@ -312,7 +312,7 @@ return core.Class.extend({
                 var defaultOrder = innerFieldsView.arch.attrs.default_order;
                 if (defaultOrder) {
                     attrs.orderedBy = _.map(defaultOrder.split(','), function (order) {
-                        order = order.split(' ');
+                        order = order.trim().split(' ');
                         return {name: order[0], asc: order[1] !== 'desc'};
                     });
                 }

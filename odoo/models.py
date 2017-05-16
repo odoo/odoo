@@ -2252,7 +2252,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
         cls._setup_done = False
         # a model's base structure depends on its mro (without registry classes)
-        cls._model_cache_key = tuple(c for c in cls.mro() if not getattr(c, 'pool', None))
+        cls._model_cache_key = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
 
     @api.model
     def _setup_base(self):

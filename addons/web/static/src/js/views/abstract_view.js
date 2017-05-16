@@ -109,7 +109,7 @@ var AbstractView = Class.extend({
         var defaultOrder = viewInfo.arch.attrs.default_order;
         if (defaultOrder) {
             this.loadParams.orderedBy = _.map(defaultOrder.split(','), function (order) {
-                order = order.split(' ');
+                order = order.trim().split(' ');
                 return {name: order[0], asc: order[1] !== 'desc'};
             });
         }

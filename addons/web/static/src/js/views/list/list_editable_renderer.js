@@ -18,11 +18,7 @@ var _t = core._t;
 
 ListRenderer.include({
     custom_events: _.extend({}, ListRenderer.prototype.custom_events, {
-        move_down: '_onMoveDown',
-        move_up: '_onMoveUp',
-        move_left: '_onMoveLeft',
-        move_right: '_onMoveRight',
-        move_next_line: '_onMoveNextLine',
+        navigation_move: '_onNavigationMove',
     }),
     events: _.extend({}, ListRenderer.prototype.events, {
         'click tbody td.o_data_cell': '_onCellClick',
@@ -47,8 +43,6 @@ ListRenderer.include({
         // if addTrashIcon is true, there will be a small trash icon at the end
         // of each line, so the user can delete a record.
         this.addTrashIcon = params.addTrashIcon;
-
-        this.editable = this.arch.attrs.editable;
 
         this.currentRow = null;
         this.currentCol = null;
@@ -88,20 +82,6 @@ ListRenderer.include({
             }
         }
         return this._super(recordID);
-    },
-    /**
-     * This method is called by the controller when the user has clicked 'save',
-     * and the model as actually saved the current changes.  We then need to
-     * set the correct values for each cell. The difference with confirmChange
-     * is that the edited line is now in readonly mode, so we can just set its
-     * new value.
-     *
-     * @param {Object} state the new full state for the list
-     * @param {string} savedRecordID the id for the saved record
-     */
-    confirmSave: function (state, savedRecordID) {
-        this.state = state;
-        this.setRowMode(savedRecordID, 'readonly');
     },
     /**
      * Edit a given record in the list
@@ -147,6 +127,7 @@ ListRenderer.include({
      *
      * @param {string} recordID
      * @param {string} mode
+     * @returns {Deferred}
      */
     setRowMode: function (recordID, mode) {
         var self = this;
@@ -159,40 +140,67 @@ ListRenderer.include({
 
         this.currentRow = editMode ? rowIndex : null;
         var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
+        var $tds = $row.children('.o_data_cell');
+        var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
 
+        // When switching to edit mode, force the dimensions of all cells to
+        // their current value so that they won't change if their content
+        // changes, to prevent the view from flickering.
         if (editMode) {
-            // Instantiate column widgets and destroy potential readonly ones
-            var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
-            var $tds = $row.children('.o_data_cell');
-            // Force the size of each cell to its current value so that it
-            // won't change if its content changes, to prevent the view from
-            // flickering
             $tds.each(function () {
                 var $td = $(this);
                 $td.css({width: $td.outerWidth()});
             });
-            _.each(this.columns, function (node, colIndex) {
-                var $td = $tds.eq(colIndex);
-                var $newTd = self._renderBodyCell(record, node, colIndex, {
-                    renderInvisible: true,
-                    renderWidgets: true,
-                });
-
-                // TODO this is ugly...
-                if ($td.hasClass('o_list_button')) {
-                    self._unregisterModifiersElement(node, record, $td.children());
-                }
-
-                $td.empty().append($newTd.contents());
-            });
-            _.each(oldWidgets, this._destroyFieldWidget.bind(this, record));
-        } else {
-            for (var colIndex = 0; colIndex < this.columns.length; colIndex++) {
-                this._setCellValue(rowIndex, colIndex);
-            }
         }
 
-        $row.toggleClass('o_selected_row', editMode); // Toggle here so that style is applied at the end
+        // Prepare options for cell rendering (this depends on the mode)
+        var options = {
+            renderInvisible: editMode,
+            renderWidgets: editMode,
+        };
+        if (!editMode) {
+            // Force 'readonly' mode for widgets in readonly rows as
+            // otherwise they default to the view mode which is 'edit' for
+            // an editable list view
+            options.mode = 'readonly';
+        }
+
+        // Switch each cell to the new mode; note: the '_renderBodyCell'
+        // function might fill the 'this.defs' variables with multiple deferred
+        // so we create the array and delete it after the rendering.
+        var defs = [];
+        this.defs = defs;
+        _.each(this.columns, function (node, colIndex) {
+            var $td = $tds.eq(colIndex);
+            var $newTd = self._renderBodyCell(record, node, colIndex, options);
+
+            // Widgets are unregistered of modifiers data when they are
+            // destroyed. This is not the case for simple buttons so we have to
+            // do it here.
+            if ($td.hasClass('o_list_button')) {
+                self._unregisterModifiersElement(node, record, $td.children());
+            }
+
+            // For edit mode we only replace the content of the cell with its
+            // new content (invisible fields, editable fields, ...).
+            // For readonly mode, we replace the whole cell so that the
+            // dimensions of the cell are not forced anymore.
+            if (editMode) {
+                $td.empty().append($newTd.contents());
+            } else {
+                self._unregisterModifiersElement(node, record, $td);
+                $td.replaceWith($newTd);
+            }
+        });
+        delete this.defs;
+
+        // Destroy old field widgets
+        _.each(oldWidgets, this._destroyFieldWidget.bind(this, record));
+
+        // Toggle selected class here so that style is applied at the end
+        $row.toggleClass('o_selected_row', editMode);
+
+        return $.when.apply($, defs);
     },
 
     //--------------------------------------------------------------------------
@@ -214,7 +222,30 @@ ListRenderer.include({
         return n;
     },
     /**
-     * Move the cursor one the beginning of the next line, if possible.
+     * Returns true iff the list is editable, i.e. if it isn't grouped and if
+     * the editable attribute is set on the root node of its arch.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isEditable: function () {
+        return this.mode === 'edit' && !this.state.groupedBy.length && this.arch.attrs.editable;
+    },
+    /**
+     * Move the cursor on the end of the previous line, if possible.
+     * If there is no previous line, then we create a new record.
+     *
+     * @private
+     */
+    _moveToPreviousLine: function () {
+        if (this.currentRow > 0) {
+            this._selectCell(this.currentRow - 1, this.columns.length - 1);
+        } else {
+            this._unselectRow().then(this.trigger_up.bind(this, 'add_record'));
+        }
+    },
+    /**
+     * Move the cursor on the beginning of the next line, if possible.
      * If there is no next line, then we create a new record.
      *
      * @private
@@ -223,9 +254,7 @@ ListRenderer.include({
         if (this.currentRow < this.state.data.length - 1) {
             this._selectCell(this.currentRow + 1, 0);
         } else {
-            this._unselectRow().then(
-                this.trigger_up.bind(this, 'add_record')
-            );
+            this._unselectRow().then(this.trigger_up.bind(this, 'add_record'));
         }
     },
     /**
@@ -313,24 +342,31 @@ ListRenderer.include({
      *
      * @param {integer} rowIndex
      * @param {integer} colIndex
-     * @param {boolean} [wrap=true] if true and no widget could be selected from
-     *   the colIndex to the last column, then we wrap around and try to select
-     *   a widget starting from the beginning
+     * @param {Object} [options]
+     * @param {Event} [options.event] original target of the event which
+     * @param {boolean} [options.wrap=true] if true and no widget could be
+     *   triggered the cell selection
+     *   selected from the colIndex to the last column, then we wrap around and
+     *   try to select a widget starting from the beginning
      * @return {Deferred} fails if no cell could be selected
      */
-    _selectCell: function (rowIndex, colIndex, wrap) {
+    _selectCell: function (rowIndex, colIndex, options) {
         // Do nothing if the user tries to select current cell
         if (rowIndex === this.currentRow && colIndex === this.currentCol) {
             return $.when();
         }
-        wrap = wrap === undefined ? true : wrap;
+        var wrap = (!options || options.wrap === undefined) ? true : options.wrap;
 
         // Select the row then activate the widget in the correct cell
         var self = this;
         return this._selectRow(rowIndex).then(function () {
             var record = self.state.data[rowIndex];
             var correctedIndex = colIndex - getNbButtonBefore(colIndex);
-            var fieldIndex = self._activateFieldWidget(record, correctedIndex, {inc: 1, wrap: wrap});
+            var fieldIndex = self._activateFieldWidget(record, correctedIndex, {
+                inc: 1,
+                wrap: wrap,
+                event: options && options.event,
+            });
 
             if (fieldIndex < 0) {
                 return $.Deferred().reject();
@@ -353,6 +389,7 @@ ListRenderer.include({
      * Activates the row at the given row index.
      *
      * @param {integer} rowIndex
+     * @returns {Deferred}
      */
     _selectRow: function (rowIndex) {
         // Do nothing if already selected
@@ -365,39 +402,13 @@ ListRenderer.include({
         return this._unselectRow().then(function () {
             // Notify the controller we want to make a record editable
             var record = self.state.data[rowIndex];
+            var def = $.Deferred();
             self.trigger_up('edit_line', {
                 recordID: record.id,
+                onSuccess: def.resolve.bind(def),
             });
+            return def;
         });
-    },
-    /**
-     * Set the value of a cell.  This method can be called when the value of a
-     * cell was modified, for example after an onchange.
-     *
-     * @param {integer} rowIndex
-     * @param {integer} colIndex
-     */
-    _setCellValue: function (rowIndex, colIndex) {
-        var record = this.state.data[rowIndex];
-        var node = this.columns[colIndex];
-
-        var $oldTd = this.$('.o_data_row:nth(' + rowIndex + ') > .o_data_cell:nth(' + colIndex + ')');
-        var $newTd = this._renderBodyCell(record, node, colIndex, {mode: 'readonly'});
-        this._unregisterModifiersElement(node, record, $oldTd);
-        $oldTd.replaceWith($newTd);
-
-        // Destroy old cell field widget if any
-        // TODO this is very inefficient O(n^3) instead of O(n) on row update
-        // because this method is called for each cell (O(n)), each time we have
-        // to find the associated record widget (O(n)) and once found, the
-        // search is performed again by the _destroyFieldWidget function
-        if (node.tag === 'field') {
-            var recordWidgets = this.allFieldWidgets[record.id];
-            var w = _.findWhere(recordWidgets, {name: node.attrs.name}); //
-            if (w) {
-                this._destroyFieldWidget(record, w);
-            }
-        }
     },
     /**
      * This method is called whenever we click/move outside of a row that was
@@ -471,19 +482,19 @@ ListRenderer.include({
     _onCellClick: function (event) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (this.mode === 'readonly' || !this.editable || $(event.target).prop('special_click')) {
+        if (!this._isEditable() || $(event.target).prop('special_click')) {
             return;
         }
         var $td = $(event.currentTarget);
         var $tr = $td.parent();
         var rowIndex = this.$('.o_data_row').index($tr);
         var colIndex = $tr.find('.o_data_cell').index($td);
-        this._selectCell(rowIndex, colIndex);
+        this._selectCell(rowIndex, colIndex, {event: event});
     },
     /**
      * We need to manually unselect row, because noone else would do it
      */
-    _onEmptyRowClick: function (event) {
+    _onEmptyRowClick: function () {
         this._unselectRow();
     },
     /**
@@ -495,78 +506,68 @@ ListRenderer.include({
         this._unselectRow();
     },
     /**
-     * Move the cursor on the cell just down the current cell.
-     */
-    _onMoveDown: function () {
-        if (this.currentRow < this.state.data.length - 1) {
-            this._selectCell(this.currentRow + 1, this.currentCol);
-        }
-    },
-    /**
-     * Move the cursor on the left, if possible
-     */
-    _onMoveLeft: function () {
-        if (this.currentCol > 0) {
-            this._selectCell(this.currentRow, this.currentCol - 1);
-        }
-    },
-    /**
-     * Move the cursor on the next available cell, so either the next available
-     * cell on the right, or the first on the next line.  This method is called
-     * when the user press the TAB key.
+     * Handles the keyboard navigation according to events triggered by field
+     * widgets.
+     * - up/down: move to the cell above/below if any, or the first activable
+     *          one on the row above/below if any on the right of this cell
+     *          above/below (if none on the right, wrap to the beginning of the
+     *          line).
+     * - left/right: move to the first activable cell on the left/right if any
+     *          (wrap to the end/beginning of the line if necessary).
+     * - previous: move to the first activable cell on the left if any, if not
+     *          move to the rightmost activable cell on the row above.
+     * - next: move to the first activable cell on the right if any, if not move
+     *          to the leftmost activable cell on the row below.
+     * - next_line: move to leftmost activable cell on the row below.
      *
-     * @param {OdooEvent} ev
-     */
-    _onMoveNext: function (ev) {
-        // we need to stop the event, to prevent interference with some other
-        // component up there, such as a form renderer.
-        ev.stopPropagation();
-        if (this.currentCol + 1 < this.columns.length) {
-            this._selectCell(this.currentRow, this.currentCol + 1, false)
-                .fail(this._moveToNextLine.bind(this));
-        } else {
-            this._moveToNextLine();
-        }
-    },
-    /**
+     * Note: moving to a line below if on the last line or moving to a line
+     * above if on the first line automatically creates a new line.
+     *
      * @private
-     * @param {OdooEvent} event
-     */
-    _onMoveNextLine: function (event) {
-        event.stopPropagation();
-        this._moveToNextLine();
-    },
-    /**
-     * Move the cursor on the previous available cell, so either the previous
-     * available cell on the left, or the last on the previous line. This method
-     * is called when the user press the TAB key while holding the shift key.
-     *
      * @param {OdooEvent} ev
      */
-    _onMovePrevious: function (ev) {
-        // we need to stop the event, to prevent interference with some other
-        // component up there, such as a form renderer.
-        ev.stopPropagation();
-        if (this.currentCol > 0) {
-            this._selectCell(this.currentRow, this.currentCol - 1);
-        } else if (this.currentRow > 0) {
-            this._selectCell(this.currentRow - 1, this.columns.length - 1);
-        }
-    },
-    /**
-     * Move the cursor one cell right, if possible
-     */
-    _onMoveRight: function () {
-        if (this.currentCol + 1 < this.columns.length) {
-            this._selectCell(this.currentRow, this.currentCol + 1);
-        }
-    },
-    /**
-     * Move the cursor one line up
-     */
-    _onMoveUp: function () {
-        if (this.currentRow > 0) {
-            this._selectCell(this.currentRow - 1, this.currentCol);
+    _onNavigationMove: function (ev) {
+        ev.stopPropagation(); // stop the event, the action is done by this renderer
+        switch (ev.data.direction) {
+            case 'up':
+                if (this.currentRow > 0) {
+                    this._selectCell(this.currentRow - 1, this.currentCol);
+                }
+                break;
+            case 'right':
+                if (this.currentCol + 1 < this.columns.length) {
+                    this._selectCell(this.currentRow, this.currentCol + 1);
+                }
+                break;
+            case 'down':
+                if (this.currentRow < this.state.data.length - 1) {
+                    this._selectCell(this.currentRow + 1, this.currentCol);
+                }
+                break;
+            case 'left':
+                if (this.currentCol > 0) {
+                    this._selectCell(this.currentRow, this.currentCol - 1);
+                }
+                break;
+            case 'previous':
+                if (this.currentCol > 0) {
+                    this._selectCell(this.currentRow, this.currentCol - 1, {wrap: false})
+                        .fail(this._moveToPreviousLine.bind(this));
+                } else {
+                    this._moveToPreviousLine();
+                }
+                break;
+            case 'next':
+                if (this.currentCol + 1 < this.columns.length) {
+                    this._selectCell(this.currentRow, this.currentCol + 1, {wrap: false})
+                        .fail(this._moveToNextLine.bind(this));
+                } else {
+                    this._moveToNextLine();
+                }
+                break;
+            case 'next_line':
+                this._moveToNextLine();
+                break;
         }
     },
     /**
@@ -577,7 +578,7 @@ ListRenderer.include({
      * @private
      */
     _onRowClicked: function () {
-        if (this.mode === 'readonly' || !this.editable) {
+        if (!this._isEditable()) {
             this._super.apply(this, arguments);
         }
     },

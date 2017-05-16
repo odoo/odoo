@@ -438,23 +438,21 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <group name="employee_data" position="inside">
-                <group>
-                    <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]" options="{'always_reload': True}"/>
-                </group>
-            </group>
             <xpath expr="//field[@name='department_id']" position="after">
-                <label for="alias_name" string="Specific Email Address" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
+                <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]" options="{'always_reload': True}"/>
+                <label for="alias_name" string="Email alias" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                 <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                     <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
                     <div class="oe_edit_only" name="edit_alias">
                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                     </div>
                 </div>
-            </xpath>
-            <xpath expr="//field[@name='department_id']" position="after">
                 <field name="user_id"/>
-                <field name="hr_responsible_id"/>
+            </xpath>
+            <xpath expr="//group[@name='recruitment']" position="after">
+                <group string="Offer" name="offer">
+                    <field name="hr_responsible_id"/>
+                </group>
             </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"

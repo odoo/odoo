@@ -11,12 +11,12 @@ from odoo.fields import Datetime
 class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
 
-    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 fee (monthly)")
+    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee")
     total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost',
-        string="Total Depreciated Cost", help="This includes all the depreciated costs and the CO2 fee")
+        string="Total Cost (Depreciated)", help="This includes all the depreciated costs and the CO2 fee")
     total_cost = fields.Float(compute='_compute_total_cost', string="Total Cost", help="This include all the costs and the CO2 fee")
     fuel_type = fields.Selection(required=True, default='diesel')
-    atn = fields.Float(compute='_compute_car_atn')
+    atn = fields.Float(compute='_compute_car_atn', string="ATN")
     acquisition_date = fields.Date(required=True)
 
     @api.depends('co2_fee', 'log_contracts', 'log_contracts.state', 'log_contracts.recurring_cost_amount_depreciated')
@@ -57,7 +57,7 @@ class FleetVehicle(models.Model):
         for car in self:
             car.atn = car._get_car_atn(car.acquisition_date, car.car_value, car.fuel_type, car.co2)
 
-    @api.depends('model_id', 'license_plate', 'total_depreciated_cost', 'acquisition_date')
+    @api.depends('model_id', 'license_plate', 'log_contracts', 'total_depreciated_cost', 'acquisition_date')
     def _compute_vehicle_name(self):
         super(FleetVehicle, self)._compute_vehicle_name()
         for vehicle in self:
@@ -116,14 +116,15 @@ class FleetVehicleLogContract(models.Model):
 class FleetVehicleModel(models.Model):
     _inherit = 'fleet.vehicle.model'
 
-    default_recurring_cost_amount_depreciated = fields.Float(string="Recurring Cost (Depreciated)",
+    default_recurring_cost_amount_depreciated = fields.Float(string="Cost (Depreciated)",
         help="Default recurring cost amount that should be applied to a new car from this model")
     default_co2 = fields.Float(string="CO2 emissions")
     default_fuel_type = fields.Selection([('gasoline', 'Gasoline'), ('diesel', 'Diesel'), ('electric', 'Electric'), ('hybrid', 'Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle')
     default_car_value = fields.Float(string="Catalog Value (VAT Incl.)")
     can_be_requested = fields.Boolean(string="Can be requested", help="Can be requested on a contract as a new car")
     default_atn = fields.Float(compute='_compute_atn', string="ATN")
-    default_total_depreciated_cost = fields.Float(compute='_compute_default_total_depreciated_cost')
+    default_total_depreciated_cost = fields.Float(compute='_compute_default_total_depreciated_cost', string="Total Cost (Depreciated)")
+    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 fee")
 
     @api.depends('default_car_value', 'default_co2', 'default_fuel_type')
     def _compute_atn(self):
@@ -131,10 +132,10 @@ class FleetVehicleModel(models.Model):
         for model in self:
             model.default_atn = self.env['fleet.vehicle']._get_car_atn(now, model.default_car_value, model.default_fuel_type, model.default_co2)
 
-    @api.depends('default_co2', 'default_recurring_cost_amount_depreciated')
+    @api.depends('co2_fee', 'default_recurring_cost_amount_depreciated')
     def _compute_default_total_depreciated_cost(self):
         for model in self:
-            model.default_total_depreciated_cost = model.default_co2 + model.default_recurring_cost_amount_depreciated
+            model.default_total_depreciated_cost = model.co2_fee + model.default_recurring_cost_amount_depreciated
 
     @api.multi
     @api.depends('name', 'brand_id')
@@ -148,3 +149,8 @@ class FleetVehicleModel(models.Model):
             else:
                 new_res.append(res_item)
         return new_res
+
+    @api.depends('default_co2')
+    def _compute_co2_fee(self):
+        for model in self:
+            model.co2_fee = self.env['fleet.vehicle']._get_co2_fee(model.default_co2)

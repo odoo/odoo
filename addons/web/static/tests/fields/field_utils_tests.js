@@ -23,13 +23,13 @@ QUnit.test('format integer', function(assert) {
     assert.strictEqual(fieldUtils.format.integer(106500), '106,50,0');
 
     assert.strictEqual(fieldUtils.format.integer(0), "0");
-    assert.strictEqual(fieldUtils.format.integer(undefined), "");
+    assert.strictEqual(fieldUtils.format.integer(false), "");
 
     core._t.database.parameters.grouping = originalGrouping;
 });
 
 QUnit.test('format float', function(assert) {
-    assert.expect(4);
+    assert.expect(5);
 
     var originalParameters = $.extend(true, {}, core._t.database.parameters);
 
@@ -48,6 +48,7 @@ QUnit.test('format float', function(assert) {
         thousands_sep: '.'
     });
     assert.strictEqual(fieldUtils.format.float(6000), '6.000,00');
+    assert.strictEqual(fieldUtils.format.float(false), '');
 
     core._t.database.parameters = originalParameters;
 });
@@ -68,6 +69,12 @@ QUnit.test("format_many2one", function (assert) {
     assert.strictEqual('A M2O value', fieldUtils.format.many2one({
         data: { display_name: 'A M2O value' },
     }));
+});
+
+QUnit.test('format monetary', function(assert) {
+    assert.expect(1);
+
+    assert.strictEqual(fieldUtils.format.monetary(false), '');
 });
 
 QUnit.test('format char', function(assert) {

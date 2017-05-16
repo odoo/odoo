@@ -123,7 +123,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldBoolean');
 
     QUnit.test('boolean field in form view', function (assert) {
-        assert.expect(11);
+        assert.expect(12);
 
         var form = createView({
             View: FormView,
@@ -183,6 +183,12 @@ QUnit.module('basic_fields', {
             .trigger({type: "keyup", which: $.ui.keyCode.ENTER});
         assert.strictEqual(form.$('.o_field_boolean input:checked').length, 1,
             "checkbox should now be checked");
+        // blindly press enter again, it should uncheck the checkbox
+        $(document.activeElement).trigger({type: "keydown", which: $.ui.keyCode.ENTER});
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 0,
+            "checkbox should not be checked");
+        // blindly press enter again, it should check the checkbox back
+        $(document.activeElement).trigger({type: "keydown", which: $.ui.keyCode.ENTER});
 
         // save
         form.$buttons.find('.o_form_button_save').click();
@@ -237,10 +243,10 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 3,
             "should still have only 3 checked input");
 
-        // Re-Edit the line to check the checkbox back
+        // Re-Edit the line to check the checkbox back but this time click on
+        // the checkbox directly in readonly mode !
         $cell = list.$('tr.o_data_row:has(.o_checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
-        $cell.click();
-        $cell.find('.o_checkbox input:not(:checked)').click();
+        $cell.find('.o_checkbox span').click();
 
         // save
         list.$buttons.find('.o_form_button_save').click();
@@ -415,9 +421,9 @@ QUnit.module('basic_fields', {
                   '</tree>',
         });
 
-        var zeroValues = list.$('td').filter(function () {return $(this).text() === '0.000';});
-        assert.strictEqual(zeroValues.length, 2,
-            'Unset float values should be rendered as zeros.');
+        var zeroValues = list.$('td.o_data_cell').filter(function () {return $(this).text() === '';});
+        assert.strictEqual(zeroValues.length, 1,
+            'Unset float values should be rendered as empty strings.');
 
         // switch to edit mode
         var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector)').first();
@@ -441,8 +447,8 @@ QUnit.module('basic_fields', {
     QUnit.test('do not trigger a field_changed if they have not changed', function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[1].qux = undefined;
-        this.data.partner.records[1].int_field = undefined;
+        this.data.partner.records[1].qux = false;
+        this.data.partner.records[1].int_field = false;
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -656,7 +662,7 @@ QUnit.module('basic_fields', {
 
         this.data.partner.fields.foo.translate = true;
 
-        var multi_lang = _t.database.multi_lang;
+        var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
 
         var form = createView({
@@ -701,7 +707,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual($button.length, 0, "should not have a translate button in create mode");
         form.destroy();
 
-        _t.database.multi_lang = multi_lang;
+        _t.database.multi_lang = multiLang;
     });
 
 
@@ -869,7 +875,7 @@ QUnit.module('basic_fields', {
 
         this.data.partner.fields.txt.translate = true;
 
-        var multi_lang = _t.database.multi_lang;
+        var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
 
         var form = createView({
@@ -914,7 +920,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual($button.length, 0, "should not have a translate button in create mode");
         form.destroy();
 
-        _t.database.multi_lang = multi_lang;
+        _t.database.multi_lang = multiLang;
     });
 
     QUnit.module('FieldBinary');
@@ -1141,12 +1147,12 @@ QUnit.module('basic_fields', {
                 "graph of first record should be a barchart");
             assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_graph_linechart').length, 1,
                 "graph of second record should be a linechart");
-            
+
             var evt = document.createEvent("MouseEvents"); //taken ref from https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
             evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
-            $('.discreteBar')[0].dispatchEvent(evt)
+            $('.discreteBar')[0].dispatchEvent(evt);
             var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText;
-            assert.equal(tooltip,graph_key, "graph tooltip should be generated ")
+            assert.equal(tooltip,graph_key, "graph tooltip should be generated ");
             $('.nvtooltip').remove();
 
             // force a re-rendering of the first record (to check if the
@@ -1251,7 +1257,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('date field in form view', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         var form = createView({
             View: FormView,
@@ -1284,6 +1290,7 @@ QUnit.module('basic_fields', {
         // click on the input and select another value
         form.$('.o_datepicker_input').click();
         assert.ok(form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        assert.strictEqual(form.$('.day.active').data('day'), '02/03/2017', 'datepicker should be highlight February 3');
         form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
         form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
@@ -1386,7 +1393,6 @@ QUnit.module('basic_fields', {
             'the selected date should be displayed after saving');
         form.destroy();
     });
-
 
     QUnit.module('FieldDatetime');
 
@@ -1659,9 +1665,9 @@ QUnit.module('basic_fields', {
         assert.strictEqual(euroValues.length, 1,
             'One one line has euro as a currency.');
 
-        var zeroValues = list.$('td').filter(function () {return _.str.include($(this).text(), '0.00');});
-        assert.strictEqual(zeroValues.length, 2,
-            'Unset float values should be rendered as zeros.');
+        var zeroValues = list.$('td.o_data_cell').filter(function () {return $(this).text() === '';});
+        assert.strictEqual(zeroValues.length, 1,
+            'Unset float values should be rendered as empty strings.');
 
         // switch to edit mode
         var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector):contains($)');
@@ -1732,6 +1738,67 @@ QUnit.module('basic_fields', {
         $dropdown.find('li:not(.o_m2o_dropdown_option):last').mouseenter().click();
         assert.strictEqual(form.$('.o_field_monetary > span').html(), "€",
             "After currency change, the monetary field currency should have been updated");
+
+        form.destroy();
+    });
+
+    QUnit.test('should keep the focus when being edited in x2many lists', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.currency_id.default = 1;
+        this.data.partner.fields.m2m = {
+            string: "m2m", type: "many2many", relation: 'partner', default: [[6, false, [2]]],
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p"/>' +
+                        '<field name="m2m"/>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,list': '<tree editable="bottom">' +
+                    '<field name="qux" widget="monetary"/>' +
+                    '<field name="currency_id" invisible="1"/>' +
+                '</tree>',
+            },
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        // test the monetary field inside the one2many
+        var $o2m = form.$('.o_field_widget[name=p]');
+        $o2m.find('.o_field_x2many_list_row_add a').click();
+        $o2m.find('.o_field_widget input').val("22").trigger('input');
+
+        assert.strictEqual($o2m.find('.o_field_widget input').get(0), document.activeElement,
+            "the focus should still be on the input");
+        assert.strictEqual($o2m.find('.o_field_widget input').val(), "22",
+            "the value should not have been formatted yet");
+
+        form.$el.click(); // focusout the input
+
+        assert.strictEqual($o2m.find('.o_field_widget[name=qux]').html(), "$&nbsp;22.00",
+            "the value should have been formatted after losing the focus");
+
+        // test the monetary field inside the many2many
+        var $m2m = form.$('.o_field_widget[name=m2m]');
+        $m2m.find('.o_data_row td:first').click();
+        $m2m.find('.o_field_widget input').val("22").trigger('input');
+
+        assert.strictEqual($m2m.find('.o_field_widget input').get(0), document.activeElement,
+            "the focus should still be on the input");
+        assert.strictEqual($m2m.find('.o_field_widget input').val(), "22",
+            "the value should not have been formatted yet");
+
+        form.$el.click(); // focusout the input
+
+        assert.strictEqual($m2m.find('.o_field_widget[name=qux]').html(), "22.00&nbsp;€",
+            "the value should have been formatted after losing the focus");
 
         form.destroy();
     });

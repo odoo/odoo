@@ -65,15 +65,18 @@ return Widget.extend({
     setLocalState: function (localState) {
     },
     /**
-     * update the state of the view.  It always retrigger a full rerender.
+     * Updates the state of the view. It retriggers a full rerender, unless told
+     * otherwise (for optimization for example).
      *
      * @param {any} state
      * @param {Object} params
+     * @param {boolean} [params.noRender=false]
+     *        if true, the method only updates the state without rerendering
      * @returns {Deferred}
      */
     updateState: function (state, params) {
         this.state = state;
-        return this._render();
+        return params.noRender ? $.when() : this._render();
     },
 
     //--------------------------------------------------------------------------

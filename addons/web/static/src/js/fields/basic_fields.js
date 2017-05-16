@@ -56,14 +56,7 @@ var TranslatableFieldMixin = {
      * @private
      */
     _onTranslate: function () {
-        this._rpc({
-            route: '/web/dataset/call_button',
-            params: {
-                model: 'ir.translation',
-                method: 'translate_fields',
-                args: [this.model, this.res_id, this.name, this.record.getContext()],
-            }
-        }).then(this.do_action.bind(this));
+        this.trigger_up('translate', {fieldName: this.name, id: this.dataPointID});
     },
 };
 
@@ -93,9 +86,6 @@ var DebouncedField = AbstractField.extend({
         // _debouncedStarted is used to detect that the user interacted at least
         // once with the widget, so that we can prevent it from triggering a
         // field_changed in commitChanges if the user didn't change anything
-        // (this is required as sometimes it is hard to detect that an unset
-        // value is still unset, e.g. if a numerical field contains the value 0,
-        // is it because it is still unset or because the user set it to 0?
         this._debouncedStarted = false;
         if (this.mode === 'edit') {
             if (this.DEBOUNCE) {
@@ -229,12 +219,7 @@ var InputField = DebouncedField.extend({
             type: 'text',
             placeholder: this.attrs.placeholder || "",
         });
-        // Save cursor position to restore it after updating value
-        var selectionStart = this.$input[0].selectionStart;
-        var selectionEnd = this.$input[0].selectionEnd;
         this.$input.val(this._formatValue(this.value));
-        this.$input[0].selectionStart = selectionStart;
-        this.$input[0].selectionEnd = selectionEnd;
         return this.$input;
     },
     /**
@@ -282,40 +267,20 @@ var InputField = DebouncedField.extend({
         this._doDebouncedAction();
     },
     /**
-     * Implement keyboard movements.  Mostly useful for its environment, such
-     * as a list view.
+     * Stops the left/right navigation move event if the cursor is not at the
+     * start/end of the input element.
      *
-     * @override
      * @private
-     * @param {any} event
+     * @param {OdooEvent} ev
      */
-    _onKeydown: function (event) {
-        var input = this.$input[0];
-        var is_not_selecting;
-        switch (event.which) {
-            case $.ui.keyCode.DOWN:
-                this.trigger_up('move_down');
-                break;
-            case $.ui.keyCode.UP:
-                this.trigger_up('move_up');
-                break;
-            case $.ui.keyCode.LEFT:
-                is_not_selecting = input.selectionEnd === input.selectionStart;
-                if (is_not_selecting && input.selectionStart === 0) {
-                    this.trigger_up('move_left');
-                }
-                break;
-            case $.ui.keyCode.RIGHT:
-                is_not_selecting = input.selectionEnd === input.selectionStart;
-                if (is_not_selecting && input.selectionEnd === input.value.length) {
-                    this.trigger_up('move_right');
-                }
-                break;
-            case $.ui.keyCode.ENTER:
-                this.trigger_up('move_next_line');
-                break;
-        }
+    _onNavigationMove: function (ev) {
         this._super.apply(this, arguments);
+        var input = this.$input[0];
+        var selecting = (input.selectionEnd !== input.selectionStart);
+        if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
+         || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
+            ev.stopPropagation();
+        }
     },
 });
 
@@ -380,7 +345,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _doDebouncedAction: function () {
-        this.datewidget.change_datetime();
+        this.datewidget.changeDatetime();
     },
 
     /**
@@ -389,7 +354,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _getValue: function () {
-        return this.datewidget.get_value();
+        return this.datewidget.getValue();
     },
     /**
      * @override
@@ -418,7 +383,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _renderEdit: function () {
-        this.datewidget.set_value(this.value);
+        this.datewidget.setValue(this.value);
         this.$input = this.datewidget.$input;
     },
 
@@ -447,7 +412,7 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _getValue: function () {
-        var value = this.datewidget.get_value();
+        var value = this.datewidget.getValue();
         return value && value.add(-this.getSession().tzOffset, 'minutes');
     },
 
@@ -470,7 +435,7 @@ var FieldDateTime = FieldDate.extend({
      */
     _renderEdit: function () {
         var value = this.value && this.value.clone().add(this.getSession().tzOffset, 'minutes');
-        this.datewidget.set_value(value);
+        this.datewidget.setValue(value);
         this.$input = this.datewidget.$input;
     },
 
@@ -610,6 +575,23 @@ var FieldBoolean = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Toggle the checkbox if it is activated due to a click on itself.
+     *
+     * @override
+     */
+    activate: function (options) {
+        var activated = this._super.apply(this, arguments);
+        // The formatValue of boolean fields renders HTML elements similar to
+        // the one rendered by the widget itself. Even though the event might
+        // have been fired on the non-widget version of this field, we can still
+        // test the presence of its o_checkbox class.
+        if (activated && options && options.event && $(options.event.target).parents('.o_checkbox').length) {
+            this._setValue(!this.value);  // Toggle the checkbox
+        }
+        return activated;
+    },
+
+    /**
      * @override
      * @returns {jQuery} the focusable checkbox input
      */
@@ -623,6 +605,20 @@ var FieldBoolean = AbstractField.extend({
      */
     isSet: function () {
         return true;
+    },
+    /**
+     * When the checkbox is rerendered, we need to check if it was the actual
+     * origin of the reset. If it is, we need to activate it back so it looks
+     * like it was not rerendered but is still the same input.
+     *
+     * @override
+     */
+    reset: function (record, event) {
+        var rendered = this._super.apply(this, arguments);
+        if (event && event.target.name === this.name) {
+            this.activate();
+        }
+        return rendered;
     },
 
     //--------------------------------------------------------------------------
@@ -665,28 +661,16 @@ var FieldBoolean = AbstractField.extend({
      *
      * @override
      * @private
-     * @param {KeyEvent} event
+     * @param {KeyEvent} ev
      */
-    _onKeydown: function (event) {
-        this._super.apply(this, arguments);
-        switch (event.which) {
-            case $.ui.keyCode.DOWN:
-                this.trigger_up('move_down');
-                break;
-            case $.ui.keyCode.UP:
-                this.trigger_up('move_up');
-                break;
-            case $.ui.keyCode.LEFT:
-                this.trigger_up('move_left');
-                break;
-            case $.ui.keyCode.RIGHT:
-                this.trigger_up('move_right');
-                break;
+    _onKeydown: function (ev) {
+        switch (ev.which) {
             case $.ui.keyCode.ENTER:
                 this.$input.prop('checked', !this.value);
                 this._setValue(!this.value);
-                break;
+                return;
         }
+        this._super.apply(this, arguments);
     },
 });
 
@@ -1774,7 +1758,8 @@ var JournalDashboardGraph = AbstractField.extend({
         this.data = JSON.parse(this.value);
     },
     start: function () {
-        nv.utils.windowResize(this._onResize.bind(this));
+        this._onResize = this._onResize.bind(this);
+        nv.utils.windowResize(this._onResize);
         return this._super.apply(this, arguments);
     },
     destroy: function () {
@@ -1909,10 +1894,10 @@ var FieldDomain = AbstractField.extend({
         "click .o_domain_show_selection_button": "_onShowSelectionButtonClick",
         "click .o_field_domain_dialog_button": "_onDialogEditButtonClick",
     }),
-    custom_events: {
+    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         "domain_changed": "_onDomainSelectorValueChange",
         "domain_selected": "_onDomainSelectorDialogValueChange",
-    },
+    }),
     /**
      * @constructor
      * @override init from AbstractField

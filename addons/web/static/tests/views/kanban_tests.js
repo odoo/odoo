@@ -586,7 +586,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create a column in grouped on m2o', function (assert) {
-        assert.expect(12);
+        assert.expect(13);
 
         var nbRPCs = 0;
         var kanban = createView({
@@ -606,7 +606,7 @@ QUnit.module('Views', {
                     assert.ok(true, "should call name_create");
                 }
                 return this._super(route, args);
-            }
+            },
         });
         assert.strictEqual(kanban.$('.o_column_quick_create').length, 1, "should have a quick create column");
         assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
@@ -645,11 +645,47 @@ QUnit.module('Views', {
         assert.ok(!kanban.$('.o_kanban_group:last').hasClass('o_column_folded'),
             'the created column should not be folded');
         assert.strictEqual(nbRPCs, 0, 'no rpc should have been done when folding/unfolding');
+
+        // quick create a record
+        kanban.$buttons.find('.o-kanban-button-new').click(); // Click on 'Create'
+        assert.ok(kanban.$('.o_kanban_group:first() > div:nth(1)').hasClass('o_kanban_quick_create'),
+            "clicking on create should open the quick_create in the first column");
         kanban.destroy();
     });
 
+    QUnit.test('quick create record & column in grouped on m2o', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+        kanban.$('.o_kanban_group:first .o_kanban_quick_add').click();
+        var $quickCreate = kanban.$('.o_kanban_quick_create');
+        $quickCreate.find('input').val('new partner');
+        $quickCreate.find('button.o_kanban_add').click();
+        assert.strictEqual(this.data.partner.records.length, 5,
+            "should have created a partner");
+
+        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').val('new column');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column)').length, 1,
+            "the last column should be the newly created one");
+        kanban.destroy();
+    }),
+
     QUnit.test('delete a column in grouped on m2o', function (assert) {
-        assert.expect(25);
+        assert.expect(26);
 
         var kanban = createView({
             View: KanbanView,
@@ -719,8 +755,49 @@ QUnit.module('Views', {
         assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive').length,
                         "should not be able to restore the records");
         assert.verifySteps(['read_group', 'unlink', 'read_group']);
+        assert.strictEqual(kanban.renderer.widgets.length, 2,
+            "the old widgets should have been correctly deleted");
         kanban.destroy();
-    });
+    }),
+
+    QUnit.test('create a column, delete it and create another one', function (assert) {
+        assert.expect(5);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have two columns");
+
+        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').val('new column 1');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have two columns");
+
+        kanban.$('.o_kanban_group:last .o_column_delete').click();
+        $('.modal .modal-footer .btn-primary').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have twos columns");
+
+        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').val('new column 2');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have three columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column 2)').length, 1,
+            "the last column should be the newly created one");
+        kanban.destroy();
+    }),
 
     QUnit.test('edit a column in grouped on m2o', function (assert) {
         assert.expect(12);
@@ -1375,6 +1452,33 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('update buttons after column creation', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records = [];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.ok(kanban.$buttons.find('.o-kanban-button-new').hasClass('btn-default'),
+            "Create button shouldn't be highlighted");
+
+        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').val('new column');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        assert.ok(kanban.$buttons.find('.o-kanban-button-new').hasClass('btn-primary'),
+            "Create button should now be highlighted");
+        kanban.destroy();
+    });
 });
 
 });

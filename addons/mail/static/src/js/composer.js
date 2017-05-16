@@ -347,7 +347,6 @@ var MentionManager = Widget.extend({
 
 var BasicComposer = Widget.extend(chat_mixin, {
     template: "mail.ChatComposer",
-
     events: {
         "keydown .o_composer_input textarea": "on_keydown",
         "keyup .o_composer_input": "on_keyup",
@@ -356,6 +355,8 @@ var BasicComposer = Widget.extend(chat_mixin, {
         "click .o_composer_button_add_attachment": "on_click_add_attachment",
         "click .o_attachment_delete": "on_attachment_delete",
     },
+    // RPCs done to fetch the mention suggestions are throttled with the following value
+    MENTION_THROTTLE: 200,
 
     init: function (parent, options) {
         this._super.apply(this, arguments);
@@ -670,7 +671,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
                 .then(function (results) {
                     def.resolve(results);
                 });
-        }, 200);
+        }, this.MENTION_THROTTLE);
         return def;
     },
     mention_fetch_channels: function (search) {
@@ -704,7 +705,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
             });
             if (!suggestions.length && !self.options.mention_partners_restricted) {
                 // no result found among prefetched partners, fetch other suggestions
-                suggestions = mention_fetch_throttled('res.partner', 'get_mention_suggestions', {
+                suggestions = self.mention_fetch_throttled('res.partner', 'get_mention_suggestions', {
                     limit: limit,
                     search: search,
                 });

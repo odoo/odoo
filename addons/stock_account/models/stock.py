@@ -179,6 +179,12 @@ class StockMove(models.Model):
     to_refund = fields.Boolean(string="To Refund (update SO/PO)",
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
 
+    def _set_default_price_moves(self):
+        # When the cost method is in real or average price, the price can be set to 0.0 on the PO
+        # So the price doesn't have to be updated
+        moves = super(StockMove, self)._set_default_price_moves()
+        return moves.filtered(lambda m: m.product_id.cost_method not in ('real', 'average'))
+
     @api.multi
     def action_done(self):
         self.product_price_update_before_done()

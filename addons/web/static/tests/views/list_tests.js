@@ -711,6 +711,33 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('use more complex default_order', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree default_order="foo, bar desc, int_field">' +
+                    '<field name="foo"/><field name="bar"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.strictEqual(args.sort, 'foo ASC, bar DESC, int_field ASC',
+                        "should correctly set the sort attribute");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(list.$('tbody tr:first td:contains(blip)').length,
+            "record 3 should be first");
+        assert.ok(list.$('tbody tr:eq(3) td:contains(yop)').length,
+            "record 1 should be first");
+
+        list.destroy();
+    });
+
     QUnit.test('can display button in edit mode', function (assert) {
         assert.expect(1);
 
@@ -1968,6 +1995,175 @@ QUnit.module('Views', {
         $(textarea).trigger({type: 'keydown', which: $.ui.keyCode.RIGHT});
         assert.strictEqual(document.activeElement, list.$('[name="bar"] input')[0],
             "next field (checkbox) should now be focused");
+        list.destroy();
+    });
+
+    QUnit.test('navigation: moving left/right with keydown', function (assert) {
+        assert.expect(8);
+
+        this.data.foo.fields.foo.type = 'text';
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                '<tree editable="bottom">' +
+                    '<field name="m2m" widget="many2many_tags"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="m2o"/>' +
+                    '<field name="qux"/>' +
+                '</tree>',
+        });
+
+        list.$('td:contains(13)').click();
+        var $m2m = list.$('[name="m2m"] input');
+        var $foo = list.$('textarea[name="foo"]');
+        var $bar = list.$('[name="bar"] input');
+        var $m2o = list.$('[name="m2o"] input');
+        var $qux = list.$('input[name="qux"]');
+
+        assert.strictEqual(document.activeElement, $qux[0],
+            "'qux' input should be focused");
+
+        $qux[0].selectionEnd = 0; // Simulate browser keyboard left behavior (unselect)
+        $qux.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
+        assert.strictEqual(document.activeElement, $m2o[0],
+            "'m2o' input should be focused");
+
+        // forget unselecting and try leaving
+        $m2o.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
+        assert.strictEqual(document.activeElement, $m2o[0],
+            "'m2o' input should still be focused");
+
+        $m2o[0].selectionEnd = 0; // Simulate browser keyboard left behavior (unselect)
+        $m2o.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
+        assert.strictEqual(document.activeElement, $bar[0],
+            "'bar' input should be focused");
+
+        // no unselect here as it is a checkbox
+        $bar.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
+        assert.strictEqual(document.activeElement, $foo[0],
+            "'foo' input should be focused");
+
+        // forget unselecting and try leaving
+        $foo.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
+        assert.strictEqual(document.activeElement, $foo[0],
+            "'foo' input should still be focused");
+
+        $foo[0].selectionEnd = 0; // Simulate browser keyboard left behavior (unselect)
+        $foo.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
+        assert.strictEqual(document.activeElement, $m2m[0],
+            "'m2m' input should be focused");
+
+        $m2m[0].selectionStart = $m2m[0].value.length; // Simulate browser keyboard right behavior (unselect)
+        $m2m.trigger({type: 'keydown', which: $.ui.keyCode.RIGHT});
+        assert.strictEqual(document.activeElement, $foo[0],
+            "'foo' input should be focused");
+
+        list.destroy();
+    });
+
+    QUnit.test('discarding changes in a row properly updates the rendering', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:first').text(), "yop",
+            "first cell should contain 'yop'");
+
+        list.$('.o_data_cell:first').click();
+        list.$('input[name="foo"]').val("hello").trigger('input');
+        list.$buttons.find('.o_list_button_discard').click();
+        assert.strictEqual($('.modal:visible').length, 1,
+            "a modal to ask for discard should be visible");
+
+        $('.modal:visible .btn-primary').click();
+        assert.strictEqual(list.$('.o_data_cell:first').text(), "yop",
+            "first cell should still contain 'yop'");
+
+        list.destroy();
+    });
+
+    QUnit.test('numbers in list are right-aligned', function (assert) {
+        assert.expect(2);
+
+        var currencies = {};
+        _.each(this.data.res_currency.records, function (currency) {
+            currencies[currency.id] = currency;
+        });
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                    '<field name="qux"/>' +
+                    '<field name="amount" widget="monetary"/>' +
+                    '<field name="currency_id" invisible="1"/>' +
+                '</tree>',
+            session: {
+                currencies: currencies,
+            },
+        });
+
+        var nbCellRight = _.filter(list.$('.o_data_row:first > .o_data_cell'), function (el) {
+            var style = window.getComputedStyle(el);
+            return style.textAlign === 'right';
+        }).length;
+        assert.strictEqual(nbCellRight, 2,
+            "there should be two right-aligned cells");
+
+        list.$('.o_data_cell:first').click();
+
+        var nbInputRight = _.filter(list.$('.o_data_row:first > .o_data_cell input'), function (el) {
+            var style = window.getComputedStyle(el);
+            return style.textAlign === 'right';
+        }).length;
+        assert.strictEqual(nbInputRight, 2,
+            "there should be two right-aligned input");
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped list are not editable', function (assert) {
+        // Editable grouped list views are not supported, so the purpose of this
+        // test is to check that when a list view is grouped, its editable
+        // attribute is ignored
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
+            intercepts: {
+                switch_view: function () {
+                    assert.step('switch view');
+                },
+            },
+        });
+
+        list.$('.o_data_cell:first').click();
+        assert.verifySteps([], 'no switch view should have been requested');
+        assert.strictEqual(list.$('.o_selected_row').length, 1,
+            "a row should be in edition");
+
+        // reload with groupBy
+        list.reload({groupBy: ['bar']});
+        list.$('.o_group_header:first').click();
+        list.$('.o_data_cell:first').click();
+        assert.verifySteps(['switch view'], 'one switch view should have been requested');
+
         list.destroy();
     });
 });

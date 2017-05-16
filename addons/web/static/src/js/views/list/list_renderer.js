@@ -246,10 +246,12 @@ var ListRenderer = BasicRenderer.extend({
         if (node.tag === 'button') {
             tdClassName += ' o_list_button';
         } else {
-            if (node.attrs.widget){
+            var typeClass = FIELD_CLASSES[this.state.fields[node.attrs.name].type];
+            if (typeClass) {
+                tdClassName += (' ' + typeClass);
+            }
+            if (node.attrs.widget) {
                 tdClassName += (' o_' + node.attrs.widget + '_cell');
-            } else {
-                tdClassName += (' ' + FIELD_CLASSES[this.state.fields[node.attrs.name].type]);
             }
         }
         var $td = $('<td>', {class: tdClassName});
@@ -268,9 +270,7 @@ var ListRenderer = BasicRenderer.extend({
             return $td.append(this._renderButton(record, node));
         }
         if (node.attrs.widget || (options && options.renderWidgets)) {
-            this.defs = []; // TODO maybe wait for those somewhere ?
             var widget = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
-            delete this.defs;
             return $td.append(widget.$el);
         }
         var name = node.attrs.name;
@@ -534,9 +534,11 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderRow: function (record) {
         var self = this;
+        this.defs = []; // TODO maybe wait for those somewhere ?
         var $cells = _.map(this.columns, function (node, index) {
             return self._renderBodyCell(record, node, index, {mode: 'readonly'});
         });
+        delete this.defs;
         var className = 'o_data_row';
         var decorations = this._computeDecorationClassNames(record);
         if (decorations.length) {

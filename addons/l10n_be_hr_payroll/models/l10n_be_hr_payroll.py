@@ -13,17 +13,22 @@ class HrContract(models.Model):
         ('company_car', 'Company car'),
         ('public_transport', 'Public Transport'),
         ('others', 'Other'),
-    ], string="Transport", default='company_car')
+    ], string="Transport", default='company_car',
+    help="Transport mode the employee uses to go to work.")
     car_atn = fields.Monetary(string='ATN Company Car')
     public_transport_employee_amount = fields.Monetary('Paid by the employee (Monthly)')
-    thirteen_month = fields.Monetary(compute='_compute_holidays_advantages', string='13th Month')
-    double_holidays = fields.Monetary(compute='_compute_holidays_advantages', string='Double holidays')
+    thirteen_month = fields.Monetary(compute='_compute_holidays_advantages', string='13th Month',
+        help="Yearly gross amount the employee receives as 13th month bonus.")
+    double_holidays = fields.Monetary(compute='_compute_holidays_advantages', string='Double holidays',
+        help="Yearly gross amount the employee receives as double holidays bonus.")
     warrant_value_employee = fields.Monetary(compute='_compute_warrants_cost', string="Warrant value for the employee")
 
     # Employer costs fields
     final_yearly_costs = fields.Monetary(compute='_compute_final_yearly_costs', readonly=False,
-        string='Total Employee Cost', groups="hr.group_hr_manager")
-    monthly_yearly_costs = fields.Monetary(compute='_compute_monthly_yearly_costs', string='Monthly Equivalent Cost', readonly=True)
+        string='Total Employee Cost', groups="hr.group_hr_manager",
+        help="Total yearly cost of the employee for the employer.")
+    monthly_yearly_costs = fields.Monetary(compute='_compute_monthly_yearly_costs', string='Monthly Equivalent Cost', readonly=True,
+        help="Total monthly cost of the employee for the employer.")
     ucm_insurance = fields.Monetary(compute='_compute_ucm_insurance', string="Social Secretary Costs")
     social_security_contributions = fields.Monetary(compute='_compute_social_security_contributions', string="Social Security Contributions")
     yearly_cost_before_charges = fields.Monetary(compute='_compute_yearly_cost_before_charges', string="Yearly Costs Before Charges")
@@ -36,19 +41,40 @@ class HrContract(models.Model):
     warrants_cost = fields.Monetary(compute='_compute_warrants_cost')
 
     # Advantages
-    commission_on_target = fields.Monetary(string="Commission on Target", default=1000)
-    fuel_card = fields.Monetary(string="Fuel Card", default=150)
-    internet = fields.Monetary(string="Internet", default=38, help="Your internet subscription will be paid up to this amount.")
-    representation_fees = fields.Monetary(string="Representation Fees", default=150.0)
-    mobile = fields.Monetary(string="Mobile", default=30, help="Your mobile subscription will be paid up to this amount.")
-    mobile_plus = fields.Monetary(string="International Communication", default=50, help="Your international mobile subscription will be paid up to this amount.")
-    meal_voucher_amount = fields.Monetary(string="Meal Vouchers", default=7.45)
-    holidays = fields.Float(string="Holidays", default=20)
+    commission_on_target = fields.Monetary(string="Commission on Target",
+        default=lambda self: self.get_attribute('commission_on_target', 'default_value'),
+        help="Monthly gross amount that the employee receives if the target is reached.")
+    fuel_card = fields.Monetary(string="Fuel Card",
+        default=lambda self: self.get_attribute('fuel_card', 'default_value'),
+        help="Monthly amount the employee receives on his fuel card.")
+    internet = fields.Monetary(string="Internet",
+        default=lambda self: self.get_attribute('internet', 'default_value'),
+        help="The employee's internet subcription will be paid up to this amount.")
+    representation_fees = fields.Monetary(string="Representation Fees",
+        default=lambda self: self.get_attribute('representation_fees', 'default_value'),
+        help="Monthly net amount the employee receives to cover his representation fees.")
+    mobile = fields.Monetary(string="Mobile",
+        default=lambda self: self.get_attribute('mobile', 'default_value'),
+        help="The employee's mobile subscription will be paid up to this amount.")
+    mobile_plus = fields.Monetary(string="International Communication",
+        default=lambda self: self.get_attribute('mobile_plus', 'default_value'),
+        help="The employee's mobile subscription for international communication will be paid up to this amount.")
+    meal_voucher_amount = fields.Monetary(string="Meal Vouchers",
+        default=lambda self: self.get_attribute('meal_voucher_amount', 'default_value'),
+        help="Amount the employee receives in the form of meal vouchers per worked day.")
+    holidays = fields.Float(string="Holidays",
+        default=lambda self: self.get_attribute('holidays', 'default_value'),
+        help="Number of days of paid leaves the employee gets per year.")
+    holidays_editable = fields.Boolean(string="Editable Holidays", default=True)
     holidays_compensation = fields.Monetary(compute='_compute_holidays_compensation', string="Holidays Compensation")
     wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', sting="Wage update with holidays retenues")
-    additional_net_amount = fields.Monetary(string="Net Supplements")
-    retained_net_amount = fields.Monetary(sting="Net Retained")
-    eco_checks = fields.Monetary("Eco Vouchers", default=250)
+    additional_net_amount = fields.Monetary(string="Net Supplements",
+        help="Monthly net amount the employee receives.")
+    retained_net_amount = fields.Monetary(sting="Net Retained",
+        help="Monthly net amount that is retained on the employee's salary.")
+    eco_checks = fields.Monetary("Eco Vouchers",
+        default=lambda self: self.get_attribute('eco_checks', 'default_value'),
+        help="Yearly amount the employee receives in the form of eco vouchers.")
 
     @api.depends('holidays', 'wage')
     def _compute_wage_with_holidays(self):

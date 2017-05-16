@@ -10,6 +10,9 @@ var qweb = core.qweb;
 
 var FormRenderer = BasicRenderer.extend({
     className: "o_form_view",
+    events: _.extend({}, BasicRenderer.prototype.events, {
+        'click .o_notification_box .oe_field_translate': '_onTranslate',
+    }),
     /**
      * @override
      */
@@ -47,6 +50,25 @@ var FormRenderer = BasicRenderer.extend({
             }
         });
         return fieldNames;
+    },
+    /**
+     * Show a warning message if the user modified a translated field.  For each
+     * field, the notification provides a link to edit the field's translations.
+     *
+     * @param {Object[]} alertFields: field list
+     */
+    displayTranslationAlert: function (alertFields) {
+        this.$('.o_notification_box').remove();
+        var $notification = $(qweb.render('notification-box', {type: 'info'}))
+            .append(qweb.render('translation-alert', {
+                fields: alertFields,
+                lang: _t.database.parameters.name
+            }));
+        if (this.$('.o_form_statusbar').length) {
+            this.$('.o_form_statusbar').after($notification);
+        } else {
+            this.$el.prepend($notification);
+        }
     },
     /**
      * @see BasicRenderer.confirmChange
@@ -302,106 +324,98 @@ var FormRenderer = BasicRenderer.extend({
      * @param {Object} node
      * @returns {jQueryElement}
      */
-    _renderInnerField: function (node) {
+    _renderInnerGroup: function (node) {
         var self = this;
-        var fieldName = node.attrs.name;
-        var field = this.state.fields[fieldName];
-        var fieldDescr = node.attrs.string || field.string;
-        var widget = this._renderFieldWidget(node, this.state);
+        var $result = $('<table/>', {class: 'o_group o_inner_group'});
+        this._handleAttributes($result, node);
+        this._registerModifiers(node, this.state, $result);
 
-        if (!node.attrs.nolabel) {
-            var $label = $('<label>', {
-                class: 'o_form_label',
-                for: this._getIDForLabel(node.attrs.name),
-                text: fieldDescr,
-            });
-            this._registerModifiers(node, this.state, $label, {
-                callback: function (element, modifiers, record) {
-                    element.$el.toggleClass('o_form_label_empty', !!( // FIXME condition is evaluated twice (label AND widget...)
-                        record.data.id
-                        && (modifiers.readonly || self.mode === 'readonly')
-                        && !widget.isSet() // getting like this because it could have been re-rendered...
-                    ));
-                },
-            });
-            return $('<tr>')
-                    .append($('<td class="o_td_label">').append($label))
-                    .append($('<td style="width: 100%">').append(widget.$el));
-        } else {
-            var style = {
-                width: 100/2 + '%',
-            };
-            return $('<tr>')
-                    .append($('<td colspan="1">').css(style).append(widget.$el));
+        var col = parseInt(node.attrs.col, 10) || 2;
+
+        if (node.attrs.string) {
+            var $sep = $('<tr><td colspan="' + col + '" style="width: 100%;"><div class="o_horizontal_separator">' + node.attrs.string + '</div></td></tr>');
+            $result.append($sep);
         }
+
+        var rows = [];
+        var $currentRow = $('<tr/>');
+        var currentColspan = 0;
+        _.each(node.children, function (child) {
+            if (child.tag === 'newline') {
+                rows.push($currentRow);
+                $currentRow = $('<tr/>');
+                currentColspan = 0;
+                return;
+            }
+
+            var colspan = parseInt(child.attrs.colspan, 10);
+            var isLabeledField = (child.tag === 'field' && child.attrs.nolabel !== '1');
+            if (!colspan) {
+                if (isLabeledField) {
+                    colspan = 2;
+                } else {
+                    colspan = 1;
+                }
+            }
+            var finalColspan = colspan - (isLabeledField ? 1 : 0);
+            currentColspan += colspan;
+
+            if (currentColspan > col) {
+                rows.push($currentRow);
+                $currentRow = $('<tr/>');
+                currentColspan = colspan;
+            }
+
+            var $tds;
+            if (child.tag === 'field') {
+                $tds = self._renderInnerGroupField(child);
+            } else if (child.tag === 'label') {
+                $tds = self._renderInnerGroupLabel(child);
+            } else {
+                $tds = $('<td/>').append(self._renderNode(child));
+            }
+            if (finalColspan > 1) {
+                $tds.last().attr('colspan', finalColspan);
+            }
+            $currentRow.append($tds);
+        });
+        rows.push($currentRow);
+
+        _.each(rows, function ($tr) {
+            var nonLabelColSize = 100 / (col - $tr.children('.o_td_label').length);
+            _.each($tr.children(':not(.o_td_label)'), function (el) {
+                var $el = $(el);
+                $el.css('width', ((parseInt($el.attr('colspan'), 10) || 1) * nonLabelColSize) + '%');
+            });
+            $result.append($tr);
+        });
+
+        return $result;
     },
     /**
      * @private
      * @param {Object} node
      * @returns {jQueryElement}
      */
-    _renderInnerGroup: function (node) {
-        var $result = $('<table class="o_group o_inner_group"/>');
-        this._handleAttributes($result, node);
-        this._registerModifiers(node, this.state, $result);
-        if (node.attrs.string) {
-            var $sep = $('<tr><td colspan="2" style="width:100%;"><div class="o_horizontal_separator">' + node.attrs.string + '</div></td></tr>');
-            $result.append($sep);
+    _renderInnerGroupField: function (node) {
+        var widget = this._renderFieldWidget(node, this.state);
+        var $tds = $('<td/>').append(widget.$el);
+
+        if (node.attrs.nolabel !== '1') {
+            var $labelTd = this._renderInnerGroupLabel(node);
+            $tds = $labelTd.add($tds);
         }
-        var children = node.children;
-        for (var i = 0; i < children.length; i++) {
-            if (children[i].tag === 'field') {
-                var fieldNodes = [children[i]];
-                if (children[i].attrs.nolabel && children[i+1] &&
-                        children[i+1].tag === 'field' && children[i+1].attrs.nolabel) {
-                    fieldNodes.push(children[i+1]);
-                    i++;
-                }
-                $result.append(this._renderInnerGroupRow(fieldNodes));
-            } else if (children[i].tag === 'label') {
-                var label =  children[i];
-                // If there is a "for" attribute, we expect to have an id concerned in the next node.
-                if (label.attrs.for) {
-                    var linkedNode = children[i+1];
-                    $result = this._renderInnerGroupLabel($result, label, linkedNode);
-                    i++; // Skip the rendering of the next node because we just did it.
-                } else {
-                    $result = this._renderInnerGroupLabel($result, label);
-                }
-            } else {
-                var $td = $('<td colspan="2" style="width:100%;">').append(this._renderNode(children[i]));
-                $result.append($('<tr>').append($td));
-            }
-        }
-        return $result;
+
+        return $tds;
     },
     /**
      * @private
-     * @param {jQueryElement} $result
      * @param {string} label
-     * @param {Object} linkedNode
      * @returns {jQueryElement}
      */
-    _renderInnerGroupLabel: function ($result, label, linkedNode) {
-        var $first = $('<td class="o_td_label">')
-                    .append(this._renderNode(label));
-        var $second = linkedNode ? $('<td>').append(this._renderNode(linkedNode)) : $('<td>');
-        var $tr = $('<tr>').append($first).append($second);
-        return $result.append($tr);
-    },
-    /**
-     * Render a group row, with all the nodes inside.
-     *
-     * @private
-     * @param {Object[]} nodes
-     * @returns {jQueryElement}
-     */
-    _renderInnerGroupRow: function (nodes) {
-        var $tr = $('<tr>');
-        for (var i = 0; i < nodes.length; i++) {
-            $tr.append(this._renderInnerField(nodes[i]).contents());
-        }
-        return $tr;
+    _renderInnerGroupLabel: function (label) {
+        return $('<td/>', {class: 'o_td_label'})
+            .append(this._renderTagLabel(label));
     },
     /**
      * Render a node, from the arch of the view. It is a generic method, that
@@ -537,17 +551,16 @@ var FormRenderer = BasicRenderer.extend({
             return this._renderInnerGroup(node);
         }
 
-        var $result = $('<div class="o_group"/>');
-        var $child;
-        _.each(node.children, function (child) {
-            if (child.tag === 'group') {
-                $child = self._renderInnerGroup(child);
-            } else {
-                $child = self._renderNode(child);
+        var $result = $('<div/>', {class: 'o_group'});
+        var colSize = Math.max(1, Math.round(12 / (parseInt(node.attrs.col, 10) || 2)));
+        $result.append(_.map(node.children, function (child) {
+            if (child.tag === 'newline') {
+                return $('<br/>');
             }
-            $child.addClass('o_group_col_6');
-            $child.appendTo($result);
-        });
+            var $child = self._renderNode(child);
+            $child.addClass('o_group_col_' + (colSize * (parseInt(child.attrs.colspan, 10) || 1)));
+            return $child;
+        }));
         this._handleAttributes($result, node);
         this._registerModifiers(node, this.state, $result);
         return $result;
@@ -575,20 +588,50 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagLabel: function (node) {
+        var self = this;
         var text;
+        var fieldName = node.tag === 'label' ? node.attrs.for : node.attrs.name;
         if ('string' in node.attrs) { // allow empty string
             text = node.attrs.string;
-        } else if (node.attrs.for) {
-            text = this.state.fields[node.attrs.for].string;
+        } else if (fieldName) {
+            text = this.state.fields[fieldName].string;
         } else  {
             return this._renderGenericTag(node);
         }
-        var $result = $('<label>')
-                        .addClass('o_form_label')
-                        .attr('for', this._getIDForLabel(node.attrs.for))
-                        .text(text);
-        this._handleAttributes($result, node);
-        this._registerModifiers(node, this.state, $result);
+        var $result = $('<label>', {
+            class: 'o_form_label',
+            for: this._getIDForLabel(fieldName),
+            text: text,
+        });
+        if (node.tag === 'label') {
+            this._handleAttributes($result, node);
+        }
+        var modifiersOptions;
+        if (fieldName) {
+            modifiersOptions = {
+                callback: function (element, modifiers, record) {
+                    var widgets = self.allFieldWidgets[record.id];
+                    var widget = _.findWhere(widgets, {name: fieldName});
+                    if (!widget) {
+                        return; // FIXME this occurs if the widget is created
+                                // after the label (explicit <label/> tag in the
+                                // arch), so this won't work on first rendering
+                                // only on reevaluation
+                    }
+                    element.$el.toggleClass('o_form_label_empty', !!( // FIXME condition is evaluated twice (label AND widget...)
+                        record.data.id
+                        && (modifiers.readonly || self.mode === 'readonly')
+                        && !widget.isSet()
+                    ));
+                },
+            };
+        }
+        // FIXME if the function is called with a <label/> node, the registered
+        // modifiers will be those on this node. Maybe the desired behavior
+        // would be to merge them with associated field node if any... note:
+        // this worked in 10.0 for "o_form_label_empty" reevaluation but not for
+        // "o_invisible_modifier" reevaluation on labels...
+        this._registerModifiers(node, this.state, $result, modifiersOptions);
         return $result;
     },
     /**
@@ -682,6 +725,8 @@ var FormRenderer = BasicRenderer.extend({
 
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
+        }, function () {
+            $form.remove();
         });
     },
     /**
@@ -717,7 +762,7 @@ var FormRenderer = BasicRenderer.extend({
             }
         });
         if (focusWidget) {
-            focusWidget.activate(true);
+            focusWidget.activate({noselect: true});
         }
     },
     /**
@@ -740,20 +785,26 @@ var FormRenderer = BasicRenderer.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onMoveNext: function (ev) {
+    _onNavigationMove: function (ev) {
         ev.stopPropagation();
-        var index = this.allFieldWidgets[this.state.id].indexOf(ev.target);
-        this._activateNextFieldWidget(this.state, index);
+        var index;
+        if (ev.data.direction === "next") {
+            index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
+            this._activateNextFieldWidget(this.state, index);
+        } else if (ev.data.direction === "previous") {
+            index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
+            this._activatePreviousFieldWidget(this.state, index);
+        }
     },
     /**
-     * @override
+     * open the translation view for the current field
+     *
      * @private
-     * @param {OdooEvent} event
+     * @param {MouseEvent} ev
      */
-    _onMovePrevious: function (ev) {
-        ev.stopPropagation();
-        var index = this.allFieldWidgets[this.state.id].indexOf(ev.target);
-        this._activatePreviousFieldWidget(this.state, index);
+    _onTranslate: function (event) {
+        event.preventDefault();
+        this.trigger_up('translate', {fieldName: event.target.name, id: this.state.id});
     },
 });
 

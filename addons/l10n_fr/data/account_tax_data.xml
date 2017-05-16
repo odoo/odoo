@@ -497,7 +497,7 @@
     <record model="account.tax.template" id="tva_normale">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 20,0%</field>
-      <field name="description">20.0</field>
+      <field name="description">TVA 20%</field>
       <field name="amount" eval="20.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445711"/>
@@ -513,7 +513,7 @@
     <record model="account.tax.template" id="tva_normale_encaissement">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA à l'encaissement (vente) 20,0%</field>
-      <field name="description">20.0</field>
+      <field name="description">TVA à l'encaissement 20%</field>
       <field name="amount" eval="20.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445711"/>
@@ -528,7 +528,7 @@
     <record model="account.tax.template" id="tva_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 8,5%</field>
-      <field name="description">8.5</field>
+      <field name="description">TVA 8,5%</field>
       <field name="amount" eval="8.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445713"/>
@@ -541,7 +541,7 @@
     <record model="account.tax.template" id="tva_intermediaire">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 10,0%</field>
-      <field name="description">10.0</field>
+      <field name="description">TVA 10%</field>
       <field name="amount" eval="10.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445712"/>
@@ -554,7 +554,7 @@
     <record model="account.tax.template" id="tva_reduite">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 5,5%</field>
-      <field name="description">5.5</field>
+      <field name="description">TVA 5,5%</field>
       <field name="amount" eval="5.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445713"/>
@@ -567,7 +567,7 @@
     <record model="account.tax.template" id="tva_reduite_encaissement">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA réduite à l'encaissement (vente) 5.5%</field>
-      <field name="description">5.5</field>
+      <field name="description">TVA réduite à l'encaissement 5,5%</field>
       <field name="amount" eval="5.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445713"/>
@@ -582,7 +582,7 @@
     <record model="account.tax.template" id="tva_super_reduite">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 2,1%</field>
-      <field name="description">2.1</field>
+      <field name="description">TVA 2,1%</field>
       <field name="amount" eval="2.1"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445713"/>
@@ -595,7 +595,7 @@
     <record model="account.tax.template" id="tva_super_reduite_encaissement">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA réduite à l'encaissement (vente) 2.1%</field>
-      <field name="description">2.1</field>
+      <field name="description">TVA réduite à l'encaissement 2,1%</field>
       <field name="amount" eval="2.1"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445713"/>
@@ -612,7 +612,7 @@
     <record model="account.tax.template" id="tva_normale_ttc">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 20,0% TTC</field>
-      <field name="description">20.0-TTC</field>
+      <field name="description">TVA 20% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="20.0"/>
       <field name="amount_type">percent</field>
@@ -626,7 +626,7 @@
     <record model="account.tax.template" id="tva_normale_encaissement_ttc">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA à l'encaissement (vente) 20,0% TTC</field>
-      <field name="description">20.0-TTC</field>
+      <field name="description">TVA 20% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="20"/>
       <field name="amount_type">percent</field>
@@ -642,7 +642,7 @@
     <record model="account.tax.template" id="tva_specifique_ttc">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 8,5% TTC</field>
-      <field name="description">8.5-TTC</field>
+      <field name="description">TVA 8,5% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="8.5"/>
       <field name="amount_type">percent</field>
@@ -656,7 +656,7 @@
     <record model="account.tax.template" id="tva_intermediaire_ttc">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 10,0% TTC</field>
-      <field name="description">10.0-TTC</field>
+      <field name="description">TVA 10% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="10.0"/>
       <field name="amount_type">percent</field>
@@ -670,7 +670,7 @@
     <record model="account.tax.template" id="tva_reduite_ttc">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 5,5% TTC</field>
-      <field name="description">5.5-TTC</field>
+      <field name="description">TVA 5,5% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="5.5"/>
       <field name="amount_type">percent</field>
@@ -684,7 +684,7 @@
     <record model="account.tax.template" id="tva_reduite_encaissement_ttc">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA réduite à l'encaissement (vente) 5.5% TTC</field>
-      <field name="description">5.5-TTC</field>
+      <field name="description">TVA réduite à l'encaissement 5,5% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="5.5"/>
       <field name="amount_type">percent</field>
@@ -700,7 +700,7 @@
     <record model="account.tax.template" id="tva_super_reduite_ttc">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 2,1% TTC</field>
-      <field name="description">2.1-TTC</field>
+      <field name="description">TVA 2,1% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="2.1"/>
       <field name="amount_type">percent</field>
@@ -714,7 +714,7 @@
     <record model="account.tax.template" id="tva_super_reduite_encaissement_ttc">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA réduite à l'encaissement (vente) 2.1% TTC</field>
-      <field name="description">2.1-TTC</field>
+      <field name="description">TVA réduite à l'encaissement 2,1% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="2.1"/>
       <field name="amount_type">percent</field>
@@ -731,7 +731,7 @@
     <record model="account.tax.template" id="tva_acq_normale">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 20,0%</field>
-      <field name="description">ACH-20.0</field>
+      <field name="description">TVA 20%</field>
       <field name="amount" eval="20.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44566"/>
@@ -747,7 +747,7 @@
     <record model="account.tax.template" id="tva_acq_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 8,5%</field>
-      <field name="description">ACH-8.5</field>
+      <field name="description">TVA 8,5%</field>
       <field name="amount" eval="8.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44566"/>
@@ -760,7 +760,7 @@
     <record model="account.tax.template" id="tva_acq_intermediaire">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 10,0%</field>
-      <field name="description">ACH-10.0</field>
+      <field name="description">TVA 10%</field>
       <field name="amount" eval="10.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44566"/>
@@ -773,7 +773,7 @@
     <record model="account.tax.template" id="tva_acq_reduite">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 5,5%</field>
-      <field name="description">ACH-5.5</field>
+      <field name="description">TVA 5,5%</field>
       <field name="amount" eval="5.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44566"/>
@@ -786,7 +786,7 @@
     <record model="account.tax.template" id="tva_acq_super_reduite">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 2,1%</field>
-      <field name="description">ACH-2.1</field>
+      <field name="description">TVA 2,1%</field>
       <field name="amount" eval="2.1"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44566"/>
@@ -801,7 +801,7 @@
     <record model="account.tax.template" id="tva_acq_normale_TTC">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 20,0% TTC</field>
-      <field name="description">ACH-20.0-TTC</field>
+      <field name="description">TVA 20% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="20.0"/>
       <field name="amount_type">percent</field>
@@ -815,7 +815,7 @@
     <record model="account.tax.template" id="tva_acq_specifique_TTC">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 8,5% TTC</field>
-      <field name="description">ACH-8.5-TTC</field>
+      <field name="description">TVA 8,5% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="8.5"/>
       <field name="amount_type">percent</field>
@@ -829,7 +829,7 @@
     <record model="account.tax.template" id="tva_acq_intermediaire_TTC">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 10,0% TTC</field>
-      <field name="description">ACH-10.0-TTC</field>
+      <field name="description">TVA 10% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="10.0"/>
       <field name="amount_type">percent</field>
@@ -843,7 +843,7 @@
     <record model="account.tax.template" id="tva_acq_reduite_TTC">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 5,5% TTC</field>
-      <field name="description">ACH-5.5-TTC</field>
+      <field name="description">TVA 5,5% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="5.5"/>
       <field name="amount_type">percent</field>
@@ -857,7 +857,7 @@
     <record model="account.tax.template" id="tva_acq_super_reduite_TTC">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 2,1% TTC</field>
-      <field name="description">ACH-2.1-TTC</field>
+      <field name="description">TVA 2,1% TTC</field>
       <field name="price_include" eval="1"/>
       <field name="amount" eval="2.1"/>
       <field name="amount_type">percent</field>
@@ -874,7 +874,7 @@
     <record model="account.tax.template" id="tva_imm_normale">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd./immobilisation (achat) 20,0%</field>
-      <field name="description">IMMO-20.0</field>
+      <field name="description">TVA immo 20%</field>
       <field name="amount" eval="20.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44562"/>
@@ -887,7 +887,7 @@
     <record model="account.tax.template" id="tva_imm_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd./immobilisation (achat) 8,5%</field>
-      <field name="description">IMMO-8.5</field>
+      <field name="description">TVA immo 8,5%</field>
       <field name="amount" eval="8.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44562"/>
@@ -900,7 +900,7 @@
     <record model="account.tax.template" id="tva_imm_intermediaire">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd./immobilisation (achat) 10,0%</field>
-      <field name="description">IMMO-10.0</field>
+      <field name="description">TVA immo 10%</field>
       <field name="amount" eval="10.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44562"/>
@@ -913,7 +913,7 @@
     <record model="account.tax.template" id="tva_imm_reduite">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd./immobilisation (achat) 5,5%</field>
-      <field name="description">IMMO-5.5</field>
+      <field name="description">TVA immo 5,5%</field>
       <field name="amount" eval="5.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44562"/>
@@ -926,7 +926,7 @@
     <record model="account.tax.template" id="tva_imm_super_reduite">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd./immobilisation (achat) 2,1%</field>
-      <field name="description">IMMO-2.1</field>
+      <field name="description">TVA immo 2,1%</field>
       <field name="amount" eval="2.1"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44562"/>
@@ -941,7 +941,7 @@
     <record model="account.tax.template" id="tva_intra_normale">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA due s/ acq. intracommunautaire (achat) 20,0%</field>   <!-- ventes -->
-      <field name="description">ACH_UE_due-20.0</field>
+      <field name="description">TVA 20% EU</field>
       <field name="amount" eval="-20.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445201"/>
@@ -954,7 +954,7 @@
     <record model="account.tax.template" id="tva_intra_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA due s/ acq. intracommunautaire (achat) 8,5%</field>
-      <field name="description">ACH_UE_due-8.5</field>
+      <field name="description">TVA 8,5% EU</field>
       <field name="amount" eval="-8.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445203"/>
@@ -967,7 +967,7 @@
     <record model="account.tax.template" id="tva_intra_intermediaire">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA due s/ acq. intracommunautaire (achat) 10,0%</field>
-      <field name="description">ACH_UE_due-10.0</field>
+      <field name="description">TVA 10% EU</field>
       <field name="amount" eval="-10.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445202"/>
@@ -980,7 +980,7 @@
     <record model="account.tax.template" id="tva_intra_reduite">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA due s/ acq. intracommunautaire (achat) 5,5%</field>
-      <field name="description">ACH_UE_due-5.5</field>
+      <field name="description">TVA 5,5% EU</field>
       <field name="amount" eval="-5.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445203"/>
@@ -993,7 +993,7 @@
     <record model="account.tax.template" id="tva_intra_super_reduite">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA due s/ acq. intracommunautaire (achat) 2,1%</field>
-      <field name="description">ACH_UE_due-2.1</field>
+      <field name="description">TVA 2,1% EU</field>
       <field name="amount" eval="-2.1"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445203"/>
@@ -1008,7 +1008,7 @@
     <record model="account.tax.template" id="tva_acq_intra_normale">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd. s/ acq. intracommunautaire (achat) 20,0%</field>
-      <field name="description">ACH_UE_ded.-20.0</field>
+      <field name="description">TVA 20% EU</field>
       <field name="amount" eval="20.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445662"/>
@@ -1021,7 +1021,7 @@
     <record model="account.tax.template" id="tva_acq_intra_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd. s/ acq. intracommunautaire (achat) 8,5%</field>
-      <field name="description">ACH_UE_ded.-8.5</field>
+      <field name="description">TVA 8,5% EU</field>
       <field name="amount" eval="8.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445662"/>
@@ -1034,7 +1034,7 @@
     <record model="account.tax.template" id="tva_acq_intra_intermediaire">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd. s/ acq. intracommunautaire (achat) 10,0%</field>
-      <field name="description">ACH_UE_ded.-10.0</field>
+      <field name="description">TVA 10% EU</field>
       <field name="amount" eval="10.0"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445662"/>
@@ -1047,7 +1047,7 @@
     <record model="account.tax.template" id="tva_acq_intra_reduite">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd. s/ acq. intracommunautaire (achat) 5,5%</field>
-      <field name="description">ACH_UE_ded.-5.5</field>
+      <field name="description">TVA 5,5% EU</field>
       <field name="amount" eval="5.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445662"/>
@@ -1060,7 +1060,7 @@
     <record model="account.tax.template" id="tva_acq_intra_super_reduite">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd. s/ acq. intracommunautaire (achat) 2,1%</field>
-      <field name="description">ACH_UE_ded.-2.1</field>
+      <field name="description">TVA 2,1% EU</field>
       <field name="amount" eval="2.1"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445662"/>
@@ -1075,7 +1075,7 @@
     <record model="account.tax.template" id="tva_0">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA 0% autres opérations non imposables (vente)</field>
-      <field name="description">EXO-0</field>
+      <field name="description">TVA 0%</field>
       <field name="amount" eval="0.00"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" eval="False"/>
@@ -1088,7 +1088,7 @@
     <record model="account.tax.template" id="tva_export_0">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA 0% export (vente)</field>
-      <field name="description">EXPORT-0</field>
+      <field name="description">TVA 0% Import</field>
       <field name="amount" eval="0.00"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" eval="False"/>
@@ -1101,7 +1101,7 @@
     <record model="account.tax.template" id="tva_intra_0">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA 0% livraisons intracommunautaires (vente)</field>
-      <field name="description">UE-0</field>
+      <field name="description">TVA 0% EU</field>
       <field name="amount" eval="0.00"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445201"/>
@@ -1114,7 +1114,7 @@
     <record model="account.tax.template" id="tva_import_0">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
         <field name="name">TVA 0% import (achat)</field>
-        <field name="description">IMPORT-0</field>
+        <field name="description">TVA 0% Import</field>
         <field name="amount" eval="0.00"/>
         <field name="amount_type">percent</field>
         <field name="refund_account_id" ref="pcg_445663"/>
