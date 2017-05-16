@@ -4181,7 +4181,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('form rendering with groups with col/colspan', function (assert) {
-        assert.expect(45);
+        assert.expect(46);
 
         var form = createView({
             View: FormView,
@@ -4209,6 +4209,15 @@ QUnit.module('Views', {
                                     '<span/><field name="product_id"/>' +
                                 '</group>' +
                             '</group>' +
+                        '</group>' +
+                        '<group>' +
+                            '<field name="p">' +
+                                '<tree>' +
+                                    '<field name="display_name"/>' +
+                                    '<field name="foo"/>' +
+                                    '<field name="int_field"/>' +
+                                '</tree>' +
+                            '</field>' +
                         '</group>' +
                     '</sheet>' +
                 '</form>',
@@ -4288,6 +4297,10 @@ QUnit.module('Views', {
         assert.strictEqual($fieldGroupFifthRowTds.eq(0).attr('style').substr(0, 9), "width: 50", "the first td should 50% width");
         assert.ok($fieldGroupFifthRowTds.eq(1).hasClass('o_td_label'), "the second td should be a label td");
         assert.strictEqual($fieldGroupFifthRowTds.eq(2).attr('style').substr(0, 9), "width: 50", "the third td should 50% width");
+
+        // Verify that one2many list table hasn't been impacted
+        assert.strictEqual(form.$('.o_field_one2many th:first').attr('style'), undefined,
+            "o2m list columns should have no width harcoded");
 
         form.destroy();
     });

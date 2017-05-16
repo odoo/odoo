@@ -337,11 +337,12 @@ var FormRenderer = BasicRenderer.extend({
             $result.append($sep);
         }
 
+        var rows = [];
         var $currentRow = $('<tr/>');
         var currentColspan = 0;
         _.each(node.children, function (child) {
             if (child.tag === 'newline') {
-                $currentRow.appendTo($result);
+                rows.push($currentRow);
                 $currentRow = $('<tr/>');
                 currentColspan = 0;
                 return;
@@ -360,7 +361,7 @@ var FormRenderer = BasicRenderer.extend({
             currentColspan += colspan;
 
             if (currentColspan > col) {
-                $currentRow.appendTo($result);
+                rows.push($currentRow);
                 $currentRow = $('<tr/>');
                 currentColspan = colspan;
             }
@@ -378,15 +379,15 @@ var FormRenderer = BasicRenderer.extend({
             }
             $currentRow.append($tds);
         });
-        $currentRow.appendTo($result);
+        rows.push($currentRow);
 
-        _.each($result.find('tr'), function (tr) {
-            var $tr = $(tr);
+        _.each(rows, function ($tr) {
             var nonLabelColSize = 100 / (col - $tr.children('.o_td_label').length);
             _.each($tr.children(':not(.o_td_label)'), function (el) {
                 var $el = $(el);
                 $el.css('width', ((parseInt($el.attr('colspan'), 10) || 1) * nonLabelColSize) + '%');
             });
+            $result.append($tr);
         });
 
         return $result;
