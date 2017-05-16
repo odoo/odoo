@@ -214,6 +214,9 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
     """
     # create a new image, based on the original one
     original = Image.open(StringIO.StringIO(original))
+    # convert RGB image to RGBA
+    if original.mode == "RGB":
+        original = original.convert("RGBA")
     image = Image.new('RGB', original.size)
     # generate the background color, past it as background
     if randomize:
