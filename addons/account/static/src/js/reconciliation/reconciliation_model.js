@@ -647,7 +647,7 @@ var StatementModel = BasicModel.extend({
                 'amount_str': field_utils.format.monetary(Math.abs(total), {}, format_options),
                 'account_code': self.accounts[line.st_line.open_balance_account_id],
             };
-            line.balance.type = line.balance.amount ? (line.balance.amount > 0 && line.st_line.partner_id ? 0 : -1) : 1;
+            line.balance.type = line.balance.amount ? (line.balance.amount !== 0 && line.st_line.partner_id ? 0 : -1) : 1;
         });
     },
     /**
@@ -843,11 +843,11 @@ var StatementModel = BasicModel.extend({
      * @returns {object}
      */
     _formatToProcessReconciliation: function (line, prop) {
-        var amount = prop.partial_reconcile ? -line.st_line.amount : prop.amount;
+        var amount = prop.partial_reconcile ? line.st_line.amount : (prop.base_amount ? prop.amount : Math.abs(prop.amount + line.balance.amount));
         var result = {
             name : prop.label,
-            debit : amount > 0 ? amount : 0,
-            credit : amount < 0 ? -amount : 0,
+            debit : amount < 0 ? -amount : 0,
+            credit : amount > 0 ? amount : 0,
         };
         if (!isNaN(prop.id)) {
             result.counterpart_aml_id = prop.id;
