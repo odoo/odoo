@@ -31,17 +31,6 @@ class SaleOrder(models.Model):
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
             order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
 
-    @api.model
-    def _get_errors(self, order):
-        return []
-
-    @api.model
-    def _get_website_data(self, order):
-        return {
-            'partner': order.partner_id.id,
-            'order': order
-        }
-
     @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         self.ensure_one()
