@@ -18,12 +18,13 @@ class ResCompany(models.Model):
                 'currency_id': new_company.currency_id.id,
             })
         field = self.env['ir.model.fields']._get('res.partner', 'property_product_pricelist')
-        self.env['ir.property'].create({
+        product_property = self.env['ir.property'].create({
             'name': 'property_product_pricelist',
-            'company_id': new_company.id,
             'value_reference': 'product.pricelist,%s' % pricelist.id,
             'fields_id': field.id
         })
+        # multi-company security rules prevents access
+        product_property.sudo().write({'company_id': new_company.id})
         return new_company
 
     @api.multi
