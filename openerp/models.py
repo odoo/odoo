@@ -4349,7 +4349,16 @@ class BaseModel(object):
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
         # fields, e.g., a one2many checking constraints on records
-        recs.modified(self._fields)
+        dirty = set(self._fields)
+        for name in vals:
+            # if field B (name) is just set, B directly depends on A (deps[0]),
+            # and A is not set, do not mark A as dirty, as A will be set later
+            # by the inverse method of B
+            for path in self._fields[name].depends:
+                deps = path.split('.')
+                if deps[0] not in vals:
+                    dirty.discard(deps[0])
+        recs.modified(dirty)
 
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
