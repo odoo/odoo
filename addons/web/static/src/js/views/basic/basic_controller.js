@@ -248,9 +248,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var self = this;
         var def = $.Deferred();
         var reload = function () {
-            if (!self.isDestroyed()) {
-                self.reload();
-            }
+            return self.isDestroyed() ? $.when() : self.reload();
         };
         record = record || this.model.get(this.handle);
         var recordID = record.data.id;
@@ -262,10 +260,14 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             res_ids: [recordID],
             on_closed: function (reason) {
                 if (!_.isObject(reason)) {
-                    reload();
+                    reload(reason);
                 }
             },
-            on_fail: reload,
+            on_fail: function (reason) {
+                reload().always(function() {
+                    def.reject(reason);
+                })
+            },
             on_success: def.resolve.bind(def),
         });
         return this.alive(def);

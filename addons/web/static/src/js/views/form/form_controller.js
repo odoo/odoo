@@ -70,6 +70,22 @@ var FormController = BasicController.extend({
         });
     },
     /**
+     * Disable buttons so that they can't be clicked anymore
+     *
+     */
+    disableButtons: function () {
+        this.$buttons.find('button').attr('disabled', true);
+        this.renderer.disableButtons();
+    },
+    /**
+     * Enable buttons so they can be clicked again
+     *
+     */
+    enableButtons: function () {
+        this.$buttons.find('button').removeAttr('disabled');
+        this.renderer.enableButtons();
+    },
+    /**
      * Returns the current res_id, wrapped in a list. This is only used by the
      * sidebar (and the debugmanager)
      *
@@ -324,6 +340,8 @@ var FormController = BasicController.extend({
         var self = this;
         var def;
 
+        this.disableButtons();
+
         var attrs = event.data.attrs;
         if (attrs.confirm) {
             var d = $.Deferred();
@@ -348,7 +366,7 @@ var FormController = BasicController.extend({
                 return self._callButtonAction(attrs, record);
             });
         }
-        def.then(function () {
+        def = def.then(function () {
             self.reload();
         });
 
@@ -357,6 +375,10 @@ var FormController = BasicController.extend({
                 self.show_wow();
             });
         }
+
+        def.always(function() {
+            self.enableButtons();
+        });
     },
     /**
      * Called when the user wants to create a new record -> @see createRecord
