@@ -228,7 +228,7 @@ var BasicModel = AbstractModel.extend({
         options = options || {};
         var element = this.localData[id];
         var isNew = this.isNew(id);
-        var rollback = options.rollback || isNew;
+        var rollback = 'rollback' in options ? options.rollback : isNew;
         this._visitChildren(element, function (elem) {
             if (rollback && elem._savePoint) {
                 if (elem._savePoint instanceof Array) {
@@ -644,7 +644,7 @@ var BasicModel = AbstractModel.extend({
                 return this._makeDefaultRecord(element.model, params);
             }
             if (!options.keepChanges) {
-                this.discardChanges(id);
+                this.discardChanges(id, {rollback: false});
             }
         }
 
