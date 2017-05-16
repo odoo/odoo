@@ -10,7 +10,7 @@ ERR_MSG = _("According to the french law, you cannot modify a %s in order for it
 
 #forbidden fields
 MOVE_FIELDS = ['date', 'journal_id', 'company_id']
-LINE_FIELDS = ['debit', 'credit', 'account_id', 'move_id']  # invoice_id, partner_id, tax_ids, tax_line_id?
+LINE_FIELDS = ['debit', 'credit', 'account_id', 'move_id', 'partner_id']
 
 
 class AccountMove(models.Model):
@@ -74,6 +74,9 @@ class AccountMove(models.Model):
                 # restrict the operation in case we are trying to write a forbidden field
                 if (move.state == "posted" and set(vals).intersection(MOVE_FIELDS)):
                     raise UserError(ERR_MSG % (self._name, ', '.join(MOVE_FIELDS)))
+                # restrict the operation in case we are trying to overwrite existing hash
+                if (move.l10n_fr_hash and vals.get('l10n_fr_hash')) or (move.l10n_fr_secure_sequence_number and vals.get('l10n_fr_secure_sequence_number')):
+                    raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
         res = super(AccountMove, self).write(vals)
         # write the hash and the secure_sequence_number when posting an account.move
         if has_been_posted:
@@ -96,7 +99,7 @@ class AccountMove(models.Model):
         and raises an error with the result.
         """
         moves = self.search([('state', '=', 'posted'),
-                             ('company_id', '=', company_id.id),
+                             ('company_id', '=', company_id),
                              ('l10n_fr_secure_sequence_number', '!=', False)],
                             order="l10n_fr_secure_sequence_number ASC")
 
@@ -107,15 +110,16 @@ class AccountMove(models.Model):
         for move in moves:
             if move.l10n_fr_hash != move._compute_hash(previous_hash=previous_hash):
                 raise UserError(_('Corrupted Data on move %s.') % move.id)
-            previous_hash = move.l10n_fr_hash
             if not previous_hash:
                 #save the date and sequence number of the first move hashed
                 start_move_info = [move.date, move.l10n_fr_secure_sequence_number]
+            previous_hash = move.l10n_fr_hash
         end_move_info = [move.date, move.l10n_fr_secure_sequence_number]
-        raise UserError(_('''Success: checking the integrity of account moves.
+        raise UserError(_('''Successfully checked the integrity of account moves.
+
                          The account moves are guaranteed to be in their original and inalterable state
-                         since:   Date-%s  Sequence Number-%s
-                         to:      Date-%s  Sequence Number-%s'''
+                          - since:   %s     (Sequence Number: %s)
+                          - to:      %s     (Sequence Number: %s)'''
                          ) % (start_move_info[0], start_move_info[1], end_move_info[0], end_move_info[1]))
 
 
