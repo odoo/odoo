@@ -311,11 +311,11 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 var text;
                 if (line.partial_reconcile) {
                     text = _t("Undo the partial reconciliation.");
-                    $cell.html(state.st_line.amount_str);
+                    $cell.text(state.st_line.amount_str);
                 } else {
                     text = _t("This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.");
                 }
-                if (line.amount > 0) {
+                if (line.amount === props[0].amount) {
                     $('<span class="do_partial_reconcile_'+(!line.partial_reconcile)+' line_info_button fa fa-exclamation-triangle"/>')
                         .prependTo($cell)
                         .attr("data-content", text);
