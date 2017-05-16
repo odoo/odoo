@@ -889,7 +889,7 @@ QUnit.module('Views', {
         });
         form.$('.o_form_statusbar button.s').click();
 
-        assert.strictEqual(rpcCount, 2, "should have done 1 rpcs to reload");
+        assert.strictEqual(rpcCount, 2, "should have done 2 rpcs to reload");
         form.destroy();
     });
 
@@ -4480,6 +4480,54 @@ QUnit.module('Views', {
         form.destroy();
 
         _t.database.multi_lang = multi_lang;
+    });
+
+    QUnit.test('buttons are disabled until action is resolved', function (assert) {
+        assert.expect(3);
+
+        var def = $.Deferred();
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<div name="button_box" class="oe_button_box">' +
+                            '<button class="oe_stat_button">' +
+                                '<field name="bar"/>' +
+                            '</button>' +
+                        '</div>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            intercepts: {
+                execute_action: function (event) {
+                    return def.then(function() {
+                        event.data.on_success();
+                    })
+                }
+            },
+        });
+
+        assert.notOk(form.$('.oe_button_box button').attr('disabled'),
+            "stat buttons should be enabled");
+
+        form.$('.oe_button_box button').click();
+
+        // The unresolved deferred lets us check the state of the buttons
+        assert.ok(form.$('.oe_button_box button').attr('disabled'),
+            "stat buttons should be disabled");
+
+        def.resolve();
+
+        assert.notOk(form.$('.oe_button_box button').attr('disabled'),
+            "stat buttons should be enabled");
+
+        form.destroy();
     });
 });
 });
