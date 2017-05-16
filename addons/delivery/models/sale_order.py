@@ -55,7 +55,7 @@ class SaleOrder(models.Model):
 
                 if carrier.delivery_type not in ['fixed', 'base_on_rule']:
                     # Shipping providers are used when delivery_type is other than 'fixed' or 'base_on_rule'
-                    price_unit = order.carrier_id.get_shipping_price_from_so(order)[0]
+                    price_unit = order.carrier_id.get_shipping_price_from_so(order)
                 else:
                     # Classic grid-based carriers
                     carrier = order.carrier_id.verify_carrier(order.partner_shipping_id)

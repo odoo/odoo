@@ -118,7 +118,7 @@ class DeliveryCarrier(models.Model):
             order = SaleOrder.browse(order_id)
             if self.delivery_type not in ['fixed', 'base_on_rule']:
                 try:
-                    computed_price = self.get_shipping_price_from_so(order)[0]
+                    computed_price = self.get_shipping_price_from_so(order)
                     self.available = True
                 except ValidationError as e:
                     # No suitable delivery method found, probably configuration error
@@ -145,15 +145,15 @@ class DeliveryCarrier(models.Model):
 
     # TODO define and handle exceptions that could be thrown by providers
 
-    def get_shipping_price_from_so(self, orders):
-        ''' For every sales order, compute the price of the shipment
+    def get_shipping_price_from_so(self, order):
+        ''' Compute the price of the order shipment
 
-        :param orders: A recordset of sales orders
-        :return list: A list of floats, containing the estimated price for the shipping of the sales order
+        :param order: A recordset of a sales order
+        :return list: A float, the estimated price for the shipping of the sales order
         '''
         self.ensure_one()
         if hasattr(self, '%s_get_shipping_price_from_so' % self.delivery_type):
-            return getattr(self, '%s_get_shipping_price_from_so' % self.delivery_type)(orders)
+            return getattr(self, '%s_get_shipping_price_from_so' % self.delivery_type)(order)
 
     def send_shipping(self, pickings):
         ''' Send the package to the service provider
