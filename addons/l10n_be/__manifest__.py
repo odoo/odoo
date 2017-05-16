@@ -51,6 +51,7 @@ Wizards provided by this module:
         'data/account_reconcile_model_template.xml',
         'data/account_chart_template_data.yml',
         'data/menuitem_data.xml',
+        'views/account_config_settings_views.xml',
     ],
     'demo': [
         'demo/l10n_be_demo.yml',
