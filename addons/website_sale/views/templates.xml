@@ -1468,7 +1468,7 @@
                 <div class="container oe_website_sale">
                     <div class="row">
                         <div class="col-md-9">
-                            <h1 class="mb32">Order <em t-field="order.name" /> Confirmed</h1>
+                            <h1 class="mb32">Order <em t-field="order.name" /> <t t-if="order.state == 'sale'">Confirmed</t></h1>
                             <div class="thanks_msg">
                                 <h2>Thank you for your order.
                                           <a class="btn btn-primary pull-right hidden-xs" href="/shop/print" target="_blank"><i class="fa fa-print"></i> Print
@@ -1509,7 +1509,7 @@
                                               <td class='td-qty'>
                                                   <div id="quote_qty">
                                                       <span t-field="line.product_uom_qty"/>
-                                                      <span class='hidden-xs' t-field="line.product_uom"/>
+                                                      <span class='hidden-xs' t-field="line.product_uom" groups="product.group_uom"/>
                                                   </div>
                                               </td>
                                               <td class='td-price'>
@@ -1587,10 +1587,6 @@
     </template>
 
     <template id="order_state_message" name="Order State Message">
-        <t groups="base.group_system">
-            <a class="btn btn-primary pull-right" target="_blank" t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer',acquirer_id.id, 'payment.action_payment_acquirer')">
-                <i class="fa fa-cog"></i> Configure Transfer Details</a>
-        </t>
         <t t-if="(not_order and state == 'error') or (not tx_ids and state == 'error')">
             <p>There seems to be an error with your request.</p>
         </t>
@@ -1647,9 +1643,11 @@
         <t t-if="order.payment_acquirer_id.auto_confirm == 'none'">
             <div class="panel panel-info">
                 <div class="panel-heading" t-raw="order.payment_acquirer_id.pending_msg" />
-                <div class="panel-body" t-if="order.payment_acquirer_id.post_msg">
-                    <t t-raw="order.payment_acquirer_id.post_msg" />
-                </div>
+                <t t-if="post_msg">
+                    <div class="panel-body">
+                        <t t-raw="order.payment_acquirer_id.post_msg" />
+                    </div>
+                </t>
             </div>
         </t>
         <t t-if="order.payment_acquirer_id.auto_confirm != 'none'">
