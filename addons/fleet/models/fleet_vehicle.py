@@ -65,7 +65,7 @@ class FleetVehicle(models.Model):
     contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon', multi='contract_info')
     contract_renewal_total = fields.Text(compute='_compute_contract_reminder', string='Total of contracts due or overdue minus one',
         multi='contract_info')
-    car_value = fields.Float(string="Catalog Value (VAT incl.)", help='Value of the bought vehicle')
+    car_value = fields.Float(string="Catalog Value (VAT Incl.)", help='Value of the bought vehicle')
     residual_value = fields.Float()
 
     _sql_constraints = [

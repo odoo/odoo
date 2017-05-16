@@ -52,6 +52,7 @@ class Holidays(models.Model):
                     'user_id': holiday.employee_id.user_id.id,
                     'date': fields.Date.to_string(day_date),
                     'holiday_id': holiday.id,
+                    'employee_id': holiday.employee_id.id,
                 })
 
         return super(Holidays, self)._validate_leave_request()

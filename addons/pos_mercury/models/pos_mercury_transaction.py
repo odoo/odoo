@@ -15,7 +15,7 @@ class MercuryTransaction(models.Model):
     _name = 'pos_mercury.mercury_transaction'
 
     def _get_pos_session(self):
-        pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)])
+        pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)
         if not pos_session:
             raise UserError("No POS session")
 
@@ -32,6 +32,7 @@ class MercuryTransaction(models.Model):
             raise UserError("No Mercury configuration associated with the journal.")
 
     def _setup_request(self, data):
+        # todo: in master make the client include the pos.session id and use that
         pos_session = self._get_pos_session()
 
         config = pos_session.config_id

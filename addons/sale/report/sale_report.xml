@@ -10,15 +10,5 @@
             name="sale.report_saleorder"
             print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"
         />
-
-         <report
-            string="Pro-Forma"
-            id="report_proforma_quotation"
-            model="sale.order"
-            report_type="qweb-pdf"
-            name="sale.report_saleproforma"
-            file="sale.report_saleorder"
-            print_report_name="'Pro-Forma - %s' % (object.name)"
-        />
     </data>
 </odoo>

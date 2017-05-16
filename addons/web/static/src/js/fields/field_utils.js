@@ -71,7 +71,7 @@ function formatChar(value) {
  * @returns {string}
  */
 function formatDate(value, field, options) {
-    if (!value) {
+    if (value === false) {
         return "";
     }
     if (!options || !('timezone' in options) || options.timezone) {
@@ -96,7 +96,7 @@ function formatDate(value, field, options) {
  * @returns {string}
  */
 function formatDateTime(value, field, options) {
-    if (!value) {
+    if (value === false) {
         return "";
     }
     if (!options || !('timezone' in options) || options.timezone) {
@@ -113,7 +113,7 @@ function formatDateTime(value, field, options) {
  * Returns a string representing a float.  The result takes into account the
  * user settings (to display the correct decimal separator).
  *
- * @param {float} value the value that should be formatted
+ * @param {float|false} value the value that should be formatted
  * @param {Object} [field] a description of the field (returned by fields_get
  *   for example).  It may contain a description of the number of digits that
  *   should be used.
@@ -124,6 +124,9 @@ function formatDateTime(value, field, options) {
  * @returns {string}
  */
 function formatFloat(value, field, options) {
+    if (value === false) {
+        return "";
+    }
     var l10n = core._t.database.parameters;
     var precision;
     if (options && options.digits) {
@@ -213,7 +216,7 @@ function formatX2Many(value) {
  * Returns a string representing a monetary value. The result takes into account
  * the user settings (to display the correct decimal separator, currency, ...).
  *
- * @param {float} value the value that should be formatted
+ * @param {float|false} value the value that should be formatted
  * @param {Object} [field]
  *        a description of the field (returned by fields_get for example). It
  *        may contain a description of the number of digits that should be used.
@@ -238,6 +241,9 @@ function formatX2Many(value) {
  * @returns {string}
  */
 function formatMonetary(value, field, options) {
+    if (value === false) {
+        return "";
+    }
     options = options || {};
 
     var currency = options.currency;

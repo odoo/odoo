@@ -660,9 +660,9 @@ var DomainLeaf = DomainNode.extend({
                     this.valueWidget = new (selectedField.type === "datetime" ? datepicker.DateTimeWidget : datepicker.DateWidget)(this);
                     wDefs.push(this.valueWidget.appendTo("<div/>").then((function () {
                         this.valueWidget.$el.addClass("o_domain_leaf_value_input");
-                        this.valueWidget.set_value(moment(this.value));
+                        this.valueWidget.setValue(moment(this.value));
                         this.valueWidget.on("datetime_changed", this, function () {
-                            this._changeValue(this.valueWidget.get_value());
+                            this._changeValue(this.valueWidget.getValue());
                         });
                     }).bind(this)));
                 }

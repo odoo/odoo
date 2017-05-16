@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import werkzeug
+
 from datetime import datetime
 from dateutil import relativedelta
 
@@ -119,6 +121,9 @@ class MailGroup(http.Controller):
         "/groups/<model('mail.channel'):group>/page/<int:page>"
     ], type='http', auth="public", website=True)
     def thread_headers(self, group, page=1, mode='thread', date_begin=None, date_end=None, **post):
+        if group.channel_type != 'channel':
+            raise werkzeug.exceptions.NotFound()
+
         Message = request.env['mail.message']
 
         domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id), ('message_type', '!=', 'notification')]
@@ -151,6 +156,9 @@ class MailGroup(http.Controller):
         '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>''',
     ], type='http', auth="public", website=True)
     def thread_discussion(self, group, message, mode='thread', date_begin=None, date_end=None, **post):
+        if group.channel_type != 'channel':
+            raise werkzeug.exceptions.NotFound()
+
         Message = request.env['mail.message']
         if mode == 'thread':
             base_domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id), ('parent_id', '=', message.parent_id and message.parent_id.id or False)]
@@ -175,6 +183,9 @@ class MailGroup(http.Controller):
         '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>/get_replies''',
         type='json', auth="public", methods=['POST'], website=True)
     def render_messages(self, group, message, **post):
+        if group.channel_type != 'channel':
+            return False
+
         last_displayed_id = post.get('last_displayed_id')
         if not last_displayed_id:
             return False

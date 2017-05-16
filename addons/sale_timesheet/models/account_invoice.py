@@ -71,14 +71,14 @@ class AccountInvoice(models.Model):
                         total_revenue_per_currency = dict.fromkeys(uninvoiced_timesheet_lines.mapped('company_currency_id').ids, 0.0)
                         for index, timesheet_line in enumerate(uninvoiced_timesheet_lines):
                             if index+1 != len(uninvoiced_timesheet_lines):
-                                line_revenue = invoiced_price_per_hour * timesheet_line.unit_amount
+                                line_revenue = invoice_line.currency_id.compute(invoiced_price_per_hour, timesheet_line.company_currency_id) * timesheet_line.unit_amount
                                 total_revenue_per_currency[timesheet_line.company_currency_id.id] += line_revenue
                             else:  # last line: add the difference to avoid rounding problem
                                 total_revenue = sum([self.env['res.currency'].browse(currency_id).compute(amount, timesheet_line.company_currency_id) for currency_id, amount in total_revenue_per_currency.items()])
-                                line_revenue = invoice_line.price_subtotal - total_revenue
+                                line_revenue = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.company_currency_id) - total_revenue
                             timesheet_line.write({
                                 'timesheet_invoice_id': invoice.id,
-                                'timesheet_revenue': float_round(line_revenue, precision),
+                                'timesheet_revenue': timesheet_line.company_currency_id.round(line_revenue),
                             })
 
                     # ordered : update revenue with the prorata of theorical revenue
@@ -105,5 +105,5 @@ class AccountInvoice(models.Model):
 
                             timesheet_line.write({
                                 'timesheet_invoice_id': invoice.id,
-                                'timesheet_revenue': float_round(line_revenue, precision),
+                                'timesheet_revenue': timesheet_line.company_currency_id.round(line_revenue),
                             })

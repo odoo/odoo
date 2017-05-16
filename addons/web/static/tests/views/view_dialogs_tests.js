@@ -46,6 +46,11 @@ QUnit.module('Views', {
             },
         });
 
+        testUtils.intercept(parent, 'env_updated', function () {
+            throw new Error("The environment should not be propagated to the view manager");
+        });
+
+
         var dialog = new dialogs.FormViewDialog(parent, {
             res_model: 'partner',
             res_id: 1,

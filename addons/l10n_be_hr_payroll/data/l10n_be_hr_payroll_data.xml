@@ -279,7 +279,7 @@ elif salary &lt;= 2461.27:
         <field name="sequence">140</field>
         <field name="amount_select">fix</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(employee.dependent_children)</field>
+        <field name="condition_python">result = bool(employee.dependent_children) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
     </record>
     <record id="hr_payroll_rules_child" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_child_alw"/>
@@ -296,7 +296,7 @@ elif salary &lt;= 2461.27:
 
                                                 a) Reduction for dependent children</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(employee.dependent_children)</field>
+        <field name="condition_python">result = bool(employee.dependent_children) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
     </record>
     <record id="hr_salary_rule_other_family_charges_reductions" model="hr.salary.rule">
         <field name="category_id" ref="hr_salary_rule_category_family_reductions"/>

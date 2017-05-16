@@ -67,7 +67,7 @@ var FormController = BasicController.extend({
         }).then(function (handle) {
             self.handle = handle;
             self._updateEnv();
-            self._setMode('edit');
+            return self._setMode('edit');
         });
     },
     /**
@@ -168,6 +168,35 @@ var FormController = BasicController.extend({
             this._updateSidebar();
         }
     },
+    /**
+     * Show a warning message if the user modified a translated field.  For each
+     * field, the notification provides a link to edit the field's translations.
+     *
+     * @override
+     */
+    saveRecord: function () {
+        var result = this._super.apply(this, arguments);
+        if (_t.database.multi_lang) {
+            var self = this;
+            result.then(function (changedFields) {
+                if (!changedFields.length) {
+                    return changedFields;
+                }
+                var fields = self.renderer.state.fields;
+                var alertFields = [];
+                for (var k = 0; k < changedFields.length; k++) {
+                    var field = fields[changedFields[k]];
+                    if (field.translate) {
+                        alertFields.push(field);
+                    }
+                }
+                if (alertFields.length) {
+                    self.renderer.displayTranslationAlert(alertFields);
+                }
+            });
+        }
+        return result;
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -180,10 +209,15 @@ var FormController = BasicController.extend({
      * @private
      * @override method from field manager mixin
      * @param {string} id
+     * @returns {Deferred}
      */
     _confirmSave: function (id) {
         if (id === this.handle) {
-            return this.reload();
+            if (this.mode === 'readonly') {
+                return this.reload();
+            } else {
+                return this._setMode('readonly');
+            }
         } else {
             // a subrecord changed, so update the corresponding relational field
             // i.e. the one whose value is a record with the given id or a list
@@ -243,6 +277,12 @@ var FormController = BasicController.extend({
      */
     _updateButtons: function () {
         if (this.$buttons) {
+            if (this.footerToButtons) {
+                var $footer = this.$('footer');
+                if ($footer.length) {
+                    this.$buttons.empty().append($footer);
+                }
+            }
             var edit_mode = (this.mode === 'edit');
             this.$buttons.find('.o_form_buttons_edit')
                          .toggleClass('o_hidden', !edit_mode);
@@ -416,7 +456,7 @@ var FormController = BasicController.extend({
             res_id: record && record.res_id,
             res_model: data.field.relation,
             shouldSaveLocally: true,
-            title: (record ? _t("Open:") : _t("Create")) + data.field.string,
+            title: (record ? _t("Open: ") : _t("Create ")) + (event.target.string || data.field.string),
         }).open();
     },
     /**

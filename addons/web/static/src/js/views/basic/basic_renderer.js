@@ -16,12 +16,7 @@ var qweb = core.qweb;
 
 var BasicRenderer = AbstractRenderer.extend({
     custom_events: {
-        /**
-         * All basic renderers should be able to handle widget navigation
-         * through the TAB key.
-         */
-        move_next: '_onMoveNext',
-        move_previous: '_onMovePrevious',
+        navigation_move: '_onNavigationMove',
     },
     /**
      * Basic renderers implements the concept of "mode", they can either be in
@@ -169,7 +164,7 @@ var BasicRenderer = AbstractRenderer.extend({
 
         var recordWidgets = this.allFieldWidgets[record.id] || [];
         for (var i = 0 ; i < recordWidgets.length ; i++) {
-            var activated = recordWidgets[currentIndex].activate();
+            var activated = recordWidgets[currentIndex].activate({event: options.event});
             if (activated) {
                 return currentIndex;
             }
@@ -600,24 +595,15 @@ var BasicRenderer = AbstractRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * When someone presses TAB in a widget, it is nice to be able to go to the
-     * next widget, especially since the TAB key event is preventDefaulted
+     * When someone presses the TAB/UP/DOWN/... key in a widget, it is nice to
+     * be able to navigate in the view (default browser behaviors are disabled
+     * by Odoo).
      *
      * @abstract
      * @private
      * @param {OdooEvent} ev
      */
-    _onMoveNext: function (ev) {},
-    /**
-     * When someone presses SHIFT+TAB in a widget, it is nice to be able to go
-     * back to the previous widget, especially since the TAB key event is
-     * preventDefaulted
-     *
-     * @abstract
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onMovePrevious: function (ev) {},
+    _onNavigationMove: function (ev) {},
 });
 
 return BasicRenderer;

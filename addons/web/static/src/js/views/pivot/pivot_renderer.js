@@ -7,6 +7,9 @@ var field_utils = require('web.field_utils');
 var PivotRenderer = AbstractRenderer.extend({
     tagName: 'table',
     className: 'table-hover table-condensed table-bordered',
+    events: _.extend({}, AbstractRenderer.prototype.events, {
+        'hover td': '_onTdHover',
+    }),
 
     //--------------------------------------------------------------------------
     // Private
@@ -34,9 +37,6 @@ var PivotRenderer = AbstractRenderer.extend({
         }
         this._renderHeaders($thead, this.state.headers);
         this._renderRows($tbody, this.state.rows);
-        $table.on('hover', 'td', function () {
-            $table.find('col:eq(' + $(this).index()+')').toggleClass('hover');
-        });
         // todo: make sure the next line does something
         $table.find('.o_pivot_header_cell_opened,.o_pivot_header_cell_closed').tooltip();
         this.$el.html($table.contents());
@@ -138,6 +138,19 @@ var PivotRenderer = AbstractRenderer.extend({
             $tbody.append($row);
         }
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onTdHover: function (event) {
+        var $td = $(event.target);
+        $td.closest('table').find('col:eq(' + $td.index()+')').toggleClass('hover');
+    }
 
 });
 

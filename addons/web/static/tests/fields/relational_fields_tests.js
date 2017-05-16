@@ -142,7 +142,7 @@ QUnit.module('relational_fields', {
     QUnit.module('FieldMany2One');
 
     QUnit.test('many2ones in form views', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -150,10 +150,13 @@ QUnit.module('relational_fields', {
             arch: '<form string="Partners">' +
                     '<sheet>' +
                         '<group>' +
-                            '<field name="trululu"/>' +
+                            '<field name="trululu" string="custom label"/>' +
                         '</group>' +
                     '</sheet>' +
                 '</form>',
+            archs: {
+                'partner,false,form': '<form string="Partners"><field name="display_name"/></form>',
+            },
             res_id: 1,
             mockRPC: function (route, args) {
                 if (args.method === 'get_formview_action') {
@@ -177,11 +180,6 @@ QUnit.module('relational_fields', {
             assert.strictEqual(event.data.action.res_id, 17,
                 "should do a do_action with correct parameters");
         });
-        testUtils.intercept(form, 'load_views', function (event) {
-            // temporarily prevent the fields_view from being loaded (to prevent a crash)
-            // TODO: specify a fields_view and test that we can edit the record in the dialog
-            event.stopPropagation();
-        });
 
         assert.strictEqual(form.$('a.o_form_uri:contains(aaa)').length, 1,
                         "should contain a link");
@@ -190,6 +188,9 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
 
         form.$('.o_external_button').click(); // click on the external button (should do an RPC)
+
+        assert.strictEqual($('.modal .modal-title').text().trim(), 'Open: custom label',
+                        "dialog title should display the custom string label");
 
         // TODO: test that we can edit the record in the dialog, and that the value is correctly
         // updated on close
@@ -2185,7 +2186,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many with many2many widget: edition', function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         var form = createView({
             View: FormView,
@@ -2230,6 +2231,8 @@ QUnit.module('relational_fields', {
         });
 
         form.$('.o_data_row:first').click();
+        assert.strictEqual($('.modal .modal-title').first().text().trim(), 'Open: one2many turtle field',
+            "modal should use the python field string as title");
         $('.modal .o_form_button_cancel').click();
         form.$buttons.find('.o_form_button_edit').click();
 

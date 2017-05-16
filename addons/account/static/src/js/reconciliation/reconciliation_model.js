@@ -131,7 +131,7 @@ var StatementModel = BasicModel.extend({
      */
     autoReconciliation: function () {
         var self = this;
-        var ids = _.pluck(_.filter(_.values(this.lines), {'reconciled': false}), 'id');
+        var ids = _.pluck(_.filter(this.lines, {'reconciled': false}), 'id');
         return this._rpc({
                 model: 'account.bank.statement.line',
                 method: 'reconciliation_widget_auto_reconcile',
@@ -247,7 +247,7 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         var prop = _.filter(line.reconciliation_proposition, '__focus');
         var last = prop[prop.length-1];
-        if (last && (!last.account_id || !last.label.length || !last.amount)) {
+        if (last && !this._isValid(last)) {
             return $.Deferred().reject();
         }
 
@@ -379,10 +379,12 @@ var StatementModel = BasicModel.extend({
         var self = this;
         var line = this.getLine(handle);
         var prop = _.find(line.reconciliation_proposition, {'id' : id});
-        line.reconciliation_proposition = _.filter(line.reconciliation_proposition, function (p) {
-            return p.id !== prop.id && p.id !== prop.link && p.link !== prop.id && (!p.link || p.link !== prop.link);
-        });
-        line.mode = isNaN(id) && !this.avoidCreate ? 'create' : 'match';
+        if (prop) {
+            line.reconciliation_proposition = _.filter(line.reconciliation_proposition, function (p) {
+                return p.id !== prop.id && p.id !== prop.link && p.link !== prop.id && (!p.link || p.link !== prop.link);
+            });
+        }
+        line.mode = (id || line.mode !== "create") && isNaN(id) && !this.avoidCreate ? 'create' : 'match';
         var def = this._computeLine(line);
         if (line.mode === 'create') {
             return def.then(function () {
@@ -869,6 +871,10 @@ var StatementModel = BasicModel.extend({
  */
 var ManualModel = StatementModel.extend({
     quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id'],
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
 
     /**
      * load data from

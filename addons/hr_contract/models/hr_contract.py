@@ -57,14 +57,17 @@ class Contract(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee')
     department_id = fields.Many2one('hr.department', string="Department")
     type_id = fields.Many2one('hr.contract.type', string="Contract Type", required=True, default=lambda self: self.env['hr.contract.type'].search([], limit=1))
-    job_id = fields.Many2one('hr.job', string='Job Title')
-    date_start = fields.Date('Start Date', required=True, default=fields.Date.today)
-    date_end = fields.Date('End Date')
-    trial_date_end = fields.Date('End of Trial Period')
+    job_id = fields.Many2one('hr.job', string='Job Position')
+    date_start = fields.Date('Start Date', required=True, default=fields.Date.today,
+        help="Start date of the contract.")
+    date_end = fields.Date('End Date',
+        help="End date of the contract (if it's a fixed-term contract).")
+    trial_date_end = fields.Date('End of Trial Period',
+        help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id.id)
-    wage = fields.Monetary('Wage', digits=(16, 2), required=True, help="The monthly gross wage of the employee.")
+    wage = fields.Monetary('Wage', digits=(16, 2), required=True, help="Employee's monthly gross wage.")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
     state = fields.Selection([
@@ -73,12 +76,16 @@ class Contract(models.Model):
         ('pending', 'To Renew'),
         ('close', 'Expired'),
         ('cancel', 'Cancelled')
-    ], string='Status', track_visibility='onchange', help='Status of the contract', default='draft')
+    ], string='Status', group_expand='_expand_states',
+       track_visibility='onchange', help='Status of the contract', default='draft')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
-    currency_id = fields.Many2one(string="Currency", related='company_id.currency_id')
+    currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no")
     visa_no = fields.Char('Visa No', related="employee_id.visa_no")
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire")
+
+    def _expand_states(self, states, domain, order):
+        return [key for key, val in type(self).state.selection]
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):

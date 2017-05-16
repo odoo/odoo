@@ -164,6 +164,7 @@ var KanbanController = BasicController.extend({
         var self = this;
         this.model.createGroup(event.data.value, this.handle).then(function () {
             self.update({}, {reload: false});
+            self._updateButtons();
             self.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
         });
     },
@@ -220,7 +221,7 @@ var KanbanController = BasicController.extend({
         var state = this.model.get(this.handle, {raw: true});
         var relatedModelName = state.fields[state.groupedBy[0]].relation;
         this.model
-            .deleteRecords([column.db_id], relatedModelName, this.handle)
+            .deleteRecords([column.db_id], relatedModelName)
             .done(function () {
                 if (column.isEmpty()) {
                     self.renderer.removeWidget(column);

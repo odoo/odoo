@@ -7,13 +7,10 @@ from odoo import api, fields, models
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    def _default_employee_id(self):
-        return self.env.user.employee_ids[0]
-
     task_id = fields.Many2one('project.task', 'Task')
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
-    employee_id = fields.Many2one('hr.employee', "Employee", default=_default_employee_id)
+    employee_id = fields.Many2one('hr.employee', "Employee")
     department_id = fields.Many2one('hr.department', "Department", related='employee_id.department_id', store=True, readonly=True)
 
     @api.onchange('project_id')
@@ -27,6 +24,12 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def create(self, vals):
         vals = self._update_timesheet_values(vals)
+        if not vals.get('employee_id') and vals.get('project_id'):  # compute employee only for timesheet lines, makes no sense for other lines
+            if vals.get('user_id'):
+                ts_user_id = vals['user_id']
+            else:
+                ts_user_id = self.env.user.id
+            vals['employee_id'] = self.env['hr.employee'].search([('user_id', '=', ts_user_id)], limit=1).id
         return super(AccountAnalyticLine, self).create(vals)
 
     @api.multi

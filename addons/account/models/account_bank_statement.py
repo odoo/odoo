@@ -93,6 +93,11 @@ class AccountBankStatement(models.Model):
     def _check_lines_reconciled(self):
         self.all_lines_reconciled = all([line.journal_entry_ids.ids or line.account_id.id for line in self.line_ids])
 
+    @api.depends('move_line_ids')
+    def _get_move_line_count(self):
+        for payment in self:
+            payment.move_line_count = len(payment.move_line_ids)
+
     @api.model
     def _default_journal(self):
         journal_type = self.env.context.get('journal_type', False)
@@ -146,6 +151,8 @@ class AccountBankStatement(models.Model):
 
     line_ids = fields.One2many('account.bank.statement.line', 'statement_id', string='Statement lines', states={'confirm': [('readonly', True)]}, copy=True)
     move_line_ids = fields.One2many('account.move.line', 'statement_id', string='Entry lines', states={'confirm': [('readonly', True)]})
+    move_line_count = fields.Integer(compute="_get_move_line_count")
+
     all_lines_reconciled = fields.Boolean(compute='_check_lines_reconciled')
     user_id = fields.Many2one('res.users', string='Responsible', required=False, default=lambda self: self.env.user)
     cashbox_start_id = fields.Many2one('account.bank.statement.cashbox', string="Starting Cashbox")
@@ -419,7 +426,7 @@ class AccountBankStatementLine(models.Model):
                 payment_to_unreconcile |= line.payment_id
                 if st_line.move_name and line.payment_id.payment_reference == st_line.move_name:
                     #there can be several moves linked to a statement line but maximum one created by the line itself
-                    aml_to_cancel |= st_line.journal_entry_ids
+                    aml_to_cancel |= line
                     payment_to_cancel |= line.payment_id
         aml_to_unbind = aml_to_unbind - aml_to_cancel
 
@@ -880,6 +887,8 @@ class AccountBankStatementLine(models.Model):
             if aml_dict.get('tax_ids') and isinstance(aml_dict['tax_ids'][0], pycompat.integer_types):
                 # Transform the value in the format required for One2many and Many2many fields
                 aml_dict['tax_ids'] = [(4, id, None) for id in aml_dict['tax_ids']]
+        if any(line.journal_entry_ids for line in self):
+            raise UserError(_('A selected statement line was already reconciled with an account move.'))
 
         # Fully reconciled moves are just linked to the bank statement
         total = self.amount

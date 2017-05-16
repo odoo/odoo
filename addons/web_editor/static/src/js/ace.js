@@ -287,12 +287,15 @@ var ViewEditor = Widget.extend({
         this.less = this.resources.less;
 
         // Load resources
-        return ajax.jsonRpc("/web_editor/get_assets_editor_resources", "call", {
-            key: this.viewKey,
-            get_views: !this.options.doNotLoadViews,
-            get_less: !this.options.doNotLoadLess,
-            bundles: this.options.includeBundles,
-            bundles_restriction: this.options.includeAllLess ? [] : this.options.defaultBundlesRestriction,
+        return this._rpc({
+            route: "/web_editor/get_assets_editor_resources",
+            params: {
+                key: this.viewKey,
+                get_views: !this.options.doNotLoadViews,
+                get_less: !this.options.doNotLoadLess,
+                bundles: this.options.includeBundles,
+                bundles_restriction: this.options.includeAllLess ? [] : this.options.defaultBundlesRestriction,
+            },
         }).then((function (resources) {
             _process_views.call(this, resources.views);
             _process_less.call(this, resources.less);
@@ -481,9 +484,12 @@ var ViewEditor = Widget.extend({
         if (this.currentType === "xml") {
             return $.Defered().reject(_t("Reseting views is not supported yet")); // TODO
         } else {
-            return ajax.jsonRpc("/web_editor/reset_less", "call", {
-                url: resID,
-                bundle_xmlid: this.less[resID].bundle_xmlid,
+            return this._rpc({
+                route: "/web_editor/reset_less",
+                params: {
+                    url: resID,
+                    bundle_xmlid: this.less[resID].bundle_xmlid,
+                },
             });
         }
     },
@@ -596,7 +602,7 @@ var ViewEditor = Widget.extend({
         var def = $.Deferred();
 
         var self = this;
-        ajax.jsonRpc('/web/dataset/call', 'call', {
+        this._rpc({
             model: 'ir.ui.view',
             method: 'write',
             args: [[session.id], {arch: session.text}, _.extend(base.get_context(), {lang: null})],
@@ -618,10 +624,13 @@ var ViewEditor = Widget.extend({
         var def = $.Deferred();
 
         var self = this;
-        ajax.jsonRpc("/web_editor/save_less", "call", {
-            url: session.id,
-            bundle_xmlid: this.less[session.id].bundle_xmlid,
-            content: session.text,
+        this._rpc({
+            route: "/web_editor/save_less",
+            params: {
+                url: session.id,
+                bundle_xmlid: this.less[session.id].bundle_xmlid,
+                content: session.text,
+            },
         }).then(function () {
             self._toggleDirtyInfo(session.id, "less", false);
             def.resolve();

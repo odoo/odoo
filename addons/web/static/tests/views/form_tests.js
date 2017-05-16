@@ -576,6 +576,53 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('empty fields\' labels still get the empty class after widget rerender', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.foo.default = false; // no default value for this test
+        this.data.partner.records[1].foo = false;  // 1 is record with id=2
+        this.data.partner.records[1].int_field = false;  // 1 is record with id=2
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                            '<field name="int_field" attrs="{\'readonly\': [[\'foo\', \'=\', \'readonly\']]}"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget.o_field_empty').length, 2,
+            "should have 2 empty fields with correct class");
+        assert.strictEqual(form.$('.o_form_label_empty').length, 2,
+            "should have 2 muted labels (for the empty fieds) in readonly");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_field_empty').length, 0,
+            "in edit mode, only empty readonly fields should have the o_field_empty class");
+        assert.strictEqual(form.$('.o_form_label_empty').length, 0,
+            "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class");
+
+        form.$('input[name="foo"]').val("readonly").trigger("input"); // int_field is now rerendered as readonly
+        form.$('input[name="foo"]').val("edit").trigger("input"); // int_field is now rerendered as editable
+        form.$('input[name="int_field"]').val('1').trigger("input"); // int_field is now set
+        form.$('input[name="foo"]').val("readonly").trigger("input"); // int_field is now rerendered as readonly
+
+        assert.strictEqual(form.$('.o_field_empty').length, 0,
+            "there still should not be any empty class on fields as the readonly one is now set");
+        assert.strictEqual(form.$('.o_form_label_empty').length, 0,
+            "there still should not be any empty class on labels as the associated readonly field is now set");
+
+        form.destroy();
+    });
+
     QUnit.test('empty inner readonly fields don\'t have o_form_empty class in "create" mode', function (assert) {
         assert.expect(2);
 
@@ -693,6 +740,50 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('input.o_required_modifier').length, 1,
                             "in edit mode, should have 1 input with o_required_modifier");
+        form.destroy();
+    });
+
+    QUnit.test('required float fields works as expected', function (assert) {
+        assert.expect(8);
+
+        this.data.partner.fields.qux.required = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="qux"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(form.$('input[name="qux"]').hasClass('o_required_modifier'),
+            "qux input is flagged as required");
+        assert.strictEqual(form.$('input[name="qux"]').val(), "",
+            "qux input is empty");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.ok(form.$('input[name="qux"]').hasClass('o_field_invalid'),
+            "qux input is displayed as invalid");
+
+        form.$('input[name="qux"]').val("0").trigger('input');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('input[name="qux"]').val(), "0.0",
+            "qux input is properly formatted");
+
+        assert.verifySteps(['default_get', 'create', 'read']);
         form.destroy();
     });
 
@@ -1082,7 +1173,7 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {sidebar: true},
             res_id: 1,
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
                 }
@@ -1227,7 +1318,7 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {sidebar: true},
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
                 }
@@ -1410,8 +1501,8 @@ QUnit.module('Views', {
         assert.strictEqual(form.$("label").eq(1).text(), "Bar",
             "one should be the one for the bar field");
 
-        assert.strictEqual(form.$('.firstgroup td').first().attr('colspan'), "1",
-            "foo td should have a colspan of 1");
+        assert.strictEqual(form.$('.firstgroup td').first().attr('colspan'), undefined,
+            "foo td should have a default colspan (1)");
         assert.strictEqual(form.$('.secondgroup tr').length, 2,
             "int_field and qux should have same tr");
 
@@ -1678,7 +1769,7 @@ QUnit.module('Views', {
             arch: '<form string="Partners"><field name="foo"></field></form>',
             res_id: 1,
             viewOptions: {sidebar: true},
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
                 }
@@ -2025,7 +2116,7 @@ QUnit.module('Views', {
                 sidebar: true,
             },
             res_id: 1,
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
                 }
@@ -2839,7 +2930,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('onchange value are not discarded on o2m edition', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         this.data.partner.records[1].p = [4];
         this.data.partner.onchanges = {
@@ -2894,6 +2985,8 @@ QUnit.module('Views', {
             "onchange should have been correctly applied on field in o2m list");
 
         form.$('.o_data_row').click(); // edit the o2m in the dialog
+        assert.strictEqual($('.modal .modal-title').text().trim(), 'Open: one2many field',
+            "the field string is displayed in the modal title");
         assert.strictEqual($('.modal .o_field_widget').val(), 'foo changed',
             "the onchange value hasn't been discarded when opening the o2m");
 
@@ -2949,7 +3042,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('args of onchanges in o2m fields are correct (dialog edition)', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         this.data.partner.records[1].p = [4];
         this.data.partner.fields.p.relation_field = 'rel_field';
@@ -2966,7 +3059,7 @@ QUnit.module('Views', {
             arch: '<form>' +
                     '<group>' +
                         '<field name="foo"/>' +
-                        '<field name="p">' +
+                        '<field name="p" string="custom label">' +
                             '<tree>' +
                                 '<field name="foo"/>' +
                             '</tree>' +
@@ -2995,6 +3088,8 @@ QUnit.module('Views', {
 
         // create a new o2m record
         form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal .modal-title').text().trim(), 'Create custom label',
+            "the custom field label is applied in the modal title");
         assert.strictEqual($('.modal input:first').val(), '[blip] 14',
             "onchange should have been correctly applied after default get");
         $('.modal .modal-footer .btn-primary').click(); // save the dialog
@@ -3433,6 +3528,34 @@ QUnit.module('Views', {
         }
     });
 
+    QUnit.test('footers are not duplicated on rerender', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="foo"/>' +
+                    '<footer>' +
+                        '<button>Hello</button>' +
+                    '</footer>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                footer_to_buttons: true,
+            },
+        });
+
+        assert.strictEqual(form.$('footer').length, 0,
+            "footer should have been moved outside of the form view");
+        form.reload();
+        assert.strictEqual(form.$('footer').length, 0,
+            "footer should still have been moved outside of the form view");
+        form.destroy();
+    });
+
     QUnit.test('render stat button with string inline', function (assert) {
         assert.expect(1);
 
@@ -3652,49 +3775,49 @@ QUnit.module('Views', {
         });
 
     QUnit.test('onchanges are applied before checking if it can be saved', function (assert) {
-       assert.expect(4);
+        assert.expect(4);
 
-       this.data.partner.onchanges.foo = function (obj) {};
-       this.data.partner.fields.foo.required = true;
+        this.data.partner.onchanges.foo = function (obj) {};
+        this.data.partner.fields.foo.required = true;
 
-       var def = $.Deferred();
+        var def = $.Deferred();
 
-       var form = createView({
-           View: FormView,
-           model: 'partner',
-           data: this.data,
-           arch: '<form string="Partners">' +
-                   '<sheet><group>' +
-                       '<field name="foo"/>' +
-                   '</group></sheet>' +
-               '</form>',
-           res_id: 2,
-           mockRPC: function (route, args) {
-               var result = this._super.apply(this, arguments);
-               assert.step(args.method);
-               if (args.method === 'onchange') {
-                   return def.then(function () {
-                       return result;
-                   });
-               }
-               return result;
-           },
-           intercepts: {
-               warning: function () {
-                   assert.step('warning');
-               },
-           },
-       });
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet><group>' +
+                        '<field name="foo"/>' +
+                    '</group></sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                assert.step(args.method);
+                if (args.method === 'onchange') {
+                    return def.then(function () {
+                        return result;
+                    });
+                }
+                return result;
+            },
+            intercepts: {
+                warning: function () {
+                    assert.step('warning');
+                },
+            },
+        });
 
-       form.$buttons.find('.o_form_button_edit').click();
-       form.$('input[name="foo"]').val('').trigger("input");
-       form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input[name="foo"]').val('').trigger("input");
+        form.$buttons.find('.o_form_button_save').click();
 
-       def.resolve();
+        def.resolve();
 
-       assert.verifySteps(['read', 'onchange', 'warning'])
-       form.destroy();
-   });
+        assert.verifySteps(['read', 'onchange', 'warning']);
+        form.destroy();
+    });
 
     QUnit.test('display toolbar', function (assert) {
         assert.expect(7);
@@ -3719,7 +3842,7 @@ QUnit.module('Views', {
             viewOptions: {
                 sidebar: true,
             },
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (route === '/web/action/load') {
                     assert.strictEqual(args.context.active_id, 1,
                         "the active_id shoud be 1.");
@@ -3764,7 +3887,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('check interactions between multiple FormViewDialogs', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         this.data.product.fields.product_ids = {
             string: "one2many product", type: "one2many", relation: "product",
@@ -3815,6 +3938,8 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal').length, 1,
             "One FormViewDialog should be opened");
         var $firstModal = $('.modal');
+        assert.strictEqual($('.modal .modal-title').first().text().trim(), 'Open: Product',
+            "dialog title should display the python field string as label");
         assert.strictEqual($firstModal.find('input').val(), 'xphone',
             "display_name should be correctly displayed");
 
@@ -4053,6 +4178,250 @@ QUnit.module('Views', {
         form.$('div[name="trululu"] input').click();
 
         form.destroy();
+    });
+
+    QUnit.test('form rendering with groups with col/colspan', function (assert) {
+        assert.expect(46);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<group col="6" class="parent_group">' +
+                            '<group col="4" colspan="3" class="group_4">' +
+                                '<div colspan="3"/>' +
+                                '<div colspan="2"/><div/>' +
+                                '<div colspan="4"/>' +
+                            '</group>' +
+                            '<group col="3" colspan="4" class="group_3">' +
+                                '<group col="1" class="group_1">' +
+                                    '<div/><div/><div/>' +
+                                '</group>' +
+                                '<div/>' +
+                                '<group col="3" class="field_group">' +
+                                    '<field name="foo" colspan="3"/>' +
+                                    '<div/><field name="bar" nolabel="1"/>' +
+                                    '<field name="qux"/>' +
+                                    '<field name="int_field" colspan="3" nolabel="1"/>' +
+                                    '<span/><field name="product_id"/>' +
+                                '</group>' +
+                            '</group>' +
+                        '</group>' +
+                        '<group>' +
+                            '<field name="p">' +
+                                '<tree>' +
+                                    '<field name="display_name"/>' +
+                                    '<field name="foo"/>' +
+                                    '<field name="int_field"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        var $parentGroup = form.$('.parent_group');
+        var $group4 = form.$('.group_4');
+        var $group3 = form.$('.group_3');
+        var $group1 = form.$('.group_1');
+        var $fieldGroup = form.$('.field_group');
+
+        // Verify outergroup/innergroup
+        assert.strictEqual($parentGroup[0].tagName, 'DIV', ".parent_group should be an outergroup");
+        assert.strictEqual($group4[0].tagName, 'TABLE', ".group_4 should be an innergroup");
+        assert.strictEqual($group3[0].tagName, 'DIV', ".group_3 should be an outergroup");
+        assert.strictEqual($group1[0].tagName, 'TABLE', ".group_1 should be an innergroup");
+        assert.strictEqual($fieldGroup[0].tagName, 'TABLE', ".field_group should be an innergroup");
+
+        // Verify .parent_group content
+        var $parentGroupChildren = $parentGroup.children();
+        assert.strictEqual($parentGroupChildren.length, 2, "there should be 2 groups in .parent_group");
+        assert.ok($parentGroupChildren.eq(0).is('.o_group_col_6'), "first .parent_group group should be 1/2 parent width");
+        assert.ok($parentGroupChildren.eq(1).is('.o_group_col_8'), "second .parent_group group should be 2/3 parent width");
+
+        // Verify .group_4 content
+        var $group4rows = $group4.find('> tbody > tr');
+        assert.strictEqual($group4rows.length, 3, "there should be 3 rows in .group_4");
+        var $group4firstRowTd = $group4rows.eq(0).children('td');
+        assert.strictEqual($group4firstRowTd.length, 1, "there should be 1 td in first row");
+        assert.strictEqual($group4firstRowTd.attr('colspan'), "3", "the first td colspan should be 3");
+        assert.strictEqual($group4firstRowTd.attr('style').substr(0, 9), "width: 75", "the first td should be 75% width");
+        assert.strictEqual($group4firstRowTd.children()[0].tagName, "DIV", "the first td should contain a div");
+        var $group4secondRowTds = $group4rows.eq(1).children('td');
+        assert.strictEqual($group4secondRowTds.length, 2, "there should be 2 tds in second row");
+        assert.strictEqual($group4secondRowTds.eq(0).attr('colspan'), "2", "the first td colspan should be 2");
+        assert.strictEqual($group4secondRowTds.eq(0).attr('style').substr(0, 9), "width: 50", "the first td be 50% width");
+        assert.strictEqual($group4secondRowTds.eq(1).attr('colspan'), undefined, "the second td colspan should be default one (1)");
+        assert.strictEqual($group4secondRowTds.eq(1).attr('style').substr(0, 9), "width: 25", "the second td be 75% width");
+        var $group4thirdRowTd = $group4rows.eq(2).children('td');
+        assert.strictEqual($group4thirdRowTd.length, 1, "there should be 1 td in third row");
+        assert.strictEqual($group4thirdRowTd.attr('colspan'), "4", "the first td colspan should be 4");
+        assert.strictEqual($group4thirdRowTd.attr('style').substr(0, 10), "width: 100", "the first td should be 100% width");
+
+        // Verify .group_3 content
+        assert.strictEqual($group3.children().length, 3, ".group_3 should have 3 children");
+        assert.strictEqual($group3.children('.o_group_col_4').length, 3, ".group_3 should have 3 children of 1/3 width");
+
+        // Verify .group_1 content
+        assert.strictEqual($group1.find('> tbody > tr').length, 3, "there should be 3 rows in .group_1");
+
+        // Verify .field_group content
+        var $fieldGroupRows = $fieldGroup.find('> tbody > tr');
+        assert.strictEqual($fieldGroupRows.length, 5, "there should be 5 rows in .field_group");
+        var $fieldGroupFirstRowTds = $fieldGroupRows.eq(0).children('td');
+        assert.strictEqual($fieldGroupFirstRowTds.length, 2, "there should be 2 tds in first row");
+        assert.ok($fieldGroupFirstRowTds.eq(0).hasClass('o_td_label'), "first td should be a label td");
+        assert.strictEqual($fieldGroupFirstRowTds.eq(1).attr('colspan'), "2", "second td colspan should be given colspan (3) - 1 (label)");
+        assert.strictEqual($fieldGroupFirstRowTds.eq(1).attr('style').substr(0, 10), "width: 100", "second td width should be 100%");
+        var $fieldGroupSecondRowTds = $fieldGroupRows.eq(1).children('td');
+        assert.strictEqual($fieldGroupSecondRowTds.length, 2, "there should be 2 tds in second row");
+        assert.strictEqual($fieldGroupSecondRowTds.eq(0).attr('colspan'), undefined, "first td colspan should be default one (1)");
+        assert.strictEqual($fieldGroupSecondRowTds.eq(0).attr('style').substr(0, 9), "width: 33", "first td width should be 33.3333%");
+        assert.strictEqual($fieldGroupSecondRowTds.eq(1).attr('colspan'), undefined, "second td colspan should be default one (1)");
+        assert.strictEqual($fieldGroupSecondRowTds.eq(1).attr('style').substr(0, 9), "width: 33", "second td width should be 33.3333%");
+        var $fieldGroupThirdRowTds = $fieldGroupRows.eq(2).children('td'); // new row as label/field pair colspan is greater than remaining space
+        assert.strictEqual($fieldGroupThirdRowTds.length, 2, "there should be 2 tds in third row");
+        assert.ok($fieldGroupThirdRowTds.eq(0).hasClass('o_td_label'), "first td should be a label td");
+        assert.strictEqual($fieldGroupThirdRowTds.eq(1).attr('colspan'), undefined, "second td colspan should be default one (1)");
+        assert.strictEqual($fieldGroupThirdRowTds.eq(1).attr('style').substr(0, 9), "width: 50", "second td should be 50% width");
+        var $fieldGroupFourthRowTds = $fieldGroupRows.eq(3).children('td');
+        assert.strictEqual($fieldGroupFourthRowTds.length, 1, "there should be 1 td in fourth row");
+        assert.strictEqual($fieldGroupFourthRowTds.attr('colspan'), "3", "the td should have a colspan equal to 3");
+        assert.strictEqual($fieldGroupFourthRowTds.attr('style').substr(0, 10), "width: 100", "the td should have 100% width");
+        var $fieldGroupFifthRowTds = $fieldGroupRows.eq(4).children('td'); // label/field pair can be put after the 1-colspan span
+        assert.strictEqual($fieldGroupFifthRowTds.length, 3, "there should be 3 tds in fourth row");
+        assert.strictEqual($fieldGroupFifthRowTds.eq(0).attr('style').substr(0, 9), "width: 50", "the first td should 50% width");
+        assert.ok($fieldGroupFifthRowTds.eq(1).hasClass('o_td_label'), "the second td should be a label td");
+        assert.strictEqual($fieldGroupFifthRowTds.eq(2).attr('style').substr(0, 9), "width: 50", "the third td should 50% width");
+
+        // Verify that one2many list table hasn't been impacted
+        assert.strictEqual(form.$('.o_field_one2many th:first').attr('style'), undefined,
+            "o2m list columns should have no width harcoded");
+
+        form.destroy();
+    });
+
+    QUnit.test('form group with newline tag inside', function (assert) {
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<group col="5" class="main_inner_group">' +
+                            // col=5 otherwise the test is ok even without the
+                            // newline code as this will render a <newline/> DOM
+                            // element in the third column, leaving no place for
+                            // the next field and its label on the same line.
+                            '<field name="foo"/>' +
+                            '<newline/>' +
+                            '<field name="bar"/>' +
+                            '<field name="qux"/>' +
+                        '</group>' +
+                        '<group col="3">' +
+                            // col=3 otherwise the test is ok even without the
+                            // newline code as this will render a <newline/> DOM
+                            // element with the o_group_col_6 class, leaving no
+                            // place for the next group on the same line.
+                            '<group class="top_group">' +
+                                '<div style="height: 200px;"/>' +
+                            '</group>' +
+                            '<newline/>' +
+                            '<group class="bottom_group">' +
+                                '<div/>' +
+                            '</group>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // Inner group
+        assert.strictEqual(form.$('.main_inner_group > tbody > tr').length, 2,
+            "there should be 2 rows in the group");
+        assert.strictEqual(form.$('.main_inner_group > tbody > tr:first > .o_td_label').length, 1,
+            "there should be only one label in the first row");
+        assert.strictEqual(form.$('.main_inner_group > tbody > tr:first .o_field_widget').length, 1,
+            "there should be only one widget in the first row");
+        assert.strictEqual(form.$('.main_inner_group > tbody > tr:last > .o_td_label').length, 2,
+            "there should be two labels in the second row");
+        assert.strictEqual(form.$('.main_inner_group > tbody > tr:last .o_field_widget').length, 2,
+            "there should be two widgets in the second row");
+
+        // Outer group
+        assert.ok((form.$('.bottom_group').position().top - form.$('.top_group').position().top) >= 200,
+            "outergroup children should not be on the same line");
+
+        form.destroy();
+    });
+
+    QUnit.test('custom open record dialog title', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].p = [2];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p" widget="many2many" string="custom label">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="display_name"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            session: {},
+            res_id: 1,
+        });
+
+        form.$('.o_data_row:first').click();
+        assert.strictEqual($('.modal .modal-title').first().text().trim(), 'Open: custom label',
+            "modal should use the python field string as title");
+
+        form.destroy();
+    });
+
+    QUnit.test('display translation alert', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.foo.translate = true;
+
+        var multi_lang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input[name="foo"]').val("test").trigger("input");
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_form_view > .alert > div').length, 1,"should have a translation alert");
+
+        form.destroy();
+
+        _t.database.multi_lang = multi_lang;
     });
 });
 });
