@@ -232,7 +232,12 @@ class CommonServer(object):
         sock.close()
 
 class ThreadedServer(CommonServer):
+    initial_threads = []
+    
     def __init__(self, app):
+        for t in threading.enumerate():
+            self.initial_threads.append(t)
+        
         super(ThreadedServer, self).__init__(app)
         self.main_thread_id = threading.currentThread().ident
         # Variable keeping track of the number of calls to the signal handler defined
@@ -341,7 +346,7 @@ class ThreadedServer(CommonServer):
         _logger.debug('current thread: %r', me)
         for thread in threading.enumerate():
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
-            if thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id:
+            if thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id and thread not in self.initial_threads:
                 while thread.isAlive():
                     _logger.debug('join and sleep')
                     # Need a busyloop here as thread.join() masks signals
