@@ -504,6 +504,7 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
     _description = 'Purchase Order Line'
+    _order = 'sequence, id'
 
     @api.depends('product_qty', 'price_unit', 'taxes_id')
     def _compute_amount(self):
