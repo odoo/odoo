@@ -553,7 +553,7 @@ animation.registry.gallery_slider = animation.Class.extend({
                 self.$next.appendTo(self.$indicator);
             }
         }
-%
+
         function update() {
             index = $lis.index($lis.filter('.active')) || 0;
             page = Math.floor(index / realNbPerPage);
