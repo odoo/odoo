@@ -74,7 +74,8 @@
                                context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
                     </group>
                     <footer>
-                        <button string="Send" name="send_mail_action" type="object" class="btn-primary"/>
+                        <button string="Send" attrs="{'invisible': [('is_log', '=', True)]}" name="send_mail_action" type="object" class="btn-primary"/>
+                        <button string="Log" attrs="{'invisible': [('is_log', '=', False)]}" name="send_mail_action" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel" />
 
                         <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"
