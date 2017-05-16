@@ -16,6 +16,7 @@ var PlannerLauncher = planner.PlannerLauncher.extend({
         return this._rpc({
                 model: 'web.planner',
                 method: 'search_read',
+                domain: [['menu_id', '!=', false], ['view_id', '!=', false], ['planner_application', '!=', false]],
             })
             .then(function (records) {
                 _.each(records, function (planner) {
