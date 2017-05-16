@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from hashlib import sha1
+from hashlib import sha256
 from json import dumps
 
 from openerp import models, api, fields
@@ -38,7 +38,7 @@ class AccountMove(models.Model):
         """ Computes the hash of the browse_record given as self, based on the hash
         of the previous record in the company's securisation sequence given as parameter"""
         self.ensure_one()
-        hash_string = sha1(previous_hash + self.l10n_fr_string_to_hash)
+        hash_string = sha256(previous_hash + self.l10n_fr_string_to_hash)
         return hash_string.hexdigest()
 
     def _compute_string_to_hash(self):
@@ -75,7 +75,7 @@ class AccountMove(models.Model):
                 if (move.state == "posted" and set(vals).intersection(MOVE_FIELDS)):
                     raise UserError(ERR_MSG % (self._name, ', '.join(MOVE_FIELDS)))
                 # restrict the operation in case we are trying to overwrite existing hash
-                if (move.l10n_fr_hash and vals.get('l10n_fr_hash')) or (move.l10n_fr_secure_sequence_number and vals.get('l10n_fr_secure_sequence_number')):
+                if (move.l10n_fr_hash and 'l10n_fr_hash' in vals) or (move.l10n_fr_secure_sequence_number and 'l10n_fr_secure_sequence_number' in vals):
                     raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
         res = super(AccountMove, self).write(vals)
         # write the hash and the secure_sequence_number when posting an account.move
