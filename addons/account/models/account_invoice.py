@@ -1354,6 +1354,12 @@ class AccountInvoiceLine(models.Model):
         """
         pass
 
+    @api.multi
+    def unlink(self):
+        if self.filtered(lambda r: r.invoice_id and r.invoice_id.state != 'draft'):
+            raise UserError(_('You can only delete an invoice line if the invoice is in draft state.'))
+        return super(AccountInvoiceLine, self).unlink()
+
 class AccountInvoiceTax(models.Model):
     _name = "account.invoice.tax"
     _description = "Invoice Tax"

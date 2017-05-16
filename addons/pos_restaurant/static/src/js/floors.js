@@ -967,4 +967,11 @@ screens.define_action_button({
     },
 });
 
+return {
+    TableGuestsButton: TableGuestsButton,
+    TransferOrderButton:TransferOrderButton,
+    TableWidget: TableWidget,
+    FloorScreenWidget: FloorScreenWidget,
+};
+
 });
