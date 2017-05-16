@@ -481,7 +481,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,pivot,kanban</field>
-            <field name="context">{}</field>
+            <field name="context">{'create': False}</field>
             <field name="domain">[('invoice_status','=','to invoice')]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
@@ -507,7 +507,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,pivot,kanban</field>
             <field name="domain">[('invoice_status','=','upselling')]</field>
-            <field name="context">{}</field>
+            <field name="context">{'create': False}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
               <p>
