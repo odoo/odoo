@@ -23,29 +23,33 @@
 
     <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
         <xpath expr="//div[@id='payment_method']" position="before">
-            <div t-if="deliveries" class="row" id="delivery_carrier">
+            <div t-if="deliveries" class="col-md-12 row" id="delivery_carrier">
                 <div class="col-lg-7 col-sm-8">
-                <h4>Choose your Delivery Method</h4>
-                    <ul class="list-unstyled">
-                        <li t-foreach="deliveries" t-as="delivery">
-                            <t t-if="delivery.available">
-                                <div id="delivery_method">
-                                    <label>
-                                        <input t-att-value="delivery.id" type="radio" name="delivery_type"
-                                            t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
-                                        <abbr t-att-title="delivery.website_description"><span t-field="delivery.name"/></abbr>
-                                        <span class="badge" t-field="delivery.price"
-                                            t-options='{
-                                                "widget": "monetary",
-                                                "from_currency": delivery.product_id.company_id.currency_id,
-                                                "display_currency": website_sale_order.currency_id
-                                            }'/>
-                                        <div t-field="delivery.website_description" class="text-muted"/>
-                                    </label>
-                                </div>
-                            </t>
-                        </li>
-                    </ul>
+                <h4>Choose a delivery method</h4>
+                <ul class="list-unstyled">
+                    <li t-foreach="deliveries" t-as="delivery">
+                        <t t-if="delivery.available">
+                            <div id="delivery_method">
+                                <label>
+                                    <input t-att-value="delivery.id" type="radio" name="delivery_type"
+                                        t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
+                                    <abbr t-att-title="delivery.website_description"><span t-field="delivery.name"/></abbr>
+                                    <span class="badge" t-field="delivery.price"
+                                        t-options='{
+                                            "widget": "monetary",
+                                            "from_currency": delivery.product_id.company_id.currency_id,
+                                            "display_currency": website_sale_order.currency_id
+                                        }'/>
+                                    <div t-field="delivery.website_description" class="text-muted"/>
+                                </label>
+                            </div>
+                        </t>
+                    </li>
+                </ul>
+                <a class="btn btn-default btn-block"
+                        t-attf-href="/web#return_label=Website&amp;action=#{delivery_action_id}">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i> Setup delivery methods
+                </a>
                 </div>
             </div>
         </xpath>
