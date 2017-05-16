@@ -198,7 +198,7 @@ def log_ormcache_stats(sig=None, frame=None):
     import threading
 
     me = threading.currentThread()
-    me_dbname = me.dbname
+    me_dbname = getattr(me, 'dbname', 'n/a')
     entries = defaultdict(int)
     for dbname, reg in Registry.registries.iteritems():
         for key in reg.cache.iterkeys():

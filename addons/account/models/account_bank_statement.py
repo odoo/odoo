@@ -426,7 +426,7 @@ class AccountBankStatementLine(models.Model):
                 payment_to_unreconcile |= line.payment_id
                 if st_line.move_name and line.payment_id.payment_reference == st_line.move_name:
                     #there can be several moves linked to a statement line but maximum one created by the line itself
-                    aml_to_cancel |= st_line.journal_entry_ids
+                    aml_to_cancel |= line
                     payment_to_cancel |= line.payment_id
         aml_to_unbind = aml_to_unbind - aml_to_cancel
 
@@ -887,6 +887,8 @@ class AccountBankStatementLine(models.Model):
             if aml_dict.get('tax_ids') and isinstance(aml_dict['tax_ids'][0], pycompat.integer_types):
                 # Transform the value in the format required for One2many and Many2many fields
                 aml_dict['tax_ids'] = map(lambda id: (4, id, None), aml_dict['tax_ids'])
+        if any(line.journal_entry_ids for line in self):
+            raise UserError(_('A selected statement line was already reconciled with an account move.'))
 
         # Fully reconciled moves are just linked to the bank statement
         total = self.amount

@@ -342,27 +342,39 @@ class GeventServer(CommonServer):
         self.port = config['longpolling_port']
         self.httpd = None
 
-    def watch_parent(self, beat=4):
+    def process_limits(self):
+        restart = False
+        if self.ppid != os.getppid():
+            _logger.warning("LongPolling Parent changed", self.pid)
+            restart = True
+        rss, vms = memory_info(psutil.Process(self.pid))
+        if vms > config['limit_memory_soft']:
+            _logger.warning('LongPolling virtual memory limit reached: %s', vms)
+            restart = True
+        if restart:
+            # suicide !!
+            os.kill(self.pid, signal.SIGTERM)
+
+    def watchdog(self, beat=4):
         import gevent
-        ppid = os.getppid()
+        self.ppid = os.getppid()
         while True:
-            if ppid != os.getppid():
-                pid = os.getpid()
-                _logger.info("LongPolling (%s) Parent changed", pid)
-                # suicide !!
-                os.kill(pid, signal.SIGTERM)
-                return
+            self.process_limits()
             gevent.sleep(beat)
 
     def start(self):
         import gevent
         from gevent.wsgi import WSGIServer
 
+        # Set process memory limit as an extra safeguard
+        _, hard = resource.getrlimit(resource.RLIMIT_AS)
+        resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
+
         if os.name == 'posix':
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
-        gevent.spawn(self.watch_parent)
+        gevent.spawn(self.watchdog)
         self.httpd = WSGIServer((self.interface, self.port), self.app)
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         try:
