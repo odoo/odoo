@@ -952,8 +952,9 @@ class ReportSaleDetails(models.AbstractModel):
                 if line.tax_ids_after_fiscal_position:
                     line_taxes = line.tax_ids_after_fiscal_position.compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
                     for tax in line_taxes['taxes']:
-                        taxes.setdefault(tax['id'], {'name': tax['name'], 'total':0.0})
+                        taxes.setdefault(tax['id'], {'name': tax['name'], 'total':0.0, 'related':0.0})
                         taxes[tax['id']]['total'] += tax['amount']
+                        taxes[tax['id']]['related'] += line.price_unit
 
         st_line_ids = self.env["account.bank.statement.line"].search([('pos_statement_id', 'in', orders.ids)]).ids
         if st_line_ids:
