@@ -603,11 +603,13 @@ class Import(models.TransientModel):
                 server_format = DEFAULT_SERVER_DATE_FORMAT if field['type'] == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
 
                 if options.get('%s_format' % field['type'], server_format) != server_format:
-                    user_format = ustr(options.get('%s_format' % field['type'])).encode('utf-8')
+                    # datetime.str[fp]time takes *native strings* in both
+                    # versions, for both data and pattern
+                    user_format = pycompat.to_native(options.get('%s_format' % field['type']))
                     for num, line in enumerate(data):
                         if line[index]:
                             try:
-                                line[index] = dt.strftime(dt.strptime(ustr(line[index].strip()).encode('utf-8'), user_format), server_format)
+                                line[index] = dt.strftime(dt.strptime(pycompat.to_native(line[index].strip()), user_format), server_format)
                             except ValueError as e:
                                 raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
                             except Exception as e:
