@@ -24,6 +24,7 @@ odoo.define('web.AbstractView', function (require) {
  */
 
 var Class = require('web.Class');
+var Context = require('web.Context');
 var ajax = require('web.ajax');
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
@@ -150,6 +151,12 @@ var AbstractView = Class.extend({
             return controller;
         });
     },
+    /**
+     * Returns the view model or create an instance of it if there is noney
+     *
+     * @param {Widget} parent the parent of the model
+     * @return {Object} instance of the view model
+     */
     getModel: function (parent) {
         if (!this.model) {
             var Model = this.config.Model;
@@ -157,6 +164,13 @@ var AbstractView = Class.extend({
         }
         return this.model;
     },
+    /**
+     * Returns the a new view renderer instance
+     *
+     * @param {Widget} parent the parent of the model
+     * @param {Object} state the information related to the rendered view
+     * @return {Object} instance of the view renderer
+     */
     getRenderer: function (parent, state) {
         var Renderer = this.config.Renderer;
         return new Renderer(parent, state, this.rendererParams);
@@ -179,7 +193,7 @@ var AbstractView = Class.extend({
      * Load initial data from the model
      *
      * @private
-     * @param {Widget} parent the parent of the model, if it has to be created
+     * @param {Widget} parent the parent of the model
      * @returns {Deferred<*>} a deferred that resolves to whatever the model
      *   decide to return
      */
@@ -221,6 +235,48 @@ var AbstractView = Class.extend({
         });
         return $.when.apply($, defs);
     },
+    /**
+     * Loads the subviews for x2many fields when they are not inline
+     *
+     * @private
+     * @param {Widget} parent the parent of the model
+     * @returns {Deferred}
+     */
+    _loadSubviews: function (parent) {
+        var self = this;
+        var defs = [];
+        if (this.loadParams && this.loadParams.fieldsInfo) {
+            var fields = this.loadParams.fields;
+
+            _.each(this.loadParams.fieldsInfo.form, function (attrs, fieldName) {
+                var field = fields[fieldName];
+                if (field.type !== 'one2many' && field.type !== 'many2many') {
+                    return;
+                }
+
+                attrs.limit = attrs.mode === "tree" ? 80 : 40;
+
+                if (attrs.Widget.prototype.useSubview && !(attrs.invisible && JSON.parse(attrs.invisible)) && !attrs.views[attrs.mode]) {
+                    var context = {};
+                    var regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
+                    var matches;
+                    while (matches = regex.exec(attrs.context)) {
+                        context[matches[1]] = matches[2];
+                    }
+                    defs.push(parent.loadViews(
+                            field.relation,
+                            new Context(context, self.userContext),
+                            [[null, attrs.mode === 'tree' ? 'list' : attrs.mode]])
+                        .then(function (views) {
+                            for (var viewName in views) {
+                                attrs.views[viewName] = views[viewName];
+                            }
+                        }));
+                }
+            });
+        }
+        return $.when.apply($, defs);
+    }
 });
 
 return AbstractView;
