@@ -110,7 +110,7 @@ def get_view_arch_from_file(filename, xmlid):
         if node.tag == 'record':
             field = node.find('field[@name="arch"]')
             _fix_multiple_roots(field)
-            inner = ''.join([etree.tostring(child) for child in field.iterchildren()])
+            inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
             return field.text + inner
         elif node.tag == 'template':
             # The following dom operations has been copied from convert.py's _tag_template()
@@ -120,7 +120,7 @@ def get_view_arch_from_file(filename, xmlid):
             else:
                 node.tag = 'data'
             node.attrib.pop('id', None)
-            return etree.tostring(node)
+            return etree.tostring(node, encoding='unicode')
     _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid)
     return None
 
@@ -702,7 +702,7 @@ actual arch.
         # and apply inheritance
         arch = self.apply_view_inheritance(arch_tree, root.id, self.model)
 
-        return dict(view_data, arch=etree.tostring(arch, encoding='utf-8'))
+        return dict(view_data, arch=etree.tostring(arch, encoding='unicode'))
 
     def _apply_group(self, model, node, modifiers, fields):
         """Apply group restrictions,  may be set at view level or model level::
@@ -910,7 +910,7 @@ actual arch.
                                 not self._context.get(action, True) and is_base_model):
                             node.set(action, 'false')
 
-        arch = etree.tostring(node, encoding="utf-8").replace(b'\t', b'')
+        arch = etree.tostring(node, encoding="unicode").replace('\t', '')
         for k in list(fields):
             if k not in fields_def:
                 del fields[k]
@@ -942,7 +942,7 @@ actual arch.
         arch_tree = etree.fromstring(arch)
         self.distribute_branding(arch_tree)
         root = E.templates(arch_tree)
-        arch = etree.tostring(root, encoding='utf-8')
+        arch = etree.tostring(root, encoding='unicode')
         return arch
 
     @api.model

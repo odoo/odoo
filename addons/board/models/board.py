@@ -42,13 +42,8 @@ class Board(models.AbstractModel):
                 if child.tag == 'action' and child.get('invisible'):
                     node.remove(child)
                 else:
-                    child = remove_unauthorized_children(child)
+                    remove_unauthorized_children(child)
             return node
 
-        def encode(s):
-            if isinstance(s, pycompat.text_type):
-                return s.encode('utf8')
-            return s
-
-        archnode = etree.fromstring(encode(arch))
-        return etree.tostring(remove_unauthorized_children(archnode), pretty_print=True)
+        archnode = etree.fromstring(arch)
+        return etree.tostring(remove_unauthorized_children(archnode), pretty_print=True, encoding='unicode')

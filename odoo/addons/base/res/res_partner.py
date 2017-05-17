@@ -61,7 +61,7 @@ class FormatAddressMixin(models.AbstractModel):
                     except ValueError:
                         return arch
                 address_node.getparent().replace(address_node, sub_view_node)
-            arch = etree.tostring(doc)
+            arch = etree.tostring(doc, encoding='unicode')
         return arch
 
 class PartnerCategory(models.Model):

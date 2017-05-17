@@ -405,7 +405,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                     node.set("on_change",
                     "onchange_module(%s, '%s')" % (field, field))
 
-        ret_val['arch'] = etree.tostring(doc)
+        ret_val['arch'] = etree.tostring(doc, encoding='unicode')
         return ret_val
 
     @api.multi
