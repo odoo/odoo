@@ -10,7 +10,7 @@ import traceback
 from hashlib import md5
 
 from PIL import Image
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as ET
 
 try:
     import jcconv

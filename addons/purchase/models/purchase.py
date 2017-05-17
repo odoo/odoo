@@ -10,7 +10,7 @@ from odoo.tools.float_utils import float_is_zero, float_compare
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.misc import formatLang
 from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 
 class PurchaseOrder(models.Model):

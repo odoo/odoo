@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 
 class PriceRule(models.Model):

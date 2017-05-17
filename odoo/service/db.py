@@ -7,7 +7,7 @@ import shutil
 import tempfile
 import threading
 import traceback
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as ET
 import zipfile
 
 from functools import wraps

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import lxml.html.clean as clean
+from lxml.html import clean
 import random
 import re
 import socket
