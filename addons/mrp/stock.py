@@ -191,7 +191,7 @@ class StockMove(osv.osv):
             # Compare with numbers of move uom as we want to avoid a split with 0 qty
             quantity_rest_uom = move.product_uom_qty - self.pool.get("product.uom")._compute_qty_obj(cr, uid, move.product_id.uom_id, product_qty, move.product_uom)
             if float_compare(quantity_rest_uom, 0, precision_rounding=move.product_uom.rounding) != 0:
-                new_mov = self.split(cr, uid, move, quantity_rest, context=context)
+                new_mov = self.split(cr, uid, move, quantity_rest, restrict_lot_id=restrict_lot_id, context=context)
                 if move.production_id:
                     self.write(cr, uid, [new_mov], {'production_id': move.production_id.id}, context=context)
                 res.append(new_mov)
