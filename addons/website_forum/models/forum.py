@@ -776,7 +776,7 @@ class Post(models.Model):
         return True
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
         return {

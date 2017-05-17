@@ -24,16 +24,21 @@ class SaleOrder(models.Model):
             order.payment_transaction_count = mapped_data.get(order.id, 0)
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the online quote for
         portal users that have access to a confirmed order. """
         # TDE note: read access on sales order to portal users granted to followed sales orders
         self.ensure_one()
         if self.state == 'cancel' or (self.state == 'draft' and not self.env.context.get('mark_so_as_sent')):
-            return super(SaleOrder, self).get_access_action()
-        if self.env.user.share or self.env.context.get('force_website'):
+            return super(SaleOrder, self).get_access_action(access_uid)
+
+        user, record = self.env.user, self
+        if access_uid:
+            user = self.env['res.users'].sudo().browse(access_uid)
+            record = self.sudo(user)
+        if user.share or self.env.context.get('force_website'):
             try:
-                self.check_access_rule('read')
+                record.check_access_rule('read')
             except exceptions.AccessError:
                 pass
             else:
@@ -43,7 +48,7 @@ class SaleOrder(models.Model):
                     'target': 'self',
                     'res_id': self.id,
                 }
-        return super(SaleOrder, self).get_access_action()
+        return super(SaleOrder, self).get_access_action(access_uid)
 
     @api.multi
     def _notification_recipients(self, message, groups):

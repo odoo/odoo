@@ -22,13 +22,18 @@ class Issue(models.Model):
             issue.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to website for portal users
         that can read the issue. """
         self.ensure_one()
-        if self.env.user.share:
+        user, record = self.env.user, self
+        if access_uid:
+            user = self.env['res.users'].sudo().browse(access_uid)
+            record = self.sudo(user)
+
+        if user.share:
             try:
-                self.check_access_rule('read')
+                record.check_access_rule('read')
             except exceptions.AccessError:
                 pass
             else:
@@ -38,7 +43,7 @@ class Issue(models.Model):
                     'target': 'self',
                     'res_id': self.id,
                 }
-        return super(Issue, self).get_access_action()
+        return super(Issue, self).get_access_action(access_uid)
 
     @api.multi
     def _notification_recipients(self, message, groups):
