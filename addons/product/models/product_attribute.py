@@ -76,7 +76,12 @@ class ProductAttributevalue(models.Model):
 
     @api.multi
     def _variant_name(self, variable_attributes):
-        return ", ".join([v.name for v in self.sorted(key=lambda r: r.name) if v.attribute_id in variable_attributes])
+        data = []
+        for attr in variable_attributes:
+            value = self & attr.value_ids
+            if len(value) == 1:
+                data.append(value.name)
+        return ", ".join(data)
 
 
 class ProductAttributePrice(models.Model):
