@@ -87,7 +87,7 @@ class Website(Home):
         response = super(Website, self).web_login(redirect=redirect, *args, **kw)
         if not redirect and request.params['login_success']:
             if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
-                redirect = '/web?' + request.httprequest.query_string
+                redirect = b'/web?' + request.httprequest.query_string
             else:
                 redirect = '/'
             return http.redirect_with_hash(redirect)
@@ -114,7 +114,7 @@ class Website(Home):
         }
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):
-            return request.redirect('/page/%s?%s' % (page[8:], request.httprequest.query_string), code=301)
+            return request.redirect(b'/page/%s?%s' % (page[8:].encode('utf-8'), request.httprequest.query_string), code=301)
         elif '.' not in page:
             page = 'website.%s' % page
 

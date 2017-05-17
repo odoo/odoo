@@ -294,7 +294,7 @@ class IrHttp(models.AbstractModel):
         # locate the controller method
         try:
             if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
-                new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string
+                new_url = request.httprequest.path.replace('//', '/').encode('utf-8') + b'?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(new_url, 301)
             rule, arguments = cls._find_handler(return_rule=True)
             func = rule.endpoint
@@ -349,7 +349,7 @@ class IrHttp(models.AbstractModel):
                         path.insert(1, request.lang)
                     path = '/'.join(path) or '/'
                     request.routing_failed = False
-                    redirect = request.redirect(path + '?' + request.httprequest.query_string)
+                    redirect = request.redirect(path.encode('utf-8') + b'?' + request.httprequest.query_string)
                     redirect.set_cookie('frontend_lang', request.lang)
                     return redirect
                 elif url_lang:
@@ -408,5 +408,5 @@ class IrHttp(models.AbstractModel):
                 if request.lang != cls._get_default_lang().code:
                     path = '/' + request.lang + path
                 if request.httprequest.query_string:
-                    path += '?' + request.httprequest.query_string
+                    path = path.encode('utf-8') + b'?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(path, code=301)

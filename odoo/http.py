@@ -761,7 +761,7 @@ class HttpRequest(WebRequest):
             req = request.httprequest
             if req.method == 'POST':
                 request.session.save_request_data()
-                redirect = '/web/proxy/post{r.path}?{r.query_string}'.format(r=req)
+                redirect = '/web/proxy/post{r.full_path}'.format(r=req)
             elif not request.params.get('noredirect'):
                 redirect = req.url
             if redirect:
