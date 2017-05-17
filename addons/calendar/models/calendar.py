@@ -632,8 +632,8 @@ class Meeting(models.Model):
             }
 
         # formats will be used for str{f,p}time() which do not support unicode in Python 2, coerce to str
-        format_date = lang_params.get("date_format", '%B-%d-%Y').encode('utf-8')
-        format_time = lang_params.get("time_format", '%I-%M %p').encode('utf-8')
+        format_date = pycompat.to_native(lang_params.get("date_format", '%B-%d-%Y'))
+        format_time = pycompat.to_native(lang_params.get("time_format", '%I-%M %p'))
         return (format_date, format_time)
 
     @api.model
@@ -919,11 +919,11 @@ class Meeting(models.Model):
                     elif interval == 'minutes':
                         delta = timedelta(minutes=duration)
                     trigger.value = delta
-                    valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
+                    valarm.add('DESCRIPTION').value = alarm.name or u'Odoo'
             for attendee in meeting.attendee_ids:
                 attendee_add = event.add('attendee')
-                attendee_add.value = 'MAILTO:' + (attendee.email or '')
-            result[meeting.id] = cal.serialize()
+                attendee_add.value = u'MAILTO:' + (attendee.email or u'')
+            result[meeting.id] = cal.serialize().encode('utf-8')
 
         return result
 
