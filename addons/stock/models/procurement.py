@@ -322,6 +322,8 @@ class ProcurementOrder(models.Model):
                 substract_quantity = location_orderpoints.subtract_procurements_from_orderpoints()
 
                 for group in location_data['groups']:
+                    if group.get('from_date'):
+                        product_context['from_date'] = group['from_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                     if group['to_date']:
                         product_context['to_date'] = group['to_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                     product_quantity = location_data['products'].with_context(product_context)._product_available()
