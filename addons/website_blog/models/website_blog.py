@@ -216,12 +216,13 @@ class BlogPost(models.Model):
         return result
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on website
         directly if user is an employee or if the post is published. """
         self.ensure_one()
-        if self.env.user.share and not self.sudo().website_published:
-            return super(BlogPost, self).get_access_action()
+        user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
+        if user.share and not self.sudo().website_published:
+            return super(BlogPost, self).get_access_action(access_uid)
         return {
             'type': 'ir.actions.act_url',
             'url': self.url,
