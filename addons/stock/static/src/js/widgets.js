@@ -1035,25 +1035,14 @@ function openerp_picking_widgets(instance){
             var timeout = null;
 
             this.handler = function(e){
-                if(e.which === 13){ //ignore returns
-                    return;
-                }
-
-                if(timeStamp + 50 < new Date().getTime()){
-                    code = "";
-                }
-
-                timeStamp = new Date().getTime();
-                clearTimeout(timeout);
-
-                code += String.fromCharCode(e.which);
-
-                timeout = setTimeout(function(){
+                if(e.which === 13){
                     if(code.length >= 3){
                         callback(code);
                     }
                     code = "";
-                },100);
+                    return;
+                }
+                code += String.fromCharCode(e.which);
             };
 
             $('body').on('keypress', this.handler);
