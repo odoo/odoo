@@ -92,6 +92,10 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     start: function () {
         var self = this;
 
+        // we add the o_touch_device css class to allow CSS to target touch
+        // devices.  This is only for styling purpose, if you need javascript
+        // specific behaviour for touch device, just use the config object
+        // exported by web.config
         this.$el.toggleClass('o_touch_device', config.device.touch);
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
