@@ -73,9 +73,9 @@ class PaymentAcquirer(models.Model):
         help="Make this payment acquirer available (Customer invoices, etc.)")
     auto_confirm = fields.Selection([
         ('none', 'No automatic confirmation'),
-        ('authorize', 'Authorize the amount and confirm the SO on acquirer confirmation (capture manually)'),
-        ('confirm_so', 'Authorize & capture the amount and confirm the SO on acquirer confirmation'),
-        ('generate_and_pay_invoice', 'Authorize & capture the amount, confirm the SO and auto-validate the invoice on acquirer confirmation')],
+        ('authorize', 'Authorize the amount and confirm the order on acquirer confirmation (capture manually)'),
+        ('confirm_so', 'Authorize & capture the amount and confirm the order on acquirer confirmation'),
+        ('generate_and_pay_invoice', 'Authorize & capture the amount, confirm the order and auto-validate the invoice on acquirer confirmation')],
         string='Order Confirmation', default='confirm_so', required=True)
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal',
@@ -109,13 +109,12 @@ class PaymentAcquirer(models.Model):
         help='Message displayed, if error is occur during the payment process.')
     save_token = fields.Selection([
         ('none', 'Never'),
-        ('ask', 'Let the customer decide'),
-        ('always', 'Always')],
-        string='Store Card Data', default='none',
-        help="Determine if card data is saved as a token automatically or not. "
-        "Payment tokens allow your customer to reuse their cards in the e-commerce "
-        "or allow you to charge an invoice directly on a credit card. If set to "
-        "'let the customer decide', ecommerce customers will have a checkbox displayed on the payment page.")
+        ('ask', 'Let the customer decide (recommended for eCommerce)'),
+        ('always', 'Always (recommended for Subscriptions)')],
+        string='Save Cards', default='none',
+        help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase."
+             "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
+             "issue an invoice.")
     token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support')
 
     fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
@@ -163,7 +162,7 @@ class PaymentAcquirer(models.Model):
     def _check_authorization_support(self):
         for acquirer in self:
             if acquirer.auto_confirm == 'authorize' and acquirer.provider not in self._get_feature_support()['authorize']:
-                raise ValidationError('Transaction Authorization is not supported by this payment provider.')
+                raise ValidationError('You cannot capture payments manually with this payment method. Please choose another Order Confirmation mode (in Configuration tab).')
         return True
 
     _constraints = [
@@ -433,7 +432,7 @@ class PaymentTransaction(models.Model):
         required=True, help='Internal reference of the TX')
     acquirer_reference = fields.Char('Acquirer Reference', help='Reference of the TX as stored in the acquirer database')
     # duplicate partner / transaction data to store the values at transaction time
-    partner_id = fields.Many2one('res.partner', 'Partner', track_visibility='onchange')
+    partner_id = fields.Many2one('res.partner', 'Customer', track_visibility='onchange')
     partner_name = fields.Char('Partner Name')
     partner_lang = fields.Selection(_lang_get, 'Language', default=lambda self: self.env.lang)
     partner_email = fields.Char('Email')
