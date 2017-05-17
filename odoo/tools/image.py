@@ -262,17 +262,17 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
 
 def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small'):
     """ Update ``vals`` with image fields resized as expected. """
-    if big_name in vals:
+    if vals.get(big_name):
         vals.update(image_get_resized_images(vals[big_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
                         avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False))
-    elif medium_name in vals:
+    elif vals.get(medium_name):
         vals.update(image_get_resized_images(vals[medium_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
                         avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=False))
-    elif small_name in vals:
+    elif vals.get(small_name):
         vals.update(image_get_resized_images(vals[small_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
