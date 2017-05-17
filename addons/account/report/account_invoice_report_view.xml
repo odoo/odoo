@@ -85,6 +85,7 @@
                 <field name="partner_id" operator="child_of"/>
                 <field name="user_id" />
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
+                <field name="account_analytic_id"/>
                 <group expand="1" string="Group By">
                     <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Salesperson" name='user' context="{'group_by':'user_id'}"/>
@@ -94,6 +95,7 @@
                     <separator orientation="vertical" />
                     <filter string="Date" context="{'group_by':'date'}"/>
                     <filter string="Due Month" context="{'group_by':'date_due:month'}"/>
+                    <filter string="Analytic Account" name="account_analytic_id" context="{'group_by':'account_analytic_id'}" groups="analytic.group_analytic_accounting" />
                 </group>
             </search>
         </field>
