@@ -1264,7 +1264,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # fallback on default views methods if no ir.ui.view could be found
             try:
                 arch_etree = getattr(self, '_get_default_%s_view' % view_type)()
-                result['arch'] = etree.tostring(arch_etree, encoding='utf-8')
+                result['arch'] = etree.tostring(arch_etree, encoding='unicode')
                 result['type'] = view_type
                 result['name'] = 'default'
             except AttributeError:
