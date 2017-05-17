@@ -51,37 +51,7 @@ var FormView = BasicView.extend({
      * @override
      */
     getController: function (parent) {
-        var self = this;
-        var defs = [];
-        var fields = this.loadParams.fields;
-
-        _.each(self.loadParams.fieldsInfo.form, function (attrs, fieldName) {
-            var field = fields[fieldName];
-            if (field.type !== 'one2many' && field.type !== 'many2many') {
-                return;
-            }
-
-            attrs.limit = attrs.mode === "tree" ? 80 : 40;
-
-            if (attrs.Widget.prototype.useSubview && !(attrs.invisible && JSON.parse(attrs.invisible)) && !attrs.views[attrs.mode]) {
-                var context = {};
-                var regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
-                var matches;
-                while (matches = regex.exec(attrs.context)) {
-                    context[matches[1]] = matches[2];
-                }
-                defs.push(parent.loadViews(
-                        field.relation,
-                        new Context(context, self.userContext),
-                        [[null, attrs.mode === 'tree' ? 'list' : attrs.mode]])
-                    .then(function (views) {
-                        for (var viewName in views) {
-                            attrs.views[viewName] = views[viewName];
-                        }
-                    }));
-            }
-        });
-        return $.when.apply($, defs).then(this._super.bind(this, parent));
+        return this._loadSubviews(parent).then(this._super.bind(this, parent));
     },
 });
 
