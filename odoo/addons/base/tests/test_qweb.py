@@ -484,7 +484,7 @@ class FileSystemLoader(object):
             if node.get('t-name') == name:
                 root = etree.Element('templates')
                 root.append(deepcopy(node))
-                arch = etree.tostring(root, encoding='utf-8')
+                arch = etree.tostring(root, encoding='unicode')
                 return arch
 
 
