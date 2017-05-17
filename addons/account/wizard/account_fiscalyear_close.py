@@ -147,12 +147,14 @@ class account_fiscalyear_close(osv.osv_memory):
                      partner_id, blocked, credit, state, debit,
                      ref, account_id, period_id, date, move_id, amount_currency,
                      quantity, product_id, company_id)
-                  (SELECT name, create_uid, create_date, write_uid, write_date,
-                     statement_id, %s,currency_id, date_maturity, partner_id,
+                  (WITH posted AS (SELECT id FROM account_move WHERE state='posted' AND period_id IN ('''+fy_period_set+'''))
+                   SELECT name, create_uid, create_date, write_uid, write_date,
+                     statement_id, %(journal)s,currency_id, date_maturity, partner_id,
                      blocked, credit, 'draft', debit, ref, account_id,
                      %s, (%s) AS date, %s, amount_currency, quantity, product_id, company_id
                    FROM account_move_line
-                   WHERE account_id IN %s
+                   WHERE account_id IN %(accounts)s
+                     AND move_id IN (SELECT id FROM posted)
                      AND ''' + query_line + '''
                      AND reconcile_id IS NULL)''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
 
@@ -165,7 +167,8 @@ class account_fiscalyear_close(osv.osv_memory):
                      partner_id, blocked, credit, state, debit,
                      ref, account_id, period_id, date, move_id, amount_currency,
                      quantity, product_id, company_id)
-                  (SELECT
+                  (WITH posted AS (SELECT id FROM account_move WHERE state='posted' AND period_id IN ('''+fy_period_set+'''))
+                   SELECT
                      b.name, b.create_uid, b.create_date, b.write_uid, b.write_date,
                      b.statement_id, %s, b.currency_id, b.date_maturity,
                      b.partner_id, b.blocked, b.credit, 'draft', b.debit,
@@ -175,6 +178,7 @@ class account_fiscalyear_close(osv.osv_memory):
                      WHERE b.account_id IN %s
                        AND b.reconcile_id IS NOT NULL
                        AND b.period_id IN ('''+fy_period_set+''')
+                       AND b.move_id IN (SELECT id FROM posted)
                        AND b.reconcile_id IN (SELECT DISTINCT(reconcile_id)
                                           FROM account_move_line a
                                           WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
