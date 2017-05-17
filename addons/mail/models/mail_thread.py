@@ -13,7 +13,10 @@ import pytz
 import re
 import socket
 import time
-import xmlrpclib
+try:
+    from xmlrpc import client as xmlrpclib
+except ImportError:
+    import xmlrpclib
 
 from collections import namedtuple
 from email.message import Message
