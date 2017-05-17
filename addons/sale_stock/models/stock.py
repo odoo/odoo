@@ -36,6 +36,13 @@ class StockMove(models.Model):
                     subtype_id=self.env.ref('mail.mt_note').id)
         return result
 
+    def _get_related_invoices(self):
+        """ Overridden to return the customer invoices related to this stock move.
+        """
+        rslt = super(StockMove, self)._get_related_invoices()
+        rslt += self.picking_id.sale_id.invoice_ids
+        return rslt
+
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'

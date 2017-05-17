@@ -175,7 +175,7 @@ class AccountInvoice(models.Model):
 
                         elif i_line.product_id.cost_method == 'real': # In this condition, we have a real price-valuated product which has not yet been received
                             valuation_price_unit = i_line.purchase_line_id.price_unit
-                            interim_account_price = float_round(valuation_price_unit * i_line.quantity, precision_digits=account_prec)
+                            interim_account_price = valuation_price_unit * i_line.quantity
 
                     if inv.currency_id.id != company_currency.id:
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
@@ -234,7 +234,9 @@ class AccountInvoice(models.Model):
                 invoice.message_post(body=message)
         return result
 
-    def _get_related_stock_moves(self): # overridden from stock_account
+    def _get_related_stock_moves(self):
+        """ Overridden from stock_account.
+        Returns the stock moves associated to this invoice."""
         rslt = super(AccountInvoice, self)._get_related_stock_moves()
 
         if self.type == 'in_invoice':
@@ -243,7 +245,9 @@ class AccountInvoice(models.Model):
 
         return rslt
 
-    def _get_anglosaxon_interim_account(self, product): # overridden from stock_account
+    def _get_anglosaxon_interim_account(self, product):
+        """ Overridden from stock_account.
+        Returns the interim account to use in anglosaxon accounting for this invoice."""
         if self.type == 'in_invoice':
             return product.product_tmpl_id.get_product_accounts()['stock_input']
         return super(AccountInvoice, self)._get_anglosaxon_interim_account(product)

@@ -56,6 +56,24 @@ class StockMove(models.Model):
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
+    @api.multi
+    def copy(self, default=None):
+        default = default or {}
+        # we don't want to propagate the link to the purchase order line on the move copied,
+        # except when it's a split or a returned move
+
+        if not default.get('split_from') and not default.get('origin_returned_move_id'):
+            default['purchase_line_id'] = False
+        return super(StockMove, self).copy(default)
+
+    def _get_related_invoices(self):
+        """ Overridden to return the vendor bills related to this stock move.
+        """
+        rslt = super(StockMove, self)._get_related_invoices()
+        rslt += self.picking_id.purchase_id.invoice_ids
+        return rslt
+
+
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 

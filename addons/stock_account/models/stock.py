@@ -83,8 +83,6 @@ class StockMoveLine(models.Model):
 
     def _account_entry_move(self, move):
         """ Accounting Valuation Entries """
-        #TODO OCO move est un stock.move ! C'est donc bien pratique !
-
         if move.product_id.type != 'product' or move.product_id.valuation != 'real_time':
             # no stock valuation for consumable products
             return False
@@ -122,7 +120,7 @@ class StockMoveLine(models.Model):
             journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
             self.with_context(force_company=move.company_id.id)._create_account_move_line(move, acc_src, acc_dest, journal_id)
 
-        if move.company_id.anglo_saxon_accounting: #TODO OCO : voir si ça fonctionne comme tu le veux
+        if move.company_id.anglo_saxon_accounting:
             move.reconcile_valuation_with_invoices()
 
     def _create_account_move_line(self, move, credit_account_id, debit_account_id, journal_id):
@@ -509,12 +507,11 @@ class StockMove(models.Model):
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
 
-    def _get_related_invoices(self): # To be overridden #TODO OCO: le faire dans sale et purchase (en ajoutant bien toujours au résultat du parent pour ménager l'héritage louche)
-        return []
+    def _get_related_invoices(self): # To be overridden in purchase and sale
+        return self.env['account.invoice']
 
     def reconcile_valuation_with_invoices(self):
-        for invoice in self._get_related_invoices():
-            invoice.anglo_saxon_reconcile_valuation() #TODO OCO: devrait marcher, mais bien vérifier ça.
+        self._get_related_invoices().anglo_saxon_reconcile_valuation()
 
 
 class StockReturnPicking(models.TransientModel):
