@@ -29,7 +29,10 @@ configuration of their taxes and fiscal positions manually.
 
 **Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.
 """,
-    'depends': ['base_iban', 'account', 'base_vat'],
+    'depends': [
+        'account',
+        'base_iban',
+    ],
     'data': [
         'data/l10n_fr_chart_data.xml',
         'data/account_chart_template_data.xml',

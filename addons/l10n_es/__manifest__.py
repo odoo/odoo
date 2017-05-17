@@ -26,7 +26,10 @@ Spanish charts of accounts (PGCE 2008).
     * Defines tax code templates
     * Defines fiscal positions for spanish fiscal legislation
 """,
-    "depends" : ["account", "base_vat", "base_iban"],
+    "depends" : [
+        "account",
+        "base_iban",
+    ],
     "data" : [
         'data/account_account_type_data.xml',
         'data/l10n_es_chart_data.xml',

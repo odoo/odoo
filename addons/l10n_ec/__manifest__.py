@@ -16,7 +16,6 @@ Accounting chart and localization for Ecuador.
     'author': 'Gnuthink Co.Ltd.',
     'depends': [
         'account',
-        'base_vat',
         'base_iban',
     ],
     'data': [

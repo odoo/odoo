@@ -10,7 +10,11 @@
     "website": "http://www.mentis.si",
     'category': 'Localization',
     "description": "Kontni načrt za gospodarske družbe",
-    "depends": ["account", "base_iban", "base_vat", "account_cancel"],
+    "depends": [
+        "account",
+        "base_iban",
+        "account_cancel",
+    ],
     "data": [
         "data/l10n_si_chart_data.xml",
         "data/account.account.template.csv",
