@@ -407,7 +407,7 @@ class IrValues(models.Model):
         for id, name, value in self._cr.fetchall():
             if not value:
                 continue                # skip if undefined
-            action_model, action_id = value.decode('utf-8').split(',')
+            action_model, action_id = bytes(value).decode('utf-8').split(',')
             if action_model not in self.env:
                 continue                # unknown model? skip it!
             action = self.env[action_model].browse(int(action_id))
