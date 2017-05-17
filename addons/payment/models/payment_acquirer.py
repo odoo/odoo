@@ -193,6 +193,11 @@ class PaymentAcquirer(models.Model):
         return super(PaymentAcquirer, self).write(vals)
 
     @api.multi
+    def toggle_website_published(self):
+        self.write({'website_published': not self.website_published})
+        return True
+
+    @api.multi
     def get_form_action_url(self):
         """ Returns the form action URL, for form-based acquirer implementations. """
         if hasattr(self, '%s_get_form_action_url' % self.provider):
@@ -405,6 +410,7 @@ class PaymentTransaction(models.Model):
     create_date = fields.Datetime('Creation Date', readonly=True)
     date_validate = fields.Datetime('Validation Date')
     acquirer_id = fields.Many2one('payment.acquirer', 'Acquirer', required=True)
+    provider = fields.Selection(string='Provider', related='acquirer_id.provider')
     type = fields.Selection([
         ('server2server', 'Server To Server'),
         ('form', 'Form'),
