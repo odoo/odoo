@@ -30,13 +30,19 @@
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
                         <div class="oe_button_box" name="button_box" attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
+                            <button name="toggle_website_published"
+                                    class="oe_stat_button"
+                                    type="object" icon="fa-globe">
+                                <field name="website_published" widget="boolean_button"
+                                    options='{"terminology": {"string_true": "Published", "hover_false": "Publish"}}'/>
+                            </button>
                             <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
                             <button name="toggle_environment_value"
                                     attrs="{'invisible': ['|', ('environment', '=', 'test'), ('provider', '=', 'transfer')]}"
                                     class="oe_stat_button"
                                     type="object" icon="fa-play">
                                 <div class="o_stat_info o_field_widget">
-                                    <span  class="text-success">Production</span>
+                                    <span class="text-success">Production</span>
                                     <span class="o_stat_text">Environment</span>
                                 </div>
                             </button>
@@ -141,10 +147,11 @@
                     <field name="provider"/>
                     <field name="module_id"/>
                     <field name="module_state"/>
+                    <field name="website_published"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click">
-                                <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
+                            <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
+                            <div t-attf-class="oe_kanban_global_click #{installed and record.website_published.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
                                 <div class="o_kanban_image">
                                     <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_small', record.id.value)"/>
                                 </div>
@@ -157,7 +164,8 @@
                                         <field name="environment" widget="label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}"/>
                                     </t>
                                     <button t-if="!installed" type="object" class="btn btn-default pull-right btn-sm" name="button_immediate_install">Install</button>
-                                    <button t-if="installed" type="edit" class="btn btn-primary pull-right btn-sm">Configure</button>
+                                    <button t-if="installed and !record.website_published.raw_value" type="edit" class="btn btn-primary pull-right btn-sm">Activate</button>
+                                    <button t-if="installed and record.website_published.raw_value" type="edit" class="btn btn-primary pull-right btn-sm">Configure</button>
                                 </div>
                             </div>
                         </t>
@@ -195,13 +203,13 @@
         </record>
 
         <record id="action_payment_acquirer" model="ir.actions.act_window">
-            <field name="name">Payment Acquirers</field>
+            <field name="name">Payment Methods</field>
             <field name="res_model">payment.acquirer</field>
             <field name='view_type'>form</field>
             <field name='view_mode'>kanban,tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to create a payment acquirer.
+                    Click to create a payment method.
                 </p>
             </field>
         </record>
@@ -232,11 +240,11 @@
                                     <field name="amount"/>
                                     <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
                                 </div>
-                                <field name="fees"/>
-                                <field name="partner_id"/>
-                                <label for="partner_details" string="Customer Details"/>
+                                <field name="fees" readonly="1"/>
+                                <label for="partner_id"/>
                                 <div>
-                                    <div name="partner_details" class="o_address_format">
+                                    <field name="partner_id" context="{'show_address': 1}" options="{'always_reload': True}"/>
+                                    <div name="partner_details" class="o_address_format" attrs="{'invisible': [('partner_id', '!=', False)]}">
                                         <field name="partner_name" placeholder="Name" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_street"/>
                                         <field name="partner_address" placeholder="Address" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_street"/>
                                         <field name="partner_city" placeholder="City" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_city"/>
@@ -249,8 +257,9 @@
                             </group>
                             <group>
                                 <field name="acquirer_id"/>
+                                <field name="provider" invisible="1"/>
                                 <field name="payment_token_id"/>
-                                <field name="acquirer_reference"/>
+                                <field name="acquirer_reference" readonly="1"/>
                                 <field name="create_date"/>
                                 <field name="date_validate"/>
                             </group>
@@ -258,8 +267,6 @@
                         <group string="Message">
                             <field name="state_message" nolabel="1"/>
                         </group>
-                        <notebook>
-                        </notebook>
                     </sheet>
                 </form>
             </field>
