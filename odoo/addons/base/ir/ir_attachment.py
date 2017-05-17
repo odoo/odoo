@@ -258,8 +258,8 @@ class IrAttachment(models.Model):
         if file_type:
             index_content = file_type.split('/')[0]
             if index_content == 'text': # compute index_content only for text type
-                words = re.findall("[^\x00-\x1F\x7F-\xFF]{4,}", bin_data)
-                index_content = ustr("\n".join(words))
+                words = re.findall(b"[\x20-\x7E]{4,}", bin_data)
+                index_content = b"\n".join(words).decode('ascii')
         return index_content
 
     name = fields.Char('Attachment Name', required=True)
