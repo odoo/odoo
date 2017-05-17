@@ -109,7 +109,7 @@ class ReportPartnerLedger(models.AbstractModel):
         self.env.cr.execute(query, tuple(params))
         partner_ids = [res['partner_id'] for res in self.env.cr.dictfetchall()]
         partners = obj_partner.browse(partner_ids)
-        partners = sorted(partners, key=lambda x: (x.ref, x.name))
+        partners = sorted(partners, key=lambda x: (x.ref or '', x.name or ''))
 
         return {
             'doc_ids': partner_ids,
