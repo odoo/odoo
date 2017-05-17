@@ -249,9 +249,14 @@ odoo.define('website_sale.website_sale', function (require) {
             if ($(".decimal_precision").length) {
                 precision = parseInt($(".decimal_precision").last().data('precision'));
             }
-            var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
-            formatted[0] = utils.insert_thousand_seps(formatted[0]);
-            return formatted.join(l10n.decimal_point);
+            if (precision) {
+                var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
+                formatted[0] = utils.insert_thousand_seps(formatted[0]);
+                return formatted.join(l10n.decimal_point);
+            }
+            else {
+                return price;
+            }
         }
 
         function update_product_image(event_source, product_id) {
