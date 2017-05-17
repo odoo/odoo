@@ -12,6 +12,7 @@ var rpc = require('web.rpc');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
+var pyeval = require('web.pyeval');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -204,7 +205,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.tax',
-        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
+        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids', 'python_compute', 'python_applicable'],
         domain: null,
         loaded: function(self, taxes){
             self.taxes = taxes;
@@ -1528,6 +1529,10 @@ exports.Orderline = Backbone.Model.extend({
         }
         if (tax.amount_type === 'division' && !tax.price_include) {
             return base_amount / (1 - tax.amount / 100) - base_amount;
+        }
+        if (tax.amount_type === 'code' && tax.python_applicable.search('True') > -1){
+            var pyexpr = tax.python_compute.match(/=(.*)/)[1].trim();
+            return pyeval.py_eval(pyexpr, {'price_unit': this.get_unit_price()});
         }
         return false;
     },
