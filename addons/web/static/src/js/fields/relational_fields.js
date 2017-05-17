@@ -1710,7 +1710,7 @@ var FieldSelection = AbstractField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.empty().html(this._formatValue(this.value));
+        this.$el.empty().text(this._formatValue(this.value));
     },
 
     //--------------------------------------------------------------------------

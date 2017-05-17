@@ -201,7 +201,9 @@ var ListRenderer = BasicRenderer.extend({
                 var field = self.state.fields[column.attrs.name];
                 var value = aggregateValues[column.attrs.name].value;
                 var help = aggregateValues[column.attrs.name].help;
-                var formattedValue = field_utils.format[field.type](value, field, {});
+                var formattedValue = field_utils.format[field.type](value, field, {
+                    escape: true,
+                });
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
             return $cell;
@@ -276,7 +278,10 @@ var ListRenderer = BasicRenderer.extend({
         var name = node.attrs.name;
         var field = this.state.fields[name];
         var value = record.data[name];
-        var formattedValue = field_utils.format[field.type](value, field, { data: record.data });
+        var formattedValue = field_utils.format[field.type](value, field, {
+            data: record.data,
+            escape: true,
+        });
         return $td.html(formattedValue);
     },
     /**

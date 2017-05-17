@@ -240,7 +240,7 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.html(this._formatValue(this.value));
+        this.$el.text(this._formatValue(this.value));
     },
 
     //--------------------------------------------------------------------------
@@ -522,6 +522,13 @@ var FieldMonetary = InputField.extend({
         } else {
             this.$el.prepend($currencySymbol);
         }
+    },
+    /**
+     * @override
+     * @private
+     */
+    _renderReadonly: function () {
+        this.$el.html(this._formatValue(this.value));
     },
     /**
      * Re-gets the currency as its value may have changed.
@@ -885,8 +892,11 @@ var FieldPhone = FieldEmail.extend({
     _renderReadonly: function () {
         this._super();
         if (this._canCall()) {
+            // Split phone number into two to prevent Skype app from finding it
             var text = this.$el.text();
-            this.$el.html(text.substr(0, text.length/2) + "&shy;" + text.substr(text.length/2)); // To prevent Skype app to find the phone number
+            var part1 = _.escape(text.substr(0, text.length/2));
+            var part2 = _.escape(text.substr(text.length/2));
+            this.$el.html(part1 + "&shy;" + part2);
         } else {
             this.$el.removeClass('o_form_uri');
         }
@@ -1540,7 +1550,7 @@ var FieldPercentPie = AbstractField.extend({
         this.$leftMask.css({transform: leftDeg, msTransform: leftDeg, mozTransform: leftDeg, webkitTransform: leftDeg});
         this.$rightMask.css({transform: rightDeg, msTransform: rightDeg, mozTransform: rightDeg, webkitTransform: rightDeg});
 
-        this.$pieValue.html(Math.round(value) + '%');
+        this.$pieValue.text(Math.round(value) + '%');
     },
 });
 
@@ -1681,9 +1691,9 @@ var FieldProgressBar = AbstractField.extend({
 
         if (!this.write_mode) {
             if (max_value !== 100) {
-                this.$('.o_progressbar_value').html(utils.human_number(value) + " / " + utils.human_number(max_value));
+                this.$('.o_progressbar_value').text(utils.human_number(value) + " / " + utils.human_number(max_value));
             } else {
-                this.$('.o_progressbar_value').html(utils.human_number(value) + "%");
+                this.$('.o_progressbar_value').text(utils.human_number(value) + "%");
             }
         } else if (isNaN(v)) {
             this.$('.o_progressbar_value').val(this.edit_max_value ? max_value : value);

@@ -710,6 +710,33 @@ QUnit.module('basic_fields', {
         _t.database.multi_lang = multiLang;
     });
 
+    QUnit.test('char field does not allow html injections', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input').val('<script>throw Error();</script>').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_widget').text(), '<script>throw Error();</script>',
+            'the value should have been properly escaped');
+
+        form.destroy();
+    });
 
     QUnit.module('UrlWidget');
 
@@ -2166,6 +2193,42 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('phone field does not allow html injections', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" widget="phone"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            config: {
+                device: {
+                    size_class: 0,
+                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
+                }
+            },
+        });
+
+        var val = '<script>throw Error();</script><script>throw Error();</script>';
+        form.$('input').val(val).trigger('input');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_widget').text().split('\u00AD').join(''), val,
+            "value should have been correctly escaped");
+
+        form.destroy();
+    });
 
     QUnit.module('PriorityWidget');
 
