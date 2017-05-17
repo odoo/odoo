@@ -170,7 +170,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     src = ustr(src, errors='replace')
     # html: remove encoding attribute inside tags
     doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
-    src = doctype.sub(r"", src)
+    src = doctype.sub(u"", src)
 
     logger = logging.getLogger(__name__ + '.html_sanitize')
 
@@ -178,10 +178,10 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     # remove results containing cite="mid:email_like@address" (ex: blockquote cite)
     # cite_except = re.compile(r"^((?!cite[\s]*=['\"]).)*$", re.IGNORECASE)
-    src = part.sub(lambda m: ('cite=' not in m.group(1) and 'alt=' not in m.group(1)) and misc.html_escape(m.group(1)) or m.group(1), src)
+    src = part.sub(lambda m: (u'cite=' not in m.group(1) and u'alt=' not in m.group(1)) and misc.html_escape(m.group(1)) or m.group(1), src)
     # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
-    src = src.replace('<%', misc.html_escape('<%'))
-    src = src.replace('%>', misc.html_escape('%>'))
+    src = src.replace(u'<%', misc.html_escape(u'<%'))
+    src = src.replace(u'%>', misc.html_escape(u'%>'))
 
     kwargs = {
         'page_structure': True,
@@ -222,33 +222,34 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
+        assert isinstance(cleaned, pycompat.text_type)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
-        cleaned = cleaned.replace('%24', '$')
-        cleaned = cleaned.replace('%7B', '{')
-        cleaned = cleaned.replace('%7D', '}')
-        cleaned = cleaned.replace('%20', ' ')
-        cleaned = cleaned.replace('%5B', '[')
-        cleaned = cleaned.replace('%5D', ']')
-        cleaned = cleaned.replace('%7C', '|')
-        cleaned = cleaned.replace('&lt;%', '<%')
-        cleaned = cleaned.replace('%&gt;', '%>')
+        cleaned = cleaned.replace(u'%24', u'$')
+        cleaned = cleaned.replace(u'%7B', u'{')
+        cleaned = cleaned.replace(u'%7D', u'}')
+        cleaned = cleaned.replace(u'%20', u' ')
+        cleaned = cleaned.replace(u'%5B', u'[')
+        cleaned = cleaned.replace(u'%5D', u']')
+        cleaned = cleaned.replace(u'%7C', u'|')
+        cleaned = cleaned.replace(u'&lt;%', u'<%')
+        cleaned = cleaned.replace(u'%&gt;', u'%>')
         # html considerations so real html content match database value
-        cleaned.replace(u'\xa0', '&nbsp;')
+        cleaned.replace(u'\xa0', u'&nbsp;')
     except etree.ParserError as e:
-        if 'empty' in str(e):
-            return ""
+        if u'empty' in pycompat.text_type(e):
+            return u""
         if not silent:
             raise
-        logger.warning('ParserError obtained when sanitizing %r', src, exc_info=True)
-        cleaned = '<p>ParserError when sanitizing</p>'
+        logger.warning(u'ParserError obtained when sanitizing %r', src, exc_info=True)
+        cleaned = u'<p>ParserError when sanitizing</p>'
     except Exception:
         if not silent:
             raise
-        logger.warning('unknown error obtained when sanitizing %r', src, exc_info=True)
-        cleaned = '<p>Unknown error when sanitizing</p>'
+        logger.warning(u'unknown error obtained when sanitizing %r', src, exc_info=True)
+        cleaned = u'<p>Unknown error when sanitizing</p>'
 
     # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
-    if cleaned.startswith('<div>') and cleaned.endswith('</div>'):
+    if cleaned.startswith(u'<div>') and cleaned.endswith(u'</div>'):
         cleaned = cleaned[5:-6]
 
     return cleaned
