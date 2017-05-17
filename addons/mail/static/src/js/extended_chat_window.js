@@ -53,8 +53,11 @@ return ChatWindow.extend({
      },
     on_click_expand: _.debounce(function (event) {
         event.preventDefault();
-        var options = {clear_breadcrumbs: false, active_id: this.channel_id, on_reverse_breadcrumb: this.on_reverse_breadcrumb};
-        this.do_action('mail.mail_channel_action_client_chat', options);
+        this.do_action('mail.mail_channel_action_client_chat', {
+            clear_breadcrumbs: false,
+            active_id: this.channel_id,
+            on_reverse_breadcrumb: this.on_reverse_breadcrumb
+        });
     }, 1000, true),
 });
 
