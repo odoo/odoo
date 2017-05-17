@@ -109,15 +109,15 @@
                             </t>
                         </span>
                     </span>
-                    <span>
+                    <span t-attf-class="o_thread_icons">
                         <i t-if="options.display_stars &amp;&amp; !message.is_system_notification"
-                            t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
+                            t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                             t-att-data-message-id="message.id" title="Mark as Todo"/>
                        <i t-if="message.record_name &amp;&amp; message.model != 'mail.channel' &amp;&amp; options.display_reply_icon"
-                           class="fa fa-reply o_thread_message_reply"
+                           class="fa fa-reply o_thread_icon o_thread_message_reply"
                            t-att-data-message-id="message.id" title="Reply"/>
                         <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
-                           class="fa fa-check o_thread_message_needaction"
+                           class="fa fa-check o_thread_icon o_thread_message_needaction"
                            t-att-data-message-id="message.id" title="Mark as Read"/>
                     </span>
                 </p>
