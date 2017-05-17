@@ -48,11 +48,11 @@ class PaymentAcquirer(models.Model):
     """
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
-    _order = 'sequence'
+    _order = 'website_published desc, sequence, name'
 
     name = fields.Char('Name', required=True, translate=True)
     description = fields.Html('Description')
-    sequence = fields.Integer('Sequence', help="Determine the display order")
+    sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
     provider = fields.Selection(
         selection=[('manual', 'Manual Configuration')], string='Provider',
         default='manual', required=True)
@@ -459,7 +459,7 @@ class PaymentTransaction(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         onchange_vals = self.on_change_partner_id(self.partner_id.id).get('value', {})
-        self.write(onchange_vals)
+        self.update(onchange_vals)
 
     @api.multi
     def on_change_partner_id(self, partner_id):
@@ -484,6 +484,12 @@ class PaymentTransaction(models.Model):
             if self.search_count([('reference', '=', transaction.reference)]) != 1:
                 raise exceptions.ValidationError(_('The payment transaction reference must be unique!'))
         return True
+
+    @api.constrains('state', 'acquirer_id')
+    def _check_authorize_state(self):
+        failed_tx = self.filtered(lambda tx: tx.state == 'authorized' and tx.acquirer_id.provider not in self.env['payment.acquirer']._get_feature_support()['authorize'])
+        if failed_tx:
+            raise exceptions.ValidationError(_('The %s payment acquirers are not allowed to manual capture mode!' % failed_tx.mapped('acquirer_id.name')))
 
     @api.model
     def create(self, values):

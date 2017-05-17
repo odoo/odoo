@@ -36,6 +36,7 @@
 
     <record id="payment_acquirer_ogone" model="payment.acquirer">
         <field name="name">Ingenico</field>
+        <field name="sequence">2</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image" type="base64" file="payment_ogone/static/src/img/ogone_icon.png"/>
         <field name="module_id" ref="base.module_payment_ogone"/>
@@ -70,6 +71,7 @@
 
     <record id="payment_acquirer_authorize" model="payment.acquirer">
         <field name="name">Authorize.net</field>
+        <field name="sequence">3</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image" type="base64" file="payment_authorize/static/src/img/authorize_icon.png"/>
         <field name="module_id" ref="base.module_payment_authorize"/>
@@ -89,6 +91,7 @@
 
     <record id="payment_acquirer_transfer" model="payment.acquirer">
         <field name="name">Wire Transfer</field>
+        <field name="sequence">2</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image" type="base64" file="payment_transfer/static/src/img/transfer_icon.png"/>
         <field name="module_id" ref="base.module_payment_transfer"/>
@@ -118,6 +121,7 @@
 
     <record id="payment_acquirer_paypal" model="payment.acquirer">
         <field name="name">Paypal</field>
+        <field name="sequence">1</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image" type="base64" file="payment_paypal/static/src/img/paypal_icon.png"/>
         <field name="module_id" ref="base.module_payment_paypal"/>
