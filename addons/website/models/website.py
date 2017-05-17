@@ -376,7 +376,7 @@ class Website(models.Model):
             shorts.append(lg_codes[0])
             uri = get_url_localized(router, code) if request.endpoint else request.httprequest.path
             if req.query_string:
-                uri += '?' + req.query_string
+                uri += u'?' + req.query_string.decode('utf-8')
             lang = {
                 'hreflang': ('-'.join(lg_codes)).lower(),
                 'short': lg_codes[0],

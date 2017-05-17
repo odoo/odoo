@@ -24,6 +24,7 @@ import werkzeug.wrappers
 import zlib
 from xml.etree import ElementTree
 from werkzeug import url_decode
+from werkzeug import iri_to_uri
 
 
 import odoo
@@ -117,12 +118,11 @@ def ensure_db(redirect='/web/database/selector'):
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
         r = request.httprequest
-        url_redirect = r.base_url
+        url_redirect = werkzeug.urls.url_parse(r.base_url)
         if r.query_string:
-            # Can't use werkzeug.wrappers.BaseRequest.url with encoded hashes:
-            # https://github.com/amigrave/werkzeug/commit/b4a62433f2f7678c234cdcac6247a869f90a7eb7
-            url_redirect += '?' + r.query_string
-        response = werkzeug.utils.redirect(url_redirect, 302)
+            # in P3, request.query_string is bytes, the rest is text, can't mix them
+            query_string = iri_to_uri(r.query_string)
+            url_redirect = url_redirect.replace(query=query_string)
         request.session.db = db
         abort_and_redirect(url_redirect)
 
