@@ -102,7 +102,7 @@ class AssetsBundle(object):
 
     def to_html(self, sep=None, css=True, js=True, debug=False, async=False, url_for=(lambda url: url)):
         if sep is None:
-            sep = '\n            '
+            sep = u'\n            '
         response = []
         if debug == 'assets':
             if css and self.stylesheets:
@@ -121,12 +121,12 @@ class AssetsBundle(object):
             if css and self.stylesheets:
                 css_attachments = self.css() or []
                 for attachment in css_attachments:
-                    response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+                    response.append(u'<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
                 if self.css_errors:
                     msg = '\n'.join(self.css_errors)
                     response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_html())
             if js and self.javascripts:
-                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(self.js().url)))
+                response.append(u'<script %s type="text/javascript" src="%s"></script>' % (async and u'async="async"' or '', url_for(self.js().url)))
         response.extend(self.remains)
 
         return sep + sep.join(response)
@@ -149,8 +149,8 @@ class AssetsBundle(object):
         Not really a full checksum.
         We compute a SHA1 on the rendered bundle + max linked files last_modified date
         """
-        check = json.dumps(self.files) + b",".join(self.remains) + self.last_modified.encode('utf-8')
-        return hashlib.sha1(check).hexdigest()
+        check = u"%s%s%s" % (json.dumps(self.files), u",".join(self.remains), self.last_modified)
+        return hashlib.sha1(check.encode('utf-8')).hexdigest()
 
     def clean_attachments(self, type):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
