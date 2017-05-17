@@ -792,7 +792,7 @@ class AccountTax(models.Model):
             tax_base = base
 
             if tax.include_base_amount:
-                base += tax_amount
+                base += tax_amount if not tax.price_include or tax.amount_type != 'percent' else 0
 
             taxes.append({
                 'id': tax.id,

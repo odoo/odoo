@@ -172,3 +172,23 @@ class TestTax(AccountTestUsers):
         aml_with_taxes = move.line_ids.filtered(lambda l: set(l.tax_ids.ids) == set([self.group_tax.id, self.fixed_tax_bis.id]))
         self.assertEquals(len(aml_with_taxes), 1)
         self.assertEquals(aml_with_taxes.credit, 190)
+
+    def test_tax_include_one_affect_base(self):
+        self.percent_tax.price_include = True
+        self.percent_tax.include_base_amount = True
+
+        res = self.percent_tax.compute_all(200.0)
+        self.assertEquals(res['total_excluded'], 181.82)
+        self.assertAlmostEqual(res['taxes'][0]['amount'], 18.18)
+
+    def test_tax_include_multiple_affect_base(self):
+        self.percent_tax.price_include = True
+        self.percent_tax_bis.price_include = True
+        self.percent_tax.include_base_amount = True
+        self.percent_tax_bis.include_base_amount = True
+
+        res = self.group_percent_tax.compute_all(200.00)
+        self.assertEquals(res['total_excluded'], 173.16)
+        self.assertAlmostEqual(res['taxes'][0]['amount'], 18.18)
+        self.assertAlmostEqual(res['taxes'][1]['amount'], 8.66)
+
