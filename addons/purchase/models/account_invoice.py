@@ -146,7 +146,6 @@ class AccountInvoice(models.Model):
             # reference_account_id is the stock input account
             reference_account_id = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)['stock_input'].id
             diff_res = []
-            account_prec = inv.company_id.currency_id.decimal_places
             # calculate and write down the possible price difference between invoice price and product price
             for line in res:
                 if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
@@ -180,13 +179,13 @@ class AccountInvoice(models.Model):
                                     if child.type_tax_use != 'none':
                                         tax_ids.append((4, child.id, None))
                         price_before = line.get('price', 0.0)
-                        line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
+                        line.update({'price': company_currency.round(valuation_price_unit * line['quantity'])})
                         diff_res.append({
                             'type': 'src',
                             'name': i_line.name[:64],
-                            'price_unit': round(price_unit - valuation_price_unit, account_prec),
+                            'price_unit': company_currency.round(price_unit - valuation_price_unit),
                             'quantity': line['quantity'],
-                            'price': round(price_before - line.get('price', 0.0), account_prec),
+                            'price': company_currency.round(price_before - line.get('price', 0.0)),
                             'account_id': acc,
                             'product_id': line['product_id'],
                             'uom_id': line['uom_id'],
