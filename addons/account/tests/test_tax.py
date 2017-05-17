@@ -27,6 +27,12 @@ class TestTax(AccountTestUsers):
             'amount': 10,
             'sequence': 3,
         })
+        self.percent_tax_bis = self.tax_model.create({
+            'name': "Percent tax bis",
+            'amount_type': 'percent',
+            'amount': 5,
+            'sequence': 8,
+        })
         self.division_tax = self.tax_model.create({
             'name': "Division tax",
             'amount_type': 'division',
@@ -63,6 +69,17 @@ class TestTax(AccountTestUsers):
                 (4, self.group_tax_bis.id, 0)
             ]
         })
+        self.group_percent_tax = self.tax_model.create({
+            'name': "Group of percent tax",
+            'amount_type': 'group',
+            'amount': 0,
+            'sequence': 7,
+            'children_tax_ids': [
+                (4, self.percent_tax.id, 0),
+                (4, self.percent_tax_bis.id, 0)
+            ]
+        })
+
         self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.account_manager.company_id.id)])[0]
         self.bank_account = self.bank_journal.default_debit_account_id
         self.expense_account = self.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
@@ -172,3 +189,22 @@ class TestTax(AccountTestUsers):
         aml_with_taxes = move.line_ids.filtered(lambda l: set(l.tax_ids.ids) == set([self.group_tax.id, self.fixed_tax_bis.id]))
         self.assertEquals(len(aml_with_taxes), 1)
         self.assertEquals(aml_with_taxes.credit, 190)
+
+    def test_tax_include_one_keep_base(self):
+        self.percent_tax.price_include = True
+        self.percent_tax.include_base_amount = False
+
+        res = self.percent_tax.compute_all(200.0)
+        self.assertEquals(res['total_excluded'], 181.82)
+        self.assertAlmostEqual(res['taxes'][0]['amount'], 18.18)
+
+    def test_tax_include_multiple_keep_base(self):
+        self.percent_tax.price_include = True
+        self.percent_tax_bis.price_include = True
+        self.percent_tax.include_base_amount = False
+        self.percent_tax_bis.include_base_amount = False
+
+        res = self.group_percent_tax.compute_all(200.0)
+        self.assertEquals(res['total_excluded'], 173.91)
+        self.assertAlmostEqual(res['taxes'][0]['amount'], 17.39)
+        self.assertAlmostEqual(res['taxes'][1]['amount'], 8.70)

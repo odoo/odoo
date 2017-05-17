@@ -767,6 +767,9 @@ class AccountTax(models.Model):
         else:
             total_excluded, total_included, base = base_values
 
+        origin_base = base
+        taxes_to_recompute = {}
+
         # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
         # search. However, the search method is overridden in account.tax in order to add a domain
         # depending on the context. This domain might filter out some taxes from self, e.g. in the
@@ -783,10 +786,7 @@ class AccountTax(models.Model):
                 continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
-            if not round_tax:
-                tax_amount = round(tax_amount, prec)
-            else:
-                tax_amount = currency.round(tax_amount)
+            tax_amount = self._rounding_preference(tax_amount, round_tax, currency, prec)
 
             if tax.price_include:
                 total_excluded -= tax_amount
@@ -800,6 +800,9 @@ class AccountTax(models.Model):
             if tax.include_base_amount:
                 base += tax_amount
 
+            if tax.price_include and not tax.include_base_amount and tax.amount_type == 'percent':
+                taxes_to_recompute[tax.id] = tax.amount
+
             taxes.append({
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
@@ -810,6 +813,9 @@ class AccountTax(models.Model):
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
             })
+
+        if len(taxes_to_recompute) > 1:
+            total_excluded = self._filter_taxes_included_base_not_affected(taxes, taxes_to_recompute, origin_base, round_tax, currency, prec)
 
         return {
             'taxes': sorted(taxes, key=lambda k: k['sequence']),
@@ -826,6 +832,25 @@ class AccountTax(models.Model):
         if incl_tax:
             return incl_tax.compute_all(price)['total_excluded']
         return price
+
+    def _rounding_preference(self, tax_amount, bool_round_tax, currency, precision):
+        if not bool_round_tax:
+            return round(tax_amount, precision)
+        else:
+            return currency.round(tax_amount)
+
+    def _filter_taxes_included_base_not_affected(self, list_taxes, taxes_to_recompute, base, round_tax, currency, precision):
+        taxes_cumul_rate = sum(taxes_to_recompute.values())
+        excluded_amount = 0
+        if taxes_cumul_rate != -100:
+            excluded_amount = base / (1 + (taxes_cumul_rate / 100))
+        for tax in list_taxes:
+            if tax['id'] in taxes_to_recompute.keys():
+                tax['base'] = excluded_amount
+                new_amount = excluded_amount * taxes_to_recompute[tax['id']] / 100
+                tax['amount'] = self._rounding_preference(new_amount, round_tax, currency, precision)
+        return excluded_amount
+
 
 class AccountReconcileModel(models.Model):
     _name = "account.reconcile.model"
