@@ -1769,6 +1769,37 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('monetary field with monetary field given in options', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.qux.type = "monetary";
+        this.data.partner.fields.company_currency_id = {
+            string: "Company Currency", type: "many2one", relation: "currency",
+        };
+        this.data.partner.records[4].company_currency_id = 2;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" options="{\'currency_field\': \'company_currency_id\'}"/>' +
+                        '<field name="company_currency_id"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 5,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_monetary').html(), "9.10&nbsp;€",
+            "field monetary should be formatted with correct currency");
+
+        form.destroy();
+    });
+
     QUnit.test('should keep the focus when being edited in x2many lists', function (assert) {
         assert.expect(6);
 
