@@ -74,6 +74,7 @@ class FleetVehicleCost(models.Model):
 class FleetVehicleLogContract(models.Model):
 
     _inherits = {'fleet.vehicle.cost': 'cost_id'}
+    _inherit = 'mail.thread'
     _name = 'fleet.vehicle.log.contract'
     _description = 'Contract information on a vehicle'
     _order = 'state desc,expiration_date'
