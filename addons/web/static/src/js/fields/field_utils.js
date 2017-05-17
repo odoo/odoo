@@ -52,10 +52,18 @@ function formatBoolean(value) {
  * an empty string.
  *
  * @param {string|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @returns {string}
  */
-function formatChar(value) {
-    return typeof value === 'string' ? value : '';
+function formatChar(value, field, options) {
+    value = typeof value === 'string' ? value : '';
+    if (options && options.escape) {
+        value = _.escape(value);
+    }
+    return value;
 }
 
 /**
@@ -189,10 +197,18 @@ function formatInteger(value) {
  * case, we assume that it is a record from a BasicModel.
  *
  * @param {Array|Object|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @returns {string}
  */
-function formatMany2one(value) {
-    return value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
+function formatMany2one(value, field, options) {
+    value = value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
+    if (options && options.escape) {
+        value = _.escape(value);
+    }
+    return value;
 }
 
 /**
@@ -270,14 +286,27 @@ function formatMonetary(value, field, options) {
     }
 }
 
-function formatSelection(value, field) {
+/**
+ * Returns a string representing the value of the selection.
+ *
+ * @param {string|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.escape=false] if true, escapes the formatted value
+ */
+function formatSelection(value, field, options) {
     if (!value) {
         return '';
     }
     var val = _.find(field.selection, function (option) {
         return option[0] === value;
     });
-    return val[1];
+    value = val[1];
+    if (options && options.escape) {
+        value = _.escape(value);
+    }
+    return value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

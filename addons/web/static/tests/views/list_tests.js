@@ -2166,6 +2166,25 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('field values are escaped', function (assert) {
+        assert.expect(1);
+        var value = '<script>throw Error();</script>';
+
+        this.data.foo.records[0].foo = value;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/></tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:first').text(), value,
+            "value should have been escaped");
+
+        list.destroy();
+    });
 });
 
 });
