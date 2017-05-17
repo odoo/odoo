@@ -554,6 +554,8 @@
             <form string="Workcenter Productivity">
                 <group>
                     <group>
+                        <field name="production_id"/>
+                        <field  name="workorder_id"/>
                         <field name="workcenter_id"/>
                         <field name="loss_id"/>
                     </group><group>
@@ -613,7 +615,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">graph,pivot,tree,form</field>
         <field name="domain">[]</field>
-        <field name="context">{'search_default_thismonth':True}</field>
+        <field name="context">{'search_default_workcenter_group': 1, 'create':False,'edit':False}</field>
         <field name="help" type="html">
           <p>
             Overall Equipment Effectiveness: no working or blocked time.
