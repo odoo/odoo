@@ -499,13 +499,12 @@ class Slide(models.Model):
         try:
             response = requests.get(base_url, params=data)
             response.raise_for_status()
-            content = response.content
             if content_type == 'json':
-                result['values'] = json.loads(content)
+                result['values'] = response.json()
             elif content_type in ('image', 'pdf'):
-                result['values'] = base64.b64encode(content)
+                result['values'] = base64.b64encode(response.content)
             else:
-                result['values'] = content
+                result['values'] = response.content
         except requests.exceptions.HTTPError as e:
             result['error'] = e.response.content
         except requests.exceptions.ConnectionError as e:
