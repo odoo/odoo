@@ -20,7 +20,7 @@ This is the latest Ethiopian Odoo localization and consists of:
     'author':'Michael Telahun Makonnen <mmakonnen@gmail.com>',
     'website':'http://miketelahun.wordpress.com',
     'depends': [
-        'base_vat',
+        'account',
     ],
     'data': [
         'data/l10n_et_chart_data.xml',

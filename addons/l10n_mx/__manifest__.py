@@ -32,7 +32,6 @@ With this module you will have:
     """,
     "depends": [
         "account",
-        "base_vat",
     ],
     "data": [
         "data/account_tag_data.xml",

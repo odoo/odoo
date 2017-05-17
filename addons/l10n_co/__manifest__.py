@@ -16,7 +16,6 @@
     'author': 'David Arnold BA HSG (devCO)',
     'depends': [
         'account',
-        'base_vat',
     ],
     'data': [
         'data/account.account.tag.csv',

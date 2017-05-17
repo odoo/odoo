@@ -8,6 +8,7 @@ from . import report
 
 from odoo import api, SUPERUSER_ID
 
+SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE', 'CD', 'SN', 'TD', 'TG']
 
 def _auto_install_l10n(cr, registry):
     #check the country of the main company (only) and eventually load some module needed in that country
@@ -16,7 +17,7 @@ def _auto_install_l10n(cr, registry):
     if country_code:
         #auto install localization module(s) if available
         module_list = []
-        if country_code in ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE', 'CD', 'SN', 'TD', 'TG']:
+        if country_code in SYSCOHADA_LIST:
             #countries using OHADA Chart of Accounts
             module_list.append('l10n_syscohada')
         elif country_code == 'GB':
@@ -31,6 +32,11 @@ def _auto_install_l10n(cr, registry):
             module_list.append('account_check_printing')
         if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'UK']:
             module_list.append('account_yodlee')
+        if country_code in SYSCOHADA_LIST + [
+            'AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX', 'NL', 'NO', 
+            'PL', 'PT', 'RO', 'SI', 'TR', 'UK', 'VE', 'VN'
+            ]:
+            module_list.append('base_vat')
 
         #european countries will be using SEPA
         europe = env.ref('base.europe', raise_if_not_found=False)

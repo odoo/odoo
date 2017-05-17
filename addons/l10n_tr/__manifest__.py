@@ -18,7 +18,6 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     'website':'https://launchpad.net/openerp-turkey',
     'depends': [
         'account',
-        'base_vat',
     ],
     'data': [
         'data/l10n_tr_chart_data.xml',

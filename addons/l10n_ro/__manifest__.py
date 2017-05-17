@@ -12,7 +12,9 @@
     "author" : "Fekete Mihai (Forest and Biomass Services Romania)",
     "website": "http://www.forbiom.eu",
     'category': 'Localization',
-    "depends" : ['account','base_vat'],
+    "depends" : [
+        'account',
+    ],
     "description": """
 This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.
 It also adds the Registration Number for Romania in Odoo.

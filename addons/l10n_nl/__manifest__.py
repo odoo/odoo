@@ -11,7 +11,6 @@
     'website': 'http://www.onestein.eu',
     'depends': [
         'account',
-        'base_vat',
         'base_iban',
     ],
     'data': [

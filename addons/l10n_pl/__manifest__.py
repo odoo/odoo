@@ -20,7 +20,10 @@ zakładając, że wszystkie towary są w obrocie hurtowym.
 Niniejszy moduł jest przeznaczony dla odoo 8.0.
 Wewnętrzny numer wersji OpenGLOBE 1.02
     """,
-    'depends' : ['account', 'base_iban', 'base_vat'],
+    'depends' : [
+        'account',
+        'base_iban',
+    ],
     'data': [
               'data/l10n_pl_chart_data.xml',
               'data/account_tax_data.xml',
