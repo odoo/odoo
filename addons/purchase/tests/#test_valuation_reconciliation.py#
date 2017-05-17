@@ -1,0 +1,83 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import datetime
+
+import time
+
+from odoo.tools import float_utils
+from odoo.addons.stock_account.tests.test_valuation_reconciliation_common import ValuationReconciliationTestCase
+
+class TestValuationReconciliation(ValuationReconciliationTestCase):
+
+    def create_purchase(self):
+        rslt = self.env['purchase.order'].create({
+            'partner_id': self.test_partner.id,
+            'currency_id': self.currency_one.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.test_product.name,
+                    'product_id': self.test_product.id,
+                    'product_qty': 1.0,
+                    'product_uom': self.test_product.uom_po_id.id,
+                    'price_unit': self.product_price_unit,
+                    'date_planned': datetime.today(),
+                })],
+        })
+        rslt.button_confirm()
+        return rslt
+
+    def create_invoice_for_po(self, purchase_order):
+        account_receivable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
+        rslt = self.env['account.invoice'].create({
+            'purchase_id': purchase_order.id,
+            'partner_id': self.test_partner.id,
+            'reference_type': 'none',
+            'currency_id': self.currency_two.id,
+            'name': 'vendor bill',
+            'type': 'in_invoice',
+            'date_invoice': time.strftime('%Y') + '-12-22',
+            'account_id': account_receivable.id,
+        })
+        rslt.purchase_order_change()
+        return rslt
+
+    def check_reconciliation(self, invoice, purchase_order):
+        invoice_line = self.env['account.move.line'].search([('move_id','=',invoice.move_id.id), ('product_id','=',self.test_product.id), ('account_id','=',self.input_account.id)])
+        self.assertEqual(len(invoice_line), 1, "Only one line should have been written by invoice in stock input account")
+        self.assertNotEqual(float_utils.float_compare(invoice_line.amount_residual, invoice_line.debit, precision_digits=self.currency_one.decimal_places), 0, "The invoice's account move line should have been partly reconciled with stock valuation")
+
+        valuation_line = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)]).move_lines.stock_account_valuation_account_move_ids.line_ids.filtered(lambda x: x.account_id == self.input_account)
+        self.assertEqual(len(valuation_line), 1, "Only one line should have been written for stock valuation in stock input account")
+        self.assertTrue(valuation_line.reconciled or invoice_line.reconciled, "The valuation and invoice line should have been reconciled together.")
+
+        self.assertEqual(float_utils.float_compare(invoice_line.debit - invoice_line.amount_residual,valuation_line.credit + valuation_line.amount_residual,self.currency_one.decimal_places), 0 , "The reconciled amount of invoice move line should match the stock valuation line.")
+
+    def test_shipment_invoice(self):
+        """ Tests the case into which we receive the goods first, and then
+        make the invoice.
+        """
+        purchase_order = self.create_purchase()
+        purchase_order.picking_ids.action_done()
+
+        invoice = self.create_invoice_for_po(purchase_order)
+        self.currency_rate.rate = 7.76435463
+        invoice.action_invoice_open()
+        self.check_reconciliation(invoice, purchase_order)
+
+    def test_invoice_shipment(self):
+        """ Tests the case into which we make the invoice first, and then receive
+        the goods.
+        """
+        purchase_order = self.create_purchase()
+
+        invoice = self.create_invoice_for_po(purchase_order)
+        invoice_line = self.env['account.invoice.line'].search([('invoice_id', '=', invoice.id)])
+        invoice_line.quantity = 1
+
+        self.currency_rate.rate = 13.834739702 # We test with a big change in the currency rate (which is pretty sound in a world where Trump rules the US)
+
+        invoice.action_invoice_open()
+        purchase_order.picking_ids.action_done()
+        self.check_reconciliation(invoice, purchase_order)
+
