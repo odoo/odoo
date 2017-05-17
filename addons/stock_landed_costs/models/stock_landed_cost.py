@@ -251,10 +251,12 @@ class AdjustmentLines(models.Model):
         digits=dp.get_precision('Product Unit of Measure'), required=True)
     weight = fields.Float(
         'Weight', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Product Unit of Measure'),
+        help="If you want to change the weight's unit of measure, you can do it in the General Settings.")
     volume = fields.Float(
         'Volume', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Product Unit of Measure'),
+        help="If you want to change the volume's unit of measure, you can do it in the General Settings.")
     former_cost = fields.Float(
         'Former Cost', digits=dp.get_precision('Product Price'))
     former_cost_per_unit = fields.Float(

@@ -8,7 +8,9 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     weight = fields.Float(
-        compute='_cal_move_weight', store=True)
+        compute='_cal_move_weight', store=True,
+        help="Weight of the stock move. If you want to change the weight's"
+             " unit of measure, you can do it in the General Settings.")
 
     @api.depends('product_id', 'product_uom_qty', 'product_uom')
     def _cal_move_weight(self):

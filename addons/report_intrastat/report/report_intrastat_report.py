@@ -19,7 +19,9 @@ class ReportIntrastat(models.Model):
     ref = fields.Char(string='Source document', readonly=True)
     code = fields.Char(string='Country code', readonly=True)
     intrastat_id = fields.Many2one('report.intrastat.code', string='Intrastat code', readonly=True)
-    weight = fields.Float(string='Weight (kg)', readonly=True)
+    weight = fields.Float(
+        string='Weight', readonly=True,
+        help="If you want to change the weight's unit of measure, you can do it in the General Settings.")
     value = fields.Float(string='Value', readonly=True, digits=0)
     type = fields.Selection([('import', 'Import'), ('export', 'Export')], string='Type')
     currency_id = fields.Many2one('res.currency', string="Currency", readonly=True)

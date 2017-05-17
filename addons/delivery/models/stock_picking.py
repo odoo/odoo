@@ -16,8 +16,13 @@ class StockQuantPackage(models.Model):
             weight += quant.qty * quant.product_id.weight
         self.weight = weight
 
-    weight = fields.Float(compute='_compute_weight')
-    shipping_weight = fields.Float(string='Shipping Weight', help="Can be changed during the 'put in pack' to adjust the weight of the shipping.")
+    weight = fields.Float(
+        compute='_compute_weight', help="Weight of the package. If you want to change the weight's"
+                                        " unit of measure, you can do it in the General Settings.")
+    shipping_weight = fields.Float(
+        string='Shipping Weight', help="Can be changed during the 'put in pack' to adjust the weight"
+                                       " of the shipping. If you want to change the weight's unit of"
+                                       " measure, you can do it in the General Settings.")
 
 
 class StockMoveLine(models.Model):
@@ -78,8 +83,12 @@ class StockPicking(models.Model):
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
     number_of_packages = fields.Integer(string='Number of Packages', copy=False)
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
-    weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
-    shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
+    weight_bulk = fields.Float(
+        'Bulk Weight', compute='_compute_bulk_weight',
+        help="If you want to change the weight's unit of measure, you can do it in the General Settings.")
+    shipping_weight = fields.Float(
+        "Weight for Shipping", compute='_compute_shipping_weight',
+        help="If you want to change the weight's unit of measure, you can do it in the General Settings.")
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):

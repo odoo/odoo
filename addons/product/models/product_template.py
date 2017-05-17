@@ -81,11 +81,13 @@ class ProductTemplate(models.Model):
         help="Cost of the product, in the default unit of measure of the product.")
 
     volume = fields.Float(
-        'Volume', compute='_compute_volume', inverse='_set_volume',
-        help="The volume of this product.", store=True)
+        'Volume', compute='_compute_volume', inverse='_set_volume', store=True,
+        help="The volume of this product. If you want to change the volume's"
+             " unit of measure, you can do it in the General Settings.")
     weight = fields.Float(
         'Weight', compute='_compute_weight', inverse='_set_weight', store=True,
-        help="The weight of the contents, not including any packaging, etc.")
+        help="The weight of the contents, not including any packaging, etc. If you want to change"
+             " the weight's unit of measure, you can do it in the General Settings.")
 
     sale_ok = fields.Boolean(
         'Can be Sold', default=True,
