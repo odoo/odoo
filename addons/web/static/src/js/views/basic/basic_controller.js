@@ -388,18 +388,19 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // Note: it is the model's job to do nothing if there is nothing to save
         if (this.canBeSaved(recordID)) {
             var self = this;
-            var def = this.model.save(recordID, { // Save then leave edit mode
+            var saveDef = this.model.save(recordID, { // Save then leave edit mode
                 reload: options.reload,
                 savePoint: options.savePoint,
             });
             if (!options.stayInEdit) {
-                def = def.then(function (fieldNames) {
-                    return self._confirmSave(recordID).then(function () {
+                saveDef = saveDef.then(function (fieldNames) {
+                    var def = fieldNames.length ? self._confirmSave(recordID) : self._setMode('readonly');
+                    return def.then(function () {
                         return fieldNames;
                     });
                 });
             }
-            return def;
+            return saveDef;
         } else {
             return $.Deferred().reject(); // Cannot be saved
         }

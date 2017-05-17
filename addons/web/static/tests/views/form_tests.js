@@ -4529,5 +4529,51 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('multiple clicks on save should reload only once', function (assert) {
+        assert.expect(4);
+
+        var def = $.Deferred();
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                assert.step(args.method);
+                if (args.method === "write") {
+                    return def.then(function () {
+                        return result;
+                    });
+                } else {
+                    return result;
+                }
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input[name="foo"]').val("test").trigger("input");
+        form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_save').click();
+
+        def.resolve();
+
+        assert.verifySteps([
+            'read', // initial read to render the view
+            'write', // write on save
+            'read' // read on reload
+        ]);
+
+        form.destroy();
+    });
 });
 });
