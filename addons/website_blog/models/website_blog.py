@@ -209,7 +209,7 @@ class BlogPost(models.Model):
     def write(self, vals):
         self.ensure_one()
         if 'website_published' in vals and 'published_date' not in vals:
-            if self.published_date <= fields.Datetime.now():
+            if (self.published_date or '') <= fields.Datetime.now():
                 vals['published_date'] = vals['website_published'] and fields.Datetime.now()
         result = super(BlogPost, self).write(vals)
         self._check_for_publication(vals)

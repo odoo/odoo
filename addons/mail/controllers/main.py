@@ -7,7 +7,6 @@ import logging
 import psycopg2
 import werkzeug
 
-from operator import itemgetter
 from werkzeug import url_encode
 
 from odoo import api, http, registry, SUPERUSER_ID, _
@@ -154,10 +153,10 @@ class MailController(http.Controller):
             'default': subtype.default,
             'internal': subtype.internal,
             'followed': subtype.id in followers.mapped('subtype_ids').ids,
-            'parent_model': subtype.parent_id and subtype.parent_id.res_model or False,
+            'parent_model': subtype.parent_id.res_model,
             'id': subtype.id
         } for subtype in subtypes]
-        subtypes_list = sorted(subtypes_list, key=itemgetter('parent_model', 'res_model', 'internal', 'sequence'))
+        subtypes_list = sorted(subtypes_list, key=lambda it: (it['parent_model'] or '', it['res_model'] or '', it['internal'], it['sequence']))
         return subtypes_list
 
     @http.route('/mail/view', type='http', auth='none')

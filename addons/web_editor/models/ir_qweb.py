@@ -510,7 +510,7 @@ def _realize_padding(it):
     requests for at least n newlines of padding. Runs thereof can be collapsed
     into the largest requests and converted to newlines.
     """
-    padding = None
+    padding = 0
     for item in it:
         if isinstance(item, int):
             padding = max(padding, item)
@@ -518,7 +518,7 @@ def _realize_padding(it):
 
         if padding:
             yield '\n' * padding
-            padding = None
+            padding = 0
 
         yield item
     # leftover padding irrelevant as the output will be stripped

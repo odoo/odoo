@@ -226,9 +226,7 @@ class TestSurvey(TransactionCase):
         lines = [line.value_suggested.id for line in question.user_input_line_ids]
         answers = [{'text': label.value, 'count': lines.count(label.id), 'answer_id': label.id} for label in question.labels_ids]
         prp_result = self.env['survey.survey'].prepare_result(question)['answers']
-        answers.sort()
-        prp_result.sort()
-        self.assertEqual(prp_result, answers, msg="Statistics of simple, multiple choice questions are different from expectation")
+        self.assertItemsEqual(prp_result, answers, msg="Statistics of simple, multiple choice questions are different from expectation")
 
     def test_11_survey_result_matrix(self):
         question = self.env['survey.question'].sudo(self.survey_manager).create({
