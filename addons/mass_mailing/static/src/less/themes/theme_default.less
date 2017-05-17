@@ -55,9 +55,12 @@
     background-color: @o_mm_def_color_alpha;
     padding: 24px 3%;
 
-    // Forces on <p/> elements as several mail clients does not correctly
-    // inherit font properties
+    // Forces on <p/> and <hx/> elements as several mail clients does not
+    // correctly inherit font properties
     &, p {
+        font-size: 14px; // force bootstrap default
+    }
+    &, p, h1, h2, h3, h4, h5, h6 {
         font-family: @o_mm_def_font;
         color: lighten(@o_mm_def_text_color, 20%);
     }
