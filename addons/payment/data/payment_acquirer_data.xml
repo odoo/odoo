@@ -27,14 +27,16 @@
             <p>
                 A payment gateway to accept online payments via credit cards.
             </p>
-            <ul>
-                <li><i class="fa fa-check"/>eCommerce</li>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
     </record>
 
     <record id="payment_acquirer_ogone" model="payment.acquirer">
         <field name="name">Ingenico</field>
+        <field name="sequence">2</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image" type="base64" file="payment_ogone/static/src/img/ogone_icon.png"/>
         <field name="module_id" ref="base.module_payment_ogone"/>
@@ -43,9 +45,10 @@
                 Ingenico Payment Services (formerly Ogone) supports credit cards, debit cards and bank transfers.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>eCommerce</li>
-                <li><i class="fa fa-check"/>Cards storage</li>
-                <li><i class="fa fa-check"/>Pay button in emails</li>
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li><i class="fa fa-check"/>Subscriptions</li>
+                <li><i class="fa fa-check"/>Save Cards</li>
             </ul>
         </field>
     </record>
@@ -59,14 +62,16 @@
             <p>
                 A payment gateway to accept online payments via credit cards, debit cards and bank transfers.
             </p>
-            <ul>
-                <li><i class="fa fa-check"/>eCommerce</li>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
     </record>
 
     <record id="payment_acquirer_authorize" model="payment.acquirer">
         <field name="name">Authorize.net</field>
+        <field name="sequence">3</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image" type="base64" file="payment_authorize/static/src/img/authorize_icon.png"/>
         <field name="module_id" ref="base.module_payment_authorize"/>
@@ -75,15 +80,18 @@
                 A payment gateway to accept online payments via credit cards and e-checks.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>eCommerce</li>
-                <li><i class="fa fa-check"/>Cards storage</li>
-                <li><i class="fa fa-check"/>Authorize &amp; Capture</li>
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li><i class="fa fa-check"/>Subscriptions</li>
+                <li><i class="fa fa-check"/>Save Cards</li>
+                <li><i class="fa fa-check"/>Manual Capture</li>
             </ul>
         </field>
     </record>
 
     <record id="payment_acquirer_transfer" model="payment.acquirer">
         <field name="name">Wire Transfer</field>
+        <field name="sequence">2</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image" type="base64" file="payment_transfer/static/src/img/transfer_icon.png"/>
         <field name="module_id" ref="base.module_payment_transfer"/>
@@ -92,9 +100,6 @@
             <p>
                 Provide instructions to customers so that they can pay their orders manually.
             </p>
-            <ul>
-                <li><i class="fa fa-check"/>eCommerce</li>
-            </ul>
         </field>
     </record>
 
@@ -107,14 +112,16 @@
             <p>
                 A payment gateway from Atos Worldline to accept online payments via credit cards.
             </p>
-            <ul>
-                <li><i class="fa fa-check"/>eCommerce</li>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
     </record>
 
     <record id="payment_acquirer_paypal" model="payment.acquirer">
         <field name="name">Paypal</field>
+        <field name="sequence">1</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="image" type="base64" file="payment_paypal/static/src/img/paypal_icon.png"/>
         <field name="module_id" ref="base.module_payment_paypal"/>
@@ -123,8 +130,8 @@
                 PayPal is the easiest way to accept payments via Paypal or credit cards.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>eCommerce</li>
-                <li><i class="fa fa-check"/>Pay button in emails</li>
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
     </record>
@@ -138,8 +145,9 @@
             <p>
                 A payment gateway to accept online payments via credit cards.
             </p>
-            <ul>
-                <li><i class="fa fa-check"/>eCommerce</li>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
 
@@ -153,10 +161,10 @@
         <field name="module_id" ref="base.module_payment_transfer"/>
         <field name="description" type="html">
             <p>
-                A generic acquirer payment acquirer.
+                A generic payment method to send payment instructions to any payment acquirer.
             </p>
-            <ul>
-                <li><i class="fa fa-check"/>eCommerce</li>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>Online Payment</li>
             </ul>
         </field>
     </record>
@@ -171,9 +179,8 @@
                 PayU India is an online payments solutions company serving the Indian market.
             </p>
             <ul class="list-inline">
-                <li><i class="fa fa-check"/>eCommerce</li>
-                <li><i class="fa fa-check"/>Subscription</li>
-                <li><i class="fa fa-check"/>Pay button in emails</li>
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
             </ul>
         </field>
     </record>
