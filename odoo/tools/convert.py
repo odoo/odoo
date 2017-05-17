@@ -600,7 +600,7 @@ form: module.record_id""" % (xml_id,)
                           ' xmltag: %s\n'               \
                           ' expected value: %r\n'       \
                           ' obtained value: %r\n'       \
-                          % (rec_string, etree.tostring(test), expected_value, expression_value)
+                          % (rec_string, etree.tostring(test, encoding='unicode'), expected_value, expression_value)
                     _logger.error(msg)
                     return
         else: # all tests were successful for this assertion tag (no break)
@@ -788,7 +788,7 @@ form: module.record_id""" % (xml_id,)
                     exc_info = sys.exc_info()
                     pycompat.reraise(
                         ParseError,
-                        ParseError(ustr(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline),
+                        ParseError(ustr(e), etree.tostring(rec, encoding='unicode').rstrip(), rec.getroottree().docinfo.URL, rec.sourceline),
                         exc_info[2]
                     )
         return True
