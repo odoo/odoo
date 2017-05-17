@@ -1550,14 +1550,13 @@ class AccountPaymentTerm(models.Model):
             currency = self.env['res.currency'].browse(self.env.context['currency_id'])
         else:
             currency = self.env.user.company_id.currency_id
-        prec = currency.decimal_places
         for line in self.line_ids:
             if line.value == 'fixed':
-                amt = round(line.value_amount, prec)
+                amt = currency.round(line.value_amount)
             elif line.value == 'percent':
-                amt = round(value * (line.value_amount / 100.0), prec)
+                amt = currency.round(value * (line.value_amount / 100.0))
             elif line.value == 'balance':
-                amt = round(amount, prec)
+                amt = currency.round(amount)
             if amt:
                 next_date = fields.Date.from_string(date_ref)
                 if line.option == 'day_after_invoice_date':
@@ -1572,7 +1571,7 @@ class AccountPaymentTerm(models.Model):
                 result.append((fields.Date.to_string(next_date), amt))
                 amount -= amt
         amount = sum(amt for _, amt in result)
-        dist = round(value - amount, prec)
+        dist = currency.round(value - amount)
         if dist:
             last_date = result and result[-1][0] or fields.Date.today()
             result.append((last_date, dist))
