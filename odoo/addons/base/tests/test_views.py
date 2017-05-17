@@ -144,7 +144,7 @@ class TestViewInheritance(ViewCase):
                 E.attribute(name, name='string'),
                 position='attributes'
             )
-        return etree.tostring(element)
+        return etree.tostring(element, encoding='unicode')
 
     def makeView(self, name, parent=None, arch=None):
         """ Generates a basic ir.ui.view with the provided name, parent and arch.

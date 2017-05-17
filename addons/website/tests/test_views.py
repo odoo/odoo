@@ -48,7 +48,7 @@ class TestViewSaving(common.TransactionCase):
         self.view_id = self.env['ir.ui.view'].create({
             'name': "Test View",
             'type': 'qweb',
-            'arch': ET.tostring(self.arch, encoding='utf-8').decode('utf-8')
+            'arch': ET.tostring(self.arch, encoding='unicode')
         })
 
     def test_embedded_extraction(self):
@@ -160,7 +160,7 @@ class TestViewSaving(common.TransactionCase):
                 h.LI(h.SPAN("Acme Corporation", attrs(model='res.company', id=1, field='name', expression="bob", type='char'))),
                 h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone', expression="edmund", type='char'))),
             )
-        ), encoding='utf-8')
+        ), encoding='unicode')
         self.view_id.save(value=replacement, xpath='/div/div[2]')
 
         # the xml_id of the view should be flagged as 'noupdate'
@@ -170,7 +170,7 @@ class TestViewSaving(common.TransactionCase):
         self.assertEqual(company.name, "Acme Corporation")
         self.assertEqual(company.phone, "+12 3456789")
         self.eq(
-            ET.fromstring(self.view_id.arch.encode('utf-8')),
+            ET.fromstring(self.view_id.arch),
             h.DIV(
                 h.DIV(
                     h.H3("Column 1"),
@@ -225,7 +225,8 @@ class TestViewSaving(common.TransactionCase):
 
         node = html.tostring(h.SPAN(
             "Acme Corporation",
-            attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')))
+            attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')),
+        encoding='unicode')
         View = self.env['ir.ui.view']
         View.browse(company_id).save(value=node)
         self.assertEqual(company.name, "Acme Corporation")

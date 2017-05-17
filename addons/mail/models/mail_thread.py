@@ -374,7 +374,7 @@ class MailThread(models.AbstractModel):
                 options['display_log_button'] = is_employee
                 # save options on the node
                 node.set('options', repr(options))
-            res['arch'] = etree.tostring(doc)
+            res['arch'] = etree.tostring(doc, encoding='unicode')
         return res
 
     # ------------------------------------------------------
