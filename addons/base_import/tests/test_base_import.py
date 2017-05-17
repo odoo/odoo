@@ -230,10 +230,10 @@ class TestPreview(TransactionCase):
     def test_csv_success(self):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
-            'file': 'name,Some Value,Counter\n'
-                    'foo,1,2\n'
-                    'bar,3,4\n'
-                    'qux,5,6\n',
+            'file': b'name,Some Value,Counter\n'
+                    b'foo,1,2\n'
+                    b'bar,3,4\n'
+                    b'qux,5,6\n',
             'file_type': 'text/csv'
         })
 
@@ -358,10 +358,10 @@ class test_convert_import_data(TransactionCase):
     def test_all(self):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
-            'file': 'name,Some Value,Counter\n'
-                    'foo,1,2\n'
-                    'bar,3,4\n'
-                    'qux,5,6\n',
+            'file': b'name,Some Value,Counter\n'
+                    b'foo,1,2\n'
+                    b'bar,3,4\n'
+                    b'qux,5,6\n',
             'file_type': 'text/csv'
 
         })
@@ -380,8 +380,8 @@ class test_convert_import_data(TransactionCase):
     def test_date_fields(self):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.partner',
-            'file': 'name,date,create_date\n'
-                    '"foo","2013年07月18日","2016-10-12 06:06"\n',
+            'file': u'name,date,create_date\n'
+                    u'"foo","2013年07月18日","2016-10-12 06:06"\n'.encode('utf-8'),
             'file_type': 'text/csv'
 
         })
@@ -408,10 +408,10 @@ class test_convert_import_data(TransactionCase):
         """
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
-            'file': 'name,Some Value,Counter\n'
-                    'foo,1,2\n'
-                    'bar,3,4\n'
-                    'qux,5,6\n',
+            'file': b'name,Some Value,Counter\n'
+                    b'foo,1,2\n'
+                    b'bar,3,4\n'
+                    b'qux,5,6\n',
             'file_type': 'text/csv'
         })
         data, fields = import_wizard._convert_import_data(
@@ -432,10 +432,10 @@ class test_convert_import_data(TransactionCase):
         """
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
-            'file': 'name,Some Value,Counter\n'
-                    'foo,1,2\n'
-                    ',3,\n'
-                    ',5,6\n',
+            'file': b'name,Some Value,Counter\n'
+                    b'foo,1,2\n'
+                    b',3,\n'
+                    b',5,6\n',
             'file_type': 'text/csv'
         })
         data, fields = import_wizard._convert_import_data(
@@ -452,12 +452,12 @@ class test_convert_import_data(TransactionCase):
     def test_empty_rows(self):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
-            'file': 'name,Some Value\n'
-                    'foo,1\n'
-                    '\n'
-                    'bar,2\n'
-                    '     \n'
-                    '\t \n',
+            'file': b'name,Some Value\n'
+                    b'foo,1\n'
+                    b'\n'
+                    b'bar,2\n'
+                    b'     \n'
+                    b'\t \n',
             'file_type': 'text/csv'
         })
         data, fields = import_wizard._convert_import_data(
@@ -474,8 +474,8 @@ class test_convert_import_data(TransactionCase):
     def test_nofield(self):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
-            'file': 'name,Some Value,Counter\n'
-                    'foo,1,2\n',
+            'file': b'name,Some Value,Counter\n'
+                    b'foo,1,2\n',
             'file_type': 'text/csv'
 
         })
@@ -484,8 +484,8 @@ class test_convert_import_data(TransactionCase):
     def test_falsefields(self):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
-            'file': 'name,Some Value,Counter\n'
-                    'foo,1,2\n',
+            'file': b'name,Some Value,Counter\n'
+                    b'foo,1,2\n',
             'file_type': 'text/csv'
         })
 
