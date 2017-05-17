@@ -68,7 +68,7 @@ class WebsiteEventTrackController(http.Controller):
     @http.route(['''/event/<model("event.event", "[('website_track','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
     def event_agenda(self, event, tag=None, **post):
         days_tracks = collections.defaultdict(lambda: [])
-        for track in event.track_ids.sorted(lambda track: (track.date, bool(track.location_id))):
+        for track in event.track_ids.sorted(lambda track: (track.date or '', bool(track.location_id))):
             if not track.date:
                 continue
             days_tracks[track.date[:10]].append(track)
