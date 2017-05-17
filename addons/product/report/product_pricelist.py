@@ -12,7 +12,8 @@ class report_product_pricelist(models.AbstractModel):
     def get_report_values(self, docids, data=None):
         data = data if data is not None else {}
         pricelist = self.env['product.pricelist'].browse(data.get('form', {}).get('price_list', False))
-        products = self.env['product.product'].browse(data.get('ids', data.get('active_ids')))
+        active_model = self.env.context.get('active_model')
+        products = self.env[active_model].browse(data.get('ids'))
         quantities = self._get_quantity(data)
         return {
             'doc_ids': data.get('ids', data.get('active_ids')),
@@ -38,10 +39,13 @@ class report_product_pricelist(models.AbstractModel):
         for category in categories:
             categ_products = products.filtered(lambda product: product.categ_id == category)
             prices = {}
-            for categ_product in categ_products:
-                prices[categ_product.id] = dict.fromkeys(quantities, 0.0)
-                for quantity in quantities:
-                    prices[categ_product.id][quantity] = self._get_price(pricelist, categ_product, quantity)
+            if self.env.context.get('active_model') == 'product.template':
+                categ_products = (map((lambda product: product.product_variant_ids), categ_products))
+            for product_variants in categ_products:
+                for product in product_variants:
+                    prices[product.id] = dict.fromkeys(quantities, 0.0)
+                    for quantity in quantities:
+                        prices[product.id][quantity] = self._get_price(pricelist, product, quantity)
             categ_data.append({
                 'category': category,
                 'products': categ_products,
