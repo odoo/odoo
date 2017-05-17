@@ -102,6 +102,7 @@ class LRU(object):
             cur2 = cur.next
             yield cur.me
             cur = cur2
+    items = iteritems
 
     @synchronized()
     def iterkeys(self):
