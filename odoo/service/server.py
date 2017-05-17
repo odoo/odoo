@@ -39,7 +39,7 @@ import odoo
 from odoo.modules.module import run_unit_tests, runs_post_install
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
-import odoo.tools.config as config
+from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats, pycompat
 
 _logger = logging.getLogger(__name__)
@@ -212,6 +212,7 @@ class ThreadedServer(CommonServer):
             self.quit_signals_received += 1
 
     def cron_thread(self, number):
+        from odoo.addons.base.ir.ir_cron import ir_cron
         while True:
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
             registries = odoo.modules.registry.Registry.registries
@@ -219,7 +220,7 @@ class ThreadedServer(CommonServer):
             for db_name, registry in pycompat.items(registries):
                 while registry.ready:
                     try:
-                        acquired = odoo.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                        acquired = ir_cron._acquire_job(db_name)
                         if not acquired:
                             break
                     except Exception:
@@ -814,7 +815,7 @@ class WorkerCron(Worker):
                 start_time = time.time()
                 start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
 
-            import odoo.addons.base as base
+            from odoo.addons import base
             base.ir.ir_cron.ir_cron._acquire_job(db_name)
             odoo.modules.registry.Registry.delete(db_name)
 

@@ -10,7 +10,7 @@ from odoo.tools import float_is_zero, float_compare, pycompat
 
 from odoo.exceptions import UserError, RedirectWarning, ValidationError, Warning
 
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 import logging
 
 _logger = logging.getLogger(__name__)

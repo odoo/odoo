@@ -3,7 +3,7 @@
 
 
 from odoo import fields, models, api, _
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import pycompat
 

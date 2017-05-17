@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.tools.misc import formatLang
 
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 
 class SaleOrder(models.Model):

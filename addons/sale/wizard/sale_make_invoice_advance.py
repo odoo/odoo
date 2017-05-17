@@ -4,7 +4,7 @@
 import time
 
 from odoo import api, fields, models, _
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 

@@ -8,7 +8,7 @@ import threading
 
 from odoo import http
 
-import odoo.addons.hw_proxy.controllers.main as hw_proxy
+from odoo.addons.hw_proxy.controllers import main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 

@@ -6,7 +6,7 @@ import psycopg2
 from odoo.models import BaseModel
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger, pycompat
-import odoo.osv.expression as expression
+from odoo.osv import expression
 
 
 class TestExpression(TransactionCase):
