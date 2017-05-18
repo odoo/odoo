@@ -46,7 +46,7 @@ class MailComposeMessage(osv.TransientModel):
                         'sent_date': fields.datetime.now(),
                         'body_html': wizard.body,
                         'mailing_model': wizard.model,
-                        'mailing_domain': wizard.active_domain,
+                        'mailing_domain': "[('id', 'in', %s)]" % wizard.env.context.get('active_ids'),
                     }, context=context)
                 mass_mailing = self.pool['mail.mass_mailing'].browse(cr, uid, mass_mailing_id, context=context)
             for res_id in res_ids:
