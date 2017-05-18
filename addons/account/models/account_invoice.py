@@ -1030,6 +1030,25 @@ class AccountInvoice(models.Model):
         return result
 
     @api.model
+    def _get_refund_common_fields(self):
+        return ['partner_id', 'payment_term_id', 'account_id', 'currency_id', 'journal_id']
+
+    @api.model
+    def _get_refund_prepare_fields(self):
+        return ['name', 'reference', 'comment', 'date_due']
+
+    @api.model
+    def _get_refund_modify_read_fields(self):
+        read_fields = ['type', 'number', 'invoice_line_ids', 'tax_line_ids',
+                       'date', 'partner_insite', 'partner_contact', 'partner_ref']
+        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + read_fields
+
+    @api.model
+    def _get_refund_copy_fields(self):
+        copy_fields = ['company_id', 'user_id', 'fiscal_position_id']
+        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + copy_fields
+
+    @api.model
     def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):
         """ Prepare the dict of values to create the new credit note from the invoice.
             This method may be overridden to implement custom
@@ -1044,8 +1063,7 @@ class AccountInvoice(models.Model):
             :return: dict of value to create() the credit note
         """
         values = {}
-        for field in ['name', 'reference', 'comment', 'date_due', 'partner_id', 'company_id',
-                'account_id', 'currency_id', 'payment_term_id', 'user_id', 'fiscal_position_id']:
+        for field in self._get_refund_copy_fields():
             if invoice._fields[field].type == 'many2one':
                 values[field] = invoice[field].id
             else:
