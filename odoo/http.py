@@ -510,7 +510,7 @@ def route(route=None, **kw):
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
 
-            if isinstance(response, pycompat.string_types):
+            if isinstance(response, (bytes, pycompat.text_type)):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
@@ -1380,13 +1380,13 @@ class Root(object):
         if isinstance(result, Response) and result.is_qweb:
             try:
                 result.flatten()
-            except(Exception) as e:
+            except Exception as e:
                 if request.db:
                     result = request.registry['ir.http']._handle_exception(e)
                 else:
                     raise
 
-        if isinstance(result, pycompat.string_types):
+        if isinstance(result, (bytes, pycompat.text_type)):
             response = Response(result, mimetype='text/html')
         else:
             response = result
