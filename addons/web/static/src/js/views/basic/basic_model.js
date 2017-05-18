@@ -2300,60 +2300,48 @@ var BasicModel = AbstractModel.extend({
                         record._changes[name] = x2manyList.id;
                         var many2ones = {};
                         var r;
+                        var isCommandList = result[name].length && _.isArray(result[name][0]);
+                        if (!isCommandList) {
+                            result[name] = [[6, false, result[name]]];
+                        }
                         _.each(result[name], function (value) {
-                            if (_.isArray(value)) {
-                                // value is a command
-                                if (value[0] === 0) {
-                                    // CREATE
-                                    r = self._makeDataPoint({
-                                        modelName: x2manyList.model,
-                                        context: x2manyList.context,
-                                        fieldsInfo: fieldsInfo,
-                                        fields: fields,
-                                        viewType: viewType,
-                                    });
-                                    x2manyList._changes = x2manyList._changes || [];
-                                    x2manyList._changes.push(r.id);
-
-                                    // this is necessary so the fields are initialized
-                                    _.each(r.getFieldNames(), function (fieldName) {
-                                        r.data[fieldName] = null;
-                                    });
-
-                                    r._changes = _.defaults(value[2], r.data);
-                                    for (var name in r._changes) {
-                                        var isFieldInView = name in r.fields;
-                                        if (isFieldInView && r.fields[name].type === 'many2one') {
-                                            var rec = self._makeDataPoint({
-                                                context: r.context,
-                                                modelName: r.fields[name].relation,
-                                                data: {id: r._changes[name]}
-                                            });
-                                            r._changes[name] = rec.id;
-                                            many2ones[name] = true;
-                                        }
-                                    }
-                                }
-                                if (value[0] === 6) {
-                                    // REPLACE_WITH
-                                    x2manyList.res_ids = value[2];
-                                    x2manyList.count = x2manyList.res_ids.length;
-                                    defs.push(self._readUngroupedList(x2manyList));
-                                }
-                            } else {
-                                // value is an id
+                            // value is a command
+                            if (value[0] === 0) {
+                                // CREATE
                                 r = self._makeDataPoint({
                                     modelName: x2manyList.model,
                                     context: x2manyList.context,
                                     fieldsInfo: fieldsInfo,
                                     fields: fields,
-                                    res_id: value,
                                     viewType: viewType,
                                 });
-                                if (!x2manyList._changes) {
-                                    x2manyList._changes = [];
-                                }
+                                x2manyList._changes = x2manyList._changes || [];
                                 x2manyList._changes.push(r.id);
+
+                                // this is necessary so the fields are initialized
+                                _.each(r.getFieldNames(), function (fieldName) {
+                                    r.data[fieldName] = null;
+                                });
+
+                                r._changes = _.defaults(value[2], r.data);
+                                for (var name in r._changes) {
+                                    var isFieldInView = name in r.fields;
+                                    if (isFieldInView && r.fields[name].type === 'many2one') {
+                                        var rec = self._makeDataPoint({
+                                            context: r.context,
+                                            modelName: r.fields[name].relation,
+                                            data: {id: r._changes[name]}
+                                        });
+                                        r._changes[name] = rec.id;
+                                        many2ones[name] = true;
+                                    }
+                                }
+                            }
+                            if (value[0] === 6) {
+                                // REPLACE_WITH
+                                x2manyList.res_ids = value[2];
+                                x2manyList.count = x2manyList.res_ids.length;
+                                defs.push(self._readUngroupedList(x2manyList));
                             }
                         });
 
