@@ -1785,14 +1785,17 @@ var FieldRadio = FieldSelection.extend({
      * @override
      */
     _renderEdit: function () {
-        this.$("input").prop("checked", false);
-        var key;
+        var value;
         if (this.field.type === 'many2one') {
-            key = this.value && this.value.data.id;
+            value = this.value && this.value.data.id;
         } else {
-            key = this.value;
+            value = this.value;
         }
-        this.$('input[data-value="' + key + '"]').prop('checked', true);
+        var index = _.findIndex(this.values, function (option) {
+            return option[0] === value;
+        });
+        this.$("input").prop("checked", false);
+        this.$('input[data-index="' + index + '"]').prop('checked', true);
     },
 
     //--------------------------------------------------------------------------
@@ -1804,14 +1807,12 @@ var FieldRadio = FieldSelection.extend({
      * @param {MouseEvent} event
      */
     _onInputClick: function (event) {
-        var res_id = $(event.target).data('value');
+        var index = $(event.target).data('index');
+        var value = this.values[index];
         if (this.field.type === 'many2one') {
-            var value = _.find(this.values, function (val) {
-                return val[0] === res_id;
-            });
-            this._setValue({id: res_id, display_name: value[1]});
+            this._setValue({id: value[0], display_name: value[1]});
         } else {
-            this._setValue(res_id);
+            this._setValue(value[0]);
         }
     },
 });
