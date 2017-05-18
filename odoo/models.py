@@ -3066,7 +3066,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if field.column_type:
                     if single_lang or not (has_trans and field.translate is True):
                         # val is not a translation: update the table
-                        val = field.convert_to_column(val, self)
+                        val = field.convert_to_column(val, self, vals)
                         updates.append((name, field.column_format, val))
                     direct.append(name)
                 else:
@@ -3106,7 +3106,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         # Insert value to DB
                         src_trans = vals[name]
                         self.with_context(lang=None).write({name: src_trans})
-                    val = field.convert_to_column(vals[name], self)
+                    val = field.convert_to_column(vals[name], self, vals)
                     tname = "%s,%s" % (self._name, name)
                     self.env['ir.translation']._set_ids(
                         tname, 'model', self.env.lang, self.ids, val, src_trans)
@@ -3330,7 +3330,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 parent_id = self.env[parent_model].create(parent_vals).id
             else:
                 self.env[parent_model].browse(parent_id).write(parent_vals)
-            updates.append((self._inherits[parent_model], '%s', parent_id))
+            vals[self._inherits[parent_model]] = parent_id
 
         # set boolean fields to False by default (to make search more powerful)
         for name, field in pycompat.items(self._fields):
@@ -3338,10 +3338,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 vals[name] = False
 
         # determine SQL values
+        self = self.browse()
         for name, val in pycompat.items(vals):
             field = self._fields[name]
             if field.store and field.column_type:
-                updates.append((name, field.column_format, field.convert_to_column(val, self)))
+                column_val = field.convert_to_column(val, self, vals)
+                updates.append((name, field.column_format, column_val))
             else:
                 upd_todo.append(name)
 
