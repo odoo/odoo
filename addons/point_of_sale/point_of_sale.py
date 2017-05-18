@@ -831,6 +831,13 @@ class pos_order(osv.osv):
             order_id = self._process_order(cr, uid, order, context=context)
             order_ids.append(order_id)
 
+            # REMOVE ME IN 10.0
+            #At this point, The ORM cache contains all pos.order of the session
+            #As we'll use a non-stored computed field later, empty the cache
+            #ensure not computing this field for the full order list of the session
+            #which is a mess with big pos sessions (4000+ tickets)
+            self.pool['pos.order'].browse(cr, uid, [], context).env.invalidate_all()
+
             try:
                 self.signal_workflow(cr, uid, [order_id], 'paid')
             except psycopg2.OperationalError:
@@ -930,6 +937,10 @@ class pos_order(osv.osv):
             amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
             order.amount_total = order.amount_tax + amount_untaxed
 
+    # DEPRECATED, REMOVE ME IN v10
+    def _amount_all(self, cr, uid, ids, name, args, context=None):
+        res = self.read(cr, uid, ids, name, context=context)
+        return dict((l['id'], l) for l in res)
 
     def _default_session(self, cr, uid, context=None):
         so = self.pool.get('pos.session')
@@ -1601,6 +1612,10 @@ class pos_order_line(osv.osv):
             line.price_subtotal = currency.round(line.price_subtotal)
             line.price_subtotal_incl = currency.round(line.price_subtotal_incl)
 
+    # DEPRECATED, REMOVE ME IN v10
+    def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
+        res = self.read(cr, uid, ids, field_names, context=context)
+        return dict((l['id'], l) for l in res)
 
     _defaults = {
         'qty': lambda *a: 1,
