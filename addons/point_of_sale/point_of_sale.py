@@ -831,6 +831,13 @@ class pos_order(osv.osv):
             order_id = self._process_order(cr, uid, order, context=context)
             order_ids.append(order_id)
 
+            # REMOVE ME IN 10.0
+            #At this point, The ORM cache contains all pos.order of the session
+            #As we'll use a non-stored computed field later, empty the cache
+            #ensure not computing this field for the full order list of the session
+            #which is a mess with big pos sessions (4000+ tickets)
+            self.pool['pos.order'].browse(cr, uid, [], context).env.invalidate_all()
+
             try:
                 self.signal_workflow(cr, uid, [order_id], 'paid')
             except psycopg2.OperationalError:
