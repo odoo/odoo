@@ -38,7 +38,6 @@ class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
     rerouting_limit = 10
-    _geoip_resolver = None  # backwards-compatibility
 
     @classmethod
     def _get_converters(cls):
@@ -95,10 +94,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _geoip_setup_resolver(cls):
         # Lazy init of GeoIP resolver
-        if cls._geoip_resolver is not None:
-            return
         if odoo._geoip_resolver is not None:
-            cls._geoip_resolver = odoo._geoip_resolver
             return
         try:
             import GeoIP
