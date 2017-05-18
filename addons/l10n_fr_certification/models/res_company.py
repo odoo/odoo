@@ -20,7 +20,7 @@ class ResCompany(models.Model):
     def write(self, vals):
         res = super(ResCompany, self).write(vals)
         #if country changed to fr, create the securisation sequence
-        if vals.get('country_id') and vals.get('country_id') == self.env.ref('base.fr'):
+        if vals.get('country_id') and vals.get('country_id') == self.env.ref('base.fr').id:
             self.filtered(lambda c: not c.l10n_fr_secure_sequence_id)._create_secure_sequence()
         return res
 
