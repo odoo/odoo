@@ -18,7 +18,7 @@ except ImportError:
 import psycopg2
 
 from odoo.sql_db import LazyCursor
-from odoo.tools import float_precision, float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, ustr, OrderedSet, pycompat
+from odoo.tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, ustr, OrderedSet, pycompat
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.translate import html_translate, _
@@ -737,7 +737,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return the null value for this field in the record format. """
         return False
 
-    def convert_to_column(self, value, record):
+    def convert_to_column(self, value, record, values=None):
         """ Convert ``value`` from the ``write`` format to the SQL format. """
         if value is None or value is False:
             return None
@@ -1140,7 +1140,7 @@ class Boolean(Field):
     type = 'boolean'
     column_type = ('bool', 'bool')
 
-    def convert_to_column(self, value, record):
+    def convert_to_column(self, value, record, values=None):
         return bool(value)
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1161,7 +1161,7 @@ class Integer(Field):
 
     _description_group_operator = property(attrgetter('group_operator'))
 
-    def convert_to_column(self, value, record):
+    def convert_to_column(self, value, record, values=None):
         return int(value or 0)
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1225,7 +1225,7 @@ class Float(Field):
     _description_digits = property(attrgetter('digits'))
     _description_group_operator = property(attrgetter('group_operator'))
 
-    def convert_to_column(self, value, record):
+    def convert_to_column(self, value, record, values=None):
         result = float(value or 0.0)
         digits = self.digits
         if digits:
@@ -1279,25 +1279,33 @@ class Monetary(Field):
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
-    def convert_to_column(self, value, record):
-        try:
-            return value.float_repr()         # see float_precision.float_repr()
-        except Exception:
-            return float(value or 0.0)
+    def convert_to_column(self, value, record, values=None):
+        # retrieve currency from values or record
+        if values and self.currency_field in values:
+            field = record._fields[self.currency_field]
+            currency = field.convert_to_cache(values[self.currency_field], record)
+            currency = field.convert_to_record(currency, record)
+        else:
+            # Note: this is wrong if 'record' is several records with different
+            # currencies, which is functional nonsense and should not happen
+            currency = record[:1][self.currency_field]
+
+        value = float(value or 0.0)
+        if currency:
+            return float_repr(currency.round(value), currency.decimal_places)
+        return value
 
     def convert_to_cache(self, value, record, validate=True):
-        if validate:
-            currency = record[self.currency_field]
+        # cache format: float
+        value = float(value or 0.0)
+        if validate and record[self.currency_field]:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
-            if currency:
-                value = currency.round(float(value or 0.0))
-                return float_precision(value, currency.decimal_places)
-        return float(value or 0.0)
+            value = record[self.currency_field].round(value)
+        return value
 
     def convert_to_read(self, value, record, use_name_get=True):
-        # float_precision values are not supported in pure XMLRPC
-        return float(value)
+        return value
 
     def convert_to_write(self, value, record):
         return value
@@ -1398,7 +1406,7 @@ class Char(_String):
         assert self.size is None or isinstance(self.size, int), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
-    def convert_to_column(self, value, record):
+    def convert_to_column(self, value, record, values=None):
         if value is None or value is False:
             return None
         # we need to convert the string to a unicode object to be able
@@ -1463,7 +1471,7 @@ class Html(_String):
     _description_strip_style = property(attrgetter('strip_style'))
     _description_strip_classes = property(attrgetter('strip_classes'))
 
-    def convert_to_column(self, value, record):
+    def convert_to_column(self, value, record, values=None):
         if value is None or value is False:
             return None
         if self.sanitize:
@@ -1644,7 +1652,7 @@ class Binary(Field):
 
     _description_attachment = property(attrgetter('attachment'))
 
-    def convert_to_column(self, value, record):
+    def convert_to_column(self, value, record, values=None):
         # Binary values may be byte strings (python 2.6 byte array), but
         # the legacy OpenERP convention is to transfer and store binaries
         # as base64-encoded strings. The base64 string may be provided as a
@@ -1804,7 +1812,7 @@ class Selection(Field):
                 return item[1]
         return False
 
-    def convert_to_column(self, value, record):
+    def convert_to_column(self, value, record, values=None):
         """ Convert ``value`` from the ``write`` format to the SQL format. """
         if value is None or value is False:
             return None
@@ -1971,7 +1979,7 @@ class Many2one(_Relational):
         """
         records._cache[self] = self.convert_to_cache(value, records, validate=False)
 
-    def convert_to_column(self, value, record):
+    def convert_to_column(self, value, record, values=None):
         return value or None
 
     def convert_to_cache(self, value, record, validate=True):
