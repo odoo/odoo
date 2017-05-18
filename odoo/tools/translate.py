@@ -1000,7 +1000,7 @@ def trans_generate(lang, modules, cr):
 
 def trans_load(cr, filename, lang, verbose=True, module_name=None, context=None):
     try:
-        with file_open(filename) as fileobj:
+        with file_open(filename, mode='rb') as fileobj:
             _logger.info("loading %s", filename)
             fileformat = os.path.splitext(filename)[-1][1:].lower()
             result = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
@@ -1053,7 +1053,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     addons_module, i18n_dir = os.path.split(addons_module_i18n)
                     addons, module = os.path.split(addons_module)
                     pot_handle = file_open(os.path.join(
-                        addons, module, i18n_dir, module + '.pot'))
+                        addons, module, i18n_dir, module + '.pot'), mode='rb')
                     pot_reader = PoFile(pot_handle)
                 except:
                     pass
