@@ -857,13 +857,13 @@ var FormViewDialog = ViewDialog.extend({
         if(!options || !options.buttons) {
             options = options || {};
             options.buttons = [
-                {text: (readonly ? _t("Close") : _t("Discard")), classes: "btn-default o_form_button_cancel", close: true, click: function() {
+                {text: (readonly ? _t("Close") : _t("Discard")), classes: "btn-default o_form_button_cancel", accesskey: 'D', close: true, click: function() {
                     self.view_form.trigger('on_button_cancel');
                 }}
             ];
 
             if(!readonly) {
-                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? " " + _t(" & Close") : ""), classes: "btn-primary o_formdialog_save", click: function() { // o_formdialog_save class for web_tests!
+                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? " " + _t(" & Close") : ""), classes: "btn-primary o_formdialog_save", accesskey: 'S', click: function() { // o_formdialog_save class for web_tests!
                         self.view_form.onchanges_mutex.def.then(function() {
                             if (!self.view_form.warning_displayed) {
                                 $.when(self.view_form.save()).done(function() {
