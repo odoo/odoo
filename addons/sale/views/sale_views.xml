@@ -10,6 +10,10 @@
             id="sales_team.menu_base_partner"
             web_icon="sale,static/description/icon.png"/>
 
+        <record id="sales_team.menu_base_partner" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
         <menuitem
             id= "menu_sales_config"
             parent= "sales_team.menu_sale_config"
@@ -25,7 +29,6 @@
         <menuitem action="product.attribute_action" id="menu_attribute_action" parent="sale.prod_config_main" sequence="1" groups="product.group_product_variant"/>
         <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="product.group_product_variant"/>
         <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2"/>
-        <menuitem action="product.product_category_action_form" name="Internal Categories" id="menu_product_category_action_form" parent="sale.prod_config_main" sequence="4"/>
         <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="product.group_uom"/>
         <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="product.group_uom"/>
         <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="8" groups="product.group_uom"/>
