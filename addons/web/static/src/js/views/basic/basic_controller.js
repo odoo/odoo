@@ -258,7 +258,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 context: record.getContext({additionalContext: attrs.context}),
             }),
             model: record.model,
-            record_id: recordID,
+            res_ids: [recordID],
             on_closed: function (reason) {
                 if (!_.isObject(reason)) {
                     reload();

@@ -260,7 +260,7 @@ var KanbanController = BasicController.extend({
         this.trigger_up('execute_action', {
             action_data: attrs,
             model: record.model,
-            record_id: record.res_id,
+            res_ids: [record.res_id],
             on_closed: function () {
                 self.model.reload(record.id).then(function (db_id) {
                     var data = self.model.get(db_id);
