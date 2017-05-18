@@ -106,6 +106,26 @@ var AccountDashboardModel = KanbanModel.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    init: function () {
+        this.dashboardValues = {};
+        this._super.apply(this, arguments);
+    },
+
+    /**
+     * @override
+     */
+    get: function (localID) {
+        var result = this._super.apply(this, arguments);
+        if (this.dashboardValues[localID]) {
+            result.dashboardValues = this.dashboardValues[localID];
+        }
+        return result;
+    },
+
+
+    /**
      * @œverride
      * @returns {Deferred}
      */
@@ -144,8 +164,7 @@ var AccountDashboardModel = KanbanModel.extend({
         var self = this;
         var dashboard_def = this._fetchDashboardData();
         return $.when(super_def, dashboard_def).then(function (id, dashboardValues) {
-            var dataPoint = self.localData[id];
-            dataPoint.dashboardValues = dashboardValues;
+            self.dashboardValues[id] = dashboardValues;
             return id;
         });
     },
