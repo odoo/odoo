@@ -260,32 +260,17 @@ class AccountJournal(models.Model):
     ]
 
     @api.multi
-    @api.depends('sequence_id', 'sequence_id.use_date_range', 'sequence_id.date_range_ids',
-                 'sequence_id.date_range_ids.number_next_actual', 'sequence_id.number_next_actual')
+    # do not depend on 'sequence_id.date_range_ids', because
+    # sequence_id._get_current_sequence() may invalidate it!
+    @api.depends('sequence_id.use_date_range', 'sequence_id.number_next_actual')
     def _compute_seq_number_next(self):
         '''Compute 'sequence_number_next' according to the current sequence in use,
         an ir.sequence or an ir.sequence.date_range.
         '''
-        #print "ici"
-        #print [j.code for j in self]
-        #for journal in self:
-        #    number_next = 0
-        #    if journal.sequence_id:
-        #        sequence = journal.sequence_id._get_current_sequence()
-        #        number_next = sequence.number_next_actual
-        #    print "on set", journal.id, journal.code, number_next
-        #    journal.sequence_number_next = number_next
-        #print "plus ici"
-
-        stuff = []
         for journal in self:
             if journal.sequence_id:
                 sequence = journal.sequence_id._get_current_sequence()
-                stuff.append((journal, sequence.number_next_actual))
-            else:
-                stuff.append((journal, 0))
-        for journal, value in stuff:
-            journal.sequence_number_next = value
+                journal.sequence_number_next = sequence.number_next_actual
 
     @api.multi
     def _inverse_seq_number_next(self):
@@ -297,29 +282,17 @@ class AccountJournal(models.Model):
                 sequence.number_next = journal.sequence_number_next
 
     @api.multi
-    @api.depends('refund_sequence_id', 'refund_sequence_id.use_date_range', 'refund_sequence_id.date_range_ids',
-                 'refund_sequence_id.date_range_ids.number_next_actual', 'refund_sequence_id.number_next_actual')
+    # do not depend on 'refund_sequence_id.date_range_ids', because
+    # refund_sequence_id._get_current_sequence() may invalidate it!
+    @api.depends('refund_sequence_id.use_date_range', 'refund_sequence_id.number_next_actual')
     def _compute_refund_seq_number_next(self):
         '''Compute 'sequence_number_next' according to the current sequence in use,
         an ir.sequence or an ir.sequence.date_range.
         '''
-        #print "la"
-        #for journal in self:
-        #    number_next = 0
-        #    if journal.refund_sequence_id and journal.refund_sequence:
-        #        sequence = journal.refund_sequence_id._get_current_sequence()
-        #        number_next = sequence.number_next_actual
-        #        journal.refund_sequence_number_next = number_next
-        #print "plus la"
-        stuff = []
         for journal in self:
             if journal.refund_sequence_id and journal.refund_sequence:
                 sequence = journal.refund_sequence_id._get_current_sequence()
-                stuff.append((journal, sequence.number_next_actual))
-            else:
-                stuff.append((journal, 0))
-        for journal, value in stuff:
-            journal.refund_sequence_number_next = value
+                journal.refund_sequence_number_next = sequence.number_next_actual
 
     @api.multi
     def _inverse_refund_seq_number_next(self):
