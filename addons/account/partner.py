@@ -227,7 +227,7 @@ class res_partner(osv.osv):
                     'AND '+query+') AS l ' \
                     'RIGHT JOIN res_partner p ' \
                     'ON p.id = partner_id ) AS pl ' \
-                    'GROUP BY pid HAVING ' + where), 
+                    'GROUP BY pid HAVING ' + where),
                     (type,) + having_values)
         res = cr.fetchall()
         if not res:
