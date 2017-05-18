@@ -205,7 +205,8 @@ var FormController = BasicController.extend({
                     }
                 }
                 if (alertFields.length) {
-                    self.renderer.displayTranslationAlert(alertFields);
+                    self.renderer.alertFields = alertFields;
+                    self.renderer.displayTranslationAlert();
                 }
             }
             return changedFields;

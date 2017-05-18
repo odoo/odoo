@@ -1249,7 +1249,7 @@
 </t>
 
 <t t-name="notification-box">
-    <div t-attf-class="o_notification_box alert alert-dismissible alert-{{type}}" role="alert">
+    <div t-attf-class="o_notification_box mb0 alert alert-dismissible alert-{{type}}" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true" class="fa fa-times"></span>
         </button>
@@ -1257,12 +1257,12 @@
 </t>
 
 <t t-name="translation-alert">
-    <t t-foreach="fields" t-as="field">
-        <div>
-            You have updated <strong><t t-esc="field.string"/></strong> (<t t-esc="lang"/>).
-            <a class="oe_field_translate" t-att-name="field.name" href="#">Update translations</a>
-        </div>
-    </t>
+    <div>
+        Please update translations of :
+        <t t-foreach="fields" t-as="field">
+            <strong><a class="oe_field_translate" t-att-name="field.name" href="#"><t t-esc="field.string"/><t t-if="!field_last">, </t></a></strong>
+        </t>
+    </div>
 </t>
 
 <t t-name="UserMenu">
