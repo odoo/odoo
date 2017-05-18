@@ -387,7 +387,7 @@ class AccountJournal(models.Model):
                     'name': journal.name,
                     'company_id': journal.company_id.id,
                     'code': journal.code,
-                    'refund_sequence_number_next': journal.refund_sequence_number_next,
+                    'refund_sequence_number_next': vals.get('refund_sequence_number_next', journal.refund_sequence_number_next),
                 }
                 journal.refund_sequence_id = self.sudo()._create_sequence(journal_vals, refund=True).id
         return result
