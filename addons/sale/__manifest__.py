@@ -3,16 +3,49 @@
 
 {
     'name': 'Sales',
-    'version': '1.1',
+    'version': '1.0',
     'category': 'Sales',
-    'summary': 'Sales internal machinery',
+    'sequence': 15,
+    'summary': 'Quotations, Sales Orders, Invoicing',
     'description': """
-This module contains all the common features of Sales Management and eCommerce.
+Manage sales quotations and orders
+==================================
+
+This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
+
+It handles the full sales workflow:
+
+* **Quotation** -> **Sales order** -> **Invoice**
+
+Preferences (only with Warehouse Management installed)
+------------------------------------------------------
+
+If you also installed the Warehouse Management, you can deal with the following preferences:
+
+* Shipping: Choice of delivery at once or partial delivery
+* Invoicing: choose how invoices will be paid
+* Incoterms: International Commercial terms
+
+You can choose flexible invoicing methods:
+
+* *On Demand*: Invoices are created manually from Sales Orders when needed
+* *On Delivery Order*: Invoices are generated from picking (delivery)
+* *Before Delivery*: A Draft invoice is created and must be paid before delivery
+
+With this module you can personnalize the sales order and invoice report with
+categories, subtotals or page-breaks.
+
+The Dashboard for the Sales Manager will include
+------------------------------------------------
+* My Quotations
+* Monthly Turnover (Graph)
     """,
-    'depends': ['sales_team', 'account', 'procurement'],
+    'website': 'https://www.odoo.com/page/crm',
+    'depends': ['sales_team', 'account', 'procurement', 'web_tour'],
     'data': [
         'data/ir_sequence_data.xml',
         'data/sale_data.xml',
+        'data/sale_tour.xml',
         'report/sale_report.xml',
         'data/mail_template_data.xml',
         'report/sale_report_views.xml',
@@ -35,4 +68,5 @@ This module contains all the common features of Sales Management and eCommerce.
     'css': ['static/src/css/sale.css'],
     'installable': True,
     'auto_install': False,
+    'application': True,
 }
