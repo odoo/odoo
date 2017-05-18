@@ -772,6 +772,43 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('read group when grouped by a selection field', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.selection = {
+            type: 'selection',
+            selection: [['a', 'A'], ['b', 'B']],
+        };
+        this.data.partner.records[0].selection = 'a';
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+        var params = {
+            modelName: 'partner',
+            fields: this.data.partner.fields,
+            fieldNames: ['foo'],
+            groupedBy: ['selection'],
+        };
+
+        model.load(params).then(function (resultID) {
+            var dataPoint = model.get(resultID);
+            assert.strictEqual(dataPoint.data.length, 2, "should have two groups");
+
+            var groupFalse = _.findWhere(dataPoint.data, {value: false});
+            assert.ok(groupFalse, "should have a group for value false");
+            assert.deepEqual(groupFalse.domain, [['selection', '=', false]],
+                "group's domain should be correct");
+
+            var groupA = _.findWhere(dataPoint.data, {value: 'A'});
+            assert.ok(groupA, "should have a group for value 'a'");
+            assert.deepEqual(groupA.domain, [['selection', '=', 'a']],
+                "group's domain should be correct");
+        });
+        model.destroy();
+    });
+
     QUnit.test('create record, then save', function (assert) {
         assert.expect(5);
 

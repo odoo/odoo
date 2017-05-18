@@ -2576,7 +2576,7 @@ var BasicModel = AbstractModel.extend({
                         var choice = _.find(list.fields[rawGroupBy].selection, function (c) {
                             return c[0] === value;
                         });
-                        value = choice[1];
+                        value = choice ? choice[1] : false;
                     }
                     var newGroup = self._makeDataPoint({
                         modelName: list.model,
