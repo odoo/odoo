@@ -693,7 +693,6 @@ class MassMailing(osv.Model):
             value['mailing_domain'] = "[('opt_out', '=', False)]"
         else:
             value['mailing_domain'] = []
-        value['body_html'] = "on_change_model_and_list"
         return {'value': value}
 
     def action_duplicate(self, cr, uid, ids, context=None):
