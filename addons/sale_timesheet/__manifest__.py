@@ -14,7 +14,7 @@ according to the order/contract you work on. This allows to
 have real delivered quantities in sales orders.
 """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['sale', 'hr_timesheet'],
+    'depends': ['sale_management', 'hr_timesheet'],
     'data': [
         'data/sale_timesheet_data.xml',
         'views/account_invoice_views.xml',
