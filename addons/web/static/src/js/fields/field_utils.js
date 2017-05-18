@@ -296,12 +296,12 @@ function formatMonetary(value, field, options) {
  * @param {boolean} [options.escape=false] if true, escapes the formatted value
  */
 function formatSelection(value, field, options) {
-    if (!value) {
-        return '';
-    }
     var val = _.find(field.selection, function (option) {
         return option[0] === value;
     });
+    if (!val) {
+        return '';
+    }
     value = val[1];
     if (options && options.escape) {
         value = _.escape(value);

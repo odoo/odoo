@@ -1093,14 +1093,8 @@ var BasicModel = AbstractModel.extend({
                     });
                     defs.push(def);
                 }
-            } else if (field.type === 'date') {
-                // process data: convert into a moment instance
-                record._changes[name] = fieldUtils.parse.date(val);
-            } else if (field.type === 'datetime') {
-                // process datetime: convert into a moment instance
-                record._changes[name] = fieldUtils.parse.datetime(val);
             } else {
-                record._changes[name] = val;
+                record._changes[name] = self._parseServerValue(field, val);
             }
         });
         return $.when.apply($, defs);
@@ -2349,14 +2343,8 @@ var BasicModel = AbstractModel.extend({
                         _.each(_.keys(many2ones), function (name) {
                             defs.push(self._fetchNameGets(x2manyList, name));
                         });
-                    } else if (field.type === 'date') {
-                        // process date: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.date(result[name], field, {isUTC: true});
-                    } else if (field.type === 'datetime') {
-                        // process datetime: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.datetime(result[name], field, {isUTC: true});
                     } else {
-                        record._changes[name] = result[name];
+                        record._changes[name] = self._parseServerValue(field, result[name]);
                     }
                 });
                 return $.when.apply($, defs)
@@ -2426,14 +2414,34 @@ var BasicModel = AbstractModel.extend({
                     // no value for the many2one
                     record[fieldName] = false;
                 }
-            } else if (field.type === 'date') {
-                // process data: convert into a moment instance
-                record[fieldName] = fieldUtils.parse.date(val, field, {isUTC: true});
-            } else if (field.type === 'datetime') {
-                // process datetime: convert into a moment instance
-                record[fieldName] = fieldUtils.parse.datetime(val, field, {isUTC: true});
+            } else {
+                record[fieldName] = self._parseServerValue(field, val);
             }
         });
+    },
+    /**
+     * Processes date(time) and selection field values sent by the server.
+     * Converts data(time) values to moment instances.
+     * Converts false values of selection fields to 0 if 0 is a valid key,
+     * because the server doesn't make a distinction between false and 0, and
+     * always sends false when value is 0.
+     *
+     * @param {Object} field the field description
+     * @param {*} value
+     * @returns {*} the processed value
+     */
+    _parseServerValue: function (field, value) {
+        if (field.type === 'date' || field.type === 'datetime') {
+            // process date(time): convert into a moment instance
+            value = fieldUtils.parse[field.type](value, field, {isUTC: true});
+        } else if (field.type === 'selection' && value === false) {
+            // process selection: convert false to 0, if 0 is a valid key
+            var hasKey0 = _.find(field.selection, function (option) {
+                return option[0] === 0;
+            });
+            value = hasKey0 ? 0 : value;
+        }
+        return value;
     },
     /**
      * This method is quite important: it is supposed to perform the /onchange
