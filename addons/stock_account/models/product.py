@@ -66,6 +66,9 @@ class ProductTemplate(models.Model):
     def _compute_cost_method(self):
         self.cost_method = self.property_cost_method or self.categ_id.property_cost_method
 
+    def _is_cost_method_standard(self):
+        return self.property_cost_method == 'standard'
+
     @api.one
     def _set_cost_method(self):
         return self.write({'property_cost_method': self.cost_method})
