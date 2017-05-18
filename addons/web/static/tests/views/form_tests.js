@@ -876,7 +876,7 @@ QUnit.module('Views', {
         testUtils.intercept(form, 'execute_action', function (event) {
             assert.strictEqual(event.data.action_data.name, "post",
                 "should trigger execute_action with correct method name");
-            assert.strictEqual(event.data.record_id, 2, "should have correct id in event data");
+            assert.deepEqual(event.data.res_ids, [2], "should have correct id in event data");
             event.data.on_success();
         });
         rpcCount = 0;
@@ -928,7 +928,7 @@ QUnit.module('Views', {
 
         testUtils.intercept(form, 'execute_action', function (event) {
             assert.step('execute_action');
-            assert.strictEqual(event.data.record_id, resID,
+            assert.deepEqual(event.data.res_ids, [resID],
                 "execute action should be done on correct record id");
             event.data.on_success();
         });
@@ -977,7 +977,7 @@ QUnit.module('Views', {
 
         testUtils.intercept(form, 'execute_action', function (event) {
             assert.step('execute_action');
-            assert.strictEqual(event.data.record_id, resID,
+            assert.deepEqual(event.data.res_ids, [resID],
                 "execute action should be done on correct record id");
             event.data.on_success();
         });

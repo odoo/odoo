@@ -147,7 +147,7 @@ QUnit.test('click events are correctly triggered', function (assert) {
             execute_action: function (event) {
                 var data = event.data;
                 assert.strictEqual(data.model, 'line', "should have correct model");
-                assert.strictEqual(data.record_id, 4, "should have correct res_id");
+                assert.deepEqual(data.res_ids, [4], "should have correct res_ids");
                 assert.strictEqual(data.action_data.name, 'create_move',
                     "should call correct method");
             },

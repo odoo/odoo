@@ -20,7 +20,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     custom_events: {
         execute_action: function(event) {
             var data = event.data;
-            this.do_execute_action(data.action_data, data.model, data.record_id, data.on_closed)
+            this.do_execute_action(data.action_data, data.model, data.res_ids, data.on_closed)
                 .then(data.on_success, data.on_fail);
         },
         search: function(event) {
@@ -551,13 +551,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
      * @param {Object} [action_data.context=null] additional action context, to add to the current context
      * @param {DataSet} dataset a dataset object used to communicate with the server
-     * @param {Object} [record_id] the identifier of the object on which the action is to be applied
+     * @param {integer[]} [res_ids] the res_ids of the objects on which the action is to be applied (fallback on env.ids if not set)
      * @param {Function} on_closed callback to execute when dialog is closed or when the action does not generate any result (no new action)
      */
-    do_execute_action: function (action_data, model, record_id, on_closed) {
+    do_execute_action: function (action_data, model, res_ids, on_closed) {
         var self = this;
         var result_handler = on_closed || function () {};
         var context = new Context(this.env.context, action_data.context || {});
+        var record_id = res_ids && res_ids[0];
 
         // response handler
         var handler = function (action) {
@@ -572,10 +573,10 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 );
                 ncontext.add(action_data.context || {});
                 ncontext.add({active_model: self.env.modelName});
-                if (record_id) {
+                if (res_ids) {
                     ncontext.add({
                         active_id: record_id,
-                        active_ids: [record_id],
+                        active_ids: res_ids,
                     });
                 }
                 ncontext.add(action.context || {});
@@ -592,7 +593,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         if (action_data.special === 'cancel') {
             return handler({"type":"ir.actions.act_window_close"});
         } else if (action_data.type === "object") {
-            var args = record_id ? [[record_id]] : [this.env.ids];
+            var args = res_ids ? [res_ids] : [this.env.ids];
             if (action_data.args) {
                 try {
                     // Warning: quotes and double quotes problem due to json and xml clash
@@ -610,7 +611,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             return data_manager.load_action(action_data.name, _.extend(pyeval.eval('context', context), {
                 active_model: this.env.modelName,
                 active_ids: this.env.ids,
-                active_id: record_id
+                active_id: record_id,
             })).then(handler);
         }
     },
