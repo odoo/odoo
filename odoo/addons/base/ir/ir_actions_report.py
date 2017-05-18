@@ -10,6 +10,7 @@ from odoo.http import request
 
 import time
 import base64
+import io
 import logging
 import os
 import lxml.html
@@ -21,7 +22,6 @@ from lxml import etree
 from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
-from cStringIO import StringIO
 from PyPDF2 import PdfFileWriter, PdfFileReader
 
 
@@ -371,13 +371,13 @@ class IrActionsReport(models.Model):
         temporary_files = []
         if header:
             head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
-            with closing(os.fdopen(head_file_fd, 'w')) as head_file:
+            with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
                 head_file.write(header)
             temporary_files.append(head_file_path)
             files_command_args.extend(['--header-html', head_file_path])
         if footer:
             foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
-            with closing(os.fdopen(foot_file_fd, 'w')) as foot_file:
+            with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
                 foot_file.write(footer)
             temporary_files.append(foot_file_path)
             files_command_args.extend(['--footer-html', foot_file_path])
@@ -386,7 +386,7 @@ class IrActionsReport(models.Model):
         for i, body in enumerate(bodies):
             prefix = '%s%d.' % ('report.body.tmp.', i)
             body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
-            with closing(os.fdopen(body_file_fd, 'w')) as body_file:
+            with closing(os.fdopen(body_file_fd, 'wb')) as body_file:
                 body_file.write(body)
             paths.append(body_file_path)
             temporary_files.append(body_file_path)
@@ -511,7 +511,7 @@ class IrActionsReport(models.Model):
 
         # In wkhtmltopdf has been called, we need to split the pdf in order to call the postprocess method.
         if pdf_content:
-            pdf_content_stream = StringIO(pdf_content)
+            pdf_content_stream = io.BytesIO(pdf_content)
             # Build a record_map mapping id -> record
             record_map = {r.id: r for r in self.env[self.model].browse([res_id for res_id in res_ids if res_id])}
 
@@ -558,7 +558,7 @@ class IrActionsReport(models.Model):
         for stream in streams:
             reader = PdfFileReader(stream)
             writer.appendPagesFromReader(reader)
-        result_stream = StringIO()
+        result_stream = io.BytesIO()
         streams.append(result_stream)
         writer.write(result_stream)
         result = result_stream.getvalue()

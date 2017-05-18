@@ -820,10 +820,9 @@ form: module.record_id""" % (xml_id,)
 def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
     if pathname is None:
         pathname = os.path.join(module, filename)
-    fp = file_open(pathname, mode='rb')
     ext = os.path.splitext(filename)[1].lower()
 
-    try:
+    with file_open(pathname, 'rb') as fp:
         if ext == '.csv':
             convert_csv_import(cr, module, pathname, fp.read(), idref, mode, noupdate)
         elif ext == '.sql':
@@ -836,8 +835,6 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
             pass # .js files are valid but ignored here.
         else:
             raise ValueError("Can't load unknown file type %s.", filename)
-    finally:
-        fp.close()
 
 def convert_sql_import(cr, fp):
     cr.execute(fp.read())
