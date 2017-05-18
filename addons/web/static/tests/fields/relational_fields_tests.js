@@ -3579,6 +3579,31 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many list: list of id as default value', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.turtles.default = [2, 3];
+        this.data.partner.fields.turtles.type = "many2many";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('td.o_data_cell').text(), "blipkawa",
+            "should have loaded default data");
+
+        form.destroy();
+    });
+
     QUnit.test('many2many list with x2many: add a record', function (assert) {
         assert.expect(18);
 
