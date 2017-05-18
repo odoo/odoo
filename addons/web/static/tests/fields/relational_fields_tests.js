@@ -4004,6 +4004,65 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('unset selection field with 0 as key', function (assert) {
+        // The server doesn't make a distinction between false value (the field
+        // is unset), and selection 0, as in that case the value it returns is
+        // false. So the client must convert false to value 0 if it exists.
+        assert.expect(2);
+
+        this.data.partner.fields.selection = {
+            type: "selection",
+            selection: [[0, "Value O"], [1, "Value 1"]],
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="selection"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Value O',
+            "the displayed value should be 'Value O'");
+        assert.notOk(form.$('.o_field_widget').hasClass('o_field_empty'),
+            "should not have class o_field_empty");
+
+        form.destroy();
+    });
+
+    QUnit.test('unset selection field with string keys', function (assert) {
+        // The server doesn't make a distinction between false value (the field
+        // is unset), and selection 0, as in that case the value it returns is
+        // false. So the client must convert false to value 0 if it exists. In
+        // this test, it doesn't exist as keys are strings.
+        assert.expect(2);
+
+        this.data.partner.fields.selection = {
+            type: "selection",
+            selection: [['0', "Value O"], ['1', "Value 1"]],
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="selection"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget').text(), '',
+            "there should be no displayed value");
+        assert.ok(form.$('.o_field_widget').hasClass('o_field_empty'),
+            "should have class o_field_empty");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2ManyTags');
 
     QUnit.test('fieldmany2many tags: rendering and edition', function (assert) {

@@ -1671,7 +1671,7 @@ var FieldSelection = AbstractField.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
@@ -1680,6 +1680,12 @@ var FieldSelection = AbstractField.extend({
      */
     getFocusableElement: function () {
         return this.$el.is('select') ? this.$el : $();
+    },
+    /**
+     * @override
+     */
+    isSet: function () {
+        return this.value !== false;
     },
 
     //--------------------------------------------------------------------------
