@@ -93,7 +93,7 @@ class IrAttachment(models.Model):
         '''Index PDF documents'''
 
         buf = u""
-        if bin_data.startswith('%PDF-'):
+        if bin_data.startswith(b'%PDF-'):
             f = io.BytesIO(bin_data)
             try:
                 pdf = PyPDF2.PdfFileReader(f, overwriteWarnings=False)
