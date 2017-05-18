@@ -4401,7 +4401,6 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-
     QUnit.test('fieldradio widget on a selection in a new record', function (assert) {
         assert.expect(4);
 
@@ -4426,6 +4425,55 @@ QUnit.module('relational_fields', {
 
         var newRecord = _.last(this.data.partner.records);
         assert.strictEqual(newRecord.color, 'black', "should have saved record with correct value");
+        form.destroy();
+    });
+
+    QUnit.test('fieldradio widget with numerical keys encoded as strings', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.selection = {
+            type: 'selection',
+            selection: [['0', "Red"], ['1', "Black"]],
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="selection" widget="radio"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].selection, '1',
+                        "should write correct value");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+
+        assert.strictEqual(form.$('.o_field_widget').text(), '',
+            "field should be unset");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_radio_input:checked').length, 0,
+            "no value should be checked");
+
+        form.$("input.o_radio_input:nth(1)").click(); // click on 2nd option
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Black',
+            "value should be 'Black'");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_radio_input[data-index=1]:checked').length, 1,
+            "'Black' should be checked");
+
         form.destroy();
     });
 

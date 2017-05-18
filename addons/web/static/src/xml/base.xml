@@ -729,7 +729,8 @@
 
     <div t-if="widget.mode !== 'readonly'" t-attf-class="o_field_radio #{widget.nodeOptions.horizontal ? 'o_horizontal' : 'o_vertical'}">
         <div t-foreach="widget.values" t-as="value" class="o_radio_item">
-            <input type="radio" class="o_radio_input" t-att-id="widget.unique_id + '_' + value[0]" t-att-name="widget.unique_id" t-att-data-value="value[0]"/>
+            <input type="radio" class="o_radio_input" t-att-id="widget.unique_id + '_' + value[0]"
+                   t-att-name="widget.unique_id" t-att-data-value="value[0]" t-att-data-index="value_index"/>
             <label t-if="!widget.nodeOptions.no_radiolabel" class="o_form_label" t-att-for="widget.unique_id + '_' + value[0]"><t t-esc="value[1]"/></label>
         </div>
     </div>
