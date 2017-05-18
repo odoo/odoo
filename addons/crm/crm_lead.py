@@ -729,9 +729,11 @@ class crm_lead(format_address, osv.osv):
         return True
 
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
+        if context is None:
+            context = {}
         partner = self.pool.get('res.partner')
         vals = {'name': name,
-            'user_id': lead.user_id.id,
+            'user_id': context.get('default_user_id') or lead.user_id.id,
             'comment': lead.description,
             'team_id': lead.team_id.id or False,
             'parent_id': parent_id,
