@@ -1019,7 +1019,7 @@ class AccountInvoice(models.Model):
             :return: dict of value to create() the refund
         """
         values = {}
-        for field in ['name', 'reference', 'comment', 'date_due', 'partner_id', 'company_id',
+        for field in ['name', 'reference', 'comment', 'date_due', 'partner_id', 'company_id', 'team_id',
                 'account_id', 'currency_id', 'payment_term_id', 'user_id', 'fiscal_position_id']:
             if invoice._fields[field].type == 'many2one':
                 values[field] = invoice[field].id
