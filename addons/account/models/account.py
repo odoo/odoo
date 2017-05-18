@@ -74,6 +74,7 @@ class AccountAccount(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.account'))
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
+    group_id = fields.Many2one('account.group')
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -111,6 +112,21 @@ class AccountAccount(models.Model):
     def onchange_internal_type(self):
         if self.internal_type in ('receivable', 'payable'):
             self.reconcile = True
+
+    @api.onchange('code')
+    def onchange_code(self):
+        AccountGroup = self.env['account.group']
+        matching_group = AccountGroup
+        code_prefix = self.code
+
+        self.group_id = False
+
+        # find group with longest matching prefix
+        while code_prefix and not matching_group:
+            matching_group = AccountGroup.search([('code_prefix', '=', code_prefix)], limit=1)
+            if matching_group:
+                self.group_id = matching_group
+            code_prefix = code_prefix[:-1]
 
     @api.multi
     @api.depends('name', 'code')
@@ -176,6 +192,28 @@ class AccountAccount(models.Model):
             'context': action_context,
         }
 
+
+class AccountGroup(models.Model):
+    _name = "account.group"
+
+    _parent_store = True
+
+    parent_id = fields.Many2one('account.group', index=True, ondelete='cascade')
+    parent_left = fields.Integer('Left Parent', index=True)
+    parent_right = fields.Integer('Right Parent', index=True)
+    name = fields.Char(required=True)
+    code_prefix = fields.Char()
+
+    @api.depends('name', 'code_prefix')
+    def name_get(self):
+        result = []
+        for group in self:
+            if group.code_prefix:
+                name = group.code_prefix + ' ' + group.name
+            else:
+                name = group.name
+            result.append((group.id, name))
+        return result
 
 class AccountJournal(models.Model):
     _name = "account.journal"
