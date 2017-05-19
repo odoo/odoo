@@ -427,6 +427,7 @@ var FieldMany2One = AbstractField.extend({
                     view_id: view_id,
                     readonly: !self.can_write,
                     on_saved: function () {
+                        self._setValue(self.value.data, {forceChange: true});
                         self.trigger_up('reload', {db_id: self.value.id});
                     },
                 }).open();
@@ -1026,11 +1027,15 @@ var FieldMany2Many = FieldX2Many.extend({
      * @param {OdooEvent} ev
      */
     _onOpenRecord: function (ev) {
+        var self = this;
         _.extend(ev.data, {
             context: this.record.getContext(this.recordParams),
             domain: this.record.getDomain(this.recordParams),
             fields_view: this.attrs.views && this.attrs.views.form,
-            on_saved: this.trigger_up.bind(this, 'reload', {db_id: ev.data.id}),
+            on_saved: function () {
+                self._setValue(ev.data, {forceChange: true});
+                self.trigger_up('reload', {db_id: ev.data.id});
+            },
             readonly: this.mode === 'readonly',
             string: this.string,
         });

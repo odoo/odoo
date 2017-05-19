@@ -348,8 +348,11 @@ var AbstractField = Widget.extend({
      *
      * @private
      * @param {any} value
+     * @param {Object} [options]
+     * @param {boolean} [options.forceChange] if true, the change event will be
+     *   triggered even if the new value is the same as the old one
      */
-    _setValue: function (value) {
+    _setValue: function (value, options) {
         // we try to avoid doing useless work, if the value given has not
         // changed.  Note that we compare the unparsed values.
         if (this.lastSetValue === value || (this.value === false && value === '')) {
@@ -363,7 +366,7 @@ var AbstractField = Widget.extend({
             this._isValid = false;
             return;
         }
-        if (this._isSameValue(value)) {
+        if ((options && 'forceChange' in options) ? !options.forceChange : this._isSameValue(value)) {
             return;
         }
         var changes = {};
