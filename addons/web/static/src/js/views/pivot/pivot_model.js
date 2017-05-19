@@ -127,20 +127,21 @@ var PivotModel = AbstractModel.extend({
         });
     },
     /**
+     * Export the current pivot view in a simple JS object.
+     *
      * @returns {Object}
      */
     exportData: function () {
-        var record = this.data;
-        var measureNbr = record.measures.length;
-        var headers = this.renderer._computeHeaders();
+        var measureNbr = this.data.measures.length;
+        var headers = this._computeHeaders();
         var measureRow = measureNbr > 1 ? _.last(headers) : [];
-        var rows = this.renderer._computeRows();
+        var rows = this._computeRows();
         var i, j, value;
         headers[0].splice(0,1);
 
         // process measureRow
         for (i = 0; i < measureRow.length; i++) {
-            measureRow[i].measure = this.measures[measureRow[i].measure].string;
+            measureRow[i].measure = this.fields[measureRow[i].measure].string;
         }
         // process all rows
         for (i =0, j, value; i < rows.length; i++) {
@@ -148,7 +149,7 @@ var PivotModel = AbstractModel.extend({
                 value = rows[i].values[j];
                 rows[i].values[j] = {
                     is_bold: (i === 0) ||
-                        ((record.data.main_col.width > 1) &&
+                        ((this.data.main_col.width > 1) &&
                          (j >= rows[i].values.length - measureNbr)),
                     value:  (value === undefined) ? "" : value,
                 };
@@ -159,7 +160,6 @@ var PivotModel = AbstractModel.extend({
             measure_row: measureRow,
             rows: rows,
             nbr_measures: measureNbr,
-            title: this.title,
         };
     },
     /**
