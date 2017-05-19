@@ -298,6 +298,33 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('properly handle modifiers and attributes on notebook tags', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="product_id"/>' +
+                        '<notebook class="new_class" attrs=\'{"invisible": [["product_id", "=", false]]}\'>' +
+                            '<page string="Foo">' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.ok(form.$('.o_notebook').hasClass('o_invisible_modifier'),
+            'the notebook should handle modifiers (invisible)');
+        assert.ok(form.$('.o_notebook').hasClass('new_class'),
+            'the notebook should handle attributes');
+        form.destroy();
+    });
+
     QUnit.test('invisible attrs on first notebook page', function (assert) {
         assert.expect(6);
 

@@ -679,10 +679,12 @@ var FormRenderer = BasicRenderer.extend({
                 },
             });
         });
-        return $('<div class="o_notebook">')
+        var $notebook = $('<div class="o_notebook">')
                 .data('name', node.attrs.name || '_default_')
-                .append($headers)
-                .append($pages);
+                .append($headers, $pages);
+        this._registerModifiers(node, this.state, $notebook);
+        this._handleAttributes($notebook, node);
+        return $notebook;
     },
     /**
      * @private
