@@ -22,6 +22,8 @@
 """
 
 import datetime
+
+import collections
 import dateutil
 import functools
 import itertools
@@ -4952,7 +4954,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         }
 
         return result
-
+collections.Set.register(BaseModel)
+# not exactly true as BaseModel doesn't have __reversed__, index or count
+collections.Sequence.register(BaseModel)
 
 class RecordCache(MutableMapping):
     """ Implements a proxy dictionary to read/update the cache of a record.
