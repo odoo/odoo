@@ -17,7 +17,7 @@ from odoo import http, models
 from odoo import fields
 from odoo.http import request
 
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
 
 from odoo.tools import pycompat, OrderedSet

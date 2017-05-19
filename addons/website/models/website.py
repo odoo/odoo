@@ -4,22 +4,15 @@
 import inspect
 import logging
 import math
-import unicodedata
-import re
 import hashlib
+import re
 
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
-# optional python-slugify import (https://github.com/un33k/python-slugify)
-try:
-    import slugify as slugify_lib
-except ImportError:
-    slugify_lib = None
-
-from odoo import api, fields, models
-from odoo import tools
-from odoo.tools import ustr, pycompat
+from odoo import api, fields, models, tools
+from odoo.addons.http_routing.models.ir_http import slugify
+from odoo.tools import pycompat
 from odoo.http import request
 from odoo.tools.translate import _
 
@@ -89,62 +82,6 @@ def is_multilang_url(local_url, langs=None):
                 func.routing.get('multilang', func.routing['type'] == 'http'))
     except Exception:
         return False
-
-
-####################################################
-# Slug API
-####################################################
-
-def slugify(s, max_length=None):
-    """ Transform a string to a slug that can be used in a url path.
-        This method will first try to do the job with python-slugify if present.
-        Otherwise it will process string by stripping leading and ending spaces,
-        converting unicode chars to ascii, lowering all chars and replacing spaces
-        and underscore with hyphen "-".
-        :param s: str
-        :param max_length: int
-        :rtype: str
-    """
-    s = ustr(s)
-    if slugify_lib:
-        # There are 2 different libraries only python-slugify is supported
-        try:
-            return slugify_lib.slugify(s, max_length=max_length)
-        except TypeError:
-            pass
-    uni = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
-    slug_str = re.sub('[\W_]', ' ', uni).strip().lower()
-    slug_str = re.sub('[-\s]+', '-', slug_str)
-
-    return slug_str[:max_length]
-
-
-def slug(value):
-    if isinstance(value, models.BaseModel):
-        if isinstance(value.id, models.NewId):
-            raise ValueError("Cannot slug non-existent record %s" % value)
-        # [(id, name)] = value.name_get()
-        identifier, name = value.id, value.display_name
-    else:
-        # assume name_search result tuple
-        identifier, name = value
-    slugname = slugify(name or '').strip().strip('-')
-    if not slugname:
-        return str(identifier)
-    return "%s-%d" % (slugname, identifier)
-
-# NOTE: as the pattern is used as it for the ModelConverter (ir_http.py), do not use any flags
-_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
-
-
-def unslug(s):
-    """Extract slug and id from a string.
-        Always return un 2-tuple (str|None, int|None)
-    """
-    m = _UNSLUG_RE.match(s)
-    if not m:
-        return None, None
-    return m.group(1), int(m.group(2))
 
 
 class Website(models.Model):

@@ -10,7 +10,7 @@ from werkzeug.exceptions import NotFound
 from odoo import fields
 from odoo import http
 from odoo.http import request
-from odoo.addons.website.models.website import slug, unslug
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
 from odoo.tools import pycompat

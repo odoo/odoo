@@ -3,7 +3,6 @@
 
 import logging
 import os
-import re
 import traceback
 
 import werkzeug
@@ -14,12 +13,12 @@ import odoo
 from odoo import api, models
 from odoo import SUPERUSER_ID
 from odoo.http import request
-from odoo.tools import config, pycompat
+from odoo.tools import config
 from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.base import ir
-from odoo.addons.website.models.website import slug, url_for, _UNSLUG_RE
+from odoo.addons.http_routing.models.ir_http import ModelConverter
+from odoo.addons.website.models.website import url_for
 
 
 logger = logging.getLogger(__name__)
@@ -27,11 +26,6 @@ logger = logging.getLogger(__name__)
 # global resolver (GeoIP API is thread-safe, for multithreaded workers)
 # This avoids blowing up open files limit
 odoo._geoip_resolver = None
-
-
-class RequestUID(object):
-    def __init__(self, **kw):
-        self.__dict__.update(kw)
 
 
 class Http(models.AbstractModel):
@@ -242,11 +236,6 @@ class Http(models.AbstractModel):
     def _postprocess_args(cls, arguments, rule):
         super(Http, cls)._postprocess_args(arguments, rule)
 
-        for key, val in pycompat.items(arguments):
-            # Replace uid placeholder by the current request.uid
-            if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
-                arguments[key] = val.sudo(request.uid)
-
         try:
             _, path = rule.build(arguments)
             assert path is not None
@@ -341,26 +330,7 @@ class Http(models.AbstractModel):
         return super(Http, cls).binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
 
 
-class ModelConverter(ir.ir_http.ModelConverter):
-
-    def __init__(self, url_map, model=False, domain='[]'):
-        super(ModelConverter, self).__init__(url_map, model)
-        self.domain = domain
-        self.regex = _UNSLUG_RE.pattern
-
-    def to_url(self, value):
-        return slug(value)
-
-    def to_python(self, value):
-        matching = re.match(self.regex, value)
-        _uid = RequestUID(value=value, match=matching, converter=self)
-        record_id = int(matching.group(2))
-        env = api.Environment(request.cr, _uid, request.context)
-        if record_id < 0:
-            # limited support for negative IDs due to our slug pattern, assume abs() if not found
-            if not env[self.model].browse(record_id).exists():
-                record_id = abs(record_id)
-        return env[self.model].browse(record_id)
+class ModelConverter(ModelConverter):
 
     def generate(self, uid, query=None, args=None):
         Model = request.env[self.model].sudo(uid)

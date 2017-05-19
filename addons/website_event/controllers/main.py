@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, _
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.http import request
 from odoo.tools import pycompat
 

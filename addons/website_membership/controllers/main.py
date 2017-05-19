@@ -7,7 +7,7 @@ from odoo import fields
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.website.models.website import unslug
+from odoo.addons.http_routing.models.ir_http import unslug
 from odoo.tools.translate import _
 
 

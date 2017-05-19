@@ -4,7 +4,7 @@
 import werkzeug.urls
 
 from odoo import http
-from odoo.addons.website.models.website import unslug
+from odoo.addons.http_routing.models.ir_http import unslug
 from odoo.tools.translate import _
 from odoo.http import request
 

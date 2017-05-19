@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import re
-
 from odoo import api, fields, models, _
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 
 
 class EventType(models.Model):

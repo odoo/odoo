@@ -11,10 +11,10 @@ import re
 from werkzeug import urls
 
 from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import image, pycompat
 from odoo.tools.translate import html_translate
 from odoo.exceptions import Warning
-from odoo.addons.website.models.website import slug
 
 
 class Channel(models.Model):
