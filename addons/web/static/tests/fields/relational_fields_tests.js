@@ -3684,6 +3684,44 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many with a domain', function (assert) {
+        // The domain specified on the field should not be replaced by the potential
+        // domain the user writes in the dialog, they should rather be concatenated
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy" domain="[[\'display_name\', \'=\', \'gold\']]"/>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'partner_type,false,list': '<tree>' +
+                        '<field name="display_name"/>' +
+                    '</tree>',
+                'partner_type,false,search': '<search>' +
+                        '<field name="display_name" string="Name"/>' +
+                    '</search>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            "should contain only one row (gold)");
+
+        $('.modal .o_searchview_input').trigger({type: 'keypress', which: 115}); // s
+        $('.modal .o_searchview_input').trigger({type: 'keydown', which: 13}); // enter
+
+        assert.strictEqual($('.modal .o_data_row').length, 0, "should contain no row");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldStatus');
 
     QUnit.test('static statusbar widget on many2one field', function (assert) {
