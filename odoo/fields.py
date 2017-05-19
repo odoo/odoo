@@ -7,7 +7,9 @@ from collections import OrderedDict, defaultdict
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
+import itertools
 import logging
+
 import pytz
 try:
     from xmlrpc.client import MAXINT
@@ -119,7 +121,7 @@ class MetaField(type):
             elif attr.startswith('_description_'):
                 cls.description_attrs.append((attr[13:], attr))
 
-
+_global_seq = iter(itertools.count())
 class Field(MetaField('DummyField', (object,), {})):
     """ The field descriptor contains the field definition, and manages accesses
         and assignments of the corresponding field on records. The following
@@ -296,6 +298,7 @@ class Field(MetaField('DummyField', (object,), {})):
         '_attrs': EMPTY_DICT,           # the field's non-slot attributes
         '_module': None,                # the field's module name
         '_setup_done': None,            # the field's setup state: None, 'base' or 'full'
+        '_sequence': None,               # absolute ordering of the field
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
@@ -336,6 +339,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
+        self._sequence = kwargs['_sequence'] = next(_global_seq)
         args = {key: val for key, val in pycompat.items(kwargs) if val is not Default}
         self.args = args or EMPTY_DICT
         self._setup_done = None
