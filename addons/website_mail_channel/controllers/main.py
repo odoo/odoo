@@ -8,7 +8,8 @@ from dateutil import relativedelta
 
 from odoo import http, fields, tools
 from odoo.http import request
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
+
 
 class MailGroup(http.Controller):
     _thread_per_page = 20

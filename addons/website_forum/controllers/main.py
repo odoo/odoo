@@ -11,8 +11,8 @@ import werkzeug.wrappers
 from datetime import datetime
 
 from odoo import http, modules, SUPERUSER_ID, tools, _
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.web.controllers.main import binary_content
-from odoo.addons.website.models.website import slug
 from odoo.http import request
 
 
