@@ -2482,7 +2482,7 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('one2many kanban with edit type action and domain widget (widget wich use SpecialData)', function (assert) {
+    QUnit.test('one2many kanban with edit type action and domain widget (widget using SpecialData)', function (assert) {
         assert.expect(1);
 
         this.data.turtle.fields.model_name = {string: "Domain Condition Model", type: "char"};
@@ -2504,6 +2504,8 @@ QUnit.module('relational_fields', {
                                     '<t t-name="kanban-box">' +
                                         '<div><field name="display_name"/></div>' +
                                         '<div><field name="turtle_foo"/></div>' +
+                                        // field without Widget in the list
+                                        '<div><field name="condition"/></div>' +
                                         '<div> <a type="edit"> Edit </a> </div>' +
                                     '</t>' +
                                 '</templates>' +
@@ -2511,6 +2513,7 @@ QUnit.module('relational_fields', {
                             '<form>' +
                                 '<field name="product_id" widget="statusbar"/>' +
                                 '<field name="model_name"/>' +
+                                // field with Widget requiring specialData in the form
                                 '<field name="condition" widget="domain" options="{\'model\': \'model_name\'}"/>' +
                             '</form>' +
                         '</field>' +
