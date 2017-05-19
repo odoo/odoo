@@ -100,7 +100,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`{%PROGRAMFILES%}\\Odoo 8.0-{id}\\server\\openerp-server.conf`.
+:file:`{%PROGRAMFILES%}\\Odoo 8.0-{id}\\server\\odoo.conf`.
 
 The configuration file can be edited to connect to a remote Postgresql, edit
 file locations or set a dbfilter.
@@ -135,7 +135,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`/etc/odoo/openerp-server.conf`
+:file:`/etc/odoo/odoo.conf`
 
 When the configuration file is edited, Odoo must be restarted using
 ``service``:
@@ -144,6 +144,11 @@ When the configuration file is edited, Odoo must be restarted using
 
     $ sudo service odoo restart
     Restarting odoo: ok
+
+.. warning:: if the configuration file :file:`/etc/odoo/openerp-server.conf`
+    exists, it will take the priority over :file:`/etc/odoo/odoo.conf` for
+    backward compatibility reasons, so you should delete it if you
+    want Odoo to use the configuration file at :file:`/etc/odoo/odoo.conf`.
 
 RPM
 ---
@@ -181,7 +186,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`/etc/odoo/openerp-server.conf`
+:file:`/etc/odoo/odoo.conf`
 
 When the configuration file is edited, Odoo must be restarted via SystemD:
 
@@ -189,6 +194,10 @@ When the configuration file is edited, Odoo must be restarted via SystemD:
 
     $ sudo systemctl restart odoo
 
+.. warning:: if the configuration file :file:`/etc/odoo/openerp-server.conf`
+    exists, it will take the priority over :file:`/etc/odoo/odoo.conf` for
+    backward compatibility reasons, so you should delete it if you
+    want Odoo to use the configuration file at :file:`/etc/odoo/odoo.conf`.
 
 .. _setup/install/source:
 
