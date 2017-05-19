@@ -43,7 +43,7 @@ var FieldManagerMixin = {
      */
     _applyChanges: function (dataPointID, changes, event) {
         var self = this;
-        return this.model.notifyChanges(dataPointID, changes)
+        return this.model.notifyChanges(dataPointID, changes, event.data.viewType)
             .then(function (result) {
                 if (event.data.force_save) {
                     return self.model.save(dataPointID).then(function () {

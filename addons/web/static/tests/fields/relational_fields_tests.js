@@ -20,7 +20,7 @@ QUnit.module('relational_fields', {
                     int_field: {string: "int_field", type: "integer", sortable: true},
                     qux: {string: "Qux", type: "float", digits: [16,1] },
                     p: {string: "one2many field", type: "one2many", relation: 'partner', relation_field: 'trululu'},
-                    turtles: {string: "one2many turtle field", type: "one2many", relation: 'turtle'},
+                    turtles: {string: "one2many turtle field", type: "one2many", relation: 'turtle', relation_field: 'turtle_trululu'},
                     trululu: {string: "Trululu", type: "many2one", relation: 'partner'},
                     timmy: { string: "pokemon", type: "many2many", relation: 'partner_type'},
                     product_id: {string: "Product", type: "many2one", relation: 'product'},
@@ -1336,12 +1336,14 @@ QUnit.module('relational_fields', {
 
     QUnit.test('one2many list (editable): edition, part 4', function (assert) {
         assert.expect(3);
+        var i = 0;
 
         this.data.turtle.onchanges = {
             turtle_trululu: function (obj) {
-                if (obj.turtle_trululu) {
+                if (i) {
                     obj.turtle_description = "Some Description";
                 }
+                i++;
             },
         };
 
@@ -2334,25 +2336,26 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('parent data is properly sent on an onchange rpc, new record', function (assert) {
-        assert.expect(1);
+        assert.expect(6);
 
-        this.data.partner.onchanges = {bar: function () {}};
+        this.data.turtle.onchanges = {turtle_bar: function () {}};
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
                     '<field name="foo"/>' +
-                    '<field name="p">' +
+                    '<field name="turtles">' +
                         '<tree editable="top">' +
-                            '<field name="bar"/>' +
+                            '<field name="turtle_bar"/>' +
                         '</tree>' +
                     '</field>' +
                 '</form>',
             mockRPC: function (route, args) {
-                if (args.method === 'onchange') {
+                assert.step(args.method);
+                if (args.method === 'onchange' && args.model === 'turtle') {
                     var fieldValues = args.args[1];
-                    assert.strictEqual(fieldValues.trululu.foo, "My little Foo Value",
+                    assert.strictEqual(fieldValues.turtle_trululu.foo, "My little Foo Value",
                         "should have properly sent the parent foo value");
                 }
                 return this._super.apply(this, arguments);
@@ -2361,6 +2364,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
         form.$('tbody td.o_field_x2many_list_row_add a').click();
+        assert.verifySteps(['default_get', 'onchange', 'default_get', 'onchange']);
         form.destroy();
     });
 

@@ -615,10 +615,12 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {string} record_id
      * @param {Object} changes a map field => new value
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
      * @returns {string[]} list of changed fields
      */
-    notifyChanges: function (record_id, changes) {
-        return this.mutex.exec(this._applyChange.bind(this, record_id, changes));
+    notifyChanges: function (record_id, changes, viewType) {
+        return this.mutex.exec(this._applyChange.bind(this, record_id, changes, viewType));
     },
     /**
      * Reload all data for a given resource
@@ -902,9 +904,11 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {string} recordID
      * @param {Object} changes
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
      * @returns {Deferred}
      */
-    _applyChange: function (recordID, changes) {
+    _applyChange: function (recordID, changes, viewType) {
         var self = this;
         var record = this.localData[recordID];
         var field;
@@ -937,7 +941,7 @@ var BasicModel = AbstractModel.extend({
             }
             var onchangeDef;
             if (onChangeFields.length) {
-                onchangeDef = self._performOnChange(record, onChangeFields).then(function (result) {
+                onchangeDef = self._performOnChange(record, onChangeFields, viewType).then(function (result) {
                     delete record._warning;
                     return _.keys(changes).concat(Object.keys(result && result.value || {}));
                 });
@@ -1237,22 +1241,34 @@ var BasicModel = AbstractModel.extend({
      * @see _performOnChange
      *
      * @param {Object} record resource object of type 'record'
-     * @returns {Object} an onchange spec
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
+     * @returns {Object|false} an onchange spec, or false if no onchange should
+     *   be applied
      */
-    _buildOnchangeSpecs: function (record) {
-        // TODO: replace this function by some generic tree function in utils
+    _buildOnchangeSpecs: function (record, viewType) {
+        var hasOnchange = false;
         var specs = {};
-        _.each(record.getFieldNames(), function (name) {
+        var fieldsInfo = record.fieldsInfo[viewType || record.viewType];
+
+        _.each(Object.keys(fieldsInfo), function (name) {
             var field = record.fields[name];
-            var fieldInfo = record.fieldsInfo[record.viewType][name];
+            var fieldInfo = fieldsInfo[name];
             specs[name] = (field.onChange) || "";
+            if (field.onChange) {
+                hasOnchange = true;
+            }
             _.each(fieldInfo.views, function (view) {
                 _.each(view.fieldsInfo[view.type], function (field, subname) {
-                    specs[name + '.' + subname] = (view.fields[subname].onChange) || "";
+                    var onChange = view.fields[subname].onChange;
+                    specs[name + '.' + subname] = onChange || "";
+                    if (onChange) {
+                        hasOnchange = true;
+                    }
                 });
             });
         });
-        return specs;
+        return hasOnchange ? specs : false;
     },
     /**
      * Fetch all name_gets for the many2ones in a group
@@ -2349,23 +2365,11 @@ var BasicModel = AbstractModel.extend({
                 });
                 return $.when.apply($, defs)
                     .then(function () {
-                        var shouldApplyOnchange = false;
-                        var field;
-                        for (var field_name in record.data) {
-                            field = record.fields[field_name];
-                            if (field.onChange) {
-                                shouldApplyOnchange = true;
+                        return self._performOnChange(record, fields_key).then(function () {
+                            if (record._warning) {
+                                return $.Deferred().reject();
                             }
-                        }
-                        if (shouldApplyOnchange) {
-                            return self._performOnChange(record, fields_key).then(function () {
-                                if (record._warning) {
-                                    return $.Deferred().reject();
-                                }
-                            });
-                        } else {
-                            return $.when();
-                        }
+                        });
                     })
                     .then(function () {
                         return self._fetchRelationalData(record);
@@ -2449,12 +2453,17 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {Object} record
      * @param {string[]} fields changed fields
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
      * @returns {Deferred} The returned deferred can fail, in which case the
      *   fail value will be the warning message received from the server
      */
-    _performOnChange: function (record, fields) {
+    _performOnChange: function (record, fields, viewType) {
         var self = this;
-        var onchange_spec = this._buildOnchangeSpecs(record);
+        var onchangeSpec = this._buildOnchangeSpecs(record, viewType);
+        if (!onchangeSpec) {
+            return $.when();
+        }
         var idList = record.data.id ? [record.data.id] : [];
         var options = {
             full: true,
@@ -2470,7 +2479,7 @@ var BasicModel = AbstractModel.extend({
         return self._rpc({
                 model: record.model,
                 method: 'onchange',
-                args: [idList, currentData, fields, onchange_spec, context],
+                args: [idList, currentData, fields, onchangeSpec, context],
             })
             .then(function (result) {
                 if (!record._changes) {

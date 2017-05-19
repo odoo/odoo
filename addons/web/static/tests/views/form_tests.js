@@ -1159,6 +1159,38 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('default record with a one2many and an onchange on sub field', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges.foo = function () {};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'onchange') {
+                    assert.deepEqual(args.args[3], {
+                        p: '',
+                        'p.display_name': '',
+                        'p.foo': '1'
+                    }, "onchangeSpec should be correct (with sub fields)");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(['default_get', 'onchange']);
+        form.destroy();
+    });
+
     QUnit.test('sidebar is hidden when switching to edit mode', function (assert) {
         assert.expect(3);
 

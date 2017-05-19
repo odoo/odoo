@@ -371,6 +371,7 @@ var AbstractField = Widget.extend({
         this.trigger_up('field_changed', {
             dataPointID: this.dataPointID,
             changes: changes,
+            viewType: this.viewType,
         });
     },
 
