@@ -14,11 +14,8 @@ class Company(models.Model):
         'project.task', string="Leave Task",
         domain="[('project_id', '=', leave_timesheet_project_id)]")
 
-    def _init_column(self, name):
-        super(Company, self)._init_column(name)
-
-        if name == 'leave_timesheet_project_id':
-            self.search([('leave_timesheet_project_id', '=', False)])._create_leave_project_task()
+    def init(self):
+        self.search([('leave_timesheet_project_id', '=', False)])._create_leave_project_task()
 
     @api.model
     def create(self, values):
