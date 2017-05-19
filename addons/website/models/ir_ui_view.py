@@ -3,7 +3,6 @@
 
 import logging
 from itertools import groupby
-from lxml import etree
 
 from odoo import api, fields, models
 from odoo import tools
@@ -117,21 +116,10 @@ class View(models.Model):
             if 'main_object' not in qcontext:
                 qcontext['main_object'] = self
 
-            def unslug_url(s):
-                parts = s.split('/')
-                if parts:
-                    unslug_val = website.unslug(parts[-1])
-                    if unslug_val[1]:
-                        parts[-1] = str(unslug_val[1])
-                        return '/'.join(parts)
-                return s
-
             qcontext.update(dict(
                 self._context.copy(),
                 website=request.website,
                 url_for=website.url_for,
-                slug=website.slug,
-                unslug_url=unslug_url,
                 res_company=request.website.company_id.sudo(),
                 default_lang_code=request.website.default_lang_code,
                 languages=request.website.get_languages(),

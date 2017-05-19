@@ -10,6 +10,7 @@ import mimetypes
 import os
 import re
 import sys
+import unicodedata
 
 import werkzeug
 import werkzeug.exceptions
@@ -27,7 +28,10 @@ from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
 
-UID_PLACEHOLDER = object()
+
+class RequestUID(object):
+    def __init__(self, **kw):
+        self.__dict__.update(kw)
 
 
 class ModelConverter(werkzeug.routing.BaseConverter):
@@ -38,7 +42,8 @@ class ModelConverter(werkzeug.routing.BaseConverter):
         self.regex = r'([0-9]+)'
 
     def to_python(self, value):
-        env = api.Environment(request.cr, UID_PLACEHOLDER, request.context)
+        _uid = RequestUID(value=value, converter=self)
+        env = api.Environment(request.cr, _uid, request.context)
         return env[self.model].browse(int(value))
 
     def to_url(self, value):
@@ -54,7 +59,8 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         self.regex = r'([0-9,]+)'
 
     def to_python(self, value):
-        env = api.Environment(request.cr, UID_PLACEHOLDER, request.context)
+        _uid = RequestUID(value=value, converter=self)
+        env = api.Environment(request.cr, _uid, request.context)
         return env[self.model].browse(int(v) for v in value.split(','))
 
     def to_url(self, value):
@@ -203,10 +209,11 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _postprocess_args(cls, arguments, rule):
         """ post process arg to set uid on browse records """
-        for name, arg in list(pycompat.items(arguments)):
-            if isinstance(arg, models.BaseModel) and arg._uid is UID_PLACEHOLDER:
-                arguments[name] = arg.sudo(request.uid)
-                if not arg.exists():
+        for key, val in list(pycompat.items(arguments)):
+            # Replace uid placeholder by the current request.uid
+            if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
+                arguments[key] = val.sudo(request.uid)
+                if not val.exists():
                     return cls._handle_exception(werkzeug.exceptions.NotFound())
 
     @classmethod
