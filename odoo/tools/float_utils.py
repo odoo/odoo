@@ -175,27 +175,35 @@ if __name__ == "__main__":
     count = 0
     errors = 0
 
-    def try_round(amount, expected, precision_digits=3):
+    def try_round(amount, expected, precision_digits=3, rounding_method=False):
         global count, errors; count += 1
-        result = float_repr(float_round(amount, precision_digits=precision_digits),
+        result = float_repr(float_round(amount, precision_digits=precision_digits, rounding_method=rounding_method),
                             precision_digits=precision_digits)
         if result != expected:
             errors += 1
-            print '###!!! Rounding error: got %s , expected %s' % (result, expected)
+            print '###!!! Rounding %s , %s : got %s , expected %s' % (
+                rounding_method, amount, result, expected)
 
     # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
-    fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
-    expecteds = ['.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
-    precisions = [2, 2, 2, 2, 2, 2, 3, 4]
-    for magnitude in range(7):
-        for i in xrange(len(fractions)):
-            frac, exp, prec = fractions[i], expecteds[i], precisions[i]
-            for sign in [-1,1]:
-                for x in xrange(0,10000,97):
-                    n = x * 10**magnitude
-                    f = sign * (n + frac)
-                    f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp 
-                    try_round(f, f_exp, precision_digits=prec)
+    fractions = [.3333, .6666, .8505, .5550, .8500, .0, .01555, .01499, .675, .67499, .4555, .4555, .45555]
+    expected_rounding = {
+        'HALF-UP':   ['.33', '.67', '.85', '.56', '.85', '.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556'],
+        'UP':        ['.34', '.67', '.86', '.56', '.85', '.00', '.02', '.02', '.68', '.68', '.46', '.456', '.4556'],
+    }
+    precisions = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4]
+    for rounding_method in expected_rounding:
+        expecteds = expected_rounding[rounding_method]
+        for magnitude in range(7):
+            for i in xrange(len(fractions)):
+                frac, exp, prec = fractions[i], expecteds[i], precisions[i]
+
+                for sign in [-1,1]:
+                    for x in xrange(0,10000,97):
+                        n = x * 10**magnitude
+                        f = sign * (n + frac)
+                        f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp
+                        try_round(f, f_exp, precision_digits=prec,
+                                  rounding_method=rounding_method)
 
     stop = time.time()
 
