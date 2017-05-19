@@ -12,6 +12,7 @@ from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
+
 class AuthSignupHome(Home):
 
     @http.route()
@@ -89,6 +90,8 @@ class AuthSignupHome(Home):
         """ Shared helper returning the rendering context for signup and reset password """
         qcontext = request.params.copy()
         qcontext.update(self.get_auth_signup_config())
+        if not qcontext.get('token') and request.session.get('auth_signup_token'):
+            qcontext['token'] = request.session.get('auth_signup_token')
         if qcontext.get('token'):
             try:
                 # retrieve the user info (name, login or email) corresponding to a signup token

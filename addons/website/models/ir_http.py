@@ -134,6 +134,13 @@ class Http(models.AbstractModel):
         first_pass = not hasattr(request, 'website')
         request.website = None
         func = None
+
+        # add signup token or login to the session if given
+        if 'auth_signup_token' in request.params:
+            request.session['auth_signup_token'] = request.params['auth_signup_token']
+        if 'auth_login' in request.params:
+            request.session['auth_login'] = request.params['auth_login']
+
         try:
             if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
                 new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string
