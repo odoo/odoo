@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_multi_inherit_hr_expense" model="ir.ui.view">
+        <field name="name">account.register.payments.wizard.inherited</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_form_multi"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="default_focus">1</attribute>
+                <attribute name="string">Payment Method</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_method_id']" position="attributes">
+                <attribute name="string">Payment Type</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_date']" position="after">
+                <field name="expense_sheet_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Expenses -->
+    <record id="account_register_payments_wizard_action" model="ir.actions.act_window">
+        <field name="name">Register Payment</field>
+        <field name="res_model">account.payment.register</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_expense.view_account_payment_form_multi_inherit_hr_expense"/>
+        <field name="target">new</field>
+        <field name="context">{'default_expense_sheet_id': active_id}</field>
+    </record>
+</odoo>
