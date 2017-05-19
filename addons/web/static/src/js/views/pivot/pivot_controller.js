@@ -126,6 +126,7 @@ var PivotController = AbstractController.extend({
             return;
         }
         framework.blockUI();
+        table.title = this.title;
         session.get_file({
             url: '/web/pivot/export_xls',
             data: {data: JSON.stringify(table)},

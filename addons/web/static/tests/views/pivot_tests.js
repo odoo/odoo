@@ -591,4 +591,28 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('can download a file', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            session: {
+                get_file: function (args) {
+                    assert.strictEqual(args.url, '/web/pivot/export_xls',
+                        "should call get_file with correct parameters");
+                    args.complete();
+                },
+            },
+        });
+
+        $('.o_pivot_download').click();
+        pivot.destroy();
+    });
+
 });});
