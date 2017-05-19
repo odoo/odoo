@@ -151,15 +151,23 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
         for i in range(5):
             args_list = (tuple(move_state), tuple(self.ACCOUNT_TYPE), tuple(partner_ids),self.date_from,)
             dates_query = '(COALESCE(l.date_maturity,l.date)'
+            date_partial = ''
+            arg_partial = ()
             if form[str(i)]['start'] and form[str(i)]['stop']:
                 dates_query += ' BETWEEN %s AND %s)'
                 args_list += (form[str(i)]['start'], form[str(i)]['stop'])
+                date_partial = 'AND l.date <= %s'
+                arg_partial = (form[str(i)]['stop'],)
             elif form[str(i)]['start']:
                 dates_query += ' >= %s)'
                 args_list += (form[str(i)]['start'],)
+                date_partial = 'AND l.date >= %s'
+                arg_partial = (form[str(i)]['start'],)
             else:
                 dates_query += ' <= %s)'
                 args_list += (form[str(i)]['stop'],)
+                date_partial = 'AND l.date <= %s'
+                arg_partial = (form[str(i)]['stop'],)
             args_list += (self.date_from,)
             self.cr.execute('''SELECT l.partner_id, SUM(l.debit-l.credit), l.reconcile_partial_id
                     FROM account_move_line AS l, account_account, account_move am 
@@ -186,7 +194,8 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
                         JOIN account_account AS a ON l.account_id = a.id
                         WHERE reconcile_partial_id = %s
                             AND a.type IN %s
-                        ''', (partner_info[2], tuple(self.ACCOUNT_TYPE),))
+                            ''' + date_partial
+                        , (partner_info[2], tuple(self.ACCOUNT_TYPE),) + arg_partial)
                     date = self.cr.fetchall()
                     # Just in case date is not defined (but it should be defined)
                     if date and not date[0][0]:
