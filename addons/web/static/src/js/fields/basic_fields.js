@@ -83,10 +83,10 @@ var DebouncedField = AbstractField.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        // _debouncedStarted is used to detect that the user interacted at least
+        // _isDirty is used to detect that the user interacted at least
         // once with the widget, so that we can prevent it from triggering a
         // field_changed in commitChanges if the user didn't change anything
-        this._debouncedStarted = false;
+        this._isDirty = false;
         if (this.mode === 'edit') {
             if (this.DEBOUNCE) {
                 this._doDebouncedAction = _.debounce(this._doAction, this.DEBOUNCE);
@@ -97,7 +97,7 @@ var DebouncedField = AbstractField.extend({
             var self = this;
             var debouncedFunction = this._doDebouncedAction;
             this._doDebouncedAction = function () {
-                self._debouncedStarted = true;
+                self._isDirty = true;
                 debouncedFunction.apply(self, arguments);
             };
         }
@@ -115,7 +115,7 @@ var DebouncedField = AbstractField.extend({
      * @override
      */
     commitChanges: function () {
-        if (this._debouncedStarted && this.mode === 'edit') {
+        if (this._isDirty && this.mode === 'edit') {
             this._doAction();
         }
     },
@@ -132,7 +132,13 @@ var DebouncedField = AbstractField.extend({
      * @private
      */
     _doAction: function () {
-        this._setValue(this._getValue());
+        // as _doAction may be debounced, it may happen that it is called after
+        // the widget has been destroyed, and in this case, we don't want it to
+        // do anything (commitChanges ensures that if it has local changes, they
+        // are triggered up before the widget is destroyed, if necessary).
+        if (!this.isDestroyed()) {
+            this._setValue(this._getValue());
+        }
     },
     /**
      * Should return the current value of the field, in the DOM (for example,

@@ -1,6 +1,7 @@
 odoo.define('web.basic_fields_tests', function (require) {
 "use strict";
 
+var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var FormView = require('web.FormView');
@@ -10,6 +11,7 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
+var DebouncedField = basicFields.DebouncedField;
 var _t = core._t;
 
 QUnit.module('fields', {}, function () {
@@ -119,6 +121,66 @@ QUnit.module('basic_fields', {
         };
     }
 }, function () {
+
+    QUnit.module('DebouncedField');
+
+    QUnit.test('debounced fields do not trigger call _setValue once destroyed', function (assert) {
+        var done = assert.async();
+        assert.expect(4);
+
+        var def = $.Deferred();
+        var _doAction = DebouncedField.prototype._doAction;
+        DebouncedField.prototype._doAction = function () {
+            _doAction.apply(this, arguments);
+            def.resolve();
+        };
+        var _setValue = DebouncedField.prototype._setValue;
+        DebouncedField.prototype._setValue = function () {
+            assert.step('_setValue');
+            _setValue.apply(this, arguments);
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            fieldDebounce: 3,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // change the value
+        form.$('input').val('new value').trigger('input');
+        assert.verifySteps([], "_setValue shouldn't have been called yet");
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.verifySteps(['_setValue'], "_setValue should have been called once");
+
+        // destroy the form view
+        def = $.Deferred();
+        form.destroy();
+
+        // wait for the debounced callback to be called
+        def.then(function () {
+            assert.verifySteps(['_setValue'],
+                "_setValue should not have been called after widget destruction");
+
+            DebouncedField.prototype._doAction = _doAction;
+            DebouncedField.prototype._setValue = _setValue;
+            done();
+        });
+
+    });
 
     QUnit.module('FieldBoolean');
 
