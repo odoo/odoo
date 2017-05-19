@@ -151,7 +151,8 @@ class BlogPost(models.Model):
     # creation / update stuff
     create_date = fields.Datetime('Created on', index=True, readonly=True)
     published_date = fields.Datetime('Published Date')
-    post_date = fields.Datetime('Published date', compute='_compute_post_date', inverse='_set_post_date', store=True)
+    post_date = fields.Datetime('Publishing date', compute='_compute_post_date', inverse='_set_post_date', store=True,
+                                help="The blog post will be visible for your visitors as of this date on the website if it is set as published.")
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
     write_date = fields.Datetime('Last Modified on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
