@@ -313,6 +313,7 @@
                                 <group string="Misc">
                                     <field name="ref"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="industry_id" attrs="{'invisible': [('is_company', '=', False)]}" options="{'no_create': True}"/>
                                 </group>
                             </group>
                         </page>
@@ -557,6 +558,46 @@
             </field>
         </record>
 
-
+        <!-- Sector of Activity -->
+        <record id="res_partner_industry_view_form" model="ir.ui.view">
+            <field name="name">Sector of Activity</field>
+            <field name="model">res.partner.industry</field>
+            <field name="arch" type="xml">
+                <form string="Sector of Activity">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="full_name"/>
+                        <field name="active"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="res_partner_industry_view_tree" model="ir.ui.view">
+            <field name="name">Sector of Activity</field>
+            <field name="model">res.partner.industry</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Sector of Activity">
+                    <field name="name"/>
+                    <field name="full_name"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="res_partner_industry_action" model="ir.actions.act_window">
+            <field name="name">Sector of Activity</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner.industry</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new sector of activity.
+                </p>
+                <p>
+                    Manage sectors of activity to better classify partners for tracking and analysis purposes.
+                </p>
+            </field>
+        </record>
     </data>
 </odoo>
