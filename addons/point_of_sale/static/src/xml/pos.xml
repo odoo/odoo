@@ -731,7 +731,7 @@
                     <t t-if='simple'>
                         <line>
                             <left><t t-esc='line.product_name_wrapped[0]' /></left>
-                            <right><value t-att-value-decimals='pos.currency.decimals'>><t t-esc='line.price_display' /></value></right>
+                            <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value></right>
                         </line>
                         <t t-call="XmlReceiptWrappedProductNameLines"/>
                     </t>
