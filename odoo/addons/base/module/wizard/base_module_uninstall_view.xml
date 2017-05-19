@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_base_module_uninstall" model="ir.ui.view">
+            <field name="name">Uninstall module</field>
+            <field name="model">base.module.uninstall</field>
+            <field name="arch" type="xml">
+                <form string="Uninstall module">
+                    <field name="module_id" groups="base.group_no_one"/>
+                    <h3>The following apps will be uninstalled</h3>
+                    <field name="show_all"/> Show technical modules
+                    <field name="module_ids" mode="kanban">
+                        <kanban create="false">
+                            <field name="icon"/>
+                            <field name="name"/>
+                            <field name="shortdesc"/>
+                            <field name="summary"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_module_vignette">
+                                        <img t-attf-src="#{record.icon.value}"
+                                             class="oe_module_icon" style="width: 60px; height: 60px"/>
+                                        <div class="oe_module_desc" style="padding-left: 70px">
+                                            <h4><field name="shortdesc"/></h4>
+                                            <p class="oe_module_name">
+                                                <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
+                                                <i><field name="name" groups="base.group_no_one"/></i>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                    <h3>The following documents will be permanently lost</h3>
+                    <field name="model_ids">
+                        <tree string="Models">
+                            <field name="name" string="Document"/>
+                            <field name="count"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button string="Confirm" class="btn-primary" type="object" name="action_uninstall"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
