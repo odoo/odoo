@@ -66,12 +66,12 @@ tour.register('shop_buy_product', {
         },
         {
             content: "select payment",
-            trigger: '#payment_method label:contains("Wire Transfer") input',
+            trigger: '#website_sale_payment label:contains("Wire Transfer") input',
         },
         {
             content: "Pay Now",
-            extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked',
-            trigger: '.oe_sale_acquirer_button .btn[type="submit"]:visible',
+            extra_trigger: '#website_sale_payment label:contains("Wire Transfer") input:checked',
+            trigger: '.o_acquirer_button .btn[type="submit"]:visible',
         },
         {
             content: "finish",
