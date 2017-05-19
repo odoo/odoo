@@ -425,7 +425,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 '_original_module': cls._module,
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
-                '_fields': {},                          # populated in _setup_base()
+                '_fields': OrderedDict(),               # populated in _setup_base()
             })
             check_parent = cls._build_model_check_parent
 
@@ -2272,7 +2272,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # therefore two registries are never set up at the same time.
 
             # remove fields that are not proper to cls
-            for name in set(cls._fields) - cls0._proper_fields:
+            for name in OrderedSet(cls._fields) - cls0._proper_fields:
                 delattr(cls, name)
                 cls._fields.pop(name, None)
             # collect proper fields on cls0, and add them on cls
@@ -2283,20 +2283,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     self._add_field(name, field)
                 else:
                     self._add_field(name, field.new(**field.args))
-            cls._proper_fields = set(cls._fields)
+            cls._proper_fields = OrderedSet(cls._fields)
 
         else:
             # retrieve fields from parent classes, and duplicate them on cls to
             # avoid clashes with inheritance between different models
             for name in cls._fields:
                 delattr(cls, name)
-            cls._fields = {}
-            for name, field in getmembers(cls, Field.__instancecheck__):
+            cls._fields = OrderedDict()
+            for name, field in sorted(getmembers(cls, Field.__instancecheck__), key=lambda f: f[1]._sequence):
                 # do not retrieve magic, custom and inherited fields
                 if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
                     self._add_field(name, field.new())
             self._add_magic_fields()
-            cls._proper_fields = set(cls._fields)
+            cls._proper_fields = OrderedSet(cls._fields)
 
         cls.pool.model_cache[cls._model_cache_key] = cls
 
