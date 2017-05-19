@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, models
+from werkzeug.urls import url_encode
 
 
 class AccountInvoice(models.Model):
@@ -33,11 +34,20 @@ class AccountInvoice(models.Model):
             else:
                 return {
                     'type': 'ir.actions.act_url',
-                    'url': '/my/invoices',  # No controller /my/invoices/<int>, only a report pdf
+                    'url': '/my/invoices?',  # No controller /my/invoices/<int>, only a report pdf
                     'target': 'self',
                     'res_id': self.id,
                 }
         return super(AccountInvoice, self).get_access_action(access_uid)
+
+    def get_mail_url(self):
+        self.ensure_one()
+        params = {
+            'model': self._name,
+            'res_id': self.id,
+        }
+        params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
+        return '/mail/view?' + url_encode(params)
 
     @api.multi
     def get_signup_url(self):

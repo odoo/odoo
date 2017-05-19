@@ -52,7 +52,7 @@ class MailController(http.Controller):
         return comparison, record, redirect
 
     @classmethod
-    def _redirect_to_record(cls, model, res_id):
+    def _redirect_to_record(cls, model, res_id, access_token=None):
         uid = request.session.uid
 
         # no model / res_id, meaning no possible record -> redirect to login
@@ -68,7 +68,6 @@ class MailController(http.Controller):
 
         # the record has a window redirection: check access rights
         if uid is not None:
-            record = record_sudo.sudo(uid)
             if not RecordModel.sudo(uid).check_access_rights('read', raise_exception=False):
                 return cls._redirect_to_messaging()
             try:
@@ -76,7 +75,7 @@ class MailController(http.Controller):
             except AccessError:
                 return cls._redirect_to_messaging()
             else:
-                record_action = record.get_access_action()
+                record_action = record_sudo.get_access_action(access_uid=uid)
         else:
             record_action = record_sudo.get_access_action()
 
@@ -162,15 +161,17 @@ class MailController(http.Controller):
         return subtypes_list
 
     @http.route('/mail/view', type='http', auth='none')
-    def mail_action_view(self, model=None, res_id=None, message_id=None):
+    def mail_action_view(self, model=None, res_id=None, message_id=None, access_token=None, **kwargs):
         """ Generic access point from notification emails. The heuristic to
-        choose where to redirect the user is the following :
+            choose where to redirect the user is the following :
 
          - find a public URL
          - if none found
           - users with a read access are redirected to the document
           - users without read access are redirected to the Messaging
           - not logged users are redirected to the login page
+
+            models that have an access_token may apply variations on this.
         """
         if message_id:
             try:
@@ -185,7 +186,7 @@ class MailController(http.Controller):
         elif res_id and isinstance(res_id, basestring):
             res_id = int(res_id)
 
-        return self._redirect_to_record(model, res_id)
+        return self._redirect_to_record(model, res_id, access_token)
 
     @http.route('/mail/follow', type='http', auth='user', methods=['GET'])
     def mail_action_follow(self,  model, res_id, token=None):

@@ -7,6 +7,8 @@ from odoo import api, fields, models, _
 from odoo.tools.translate import html_translate
 from odoo.addons import decimal_precision as dp
 
+from werkzeug.urls import url_encode
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -44,12 +46,6 @@ class SaleOrderLine(models.Model):
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
-
-    def _website_url(self):
-        super(SaleOrder, self)._website_url()
-        for so in self:
-            if so.state not in ['sale', 'done']:
-                so.website_url = '/quote/%s' % (so.id)
 
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
@@ -180,6 +176,13 @@ class SaleOrder(models.Model):
             'target': 'self',
             'res_id': self.id,
         }
+
+    def get_mail_url(self):
+        self.ensure_one()
+        if self.state not in ['sale', 'done']:
+            auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
+            return '/quote/%s/%s?' % (self.id, self.access_token) + auth_param
+        return super(SaleOrder, self).get_mail_url()
 
     @api.multi
     def _confirm_online_quote(self, transaction):
