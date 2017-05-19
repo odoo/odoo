@@ -105,12 +105,20 @@
                                 var z = x[i].split('=', 2);
                                 vars[z[0]] = unescape(z[1]);
                             }
-                            var x=['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
-                            for (var i in x) {
-                                var y = document.getElementsByClassName(x[i]);
-                                for (var j=0; j&lt;y.length; ++j)
-                                    y[j].textContent = vars[x[i]];
-                            }
+                            var fromPage = document.getElementsByClassName('page');
+                            for(var j = 0; j&lt;fromPage.length; j++)
+                                fromPage[j].textContent = vars['sitepage'];
+                            var toPage = document.getElementsByClassName('topage');
+                            for(var j = 0; j&lt;toPage.length; j++)
+                                toPage[j].textContent = vars['sitepages'];
+
+                            var index = vars['webpage'].split('.', 4)[3]
+                            var header = document.getElementById('minimal_layout_report_headers');
+                            if(header != null)
+                                header.innerHTML = header.children[index].innerHTML;
+                            var footer = document.getElementById('minimal_layout_report_footers');
+                            if(footer != null)
+                                footer.innerHTML = footer.children[index].innerHTML;
                         }
                     </script>
                 </t>
@@ -294,7 +302,6 @@
         <t t-if="not o and doc">
             <t t-set="o" t-value="doc"/>
         </t>
-        <h2 t-esc="o"/>
 
         <t t-if="o and 'company_id' in o">
             <t t-set="company" t-value="o.company_id.sudo()"/>
