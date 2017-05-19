@@ -129,11 +129,12 @@ var KanbanModel = BasicModel.extend({
      * Load more records in a group.
      *
      * @param {string} groupID localID of the group
+     * @param {integer} offset optional offset override
      * @returns {Deferred<string>} resolves to the localID of the group
      */
-    loadMore: function (groupID) {
+    loadMore: function (groupID, offset) {
         var group = this.localData[groupID];
-        var offset = group.loadMoreOffset + group.limit;
+        offset = offset === 0 ? 0 : group.loadMoreOffset + group.limit;
         return this.reload(group.id, {
             loadMoreOffset: offset,
         });
@@ -251,8 +252,11 @@ var KanbanModel = BasicModel.extend({
         if (list.groupedBy.length > 1) {
             list.groupedBy = [list.groupedBy[0]];
         }
+        // to prevent pre-loading data by default in mobile for kanban column
+        // by setting openGroupByDefault to 'false' which will set column's isOpen property
+        // to false and will ingore _load().
         if (config.isMobile) {
-            list.context['unfold_all'] = true;
+            list.openGroupByDefault = false;
         }
         return this._super.apply(this, arguments).then(function (result) {
             return self._readTooltipFields(list).then(_.constant(result));

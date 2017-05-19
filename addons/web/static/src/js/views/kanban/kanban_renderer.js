@@ -114,7 +114,8 @@ var KanbanRenderer = BasicRenderer.extend({
         }
         this._setState(state);
         // Used for mobile, when returning back to view
-        this.last_active_mobile_tab = 0;
+        this.lastActiveMobileTab = -1;
+        this.isMobile = config.isMobile;
     },
 
     //--------------------------------------------------------------------------
@@ -126,7 +127,8 @@ var KanbanRenderer = BasicRenderer.extend({
      * Uses active column index.
      */
     addQuickCreate: function () {
-        this.widgets[this.last_active_mobile_tab].addQuickCreate();
+        var index = this.lastActiveMobileTab > -1 ? this.lastActiveMobileTab : 0;
+        this.widgets[index].addQuickCreate();
     },
     /**
      * Toggle fold/unfold the Column quick create widget
@@ -152,12 +154,20 @@ var KanbanRenderer = BasicRenderer.extend({
      * @returns {Deferred}
      */
     updateColumn: function (localID, columnState) {
+        var self = this;
+        var column = _.findWhere(this.widgets, {db_id: localID});
+        var index = _.indexOf(this.widgets, column);
         var newColumn = new KanbanColumn(this, columnState, this.columnOptions, this.recordOptions);
-        var index = _.findIndex(this.widgets, {db_id: localID});
-        var column = this.widgets[index];
-        this.widgets[index] = newColumn;
-        return newColumn.insertAfter(column.$el).then(column.destroy.bind(column));
+        this.widgets[index] = newColumn; // Replacing old column to new column
+        return newColumn.insertAfter(column.$el).then(function (){
+            column.destroy();
+            if (self.isMobile) {
+                newColumn.$el.addClass("current");
+                self._enableSwipeOnRecordGroup(newColumn);
+            }
+        });
     },
+
     /**
      * Updates a given record with its new state.
      *
@@ -208,6 +218,72 @@ var KanbanRenderer = BasicRenderer.extend({
                this.createColumnEnabled ||
                (this.state.groupedBy.length && this.state.data.length);
     },
+    /* Enable swipe event on kanban column in mobile
+     *
+     * @private
+     * @param {KanbanColumn} column
+     */
+    _enableSwipeOnRecordGroup: function (column) {
+        var self = this;
+        column.$el.swipe({
+            swipeLeft: function() {
+                self._moveToGroup(++self.lastActiveMobileTab);
+            },
+            swipeRight: function() {
+                self._moveToGroup(--self.lastActiveMobileTab);
+            }
+        });
+    },
+    /**
+     * Moving to kanan column group when swiping kanban column in mobile
+     *
+     * @private
+     * @param {integer} moveToIndex
+     */
+    _moveToGroup: function (moveToIndex) {
+        var self = this;
+        if (this.widgets.length - 1 < moveToIndex) {
+            this.lastActiveMobileTab = this.widgets.length - 1;
+            return;
+        } else if (moveToIndex < 0) {
+            this.lastActiveMobileTab = 0;
+            return;
+        }
+        this.lastActiveMobileTab = moveToIndex;
+        var moveTo = moveToIndex;
+        var next = moveToIndex + 1;
+        var previous = moveToIndex - 1;
+        this.$(".o_kanban_group").removeClass("previous next current before after");
+        this.$(".o_kanban_mobile_tab").removeClass("previous next current before after");
+        _.each(this.widgets, function(column, index) {
+            var recordPane = self.$(".o_kanban_group[data-id=" + column.id + "]");
+            var tab = self.$(".o_kanban_mobile_tab[data-id=" + column.id + "]");
+            if (index == previous) {
+                tab.addClass("previous");
+                tab.css("margin-left", "-" + (tab.outerWidth() / 2) + "px");
+                recordPane.addClass("previous");
+            } else if (index == next) {
+                tab.addClass("next");
+                tab.css("margin-left", "-" + (tab.outerWidth() / 2) + "px");
+                recordPane.addClass("next");
+            } else if (index < moveTo) {
+                tab.addClass("before");
+                tab.css("margin-left", "-" + tab.outerWidth() + "px");
+                recordPane.addClass("before");
+            } else if (index == moveTo) {
+                var marginLeft = tab.outerWidth() / 2;
+                tab.css("margin-left", "-" + marginLeft + "px");
+                tab.addClass("current");
+                recordPane.addClass("current");
+                if (column.isEmpty())
+                    column.trigger_up('kanban_load_records');
+            } else if (index > moveTo) {
+                tab.addClass("after");
+                tab.css("margin-left", "0");
+                recordPane.addClass("after");
+            }
+        });
+    },
     /**
      * Renders empty invisible divs in a document fragment.
      *
@@ -231,8 +307,11 @@ var KanbanRenderer = BasicRenderer.extend({
         var self = this;
 
         // Render columns
-        if (config.isMobile) {
+        if (this.isMobile) {
             this.$el.append($(qweb.render("KanbanView.MobileTabs", {'data': this.state.data})));
+            this.$(".o_kanban_mobile_tab").on('click', function (event) {
+                self._moveToGroup($(event.currentTarget).index());
+            });
         }
         _.each(this.state.data, function (group) {
             var column = new KanbanColumn(self, group, self.columnOptions, self.recordOptions);
